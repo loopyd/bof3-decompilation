@@ -27,7 +27,7 @@ extern u16 D_801F362C[]; /* @source 0x801F362C @kind table */
  *           range is not byte-identical to that lifted span and the literals
  *           are written from this span's bytes rather than cloned. This
  *           target's own neighbouring sibling
- *           publishModeStatusFromTable3634World00Area01013_801F2CB0 has the
+ *           publishModeStatusTable3634 has the
  *           same body and reads the neighbouring halfword table at 0x801F3634,
  *           eight bytes past this one; its original-byte disassembly
  *           independently confirms the statement order and the table-pair

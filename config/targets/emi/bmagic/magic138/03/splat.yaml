@@ -48,12 +48,12 @@ segments:
     - '@behavior: Overlay header handler, entry index 2 of the nine-word handler pointer run at 0x801EEC04 (payload word 0x801EEC0C); publishes the shared battle work record pointer held at 0x801EB4E0 into the scratchpad work-object pointer cell at 0x1F800044, invokes the shared update helper at 0x8014D978, restores the cell, and when the restored work object byte 0xB is zero forwards the shared battle byte 0x80146384 through func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes func_801E5988.'
   - - 864
     - c
-    - callStateTablef72Bmagic
+    - callStateTablef72
     - '@source: src/bof3/bmagic/magic13803DispatchTables.c'
   - - 932
     - c
-    - callStateTableec10Bmagic
-    - '@source: src/bof3/bmagic/callStateTableec10Bmagic.c'
+    - callStateTableec10
+    - '@source: src/bof3/bmagic/callStateTableec10.c'
     - '@behavior: Overlay header handler, entries 3, 4 and 5 of the nine-word handler pointer run at 0x801EEC04 (the payload words at 0x801EEC10, 0x801EEC14 and 0x801EEC18); copies those three code pointers (0x801EF04C, 0x801EF3A0, 0x801EF50C) into its own 0x28-byte frame, publishes 0x800C3800 into the shared cell at 0x801459F0, and invokes the copied entry that unsigned work byte 2 of the scratchpad work object at 0x1F800044 selects. It re-reads that cell after the call and, when work byte 0 has bit 0 set, invokes the shared battle update at 0x8014D4E0, then publishes 0x800D3800 into 0x801459F0.'
   - - 1100
     - c
@@ -68,13 +68,13 @@ segments:
     - invokeHelperBmagicMagic13803_801EF50C
   - - 2348
     - c
-    - callStateTableec1Bmagic
-    - '@source: src/bof3/bmagic/callStateTableec1Bmagic.c'
+    - callStateTableec1
+    - '@source: src/bof3/bmagic/callStateTableec1.c'
     - '@behavior: Copies the three code-pointer words at 0x801EEC1C, entries 6, 7 and 8 of the overlay header handler run at 0x801EEC04, into its own 0x28-byte frame, publishes 0x800F0800 into the shared cell at 0x801459F0, calls the copied entry that unsigned work byte 2 of the scratchpad work object at 0x1F800044 selects, re-reads that cell and calls the shared service at 0x8014D290 when work byte 0 is nonzero, then publishes 0x800D3800 into 0x801459F0.'
   - - 2512
     - c
-    - seedWorkHeaderKind84SelectorB4SelectCueByByteAParityRequestResourceAdvanceWorkByte2BmagicMagic13803_801EF5D0
-    - '@source: src/bof3/bmagic/seedWorkHeaderKind84SelectorB4SelectCueByByteAParityRequestResourceAdvanceWorkByte2BmagicMagic13803_801EF5D0.c'
+    - stateHeaderSelectorParity
+    - '@source: src/bof3/bmagic/stateHeaderSelectorParity.c'
     - '@behavior: Overlay header handler index 6 of the run at 0x801EEC04; seeds the scratchpad work header bytes 0x24, 0x25, 0x27 and 0x2B with 0x84, 0x1D, 0xB4 and 0, clears bytes 0x26, 0x28, 0x29, 0x2A and halfword 0x2C, requests resource 5 through 0x8014D6B8, dispatches cue ((work byte 0xA & 1) | 0x100) through 0x8015DF18 and advances work byte 2.'
   - - 2724
     - asm

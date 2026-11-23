@@ -15,7 +15,7 @@ extern ScenarioScena1200WorkStateHandler stateFrameHandlerTable[];
  * of the in-image code-pointer run based at 0x801FD178 with no arguments. Entry
  * 0 (0x801FD178) is 0x801F71B8, the overlay's dispatcher for the object's byte
  * at offset 0x02; entry 8 (0x801FD198) is 0x801F7BEC, whose handler advances
- * exactly this state byte from 8 to 9 (stateFieldQueueScenario),
+ * exactly this state byte from 8 to 9 (stateFieldQueue),
  * and entry 11 (0x801FD1A4) is 0x801F7F28
  * (callStateChainStep), so the byte is a
  * per-frame state index. It reads no other state and writes none; the pointer

@@ -64,7 +64,7 @@ u8 func_8019601C(void);
  * is CSE'd into one saved register, while the symbol form re-materialises
  * `lui 0x1f80` per access as the original does. This body is
  * instruction-identical to the exact sibling
- * publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14 at
+ * publishBaseSeedFront at
  * 0x801FCD14 apart from the two stored literals, so this source keeps that
  * sibling's statement order and declaration style and writes 0x19/0x68 where
  * it has 6/0x70.

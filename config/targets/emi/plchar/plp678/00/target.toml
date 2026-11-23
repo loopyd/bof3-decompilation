@@ -8,7 +8,7 @@ splat = "config/targets/emi/plchar/plp678/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTable0564Plchar.c",
+    "src/bof3/plchar/callWorkTable0564.c",
 ]
 support_sources = [
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp67800_801CF1A4.c",
@@ -17,12 +17,12 @@ support_sources = [
     "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp67800_801CE6B8.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp67800_801CFEF0.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp67800_801CEB94.c",
-    "src/bof3/plchar/callWorkTable058Plchar.c",
-    "src/bof3/plchar/callWorkTable0570Plchar.c",
-    "src/bof3/plchar/callWorkTable0578Plchar.c",
+    "src/bof3/plchar/callWorkTable058.c",
+    "src/bof3/plchar/callWorkTable0570.c",
+    "src/bof3/plchar/callWorkTable0578.c",
     "src/bof3/plchar/invokeHelperPlcharPlp67800_801CE610.c",
-    "src/bof3/plchar/callWorkTable0598Plchar.c",
-    "src/bof3/plchar/dispatchWorkByte2Table05a4PlcharPlp67800_801CF6E0.c",
+    "src/bof3/plchar/callWorkTable0598.c",
+    "src/bof3/plchar/callWorkByte2Table05.c",
     "src/bof3/plchar/dispatchWorkByte2Table05b0PlcharPlp67800_801D0108.c",
     "src/bof3/plchar/dispatchWorkByte2Table05bcPlcharPlp67800_801D0314.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable05c4PlcharPlp67800_801D04DC.c",

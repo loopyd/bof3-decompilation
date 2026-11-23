@@ -50,9 +50,9 @@ extern u8 D_801F286D[]; /* @source 0x801F286D @kind data */
  */
 extern void dispatchSoundCue(u32 cue_id);
 
-void publishCommuTextId(void);
+void publishTextId(void);
 u8 checkActiveRecordsKind(s32 kind);
-extern void moveCommuPadDirection(u8 *rowPtr);
+extern void movePadDirection(u8 *rowPtr);
 extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
 extern void renderCommuListScreen(void);
 
@@ -71,11 +71,11 @@ extern void renderCommuListScreen(void);
  * read as an unsigned byte, and modes 0 and 2 require at least one in-use
  * active record of the kind named by that list row. An accepted request queues
  * resident sound cue 0x104 through the shared cue dispatcher at 0x8015DF18,
- * publishes the request text id through publishCommuTextId and advances the
+ * publishes the request text id through publishTextId and advances the
  * overlay step byte 0x801F294C by one; a rejected one, which is also every mode
  * value other than those three, queues cue 0x107 and leaves the step alone. When
  * neither mask matches it moves the commu list row through
- * moveCommuPadDirection. Every
+ * movePadDirection. Every
  * path then runs renderCommuListScreen and draws the list row 0x801448ED with the
  * selected flag 0 through drawRowMarkerOutlineCommu0107_801D36FC. Its 0x18-byte frame only holds ra.
  * @status exact
@@ -100,7 +100,7 @@ void confirmCommuEntryRequest(void) {
     case 2:
       if (checkActiveRecordsKind(D_801448ED) != 0) {
         dispatchSoundCue(0x104);
-        publishCommuTextId();
+        publishTextId();
         D_801F294C += 1;
       } else {
         dispatchSoundCue(0x107);
@@ -111,7 +111,7 @@ void confirmCommuEntryRequest(void) {
         dispatchSoundCue(0x107);
       } else {
         dispatchSoundCue(0x104);
-        publishCommuTextId();
+        publishTextId();
         D_801F294C += 1;
       }
       break;
@@ -120,7 +120,7 @@ void confirmCommuEntryRequest(void) {
       break;
     }
   } else {
-    moveCommuPadDirection(&D_801448ED);
+    movePadDirection(&D_801448ED);
   }
   renderCommuListScreen();
   drawRowMarkerOutlineCommu0107_801D36FC(D_801448ED, 0);

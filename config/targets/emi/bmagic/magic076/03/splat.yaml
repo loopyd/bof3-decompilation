@@ -61,7 +61,7 @@ segments:
     - '@behavior: Return whether state is four and kind is neither 0x4C nor 0xB4.'
   - - 1840
     - c
-    - callStateTable0488Bmagic
+    - callStateTable0488
     - '@source: src/bof3/bmagic/magic07603DispatchTables.c'
   - - 1908
     - asm

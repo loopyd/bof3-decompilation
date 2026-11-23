@@ -15,7 +15,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* @source 0x801F00D8
  * @behavior Entry 13 of the fourteen-word byte-1 handler table based at
- *           0x801F046C, which callStateTable046Bmagic
+ *           0x801F046C, which callStateTable046
  *           indexes with work record byte 1 and calls indirectly, and the sixth
  *           and last word of the six-word work-byte-2 run at 0x801F048C, where
  *           it is entry 5; the two-word dispatch base 0x801F049C that

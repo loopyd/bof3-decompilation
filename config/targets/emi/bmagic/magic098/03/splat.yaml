@@ -36,7 +36,7 @@ segments:
     - func_801EEF38
   - - 900
     - c
-    - callStateTable0340Bmagic
+    - callStateTable0340
     - '@source: src/bof3/bmagic/magic09803DispatchTables.c'
   - - 968
     - asm

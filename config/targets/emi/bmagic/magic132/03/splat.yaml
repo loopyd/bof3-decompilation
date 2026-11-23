@@ -50,7 +50,7 @@ segments:
     - func_801EF0A4
   - - 1300
     - c
-    - callStateTablefd58Bmagic
+    - callStateTablefd58
     - '@source: src/bof3/bmagic/magic13203DispatchTables.c'
   - - 1368
     - asm
@@ -65,8 +65,8 @@ segments:
     - func_801EF324
   - - 1928
     - c
-    - decrementWorkByteBMask3FThenAdvanceWorkWord1CBy2AndIncrementWorkByte2At80BmagicMagic13203_801EF388
-    - '@source: src/bof3/bmagic/decrementWorkByteBMask3FThenAdvanceWorkWord1CBy2AndIncrementWorkByte2At80BmagicMagic13203_801EF388.c'
+    - decrementByteAdvanceIncrement
+    - '@source: src/bof3/bmagic/decrementByteAdvanceIncrement.c'
   - - 2016
     - asm
     - func_801EF3E0

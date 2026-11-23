@@ -8,16 +8,16 @@ splat = "config/targets/emi/plchar/plp267/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTable0988Plchar.c",
+    "src/bof3/plchar/callWorkTable0988.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp26700_801CF38C.c",
     "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp26700_801CF900.c",
-    "src/bof3/plchar/callWorkTable09Plchar.c",
+    "src/bof3/plchar/callWorkTable09.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp26700_801CF75C.c",
     "src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp26700_801CF7C8.c",
     "src/bof3/plchar/dispatchByte2Table09d0.c",
     "src/bof3/plchar/dispatchByte2Table09dc.c",
     "src/bof3/plchar/dispatchHalfwordTable.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTable09f4PlcharPlp26700_801D0944.c",
+    "src/bof3/plchar/callWorkHalfword2Table09.c",
     "src/bof3/plchar/adjustNeighbourLayers.c",
     "src/bof3/plchar/queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp26700_801CEFB0.c",
     "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp26700_801CF32C.c",
@@ -30,8 +30,8 @@ sources = [
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp26700_801CF99C.c",
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp26700_801CFF1C.c",
     "src/bof3/plchar/claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp26700_801CF420.c",
-    "src/bof3/plchar/callWorkTable0994Plchar.c",
-    "src/bof3/plchar/callWorkTable099Plchar.c",
+    "src/bof3/plchar/callWorkTable0994.c",
+    "src/bof3/plchar/callWorkTable099.c",
 ]
 support_sources = [
     "src/bof3/plchar/dispatchByte2Handler.c",

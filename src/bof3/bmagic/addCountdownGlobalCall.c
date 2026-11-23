@@ -4,8 +4,8 @@ void func_801E5988(void);
 
 /* Scratchpad work-object pointer cell 0x1F800044, already bound at that address
  * by this target's map as g_battle_work, the name its exact lifts
- * workAdvanceAt80Bmagic and
- * workClearByteBmagic
+ * workAdvanceAt80 and
+ * workClearByte
  * use. The cell is evaluated once per access group because the byte store that
  * precedes the second group goes through the pointer the cell supplied, so the
  * compiler re-materializes `lui $v1,0x1F80` / `lw $v1,0x44($v1)` exactly twice,

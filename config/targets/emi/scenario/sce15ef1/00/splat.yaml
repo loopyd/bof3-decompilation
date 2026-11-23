@@ -115,8 +115,8 @@ segments:
     - '@behavior: Effect-record seeder of the 0x2C-byte-stride record tables of this payload, called once per record by the two step handlers that walk 0x801D3B28 and 0x801D3DE8: it copies the scratchpad work object position triple +0x34/+0x38/+0x3C behind 0x1F800044 into the record words +0x00/+0x04/+0x08, seeds the corner offset SVECTORs +0x10 and +0x18 from the shared angular pair 0x801783C8/0x801782FC at +0x10 and -0x10 with their third halfwords cleared, takes three random Euler angles (rand() & 0xFFF, (rand() & 0x7FF) - 0x400, rand() & 0xFFF), builds the scratch rotation matrix through 0x801AFF64 and 0x80179C58/0x80179DF8 with the middle angle negated/0x80179F98, rotates both offset SVECTORs in place with ApplyMatrixSV, arms the scale halfword +0x28 with (rand() & 2) + 3, clears +0x20/+0x22/+0x24 and writes 0x40 into the second scale halfword +0x2A.'
   - - 5256
     - c
-    - renderEffectRecordsScenario
-    - '@source: src/bof3/scenario/renderEffectRecordsScenario.c'
+    - renderEffectRecords
+    - '@source: src/bof3/scenario/renderEffectRecords.c'
     - '@behavior: Overlay draw pass the four step handlers func_801D0F10, func_801D0FEC, func_801D106C and func_801D12A0 call after the record pass 0x801D1A60: arms the shared draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor g_PrimCursor, appends the 0xC-byte draw-mode primitive through 0x8014E5A0 for ordering-table slot 2, fills the 0x20-byte projection scratch of its frame through 0x801AFE18, then walks all 0x20 records of the 0x2C-byte-stride table at 0x801D3B28 drawing each through 0x801D1CD4 and adding 0x10 to that record spin angle halfword at +0x24.'
   - - 5432
     - c
@@ -183,8 +183,8 @@ segments:
     - '@behavior: Dispatches the overlay step from the work-record byte at offset 1 through the eleven-word local code-pointer run at 0x801D397C; the record comes from the scratchpad pointer cell 0x1F800044 and the entry takes no arguments.'
   - - 8752
     - c
-    - claimFrontEndRecordFromWorkBlockSetPatternGridOriginAndSpritePageRequestResource7ResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D2E30
-    - '@source: src/bof3/scenario/claimFrontEndRecordFromWorkBlockSetPatternGridOriginAndSpritePageRequestResource7ResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D2E30.c'
+    - claimPatternOriginPage
+    - '@source: src/bof3/scenario/claimPatternOriginPage.c'
     - '@behavior: Step handler 5 of the eleven-word code-pointer run at 0x801D397C that the dispatcher 0x801D2DEC indexes with work byte 1: while the shared progress byte 0x80146864 reads 0x29 it asks func_8019601C for a free front-end record index and, unless that index reads 0xFF, writes 1 into the selector byte 0x801D40AC, forms the 0x74-byte record at 0x80143FC8 + index * 0x74, calls func_8014E564 with 0x340/0x100/0x80/0x100, copies the 0x74-byte block that the work object word 0x4C points at into that record, seeds record bytes 0x00/0x01/0x02/0x05 with 1/2/0/0x3A, record halfwords 0x2E/0x30 from the base pair of the pattern-grid entry that byte 0x801D40AC selects, record byte 0x25 from GetTPage(0, 0, 0x340, 0x100) and bytes 0x26 = 0x80 and 0x24 |= 0x88, then publishes the fresh record through the scratchpad cell 0x1F800044, requests resource 7, runs the main-executable service 0x8014D290 and the reset helper 0x80196070 while the fresh record is published, restores the cell to the previous work object and arms its countdown byte 0x09 with 2; either way it re-reads the cell and increments work byte 0x01.'
   - - 9176
     - asm

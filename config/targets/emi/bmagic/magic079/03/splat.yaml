@@ -36,7 +36,7 @@ segments:
     - func_801EED38
   - - 408
     - c
-    - callStateTable02Bmagic
+    - callStateTable02
     - '@source: src/bof3/bmagic/magic07903DispatchTables.c'
   - - 476
     - asm
@@ -131,8 +131,8 @@ segments:
     - '@source: src/bof3/bmagic/incrementDecrementDecrementGlobal.c'
   - - 5164
     - c
-    - drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByte9TintedByShadeRampIndexedByWorkByteALowNibbleBmagicMagic07903_801F002C
-    - '@source: src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByte9TintedByShadeRampIndexedByWorkByteALowNibbleBmagicMagic07903_801F002C.c'
+    - renderShadeLowNibble
+    - '@source: src/bof3/bmagic/renderShadeLowNibble.c'
   - - 5796
     - textbin
     - D_801F02A4

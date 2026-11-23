@@ -33,7 +33,7 @@ extern u8 *D_801F17B0; /* @source 0x801F17B0 @kind data */
 extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 
 /* Draw helpers this dispatcher invokes; each one re-reads the record cell. */
-extern void drawEightRotatedTrianglesFromPublishedCenterTintedByPaletteRowAtWorkBytes3And4BmagicMagic16203_801EFCD8(
+extern void renderRotatedPublishedCenter(
     void); /* @source 0x801EFCD8 @kind function */
 extern void renderRotatedSpokesCenter(
     s32 arg0, s32 arg1); /* @source 0x801EF80C @kind function */
@@ -67,7 +67,7 @@ void dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16203_801EF37
   handlers = D_801EEC1C;
   handlers.handlers[D_801F17B0[2]]();
   if ((D_801F17B0[0] & 1u) && (D_801F17B0[2] != 0u)) {
-    drawEightRotatedTrianglesFromPublishedCenterTintedByPaletteRowAtWorkBytes3And4BmagicMagic16203_801EFCD8();
+    renderRotatedPublishedCenter();
     if (((u16 *)D_801F17B0)[6] & 3u) {
       renderRotatedSpokesCenter(
           (u16)(D_80143E6C >> 1), D_801F17B0[6]);

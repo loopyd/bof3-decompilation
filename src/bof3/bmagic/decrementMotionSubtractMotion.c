@@ -4,7 +4,7 @@
  * by the battle lifts. The original re-materializes the cell address (lui
  * $vN,0x1F80 / lw $vN,68($vN)) for each of the two reads in this function, so
  * the cell is declared volatile like the exact sibling
- * setupMotionFieldsBmagic. */
+ * setupMotionFields. */
 extern u8* volatile g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Shared battle work-record pointer in main RAM, outside this overlay's image.

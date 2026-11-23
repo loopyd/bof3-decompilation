@@ -29,7 +29,7 @@ support_sources = [
     "src/bof3/world/initializeWorkFieldsAdvance.c",
     "src/bof3/world/signedTableStepWord80149318.c",
     "src/bof3/world/stateWorkPositionDistance.c",
-    "src/bof3/world/stateScenarioProgressClear.c",
+    "src/bof3/world/stateProgressClear.c",
     "src/bof3/world/stateBy17WorkNonzero.c",
     "src/bof3/world/queryWorkCandidateIndex.c",
     "src/bof3/world/stateThreeRotatingQuad.c",

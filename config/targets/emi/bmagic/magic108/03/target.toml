@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/callTwoMatrixPasses.c",
     "src/bof3/bmagic/dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04.c",
-    "src/bof3/bmagic/add8ToWorkByte9AndAdvanceWorkByte1At80BmagicMagic10803_801EF090.c",
+    "src/bof3/bmagic/workByte9AdvanceAt80.c",
     "src/bof3/bmagic/queueActionPointerTriplet.c",
 ]
 support_sources = [

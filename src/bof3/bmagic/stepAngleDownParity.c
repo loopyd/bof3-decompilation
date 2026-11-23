@@ -28,7 +28,7 @@ extern s32 func_801783C8(s32 arg0);
 
 /* Clears bytes 0x0 through 0x4 of the work record, one pointer-cell read per
  * store, ending the effect. */
-extern void clearWorkRecordBytesZeroThroughFourBmagicMagic10603_801EF970(void);
+extern void stateBytesThroughFour(void);
 
 /* @source 0x801EF418
  * @behavior Advances the work record's halfword angle at offset 0x0E by 0x40
@@ -47,7 +47,7 @@ extern void clearWorkRecordBytesZeroThroughFourBmagicMagic10603_801EF970(void);
  *           that captured bit is set it decrements the record byte 0x09 through
  *           a fourth pointer-cell read and, when the countdown reaches zero,
  *           decrements byte 0x0B of the shared battle word and calls
- *           clearWorkRecordBytesZeroThroughFourBmagicMagic10603_801EF970 to
+ *           stateBytesThroughFour to
  *           clear the record. Takes no arguments, returns
  *           nothing, and the 0x18-byte frame only keeps $ra across the two
  *           rotator calls and the clear. Bytes 0x801EF418 through 0x801EF52B
@@ -89,7 +89,7 @@ void stepAngleDownParity(void) {
     record4 = D_801F05F8;
     if (--FIELD_REF(u8, record4, 0x09) == 0) {
       FIELD_REF(u8, D_801EB4E0, 0x0B)--;
-      clearWorkRecordBytesZeroThroughFourBmagicMagic10603_801EF970();
+      stateBytesThroughFour();
     }
   }
 }

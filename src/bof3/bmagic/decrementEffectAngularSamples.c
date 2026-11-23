@@ -27,7 +27,7 @@ extern void func_8014D6B8(u8 value); /* @source 0x8014D6B8 */
 
 /* @source 0x801EF0D0
  * @behavior Handler entry 0 of the two-entry code-pointer run based at
- *           0x801EF7A4 that dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038
+ *           0x801EF7A4 that callStateByte2Tablef7
  *           selects by scaling the work object's unsigned byte 2 by four; no jal
  *           in this payload names this span, so that run alone reaches it. It
  *           decrements the scratchpad work object's unsigned byte 9 and returns

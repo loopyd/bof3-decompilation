@@ -4,7 +4,7 @@ extern s8 D_80146872;
 
 /* Overlay-local dispatch table of this code span's scenario state handlers,
  * indexed by the signed shared main-RAM state byte D_80146872: its first entry
- * is stateStartScenario (0x801F790C, the state-0 handler that
+ * is stateStart (0x801F790C, the state-0 handler that
  * advances the state byte to 1), the following 19 words are in-image code
  * pointers as well, and the word at 0x801FE430 (0xFF000100) is not a pointer.
  * @source 0x801FE3E0 @kind table

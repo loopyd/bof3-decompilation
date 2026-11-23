@@ -18,7 +18,7 @@ support_sources = [
     "src/bof3/bmagic/decrementCopyTripletDirection.c",
     "src/bof3/bmagic/raisePointHeadingIs.c",
     "src/bof3/bmagic/renderFanTrianglesAround.c",
-    "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908.c",
+    "src/bof3/bmagic/renderTwentyTintedCoefficients.c",
     "src/bof3/bmagic/renderJitteredSpokesJitter.c",
     "src/bof3/bmagic/renderSpokesLeastFine.c",
     "src/bof3/bmagic/renderBetweenRadiiTwenty.c",

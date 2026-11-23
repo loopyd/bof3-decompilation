@@ -25,7 +25,7 @@ extern void (*D_801FE3EC[])(void);
  * across the indirect call, with the state-byte read hoisted above the frame
  * setup. No in-image jal targets the address: its only image word is 0x801FE3E8,
  * word 2 of the twenty-word state-handler table at 0x801FE3E0 whose entry 0 is
- * stateStartScenario and whose word at 0x801FE430 (0xFF000100) is not
+ * stateStart and whose word at 0x801FE430 (0xFF000100) is not
  * a pointer, so the overlay reaches this dispatcher only indirectly, through the
  * same-overlay state dispatcher dispatchScenarioStateHandler
  * (0x801F78D0) that indexes that table with D_80146872. Its 60 bytes are

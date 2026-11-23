@@ -37,7 +37,7 @@ segments:
     - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic14303_801EED24.c'
   - - 368
     - c
-    - callStateTablefee8Bmagic
+    - callStateTablefee8
     - '@source: src/bof3/bmagic/magic14303DispatchTables.c'
   - - 436
     - c
@@ -66,8 +66,8 @@ segments:
     - func_801EF23C
   - - 3492
     - c
-    - drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4
-    - '@source: src/bof3/bmagic/drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4.c'
+    - renderGouraudBandOver
+    - '@source: src/bof3/bmagic/renderGouraudBandOver.c'
   - - 4212
     - asm
     - func_801EFC74

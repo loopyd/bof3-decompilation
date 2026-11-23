@@ -4,7 +4,7 @@ typedef void (*ScenarioScena0700WorkStateHandler)(void);
 
 /* Overlay-local two-word run of in-image code pointers based at 0x801FDD48,
  * selected by the work object's byte at offset 2: its word 0 is 0x801F6F8C
- * (incrementWorkByte2SetCounterScenarioScena0700_801F6F8C, whose own lift
+ * (incrementWorkSetCounter, whose own lift
  * records the object fields that entry advances) and its word 1 is 0x801F6FB0,
  * whose Splat row read asm when this body was written. The next data label
  * D_801FDD50 at 0x801FDD50 opens the eight-word run that

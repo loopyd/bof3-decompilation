@@ -79,7 +79,7 @@ segments:
     - func_801EFA70
   - - 3796
     - c
-    - invokeBmagicHelperMagic004
+    - callHelperMagic004
   - - 3828
     - asm
     - func_801EFAF4

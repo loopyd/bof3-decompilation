@@ -9,7 +9,7 @@ load_address = 0x800F5000
 
 
 sources = [
-    "src/bof3/world/dispatchArea030CompanionHandler.c",
+    "src/bof3/world/callCompanionHandler.c",
     "src/bof3/world/func_800F5048.c",
     "src/bof3/world/func_800F50B4.c",
     "src/bof3/world/func_800F510C.c",

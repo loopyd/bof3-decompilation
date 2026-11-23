@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - callWorkTablefafcPlchar
-    - '@source: src/bof3/plchar/callWorkTablefafcPlchar.c'
+    - callWorkTablefafc
+    - '@source: src/bof3/plchar/callWorkTablefafc.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFAFC.'
   - - 72
     - asm
@@ -38,8 +38,8 @@ segments:
     - func_801CE514
   - - 528
     - c
-    - callWorkTablefb08Plchar
-    - '@source: src/bof3/plchar/callWorkTablefb08Plchar.c'
+    - callWorkTablefb08
+    - '@source: src/bof3/plchar/callWorkTablefb08.c'
     - '@behavior: Overlay step dispatch on work-record byte 2 read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as the word at 0x801CFB40, the seventeenth word of the twenty-word handler run based at 0x801CFAFC: it calls the entry indexed by the unsigned work byte 0x02 of the run based at 0x801CFB08, the fourth word of that same run, which its own base reaches at byte-2 index 14; it bounds nothing, passes no arguments and discards any result.'
   - - 596
     - asm
@@ -58,8 +58,8 @@ segments:
     - func_801CEAE0
   - - 2044
     - c
-    - callWorkTablefb10Plchar
-    - '@source: src/bof3/plchar/callWorkTablefb10Plchar.c'
+    - callWorkTablefb10
+    - '@source: src/bof3/plchar/callWorkTablefb10.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFB10.'
   - - 2112
     - asm
@@ -72,8 +72,8 @@ segments:
     - getAndClearPlcharPlp24700_801CEE08
   - - 2584
     - c
-    - callWorkTablefb1Plchar
-    - '@source: src/bof3/plchar/callWorkTablefb1Plchar.c'
+    - callWorkTablefb1
+    - '@source: src/bof3/plchar/callWorkTablefb1.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFB1C.'
   - - 2652
     - c
@@ -87,8 +87,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044 at runtime address 0x801CEF50, reached from outside this payload as the word at 0x801CFB20, entry 9 of the twenty-word handler run based at 0x801CFAFC: while the route index byte 0x08 equals the chosen index byte 0x03 the walk has arrived, so it selects arrival sequence 0x40 for route 3 and 0x41 for route 5 through the shared selector func_8014D8D4 and increments the step counter byte 0x02; every other route selects no sequence and only increments that counter. While the two indices differ it decrements the countdown byte 0x09 and, when that reaches zero, sets it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks the index into the eight-entry route window with 7 and selects the sequence of the new index through the same selector.'
   - - 3148
     - c
-    - callWorkTablefb28Plchar
-    - '@source: src/bof3/plchar/callWorkTablefb28Plchar.c'
+    - callWorkTablefb28
+    - '@source: src/bof3/plchar/callWorkTablefb28.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFB28.'
   - - 3216
     - c
@@ -120,7 +120,7 @@ segments:
     - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from func_801CF090 in this payload: it projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1, then probes the map code of the projected cell through func_80166CB0 - the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero and the cell one row further whenever the low half of the second projected word is nonzero - and raises that answer to one for each probe that reads 0xF2.'
   - - 5748
     - c
-    - callWorkTablefb34Plchar
+    - callWorkTablefb34
   - - 5816
     - c
     - dispatchWorkHalfword2cTablefb40PlcharPlp24700_801CFAB8

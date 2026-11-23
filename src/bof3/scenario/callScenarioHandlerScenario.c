@@ -4,7 +4,7 @@ extern s8 D_80146872;
 
 /* Overlay-local outer state-dispatch table at 0x801FE3D8, indexed by the signed
  * shared main-RAM state byte D_80146872: its three code words are
- * stateSharedFieldsScenario (0x801F72D4, the
+ * stateSharedFields (0x801F72D4, the
  * state-0 handler that seeds the shared halfword fields and then advances that
  * byte to 1),
  * statePendingIdSetup

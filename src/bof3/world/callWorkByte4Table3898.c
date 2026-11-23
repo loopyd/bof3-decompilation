@@ -2,7 +2,7 @@
 
 /* This overlay's handler table at 0x801F3898: three code pointers - 0x801F32C8,
  * 0x801F3354 and this target's own
- * clearWorldFlagAndWorkByte4World01Area05613_801F3440 at 0x801F3440. The Splat
+ * stateWorldFlagWork at 0x801F3440. The Splat
  * `textbin` row D_801F34DC places the words, so the table is only referenced
  * here. */
 extern void (*workByte4HandlersWorld01Area05613[])(void); /* @source 0x801F3898 @kind data */

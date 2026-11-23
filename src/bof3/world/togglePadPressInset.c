@@ -1,7 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @behavior AREA030 panel pad handler: draws the compact panel at (0x6C, 0x56) through
- * drawArea030CompactPanel, then reacts to the shared pad mask D_80145AA8.
+ * renderCompactPanel, then reacts to the shared pad mask D_80145AA8.
  * While its 0x5000 bits are set it plays sound cue 0x100 through func_8015DF18
  * and inverts the mode byte at offset 6 of the work record published at the
  * scratchpad cursor 0x1F800044. While its 0x50 bits are set it plays cue 0x106
@@ -23,7 +23,7 @@ void togglePadPressInset(void) {
     u16 *pad;
 
     pad = &D_80145AA8;
-    drawArea030CompactPanel(0x6C, 0x56);
+    renderCompactPanel(0x6C, 0x56);
     if ((*pad & 0x5000) != 0) {
         func_8015DF18(0x100);
         work = D_1F800044;

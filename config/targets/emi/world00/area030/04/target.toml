@@ -141,7 +141,7 @@ sources = [
     "src/bof3/world/stateThreeFourText.c",
     "src/bof3/world/publishSelectedValuePad.c",
     "src/bof3/world/initializeDispatchCounterClear.c",
-    "src/bof3/world/dispatchStateByte3Table22fcWorld00Area03004_801DD95C.c",
+    "src/bof3/world/callStateTable22World00.c",
     "src/bof3/world/initializeCounterByteGate.c",
     "src/bof3/world/callStateByte3Table2304.c",
     "src/bof3/world/requestLocalModeGate.c",
@@ -177,7 +177,7 @@ sources = [
     "src/bof3/world/hasLeastTwentyMatching.c",
     "src/bof3/world/renderExtraIconEnabled.c",
     "src/bof3/world/queueIconStrip.c",
-    "src/bof3/world/runArea030FrameServices.c",
+    "src/bof3/world/runFrameServices.c",
     "src/bof3/world/seedMenuScratch.c",
     "src/bof3/world/submitPanelPair.c",
     "src/bof3/world/submitTpageDrawMode.c",
@@ -206,7 +206,7 @@ sources = [
     "src/bof3/world/requestFiveIsThree.c",
     "src/bof3/world/renderStretchedPanelColumn.c",
     "src/bof3/world/renderMirroredCellQuad.c",
-    "src/bof3/world/drawArea030CompactPanel.c",
+    "src/bof3/world/renderCompactPanel.c",
     "src/bof3/world/stateWorkBytes9Advance.c",
     "src/bof3/world/slideTowardSlotTarget.c",
     "src/bof3/world/advanceEntrySlideSelect.c",
@@ -255,7 +255,7 @@ evidence = "0x801E0C28 direct jal in reviewed func_801E0C20 assembly"
 
 [companion_overlays.abi]
 target_address = 0x800f500c
-prototype = "void dispatchArea030CompanionHandler(void)"
+prototype = "void callCompanionHandler(void)"
 evidence = "Scoped to 0x801E0C20: no a0-a3 setup or v0-v1 use; companion dispatch stub preserves the call-site ABI."
 
 [[companion_overlays.static_calls]]

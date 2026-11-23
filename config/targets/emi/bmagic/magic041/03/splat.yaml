@@ -49,8 +49,8 @@ segments:
     - '@source: src/bof3/bmagic/incrementCountersByteByte.c'
   - - 964
     - c
-    - incrementWorkByteBmagic
-    - '@source: src/bof3/bmagic/incrementWorkByteBmagic.c'
+    - incrementWorkByte
+    - '@source: src/bof3/bmagic/incrementWorkByte.c'
   - - 1016
     - c
     - decrementCountersForwardReaches
@@ -63,7 +63,7 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns immediately when the work object''s byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned and passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes the shared helper func_801E5988. The 0x18-byte frame keeps only $ra across the two calls. Reached through word 5 of the overlay code pointer run at 0x801EEC04.'
   - - 1424
     - c
-    - callStateTablefd8Bmagic
+    - callStateTablefd8
     - '@source: src/bof3/bmagic/magic04103DispatchTables.c'
   - - 1492
     - c

@@ -47,7 +47,7 @@ segments:
     - func_801EEFC4
   - - 1060
     - c
-    - callStateTablefa00Bmagic
+    - callStateTablefa00
     - '@source: src/bof3/bmagic/magic21903DispatchTables.c'
   - - 1128
     - asm
@@ -82,8 +82,8 @@ segments:
     - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic21903_801EF934.c'
   - - 3480
     - c
-    - stateWorkThrough4Bmagic
-    - '@source: src/bof3/bmagic/stateWorkThrough4Bmagic.c'
+    - stateWorkThrough4
+    - '@source: src/bof3/bmagic/stateWorkThrough4.c'
   - - 3560
     - textbin
     - D_801EF9E8

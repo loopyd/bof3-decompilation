@@ -15,7 +15,7 @@ void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena040
  *           0x801FA1E4 ({0x801F7AC8, 0x801F7B00, 0x801F7BC0, 0x801F8124,
  *           0x801F9D48, 0x801F9DB4, 0x801F9DAC, 0x801FA010}), reached only
  *           through the indirect call in
- *           callObjectHandlerScenario (0x801F7A84),
+ *           callObjectHandler (0x801F7A84),
  *           which indexes that run with byte 0x1 of the scratch work object
  *           published at pointer slot 0x1F800044.
  *           On frames whose shared frame counter D_80143E6C reads zero in its

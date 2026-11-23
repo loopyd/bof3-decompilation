@@ -50,7 +50,7 @@ segments:
     - func_801EF300
   - - 1888
     - c
-    - callStateTablefc88Bmagic
+    - callStateTablefc88
     - '@source: src/bof3/bmagic/magic04303DispatchTables.c'
   - - 1956
     - asm
@@ -65,8 +65,8 @@ segments:
     - '@behavior: Adds work motion words, increments byte 9 by one and byte 0xA by two, and advances byte 2 when byte 0xA equals 0x10.'
   - - 2528
     - c
-    - incrementVelocityPairBmagic
-    - '@source: src/bof3/bmagic/incrementVelocityPairBmagic.c'
+    - incrementVelocityPair
+    - '@source: src/bof3/bmagic/incrementVelocityPair.c'
     - '@behavior: Advances work-object byte 0x9 by one and adds its word 0xC and word 0x10 channels into word 0x34 and word 0x38, then increments work-object byte 0x2 once byte 0x9 reaches 0x18.'
   - - 2636
     - c

@@ -89,8 +89,8 @@ segments:
     - '@behavior: Decrements work byte 0xA, integrates words 0x14 and 0x3C, and at zero decrements global work byte 0xB and clears work bytes 0 through 4.'
   - - 5900
     - c
-    - drawEightTranslucentGouraudFanTrianglesRadius32TintedByWorkByteATimesSignedBytes5d5e5fBmagicMagic12903_801F030C
-    - '@source: src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesRadius32TintedByWorkByteATimesSignedBytes5d5e5fBmagicMagic12903_801F030C.c'
+    - renderFanTrianglesTinted
+    - '@source: src/bof3/bmagic/renderFanTrianglesTinted.c'
     - '@behavior: Draws eight translucent Gouraud fan triangles of radius 32 with signed work-byte tint products at the centre and RGB 1 at the rim.'
   - - 6400
     - c

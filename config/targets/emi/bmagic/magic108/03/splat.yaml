@@ -52,8 +52,8 @@ segments:
     - '@source: src/bof3/bmagic/incrementInvokeHelperFrames.c'
   - - 1168
     - c
-    - add8ToWorkByte9AndAdvanceWorkByte1At80BmagicMagic10803_801EF090
-    - '@source: src/bof3/bmagic/add8ToWorkByte9AndAdvanceWorkByte1At80BmagicMagic10803_801EF090.c'
+    - workByte9AdvanceAt80
+    - '@source: src/bof3/bmagic/workByte9AdvanceAt80.c'
   - - 1248
     - c
     - incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0

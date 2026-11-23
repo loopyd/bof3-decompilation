@@ -24,7 +24,7 @@ sources = [
     "src/bof3/world/spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanceWorkByte1WhenPositionEquals408000World04Area17413_801F2D68.c",
     "src/bof3/world/stateTablesStampInside.c",
     "src/bof3/world/audioStoreFirstSecond.c",
-    "src/bof3/world/stepAreaNoActive.c",
+    "src/bof3/world/stepNoActive.c",
     "src/bof3/world/callFrontEndPhase.c",
     "src/bof3/world/decrementEmiLoaderNot.c",
     "src/bof3/world/callEndPhaseLower.c",

@@ -28,10 +28,10 @@ extern void func_80196070(void);
  * so this body is element 3 of that run, and no `jal` and no word of this
  * payload names 0x801D0D5C, so the run alone reaches it. The byte at +0x9 is
  * the countdown the exact lift
- * tickCountdownAdvanceScenario ticks
+ * tickCountdownAdvance ticks
  * down and re-arms, and the word at +0xC is the accumulator that this overlay
  * resets in
- * stateWordArmScenario
+ * stateWordArm
  * and ramps by +0x10 in
  * workWordTickCountdown.
  *

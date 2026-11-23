@@ -41,7 +41,7 @@ extern void func_8015DF18(u32 cue);
  * @behavior Work byte 3 == 1 step of this overlay, the second handler of the
  *           work-byte-3 run based at 0x801D0684: it is the word 0x801D00CC at
  *           0x801D0688 inside the thirty-word code-pointer run at 0x801D0630,
- *           which the dispatcher callWorkTable0684Plchar
+ *           which the dispatcher callWorkTable0684
  *           indexes from that base, so it takes no arguments and any result is
  *           discarded. It first runs the shared readiness helper func_8014DAEC
  *           and keeps only that answer's low byte. While the helper reports

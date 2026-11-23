@@ -21,7 +21,7 @@ extern u8 func_801665A0(s32 arg0, s32 arg1, s32 arg2, s32 arg3); /* @source 0x80
 /* Shared main-executable slot gate, outside this payload */
 extern u8 func_801650B4(u8 arg0, u8 arg1, u8 arg2, u8 arg3); /* @source 0x801650B4 */
 
-void publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14(u8 step);
+void publishBaseSeedFront(u8 step);
 
 /* @source 0x801FB6C4
  * @behavior Runs the shared sub-state byte D_80146875 (0x80146875) through the
@@ -44,7 +44,7 @@ void publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14(u8 step);
  *   arms the shared primary mode byte D_80143BB0 (0x80143BB0) with 2 and
  *   advances the sub-state byte to 0x10. Slot 16, once that mode byte leaves 2,
  *   publishes the front-end record through
- *   publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14 with step
+ *   publishBaseSeedFront with step
  *   0x91, advances the sub-state byte to 0x11 and stores 0x19 in the progress
  *   byte. Slot 17, once the progress byte reads 0x1A, runs the same finish as
  *   slot 1. It takes no arguments and returns nothing; its 0x18-byte frame keeps
@@ -122,7 +122,7 @@ void runSubstateStepsRelease(void) {
     if (D_80143BB0 == 2u) {
       break;
     }
-    publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14(0x91);
+    publishBaseSeedFront(0x91);
     D_80146875 = 0x11;
     g_ScenarioProgress = 0x19;
     break;

@@ -36,7 +36,7 @@ segments:
     - func_801EEE70
   - - 720
     - c
-    - callStateTable125Bmagic
+    - callStateTable125
     - '@source: src/bof3/bmagic/magic12603DispatchTables.c'
   - - 788
     - asm
@@ -54,13 +54,13 @@ segments:
     - '@behavior: Copies the record words 0x34, 0x38 and 0x3C into the scratchpad work object, clears work bytes 9 and 0xA, then advances work byte 2.'
   - - 1036
     - c
-    - add2ToWorkByte9AndAdd18ToWorkByteAThenAdvanceWorkByte2At10BmagicMagic12603_801EF00C
-    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdd18ToWorkByteAThenAdvanceWorkByte2At10BmagicMagic12603_801EF00C.c'
+    - workByteAdvanceAt10
+    - '@source: src/bof3/bmagic/workByteAdvanceAt10.c'
     - '@behavior: Adds two to scratchpad work byte 9 and 0x18 to byte 0xA, then advances work byte 2 when the resulting byte 9 is 0x10.'
   - - 1144
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic12603_801EF078
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic12603_801EF078.c'
+    - incrementWorkGlobalByte
+    - '@source: src/bof3/bmagic/incrementWorkGlobalByte.c'
     - '@behavior: Increments byte 2 of the scratchpad work object at 0x1F800044 when byte 0xB of the shared record reached through 0x801EB4E0 is below two.'
   - - 1212
     - c
@@ -96,8 +96,8 @@ segments:
     - '@behavior: Increments work bytes 9 and 0xA, then increments byte 2 when the resulting byte 0xA is 0x10.'
   - - 4244
     - c
-    - workAdvanceAt96Bmagic
-    - '@source: src/bof3/bmagic/workAdvanceAt96Bmagic.c'
+    - workAdvanceAt96
+    - '@source: src/bof3/bmagic/workAdvanceAt96.c'
     - '@behavior: Adds two to work byte 9 and increments work byte 2 when the resulting byte is 0x96.'
   - - 4324
     - c
@@ -111,8 +111,8 @@ segments:
     - '@behavior: Draws two translucent textured quad bands at the work screen pair with half-width 40 and upper height from work byte 9.'
   - - 5568
     - c
-    - callHelpersSetBmagic
-    - '@source: src/bof3/bmagic/callHelpersSetBmagic.c'
+    - callHelpersSet
+    - '@source: src/bof3/bmagic/callHelpersSet.c'
     - '@behavior: Dispatches work byte 2, then calls helpers when work bytes 0 and 2 are nonzero.'
   - - 5696
     - c
@@ -133,8 +133,8 @@ segments:
     - func_801F06AC
   - - 7452
     - c
-    - callRecordTable12Bmagic
-    - '@source: src/bof3/bmagic/callRecordTable12Bmagic.c'
+    - callRecordTable12
+    - '@source: src/bof3/bmagic/callRecordTable12.c'
   - - 7520
     - c
     - callRecordHelpersSet
@@ -166,8 +166,8 @@ segments:
     - func_801F1110
   - - 9580
     - c
-    - stateRecordThrough3Bmagic
-    - '@source: src/bof3/bmagic/stateRecordThrough3Bmagic.c'
+    - stateRecordThrough3
+    - '@source: src/bof3/bmagic/stateRecordThrough3.c'
   - - 9644
     - asm
     - func_801F11AC

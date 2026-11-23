@@ -34,7 +34,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * @residual none
  *
  * Shape notes from the original bytes: this body is instruction-identical to
- * the exact sibling publishWorkBaseAndSeedFrontEndRecordFromModeTableWorld02Area07714_801F5AAC
+ * the exact sibling publishBaseSeedFront
  * at 0x801F5AAC except for five words of shipped literals - the published work
  * base, the shared party-id byte it indexes the mode table with, the two
  * halfwords it forwards to the seeder and that table's own row - so statement

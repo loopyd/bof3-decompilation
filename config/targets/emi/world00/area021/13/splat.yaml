@@ -35,8 +35,8 @@ segments:
     - '@behavior: Loads the shared gate byte 0x801490C7 with a signed byte read and stores 0x18 into the shared status halfword 0x801490A8 while the gate byte is nonzero; when it is zero it compares the main-RAM word 0x80144F50 unsigned against 0x14 and stores 0x17 below that bound, otherwise calls func_8016663C(0x14, 0) and stores 0x11.'
   - - 108
     - c
-    - publishModeStatusFromTable33b4World00Area02113_801F2C6C
-    - '@source: src/bof3/world/publishModeStatusFromTable33b4World00Area02113_801F2C6C.c'
+    - publishModeStatusTable33
+    - '@source: src/bof3/world/publishModeStatusTable33.c'
     - '@behavior: Publishes the shared status halfword 0x801490A8 from the payload-local halfword table 0x801F33B4 indexed by the signed shared gate byte 0x801490C7; the table holds five halfwords 0x12 through 0x16, read with a signed byte load and scaled by two for the halfword load, and the status cell takes the store before a bare return.'
   - - 152
     - asm

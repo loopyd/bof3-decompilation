@@ -1,8 +1,8 @@
 func_8014D978 = 0x8014D978;
-callStateTable0Plchar = 0x801CE404;
+callStateTable0 = 0x801CE404;
 func_801CE448 = 0x801CE448;
 func_801CE628 = 0x801CE628;
-dispatchStateByte2Table0a60PlcharPlp02600_801CE72C = 0x801CE72C;
+callStateByte2Table0 = 0x801CE72C;
 func_801CE770 = 0x801CE770;
 func_801CEA94 = 0x801CEA94;
 stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp02600_801CEC30 = 0x801CEC30;
@@ -37,6 +37,6 @@ selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownBy
 clearUnseededWorkRow = 0x801D0628;
 testProjectedWorkPositionAgainstWorkRecordsOrMapCodesF0F1F4F6F7PlcharPlp02600_801D06C4 = 0x801D06C4;
 claimWorkTwoLayer = 0x801D0868;
-callWorkTable0Plchar = 0x801D09CC;
-dispatchWorkHalfword2cTable0ac0PlcharPlp02600_801D0A10 = 0x801D0A10;
+callWorkTable0 = 0x801D09CC;
+callWorkHalfword2Table0 = 0x801D0A10;
 codePointerTable0a54 = 0x801D0A54;

@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/publishModeStatusTable3808.c",
     "src/bof3/world/stateStatusByte801448Gate.c",
-    "src/bof3/world/startStateEntry3AProgress0AWhenPackedArgRangesWorld03Area15013_801F2F58.c",
+    "src/bof3/world/audioPackedArgRanges.c",
     "src/bof3/support/area150_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area150_13_psyq.c"

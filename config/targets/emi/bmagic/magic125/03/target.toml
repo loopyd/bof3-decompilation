@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic125/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusWorkByteATintedBySignedBytes5d5e5fTimesSixteenWithCentre240BmagicMagic12503_801EFFC8.c",
+    "src/bof3/bmagic/renderTrianglesTintedTimes.c",
 ]
 support_sources = [
     "src/bof3/bmagic/subtractSixtyFourRecords.c",

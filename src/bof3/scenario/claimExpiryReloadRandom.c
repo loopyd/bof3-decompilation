@@ -60,7 +60,7 @@ void claimFreeTableEntry(void);
  * the sibling lifts of this family call), and the jal at 0x801D0E7C to
  * 0x801D1624. The countdown byte at +0x9 is the same byte
  * armClearCountdownTable
- * zeroes and tickCountdownAdvanceScenario
+ * zeroes and tickCountdownAdvance
  * decrements, and 0x80146864 is the shared progress byte the game image
  * symbols bind as g_ScenarioProgress. The claim helper's own lift records this
  * caller and the same re-arm, so the countdown and table roles agree from

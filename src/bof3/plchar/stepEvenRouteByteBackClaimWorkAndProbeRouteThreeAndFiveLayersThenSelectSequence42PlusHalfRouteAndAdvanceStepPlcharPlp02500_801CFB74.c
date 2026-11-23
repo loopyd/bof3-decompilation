@@ -50,7 +50,7 @@ u32 func_8014D8D4(u8 arg0);
 /* @source 0x801CFB74
  * @behavior Fourth entry of the front-end work handler run based at 0x801CFFD4,
  *           the word at 0x801CFFE0, which the step dispatcher
- *           callWorkTableffd4Plchar enters after
+ *           callWorkTableffd4 enters after
  *           scaling the work byte 0x02 by four; no jal in the payload targets
  *           this body, so the overlay loader that steps the run is what calls
  *           it. Work object of the scratchpad pointer cell 0x1F800044: byte 0x08

@@ -15,7 +15,7 @@ support_sources = [
     "src/bof3/world/publishModeStatusMode.c",
     "src/bof3/world/publishModeStatusFromTable43fcAndProgress6InModeZeroWorld03Area13613_801F2D2C.c",
     "src/bof3/world/queueSharedUiElementBlock9x59To5BSize51World03Area13613_801F2E08.c",
-    "src/bof3/world/stateScenarioWordByte.c",
+    "src/bof3/world/stateWordByte.c",
     "src/bof3/world/retreatCounter2By2World03Area13613_801F3148.c",
     "src/bof3/world/advanceCounter2By2World03Area13613_801F3170.c",
     "src/bof3/world/selectCrossedFrontSide.c",

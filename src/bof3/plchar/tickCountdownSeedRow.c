@@ -87,7 +87,7 @@ u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStrea
  *           in the payload's bytes, at the pointer word 0x801CF604, entry 6 of
  *           the sixteen-word code-pointer run the payload places at 0x801CF5EC.
  *           That word is four bytes past the base word 0x801CF600 that the
- *           byte-3 dispatcher callWorkTablef600Plchar
+ *           byte-3 dispatcher callWorkTablef600
  *           indexes with work byte 3 scaled by four, so the body runs as step 1
  *           of that dispatcher and no jal in this payload names it. It reads the
  *           front-end work object published at the scratchpad pointer cell

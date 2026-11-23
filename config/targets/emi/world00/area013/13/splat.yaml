@@ -44,8 +44,8 @@ segments:
     - func_801F2D88
   - - 536
     - c
-    - incrementWorkByte8Modulo8World00Area01313_801F2E18
-    - '@source: src/bof3/world/incrementWorkByte8Modulo8World00Area01313_801F2E18.c'
+    - incrementWorkByte8Modulo8
+    - '@source: src/bof3/world/incrementWorkByte8Modulo8.c'
     - '@behavior: advances work byte 8 of the record published at scratchpad pointer cell 0x1F800044 by one and masks it to three bits, loading that cell once for both the byte read and the byte store'
 - - 572
   - bin

@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic138/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/callStateTableec10Bmagic.c",
+    "src/bof3/bmagic/callStateTableec10.c",
     "src/bof3/bmagic/statePoseHalfwordsPointer.c",
     "src/bof3/bmagic/stateDeltaTablesHeader.c",
 ]
@@ -18,8 +18,8 @@ support_sources = [
     "src/bof3/bmagic/magic13803DispatchTables.c",
     "src/bof3/support/magic138_03_psyq.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic13803_801EF6F8.c",
-    "src/bof3/bmagic/seedWorkHeaderKind84SelectorB4SelectCueByByteAParityRequestResourceAdvanceWorkByte2BmagicMagic13803_801EF5D0.c",
+    "src/bof3/bmagic/stateHeaderSelectorParity.c",
     "src/bof3/bmagic/publishPointerUpdateForward.c",
-    "src/bof3/bmagic/callStateTableec1Bmagic.c",
+    "src/bof3/bmagic/callStateTableec1.c",
 ]
 psyq_source = "src/bof3/support/magic138_03_psyq.c"

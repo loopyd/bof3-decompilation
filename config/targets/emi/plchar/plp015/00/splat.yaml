@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - callWorkTablefb84Plchar
-    - '@source: src/bof3/plchar/callWorkTablefb84Plchar.c'
+    - callWorkTablefb84
+    - '@source: src/bof3/plchar/callWorkTablefb84.c'
     - '@behavior: Overlay step dispatch of this front-end payload. It reads the work object through the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte 0x02, the step counter the payload step bodies increment, scales it by four and calls the matching entry of the sixteen-word handler run based at 0x801CFB84 with no arguments, discarding any result, so the call walks the run one step at a time. The original does not bound the index before the scaled table load, and it reads no other state and writes none. Its only in-image reference is the word 0x801CE404 at 0x801CFBC8, entry 1 of the seven-word code-pointer run at 0x801CFBC4 that the sibling dispatcher at 0x801CFAFC indexes from 0x801CFBC8, so that dispatcher and the overlay loader that steps the run are what enter it.'
   - - 72
     - asm
@@ -38,8 +38,8 @@ segments:
     - func_801CE628
   - - 812
     - c
-    - callWorkTablefb90Plchar
-    - '@source: src/bof3/plchar/callWorkTablefb90Plchar.c'
+    - callWorkTablefb90
+    - '@source: src/bof3/plchar/callWorkTablefb90.c'
     - '@behavior: Overlay step dispatch on byte 2 of the front-end work object read through the scratchpad pointer cell 0x1F800044. It loads that pointer once, takes the record unsigned byte 0x02, scales it by four and calls the matching entry of the sixteen-word code-pointer run based at 0x801CFB84 indexed from its word 3, that is from 0x801CFB90, with no arguments and discarding any result, so the entries it can reach are 0x801CE770 through 0x801CF91C with the shared main-executable handler 0x801B2D54 at two of them; the original does not bound the index before the scaled table load. It reads no other state and writes none. The pointer-cell load precedes frame creation and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. Its own address is the word at 0x801CFBD4, entry 4 of the seven-entry run at 0x801CFBC4 that the sibling dispatcher at 0x801CFAFC indexes from 0x801CFBC8, so that dispatcher enters it, and it takes no arguments and returns nothing.'
   - - 880
     - c
@@ -71,8 +71,8 @@ segments:
     - func_801CEFF8
   - - 3372
     - c
-    - callWorkTablefb9Plchar
-    - '@source: src/bof3/plchar/callWorkTablefb9Plchar.c'
+    - callWorkTablefb9
+    - '@source: src/bof3/plchar/callWorkTablefb9.c'
     - '@behavior: Overlay step dispatch on byte 2 of the front-end work object read through the scratchpad pointer cell 0x1F800044. It loads that pointer once, takes the record''s unsigned byte 0x02, scales it by four and calls the matching entry of this payload''s sixteen-word handler run at 0x801CFB9C with no arguments, discarding any result. The original bounds no index before the scaled table load, reads no other state and writes none; the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slots after the index byte and after the table load stay nops.'
   - - 3440
     - c
@@ -86,8 +86,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044. When the unsigned route index byte 0x08 already equals the chosen candidate index byte 0x03 the walk has arrived, so the body selects that arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 1 and 0x41 for route 7 and none for any other route, then increments the step counter byte 0x02. Otherwise it decrements the countdown byte 0x09 and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks that index into the eight-entry window with 7 and selects the sequence of the new route index through the same selector. It takes no arguments and returns nothing, and the 0x18-byte frame only keeps $ra at 0x10 across the calls.'
   - - 3896
     - c
-    - callWorkTablefba8Plchar
-    - '@source: src/bof3/plchar/callWorkTablefba8Plchar.c'
+    - callWorkTablefba8
+    - '@source: src/bof3/plchar/callWorkTablefba8.c'
     - '@behavior: Overlay step dispatch on work-record byte 2. It reads the work object through the scratchpad pointer cell 0x1F800044 once, takes that record pointer byte 0x02, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFBA8 with no arguments, discarding any result. That base is entry 9 of the sixteen-entry run at 0x801CFB84, so the walk reaches entries 9 through 15, 0x801CF37C through 0x801CF91C. The index is unbounded before the scaled table load. The body reads no other state and writes none, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. Its only in-image reference is the word 0x801CF338 at 0x801CFBD8, entry 5 of the seven-entry run at 0x801CFBC4 that the sibling dispatcher at 0x801CFAFC indexes from 0x801CFBC8, so that dispatcher and the overlay loader that steps the run enter it.'
   - - 3964
     - asm
@@ -97,8 +97,8 @@ segments:
     - func_801CF494
   - - 4352
     - c
-    - callWorkTablefbb0Plchar
-    - '@source: src/bof3/plchar/callWorkTablefbb0Plchar.c'
+    - callWorkTablefbb0
+    - '@source: src/bof3/plchar/callWorkTablefbb0.c'
     - '@behavior: Overlay step dispatch on work-record byte 2. It reads the work object through the scratchpad pointer cell 0x1F800044 once, takes that record pointer byte 0x02, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFBB0 with no arguments, discarding any result. That base is entry 11 of the sixteen-entry run at 0x801CFB84, so the walk reaches entries 11 through 15, 0x801CF544 through 0x801CF91C. The index is unbounded before the scaled table load. The body reads no other state and writes none, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. Its only in-image reference is the word 0x801CF500 at 0x801CFBD0, entry 3 of the seven-entry run at 0x801CFBC4 that the sibling dispatcher at 0x801CFAFC indexes from 0x801CFBC8, so that dispatcher and the overlay loader that steps the run enter it.'
   - - 4420
     - asm
@@ -110,8 +110,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 12 of the sixteen-word handler run that starts at 0x801CFB84. When the unsigned route index byte 0x08 already equals the chosen candidate index byte 0x03 the walk has arrived, so the body selects that arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 3, sequence 0x41 for route 5 and none for any other route, then increments the step counter byte 0x02. Otherwise it decrements the countdown byte 0x09 and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks that index into the eight-entry window with 7 and selects the sequence of the new route index through the same selector. It takes no arguments and returns nothing, the countdown store reuses the pointer load of the first comparison, and the 0x18-byte frame only keeps $ra at 0x10 across the calls.'
   - - 4876
     - c
-    - callWorkTablefbbcPlchar
-    - '@source: src/bof3/plchar/callWorkTablefbbcPlchar.c'
+    - callWorkTablefbbc
+    - '@source: src/bof3/plchar/callWorkTablefbbc.c'
     - '@behavior: Overlay step dispatch of this front-end work object read through the scratchpad pointer cell 0x1F800044 on the step counter byte 0x02. It loads that record pointer once, takes unsigned byte 0x02, scales it by four and calls the matching entry of the handler run based at 0x801CFBBC with no arguments, discarding any result. That base is entry 14 of the sixteen-word run at 0x801CFB84, so step 0 reaches 0x801CF750 and step 1 reaches 0x801CF91C, and the original does not bound the index before the scaled table load. It reads no other state and writes none; the frame is 0x18 bytes and only keeps $ra at 0x10 across the indirect call. Its only in-image reference is the word 0x801CF70C at 0x801CFBDC, entry 6 of the seven-word code-pointer run at 0x801CFBC4 that the sibling dispatcher at 0x801CFAFC indexes from 0x801CFBC8 on work halfword 0x2C, so that dispatcher and the overlay loader that steps the run are what enter it.'
   - - 4944
     - c
@@ -130,10 +130,10 @@ segments:
     - '@behavior: Overlay step handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, first word of the seven-word code-pointer run at 0x801CFBC4 that follows the sixteen-word run at 0x801CFB84, so the overlay loader that steps the run is what calls it and it takes no arguments. When work byte 0x07 reads nonzero it polls the shared readiness helper func_8014DAEC and, once that answers nonzero, passes the work route byte 0x08 to the shared sequence selector func_8014D8D4 and then clears work byte 0x07. When work byte 0x07 reads zero it polls the same helper and, once it answers nonzero, takes work byte 0x0B as the byte offset of the row in the shared 0x74-byte front-end record table at 0x80143FC8 and, while the occupancy byte 0 of that row reads zero, clears work byte 0x2B and then the state byte 0x12B of the record published at the pointer cell 0x80146250. Both arms join on one epilogue and no path reports a value; the pointer-cell load precedes frame creation and the 0x18-byte frame only keeps $ra at 0x10 across the calls.'
   - - 5884
     - c
-    - callWorkTablefbc8Plchar
+    - callWorkTablefbc8
   - - 5952
     - c
-    - dispatchWorkHalfword2cTablefbd4PlcharPlp01500_801CFB40
+    - callWorkHalfword2Tablefbd4
   - - 6020
     - textbin
     - codePointerTablefb84

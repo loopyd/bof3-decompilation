@@ -9,7 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/stateMidpointPointThird.c",
-    "src/bof3/world/setStatusFFFFAndScenarioProgress23IfGateElse1EWorld03Area14413_801F3CE4.c",
+    "src/bof3/world/stateStatusProgress23Gate.c",
     "src/bof3/world/stateHalfword0By3Shared.c",
     "src/bof3/world/stateSixTableRecords.c",
     "src/bof3/world/latchIntoBuildCue.c",

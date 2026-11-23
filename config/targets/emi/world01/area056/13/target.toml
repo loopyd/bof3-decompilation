@@ -16,11 +16,11 @@ support_sources = [
     "src/bof3/world/stateStatusScrollFlag.c",
     "src/bof3/world/stateOneMotionConsume.c",
     "src/bof3/world/noopHandlerWorld01Area05613_801F3464.c",
-    "src/bof3/world/clearWorldFlagAndWorkByte4World01Area05613_801F3440.c",
+    "src/bof3/world/stateWorldFlagWork.c",
     "src/bof3/world/area05613_gate_status.c",
     "src/bof3/world/callWorkByte4Table3898.c",
     "src/bof3/world/statePastHandConsume.c",
-    "src/bof3/world/setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C.c",
+    "src/bof3/world/stateFlag6SetSet.c",
     "src/bof3/support/area056_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area056_13_psyq.c"

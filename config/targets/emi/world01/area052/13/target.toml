@@ -25,7 +25,7 @@ support_sources = [
     "src/bof3/world/stateWorkTableByte15.c",
     "src/bof3/world/stateSharedFlagBit25.c",
     "src/bof3/support/area052_13_psyq.c",
-    "src/bof3/world/probeLeftColumnCellCodesQueueCue11ThenArmLevel7AndSetByte7To2World01Area05213_801F43B0.c",
+    "src/bof3/world/probeLeftColumnCodes.c",
 ]
 psyq_source = "src/bof3/support/area052_13_psyq.c"
 

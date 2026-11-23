@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic009/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/workAdvanceAt16Bmagic.c",
+    "src/bof3/bmagic/workAdvanceAt16.c",
     "src/bof3/bmagic/dispatchWorkByte1Nine.c",
     "src/bof3/bmagic/incrementCountdownGlobal.c",
     "src/bof3/bmagic/dispatchWorkByte2Reset.c",
@@ -16,7 +16,7 @@ sources = [
 support_sources = [
     "src/bof3/bmagic/decrementCopyMotionPair.c",
     "src/bof3/bmagic/decrementGlobalByteZero.c",
-    "src/bof3/bmagic/decrementIncrementZeroBmagic.c",
+    "src/bof3/bmagic/decrementIncrementZero.c",
     "src/bof3/bmagic/decrementBattleZeroReady.c",
     "src/bof3/bmagic/callHandlerDrawSet.c",
     "src/bof3/bmagic/renderTexturedScaledTinted.c",

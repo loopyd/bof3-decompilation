@@ -6,7 +6,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
 extern s16 D_1F800004; /* @source 0x1F800004 @kind data */
 extern s32 func_801782FC(s32 angle); /* @source 0x801782FC */
 extern s32 func_801783C8(s32 angle); /* @source 0x801783C8 */
-extern void stateRecordThrough3Bmagic(void); /* @source 0x801F116C */
+extern void stateRecordThrough3(void); /* @source 0x801F116C */
 
 /* @source 0x801F0DA4
  * @behavior Increments record byte 7 when shared frame word bit 0 is set.
@@ -46,6 +46,6 @@ void projectAccumulateCountDown(void) {
     *(s32 *)(record3 + 0x18) += *(s32 *)(record3 + 8);
     if (--record3[6] == 0) {
         D_801EB4E0[0xB]--;
-        stateRecordThrough3Bmagic();
+        stateRecordThrough3();
     }
 }

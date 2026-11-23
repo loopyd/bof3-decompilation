@@ -39,7 +39,7 @@ extern void clearWorkBytes0Through4BmagicMagic14603_801EF964(void); /* @source 0
  *           work bytes 9, 0xA and 0xB stay offset-anchored. No jal in this
  *           payload reaches it: its address is the last word of the
  *           seven-word code-pointer run based at 0x801EF9B4, which the byte-1
- *           dispatcher dispatchStateByte1Tablef9b4BmagicMagic14603_801EF04C
+ *           dispatcher callStateByte1Tablef9
  *           indexes, so the table word at 0x801EF9CC is its only in-payload
  *           reference. A cmp of the 120-byte span at payload offset 0x98C
  *           against emi/bmagic/magic059/03 0x801F012C, emi/bmagic/magic059/03

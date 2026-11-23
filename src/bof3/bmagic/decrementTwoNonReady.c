@@ -25,7 +25,7 @@ u8 func_8014DAEC(void);
  *           0x801F0550..0x801F0574 (0x801EF0A8, 0x801EF174, 0x801EF420,
  *           0x801EF5C0, 0x801EF674, 0x801EF6D8, 0x801EFD94, 0x801EFE1C,
  *           0x801EFF24, 0x801F0018). That table's only in-payload reader is the
- *           dispatcher callStateTable0550Bmagic,
+ *           dispatcher callStateTable0550,
  *           which indexes the run with the work record's unsigned byte +1 and
  *           calls the selected cell as void(void), so this body is invoked with
  *           no arguments and returns nothing. It reads the scratchpad

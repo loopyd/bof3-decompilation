@@ -15,8 +15,8 @@ support_sources = [
     "src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07003_801EF67C.c",
     "src/bof3/bmagic/decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07003_801EF1A4.c",
     "src/bof3/bmagic/statePoolSourceActivate.c",
-    "src/bof3/bmagic/drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07003_801EF810.c",
-    "src/bof3/bmagic/drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07003_801EFA44.c",
+    "src/bof3/bmagic/renderSpokesPublishedCenter.c",
+    "src/bof3/bmagic/renderRotatedCenterFull.c",
     "src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07003_801EF33C.c",
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07003_801EF04C.c",
 ]

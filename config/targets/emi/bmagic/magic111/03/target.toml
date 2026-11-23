@@ -20,7 +20,7 @@ sources = [
 support_sources = [
     "src/bof3/bmagic/callForwardBattleZero.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic11103_801EF7F8.c",
-    "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF8C4.c",
+    "src/bof3/bmagic/workByte9AdvanceAt10.c",
     "src/bof3/bmagic/decrementGlobalByteIncrement.c",
     "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic11103_801EF138.c",

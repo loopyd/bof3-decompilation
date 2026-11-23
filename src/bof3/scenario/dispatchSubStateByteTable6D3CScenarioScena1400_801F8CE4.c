@@ -179,7 +179,7 @@ void stepViewReferenceDistances(
  * at 0x801FC424, it switches on the shared secondary sub-state byte D_80146875
  * like its two in-target siblings, and 0x801F6D3C is this payload's own leading
  * table-data jump table, so the in-target family form of
- * callSubByteScenario and
+ * callSubByte and
  * dispatchSubStateByteTable6DA4ScenarioScena1400_801F9320 names this body
  * dispatchSubStateByteTable6D3CScenarioScena1400.
  *
@@ -199,7 +199,7 @@ void stepViewReferenceDistances(
  * two exact in-target switch bodies, dispatchSubStateByteTable6DA4ScenarioScena1400_801F9320
  * for the switch, the per-arm return tails, the pointer-locals that keep a
  * counter address in one register and the D_80143FC8 row writes, and
- * callSubByteScenario for the
+ * callSubByte for the
  * selector-context arms and the D_80144F28 bank. Every literal, call constant
  * and bound here is this span's own bytes.
  *

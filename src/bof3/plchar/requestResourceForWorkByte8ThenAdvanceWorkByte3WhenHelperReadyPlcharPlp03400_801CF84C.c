@@ -22,7 +22,7 @@ extern void func_8014D6B8(u32 flag);
  * @behavior Overlay step reached through the code-pointer word 0x801CF84C at
  *           0x801D032C, entry 14 of this overlay's twenty-eight-word handler run
  *           at 0x801D02F4 that the byte-3 dispatcher
- *           callWorkTable0320Plchar indexes from its
+ *           callWorkTable0320 indexes from its
  *           base word 0x801D0320 with work-record byte 3 scaled by four, so the
  *           body runs as that dispatcher's step 3; no jal in this payload names
  *           it, so it is reached through the run alone. It calls the shared

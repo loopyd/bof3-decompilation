@@ -38,7 +38,7 @@ extern BmagicMagic22303DispatchTable
  * 0x1F800044 and calls the handler its unsigned byte 1 selects from the
  * four-word run at 0x801EFC40, so publishing a record there runs that record's
  * step. */
-extern void callStateTablefc40Bmagic(
+extern void callStateTablefc40(
     void); /* @source 0x801EF3C0 @kind function */
 
 /* @source 0x801EEC10
@@ -93,7 +93,7 @@ void dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicM
       recordWork = *(u8 **)&D_801EFC60[offset + 0x74];
       g_battle_work = record;
       D_801EB4E0 = recordWork;
-      callStateTablefc40Bmagic();
+      callStateTablefc40();
       D_801EB4E0 = savedRecord;
       g_battle_work = savedWork;
     }

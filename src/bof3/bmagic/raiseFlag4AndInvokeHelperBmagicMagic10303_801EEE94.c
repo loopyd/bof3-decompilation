@@ -14,7 +14,7 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  *           address is the third word (index 2) of the three-word code pointer
  *           run in this payload's leading data at 0x801EEC04, whose words are
  *           0x801EEC70, 0x801EEE38 and 0x801EEE94; the payload's own dispatcher
- *           dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10 copies
+ *           callWorkHandlerTableec04 copies
  *           those three words into its 0x28-byte frame and calls the entry
  *           selected by the scratchpad work object byte at offset 0x1 scaled by
  *           four, which is how this body is reached. The original materializes

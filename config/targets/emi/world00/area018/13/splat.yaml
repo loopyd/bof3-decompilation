@@ -32,8 +32,8 @@ segments:
     - '@behavior: reads the shared scenario-state byte 0x80146870 and stores 0 into byte 4 of the world record reached through the pointer table 0x80181164 at the pending world id 0x80143F00 when that byte is 8, and stores 2 there otherwise'
   - - 104
     - c
-    - advanceHalfword0aBy9WhenWorkByte79Not2World00Area01813_801F2C68
-    - '@source: src/bof3/world/advanceHalfword0aBy9WhenWorkByte79Not2World00Area01813_801F2C68.c'
+    - stateBy9WorkNot2
+    - '@source: src/bof3/world/stateBy9WorkNot2.c'
     - '@behavior: reads the +0x79 byte of the work record published through the global pointer cell 0x80146250 and, when that byte is not 2, advances the halfword at offset 0x0A of the record published through the global pointer cell 0x80148210 by 9; mode 2 returns before the halfword is touched'
   - - 168
     - asm

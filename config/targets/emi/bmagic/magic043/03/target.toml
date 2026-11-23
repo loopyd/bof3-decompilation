@@ -14,7 +14,7 @@ support_sources = [
     "src/bof3/bmagic/workMotionPairIncrement.c",
     "src/bof3/support/magic043_03_psyq.c",
     "src/bof3/bmagic/magic04303DispatchTables.c",
-    "src/bof3/bmagic/incrementVelocityPairBmagic.c",
+    "src/bof3/bmagic/incrementVelocityPair.c",
     "src/bof3/bmagic/workMotionPairGlobal.c",
 ]
 psyq_source = "src/bof3/support/magic043_03_psyq.c"

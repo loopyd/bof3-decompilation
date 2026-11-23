@@ -155,7 +155,7 @@ void signedTableStepScaled(
  * sub-state byte D_80146875 that this target's other sources name as the
  * second member of the front-end state tuple, and 0x801F6DA4 is this payload's
  * own leading table-data jump table, so the in-target family form of
- * callSubByteScenario names this body
+ * callSubByte names this body
  * dispatchSubStateByteTable6DA4ScenarioScena1400.
  *
  * Shape: the payload holds no byte-identical copy of this 0x514-byte span and
@@ -165,7 +165,7 @@ void signedTableStepScaled(
  * other payload carries, so no clone or carver rung applies. The statement
  * order and declaration style come from the two exact in-target sources that
  * this body's own bytes confirm site by site:
- * callSubByteScenario for the switch, the
+ * callSubByte for the switch, the
  * per-arm return tails and the declarations of D_80146875, D_80143BB0 and the
  * shared helpers, and claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp46700_801CF050
  * for the func_8019601C object-byte block whose 0x74 multiply chain, 0xFF test

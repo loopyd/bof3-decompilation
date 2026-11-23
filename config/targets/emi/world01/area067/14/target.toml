@@ -41,7 +41,7 @@ support_sources = [
     "src/bof3/world/publishModeStatusTable5384.c",
     "src/bof3/world/stepGrowClearCountdowns.c",
     "src/bof3/world/tickRearmExpiredCountdowns.c",
-    "src/bof3/world/raiseDecisionResetArea.c",
+    "src/bof3/world/raiseDecisionReset.c",
     "src/bof3/world/initArea06714State.c",
 ]
 psyq_source = "src/bof3/support/area067_14_psyq.c"

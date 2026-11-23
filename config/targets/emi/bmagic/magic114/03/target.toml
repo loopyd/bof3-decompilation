@@ -8,9 +8,9 @@ splat = "config/targets/emi/bmagic/magic114/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/incrementByteClearBmagic.c",
-    "src/bof3/bmagic/incrementAdvanceClearBmagic.c",
-    "src/bof3/bmagic/decrementWorkZeroBmagic.c",
+    "src/bof3/bmagic/incrementByteClear.c",
+    "src/bof3/bmagic/incrementAdvanceClear.c",
+    "src/bof3/bmagic/decrementWorkZero.c",
 ]
 support_sources = [
     "src/bof3/bmagic/renderGouraudQuadOffsets.c",
@@ -18,11 +18,11 @@ support_sources = [
     "src/bof3/bmagic/renderEightScaledEndpoint.c",
     "src/bof3/bmagic/call801ReadyOtherwiseBmagic.c",
     "src/bof3/bmagic/stateHeaderSelectParity.c",
-    "src/bof3/bmagic/decrementWorkWord20Call800A9610AtWord14Equals30ThenAdd2AndAdvanceWorkByte2AtC0BmagicMagic11403_801EFF1C.c",
+    "src/bof3/bmagic/decrementWorkAdvanceWork.c",
     "src/bof3/bmagic/decrementOffsetChannelRearm.c",
-    "src/bof3/bmagic/callHandlerSetBmagic.c",
-    "src/bof3/bmagic/decrementZeroOtherwiseBmagic.c",
-    "src/bof3/bmagic/callStateTable123Bmagic.c",
+    "src/bof3/bmagic/callHandlerSet.c",
+    "src/bof3/bmagic/decrementZeroOtherwise.c",
+    "src/bof3/bmagic/callStateTable123.c",
     "src/bof3/support/magic114_03_psyq.c",
     "src/bof3/bmagic/magic11403DispatchTables.c",
     "src/bof3/bmagic/decrementByteSetZero.c",

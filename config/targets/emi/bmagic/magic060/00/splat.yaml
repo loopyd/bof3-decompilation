@@ -130,8 +130,8 @@ segments:
     - '@behavior: Advances the scratchpad work-object byte at offset 0x9 by one modulo 256, then tests the truncated byte it just stored (andi 0xFF of the stored register, no second load) against 0x10. Only when that byte equals 0x10 does it read the shared battle work pointer at 0x801EB4E0, store 1 into that record''s byte at offset 0xB - the constant is materialised in the delay slot of the equality test - re-read the work-object pointer cell at 0x1F800044 and increment that object''s byte at offset 0x2, advancing the overlay work byte 2 handler sequence. Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state.'
   - - 5264
     - c
-    - incrementGlobalByteBmagic
-    - '@source: src/bof3/bmagic/incrementGlobalByteBmagic.c'
+    - incrementGlobalByte
+    - '@source: src/bof3/bmagic/incrementGlobalByte.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record has byte 0x83 at offset 0xB, reads the scratchpad work-object pointer cell at 0x1F800044 once and increments that object with a byte-width add (lbu, addiu $v0,$v0,1, sb) at offset 0x2. Leaf with no frame; takes no arguments, returns nothing and writes no other state.'
   - - 5328
     - c
@@ -173,7 +173,7 @@ segments:
     - '@behavior: Rotated quad emitter of this overlay''s work-byte-1 handler group. It is reached with no arguments from the work-byte-2 table handler at 0x801F0254, and the body reads no incoming register, so it takes none. It queries the shared graphic type twice and, when either answer is 1 or 2, selects the draw-mode texture page 0x125, else 0x55, arms SetDrawMode at g_PrimCursor with dfe 0 and dtd 1 and appends a 0xC-byte draw-mode packet through the shared helper at 0x8014E5A0 under OT slot 3. It then takes a fresh g_PrimCursor POLY_G4, seeds it with SetPolyG4, marks it semi-transparent and writes four corners around the fixed screen centre 0xA0 by 0x78: each corner angle is the scratchpad rotation cell 0x1F800008, work byte 9 plus one of 6, 0xE, 0x16 and 0x1E masked to five bits and scaled left 7, each corner x is 0xA0 plus the 0x801782FC sample of that angle times the radius cell shifted right 12, and each corner y is 0x78 plus the 0x801783C8 sample of it, so the corners are a square rotated by work byte 9. The radius published once before the first corner is work byte 9 times three plus 0x12. The uniform grey tint is work byte 9 divided by three as an unsigned value, truncated to eight bits and multiplied by six, published in the scratchpad word 0x1F800004 and re-read for each of the twelve colour bytes. The quad is appended as a 0x24-byte packet under the same OT slot, the graphic type is queried again to select 0x25, else 0x15, for a second draw-mode packet appended as 0xC bytes, and the body returns nothing from an 0x28-byte frame that also holds the outgoing fifth draw-mode argument at 0x10.'
   - - 7144
     - c
-    - dispatchStateByte2Table0bdcBmagicMagic06000_801F07E8
+    - callStateByte2Table0
     - '@source: src/bof3/bmagic/magic06000DispatchTables.c'
   - - 7212
     - c

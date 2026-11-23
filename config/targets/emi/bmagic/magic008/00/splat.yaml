@@ -45,8 +45,8 @@ segments:
     - '@behavior: Work byte 1 state 1 of this overlay: entry 1 of the four-entry handler table at 0x801EEC04 (0x801EED5C, 0x801EEF6C, 0x801EEFDC, 0x801EF010), which 0x801EECF0 dispatches on the scratchpad work object''s state byte 1. It reads the work-object pointer cell at 0x1F800044 and, only when the work object''s byte at offset 0xB is 0xFF, invokes the shared battle helper at 0x800AEF98 with the event selector 4 and the value 0, then clears bit 0x40 of byte 0 of the shared battle work record at 0x801EB4E0 through the 0xBF mask, and finally re-reads the scratchpad cell and increments work byte 1 with a byte-width add, which selects table entry 2 (0x801EEFDC). The 0x18-byte frame only keeps $ra across that call; it reads or writes no other state and returns nothing.'
   - - 988
     - c
-    - raiseInvokeHelperBmagic
-    - '@source: src/bof3/bmagic/raiseInvokeHelperBmagic.c'
+    - raiseInvokeHelper
+    - '@source: src/bof3/bmagic/raiseInvokeHelper.c'
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988, unconditionally; the neighbouring entry at 0x801F01E4 performs the same two steps under a scratchpad byte-0x0B guard. Reads and writes no other state.'
   - - 1040
     - asm
@@ -153,8 +153,8 @@ segments:
     - '@behavior: Entry 0 (index 0) of the six-entry work byte 1 table at 0x801F1BEC, which 0x801F0250 dispatches on the scratchpad work object state byte 1. Per frame it copies the six words of the overlay-local work-state table at 0x801EEC58 (0x801F0330, 0x801F037C, 0x801F03FC, 0x801F047C, 0x801F04DC, 0x801F0548) into its own 0x30-byte frame, invokes the entry selected by work byte 2 with no arguments, then re-reads the work-object pointer cell at 0x1F800044 and, when work flag byte 0 is non-zero, runs the shared main-executable service func_8014D290. The cell is re-materialised for the dispatch index and again after the indirect call, so it is read through the named target symbol. It returns nothing; the frame keeps $ra at 0x28.'
   - - 5936
     - c
-    - setupMotionFieldsBmagic
-    - '@source: src/bof3/bmagic/setupMotionFieldsBmagic.c'
+    - setupMotionFields
+    - '@source: src/bof3/bmagic/setupMotionFields.c'
     - '@behavior: Seeds the scratchpad work object published at pointer cell 0x1F800044: the motion word pair at +0x40 and +0x44 is set to 0x10000, work byte 0x48 is set to 2, work byte 9 is seeded with the countdown value 0x1E, and work byte 2 is advanced by one.'
   - - 6012
     - c
@@ -247,8 +247,8 @@ segments:
     - '@behavior: Work byte 2 state 2 of this overlay: entry 2 of the six-entry code pointer table at 0x801EEC94 (0x801F0E54, 0x801F0FA4, 0x801F1090, 0x801F117C, 0x801F11C4, 0x801F1274), which 0x801F0DA8 copies into its own frame and selects with scratchpad work-object byte 2, so this body runs while work byte 2 is 2. Bit 0 of the shared frame counter at 0x80143E6C picks the arm. On a set bit it copies the shared battle work record''s position word pair 0x34/0x38 into the work object at the same offsets, both stores issued through one read of each pointer cell and the second one scheduled into the countdown branch delay slot, then counts the object countdown byte 9 down in place (lbu / addiu -1 / sb) and tests the stored byte truncated to eight bits (andi $v0,$v0,0xFF / bnez). When that countdown reaches zero it re-reads the pointer cell at 0x1F800044 and, only while work byte 0xB is still zero, invokes the shared helper 0x800AFC98 with the pair (2, 4) and then forwards the shared battle byte 0x80146384 to the helper 0x800A9820, and it re-reads the pointer cell once more to increment work byte 2 with a byte-width add, moving dispatch to entry 3 at 0x801F117C. On a clear bit it instead accumulates the object step pair: word 0x34 gains step word 0xC and word 0x38 gains step word 0x10, each read and written in place with lw / addu / sw through one pointer-cell read. The 0x18-byte frame keeps only $ra at 0x10 across the two calls; the function takes no arguments, returns nothing and reads or writes no other state.'
   - - 9596
     - c
-    - stateHelperReadyBmagic
-    - '@source: src/bof3/bmagic/stateHelperReadyBmagic.c'
+    - stateHelperReady
+    - '@source: src/bof3/bmagic/stateHelperReady.c'
     - '@behavior: Entry 3 (index 3) of the six-entry pointer table at 0x801EEC94, which 0x801F0DA8 copies into its frame and dispatches on scratchpad work-object byte 2. Per frame it calls the shared readiness helper func_8014DAEC and tests its returned byte; while the helper reports not-ready the handler does nothing, and once it reports ready it re-reads the work-object pointer cell at 0x1F800044 and increments the work object''s state byte 2 with a byte-width add (lbu / addiu 1 / sb), advancing dispatch to table entry 4 (0x801F11C4). The function has a 0x18-byte frame holding the saved return address at 0x10, reads or writes no other state, and returns nothing.'
   - - 9668
     - c

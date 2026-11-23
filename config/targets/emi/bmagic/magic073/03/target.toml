@@ -14,7 +14,7 @@ support_sources = [
     "src/bof3/bmagic/statePerEligibleOrdinal.c",
     "src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724.c",
     "src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic07303_801F0454.c",
-    "src/bof3/bmagic/stateIncrementByteBmagic.c",
+    "src/bof3/bmagic/stateIncrementByte.c",
     "src/bof3/bmagic/incrementCountersDecrementZero.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic07303_801F03E8.c",
     "src/bof3/bmagic/callInvokeDrawHelpers.c",

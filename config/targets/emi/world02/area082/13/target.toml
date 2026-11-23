@@ -9,7 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/decrementCountdownWord64Subtract3.c",
-    "src/bof3/world/advanceHalfword0aByWorkByte79StepWorld02Area08213_801F5608.c",
+    "src/bof3/world/stateWorkByte79Step.c",
 ]
 support_sources = [
     "src/bof3/world/stateSweepRandomizeOffsets.c",
@@ -20,14 +20,14 @@ support_sources = [
     "src/bof3/world/renderRotatingBandsCorners.c",
     "src/bof3/world/incrementQueueAdvanceDraw.c",
     "src/bof3/world/renderScreenGradientQueue.c",
-    "src/bof3/world/queueResetAdvanceScenario.c",
+    "src/bof3/world/queueResetAdvance.c",
     "src/bof3/world/mathHalfFillWhite.c",
     "src/bof3/world/decrementCountdownAdjustWords.c",
     "src/bof3/world/decrementCountdownWorkAnd68.c",
     "src/bof3/world/initializeWorkFieldsWorld02Area08213_801F4A18.c",
     "src/bof3/world/statePaletteScaleIncrement.c",
     "src/bof3/world/renderRampDownColor.c",
-    "src/bof3/world/renderScreenGradientScenario.c",
+    "src/bof3/world/renderScreenGradient.c",
     "src/bof3/world/renderScreenGradientAdvance.c",
     "src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress3bWorld02Area08213_801F527C.c",
     "src/bof3/world/area08213DispatchTables.c",

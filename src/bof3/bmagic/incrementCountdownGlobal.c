@@ -47,7 +47,7 @@ void func_801E5988(void);
  *           order, reload points and declaration style also follow this
  *           target's exact siblings decrementWorkByte9ThenDecrementGlobalWork
  *           ByteBAndAdvanceWorkByte2WhenZeroBmagicMagic00903_801EF814 and
- *           workAdvanceAt16Bmagic.
+ *           workAdvanceAt16.
  * @status exact
  * @match 100.00
  * @residual none

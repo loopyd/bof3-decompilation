@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell, shared by this overlay's dispatchers and
  * handlers. Declared as the same volatile u8 pointer the exact sibling
- * stateHelperReadyBmagic uses: the original
+ * stateHelperReady uses: the original
  * re-reads the cell per access and the named symbol lets the assembler fold the
  * constant address into the load (lui $v0,0x1F80 / lw $v0,68($v0)). */
 extern u8* volatile g_battle_work; /* @source 0x1F800044 @kind data */

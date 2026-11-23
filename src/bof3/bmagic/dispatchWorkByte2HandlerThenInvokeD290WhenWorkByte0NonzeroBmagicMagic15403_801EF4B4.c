@@ -36,7 +36,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
  * @behavior Work byte 2 step dispatcher of this overlay's work object, reached
  *           as entry 1 of the code pointer run at 0x801EF6CC (0x801EF104,
  *           0x801EF4B4, 0x801EF1EC, 0x801EF380, 0x801EF3E4, 0x801EF454) that
- *           the exact lift callStateTablef6Bmagic
+ *           the exact lift callStateTablef6
  *           indexes with work-object byte 1. It reads the work-object pointer
  *           cell at 0x1F800044 once before its frame exists, copies the
  *           four-entry work byte 2 handler table at 0x801EEC14 (0x801EF544,

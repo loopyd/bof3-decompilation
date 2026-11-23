@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/bmagic/statePoseNineSlots.c",
-    "src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteAAndAdvanceSourceByteBAndCallE5988WhenZeroBmagicMagic09903_801F0314.c",
+    "src/bof3/bmagic/incrementProjectSubtractSource.c",
     "src/bof3/bmagic/incrementCountDownSource.c",
     "src/bof3/bmagic/incrementProjectCountDown.c",
     "src/bof3/bmagic/callHandlerPopActive.c",

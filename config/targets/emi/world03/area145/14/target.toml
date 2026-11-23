@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/renderBeamRotatedBody.c",
     "src/bof3/world/stateMotionReleaseConsume.c",
-    "src/bof3/world/setStatusFFFFAndScenarioProgress8IfGateElse0AState3Substate10World03Area14514_801F3C90.c",
+    "src/bof3/world/stateStatusProgress8Gate.c",
     "src/bof3/world/stateScratchFrontEnd.c",
     "src/bof3/world/area14514DispatchTables.c",
     "src/bof3/world/invokeHelperWorld03Area14514_801F2F10.c",

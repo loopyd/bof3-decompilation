@@ -39,8 +39,8 @@ segments:
     - '@source: src/bof3/bmagic/stateMotionPairBytes.c'
   - - 428
     - c
-    - runDecrementAdvanceBmagic
-    - '@source: src/bof3/bmagic/runDecrementAdvanceBmagic.c'
+    - runDecrementAdvance
+    - '@source: src/bof3/bmagic/runDecrementAdvance.c'
     - '@behavior: Calls both overlay helpers with 1, decrements work byte 9 and rearms it to 30 while advancing byte 1 on zero.'
   - - 552
     - c

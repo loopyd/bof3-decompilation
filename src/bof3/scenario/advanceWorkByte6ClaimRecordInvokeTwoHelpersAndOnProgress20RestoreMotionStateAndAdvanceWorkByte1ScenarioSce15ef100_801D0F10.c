@@ -15,7 +15,7 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
  * is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-void renderEffectRecordsScenario(void);
+void renderEffectRecords(void);
 
 /* @source 0x801D0F10
  * @behavior Entry 4 of the overlay's step-handler code-pointer run at
@@ -101,7 +101,7 @@ void advanceWorkByte6ClaimRecordInvokeTwoHelpersAndOnProgress20RestoreMotionStat
   if ((frame & 3) == 0) {
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
-  renderEffectRecordsScenario();
+  renderEffectRecords();
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   if (g_ScenarioProgress == 0x14) {
     motion = D_1F800044;

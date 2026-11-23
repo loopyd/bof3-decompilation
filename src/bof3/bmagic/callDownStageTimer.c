@@ -44,12 +44,12 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
 
 /* The two phase handlers this body seeds into its local table, both following
  * spans of this overlay: 0x801EF7A0 is lifted as
- * decrementAdvanceBelowBmagic
+ * decrementAdvanceBelow
  * and 0x801EF7E0 as
  * incrementNegativeOtherwiseDecrement.
  * Each address reaches the frame through its own lui %hi / addiu %lo pair, so
  * both need a declaration here. */
-void decrementAdvanceBelowBmagic(
+void decrementAdvanceBelow(
     void);
 void incrementNegativeOtherwiseDecrement(
     void);
@@ -102,7 +102,7 @@ void callDownStageTimer(
   u8 stage;
   s32 ramp;
   BmagicMagic05703PhaseHandler handlers[2] = {
-      decrementAdvanceBelowBmagic,
+      decrementAdvanceBelow,
       incrementNegativeOtherwiseDecrement};
 
   handlers[g_battle_work[3]]();

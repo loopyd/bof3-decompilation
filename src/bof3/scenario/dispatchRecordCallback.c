@@ -6,7 +6,7 @@ extern u32 D_8014686C;
 
 /* Overlay-local per-record callback table at 0x801FD00C: nine code-pointer
  * words running from func_801FC4AC (0x801FC4AC, word 0) through
- * requestPrimaryArmScenario (0x801FC6C4,
+ * requestPrimaryArm (0x801FC6C4,
  * word 8), indexed by byte 0x7A of a record. It
  * begins immediately after the two data words 0x000100FF/0x000001FF at
  * 0x801FD004/0x801FD008 and ends immediately before the data word 0x014F2363
@@ -24,7 +24,7 @@ extern ScenarioScena0300RecordCallback D_801FD00C[];
  * stateFlagSetBit12,
  * stateFlagSetBit13,
  * func_801FC5FC, noopCallbackSlot, func_801FC690 and
- * requestPrimaryArmScenario), passing the
+ * requestPrimaryArm), passing the
  * record pointer unchanged as the first argument
  * and the word held in the shared main-RAM cell D_8014686C as the second
  * (slot 7, func_801FC690, is documented as receiving exactly that pair). It

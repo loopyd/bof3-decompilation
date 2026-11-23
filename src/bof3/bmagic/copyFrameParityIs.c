@@ -14,7 +14,7 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind unknown */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* Scratchpad work-object pointer cell, the same named cell this target's exact
- * lifts stateHelperReadyBmagic and
+ * lifts stateHelperReady and
  * subtractWorkColorTripletBy3ThenAdvanceWorkByte2WhenChannelIs80
  * BmagicMagic00800_801F11C4 declare. The named symbol lets the assembler fold
  * the constant address into each load (lui $v1,0x1F80 / lw $v1,0x44($v1)), and

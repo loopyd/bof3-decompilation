@@ -1,9 +1,9 @@
 g_battle_work = 0x1F800044;
-dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10 = 0x801EEC10;
+callWorkHandlerTableec04 = 0x801EEC10;
 func_801EEC70 = 0x801EEC70;
 forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic10303_801EEE38 = 0x801EEE38;
 raiseFlag4AndInvokeHelperBmagicMagic10303_801EEE94 = 0x801EEE94;
-callStateTable0794Bmagic = 0x801EEEC8;
+callStateTable0794 = 0x801EEEC8;
 func_801EEF0C = 0x801EEF0C;
 copyWordPairHalfword = 0x801EEF94;
 func_801EEFF4 = 0x801EEFF4;

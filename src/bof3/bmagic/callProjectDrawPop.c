@@ -3,7 +3,7 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* The code pointer run at 0x801F0744 is the one the byte-1 dispatcher
- * callStateTable0744Bmagic indexes; its eleven words
+ * callStateTable0744 indexes; its eleven words
  * are 0x801EF1F4, 0x801EF1F4, 0x801EFA50, 0x801EFF28, 0x801EF27C, 0x801EF2DC,
  * 0x801EF37C, 0x801EFAD8, 0x801EFB38, 0x801EFBA4 and 0x801EFBF4, so this function
  * occupies words 0 and 1 of it. The byte-2 table this function dispatches through
@@ -47,7 +47,7 @@ extern void renderBandsThirtyQuads(
  *           handlers advance. No jal in this payload names 0x801EF1F4; it is
  *           reached as words 0 and 1 of the byte-1 handler run at 0x801F0744,
  *           which the exact byte-1 dispatcher
- *           callStateTable0744Bmagic indexes with
+ *           callStateTable0744 indexes with
  *           work byte 1, so it has no direct caller and its parameter roles stay
  *           structural.
  *

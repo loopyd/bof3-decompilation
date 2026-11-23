@@ -38,7 +38,7 @@ void func_801F0568(void);
 /* Draws the eight-triangle translucent fan whose centre vertex is the work
  * record screen pair at halfwords 0x2E and 0x30, so the two calls below paint
  * the ring above and below the record position. */
-void drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C(
+void renderFanTintedJittered(
     void);
 
 /* @source 0x801EEFC8
@@ -83,9 +83,9 @@ void callDrawRecordPop(
     func_801F0568();
     g_battle_work[0xB] -= 8;
     FIELD_REF(u16, g_battle_work, 0x2Eu) += 0x10;
-    drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C();
+    renderFanTintedJittered();
     FIELD_REF(u16, g_battle_work, 0x2Eu) -= 0x20;
-    drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C();
+    renderFanTintedJittered();
     PopMatrix();
   }
 }

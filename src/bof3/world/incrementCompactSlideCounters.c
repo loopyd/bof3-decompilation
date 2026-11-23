@@ -2,7 +2,7 @@
 
 /* @behavior increments byte 9 of the slideWork record published at the scratchpad cursor
  * 0x1F800044 and redraws the AREA030 panel at the origin 0x6C - 0x50 * that
- * slideCount through drawArea030CompactPanel; once the slideCount reaches 5 it
+ * slideCount through renderCompactPanel; once the slideCount reaches 5 it
  * restarts it at zero and, while the record byte 6 is clear, advances the
  * shared halfword counter D_80143B92, otherwise advances the shared step byte
  * D_8014403D and clears the record dispatch byte 3; then the dim tile is
@@ -23,7 +23,7 @@ void incrementCompactSlideCounters(void) {
     u8 *byteCounter;
 
     D_1F800044[9]++;
-    drawArea030CompactPanel((s16)(0x6C - D_1F800044[9] * 0x50), 0x56);
+    renderCompactPanel((s16)(0x6C - D_1F800044[9] * 0x50), 0x56);
     slideWork = D_1F800044;
     if (slideWork[9] == 5) {
         slideWork[9] = 0;

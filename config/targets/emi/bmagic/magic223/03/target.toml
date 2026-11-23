@@ -11,13 +11,13 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic22303_801EEC10.c",
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic22303_801EF0F8.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawFullscreenQuadWhenWorkByte0SetBmagicMagic22303_801EF050.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF7A8WhenWorkBytes0And2SetBmagicMagic22303_801EF404.c",
+    "src/bof3/bmagic/callWorkHandlerSet.c",
 ]
 support_sources = [
     "src/bof3/bmagic/renderFullscreenVerticesMirrored.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic22303_801EFB78.c",
     "src/bof3/bmagic/clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic22303_801EF0B8.c",
-    "src/bof3/bmagic/clearWorkBytes0Through4BmagicMagic22303_801EFBDC.c",
+    "src/bof3/bmagic/stateWorkBytes0Through4.c",
     "src/bof3/support/magic223_03_psyq.c",
     "src/bof3/bmagic/magic22303DispatchTables.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22303_801EF148.c",

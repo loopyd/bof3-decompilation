@@ -10,13 +10,13 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/renderScrollingNearFocus.c",
     "src/bof3/world/renderSemiTransSprite.c",
-    "src/bof3/world/decrementByte9RetreatWord40By2000ThenResetWorkAreaWhenSharedMode5OrSetState1OnByte9ExpiryWorld00Area03313_801F3294.c",
+    "src/bof3/world/decrementRetreatResetExpiry.c",
     "src/bof3/world/queueUiTripleZero.c",
     "src/bof3/world/stateFacingStepResource.c",
     "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld00Area03313_801F2C04.c",
     "src/bof3/world/stateHalfword2eAdvance.c",
     "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World00Area03313_801F385C.c",
-    "src/bof3/world/advanceWorkByte9To0x5aAndSetByteBThenAdvanceState3WhenGatedThenDrawHalfword30World00Area03313_801F375C.c",
+    "src/bof3/world/stateSetGatedDraw.c",
     "src/bof3/world/statePrepareRecord15.c",
 ]
 support_sources = [

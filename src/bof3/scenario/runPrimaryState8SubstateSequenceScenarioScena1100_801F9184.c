@@ -49,7 +49,7 @@ extern void dispatchSoundCue(u32 cue_id);
 /* @source 0x801F9184
  * @behavior Word 8 (the word stored at 0x801FAF1C) of the ten-entry
  * overlay-local second-level handler run at 0x801FAEFC that the exact
- * dispatcher dispatchSecondaryStateScenarioScena1100_801F7748 (0x801F7748)
+ * dispatcher callSecondaryState (0x801F7748)
  * indexes with the shared primary state byte D_80146874, so a primary state
  * reading 8 selects it, and no jal or j in the payload reaches the address. It
  * switches on the shared secondary sub-state byte D_80146875 through the

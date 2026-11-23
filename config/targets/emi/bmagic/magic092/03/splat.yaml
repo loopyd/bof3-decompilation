@@ -38,7 +38,7 @@ segments:
     - func_801EEFB4
   - - 1024
     - c
-    - callStateTable07Bmagic
+    - callStateTable07
     - '@source: src/bof3/bmagic/magic09203DispatchTables.c'
   - - 1092
     - c
@@ -54,8 +54,8 @@ segments:
     - func_801EF1F0
   - - 1872
     - c
-    - incrementByteSetBmagic
-    - '@source: src/bof3/bmagic/incrementByteSetBmagic.c'
+    - incrementByteSet
+    - '@source: src/bof3/bmagic/incrementByteSet.c'
   - - 1928
     - asm
     - func_801EF388
@@ -70,7 +70,7 @@ segments:
     - '@behavior: Translucent radial fan of eight gouraud triangles around the origin at the fixed scratchpad radius 0x180, drawn by the draw branch of dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044 under the work-record transform. Two draw-mode selectors over GetGraphType, a 0xC-byte packet before and after, eight POLY_G3 triangles stepping 0x200 of the 0x1000 circle, tint from work byte 9 shifted left three and capped at 0x80.'
   - - 3068
     - c
-    - dispatchStateByte1Table07d0BmagicMagic09203_801EF7FC
+    - callStateByte1Table07
     - '@source: src/bof3/bmagic/magic09203DispatchTables.c'
   - - 3136
     - c
@@ -83,8 +83,8 @@ segments:
     - '@source: src/bof3/bmagic/stateCopyRecordTriplet.c'
   - - 3392
     - c
-    - workAdvanceAt11Bmagic
-    - '@source: src/bof3/bmagic/workAdvanceAt11Bmagic.c'
+    - workAdvanceAt11
+    - '@source: src/bof3/bmagic/workAdvanceAt11.c'
   - - 3472
     - asm
     - func_801EF990
@@ -92,7 +92,7 @@ segments:
     - c
     - decrementFrameParityOne
     - '@source: src/bof3/bmagic/decrementFrameParityOne.c'
-    - '@behavior: Entry 10 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which callStateTable07Bmagic indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It decrements work byte 9 by two through the pointer cell at 0x1F800044, increments work byte 0xA when bit 0 of the shared frame counter at 0x80143E6C is set, and only when the reloaded work byte 9 equals 1 does it decrement byte 0xB of the shared record at 0x801EB4E0 and then clear work bytes 0x00 through 0x04, each clear re-reading the pointer cell. Leaf with no frame that takes no arguments and returns nothing through the jr $ra at 0x801EFB00; work bytes 9, 0xA and 0x00..0x04 and record byte 0xB stay offset-anchored.'
+    - '@behavior: Entry 10 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which callStateTable07 indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It decrements work byte 9 by two through the pointer cell at 0x1F800044, increments work byte 0xA when bit 0 of the shared frame counter at 0x80143E6C is set, and only when the reloaded work byte 9 equals 1 does it decrement byte 0xB of the shared record at 0x801EB4E0 and then clear work bytes 0x00 through 0x04, each clear re-reading the pointer cell. Leaf with no frame that takes no arguments and returns nothing through the jr $ra at 0x801EFB00; work bytes 9, 0xA and 0x00..0x04 and record byte 0xB stay offset-anchored.'
   - - 3844
     - c
     - renderPerSteppingTexels
@@ -102,7 +102,7 @@ segments:
     - c
     - callInvokeUpdateShift
     - '@source: src/bof3/bmagic/callInvokeUpdateShift.c'
-    - '@behavior: Entry 6 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which callStateTable07Bmagic indexes with scratchpad work byte 1 scaled by four, so no jal in this payload names this body. It reads the work record published at the pointer cell 0x1F800044, scales that record byte 2 by four and calls the selected word of the handler table at 0x801F07E8 with no arguments and no index bound, then re-reads the cell because the handler may republish it. Only when the reloaded record bytes 0 and 2 are both non-zero does the arm run: it calls the shared main-executable update pass func_800AF764, re-reads the cell a third time, moves the unsigned halfword at 0x2E by minus 0x10 when record byte 0xB equals 1 and by plus 0x10 otherwise, subtracts 0xC from the unsigned halfword at 0x30 and then calls the overlay draw pass renderAroundRadiusTen with the 0x30 store filling that call delay slot. The 0x18-byte frame keeps only the return address at 0x10 and the cell load precedes frame creation; the 0xC0-byte span takes no arguments and returns nothing through the jr $ra at 0x801F0318.'
+    - '@behavior: Entry 6 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which callStateTable07 indexes with scratchpad work byte 1 scaled by four, so no jal in this payload names this body. It reads the work record published at the pointer cell 0x1F800044, scales that record byte 2 by four and calls the selected word of the handler table at 0x801F07E8 with no arguments and no index bound, then re-reads the cell because the handler may republish it. Only when the reloaded record bytes 0 and 2 are both non-zero does the arm run: it calls the shared main-executable update pass func_800AF764, re-reads the cell a third time, moves the unsigned halfword at 0x2E by minus 0x10 when record byte 0xB equals 1 and by plus 0x10 otherwise, subtracts 0xC from the unsigned halfword at 0x30 and then calls the overlay draw pass renderAroundRadiusTen with the 0x30 store filling that call delay slot. The 0x18-byte frame keeps only the return address at 0x10 and the cell load precedes frame creation; the 0xC0-byte span takes no arguments and returns nothing through the jr $ra at 0x801F0318.'
   - - 5920
     - asm
     - func_801F0320
@@ -117,7 +117,7 @@ segments:
     - c
     - decrementGlobalByteClear
     - '@source: src/bof3/bmagic/decrementGlobalByteClear.c'
-    - '@behavior: Entry 14 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which callStateTable07Bmagic indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It decrements work byte 9 through the pointer cell at 0x1F800044 and tests the stored byte truncated to eight bits; only when that countdown reaches zero does it decrement byte 0xB of the shared record at 0x801EB4E0 and then clear work bytes 0x00 through 0x04, each clear re-reading the pointer cell. Leaf with no frame that takes no arguments and returns nothing through the jr $ra at 0x801F04B4; work bytes 9 and 0x00..0x04 and record byte 0xB stay offset-anchored.'
+    - '@behavior: Entry 14 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which callStateTable07 indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It decrements work byte 9 through the pointer cell at 0x1F800044 and tests the stored byte truncated to eight bits; only when that countdown reaches zero does it decrement byte 0xB of the shared record at 0x801EB4E0 and then clear work bytes 0x00 through 0x04, each clear re-reading the pointer cell. Leaf with no frame that takes no arguments and returns nothing through the jr $ra at 0x801F04B4; work bytes 9 and 0x00..0x04 and record byte 0xB stay offset-anchored.'
   - - 6332
     - c
     - renderAroundRadiusTen

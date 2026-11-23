@@ -14,7 +14,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* Scratchpad work-object pointer cell, bound at 0x1F800044 by this target's
  * map as g_battle_work, the name the exact lifts
- * workAdvanceAt80Bmagic and
+ * workAdvanceAt80 and
  * add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvoke
  * HelperWhenZeroBmagicMagic03903_801EF6E0 declare the same way, and the cell
  * this body re-materialises with its own lui 0x1F80 / lw 68($vN) pair at each

@@ -6,7 +6,7 @@ extern int rand(void);
 /* Scratchpad work-record pointer cell at 0x1F800044. The original re-reads the
  * cell with its own lui/lw pair at every use, so the cell is bound by name and
  * read once per consumer, as in the exact bmagic sibling
- * drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C. */
+ * renderFanTintedJittered. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Scratchpad scalar cells of the band builder. The original reaches every one

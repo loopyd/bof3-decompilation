@@ -21,7 +21,7 @@ extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind unknown */
  *           0x80146864, and the other value falls straight to the return.
  *
  *           Shape: the sibling
- *           setStatusFFFFAndScenarioProgress64Or65ByGateWorld00Area01013_801F2C04
+ *           stateStatusProgress64Gate
  *           was lifted exact in this same overlay, and its 0x40-byte span
  *           differs from this one in exactly three words: the two stored arm
  *           constants (0x64/0x65 there, 0xC8/0xC9 here) and the absolute `j`

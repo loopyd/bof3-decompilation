@@ -20,7 +20,7 @@ s32 func_8017A138(s32 arg0, s32 arg1);
 
 /* 0x801F9420 — this overlay's two-value average on the 0x1000-unit rotation
  * scale. */
-s32 average12BitValuesScenarioScena0800_801F9420(u32 arg0, u32 arg1);
+s32 average12BitValues(u32 arg0, u32 arg1);
 
 /* One 0x18-byte trail record: the projected point words at 0x00-0x08, the
  * projected screen pair at 0x10/0x12, the averaged heading halfword at 0x14 and
@@ -143,7 +143,7 @@ void stateHeadingsAverageAngles(
     prev = (i - 1) * 2;
     off2 = i * 2;
     buffer->records[i].heading_14 =
-        average12BitValuesScenarioScena0800_801F9420(
+        average12BitValues(
             *(u16 *)((u8 *)buffer + prev + 0x300),
             *(u16 *)((u8 *)buffer + off2 + 0x300));
   }

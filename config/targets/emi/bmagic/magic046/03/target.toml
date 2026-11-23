@@ -12,7 +12,7 @@ support_sources = [
     "src/bof3/bmagic/statePoolPoseHalf.c",
     "src/bof3/bmagic/dispatchWorkByte2First.c",
     "src/bof3/bmagic/dispatchWorkByte2Second.c",
-    "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusTenTimesWorkByte9PlusSixTintedByWorkByteATimesSixBmagicMagic04603_801EFC48.c",
+    "src/bof3/bmagic/renderTrianglesTenTinted.c",
     "src/bof3/bmagic/renderPlusTwiceTwenty.c",
     "src/bof3/bmagic/invokeSharedHelper14.c",
     "src/bof3/bmagic/magic04603DispatchTables.c",

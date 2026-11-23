@@ -28,7 +28,7 @@ support_sources = [
     "src/bof3/bmagic/stateInvokeHelperZero.c",
     "src/bof3/bmagic/decrementBelowTwoCall.c",
     "src/bof3/bmagic/claimOrdinalFieldsPointer.c",
-    "src/bof3/bmagic/runDecrementAdvanceBmagic.c",
+    "src/bof3/bmagic/runDecrementAdvance.c",
     "src/bof3/bmagic/reserveFreeRecordSlot.c",
     "src/bof3/bmagic/stateMotionPairBytes.c",
     "src/bof3/bmagic/clearWorkHead.c",

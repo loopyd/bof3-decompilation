@@ -14,7 +14,7 @@ extern u8* D_80146250; /* @source 0x80146250 @kind unknown */
  * counter bytes of the 12-byte record indexed by the byte at 0x13D of the
  * record published through 0x80146250. */
 extern void
-advanceWorkAccumulatorAndAdd2ToSharedCounterTripleWorld01Area04113_801F4118(
+stateAccumulatorCounterTriple(
     void);
 
 /* @source 0x801F3EE4
@@ -40,7 +40,7 @@ void advanceWorkAccumulatorAndRearmCountdownThenEnterHandlerTwoOrConsumeSharedCo
   u8* words;
   u8* shared;
 
-  advanceWorkAccumulatorAndAdd2ToSharedCounterTripleWorld01Area04113_801F4118();
+  stateAccumulatorCounterTriple();
   words = D_1F800044;
   words[0x0a] = words[0x0a] - 1;
   if (D_1F800044[0x0a] == 0) {

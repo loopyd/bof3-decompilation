@@ -17,8 +17,8 @@ sources = [
 support_sources = [
     "src/bof3/bmagic/callDownTwelvePaired.c",
     "src/bof3/bmagic/forwardBattleHelperReady.c",
-    "src/bof3/bmagic/callHelpersNonzeroBmagic.c",
-    "src/bof3/bmagic/callHelperAdvanceBmagic.c",
+    "src/bof3/bmagic/callHelpersNonzero.c",
+    "src/bof3/bmagic/callHelperAdvance.c",
     "src/bof3/bmagic/addByteCountAdvance.c",
     "src/bof3/bmagic/clearWorkFive.c",
     "src/bof3/bmagic/invokeSharedHelper13.c",

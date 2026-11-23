@@ -58,7 +58,7 @@ segments:
     - '@behavior: Overlay handler dispatcher for the scratchpad work object''s byte at offset 2, entry 1 of the ten-word byte-1 handler run based at 0x801FDD14: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local two-word in-image code-pointer run based at 0x801FDD48 with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. No in-image jal reaches the address, whose only reference is the run word at 0x801FDD18.'
   - - 908
     - c
-    - incrementWorkByte2SetCounterScenarioScena0700_801F6F8C
+    - incrementWorkSetCounter
   - - 944
     - asm
     - func_801F6FB0
@@ -101,7 +101,7 @@ segments:
     - c
     - dispatchWorkByte2HandlerScenarioScena0700_801F73C4
     - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F73C4.c'
-    - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local three-entry in-image code-pointer run labelled D_801FDD70 at 0x801FDD70 (0x801F7408 / 0x801F7480 / stateTableIdleScenario) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 3 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 3.'
+    - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local three-entry in-image code-pointer run labelled D_801FDD70 at 0x801FDD70 (0x801F7408 / 0x801F7480 / stateTableIdle) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 3 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 3.'
   - - 2056
     - asm
     - func_801F7408
@@ -109,10 +109,10 @@ segments:
     - c
     - claimRampBoundSixteenth
     - '@source: src/bof3/scenario/claimRampBoundSixteenth.c'
-    - '@behavior: Entry 1 of the three-entry in-image code-pointer run based at 0x801FDD70 (0x801F7408 / this address / stateTableIdleScenario), which dispatchWorkByte2HandlerScenarioScena0700_801F73C4 indexes with the scratchpad work object''s unsigned byte at offset 0x02; no in-image jal reaches the address. It loads the work-object pointer cell at 0x1F800044 ahead of the frame reservation, gates on the work object''s 32-bit countdown word at 0x0C masked by D_801FDD7C[byte 0x09] and, when that gate reads zero, adds the per-step record count D_801FDD84[byte 0x09] to the effect object''s unsigned halfword at +0x10 published by pointer cell 0x801FDFBC and claims D_801FDD84[byte 0x09] free records in a do/while loop through the 0x40x0x20 pool scan at 0x801F9DD4, seeding each with 0x801F9E10. It then advances byte 0x09 on the frames whose countdown word reads zero in its low nibble, calls the per-frame pass at 0x801F9EFC over the 0x800E515C work table, decrements the countdown word at 0x0C and, when it reaches zero, increments work byte 0x02 so the dispatcher advances the run. Takes no arguments and returns nothing; its 0x18-byte frame keeps $ra and $s0.'
+    - '@behavior: Entry 1 of the three-entry in-image code-pointer run based at 0x801FDD70 (0x801F7408 / this address / stateTableIdle), which dispatchWorkByte2HandlerScenarioScena0700_801F73C4 indexes with the scratchpad work object''s unsigned byte at offset 0x02; no in-image jal reaches the address. It loads the work-object pointer cell at 0x1F800044 ahead of the frame reservation, gates on the work object''s 32-bit countdown word at 0x0C masked by D_801FDD7C[byte 0x09] and, when that gate reads zero, adds the per-step record count D_801FDD84[byte 0x09] to the effect object''s unsigned halfword at +0x10 published by pointer cell 0x801FDFBC and claims D_801FDD84[byte 0x09] free records in a do/while loop through the 0x40x0x20 pool scan at 0x801F9DD4, seeding each with 0x801F9E10. It then advances byte 0x09 on the frames whose countdown word reads zero in its low nibble, calls the per-frame pass at 0x801F9EFC over the 0x800E515C work table, decrements the countdown word at 0x0C and, when it reaches zero, increments work byte 0x02 so the dispatcher advances the run. Takes no arguments and returns nothing; its 0x18-byte frame keeps $ra and $s0.'
   - - 2496
     - c
-    - stateTableIdleScenario
+    - stateTableIdle
   - - 2548
     - c
     - dispatchWorkByte2HandlerScenarioScena0700_801F75F4
@@ -297,7 +297,7 @@ segments:
     - func_801F9BDC
   - - 12712
     - c
-    - stateWorkTableScenario
+    - stateWorkTable
   - - 12756
     - c
     - findFreeWorkRecordAt800E515CScenarioScena0700_801F9DD4
@@ -318,7 +318,7 @@ segments:
     - dispatchScenarioStateHandlerScenarioScena0700_801FA65C
   - - 15000
     - c
-    - stateSharedByteScenario
+    - stateSharedByte
   - - 15028
     - asm
     - func_801FA6B4
@@ -398,18 +398,18 @@ segments:
     - func_801FD960
   - - 28212
     - c
-    - queryRecordsPartyScenario
-    - '@source: src/bof3/scenario/queryRecordsPartyScenario.c'
+    - queryRecordsParty
+    - '@source: src/bof3/scenario/queryRecordsParty.c'
     - '@behavior: Scans the live 0x140-byte-stride local work records based at 0x80145E90 for one whose party byte at +0x79 equals 2, returning 1 at the first match and 0 when the scan exhausts the D_80146254 live rows. It starts at row 0, reads only that one byte per row, writes nothing, takes no arguments and has no stack frame, so both returns share the single jr $ra epilogue at 0x801FDA90.'
   - - 28312
     - c
     - dispatchCoordinateLookupHandlerScenarioScena0700_801FDA98
     - '@source: src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena0700_801FDA98.c'
-    - '@behavior: Overlay coordinate-record selector, word 3 of the four-word code-pointer run at 0x801FDE00, so no in-image jal and no other image word holds its address. It takes the two unsigned halfword coordinates its caller forwards (the two andi 0xFFFF at 0x801FDAA0 and 0x801FDAA4 move $a0 and $a1 into $a2 and $a3) and passes them with the overlay''s single five-byte lookup record at 0x801FDFA0 and the length 1 to the resident helper func_801A7AD8 (0x801A7AD8), which matches that record against the shared route/world word D_80143F00, the coordinate pair and the shared category byte D_80145E98. A negative sign-extended byte answer returns -1 without touching any other state; otherwise it scales that index by four in the bltz delay slot, loads the word of the five-word handler run at 0x801FDFA8, calls it with no arguments through jalr and answers the constant 1, discarding the handler''s result. With one record the lookup can only answer 0 or -1, so the reachable entry is word 0, requestPrimaryState6Substate10ScenarioScena0700_801FDAFC (0x801FDAFC). It performs no stores of its own and its 0x18-byte frame only keeps $ra at 0x10 across the two calls. Its 0x64 bytes compare equal word for word with the exact dispatchRoute30CoordinateLookupHandlerScenarioScena0400_801FA010 (0x801FA010 of emi/scenario/scena04/00) in every word except the lookup-record base low half, the handler-run base low half and the absolute j word, which shifts by exactly the 0x3A88 span delta.'
+    - '@behavior: Overlay coordinate-record selector, word 3 of the four-word code-pointer run at 0x801FDE00, so no in-image jal and no other image word holds its address. It takes the two unsigned halfword coordinates its caller forwards (the two andi 0xFFFF at 0x801FDAA0 and 0x801FDAA4 move $a0 and $a1 into $a2 and $a3) and passes them with the overlay''s single five-byte lookup record at 0x801FDFA0 and the length 1 to the resident helper func_801A7AD8 (0x801A7AD8), which matches that record against the shared route/world word D_80143F00, the coordinate pair and the shared category byte D_80145E98. A negative sign-extended byte answer returns -1 without touching any other state; otherwise it scales that index by four in the bltz delay slot, loads the word of the five-word handler run at 0x801FDFA8, calls it with no arguments through jalr and answers the constant 1, discarding the handler''s result. With one record the lookup can only answer 0 or -1, so the reachable entry is word 0, requestPrimaryState6Substate10 (0x801FDAFC). It performs no stores of its own and its 0x18-byte frame only keeps $ra at 0x10 across the two calls. Its 0x64 bytes compare equal word for word with the exact dispatchRoute30CoordinateLookupHandlerScenarioScena0400_801FA010 (0x801FA010 of emi/scenario/scena04/00) in every word except the lookup-record base low half, the handler-run base low half and the absolute j word, which shifts by exactly the 0x3A88 span delta.'
   - - 28412
     - c
-    - requestPrimaryState6Substate10ScenarioScena0700_801FDAFC
-    - '@source: src/bof3/scenario/requestPrimaryState6Substate10ScenarioScena0700_801FDAFC.c'
+    - requestPrimaryState6Substate10
+    - '@source: src/bof3/scenario/requestPrimaryState6Substate10.c'
     - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 6 with secondary sub-state 0x0A by storing 6 in the shared state byte D_80146874 and 0x0A in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. No in-image jal targets the address; its only image word is the first slot of the five-slot pointer run at 0x801FDFA8, which no code in this target reaches directly.'
   - - 28468
     - asm

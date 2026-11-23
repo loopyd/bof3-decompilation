@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - callWorkTable0988Plchar
-    - '@source: src/bof3/plchar/callWorkTable0988Plchar.c'
+    - callWorkTable0988
+    - '@source: src/bof3/plchar/callWorkTable0988.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D0988.'
   - - 72
     - asm
@@ -38,8 +38,8 @@ segments:
     - func_801CE514
   - - 528
     - c
-    - callWorkTable0994Plchar
-    - '@source: src/bof3/plchar/callWorkTable0994Plchar.c'
+    - callWorkTable0994
+    - '@source: src/bof3/plchar/callWorkTable0994.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D0994, which is entry 3 of the thirty-word code-pointer run placed by this target at 0x801D0988.'
   - - 596
     - asm
@@ -58,8 +58,8 @@ segments:
     - func_801CEAE0
   - - 2044
     - c
-    - callWorkTable099Plchar
-    - '@source: src/bof3/plchar/callWorkTable099Plchar.c'
+    - callWorkTable099
+    - '@source: src/bof3/plchar/callWorkTable099.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D099C.'
   - - 2112
     - asm
@@ -113,8 +113,8 @@ segments:
     - '@behavior: Claims one free front-end record of the shared 0x74-byte row table at 0x80143FC8 and seeds it from a caller-supplied position pair. Five jal call sites inside func_801CF420 of this payload reach it: 0x801CF488 and 0x801CF4E0 pass a zero state byte, 0x801CF4B0 passes 4, 0x801CF510 passes 3 and 0x801CF5AC passes 2, each with the first coordinate in $a1 and the second in $a2 as sign-extended halfwords. It asks the shared allocator func_8019601C for a row index and, unless that byte is 0xFF, scales it by the 0x74-byte stride and writes row byte 0 as 1, row byte 5 as 0x34, row byte 1 as the state byte, row word 0x34 as the first coordinate shifted left 16, row word 0x38 as the second shifted the same way, row halfword 0x3E as the shared distance helper func_8015477C over the re-read row word 0x34 and the shifted second coordinate plus 0x200, and row byte 0x0B as 1.'
   - - 4888
     - c
-    - callWorkTable09Plchar
-    - '@source: src/bof3/plchar/callWorkTable09Plchar.c'
+    - callWorkTable09
+    - '@source: src/bof3/plchar/callWorkTable09.c'
     - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D09C4.'
   - - 4956
     - c
@@ -123,7 +123,7 @@ segments:
     - c
     - selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp26700_801CF7C8
     - '@source: src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp26700_801CF7C8.c'
-    - '@behavior: Work byte 3 == 1 step of this overlay, entry 16 of the thirty-word code-pointer run based at 0x801D0988 and so index 1 from the byte-3 dispatcher base 0x801D09C4 that callWorkTable09Plchar indexes; the body address appears once in the payload bytes, as the run word at 0x801D09C8, and no jal names it. Runs the shared readiness helper func_8014DAEC and keeps only its low byte as the ready test: while ready it passes work byte 8 to the shared work-sequence selector func_8014D8D4 and writes 2 into work byte 3, which advances the dispatch to entry 17, the 0x801CF900 handler. Otherwise it reads the countdown byte 0x0A that the step at 0x801CF75C arms with 0xB, does nothing while that byte reads zero, otherwise decrements it and continues only when a second read of the same byte reaches zero: that path queues the cue of work halfword 0x2C plus 0x100 through the shared cue dispatcher func_8015DF18, copies work byte 8 into field 0x08 of the 0x74-byte front-end row selected by work byte 0x0B and work byte 7 into the same row field 0x0A after defaulting work byte 7 to 1, then queues cue 0x10B through the same dispatcher.'
+    - '@behavior: Work byte 3 == 1 step of this overlay, entry 16 of the thirty-word code-pointer run based at 0x801D0988 and so index 1 from the byte-3 dispatcher base 0x801D09C4 that callWorkTable09 indexes; the body address appears once in the payload bytes, as the run word at 0x801D09C8, and no jal names it. Runs the shared readiness helper func_8014DAEC and keeps only its low byte as the ready test: while ready it passes work byte 8 to the shared work-sequence selector func_8014D8D4 and writes 2 into work byte 3, which advances the dispatch to entry 17, the 0x801CF900 handler. Otherwise it reads the countdown byte 0x0A that the step at 0x801CF75C arms with 0xB, does nothing while that byte reads zero, otherwise decrements it and continues only when a second read of the same byte reaches zero: that path queues the cue of work halfword 0x2C plus 0x100 through the shared cue dispatcher func_8015DF18, copies work byte 8 into field 0x08 of the 0x74-byte front-end row selected by work byte 0x0B and work byte 7 into the same row field 0x0A after defaulting work byte 7 to 1, then queues cue 0x10B through the same dispatcher.'
   - - 5376
     - c
     - clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp26700_801CF900
@@ -184,7 +184,7 @@ segments:
     - dispatchHalfwordTable
   - - 9540
     - c
-    - dispatchWorkHalfword2cTable09f4PlcharPlp26700_801D0944
+    - callWorkHalfword2Table09
   - - 9608
     - textbin
     - codePointerTable0988

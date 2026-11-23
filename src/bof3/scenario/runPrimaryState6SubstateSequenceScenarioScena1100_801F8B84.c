@@ -61,7 +61,7 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
 /* @source 0x801F8B84
  * @behavior Word 6 (the word stored at 0x801FAF14) of the ten-entry
  *           overlay-local second-level handler run at 0x801FAEFC that the exact
- *           dispatcher dispatchSecondaryStateScenarioScena1100_801F7748
+ *           dispatcher callSecondaryState
  *           (0x801F7748) indexes with the shared primary state byte D_80146874,
  *           so a primary state reading 6 selects it; no jal or j of the payload
  *           names 0x801F8B84, and that table word is its only reference. It

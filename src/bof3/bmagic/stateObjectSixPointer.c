@@ -12,7 +12,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 /* Shared battle record pointer in main RAM, outside this overlay's image. Splat
  * binds the address through this target's generated undefined_syms_auto.txt row
  * D_8014638C = 0x8014638C, so no target-map row is added. The sibling lift
- * decrementSeedHeaderBmagic
+ * decrementSeedHeader
  * reads the same record through this cell: byte 8 as the stamp it copies into
  * the object's byte 8 and the words at 0x34, 0x38 and 0x3C as the record words
  * it accumulates into the object. */
@@ -34,7 +34,7 @@ extern u8 D_801EC3A4[]; /* @source 0x801EC3A4 @kind data */
 
 /* Motion setup helper of the main executable, called with this overlay's work
  * object and returning nothing; the same prototype the sibling lift
- * decrementSeedHeaderBmagic
+ * decrementSeedHeader
  * declares. */
 extern void func_801DD350(u8 *work); /* @source 0x801DD350 @kind function */
 
@@ -84,7 +84,7 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C @kind function */
  *           extracted binaries found this 0x14C-byte span in this target only,
  *           so the clone lever is declined. Statement order, operand forms,
  *           offset-local spelling and declaration style follow the sibling lifts
- *           decrementSeedHeaderBmagic,
+ *           decrementSeedHeader,
  *           which carries the same guard shape, the same byte 0x8 copy, the same
  *           delta-word seed before func_801DD350, the same two pointer reloads
  *           and the same accumulated record triplet, and the exact lift at

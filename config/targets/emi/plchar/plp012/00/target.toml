@@ -8,12 +8,12 @@ splat = "config/targets/emi/plchar/plp012/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTablefd80Plchar.c",
-    "src/bof3/plchar/callWorkTablefd8Plchar.c",
-    "src/bof3/plchar/callWorkTablefd98Plchar.c",
-    "src/bof3/plchar/callWorkTablefda4Plchar.c",
-    "src/bof3/plchar/callWorkTablefdacPlchar.c",
-    "src/bof3/plchar/callWorkTablefdb8Plchar.c",
+    "src/bof3/plchar/callWorkTablefd80.c",
+    "src/bof3/plchar/callWorkTablefd8.c",
+    "src/bof3/plchar/callWorkTablefd98.c",
+    "src/bof3/plchar/callWorkTablefda4.c",
+    "src/bof3/plchar/callWorkTablefdac.c",
+    "src/bof3/plchar/callWorkTablefdb8.c",
     "src/bof3/plchar/clearUnseededState.c",
 ]
 support_sources = [
@@ -23,8 +23,8 @@ support_sources = [
     "src/bof3/plchar/requestRouteResource.c",
     "src/bof3/plchar/markAnimationClaim.c",
     "src/bof3/plchar/stepByteBRecord.c",
-    "src/bof3/plchar/callWorkTablefdc0Plchar.c",
-    "src/bof3/plchar/callWorkTablefdccPlchar.c",
+    "src/bof3/plchar/callWorkTablefdc0.c",
+    "src/bof3/plchar/callWorkTablefdcc.c",
     "src/bof3/plchar/queryIndexProjectedPosition.c",
     "src/bof3/plchar/pickNearerRouteRearm.c",
     "src/bof3/plchar/selectArrivalSevenReached.c",

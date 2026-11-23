@@ -74,7 +74,7 @@ extern void func_80166C48(u8* row, s32 mode);
  *           0x801D03D4: entry 10 of the twenty-eight-word code-pointer run based
  *           at 0x801D03AC and index 2 of the eight-word run based at 0x801D03CC
  *           that this target byte-3 dispatcher
- *           dispatchWorkByte3Table03ccPlcharPlp46700_801CE890 enters by scaling
+ *           callWorkByte3Table03 enters by scaling
  *           work byte 3 by four before its indirect call, so no jal in this
  *           payload names the span and those two run words are its only in-image
  *           references. When work byte 0x0B reads 1 the body first passes the

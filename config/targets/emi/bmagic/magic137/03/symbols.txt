@@ -4,7 +4,7 @@ dispatchWorkByte1HandlerBmagicMagic13703_801EEC1C = 0x801EEC1C;
 stateSlotsActingHead = 0x801EEC7C;
 decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic13703_801EEEFC = 0x801EEEFC;
 forwardBattleByteSetWorkByte9To30RaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13703_801EEF64 = 0x801EEF64;
-callStateTable00Bmagic = 0x801EEFD4;
+callStateTable00 = 0x801EEFD4;
 dispatchWorkByte2HandlerThenCallF3B0AndF4C4AndPopWhenWorkByte0NonzeroBmagicMagic13703_801EF018 = 0x801EF018;
 seedMotionOffsetPositionPairDistanceCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic13703_801EF090 = 0x801EF090;
 advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic13703_801EF174 = 0x801EF174;
@@ -20,7 +20,7 @@ decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic
 func_801EFDF8 = 0x801EFDF8;
 dispatchWorkByte2HandlerBmagicMagic13703_801EFFBC = 0x801EFFBC;
 stateBytesRequestInvoke = 0x801F001C;
-invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic13703_801F007C = 0x801F007C;
+callAdvanceWorkSet = 0x801F007C;
 invokeHelperBmagicMagic13703_801F00D8 = 0x801F00D8;
 func_801F00F8 = 0x801F00F8;
 func_801F0118 = 0x801F0118;

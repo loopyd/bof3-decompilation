@@ -1,20 +1,20 @@
 #include "bof3/bof3.h"
 /* @source 0x801FE464 @kind data */
-extern u8 sharedFieldSeed0ScenarioScena0600_801FE464;
+extern u8 sharedFieldSeed0;
 /* @source 0x801FE465 @kind data */
-extern u8 sharedFieldSeed1ScenarioScena0600_801FE465;
+extern u8 sharedFieldSeed1;
 /* @source 0x801FE466 @kind data */
-extern u8 sharedFieldSeed2ScenarioScena0600_801FE466;
+extern u8 sharedFieldSeed2;
 /* @source 0x801FE467 @kind data */
-extern u8 sharedFieldSeed3ScenarioScena0600_801FE467;
+extern u8 sharedFieldSeed3;
 /* @source 0x801FE468 @kind data */
-extern u8 sharedFieldSeed4ScenarioScena0600_801FE468;
+extern u8 sharedFieldSeed4;
 /* @source 0x801FE469 @kind data */
-extern u8 sharedFieldSeed5ScenarioScena0600_801FE469;
+extern u8 sharedFieldSeed5;
 /* @source 0x801FE46A @kind data */
-extern u8 sharedFieldSeed6ScenarioScena0600_801FE46A;
+extern u8 sharedFieldSeed6;
 /* @source 0x801FE46B @kind data */
-extern u8 sharedFieldSeed7ScenarioScena0600_801FE46B;
+extern u8 sharedFieldSeed7;
 /* @source 0x80144DF2 @kind data */
 extern u8 stateSelectionCounter;
 /* @source 0x80144DF5 @kind data */
@@ -63,14 +63,14 @@ void stateSharedFieldSeed(void) {
   s32 seed4;
   s32 seed5;
 
-  seed0 = sharedFieldSeed0ScenarioScena0600_801FE464;
-  seed6 = sharedFieldSeed6ScenarioScena0600_801FE46A;
-  seed7 = sharedFieldSeed7ScenarioScena0600_801FE46B;
-  seed1 = sharedFieldSeed1ScenarioScena0600_801FE465;
-  seed2 = sharedFieldSeed2ScenarioScena0600_801FE466;
-  seed3 = sharedFieldSeed3ScenarioScena0600_801FE467;
-  seed4 = sharedFieldSeed4ScenarioScena0600_801FE468;
-  seed5 = sharedFieldSeed5ScenarioScena0600_801FE469;
+  seed0 = sharedFieldSeed0;
+  seed6 = sharedFieldSeed6;
+  seed7 = sharedFieldSeed7;
+  seed1 = sharedFieldSeed1;
+  seed2 = sharedFieldSeed2;
+  seed3 = sharedFieldSeed3;
+  seed4 = sharedFieldSeed4;
+  seed5 = sharedFieldSeed5;
 
   sharedFieldHalfword_80144DF8 = seed0;
   stateSelectionCounter = seed6;

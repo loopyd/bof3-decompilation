@@ -45,8 +45,8 @@ segments:
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it stores 0x24 into the shared status halfword D_801490A8 and then 6 into the shared mode byte at 0x801D4285, and when the byte is zero it stores 0xFFFF into D_801490A8 instead.'
   - - 300
     - c
-    - setStatus24AndModeIndex6CloneWorld01Area05513_801F2D2C
-    - '@source: src/bof3/world/setStatus24AndModeIndex6CloneWorld01Area05513_801F2D2C.c'
+    - stateStatus24ModeClone
+    - '@source: src/bof3/world/stateStatus24ModeClone.c'
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it stores 0x24 into the shared status halfword D_801490A8 and then 6 into the shared mode byte at 0x801D4285, and when the byte is zero it stores 0xFFFF into D_801490A8 instead.'
   - - 368
     - c

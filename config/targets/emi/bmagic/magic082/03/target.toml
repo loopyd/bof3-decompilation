@@ -17,7 +17,7 @@ sources = [
     "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic08203_801EFD74.c",
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08203_801EF630.c",
     "src/bof3/bmagic/renderArgumentGreyCentre.c",
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow2BmagicMagic08203_801EF0C4.c",
+    "src/bof3/bmagic/stateWorkIncrementByte.c",
 ]
 support_sources = [
     "src/bof3/support/magic082_03_psyq.c",

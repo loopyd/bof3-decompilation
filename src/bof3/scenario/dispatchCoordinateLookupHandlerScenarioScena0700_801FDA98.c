@@ -35,7 +35,7 @@ extern ScenarioScena0700CoordinateLookupHandler scenarioScena0700CoordinateLooku
  * slot, loads the word of the five-word handler run at 0x801FDFA8, calls it
  * with no arguments through `jalr` and answers the constant 1, discarding the
  * handler's result. With one record the lookup can only answer 0 or -1, so the
- * reachable entry is word 0, requestPrimaryState6Substate10ScenarioScena0700_801FDAFC
+ * reachable entry is word 0, requestPrimaryState6Substate10
  * (0x801FDAFC). It performs no stores of its own, its 0x18-byte frame only keeps
  * $ra at 0x10 across the two calls, and the success constant is materialised as
  * `addiu $v0,$zero,0x1` in the `j` delay slot at 0x801FDAE4.

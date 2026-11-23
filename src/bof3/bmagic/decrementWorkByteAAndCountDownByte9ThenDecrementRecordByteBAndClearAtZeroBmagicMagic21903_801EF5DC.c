@@ -27,7 +27,7 @@ extern void clearWorkBytes0Through4BmagicMagic21903_801EF998(void); /* @source 0
 /* @source 0x801EF5DC
  * @behavior Overlay step handler selected by table, not by call: the pointer
  *           word at 0x801EFA10 is entry 4 of the five-word handler run based at
- *           0x801EFA00, which callStateTablefa00Bmagic
+ *           0x801EFA00, which callStateTablefa00
  *           indexes with work byte 0x01, and no jal word in the payload names
  *           0x801EF5DC. The body first calls the shared readiness helper at
  *           0x8014DAEC with no arguments; the answer is discarded and neither a

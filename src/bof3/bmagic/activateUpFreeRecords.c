@@ -3,8 +3,8 @@
 /* Finds the first record whose active byte is zero in this overlay's
  * 128-record, 0x3C-byte-stride pool at 0x801EF2A8 and returns it, or null once
  * every record is active. Already lifted exact in this target as
- * src/bof3/bmagic/findFreeRecordBmagicMagic11603_801EEFB8.c. */
-u8 *findFreeRecordBmagicMagic11603_801EEFB8(void);
+ * src/bof3/bmagic/queryFreeRecord.c. */
+u8 *queryFreeRecord(void);
 
 /* Initialises one record of the same pool: sets its active byte to 1, byte 1 to
  * 0, byte 2 to 0x10, and seeds its position, scale, flip and countdown fields
@@ -33,7 +33,7 @@ void activateUpFreeRecords(void) {
     u8 index;
 
     for (index = 0; index < 8; index++) {
-        record = findFreeRecordBmagicMagic11603_801EEFB8();
+        record = queryFreeRecord();
         if (record != 0) {
             func_801EF020(record);
         }

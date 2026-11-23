@@ -41,7 +41,7 @@ void raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C(vo
 /* This target's byte-1 step dispatcher, exact at 0x801EF3D8 through
  * src/bof3/bmagic/magic09303DispatchTables.c: it calls the handler this record's
  * work byte 0x01 selects from the table at 0x801F08AC. */
-void dispatchStateByte1Table08acBmagicMagic09303_801EF3D8(void);
+void callStateByte1Table08(void);
 
 /* @source 0x801EEC04
  * @behavior Per-frame entry of this overlay. It seeds a two-word local handler
@@ -85,7 +85,7 @@ void dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBma
       record_work = *(u8 **)((u8 *)D_801F0948 + offset);
       g_battle_work = record;
       D_801EB4E0 = record_work;
-      dispatchStateByte1Table08acBmagicMagic09303_801EF3D8();
+      callStateByte1Table08();
       D_801EB4E0 = saved_pointer;
       g_battle_work = saved_work;
     }

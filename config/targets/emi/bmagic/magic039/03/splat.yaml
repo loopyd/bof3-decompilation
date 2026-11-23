@@ -66,8 +66,8 @@ segments:
     - '@behavior: Entry 0 of the six-entry work-byte-2 handler run at 0x801EEC10 (word 0x801EEC10 of the twelve-word code-pointer run 0x801EEC04..0x801EEC34). Leaf with no frame. Loads the shared battle work record pointer cell at 0x801EB4E0, then the scratchpad work-object pointer cell at 0x1F800044, copies the record words 0x34, 0x38 and 0x3C into the same work-object word offsets, clears work-object byte 9 between the third load and the store of the copied word 0x3C, sets work-object byte 0xA to 1 through a fresh read of the pointer cell, and re-reads the cell once more to advance the dispatch state byte 0x2.'
   - - 1236
     - c
-    - workClearByteBmagic
-    - '@source: src/bof3/bmagic/workClearByteBmagic.c'
+    - workClearByte
+    - '@source: src/bof3/bmagic/workClearByte.c'
     - '@behavior: Adds 2 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and, when the stored byte equals 0x10, re-reads that pointer cell to clear work-object byte 0xA and re-reads the cell again to increment the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 1332
     - c
@@ -97,8 +97,8 @@ segments:
     - '@behavior: Decrements the scratchpad work-object byte 9 and, when that countdown reaches zero, scales work byte 0xB by 0x200 into the scratchpad halfword 0x1F80000A and steps the position pair from the shared record at 0x801EB4E0 by twelve times the first sampled angular value of that angle (word 0x34) and twelve times the second, sampled from the stored halfword (word 0x38), copies the record word 0x3C, clears work byte 9, sets work byte 0xA to 4 and advances the dispatch state byte 0x2.'
   - - 2704
     - c
-    - workAdvanceAt80Bmagic
-    - '@source: src/bof3/bmagic/workAdvanceAt80Bmagic.c'
+    - workAdvanceAt80
+    - '@source: src/bof3/bmagic/workAdvanceAt80.c'
     - '@behavior: Adds 0x10 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and, when the stored byte has ramped to 0x80, re-reads that pointer cell and increments the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 2784
     - c

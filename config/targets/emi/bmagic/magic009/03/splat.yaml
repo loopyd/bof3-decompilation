@@ -41,8 +41,8 @@ segments:
     - func_801EEF08
   - - 1052
     - c
-    - decrementIncrementZeroBmagic
-    - '@source: src/bof3/bmagic/decrementIncrementZeroBmagic.c'
+    - decrementIncrementZero
+    - '@source: src/bof3/bmagic/decrementIncrementZero.c'
   - - 1128
     - c
     - incrementByteWhenZero
@@ -67,8 +67,8 @@ segments:
     - '@behavior: Work-byte-2 handler entered as entry 0 of the handler run at 0x801EF8A4. Decrements the work object countdown byte 0x9 and, on zero, copies the 0x8014638C record byte 0x8 into work byte 0x8, stores the step triplet row the work byte 0xB selects into work words 0xC and 0x10, calls func_801DD350, adds the record words 0x34 and 0x38 into the work words 0x34 and 0x38, sets work word 0x3C from the record word 0x3C plus the row z word, calls func_800AF764, then clears work byte 0xA and advances work byte 0x2.'
   - - 1748
     - c
-    - workAdvanceAt16Bmagic
-    - '@source: src/bof3/bmagic/workAdvanceAt16Bmagic.c'
+    - workAdvanceAt16
+    - '@source: src/bof3/bmagic/workAdvanceAt16.c'
     - '@behavior: Entry 3 of the five-entry work-byte-2 handler pointer run at 0x801EF89C. Reads the scratchpad work-object pointer cell at 0x1F800044, adds two modulo 256 to the work object unsigned byte at offset 0x9 and then, after re-reading the cell, adds two modulo 256 to its byte at offset 0xA; re-reads the cell once more and, only when that object byte 0x9 equals 0x10, increments the byte at offset 0x2 through the pointer the test already loaded, advancing to the next handler step. Leaf with no frame, no arguments, no return value and no other state touched.'
   - - 1856
     - c

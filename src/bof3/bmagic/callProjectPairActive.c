@@ -28,7 +28,7 @@ extern s16 D_1F800000; /* @source 0x1F800000 @kind data */
  * code-pointer run that starts at 0x801F066C: the first group is the state-0
  * handler 0x801EF224 followed by its four work-byte-2 handlers, the second is
  * this function at 0x801EFE8C followed by its four. The byte-1 dispatcher
- * callStateTable0680Bmagic indexes 0x801F0680,
+ * callStateTable0680 indexes 0x801F0680,
  * the word that holds this function, while this body indexes the word one
  * further on. The original adds the scaled index to the 0x801F0684 word, so
  * the extern is declared at that indexed entry and not at the run start. */
@@ -99,7 +99,7 @@ void func_801F01A4(void);
  *           no arguments, returns nothing and reads or writes no other state.
  *           No jal in this payload reaches it: its address is the word at
  *           0x801F0680 inside the textbin row T_801F065C that the byte-1
- *           dispatcher callStateTable0680Bmagic
+ *           dispatcher callStateTable0680
  *           indexes. The last turn offset is computed into its own local before
  *           the record word 0x38 store: the original issues that frame-counter
  *           load and mask between the multiply of the previous product and the

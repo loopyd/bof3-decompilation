@@ -32,7 +32,7 @@ extern const char D_801F6C04[];
 
 /* Byte view of the overlay-local counter halfword at the last payload halfword
  * 0x801FD288: the low byte of that halfword is the 0..0xC7 counter the
- * per-frame handler stateRandomSignScenario
+ * per-frame handler stateRandomSign
  * signs with bit 15, and it is the byte this body reads back with lbu.
  * @source 0x801FD288 @kind data */
 extern u8 D_801FD288;

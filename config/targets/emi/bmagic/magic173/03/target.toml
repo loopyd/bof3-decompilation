@@ -9,14 +9,14 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/bmagic/callStateTable09Bmagic.c",
+    "src/bof3/bmagic/callStateTable09.c",
     "src/bof3/support/magic173_03_psyq.c",
     "src/bof3/bmagic/magic17303DispatchTables.c",
     "src/bof3/bmagic/insertEmptyRecordAtWorkByteBAndShiftRowRecordsUpBmagicMagic17303_801F03A0.c",
     "src/bof3/bmagic/stateHeaderTintResource.c",
     "src/bof3/bmagic/decrementWorkByte9By4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17303_801F0700.c",
     "src/bof3/bmagic/runReadinessHelperAdvance.c",
-    "src/bof3/bmagic/runReadinessHelperTwiceThenAdvanceWorkByte2WhenReadyBmagicMagic17303_801F06B0.c",
+    "src/bof3/bmagic/runReadinessTwiceReady.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic17303_801EED90.c",
     "src/bof3/bmagic/seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic17303_801EEEEC.c",
     "src/bof3/bmagic/renderPointHeadingHit.c",

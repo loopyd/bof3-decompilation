@@ -97,14 +97,14 @@ segments:
     - '@behavior: second entry of this overlay''s three-entry work-byte-4 handler table at 0x801F3898: adds the scratch work record''s 0x20 step word to its 0x14 motion word, runs the shared mover func_801B0DFC, then queries the shared distance routine func_80154F28 over the record''s 0x34/0x38 coordinate pair; when the record''s signed 0x3E halfword is below that distance it stores the raw result into 0x3E, zeroes the 0x14 and 0x20 words and writes handler 2 into byte 0x04; unless the record''s byte 0x05 or bit 3 of the shared flag pair 0x80146258/0x8014625A is set it hands the record''s signed 0x3E halfword to func_80154FD8, and it always consumes two units of the halfword at 0x122 of the record published through 0x80146250.'
   - - 2112
     - c
-    - clearWorldFlagAndWorkByte4World01Area05613_801F3440
+    - stateWorldFlagWork
   - - 2148
     - c
     - noopHandlerWorld01Area05613_801F3464
   - - 2156
     - c
-    - setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C
-    - '@source: src/bof3/world/setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C.c'
+    - stateFlag6SetSet
+    - '@source: src/bof3/world/stateFlag6SetSet.c'
   - - 2268
     - textbin
     - D_801F34DC

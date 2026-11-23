@@ -48,7 +48,7 @@ void func_801F02A0(void); /* @source 0x801F02A0 */
 /* @source 0x801EF320
  * @behavior Entry 2 of the three-entry handler table at 0x801F0A1C that this
  *           overlay's work-byte-2 dispatcher
- *           callHandlerDrawBmagic
+ *           callHandlerDraw
  *           indexes with the scratchpad work object's byte 0x2, so no jal in
  *           this payload reaches this address; the table words
  *           0x801EEEFC/0x801EF138/0x801EF320 are the three state blocks that

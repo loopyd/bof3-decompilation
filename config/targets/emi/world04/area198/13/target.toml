@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/stepAccumulatorsLevelTriple.c",
     "src/bof3/world/stateTripleApplyLookup.c",
-    "src/bof3/world/stateWorkScenarioProgress0.c",
+    "src/bof3/world/stateWorkProgress0.c",
     "src/bof3/world/fixedPointUnitsWorld04.c",
     "src/bof3/world/stateAfterScalePass.c",
     "src/bof3/world/invokeHelperWithWorkWorld04Area19813_801F2FD4.c",

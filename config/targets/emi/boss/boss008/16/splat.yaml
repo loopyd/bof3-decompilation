@@ -61,8 +61,8 @@ segments:
     - func_800C1AB4
   - - 840
     - c
-    - shrinkWorkScaleByte9AndWordPair40And44ThenOnZeroHandOffToByte2Handler4BossBoss00816_800C1B48
-    - '@source: src/bof3/boss/shrinkWorkScaleByte9AndWordPair40And44ThenOnZeroHandOffToByte2Handler4BossBoss00816_800C1B48.c'
+    - shrinkScaleHandOff
+    - '@source: src/bof3/boss/shrinkScaleHandOff.c'
     - '@behavior: Per-frame handler of this overlay work state machine, entry 11 of the fifteen-word run based at 0x800C2690 that callStateTable2690Boss indexes with work byte 2: runs the overlay ring renderer at 0x800C236C with work byte 9 as its scale, subtracts 4 from that byte and 0x2000 from each of the words at 0x40 and 0x44, clamping a word that is not positive to 0; once work byte 9 reaches 0 it clears work byte 0x48, applies main lookup record 0x83, requests resource 0, runs the shared accumulation pass at 0x801E54EC, clears bit 0x40 of work byte 0, stores 6 into work byte 1 and 4 into work byte 2, which hand the record to this overlay byte-2 dispatcher 0x800C18A0 and its handler 0x800C18E4, and advances work byte 3 to 1 while clearing work byte 4.'
   - - 1128
     - c
@@ -185,8 +185,8 @@ segments:
     - '@behavior: Battle-flag state switch of this overlay and first member of the third hook trio its installer publishBattleHooksBossBoss00816_800C2184 writes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x30 into the shared scenario progress byte 0x80146864 and calls initModeTuple510, and otherwise calls initModeTuple520.'
   - - 2576
     - c
-    - setupBattleWorkRecordForOwnerTwoThenSetWorkByte2AAndCopyHalfwordPair58And5ABossBoss00816_800C2210
-    - '@source: src/bof3/boss/setupBattleWorkRecordForOwnerTwoThenSetWorkByte2AAndCopyHalfwordPair58And5ABossBoss00816_800C2210.c'
+    - setupOwnerTwoHalfword
+    - '@source: src/bof3/boss/setupOwnerTwoHalfword.c'
     - '@behavior: Battle setup hook of this overlay for owner record 2, installed into the shared battle hook slot 0x801463A8 by the exact installer publishBattleHooksBossBoss00816_800C2184: clears the 0x40 flag of owner record 2 through func_800AC844, looks the same record up through func_800AC754 and publishes it into the scratchpad work-record cursor 0x1F800044, applies main lookup record 0x83 through func_8014DD3C, marks the published record by storing 1 into its byte 0x2A, requests resource 0 through func_8014D6B8, and then copies the adjacent halfword pair D_801EB688/D_801EB68A into that record at 0x58 and 0x5A.'
   - - 2688
     - c
@@ -201,8 +201,8 @@ segments:
     - '@behavior: Battle-flag state switch of this overlay and first member of the fourth hook trio its installer publishBattleHooks4 writes into shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x44 into the shared scenario progress byte 0x80146864 and calls initModeTuple510, and otherwise calls initModeTuple520.'
   - - 2828
     - c
-    - setupBattleWorkRecordForOwnerThreeThenCopyHalfwordPair58And5ABossBoss00816_800C230C
-    - '@source: src/bof3/boss/setupBattleWorkRecordForOwnerThreeThenCopyHalfwordPair58And5ABossBoss00816_800C230C.c'
+    - setupOwnerThreeHalfword
+    - '@source: src/bof3/boss/setupOwnerThreeHalfword.c'
     - '@behavior: Battle setup hook of this overlay and second member of the fourth hook trio its installer publishBattleHooks4 writes into shared battle-hook slot 0x801463A8: clears the 0x40 flag of owner record 3 through func_800AC844, publishes the record func_800AC754 returns for the same owner id into the scratchpad work-record cursor 0x1F800044, applies main lookup record 0x83 through func_8014DD3C, requests resource 0 through func_8014D6B8, and then copies the adjacent halfword pair D_801EB688/D_801EB68A into that published record at +0x58 and +0x5A.'
   - - 2924
     - asm

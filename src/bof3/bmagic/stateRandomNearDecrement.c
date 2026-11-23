@@ -13,7 +13,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 /* @source 0x801EF648
  * @behavior Entry 5 (index 5 of fourteen words) of the byte-1 handler table
  *           based at 0x801F046C, which
- *           callStateTable046Bmagic indexes with
+ *           callStateTable046 indexes with
  *           work record byte 1 and calls indirectly; the word at 0x801F0480
  *           holds this body's address, and entry 4 at 0x801EF528 is the
  *           seeder that writes the two halfwords this body steps. It calls

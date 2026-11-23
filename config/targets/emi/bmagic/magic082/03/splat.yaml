@@ -44,8 +44,8 @@ segments:
     - func_801EEFB4
   - - 1220
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow2BmagicMagic08203_801EF0C4
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow2BmagicMagic08203_801EF0C4.c'
+    - stateWorkIncrementByte
+    - '@source: src/bof3/bmagic/stateWorkIncrementByte.c'
     - '@behavior: Read the scratchpad work-object pointer at 0x1F800044; when work byte 0xB is below two, store 8 into work byte 9, re-read the pointer and increment work byte 1.'
   - - 1292
     - c

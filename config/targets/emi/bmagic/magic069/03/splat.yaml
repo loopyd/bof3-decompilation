@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1LocalPairBmagicMagic06903_801EEC04
-    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairBmagicMagic06903_801EEC04.c'
+    - callWorkLocalPair
+    - '@source: src/bof3/bmagic/callWorkLocalPair.c'
     - '@behavior: Overlay step dispatcher: reads the scratchpad work-object pointer cell at 0x1F800044 once, seeds 0x801EEC5C into entry 0 and 0x801EEE30 into entry 1 of a two-entry local handler array in its own 0x20-byte frame, and invokes the entry selected by the work object''s unsigned byte at offset 1 with no arguments. The index is unchecked and the body reads no other state; the frame only keeps $ra across the indirect call.'
   - - 92
     - asm
@@ -78,7 +78,7 @@ segments:
     - '@behavior: Work-byte-1 state 9 handler: loads the scratchpad work object, decrements its countdown word 0xC, adds the decremented word into halfword 0x2E, and only when that word reached zero decrements the shared battle record byte 0x0B and invokes the helper at 0x801E5988.'
   - - 2336
     - c
-    - callStateTable0520Bmagic
+    - callStateTable0520
     - '@source: src/bof3/bmagic/magic06903DispatchTables.c'
   - - 2404
     - c

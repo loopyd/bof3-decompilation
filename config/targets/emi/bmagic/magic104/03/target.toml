@@ -14,7 +14,7 @@ support_sources = [
     "src/bof3/bmagic/renderSixteenBandsColors.c",
     "src/bof3/bmagic/renderThirtySampledRadii.c",
     "src/bof3/bmagic/renderThirtyTrianglesSampled.c",
-    "src/bof3/bmagic/decrementWorkByte9AndHalfword3EAfterHelpersAndPublishByteBOnZeroBmagicMagic10403_801F034C.c",
+    "src/bof3/bmagic/decrementAfterHelpersPublish.c",
     "src/bof3/bmagic/decrementInvokeHelperParity.c",
     "src/bof3/support/magic104_03_psyq.c",
     "src/bof3/bmagic/incrementBytesCopyGlobal.c",

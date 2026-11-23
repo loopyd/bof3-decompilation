@@ -40,11 +40,11 @@ segments:
     - '@behavior: Entry 1 of the overlay''s local two-entry handler pair: raises bit 0x4 of the shared halfword at 0x801462E8 and invokes the shared helper when the work object''s word 0x08 masked with 0xFF00FF00 is zero.'
   - - 1152
     - c
-    - callStateTable089Bmagic
+    - callStateTable089
     - '@source: src/bof3/bmagic/magic09303DispatchTables.c'
   - - 1220
     - c
-    - callStateTable08Bmagic
+    - callStateTable08
     - '@source: src/bof3/bmagic/magic09303DispatchTables.c'
   - - 1288
     - asm
@@ -61,7 +61,7 @@ segments:
     - '@behavior: Decrement the shared battle work record byte 9 and invoke the shared helper, as one work byte 2 handler of this overlay.'
   - - 2008
     - c
-    - dispatchStateByte1Table08acBmagicMagic09303_801EF3D8
+    - callStateByte1Table08
     - '@source: src/bof3/bmagic/magic09303DispatchTables.c'
   - - 2076
     - asm
@@ -117,12 +117,12 @@ segments:
     - '@behavior: Count down work byte 9, randomize the position pair, invoke the helper by byte B and advance byte 2.'
   - - 5280
     - c
-    - workByte9AdvanceBmagic
-    - '@source: src/bof3/bmagic/workByte9AdvanceBmagic.c'
+    - workByte9Advance
+    - '@source: src/bof3/bmagic/workByte9Advance.c'
   - - 5360
     - c
-    - workDecrementByteBmagic
-    - '@source: src/bof3/bmagic/workDecrementByteBmagic.c'
+    - workDecrementByte
+    - '@source: src/bof3/bmagic/workDecrementByte.c'
     - '@behavior: Add 2 to work byte 9, decrement work byte A and advance work byte 2 when the new byte A is 0x30.'
   - - 5468
     - c

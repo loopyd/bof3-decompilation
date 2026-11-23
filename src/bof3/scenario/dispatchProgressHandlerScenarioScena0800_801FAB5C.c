@@ -12,7 +12,7 @@ extern u32 D_801FE970[];
  * than that byte and writes none; the 0x18-byte frame exists only to keep $ra
  * across the indirect call. This function is itself entry 2 of the outer table
  * at 0x801FE964 that the signed byte D_80146872 indexes (see
- * dispatchProgressHandlerScenarioScena0800_801FA294).
+ * callProgressHandler).
  * @status exact
  * @match 100.00
  * @residual none

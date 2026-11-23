@@ -27,7 +27,7 @@ void func_800AF764(void);
 /* This overlay's own record draw step at 0x801F0908: it selects a draw mode
  * from GetGraphType, installs it on the prim cursor and queues the record's
  * primitives. */
-void drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908(
+void renderTwentyTintedCoefficients(
     void);
 
 /* @source 0x801EF518
@@ -53,6 +53,6 @@ void dispatchWorkByte2HandlerThenDrawWhenWorkBytes2And0SetBmagicMagic17203_801EF
   D_801F0B90[g_battle_work[2]]();
   if ((g_battle_work[0] & g_battle_work[2]) != 0) {
     func_800AF764();
-    drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908();
+    renderTwentyTintedCoefficients();
   }
 }

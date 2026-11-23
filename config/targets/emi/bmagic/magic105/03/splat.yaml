@@ -41,7 +41,7 @@ segments:
     - func_801EEF18
   - - 888
     - c
-    - callStateTable0048Bmagic
+    - callStateTable0048
     - '@source: src/bof3/bmagic/magic10503DispatchTables.c'
   - - 956
     - c
@@ -57,8 +57,8 @@ segments:
     - func_801EF124
   - - 1616
     - c
-    - incrementWorkByteAAndAdvanceWorkByte2At40BmagicMagic10503_801EF250
-    - '@source: src/bof3/bmagic/incrementWorkByteAAndAdvanceWorkByte2At40BmagicMagic10503_801EF250.c'
+    - incrementWorkByteAdvance
+    - '@source: src/bof3/bmagic/incrementWorkByteAdvance.c'
   - - 1696
     - asm
     - func_801EF2A0
@@ -70,7 +70,7 @@ segments:
     - func_801EF3A0
   - - 3200
     - c
-    - callStateTable0074Bmagic
+    - callStateTable0074
     - '@source: src/bof3/bmagic/magic10503DispatchTables.c'
   - - 3268
     - asm

@@ -7,7 +7,7 @@
 extern u8 g_ScenarioProgress;
 
 /* Signed primary-state byte of the shared state tuple; this overlay's
- * callPrimaryHandlerScenario indexes the handler run
+ * callPrimaryHandler indexes the handler run
  * at 0x801FA210 with it.
  * @source 0x80146874 @kind unknown
  */
@@ -132,7 +132,7 @@ void addSignedTableStep(void);
 /* @source 0x801F8F98
  * @behavior The overlay handler of primary state 2: word 2 of the primary-state
  *           handler run at 0x801FA210, which
- *           callPrimaryHandlerScenario indexes with
+ *           callPrimaryHandler indexes with
  *           the signed shared state byte D_80146874. It switches on the shared
  *           substate byte D_80146875 with an unsigned bound of 31, so values
  *           0..30 select a case and 23..29 fall straight to the exit, and after

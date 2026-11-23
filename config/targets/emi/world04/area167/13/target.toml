@@ -17,7 +17,7 @@ sources = [
     "src/bof3/world/stateFrontEndSeed.c",
     "src/bof3/world/clearSharedFlagBit46ThenClearOverlayStateByteWorld04Area16713_801F3F28.c",
     "src/bof3/world/stateAdvanceWorkCall31.c",
-    "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowUnlessSharedOverlayStateByteIs20World04Area16713_801F38F0.c",
+    "src/bof3/world/stateCameraOutsideOverlay.c",
     "src/bof3/world/stateBy3SharedClear.c",
     "src/bof3/world/stateStatusSeedGate.c",
     "src/bof3/world/setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3EB4.c",

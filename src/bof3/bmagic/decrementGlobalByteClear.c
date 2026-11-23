@@ -19,7 +19,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 /* @source 0x801F0420
  * @behavior Per-frame handler of the scratchpad work object reached only
  *           through the in-image handler-pointer run based at 0x801F07BC:
- *           callStateTable07Bmagic (0x801EF000)
+ *           callStateTable07 (0x801EF000)
  *           reads work byte 1, scales it by four and jalr's that entry, and
  *           the word at 0x801F07F4, entry 14 of the fifteen non-zero words in
  *           that run, holds this address and is the only word in the payload

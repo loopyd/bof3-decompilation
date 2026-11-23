@@ -16,7 +16,7 @@ sources = [
     "src/bof3/world/decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2CB4.c",
     "src/bof3/world/decrementCountdownByte9LowerWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2D70.c",
     "src/bof3/world/publishViewFacingY.c",
-    "src/bof3/world/queueCue201WhenFrontEndModeNot5World02Area08513_801F3BEC.c",
+    "src/bof3/world/queueFrontEndMode.c",
 ]
 support_sources = [
     "src/bof3/world/setWorkByte6ClearWorkByte92World02Area08513_801F38D0.c",

@@ -17,7 +17,7 @@ support_sources = [
     "src/bof3/world/stateStepCallPair.c",
     "src/bof3/world/stateEntrySubstateRow.c",
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808.c",
-    "src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F4848.c",
+    "src/bof3/world/stateStatusSharedOverlay.c",
     "src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0DAndSetOverlayByteBit1World04Area16813_801F48B4.c",
     "src/bof3/world/setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980.c",
     "src/bof3/world/stateStatusGateOverlay.c",

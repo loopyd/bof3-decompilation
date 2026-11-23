@@ -58,7 +58,7 @@ segments:
     - '@behavior: When work byte 0xB is zero, raises mask 0x4 in the halfword at 0x801462E8 and invokes 0x801E5988.'
   - - 1744
     - c
-    - dispatchStateByte1Table04b8BmagicMagic06703_801EF2D0
+    - callStateByte1Table04
     - '@source: src/bof3/bmagic/magic06703DispatchTables.c'
   - - 1812
     - c
@@ -93,8 +93,8 @@ segments:
     - func_801EF79C
   - - 4900
     - c
-    - callHandlerNonzeroBmagic
-    - '@source: src/bof3/bmagic/callHandlerNonzeroBmagic.c'
+    - callHandlerNonzero
+    - '@source: src/bof3/bmagic/callHandlerNonzero.c'
     - '@behavior: Dispatches work byte 2 through table 0x801F04D8, reloads the scratchpad work pointer, and invokes 0x801F00C4 when work byte 0 is nonzero.'
   - - 5004
     - c
@@ -103,8 +103,8 @@ segments:
     - '@behavior: Resets two bytes of the scratchpad work object and advances a third: the object byte at offset 0x9 is cleared with sb $zero, the object byte at offset 0xA is set to the literal 0x88 (addiu $v0,$zero,0x88 then sb) and the object byte at offset 0x2 is incremented by one with a byte-width add (lbu, addiu 1, sb, the store scheduled into the $ra delay slot). The work-object pointer cell at 0x1F800044 is re-materialized and reloaded once per access, so the original keeps three separate lui $vN,0x1F80 / lw $vN,0x44($vN) pairs; nothing is returned, no other state is read or written and the function has no frame.'
   - - 5068
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic06703_801EFFCC
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic06703_801EFFCC.c'
+    - incrementWorkAdvanceWork
+    - '@source: src/bof3/bmagic/incrementWorkAdvanceWork.c'
     - '@behavior: Increments work byte 9 and, when the stored byte equals 0x10, reloads the scratchpad work pointer and increments work byte 2.'
   - - 5148
     - c
@@ -113,15 +113,15 @@ segments:
     - '@behavior: Decrements work byte 0xA and, when it reaches zero, reloads the scratchpad work pointer and increments work byte 2.'
   - - 5224
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06703_801F0068
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06703_801F0068.c'
+    - decrementGlobalInvokeZero
+    - '@source: src/bof3/bmagic/decrementGlobalInvokeZero.c'
     - '@behavior: Decrements work byte 9 of the scratchpad work object and tests the stored byte truncated to eight bits; only when it reaches zero does it decrement byte 0xB of the record selected by 0x801EB4E0 and invoke 0x801E5988.'
   - - 5316
     - asm
     - func_801F00C4
   - - 5792
     - c
-    - dispatchStateByte2Table04e8BmagicMagic06703_801F02A0
+    - callStateByte2Table04
     - '@source: src/bof3/bmagic/magic06703DispatchTables.c'
   - - 5860
     - c
@@ -139,8 +139,8 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06703_801F038C.c'
   - - 6124
     - c
-    - stateBytesAdvanceBmagic
-    - '@source: src/bof3/bmagic/stateBytesAdvanceBmagic.c'
+    - stateBytesAdvance
+    - '@source: src/bof3/bmagic/stateBytesAdvance.c'
     - '@behavior: Clears work bytes 0xB and 9, invokes 0x8014D6B8 with 3, then increments work byte 2, reloading the scratchpad work pointer for each operation.'
   - - 6204
     - c

@@ -29,7 +29,7 @@ extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
  * passes here in $a0. The same neighbour records the field roles this function
  * writes: byte 0 is the claim flag, byte 1 the state byte the work-byte-1
  * dispatchers select handlers with, byte 2 the countdown byte that
- * tickCountdownReloadScenario
+ * tickCountdownReload
  * decrements and byte 4 the re-arm value that same handler reloads. The
  * 0x8-entry/0x1C-stride table at 0x800E4800 and the scratch work object at
  * pointer slot 0x1F800044 are the ones this target's exact siblings use. This

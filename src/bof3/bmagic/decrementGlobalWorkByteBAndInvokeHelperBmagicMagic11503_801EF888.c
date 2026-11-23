@@ -18,7 +18,7 @@ extern void func_801E5988(void);
  *           code pointer run based at 0x801EF8C4 (0x801EF130, 0x801EF27C,
  *           0x801EF49C, 0x801EF5C4, 0x801EF690, 0x801EF7A4, 0x801EF7F4,
  *           0x801EF888), reached through the state-byte-2 dispatcher
- *           dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098, which scales
+ *           callStateByte2Tablef8, which scales
  *           byte 2 of the scratchpad work object at 0x1F800044 by four and
  *           calls the selected word with no arguments; the payload word at
  *           0x801EF8E0, the tail of the ten-word run that starts at 0x801EF8BC,

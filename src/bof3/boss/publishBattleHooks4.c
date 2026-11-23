@@ -6,7 +6,7 @@ typedef void (*Boss00816Handler)(void);
  * the third is the overlay's zero-result accessor. */
 void initModeTuple510Or520ByFlagBitTwoSetScenarioProgress44BossBoss00816_800C22C0(
     void);
-void setupBattleWorkRecordForOwnerThreeThenCopyHalfwordPair58And5ABossBoss00816_800C230C(
+void setupOwnerThreeHalfword(
     void);
 s32  zeroResultBossBoss00816_800C22B8(void);
 
@@ -33,6 +33,6 @@ void publishBattleHooks4(void) {
   D_801463A4 =
       initModeTuple510Or520ByFlagBitTwoSetScenarioProgress44BossBoss00816_800C22C0;
   D_801463A8 =
-      setupBattleWorkRecordForOwnerThreeThenCopyHalfwordPair58And5ABossBoss00816_800C230C;
+      setupOwnerThreeHalfword;
   D_801463AC = (Boss00816Handler)zeroResultBossBoss00816_800C22B8;
 }

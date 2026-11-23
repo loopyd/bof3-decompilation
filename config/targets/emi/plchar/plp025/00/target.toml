@@ -8,20 +8,20 @@ splat = "config/targets/emi/plchar/plp025/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTableffa8Plchar.c",
-    "src/bof3/plchar/callWorkTableffb4Plchar.c",
-    "src/bof3/plchar/callWorkTableffc0Plchar.c",
-    "src/bof3/plchar/callWorkTableffccPlchar.c",
-    "src/bof3/plchar/callWorkTableffd4Plchar.c",
-    "src/bof3/plchar/callWorkTableffe0Plchar.c",
+    "src/bof3/plchar/callWorkTableffa8.c",
+    "src/bof3/plchar/callWorkTableffb4.c",
+    "src/bof3/plchar/callWorkTableffc0.c",
+    "src/bof3/plchar/callWorkTableffcc.c",
+    "src/bof3/plchar/callWorkTableffd4.c",
+    "src/bof3/plchar/callWorkTableffe0.c",
 ]
 support_sources = [
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp02500_801CE770.c",
     "src/bof3/plchar/claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp02500_801CFD40.c",
     "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp02500_801CED1C.c",
     "src/bof3/plchar/stateWorldFlagExpires.c",
-    "src/bof3/plchar/callWorkTableffecPlchar.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablefff8PlcharPlp02500_801CFF64.c",
+    "src/bof3/plchar/callWorkTableffec.c",
+    "src/bof3/plchar/callWorkHalfword2Tablefff8.c",
     "src/bof3/plchar/findRecordIndex.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp02500_801CEA94.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp02500_801CF968.c",

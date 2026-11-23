@@ -28,7 +28,7 @@ extern s16 func_8015477C(s32 arg0, s32 arg1);
  * Name evidence: "tickCountdownByte9" is this target's family wording for the
  * `countdown = (u8)(work[9] - 1); work[9] = countdown;` chain followed by a
  * zero test of the masked byte, as in the exact siblings
- * tickCountdownSubtractScenario
+ * tickCountdownSubtract
  * and tickSeedWordsQueue.
  * The expiry arm is the same statement sequence as the exact neighbour
  * stateDistancePairArm

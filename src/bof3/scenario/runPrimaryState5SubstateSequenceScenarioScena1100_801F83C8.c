@@ -103,7 +103,7 @@ extern void dispatchSoundCue(u32 cue_id);
 /* @source 0x801F83C8
  * @behavior Word 5 (the word stored at 0x801FAF10) of the ten-entry
  * overlay-local second-level handler run at 0x801FAEFC that the exact
- * dispatcher dispatchSecondaryStateScenarioScena1100_801F7748 (0x801F7748)
+ * dispatcher callSecondaryState (0x801F7748)
  * indexes with the shared primary state byte D_80146874, so a primary state
  * reading 5 selects it; no jal or j of the payload names 0x801F83C8, and that
  * little-endian table word is its only reference. It switches on the shared

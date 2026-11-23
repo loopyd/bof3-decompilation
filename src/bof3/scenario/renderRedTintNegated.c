@@ -38,7 +38,7 @@ void renderFullRedCentered(
  *
  * Shape evidence: the tail from the countdown reload through the return is
  * byte-identical to the exact span
- * tickCountdownAdvanceScenario in this
+ * tickCountdownAdvance in this
  * target, which records the same re-arm of 0x10, the same andi $v0,$v0,0xFF
  * that the promoted u8 decrement produces and the same re-read of the pointer
  * cell after every store; this body is that sequence behind a frame that keeps

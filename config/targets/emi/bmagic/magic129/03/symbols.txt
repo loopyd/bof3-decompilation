@@ -15,7 +15,7 @@ dispatchWorkByte2HandlerThenDrawFanBetweenGraphTypeDrawModesWhenActiveBmagicMagi
 decrementRandomizedPositionTint = 0x801F00D4;
 func_801F023C = 0x801F023C;
 decrementIntegrateGlobalZero = 0x801F029C;
-drawEightTranslucentGouraudFanTrianglesRadius32TintedByWorkByteATimesSignedBytes5d5e5fBmagicMagic12903_801F030C = 0x801F030C;
+renderFanTrianglesTinted = 0x801F030C;
 reserveFirstFreeRecordBmagicMagic12903_801F0500 = 0x801F0500;
 clearWorkBytesBmagicMagic12903_801F0564 = 0x801F0564;
 T_801F05B4 = 0x801F05B4;

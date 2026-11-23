@@ -8,19 +8,19 @@ splat = "config/targets/emi/plchar/plp034/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTable02Plchar.c",
-    "src/bof3/plchar/callWorkTable0300Plchar.c",
-    "src/bof3/plchar/callWorkTable030Plchar.c",
-    "src/bof3/plchar/callWorkTable0318Plchar.c",
+    "src/bof3/plchar/callWorkTable02.c",
+    "src/bof3/plchar/callWorkTable0300.c",
+    "src/bof3/plchar/callWorkTable030.c",
+    "src/bof3/plchar/callWorkTable0318.c",
 ]
 support_sources = [
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0094.c",
-    "src/bof3/plchar/callWorkTable0340Plchar.c",
+    "src/bof3/plchar/callWorkTable0340.c",
     "src/bof3/plchar/queryClearRow.c",
-    "src/bof3/plchar/callWorkTable034Plchar.c",
+    "src/bof3/plchar/callWorkTable034.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable0358PlcharPlp03400_801D02B0.c",
-    "src/bof3/plchar/callWorkTable0320Plchar.c",
-    "src/bof3/plchar/callWorkTable0334Plchar.c",
+    "src/bof3/plchar/callWorkTable0320.c",
+    "src/bof3/plchar/callWorkTable0334.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp03400_801CF8AC.c",
     "src/bof3/plchar/clearUnseededRow.c",
     "src/bof3/plchar/queueCueSelectSequence.c",

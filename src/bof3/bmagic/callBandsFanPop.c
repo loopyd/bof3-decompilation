@@ -11,7 +11,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 /* Four-entry handler table for work-record byte 2. The code-pointer run starts
  * one word earlier at 0x801EFEE8 (0x801EEDB4, 0x801EEF10, 0x801EEF78,
  * 0x801EF054, 0x801EF100), which the byte-1 dispatcher
- * callStateTablefee8Bmagic indexes; this function
+ * callStateTablefee8 indexes; this function
  * indexes the run from its second word, so the extern is declared at the
  * indexed entry. The generated undefined_syms_auto.txt row names this word. */
 extern void (*D_801EFEEC[])(void); /* @source 0x801EFEEC @kind data */
@@ -35,7 +35,7 @@ void func_801EF23C(s32, s32, s32);
  * constant 0x80 where the 0x801EF23C path stores half its second argument. It
  * emits translucent primitives through RotTransPers / SetDrawMode / SetSemiTrans;
  * lifted at 0x801EF9A4 (partial on the entry-block copy). */
-void drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4(
+void renderGouraudBandOver(
     void);
 
 /* Draws the translucent fan whose centre vertex is the record's screen pair at
@@ -70,7 +70,7 @@ void func_801EFC74(void);
  *           entry 0 of it. Nothing in the payload holds 0x801EEDB4 as a jal
  *           target or as a table word of the 0x801EFEEC run; it is dispatched as
  *           table index 0 of work byte 1 by
- *           callStateTablefee8Bmagic, so it has no
+ *           callStateTablefee8, so it has no
  *           direct caller.
  *
  *           Statement order, operand forms and declaration style follow the
@@ -99,7 +99,7 @@ void callBandsFanPop(void) {
     g_battle_work[0xB] += 4;
     func_801EF23C(0x20, 0x50, 0xF);
     g_battle_work[0xB] += 2;
-    drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4();
+    renderGouraudBandOver();
     g_battle_work[0xB] += 4;
     func_801EF23C(0x18, 0x80, 0x1F);
     g_battle_work[0xB] -= 0xA;

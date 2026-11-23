@@ -15,7 +15,7 @@ extern u8 g_ScenarioProgress;
 extern u8 D_80146865;
 
 /* Signed primary-state byte of the shared state tuple; this overlay's
- * callPrimaryHandlerScenario indexes the handler run
+ * callPrimaryHandler indexes the handler run
  * at 0x801FA210 with it, and the exit arms of this body store 0 into it to
  * leave primary state 1 for the state-0 noop handler.
  * @source 0x80146874 @kind unknown
@@ -159,7 +159,7 @@ void func_801C16B8(void);
 /* @source 0x801F8680
  * @behavior The overlay handler of primary state 1: word 1 of the primary-state
  *           handler run at 0x801FA210, which
- *           callPrimaryHandlerScenario indexes with
+ *           callPrimaryHandler indexes with
  *           the signed shared state byte D_80146874. Word 0 of that run is the
  *           inert noopHandlerScenarioScena0400_801F8678 and word 2 is the
  *           state-2 substate controller at 0x801F8F98, so this body is the

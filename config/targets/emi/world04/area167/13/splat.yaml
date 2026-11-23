@@ -77,8 +77,8 @@ segments:
     - func_801F37A8
   - - 3312
     - c
-    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowUnlessSharedOverlayStateByteIs20World04Area16713_801F38F0
-    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowUnlessSharedOverlayStateByteIs20World04Area16713_801F38F0.c'
+    - stateCameraOutsideOverlay
+    - '@source: src/bof3/world/stateCameraOutsideOverlay.c'
     - '@behavior: Entry 3 of the state-byte-2 handler run based at 0x801F4AB0 of this payload, whose dispatcher is 0x801F3764. Skips the camera window test, and so never advances work byte +2, while the shared overlay state byte D_8014933B holds 0x20. On every other value it reads the scratchpad work record through the pointer cell 0x1F800044 once; the record halfword +0x36 against the shared camera word D_80145EC4, and then, only when that absolute difference stays within 0x20000, the halfword +0x3A against the shared camera word D_80145EC8, once from the cell start (halfword << 16) and once from the next cell start ((halfword + 1) << 16), decide whether work byte +2 is advanced. Calls the payload render helper 0x801F31BC on every path.'
   - - 3516
     - asm

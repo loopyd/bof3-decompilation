@@ -8,10 +8,10 @@ void func_800AF764(void);
 /* The two draw variants this entry selects by the work object's byte 0x0B; each
  * one emits SetPolyFT4, GetTPage, GetClut and func_8014E5A0 prims over the work
  * halfwords at 0x2E and 0x30. The zero-mask variant is the six-tile row
- * drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94
+ * renderSixTileTextured
  * and the non-zero-mask variant is the seven-tile row
  * renderSevenTileTile. */
-void drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94(
+void renderSixTileTextured(
     void);
 void renderSevenTileTile(
     void);
@@ -47,7 +47,7 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  *   renderSevenTileTile
  *   when the work object byte 0x0B (the random mask byte state 0
  *   seeds) is non-zero and the lifted six-tile row variant
- *   drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94
+ *   renderSixTileTextured
  *   when it is zero. After that group it re-reads the pointer cell and
  *   decrements work byte 0x09 with a byte-width
  *   read-modify-write whose stored value truncated to eight bits supplies the
@@ -77,7 +77,7 @@ void decayDrawRaiseExpires(
   if (work[0xB] != 0) {
     renderSevenTileTile();
   } else {
-    drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94();
+    renderSixTileTextured();
   }
   if (--g_battle_work[9] == 0) {
     func_800A9820(D_80146384);

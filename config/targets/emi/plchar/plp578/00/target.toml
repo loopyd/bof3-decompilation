@@ -8,12 +8,12 @@ splat = "config/targets/emi/plchar/plp578/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTablefab8Plchar.c",
+    "src/bof3/plchar/callWorkTablefab8.c",
     "src/bof3/plchar/claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp57800_801CE820.c",
-    "src/bof3/plchar/callWorkTablefadcPlchar.c",
-    "src/bof3/plchar/callWorkTablefae8Plchar.c",
-    "src/bof3/plchar/callWorkTablefac4Plchar.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablefafcPlcharPlp57800_801CFA30.c",
+    "src/bof3/plchar/callWorkTablefadc.c",
+    "src/bof3/plchar/callWorkTablefae8.c",
+    "src/bof3/plchar/callWorkTablefac4.c",
+    "src/bof3/plchar/callWorkHalfword2Tablefafc.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp57800_801CF9C4.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp57800_801CF444.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp57800_801CF6A0.c",
@@ -24,9 +24,9 @@ sources = [
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp57800_801CF528.c",
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp57800_801CEC78.c",
     "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp57800_801CF24C.c",
-    "src/bof3/plchar/callWorkTablefad0Plchar.c",
-    "src/bof3/plchar/callWorkTablefaf4Plchar.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablefb08PlcharPlp57800_801CFA74.c",
+    "src/bof3/plchar/callWorkTablefad0.c",
+    "src/bof3/plchar/callWorkTablefaf4.c",
+    "src/bof3/plchar/callWorkHalfword2Tablefb08.c",
 ]
 support_sources = [
     "src/bof3/support/plp578_00_psyq.c",

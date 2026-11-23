@@ -22,7 +22,7 @@ s32 func_801783C8(s32 arg0);
 
 /* Clears work-record bytes 0x00 through 0x04 of the record published through
  * the cell at 0x801F1054; defined in this overlay at 0x801F03B0. */
-void clearRecordBytes0Through4BmagicMagic06303_801F03B0(void);
+void stateRecordBytes0Through4(void);
 
 /* @source 0x801F0220
  * @behavior Step handler of the bmagic effect record published through the
@@ -87,6 +87,6 @@ void stepSixtyThirtyDown(void) {
   FIELD_REF(u32, record5, 0x14) = position + (step << 5);
   if (--FIELD_REF(u8, record5, 0x09) == 0) {
     FIELD_REF(u8, D_801EB4E0, 0x0B)--;
-    clearRecordBytes0Through4BmagicMagic06303_801F03B0();
+    stateRecordBytes0Through4();
   }
 }

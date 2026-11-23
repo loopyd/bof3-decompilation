@@ -19,7 +19,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* @source 0x801EF6B4
  * @behavior Entry 6 of the fourteen-word byte-1 handler table based at
- *           0x801F046C, which callStateTable046Bmagic
+ *           0x801F046C, which callStateTable046
  *           indexes with work record byte 1 and calls indirectly; the word at
  *           0x801F0484 is the only word in the payload that holds this address,
  *           so the entry has no jal caller. Calls rand() and leaves the call

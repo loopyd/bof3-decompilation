@@ -45,7 +45,7 @@ extern u8 func_8014DAEC(void);
  *           handler index this overlay dispatches on - the sibling
  *           incrementWorkByte1WhenWorkByteBIs1BmagicMagic04103_801EEFC4 records
  *           that role for the same cell, and this target's own dispatch entry
- *           callStateTablefa84Bmagic loads that
+ *           callStateTablefa84 loads that
  *           byte and indexes the pointer run at 0x801EFA84 with it - so the
  *           name advances a handler index rather than an anonymous counter.
  *           The cell is then restored to the saved pointer, so the helper and

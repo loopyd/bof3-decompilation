@@ -21,7 +21,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* @source 0x801EF93C
  * @behavior Entry 11 of the fourteen-word byte-1 handler table based at
- *           0x801F046C, which callStateTable046Bmagic
+ *           0x801F046C, which callStateTable046
  *           indexes with work record byte 1 and calls indirectly; the same six
  *           handlers from 0x801EF844 on form the work-byte-2 run at 0x801F048C,
  *           where this entry is index 3. The word at 0x801F0498 is the only word

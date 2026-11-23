@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 12
     - c
-    - dispatchArea030CompanionHandler
-    - '@source: src/bof3/world/dispatchArea030CompanionHandler.c'
+    - callCompanionHandler
+    - '@source: src/bof3/world/callCompanionHandler.c'
     - '@behavior: Dispatches through the handler table indexed by the selector byte.'
   - - 72
     - c

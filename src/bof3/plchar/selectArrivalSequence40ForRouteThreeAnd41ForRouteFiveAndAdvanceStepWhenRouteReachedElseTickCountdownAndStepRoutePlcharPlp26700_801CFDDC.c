@@ -22,7 +22,7 @@ extern u32 func_8014D8D4(u8 arg0);
  *           0x801CFDDC at 0x801D09D4, index 1 of the run based at 0x801D09D0
  *           that dispatchByte2Table09d0 indexes with
  *           work byte 2 scaled by four and entry 4 of the byte-3 dispatch of
- *           callWorkTable09Plchar, which indexes the
+ *           callWorkTable09, which indexes the
  *           run based at 0x801D09C4 with work byte 3, so no jal in this payload
  *           names it. Byte 0x08 is the current route index of the eight-entry
  *           route window, byte 0x03 the chosen candidate index that the re-arm

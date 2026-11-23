@@ -83,8 +83,8 @@ segments:
     - armCountdownAdvance
   - - 3856
     - c
-    - tickCountdownIncrementScenario
-    - '@source: src/bof3/scenario/tickCountdownIncrementScenario.c'
+    - tickCountdownIncrement
+    - '@source: src/bof3/scenario/tickCountdownIncrement.c'
     - '@behavior: Calls two local helpers, increments captured work halfword 0x5E, and ticks byte 9; at zero reloads 8 and advances work byte 1.'
   - - 4016
     - c
@@ -98,13 +98,13 @@ segments:
     - '@behavior: Calls two local helpers with work plus 0x0C, decrements work byte 9, and reloads 128 and advances work byte 1 at zero.'
   - - 4320
     - c
-    - tickCountdownHalfwordsScenario
-    - '@source: src/bof3/scenario/tickCountdownHalfwordsScenario.c'
+    - tickCountdownHalfwords
+    - '@source: src/bof3/scenario/tickCountdownHalfwords.c'
     - '@behavior: Calls two local helpers, subtracts 8 and 64 from captured work halfwords 0x5A and 0x5C, and ticks byte 9; at zero advances work byte 1.'
   - - 4480
     - c
-    - subtract8ResetNegativeScenario
-    - '@source: src/bof3/scenario/subtract8ResetNegativeScenario.c'
+    - subtract8ResetNegative
+    - '@source: src/bof3/scenario/subtract8ResetNegative.c'
     - '@behavior: Calls the local helpers 0x801F7FFC and 0x801F8170 with the captured work pointer plus 0x0C, then subtracts 8 from that work object halfword at 0x58; when the stored halfword reads negative it reloads the work pointer cell 0x1F800044, writes 1 to the object transition byte 0x06 and resets the work state through func_80196070.'
   - - 4592
     - c
@@ -144,8 +144,8 @@ segments:
     - '@behavior: Dispatches the overlay-local handler table at 0x801FCF94 using unsigned work-object byte 1 from scratchpad pointer cell 0x1F800044.'
   - - 5928
     - c
-    - armCountdownQueueScenario
-    - '@source: src/bof3/scenario/armCountdownQueueScenario.c'
+    - armCountdownQueue
+    - '@source: src/bof3/scenario/armCountdownQueue.c'
     - '@behavior: Arms work-object countdown byte 9 with 0x60, advances work byte 1 and queues main-exe sound cue 0x204 through func_8015DF18.'
   - - 6000
     - c
@@ -165,8 +165,8 @@ segments:
     - '@behavior: Seeds the effect-rectangle record at work plus 0x0C (intensity 0x600, width and height 0x100, random halfwords 0x0E and 0x10, white colour bytes) then advances work byte 1.'
   - - 6460
     - c
-    - renderShrinkHalfwordsScenario
-    - '@source: src/bof3/scenario/renderShrinkHalfwordsScenario.c'
+    - renderShrinkHalfwords
+    - '@source: src/bof3/scenario/renderShrinkHalfwords.c'
     - '@behavior: Draws work then shrinks halfwords 0x12 and 0x14 and advances byte 1 when halfword 0x14 is negative.'
   - - 6620
     - c
@@ -183,18 +183,18 @@ segments:
     - '@behavior: Projects the shared camera position and azimuth words at 0x80145EC4, 0x80145EC8 and 0x80145ECE into the scratchpad vertex at 0x1F800014, passes it with the scratchpad screen pair at 0x1F800034 to RotTransPers, then stores the projected depth in work word 0x60 and the screen pair in work halfwords 0x2E and 0x30, clears work byte 9 and advances work byte 1.'
   - - 6928
     - c
-    - renderGrowAdvanceScenario
-    - '@source: src/bof3/scenario/renderGrowAdvanceScenario.c'
+    - renderGrowAdvance
+    - '@source: src/bof3/scenario/renderGrowAdvance.c'
     - '@behavior: Draws using work byte 9, adds 15 with byte wrapping, then sets values above 60 to 255 and advances work byte 1.'
   - - 7076
     - c
-    - renderTickQueueScenario
-    - '@source: src/bof3/scenario/renderTickQueueScenario.c'
+    - renderTickQueue
+    - '@source: src/bof3/scenario/renderTickQueue.c'
     - '@behavior: Draws with the local helper using a radius of 0x3C carrying bit 0 of work byte 9, queues main-exe sound cue 0x208 when the reloaded work byte 9 is 0xD7, then decrements work byte 9 and re-arms it with 0x3C while advancing work byte 1 when the stored countdown reaches zero.'
   - - 7260
     - c
-    - renderTickWorkScenario
-    - '@source: src/bof3/scenario/renderTickWorkScenario.c'
+    - renderTickWork
+    - '@source: src/bof3/scenario/renderTickWork.c'
     - '@behavior: Calls the local drawing helper, decrements work byte 9 and advances work byte 1 when the reloaded signed countdown is negative.'
   - - 7388
     - c
@@ -264,8 +264,8 @@ segments:
     - '@behavior: Adds sixteen times a signed table step indexed by D_80146876 & 3 to halfwords at 0x80145ECE and 0x8014600E, rereading the table between wrapping stores.'
   - - 22544
     - c
-    - addAlternatingSignedTableStepToTwoHalfwordsScenarioScena0300_801FC410
-    - '@source: src/bof3/scenario/addAlternatingSignedTableStepToTwoHalfwordsScenarioScena0300_801FC410.c'
+    - alternatingSignedTwoHalfwords
+    - '@source: src/bof3/scenario/alternatingSignedTwoHalfwords.c'
     - '@behavior: Adds sixteen times a signed table step indexed by D_80146876 & 1 to halfwords at 0x80145ECE and 0x8014600E, rereading the table between wrapping stores.'
   - - 22636
     - c
@@ -306,8 +306,8 @@ segments:
     - '@behavior: Slot 7 of the overlay nine-pointer handler table at 0x801FD00C selected by record byte 0x7A in the record dispatcher func_801FC46C; runs the shared front-end startup helper func_8015C088, then requests primary scene state 6 with a cleared sub-state (D_80146874 = 6, D_80146875 = 0) and returns 0.'
   - - 23236
     - c
-    - requestPrimaryArmScenario
-    - '@source: src/bof3/scenario/requestPrimaryArmScenario.c'
+    - requestPrimaryArm
+    - '@source: src/bof3/scenario/requestPrimaryArm.c'
   - - 23300
     - c
     - dispatchRouteHandler

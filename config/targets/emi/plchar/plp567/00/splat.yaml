@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - callWorkTable078Plchar
-    - '@source: src/bof3/plchar/callWorkTable078Plchar.c'
+    - callWorkTable078
+    - '@source: src/bof3/plchar/callWorkTable078.c'
     - '@behavior: Calls the handler indexed by work-record byte 2 from the twenty-four-word handler run at 0x801D078C.'
   - - 72
     - c
@@ -42,8 +42,8 @@ segments:
     - '@behavior: Work byte 2 == 1 step of this overlay handler run: entry 1 of the twenty-four-word run at 0x801D078C that func_801CE404 indexes by work byte 2. Compares the work route byte 0x08 with the stored route byte 0x03; when they agree it selects the shared work sequence through func_8014D8D4 with 0x40 for route 3 and 0x41 for route 5, calls the selector on no other route value and increments the step counter byte 0x02, otherwise it decrements the countdown byte 0x09 and, only when that reloaded byte reaches zero, stores 2 back into the countdown, adds the step sign byte 0x0B into the route index byte 0x08, masks the route index to the low three bits and selects the sequence named by the new index.'
   - - 528
     - c
-    - callStateTable0798Plchar
-    - '@source: src/bof3/plchar/callStateTable0798Plchar.c'
+    - callStateTable0798
+    - '@source: src/bof3/plchar/callStateTable0798.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D0798.'
   - - 596
     - c
@@ -52,8 +52,8 @@ segments:
     - '@behavior: Entry 0 of the handler run based at 0x801D0798 that the byte-2 dispatcher 0x801CE610 indexes, so it runs while work byte 2 reads 0. It rewinds the work-object step byte 0x08 by one modulo 8 while bit 0 of that byte is clear, sets claim byte 0x2B to 1, then probes the shared layer offsets 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5: for each it projects the work words 0x34 and 0x38 by that offset pair, samples the point through func_80154F78 and, while gate byte 0x1F800000 reads nonzero and the sample narrowed to 16 bits is at least 0x41, clears the claim byte when the work reference halfword 0x3E is below the answer of func_80154F28. It then selects work sequence (step byte 0x08 >> 1) + 0x42 through func_8014D8D4 and advances work state byte 0x02.'
   - - 1056
     - c
-    - claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp56700_801CE820
-    - '@source: src/bof3/plchar/claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp56700_801CE820.c'
+    - claimFrontQueuePlus
+    - '@source: src/bof3/plchar/claimFrontQueuePlus.c'
     - '@behavior: Runs the shared no-argument update helper func_8014D978 and returns while the work-object halfword 0x58 read through the scratchpad pointer cell 0x1F800044 does not read 0x0A; when it does, claims a front-end record through the allocator func_8019601C, stores the answer in work byte 0x0B and, unless that byte reads 0xFF, seeds the 0x74-byte row at 0x80143FC8 with occupancy flag 1 in row byte 0 and handler selector 0x3A in row byte 5, then queues cue 0x100 plus work halfword 0x2C through func_8015DF18, clears work byte 0x07 and increments the work step counter byte 0x02.'
   - - 1324
     - c
@@ -62,8 +62,8 @@ segments:
     - '@behavior: Overlay step reached from entry 5 of the pointer run at 0x801D078C, which this payload''s byte-2 dispatcher 0x801CE404 indexes by work byte 2, and from index 2 of the run at 0x801D0798, which the byte-2 dispatcher 0x801CE610 indexes. While the work-object byte 0x07 read through the scratchpad pointer cell 0x1F800044 is nonzero it runs the shared readiness helper func_8014DAEC, returns while the helper reports not-ready and otherwise hands work route byte 0x08 to the shared arrival-sequence selector func_8014D8D4 and clears the flag. While that flag reads zero it runs the same helper, and once ready, while the 0x74-byte row at 0x80143FC8 that work byte 0x0B selects still has its occupancy byte 0 clear, it clears work byte 0x2B and the state byte 0x12B of the front-end record published at 0x80146250.'
   - - 1536
     - c
-    - callStateTable07Plchar
-    - '@source: src/bof3/plchar/callStateTable07Plchar.c'
+    - callStateTable07
+    - '@source: src/bof3/plchar/callStateTable07.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07A4.'
   - - 1604
     - c
@@ -78,13 +78,13 @@ segments:
     - invokeHelperPlcharPlp56700_801CEC0C
   - - 2092
     - c
-    - dispatchStateByte2Table07b0PlcharPlp56700_801CEC2C
-    - '@source: src/bof3/plchar/dispatchStateByte2Table07b0PlcharPlp56700_801CEC2C.c'
+    - callStateByte2Table07
+    - '@source: src/bof3/plchar/callStateByte2Table07.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07B0.'
   - - 2160
     - c
-    - dispatchStateByte3Table07b8PlcharPlp56700_801CEC70
-    - '@source: src/bof3/plchar/dispatchStateByte3Table07b8PlcharPlp56700_801CEC70.c'
+    - callStateByte3Table07
+    - '@source: src/bof3/plchar/callStateByte3Table07.c'
     - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D07B8.'
   - - 2228
     - c
@@ -199,7 +199,7 @@ segments:
     - '@behavior: Work-object handler reached from outside this payload: no jal in the payload names it and no payload word holds its address. It projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by work route byte 0x08 to the work words 0x34 and 0x38, seeds its answer at 1 when the slot search func_801BDE14 called at range 0 reports any slot rather than -1, and raises that answer to 1 whenever a map code probe through func_80166CB0 reads 0xF2 at the projected cell, at the cell one column further when the low half of the first projected word is nonzero, and at the cell one row further when the low half of the second projected word is nonzero. It returns that answer as an unsigned byte and takes no arguments.'
   - - 8964
     - c
-    - dispatchStateHalfword2cTable07f0PlcharPlp56700_801D0704
+    - callStateHalfword2Table07
   - - 9032
     - c
     - dispatchStateHalfword2cTable07fcPlcharPlp56700_801D0748

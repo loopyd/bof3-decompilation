@@ -32,7 +32,7 @@ void stateClearWorkTable16(void);
  * (0x801F73FC in emi/scenario/scena01/00) is the same body with two extra word
  * stores and a sound cue, and it records the same arm-clear-call-advance order
  * with one pointer local per original cell read; the exact lift
- * tickCountdownAdvanceScenario in this
+ * tickCountdownAdvance in this
  * target records the scratchpad pointer spelling and the countdown byte at
  * +0x9. The 0x48-byte span has no byte-identical sibling in the tree, so no
  * clone applies.

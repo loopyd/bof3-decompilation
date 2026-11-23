@@ -38,7 +38,7 @@ renderAroundRadiusTen(void);
 /* @source 0x801F0260
  * @behavior Entry 6 of the fifteen non-zero words of the in-image
  *   handler-pointer run based at 0x801F07BC, which
- *   callStateTable07Bmagic indexes with scratchpad
+ *   callStateTable07 indexes with scratchpad
  *   work byte 1 scaled by four, so no jal in this payload names this body. It
  *   reads the work record from the pointer cell at 0x1F800044, scales that
  *   record byte 2 by four and calls the selected word of the handler table at

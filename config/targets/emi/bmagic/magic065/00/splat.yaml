@@ -47,15 +47,15 @@ segments:
     - func_801EF1CC
   - - 1548
     - c
-    - callStateTablef510Bmagic
+    - callStateTablef510
     - '@source: src/bof3/bmagic/magic06500DispatchTables.c'
   - - 1616
     - asm
     - func_801EF250
   - - 1760
     - c
-    - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic06500_801EF2E0
-    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic06500_801EF2E0.c'
+    - stateWorkHelperAdvance
+    - '@source: src/bof3/bmagic/stateWorkHelperAdvance.c'
     - '@behavior: Entry 0 of the four-entry code pointer table at 0x801EEC14 (0x801EF2E0, 0x801EF328, 0x801EF394, 0x801EF408), which 0x801EF250 copies into its own frame and dispatches on the scratchpad work object''s state byte 2. It calls the helper at 0x800AFF98 with no arguments, stores the returned byte in work byte 9 through the pointer cell at 0x1F800044, then re-reads that cell and increments work byte 2 at byte width, advancing to entry 1. The helper selects a lookup byte for the current battle participant; it reads or writes no other state and returns nothing.'
   - - 1832
     - asm

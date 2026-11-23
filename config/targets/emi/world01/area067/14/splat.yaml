@@ -60,8 +60,8 @@ segments:
     - '@behavior: draws the +0xC point of the scratchpad work record published at pointer cell 0x1F800044 through renderRadialBurstPoint, grows that point halfword at +0x6 by 2 and lowers the point y halfword at +0x2 by the grown value, draws the same point again, then decrements the countdown byte at +9 and advances the state byte at +1 when it reaches zero'
   - - 1420
     - c
-    - raiseDecisionResetArea
-    - '@source: src/bof3/world/raiseDecisionResetArea.c'
+    - raiseDecisionReset
+    - '@source: src/bof3/world/raiseDecisionReset.c'
     - '@behavior: word 7 of the state-byte handler table D_801F4624 (its own word at 0x801F4640 holds this address), reached through the dispatcher callStateTable4624World01; reads the shared decision halfword D_801490A4, writes 0x32 to the shared scenario progress byte g_ScenarioProgress, ORs bit 0x2 into that halfword and stores it back, then calls the shared work-area reset func_80196070'
   - - 1480
     - c

@@ -59,7 +59,7 @@ segments:
     - '@behavior: Draw eight translucent Gouraud fan triangles with a phase-pulsed radius and six times work byte A as centre tint.'
   - - 1808
     - c
-    - callStateTablefcbcBmagic
+    - callStateTablefcbc
     - '@source: src/bof3/bmagic/magic10103DispatchTables.c'
   - - 1876
     - asm
@@ -86,8 +86,8 @@ segments:
     - func_801EF78C
   - - 3212
     - c
-    - drawThirtyOnePulsingGouraudQuadBandBmagicMagic10103_801EF88C
-    - '@source: src/bof3/bmagic/drawThirtyOnePulsingGouraudQuadBandBmagicMagic10103_801EF88C.c'
+    - renderThirtyPulsingBand
+    - '@source: src/bof3/bmagic/renderThirtyPulsingBand.c'
     - '@behavior: Draw thirty-one translucent pulsing Gouraud quads with work-byte-relative phases and a clamped tint ramp.'
   - - 4284
     - textbin

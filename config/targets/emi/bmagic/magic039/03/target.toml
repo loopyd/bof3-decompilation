@@ -13,8 +13,8 @@ sources = [
     "src/bof3/bmagic/incrementCountersCounterIs.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/workAdvanceAt80Bmagic.c",
-    "src/bof3/bmagic/workClearByteBmagic.c",
+    "src/bof3/bmagic/workAdvanceAt80.c",
+    "src/bof3/bmagic/workClearByte.c",
     "src/bof3/bmagic/dispatchWorkByte1Entry.c",
     "src/bof3/bmagic/queryKindResultCode.c",
     "src/bof3/bmagic/magic03903DispatchTables.c",

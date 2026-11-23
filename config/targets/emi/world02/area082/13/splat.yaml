@@ -184,8 +184,8 @@ segments:
     - '@behavior: overlay step handler, entry index 3 of the sixteen-pointer step table based at 0x801F57D0; reads the scratchpad work record published through 0x1F800044 and fills the whole 0x140 x 0xF0 screen through the gradient fill helper at 0x801F5428 with a colour packed from record byte +0x09 (blue = 0x1F - level*27/100, green = 0x19 - level*27/100, red = level/17, bit 28 set) after clearing the shared palette-stage byte at 0x8014933A, then advances that byte +0x09, and, once a fresh cell read shows it has reached 0x5B, clears byte +0x09 and advances the record dispatch byte +0x02 by one.'
   - - 8244
     - c
-    - renderScreenGradientScenario
-    - '@source: src/bof3/world/renderScreenGradientScenario.c'
+    - renderScreenGradient
+    - '@source: src/bof3/world/renderScreenGradient.c'
     - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, and, only when the shared scenario progress byte at 0x80146864 is 0x29, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record byte +0x02 by one.'
   - - 8336
     - c
@@ -194,8 +194,8 @@ segments:
     - '@behavior: re-reads the scratchpad work pointer cell 0x1F800044, packs a 15-bit colour word from that record byte +0x09 (green = level / 5, blue = green + 6, red = 5 - level / 24, bit 28 set), clears the shared palette-stage byte at 0x8014933A, fills the whole 0x140 x 0xF0 screen through the gradient fill helper at 0x801F5428, advances the work byte +0x09, and, once a fresh cell read shows that byte has reached 0x79, stores 1 into 0x8014933A and advances the record dispatch byte +0x02 by one.'
   - - 8556
     - c
-    - queueResetAdvanceScenario
-    - '@source: src/bof3/world/queueResetAdvanceScenario.c'
+    - queueResetAdvance
+    - '@source: src/bof3/world/queueResetAdvance.c'
     - '@behavior: overlay step handler called with no arguments; only when the shared scenario progress byte at 0x80146864 is 0x32 does it queue main-exe sound cue 0x208 through the cue dispatcher at 0x8015DF18, re-read the scratchpad work pointer cell 0x1F800044 and clear that work record byte at +0x09, then read the cell a second time and advance the record dispatch byte at +0x02 by one; every other progress value leaves the record untouched.'
   - - 8648
     - c
@@ -260,8 +260,8 @@ segments:
     - '@behavior: loads the scratch work record cursor from scratchpad pointer-slot 0x1F800044 and writes the word 5 to the record +0x70 field.'
   - - 10760
     - c
-    - advanceHalfword0aByWorkByte79StepWorld02Area08213_801F5608
-    - '@source: src/bof3/world/advanceHalfword0aByWorkByte79StepWorld02Area08213_801F5608.c'
+    - stateWorkByte79Step
+    - '@source: src/bof3/world/stateWorkByte79Step.c'
     - '@behavior: four independent gates re-read the +0x79 mode byte of the work record published through the global pointer cell 0x80146250 and advance the halfword at offset 0x0A of the record published through 0x80148210 by the step that mode selects - 3 for mode 5, 6 for mode 4 and 9 for mode 6, while mode 8 rewrites the halfword with the value it already holds.'
   - - 10988
     - c

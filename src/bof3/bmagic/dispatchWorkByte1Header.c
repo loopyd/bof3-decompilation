@@ -6,7 +6,7 @@ typedef struct BmagicMagic01500DispatchTable {
   BmagicMagic01500Handler handlers[4];
 } BmagicMagic01500DispatchTable;
 
-extern BmagicMagic01500DispatchTable workHandlerTableBmagic; /* @source 0x801EEC04 @kind data */
+extern BmagicMagic01500DispatchTable workHandlerTable; /* @source 0x801EEC04 @kind data */
 
 /* @source 0x801EECA0
  * @behavior Copies the four handler pointers at 0x801EEC04 into a local table,
@@ -20,6 +20,6 @@ extern BmagicMagic01500DispatchTable workHandlerTableBmagic; /* @source 0x801EEC
 void dispatchWorkByte1Header(void) {
   BmagicMagic01500DispatchTable handlers;
 
-  handlers = workHandlerTableBmagic;
+  handlers = workHandlerTable;
   handlers.handlers[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
 }

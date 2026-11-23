@@ -35,7 +35,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  *           0x801EEC04..0x801EEC27, holds this address; no jal in this payload
  *           reaches it, which is the dispatch-table shape rather than a missing
  *           caller. The body follows this target's exact sibling
- *           decrementIncrementZeroBmagic
+ *           decrementIncrementZero
  *           for the byte-9 countdown prelude and the re-read/advance tail, and
  *           the exact sibling decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic09203_801F0420
  *           for the global-byte decrement in the zero arm, which here does not

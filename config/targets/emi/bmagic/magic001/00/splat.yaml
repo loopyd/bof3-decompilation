@@ -49,7 +49,7 @@ segments:
     - '@behavior: Overlay work handler, entry 2 of the leading 24-word code pointer run at 0x801EEC04. Raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword read-modify-write, then invokes the shared helper at 0x801E5988 unconditionally; the halfword store fills the call delay slot and the 0x18-byte frame only keeps $ra. No arguments, no return value, no other state.'
   - - 984
     - c
-    - callStateTable04Bmagic
+    - callStateTable04
     - '@source: src/bof3/bmagic/magic00100DispatchTables.c'
   - - 1052
     - asm

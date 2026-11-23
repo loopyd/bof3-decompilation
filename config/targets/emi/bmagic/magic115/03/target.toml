@@ -19,7 +19,7 @@ support_sources = [
     "src/bof3/bmagic/magic11503DispatchTables.c",
     "src/bof3/bmagic/storeDoubleWorkByte9IntoWorkByteARecordTripletAndAdvanceWorkByte1WhenAtLeast6BmagicMagic11503_801EEDDC.c",
     "src/bof3/bmagic/decrementTintTripletFour.c",
-    "src/bof3/bmagic/dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098.c",
+    "src/bof3/bmagic/callStateByte2Tablef8.c",
     "src/bof3/bmagic/dispatchStateByte2Tablef8d4BmagicMagic11503_801EF5F8.c",
     "src/bof3/bmagic/decrementTintTimesTwelve.c",
 ]

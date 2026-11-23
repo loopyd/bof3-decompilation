@@ -35,8 +35,8 @@ segments:
     - '@source: src/bof3/world/stateAfterScalePass.c'
   - - 128
     - c
-    - stateWorkScenarioProgress0
-    - '@source: src/bof3/world/stateWorkScenarioProgress0.c'
+    - stateWorkProgress0
+    - '@source: src/bof3/world/stateWorkProgress0.c'
   - - 184
     - c
     - stateRescaleBlocksUnity

@@ -19,7 +19,7 @@ void func_801F7660(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
  * helper call. No other span in the tree disassembly carries the 0x501
  * immediate, so this body was seeded from its own bytes plus the work-byte-1
  * and counter spellings of the two same-target handlers whose sources measure
- * exact, incrementClearCounterScenario (0x801F743C)
+ * exact, incrementClearCounter (0x801F743C)
  * and incrementWorkByte1SetCounterScenarioScena0500_801F7530 (0x801F7530).
  * @status exact
  * @match 100.00

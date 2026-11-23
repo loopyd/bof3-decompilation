@@ -55,8 +55,8 @@ segments:
     - '@behavior: Overlay step dispatch. The leading two instructions read the work record pointer from the scratchpad cell 0x1F800044 before the 0x18-byte frame is reserved, then load record byte 4 unsigned, scale it by four and index the local handler table at 0x801F3B7C. The selected entry is called through jalr v0 with a nop delay slot, after which the body reloads ra from 0x10(sp), releases the frame and returns. Takes no arguments and returns nothing; the frame keeps the return address across the call. The table holds 0x801F3458 and 0x801F34D0, the two routines that set and clear that same record byte 4 from the shared mode byte at 0x80143BB0, so byte 4 selects which of the two runs, and the word at 0x801F3B34 publishes this dispatcher itself.'
   - - 2136
     - c
-    - stateDecrementUnlessScenario
-    - '@source: src/bof3/world/stateDecrementUnlessScenario.c'
+    - stateDecrementUnless
+    - '@source: src/bof3/world/stateDecrementUnless.c'
     - '@behavior: Runs only while the shared scenario progress byte at 0x80146864 is not 1. When the shared mode byte at 0x80143BB0 reads 3 it arms the scratch work record published through the pointer cell at 0x1F800044 by or-ing flag bit 0x40 into record byte 0 through a value register and then writing 1 into record byte 4 through a fresh load of the same cell, and whatever the mode byte reads it subtracts 2 from the halfword at 0x0A of the record published through the global pointer cell 0x80148210. Progress 1 returns without touching either record. Takes no arguments and returns nothing.'
   - - 2256
     - c

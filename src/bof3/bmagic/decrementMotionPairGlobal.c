@@ -26,7 +26,7 @@ extern void func_801E5988(void); /* @source 0x801E5988 @kind function */
  *           the six-word code pointer run at 0x801EF6CC (0x801EF104,
  *           0x801EF4B4, 0x801EF1EC, 0x801EF380, this address, 0x801EF454),
  *           which this overlay's dispatcher
- *           callStateTablef6Bmagic indexes with
+ *           callStateTablef6 indexes with
  *           work-object byte 0x1 scaled by four, so the payload holds no jal to
  *           this address. It reads the scratchpad work-object pointer cell at
  *           0x1F800044 once at entry, before its frame exists, and takes the

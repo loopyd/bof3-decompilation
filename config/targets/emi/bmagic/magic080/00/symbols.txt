@@ -2,6 +2,6 @@ g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 stateChannelDistanceRandom = 0x801EEC5C;
 decayDrawRaiseExpires = 0x801EECE4;
-drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94 = 0x801EED94;
+renderSixTileTextured = 0x801EED94;
 renderSevenTileTile = 0x801EEF5C;
 D_801EF124 = 0x801EF124;

@@ -18,7 +18,7 @@ stepClaimedLifeExpired = 0x801D1A60;
 func_801D1B10 = 0x801D1B10;
 renderOffsetsRedGreen = 0x801D1CD4;
 stateCornerRotationScale = 0x801D1F68;
-renderEffectRecordsScenario = 0x801D2088;
+renderEffectRecords = 0x801D2088;
 swapWords = 0x801D2138;
 callPatternBlinkStep = 0x801D2170;
 claimBlockPatternPage = 0x801D21B4;
@@ -33,7 +33,7 @@ advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioS
 stateHeadIntegrateNegate = 0x801D2C94;
 drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C = 0x801D2D5C;
 callEffectRecordStep = 0x801D2DEC;
-claimFrontEndRecordFromWorkBlockSetPatternGridOriginAndSpritePageRequestResource7ResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D2E30 = 0x801D2E30;
+claimPatternOriginPage = 0x801D2E30;
 func_801D2FD8 = 0x801D2FD8;
 emitPatternEffectRecords = 0x801D30AC;
 stateBlinkingLifeVelocity = 0x801D32F4;

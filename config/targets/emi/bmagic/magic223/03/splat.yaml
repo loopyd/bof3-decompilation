@@ -44,7 +44,7 @@ segments:
     - func_801EEFB4
   - - 1036
     - c
-    - callStateTablefc2Bmagic
+    - callStateTablefc2
     - '@source: src/bof3/bmagic/magic22303DispatchTables.c'
   - - 1104
     - c
@@ -75,12 +75,12 @@ segments:
     - '@behavior: Full-screen translucent Gouraud quad drawer reached from the work step at 0x801EF050 while work byte 0 is set: picks the graph-type draw-mode word (0xA5 for types 1 and 2, 0x35 otherwise), seeds SetDrawMode at g_PrimCursor and appends a 0xC-byte packet, then fills a semi-transparent POLY_G4 at g_PrimCursor with the 320x240 screen rectangle (x 0/0x13F, y 0/0xEF) whose vertex wiring bit 0 of byte 8 of the shared record at 0x801EB4E0 mirrors, publishes work byte 9 as a word through 0x1F800008 and eight times that byte at 0x1F80000C, tints all four vertices grey with vertices 0 and 3 taking the shifted scratch byte and vertices 1 and 2 the unshifted work byte, appends a second 0xC-byte packet and re-arms the draw mode with 0x25 for types 1 and 2 and 0x15 otherwise.'
   - - 1984
     - c
-    - callStateTablefc40Bmagic
+    - callStateTablefc40
     - '@source: src/bof3/bmagic/magic22303DispatchTables.c'
   - - 2052
     - c
-    - dispatchWorkByte2HandlerThenCallF7A8WhenWorkBytes0And2SetBmagicMagic22303_801EF404
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF7A8WhenWorkBytes0And2SetBmagicMagic22303_801EF404.c'
+    - callWorkHandlerSet
+    - '@source: src/bof3/bmagic/callWorkHandlerSet.c'
     - '@behavior: Work byte 2 step handler of the overlay work object at 0x801EF404, reached as word 5 of the nine-word code-pointer run at 0x801EFC2C and as entry 0 of the four-word state table at 0x801EFC40 that the dispatcher at 0x801EF3C0 indexes with work byte 1: reads the scratchpad work-object pointer cell at 0x1F800044 before its 0x18-byte frame is created and invokes the code pointer that the work object''s unsigned byte 2, scaled by four, selects in the handler table based at 0x801EFC44 (0x801EF47C, 0x801EF628, 0x801EF6E0) with no arguments and no bounds test, then re-reads the cell and, when the work object''s byte 0 and byte 2 are both non-zero, calls the overlay draw step at 0x801EF7A8. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 2172
     - asm
@@ -101,8 +101,8 @@ segments:
     - '@behavior: Reserves the first free record among 64 records of stride 0x78 in the pool at 0x801EFC60, sets that record''s flags bit 0 and returns its index, or returns 0xFF when every record is occupied.'
   - - 4060
     - c
-    - clearWorkBytes0Through4BmagicMagic22303_801EFBDC
-    - '@source: src/bof3/bmagic/clearWorkBytes0Through4BmagicMagic22303_801EFBDC.c'
+    - stateWorkBytes0Through4
+    - '@source: src/bof3/bmagic/stateWorkBytes0Through4.c'
   - - 4140
     - textbin
     - T_801EFC2C

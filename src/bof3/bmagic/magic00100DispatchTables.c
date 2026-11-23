@@ -13,7 +13,7 @@ extern void (*D_801F04B8[])(void); /* @source 0x801F04B8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable04Bmagic, callHandlerTable801);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable04, callHandlerTable801);
 
 /* @source 0x801EFAB8
  * @behavior Dispatches one frame of the overlay work handler from the

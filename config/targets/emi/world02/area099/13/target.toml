@@ -15,7 +15,7 @@ support_sources = [
     "src/bof3/world/armWorkPhase48SelectHandler1ThenLowerSharedHalfword7eBy2World02Area09913_801F2DAC.c",
     "src/bof3/world/stepAccumulatorPhaseConsume.c",
     "src/bof3/world/queueSharedUiFlag.c",
-    "src/bof3/world/stateScenarioFlagBit1.c",
+    "src/bof3/world/stateFlagBit1.c",
     "src/bof3/support/area099_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area099_13_psyq.c"

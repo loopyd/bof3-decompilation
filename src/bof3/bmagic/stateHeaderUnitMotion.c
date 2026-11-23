@@ -16,7 +16,7 @@ extern void func_8014D6B8(u32 flag); /* @source 0x8014D6B8 @kind function */
 /* @source 0x801EF690
  * @behavior Per-frame work-handler step of this overlay, entry index 4 of the
  *           eight-word code pointer run based at 0x801EF8C4 that the state-byte-2
- *           dispatcher dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098
+ *           dispatcher callStateByte2Tablef8
  *           indexes with work object byte 2 scaled by four; the payload word at
  *           0x801EF8D4 is the only in-image reference to this address, so the
  *           entry is selected through that table and takes no arguments. It

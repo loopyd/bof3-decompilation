@@ -67,7 +67,7 @@ s32 func_801783C8(s32 arg0);
 /* @source 0x801EFA4C
  * @behavior Gouraud band emitter of this overlay's work-byte-2 handler group.
  *           Its only in-image reference is the jal at 0x801EEEB0 inside
- *           callHandlerDrawBmagic,
+ *           callHandlerDraw,
  *           taken while the work object's byte 0 is non-zero, byte 2 is non-zero
  *           and byte 4 is zero; the body reads no incoming register, so it takes
  *           no arguments and returns nothing.

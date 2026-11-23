@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell at 0x1F800044, already bound at that
  * address by this target's map as g_battle_work, the name the exact lifts
- * workAdvanceAt80Bmagic and
+ * workAdvanceAt80 and
  * add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvoke
  * HelperWhenZeroBmagicMagic03903_801EF6E0 declare the same way. The original
  * re-materialises the cell with its own lui 0x1F80 plus lw 68($vN) pair at each

@@ -9,7 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
-    "src/bof3/world/publishModeStatusFromTable33b4World00Area02113_801F2C6C.c",
+    "src/bof3/world/publishModeStatusTable33.c",
     "src/bof3/world/stateStatus18GateElse17.c",
     "src/bof3/support/area021_13_psyq.c",
 ]

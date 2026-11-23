@@ -22,7 +22,7 @@
  * no image word holds its address.
  *
  * Representation notes. The loop was seeded from the same target's
- * stateWorkTableScenario (base 0x800E515C, stride
+ * stateWorkTable (base 0x800E515C, stride
  * 0x20, 0x40 entries), whose metadata records it exact, because this span's
  * loop is that body instruction for instruction with only those immediates
  * changed; the two trailing flag clears are this span's own bytes. The

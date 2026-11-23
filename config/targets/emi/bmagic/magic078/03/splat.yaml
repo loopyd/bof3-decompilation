@@ -48,8 +48,8 @@ segments:
     - func_801EEF28
   - - 1164
     - c
-    - stateByteIncrementBmagic
-    - '@source: src/bof3/bmagic/stateByteIncrementBmagic.c'
+    - stateByteIncrement
+    - '@source: src/bof3/bmagic/stateByteIncrement.c'
     - '@behavior: Entry 3 of the nine-word work-byte-1 handler pointer run this overlay keeps at 0x801F0878: loads the scratchpad work object once through the cell at 0x1F800044 and reads its unsigned byte 9; on the value 12 it writes 15 to byte 0xA, re-materializes the cell and increments byte 2, otherwise it stores byte 9 plus one back to byte 9. Takes no arguments, returns nothing and keeps no frame.'
   - - 1248
     - c
@@ -73,8 +73,8 @@ segments:
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once and tests that record''s byte at offset 0xB against two; only when it equals 2 it clears the scratchpad work-object byte at offset 0xA and rewrites the work-object byte at offset 0x2 with a fresh pointer-cell load. Takes no arguments, returns nothing and keeps no frame.'
   - - 1656
     - c
-    - add8ToWorkByteAThenAdvanceWorkByte2WhenAtLeast81BmagicMagic07803_801EF278
-    - '@source: src/bof3/bmagic/add8ToWorkByteAThenAdvanceWorkByte2WhenAtLeast81BmagicMagic07803_801EF278.c'
+    - workByteAdvanceLeast81
+    - '@source: src/bof3/bmagic/workByteAdvanceLeast81.c'
     - '@behavior: Entry 7 of this overlay nine-word work-byte-1 handler pointer run based at 0x801F0878: adds eight to the scratchpad work-object byte at offset 0xA as a byte-width read-modify-write through the pointer cell at 0x1F800044, re-materializes the cell and re-reads that byte, takes an unsigned bound of 0x81 and, when the byte is at least that bound, increments the work-object byte at offset 0x2 through the same loaded pointer. Takes no arguments, returns nothing and keeps no frame.'
   - - 1740
     - c
@@ -108,8 +108,8 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, loads the record pointer held in that object''s word 0x4C and tests that record''s byte 0xB against 1; only on equality it clears the work object''s byte 0xA through the loaded pointer, reloads the pointer cell and increments the work object''s byte 0x2. Takes no arguments and returns nothing.'
   - - 5356
     - c
-    - incrementInvokeHelperBmagic
-    - '@source: src/bof3/bmagic/incrementInvokeHelperBmagic.c'
+    - incrementInvokeHelper
+    - '@source: src/bof3/bmagic/incrementInvokeHelper.c'
     - '@behavior: Tests work byte 9 against 8; invokes helper 0x8015D71C with 0x101 and increments work byte 2 on equality, otherwise increments byte 9. Reloads the scratchpad work pointer after the call. Takes no arguments and returns nothing.'
   - - 5452
     - c

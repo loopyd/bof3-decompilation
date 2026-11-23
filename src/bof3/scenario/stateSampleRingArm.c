@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void clearWorkTableByte25At800E4800ScenarioScena0400_801F7FCC(void);
+void stateWorkTableByte25(void);
 
 /* @source 0x8015477C @kind unknown
  * Shared fixed-point distance helper over the word pair passed as (x, z);
@@ -54,7 +54,7 @@ extern s32 D_801FA1C4[];
  *           absolute addresses, and it re-reads the two ring base words every
  *           iteration because the record stores may touch them.
  *           After the loop it calls the overlay's work-table clear helper
- *           clearWorkTableByte25At800E4800ScenarioScena0400_801F7FCC (jal at
+ *           stateWorkTableByte25 (jal at
  *           0x801F78AC, delay slot a nop), re-reads the work-object pointer
  *           from the scratchpad cell 0x1F800044, stores 0x200 in the work
  *           countdown word at +0x0C, and increments work byte 1 so the tail
@@ -92,7 +92,7 @@ void stateSampleRingArm(
         func_8015477C(*(s32*)(record + 0x10), *(s32*)(record + 0x14)) << 8;
     i += 1u;
   } while (i < 8u);
-  clearWorkTableByte25At800E4800ScenarioScena0400_801F7FCC();
+  stateWorkTableByte25();
   work = SPAD_PTR_SLOT(u8, 0x44u);
   *(s32*)(work + 0xC) = 0x200;
   work[1]++;

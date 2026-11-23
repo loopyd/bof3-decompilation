@@ -38,7 +38,7 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once before the 0x18-byte frame, returns when work byte 0xB is non-zero, and otherwise loads the shared battle byte at 0x80146384 unsigned, passes it to func_800A9820, raises bit 0x4 of the shared halfword at 0x801462E8 and calls func_801E5988.'
   - - 496
     - c
-    - callStateTable0988Bmagic
+    - callStateTable0988
     - '@source: src/bof3/bmagic/magic17303DispatchTables.c'
   - - 564
     - textbin
@@ -55,7 +55,7 @@ segments:
     - c
     - renderPointHeadingHit
     - '@source: src/bof3/bmagic/renderPointHeadingHit.c'
-    - '@behavior: Entry 3 of the ten-entry code-pointer run based at 0x801F0988, indexed by scratchpad work-object byte 1 through callStateTable0988Bmagic, so it takes no arguments and returns nothing. It raises work byte 0xA by one while that byte is below 8, projects the record at 0x8014638C into a stack point triple of word 0x34 and 0x38 shifted right nine and biased by minus 0x4000 and word 0x3C plus 0x800000 shifted right 17, passes the triple with the frame word 0x24 it never writes and the size 0xC0 to func_800AF3A0, copies work word 0xC into work word 0x10, stores the heading func_8017A138 returns for the record-minus-work word differences into work word 0xC, and then either copies record words 0x34 and 0x38 into the work words on a hit of func_800AF66C with the bound 0x8000 or, off a hit, stores the low-12-bit difference of work words 0x10 and 0xC back as its own magnitude and repeats the copy only while that magnitude minus 0x601 is below 0x3FF unsigned, raising work byte 0x2 in both cases. It calls func_800AF764 and func_801F02B0, forwards the battle target byte 0x80146384 with flag word 0x10 to func_800A9610 while work byte 0x2 is not 1 and work byte 0x4 is zero, and while work byte 0x2 is 2 claims an action slot through func_801E590C(1, 0x18) and fills its byte 0x01, pointer word 0x74, work word triplet 0x34, 0x38 and 0x3C and the record byte 0xB count without testing the 0xFF answer.'
+    - '@behavior: Entry 3 of the ten-entry code-pointer run based at 0x801F0988, indexed by scratchpad work-object byte 1 through callStateTable0988, so it takes no arguments and returns nothing. It raises work byte 0xA by one while that byte is below 8, projects the record at 0x8014638C into a stack point triple of word 0x34 and 0x38 shifted right nine and biased by minus 0x4000 and word 0x3C plus 0x800000 shifted right 17, passes the triple with the frame word 0x24 it never writes and the size 0xC0 to func_800AF3A0, copies work word 0xC into work word 0x10, stores the heading func_8017A138 returns for the record-minus-work word differences into work word 0xC, and then either copies record words 0x34 and 0x38 into the work words on a hit of func_800AF66C with the bound 0x8000 or, off a hit, stores the low-12-bit difference of work words 0x10 and 0xC back as its own magnitude and repeats the copy only while that magnitude minus 0x601 is below 0x3FF unsigned, raising work byte 0x2 in both cases. It calls func_800AF764 and func_801F02B0, forwards the battle target byte 0x80146384 with flag word 0x10 to func_800A9610 while work byte 0x2 is not 1 and work byte 0x4 is zero, and while work byte 0x2 is 2 claims an action slot through func_801E590C(1, 0x18) and fills its byte 0x01, pointer word 0x74, work word triplet 0x34, 0x38 and 0x3C and the record byte 0xB count without testing the 0xFF answer.'
   - - 2008
     - asm
     - func_801EF3D8
@@ -80,8 +80,8 @@ segments:
     - '@behavior: Shifts the 4-byte records of the pair table at 0x801F09B0 from row work[0x4] one record higher for indices work[0xB] through work[0xA] - 1 and then writes the 0xFFFF, 0xFFFF null sentinel into record work[0xB] after re-reading the scratchpad work-object pointer cell at 0x1F800044; takes no arguments, returns nothing and is a leaf with no frame.'
   - - 6280
     - c
-    - callStateTable09Bmagic
-    - '@source: src/bof3/bmagic/callStateTable09Bmagic.c'
+    - callStateTable09
+    - '@source: src/bof3/bmagic/callStateTable09.c'
     - '@behavior: Step wrapper around the byte-2 work handlers: publishes 0x800C3800 into the global at 0x801459F0, reads the work object published at the scratchpad pointer cell 0x1F800044, scales that object unsigned byte 2 by four and invokes the selected entry of the handler table based at 0x801F09A0 with no arguments. After the handler returns it re-reads the pointer cell and, only when work byte 0 is non-zero, calls the shared helper func_800AF764 and the in-overlay step handler func_801F075C, re-reads the cell once more and, only when work byte 2 is below 3, calls the shared service func_8014D290; it then publishes 0x800D3800 into 0x801459F0. The second literal is re-materialised in both guard delay slots and again on the fall-through after the service call, and the 0x18-byte frame only keeps $ra.'
   - - 6464
     - c
@@ -95,8 +95,8 @@ segments:
     - '@behavior: Per-frame handler of the step dispatch table at 0x801F0988 whose entry 7 is this span; it runs the shared readiness helper at 0x8014DAEC from a 0x18-byte frame that keeps only $ra and discards the returned byte, adds four to scratchpad work-object byte 9 modulo 256 through a fresh load of the pointer cell at 0x1F800044 and tests the truncated stored byte against 0x10, and only on that match re-reads the cell and increments work byte 2 modulo 256, returning nothing and writing no other state.'
   - - 6832
     - c
-    - runReadinessHelperTwiceThenAdvanceWorkByte2WhenReadyBmagicMagic17303_801F06B0
-    - '@source: src/bof3/bmagic/runReadinessHelperTwiceThenAdvanceWorkByte2WhenReadyBmagicMagic17303_801F06B0.c'
+    - runReadinessTwiceReady
+    - '@source: src/bof3/bmagic/runReadinessTwiceReady.c'
     - '@behavior: Entry 8 of the overlay step dispatch run based at 0x801F0988, indexed by scratchpad work-object byte 1; from a 0x18-byte frame that keeps only the return address it calls the shared readiness helper at 0x8014DAEC twice and discards the first result, then only when the second result truncated to eight bits is nonzero re-reads the work-object pointer cell at 0x1F800044 and increments work byte 2 modulo 256, advancing to the next byte-2 handler step; takes no arguments and returns nothing.'
   - - 6912
     - c

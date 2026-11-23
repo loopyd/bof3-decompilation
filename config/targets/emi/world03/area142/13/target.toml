@@ -15,7 +15,7 @@ sources = [
 support_sources = [
     "src/bof3/world/renderWarpNearPoint.c",
     "src/bof3/world/stateWorkAdvanceWork.c",
-    "src/bof3/world/stateDecrementUnlessScenario.c",
+    "src/bof3/world/stateDecrementUnless.c",
     "src/bof3/world/stateRequestResourceUnless.c",
     "src/bof3/support/area142_13_psyq.c",
 ]

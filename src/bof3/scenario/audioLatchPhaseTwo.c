@@ -32,7 +32,7 @@ extern void func_80150224(s32 arg0);
 /* Shared front-end startup helper of the main executable, outside this payload.
  * Declared void in this translation unit because the shipped bytes materialise
  * both stored constants after the call in $v0, so no result is live across
- * those stores; the sibling requestPrimaryArmScenario
+ * those stores; the sibling requestPrimaryArm
  * carries the same three stores in $v1, which is what its value-returning
  * declaration produces there.
  * @source 0x8015C088 @kind function
@@ -65,7 +65,7 @@ extern void func_8015C088(void);
  * immediate masked both hit only this span's own offset, so clone was declined
  * and the body was written from this span's own bytes. The trailing three-store
  * group and its operand form come from the same target's exact sibling
- * requestPrimaryArmScenario (0x801FC6C4),
+ * requestPrimaryArm (0x801FC6C4),
  * and the leading action-then-latch pair from the exact sibling
  * startAction34LatchPhaseByteTwoThenReleaseFrontEndAndClearPrimaryStateScenarioScena0100_801FCE30
  * (0x801FCE30 of emi/scenario/scena01/00); this span stores no constant either

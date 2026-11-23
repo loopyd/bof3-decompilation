@@ -30,7 +30,7 @@ void func_8015C088(void);
  *           overlays store beside it, in the wording of the accepted exact
  *           sibling startStateEntry3AProgress0AWhenPackedArgRangesWorld03Area15013_801F2F58,
  *           which calls the same helper and writes the same byte pair. The
- *           sibling in this target, seedStateEntry39Progress14AndClearEffectBankIfSharedFlag8AElseRequestKind1World04Area19313_801F31C0,
+ *           sibling in this target, stateEffectBankShared,
  *           carries the same 0x39 state-entry value. No word of this payload
  *           holds 0x801F315C, so no jal and no table entry names the caller and
  *           the two argument roles stay structural.

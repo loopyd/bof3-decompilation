@@ -13,7 +13,7 @@ extern void (*D_801EFCCC[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTablefcc8Bmagic, D_801EFCC8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTablefcc8, D_801EFCC8);
 
 /* @source 0x801EF780
  * @behavior Overlay step dispatch: reads the state byte at +2 of
@@ -25,4 +25,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTablefcc8Bmagic, D_801E
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTablefcccBmagic, D_801EFCCC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTablefccc, D_801EFCCC);

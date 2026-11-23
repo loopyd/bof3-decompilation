@@ -26,7 +26,7 @@ extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind unknown */
  *           0x801F2C78.
  *
  *           Seed: the same-target sibling
- *           setStatusFFFFAndScenarioProgress1Or2ByGateWorld02Area08113_801F2C04
+ *           stateStatusOr2Gate
  *           at 0x801F2C04 in this payload binds the same three shared cells, and
  *           its lift measured byte-identical, so its statement order, `switch`
  *           topology and declaration style are transcribed here with this

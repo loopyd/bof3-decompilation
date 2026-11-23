@@ -41,7 +41,7 @@ s32 GetGraphType(void);
 
 /* @source 0x801EF898
  * @behavior Per-frame overlay drawing step, the last of the four calls
- *           callUpdatePassesBmagic
+ *           callUpdatePasses
  *           makes once the work record is active, and reached by no `jal`
  *           elsewhere in the payload. It first publishes three scratchpad
  *           values from the work object read through the pointer cell at

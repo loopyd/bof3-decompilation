@@ -4,7 +4,7 @@
  * by the battle lifts. The original re-materializes the cell address (lui
  * $vN,0x1F80 / lw $vN,68($vN)) for each of the two accesses after the helper
  * call, so the cell is declared volatile like the exact siblings
- * setupMotionFieldsBmagic and the motion step at
+ * setupMotionFields and the motion step at
  * 0x801F04DC. */
 extern u8* volatile g_battle_work; /* @source 0x1F800044 @kind data */
 

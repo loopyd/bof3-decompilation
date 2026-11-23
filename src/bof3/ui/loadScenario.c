@@ -34,7 +34,7 @@ void loadScenario(u8 scenario_index) {
   *(u32*)(base + index8) = 0u;
   D_8014686C = (u32*)(base + ((s32)state->scenario_id * 8));
   ready_phase = 5u;
-  requestScenarioOverlay();
+  requestOverlay();
 
   while (!func_80162D00()) {
     if ((D_80143F00 != none_sel) && (D_80143BB0 != ready_phase)) {

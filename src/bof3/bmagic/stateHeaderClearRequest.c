@@ -14,7 +14,7 @@ extern void func_8014D6B8(u32 selector); /* @source 0x8014D6B8 @kind function */
 /* @source 0x801EF528
  * @behavior Entry 4 (index 4 of the fourteen-word byte-1 handler run based at
  *           0x801F046C) that
- *           callStateTable046Bmagic selects with
+ *           callStateTable046 selects with
  *           work-record byte 1 and invokes indirectly; the payload word at
  *           0x801F047C holds this body's address. It seeds the work record read
  *           from the scratchpad pointer cell 0x1F800044 and then moves the

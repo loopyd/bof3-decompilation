@@ -43,8 +43,8 @@ segments:
     - func_801EEEE0
   - - 1008
     - c
-    - incrementWorkByte1WhenWorkByteBIs2BmagicMagic08603_801EEFF0
-    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBIs2BmagicMagic08603_801EEFF0.c'
+    - incrementWorkWorkByte
+    - '@source: src/bof3/bmagic/incrementWorkWorkByte.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and tests the work object''s byte at offset 0xB against two; only when that byte equals 2 it increments the work byte at offset 0x1 by one at byte width through the same base. It is the handler the overlay entry point at 0x801EEC1C selects with the work byte at offset 0x1, takes no arguments, returns nothing and keeps no frame.'
   - - 1060
     - asm
@@ -59,7 +59,7 @@ segments:
     - func_801EF1C8
   - - 1656
     - c
-    - callStateTable0354Bmagic
+    - callStateTable0354
     - '@source: src/bof3/bmagic/magic08603DispatchTables.c'
   - - 1724
     - asm
@@ -132,8 +132,8 @@ segments:
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once, tests that record''s byte at offset 0xB against one and, only when it equals 1, loads the scratchpad work-object pointer cell at 0x1F800044 with its own lui/lw pair and increments that object''s byte at offset 0x2 at byte width. Takes no arguments, returns nothing, keeps no frame and writes no other state; the table entry at 0x801F0384 is its only in-image reference.'
   - - 5376
     - c
-    - decrementSeedZeroBmagic
-    - '@source: src/bof3/bmagic/decrementSeedZeroBmagic.c'
+    - decrementSeedZero
+    - '@source: src/bof3/bmagic/decrementSeedZero.c'
     - '@behavior: Countdown step of the work object published at the scratchpad pointer cell 0x1F800044: decrement work byte 0x9 and, only when the stored value reaches zero, re-materialize the cell, seed work word 0x14 with 0x20, seed work word 0x20 with -1 and advance work byte 0x2.'
   - - 5460
     - c

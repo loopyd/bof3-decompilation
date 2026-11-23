@@ -36,21 +36,21 @@ segments:
     - func_801EEDA0
   - - 644
     - c
-    - incrementByteClearBmagic
-    - '@source: src/bof3/bmagic/incrementByteClearBmagic.c'
+    - incrementByteClear
+    - '@source: src/bof3/bmagic/incrementByteClear.c'
     - '@behavior: Increment work byte A at byte width, and once it reaches 0x21 advance state byte 1 and clear the byte-9 countdown.'
   - - 740
     - c
-    - incrementAdvanceClearBmagic
-    - '@source: src/bof3/bmagic/incrementAdvanceClearBmagic.c'
+    - incrementAdvanceClear
+    - '@source: src/bof3/bmagic/incrementAdvanceClear.c'
     - '@behavior: Increment work byte 9 at byte width, and once it reaches 0x21 advance state byte 1 and clear that byte-9 countdown.'
   - - 836
     - asm
     - func_801EEF44
   - - 1020
     - c
-    - decrementZeroOtherwiseBmagic
-    - '@source: src/bof3/bmagic/decrementZeroOtherwiseBmagic.c'
+    - decrementZeroOtherwise
+    - '@source: src/bof3/bmagic/decrementZeroOtherwise.c'
     - '@behavior: Decrement work byte 9, advance state byte 1 on zero, otherwise call helper at 0x801F0FBC.'
   - - 1120
     - c
@@ -72,11 +72,11 @@ segments:
     - func_801EF6A8
   - - 2932
     - c
-    - callStateTable121Bmagic
+    - callStateTable121
     - '@source: src/bof3/bmagic/magic11403DispatchTables.c'
   - - 3000
     - c
-    - callStateTable1228Bmagic
+    - callStateTable1228
     - '@source: src/bof3/bmagic/magic11403DispatchTables.c'
   - - 3068
     - asm
@@ -91,8 +91,8 @@ segments:
     - '@behavior: Draw a semi-transparent Gouraud quad using transformed work-byte-9 offsets and RotAverage4.'
   - - 4568
     - c
-    - callHandlerSetBmagic
-    - '@source: src/bof3/bmagic/callHandlerSetBmagic.c'
+    - callHandlerSet
+    - '@source: src/bof3/bmagic/callHandlerSet.c'
     - '@behavior: Dispatch work byte 2, then call 0x801F093C, 0x801F04D4 with work byte B, and 0x801F0004 when work bytes 0 and 2 are nonzero.'
   - - 4720
     - c
@@ -101,13 +101,13 @@ segments:
     - '@behavior: Decrement byte 9; on zero invoke helper at 0x8015D71C with 0x102, offset the channel pair, clear byte B, rearm byte 9, clear words 14 and 20, and advance byte 2.'
   - - 4892
     - c
-    - decrementWorkWord20Call800A9610AtWord14Equals30ThenAdd2AndAdvanceWorkByte2AtC0BmagicMagic11403_801EFF1C
-    - '@source: src/bof3/bmagic/decrementWorkWord20Call800A9610AtWord14Equals30ThenAdd2AndAdvanceWorkByte2AtC0BmagicMagic11403_801EFF1C.c'
+    - decrementWorkAdvanceWork
+    - '@source: src/bof3/bmagic/decrementWorkAdvanceWork.c'
     - '@behavior: Subtract 5 from work word 20, call 0x800A9610 at word 14 equal to 0x30, then add 2 and set byte B and advance byte 2 at 0xC0.'
   - - 5040
     - c
-    - decrementWorkZeroBmagic
-    - '@source: src/bof3/bmagic/decrementWorkZeroBmagic.c'
+    - decrementWorkZero
+    - '@source: src/bof3/bmagic/decrementWorkZero.c'
     - '@behavior: Decrement work byte 9, subtract 5 from work word 0x20 and add 2 to work word 0x14, then call 0x801E5988 if the decremented byte is zero.'
   - - 5124
     - asm
@@ -120,8 +120,8 @@ segments:
     - func_801F093C
   - - 8456
     - c
-    - callStateTable123Bmagic
-    - '@source: src/bof3/bmagic/callStateTable123Bmagic.c'
+    - callStateTable123
+    - '@source: src/bof3/bmagic/callStateTable123.c'
   - - 8556
     - c
     - stateHeaderSelectParity

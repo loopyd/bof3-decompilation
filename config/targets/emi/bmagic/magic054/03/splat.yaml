@@ -51,7 +51,7 @@ segments:
     - func_801EF0EC
   - - 1368
     - c
-    - callStateTablef658Bmagic
+    - callStateTablef658
     - '@source: src/bof3/bmagic/magic05403DispatchTables.c'
   - - 1436
     - c

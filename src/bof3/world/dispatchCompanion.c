@@ -7,5 +7,5 @@
  * @residual none
  */
 void dispatchCompanion(void) {
-  dispatchArea030CompanionHandler();
+  callCompanionHandler();
 }

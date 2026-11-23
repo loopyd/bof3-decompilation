@@ -24,5 +24,5 @@ queryTable4260ByteOffset = 0x801F3924;
 activateRecordsUnlessPending = 0x801F3964;
 func_801F39AC = 0x801F39AC;
 stateFieldFillRecords = 0x801F3AB0;
-clearFrontStateSetScenarioBit0AndResetWorkAreaWhenFlag77SetWorld04Area19113_801F3BE0 = 0x801F3BE0;
+stateFrontSetReset = 0x801F3BE0;
 D_801F3C54 = 0x801F3C54;

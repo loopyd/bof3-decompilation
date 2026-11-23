@@ -62,7 +62,7 @@ extern u8 *D_1F800044;
 /* Sixteen-byte roll table of this target at 0x801FAECC, inside the leading
  * table data run that starts at 0x801FAEC0. Indexing it with the low four bits
  * of a random roll answers the handler id the claim arm stores in the record
- * byte 1 that callHandlerPublishScenario
+ * byte 1 that callHandlerPublish
  * later reads, so the table maps a roll onto one of the ids 0, 2, 4 and 5. */
 extern u8 D_801FAECC[]; /* @source 0x801FAECC @kind data */
 
@@ -116,7 +116,7 @@ claimEndPointerReset(
 /* @source 0x801F7F08
  * @behavior Word 4 (the word stored at 0x801FAF0C) of the ten-entry
  * overlay-local second-level handler run at 0x801FAEFC that the exact
- * dispatcher dispatchSecondaryStateScenarioScena1100_801F7748 (0x801F7748)
+ * dispatcher callSecondaryState (0x801F7748)
  * indexes with the shared primary state byte D_80146874, so a primary state
  * reading 4 selects it; no jal or j of the payload names 0x801F7F08, and that
  * little-endian table word is its only reference. It switches on the shared

@@ -40,8 +40,8 @@ segments:
     - '@behavior: Work-state handler 1 of the front-end work object read through the scratchpad pointer cell 0x1F800044. The body address appears once in this payload as the word 0x801CE628 at 0x801D085C, entry 1 of the twenty-four-word code-pointer run based at 0x801D0858 that the step dispatch at 0x801CE404 indexes by work-record byte 0x02. It takes no arguments and returns nothing. Byte 0x08 is the current route index of the eight-entry route window, byte 0x03 the chosen candidate index, byte 0x09 the countdown, byte 0x0B the step sign, byte 0x04 the record resource id and byte 0x02 the step counter. When the current route index already equals the chosen index the walk has arrived: the body requests the record resource through the pair (0x50, 2) of func_8014D6DC when the id itself reads 0x50 and as the bare id through func_8014D6B8 for every other id, then increments the step counter byte 0x02, which moves the dispatch of 0x801CE404 to entry 2 of the same run. Otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks the index into the eight-entry window with 7 and selects the sequence of the new index through func_8014D8D4; while the countdown stays nonzero that path writes nothing else. The 0x18-byte frame only keeps $ra at 0x10 across the calls, the first pointer load precedes frame creation, the constant 0x50 is materialised in the delay slot of the route test, the countdown decrement reuses the pointer load of that test, the constant 2 is materialised in the delay slot of the branch that skips the expiry path, and the step counter increment issues in the delay slot of the jump to the epilogue. The one-argument request spends the byte-4 load of its own comparison as the argument, so it adds no access of its own.'
   - - 812
     - c
-    - callWorkTable0864Plchar
-    - '@source: src/bof3/plchar/callWorkTable0864Plchar.c'
+    - callWorkTable0864
+    - '@source: src/bof3/plchar/callWorkTable0864.c'
   - - 880
     - c
     - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp05600_801CE770
@@ -54,8 +54,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached as entry 1 of the handler run based at 0x801D0864 that the step dispatcher 0x801CE72C indexes by work byte 2; its only in-image reference is the word 0x801CEA94 at 0x801D0868, entry 4 of the twenty-four-word code-pointer run at 0x801D0858. It decrements the countdown byte 0x0A and does nothing else while that byte stays nonzero. Once it reaches zero it projects the work words 0x34 and 0x38 with the doubled movement offsets at 0x80181B94 and 0x80181B98 selected by route byte 0x08, hands the pair to the slot search func_801BDE14 at range 0, raises bit 0 of the animation byte at 0x801468FC plus 0x98 times the returned slot unless that search answers -1, then claims a front-end record through this payload claim claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp05600_801CED1C at the high half of each projected word, which answers one on both of its claiming paths and zero when the map cell carries neither of its codes, and retries one unit further on an axis whenever that answer is zero and the word has a nonzero low half. Every path increments the step counter byte 0x02, which moves the dispatch to entry 2 of the same run at 0x801CEC30, and closes by running the shared readiness helper func_8014DAEC. It takes no arguments and returns nothing, and the 0x30-byte frame keeps $ra at 0x28 with the six saved registers across the calls.'
   - - 2096
     - c
-    - stepReportsDonePlchar
-    - '@source: src/bof3/plchar/stepReportsDonePlchar.c'
+    - stepReportsDone
+    - '@source: src/bof3/plchar/stepReportsDone.c'
     - '@behavior: Work-byte-2 step of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 5 of the twenty-four-word code-pointer run based at 0x801D0858 that the step dispatcher func_801CE404 indexes by work byte 0x02: the sixth word of that run is 0x801CEC30 at 0x801D086C, and the run is the textbin row at payload offset 0x2458. The same word is entry 2 of the sub-run based at 0x801D0864 that the dispatcher func_801CE72C indexes the same way. No jal immediate in this payload names the body. It dispatches on the unsigned work byte 0x0B and keeps one done flag across the dispatch. When byte 0x0B reads one it polls the shared readiness helper func_8014DAEC and, once that answers nonzero, passes the unsigned work byte 0x08 to the shared resource request helper func_8014D6B8 and writes 2 into byte 0x0B so the next dispatch takes the third arm; this arm never reports done. Every other nonzero value runs the shared no-argument update helper func_8014D978 and reports done whenever the front-end phase byte 0x80143BB0 reads zero, so a busy value there suppresses the clear. A zero byte 0x0B only polls the readiness helper again and reports done as soon as it answers nonzero. All three arms leave their answer in the one flag, tested once: when it is set the body clears work byte 0x2B and then byte 0x12B of the record published at 0x80146250, re-reading the scratchpad cell before the first store and the record cell before the second. The 0x18-byte frame only keeps $ra at 0x14 and the flag at 0x10 across the calls, the pointer cell is read before the frame is created, and every arm joins on one epilogue. The 0xEC bytes at payload offset 0x830 match the plp025 and plp026 spans at the same offset word for word and the plp025 lift measured exact.'
   - - 2332
     - c
@@ -74,8 +74,8 @@ segments:
     - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp05600_801CE770 in this payload. It projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1. It then probes the map code of the projected cell through func_80166CB0: the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero, and the cell one row further whenever the low half of the second projected word is nonzero, each probe raising the answer to one when the code reads 0xF2. It returns that answer as an unsigned byte and takes no arguments. The two jal sites of adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp05600_801CE770 at 0x801CE7A0 and 0x801CE7D0 call it with the route byte moved back by one and, when the answer reads zero, with the route byte moved forward by two, each masked into the eight-entry route window with 7, and branch on the returned byte masked to 0xFF. The 0x30-byte frame keeps $ra at 0x28 and the six saved registers across the two shared calls, and the range constant is materialised before the projection tables are read. One payload comparison of the 0x134-byte spans measured this body byte-identical to the exact lifts at 0x801CEFF8 of the plp012 overlay, 0x801CF724 of plp27a and 0x801CF940 of plp247.'
   - - 3372
     - c
-    - callWorkTable0870Plchar
-    - '@source: src/bof3/plchar/callWorkTable0870Plchar.c'
+    - callWorkTable0870
+    - '@source: src/bof3/plchar/callWorkTable0870.c'
     - '@behavior: Overlay step dispatch at 0x801CF12C. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once before creating its 0x18-byte frame, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the handler run based at 0x801D0870 with no arguments, discarding any result. The original does not bound the index before the scaled table load, writes no state, and its frame only keeps $ra at 0x10 across the indirect call. Its only in-image reference is the word 0x801CF12C at 0x801D08C0, entry 2 of the seven-entry code-pointer run at 0x801D08B8.'
   - - 3440
     - c
@@ -89,8 +89,8 @@ segments:
     - '@behavior: Overlay step at 0x801CF23C, handler 1 of the step dispatch on work byte 2. It reads the work object through the scratchpad pointer cell 0x1F800044 once before creating its 0x18-byte frame and compares the route index byte 0x08 with the chosen index byte 0x03. When the two agree it selects the route arrival sequence through the shared selector func_8014D8D4: sequence 0x40 for route 3 and 0x41 for route 5, nothing for any other route, then increments step counter byte 0x02 in the delay slot of the jump to the epilogue. Otherwise it stores countdown byte 0x09 one lower, and when that reaches zero puts it back to 2, adds step sign byte 0x0B into the route index, masks the index with 7 and selects that sequence through the same selector. It takes no arguments and answers no value. Its only in-image reference is the word 0x801CF23C at 0x801D0874, entry 7 of the twenty-four-word code-pointer run at 0x801D0858 that the step dispatcher at 0x801CF12C addresses from work byte 2.'
   - - 3896
     - c
-    - callWorkTable087Plchar
-    - '@source: src/bof3/plchar/callWorkTable087Plchar.c'
+    - callWorkTable087
+    - '@source: src/bof3/plchar/callWorkTable087.c'
   - - 3964
     - c
     - stepBackPlusHalf
@@ -104,8 +104,8 @@ segments:
     - selectArrivalSequenceUnoccupied
   - - 4904
     - c
-    - callWorkTable0888Plchar
-    - '@source: src/bof3/plchar/callWorkTable0888Plchar.c'
+    - callWorkTable0888
+    - '@source: src/bof3/plchar/callWorkTable0888.c'
   - - 4972
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp05600_801CF76C
@@ -117,12 +117,12 @@ segments:
     - invokeHelperPlcharPlp05600_801CF934
   - - 5460
     - c
-    - callWorkTable0894Plchar
-    - '@source: src/bof3/plchar/callWorkTable0894Plchar.c'
+    - callWorkTable0894
+    - '@source: src/bof3/plchar/callWorkTable0894.c'
   - - 5528
     - c
-    - callWorkTable089Plchar
-    - '@source: src/bof3/plchar/callWorkTable089Plchar.c'
+    - callWorkTable089
+    - '@source: src/bof3/plchar/callWorkTable089.c'
   - - 5596
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp05600_801CF9DC
@@ -136,7 +136,7 @@ segments:
     - passResourceReportsDone
   - - 6744
     - c
-    - requestResourceReadyPlchar
+    - requestResourceReady
   - - 6840
     - c
     - dropEndSelectionBack
@@ -150,8 +150,8 @@ segments:
     - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp05600_801D0158
   - - 7748
     - c
-    - callWorkTable08Plchar
-    - '@source: src/bof3/plchar/callWorkTable08Plchar.c'
+    - callWorkTable08
+    - '@source: src/bof3/plchar/callWorkTable08.c'
   - - 7816
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp05600_801D0288
@@ -171,7 +171,7 @@ segments:
     - claimItBeyondReference
   - - 9168
     - c
-    - dispatchWorkHalfword2cTable08bcPlcharPlp05600_801D07D0
+    - callWorkHalfword2Table08
   - - 9236
     - c
     - dispatchWorkHalfword2cTable08c8PlcharPlp05600_801D0814

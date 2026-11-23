@@ -10,7 +10,7 @@ extern u32 D_8014686C;
  * record's unsigned byte field at offset 0x7A through the overlay-local
  * callback-pointer table at 0x801FE9C0 (eleven entries: func_801FE058,
  * func_801FE0A0, func_801FE0E0, func_801FE698, func_801FE6DC,
- * invokeHelperArgScenarioScena0800_801FE740,
+ * callHelperArg,
  * armGroupRecordsSlots,
  * func_801FE7AC,
  * func_801FE800, func_801FE840 and invokeHelperArgScenarioScena0800_801FE874),

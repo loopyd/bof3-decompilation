@@ -20,4 +20,4 @@ extern void (*D_801F1394[])(void); /* @source 0x801F1394 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchWorkByte2HandlerBmagicMagic06403_801F0D64, D_801F1394);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkByte2Handler, D_801F1394);

@@ -36,19 +36,19 @@ segments:
     - func_801EED18
   - - 976
     - c
-    - incrementWorkByte1WhenWorkByteBZeroBmagicMagic14603_801EEFD0
-    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic14603_801EEFD0.c'
+    - incrementWorkByteZero
+    - '@source: src/bof3/bmagic/incrementWorkByteZero.c'
     - '@behavior: Dispatch-reached leaf step of the overlay work record published at the scratchpad pointer cell 0x1F800044. It loads that cell once, tests the record unsigned byte 0x0B against zero with a plain branch on the loaded byte, and only when that byte is zero increments the record work byte 0x01 by one at byte width through the same base, testing no stored sum. Takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
   - - 1028
     - asm
     - func_801EF004
   - - 1100
     - c
-    - dispatchStateByte1Tablef9b4BmagicMagic14603_801EF04C
+    - callStateByte1Tablef9
     - '@source: src/bof3/bmagic/magic14603DispatchTables.c'
   - - 1168
     - c
-    - dispatchStateByte2Tablef9b8BmagicMagic14603_801EF090
+    - callStateByte2Tablef9
     - '@source: src/bof3/bmagic/magic14603DispatchTables.c'
   - - 1236
     - asm
@@ -68,8 +68,8 @@ segments:
     - func_801EF3B8
   - - 2336
     - c
-    - add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic14603_801EF520
-    - '@source: src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic14603_801EF520.c'
+    - workBytes9AdvanceAt16
+    - '@source: src/bof3/bmagic/workBytes9AdvanceAt16.c'
     - '@behavior: Entry 2 of this overlay four-entry work-byte-1 handler pointer run based at 0x801EF9C0 (0x801EF340, 0x801EF3B8, 0x801EF520, 0x801EF58C), whose word at 0x801EF9C8 holds this address and which the dispatcher at 0x801EF2FC indexes on unsigned byte 0x1 of the work object published at the scratchpad pointer cell 0x1F800044. It reads that cell, adds two modulo 256 to the object unsigned byte 0x09 with a byte-width read-modify-write, re-reads the cell and adds two modulo 256 to byte 0x0A the same way, then re-reads the cell a third time and tests byte 0x09 against 0x10 for equality with a plain branch on the loaded byte, so the arm runs only at that value and the test re-reads the byte instead of reusing the value stored two statements earlier. In that arm it increments the object byte 0x02 by one from the pointer the third read already holds. The function is a leaf with no frame, takes no arguments, returns nothing through the jr $ra at 0x801EF588 and reads or writes no other state, so the roles of work-object bytes 0x09, 0x0A and 0x02 stay offset-anchored. No jal in this payload reaches it, and its 108 bytes are byte-identical to the already-exact 0x801EF2D4 of emi/bmagic/magic009/03 and 0x801EF034 of emi/bmagic/magic145/03.'
   - - 2444
     - c
@@ -78,8 +78,8 @@ segments:
     - '@behavior: Per-frame handler of the battle work object published at the scratchpad pointer cell 0x1F800044. It increments that object unsigned byte 0x09 by one at byte width and does not test the sum, re-reads the cell and subtracts one from unsigned byte 0x0A the same way, then tests the stored byte truncated to eight bits, so the truncated register rather than a reload supplies the compared value. Only when byte 0x0A reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0x0B by one at byte width and call this overlay work-byte clear routine at 0x801EF964 with the store in the call delay slot. The 0x18-byte frame only keeps $ra at 0x10 across the call; takes no arguments, returns nothing and reads or writes no other state.'
   - - 2564
     - c
-    - drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes8BmagicMagic14603_801EF604
-    - '@source: src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes8BmagicMagic14603_801EF604.c'
+    - renderTranslucentTexturedTinted
+    - '@source: src/bof3/bmagic/renderTranslucentTexturedTinted.c'
     - '@behavior: Per-frame quad emitter of this overlay work-byte-2 draw step. It reads the shared graphic type twice and selects the draw-mode texture page 0x125 when either answer is 1 or 2, else 0x55, then links a 0xC-byte draw-mode packet through SetDrawMode at g_PrimCursor with dfe 0 and dtd 1 anchored at the work object projection words 0x34 and 0x38 with kind 2. It publishes work byte 9 shifted left 1 into the signed halfword at 0x1F800000 and work byte 0xA shifted left 3 into the halfword at 0x1F800004, then takes a fresh g_PrimCursor POLY_FT4, seeds it through SetPolyFT4, marks it semi-transparent and writes four corners around the work object screen halfwords 0x2E and 0x30 from the 0x801783C8 and 0x801782FC samples of the 0x200, 0x600, 0xE00 and 0xA00 eighth-turn angles scaled by the published radius. The texture is tpage GetTPage(0, 2, 0x340, 0x100) and clut GetClut(0x20, 0x1FA) over the 0x20-by-0x20 uv window at (0x80, 0x20), and red, green and blue each read the scratchpad halfword 0x1F800004 back and truncate it, so all three channels carry eight times work byte 0xA. It then links the 0x28-byte polygon at the same projection words with kind 2. The 0x28-byte frame holds $ra at 0x20 plus the fifth draw-mode argument at 0x10; it takes no arguments and returns nothing.'
   - - 3328
     - asm

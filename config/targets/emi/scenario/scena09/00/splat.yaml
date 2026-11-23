@@ -63,10 +63,10 @@ segments:
     - c
     - dispatchScenarioStateHandler
     - '@source: src/bof3/scenario/dispatchScenarioStateHandler.c'
-    - '@behavior: Per-frame state dispatcher of this overlay: it reads the signed shared main-RAM state byte D_80146872, scales it by four and dispatches through the pointer table at 0x801FE3E0 (entry 0 is stateStartScenario, the state-0 handler that advances the state byte to 1), so that state byte selects which of the overlay''s scenario handlers runs this frame. It takes no arguments and returns nothing, and its 0x18-byte frame only holds $ra across the indirect call.'
+    - '@behavior: Per-frame state dispatcher of this overlay: it reads the signed shared main-RAM state byte D_80146872, scales it by four and dispatches through the pointer table at 0x801FE3E0 (entry 0 is stateStart, the state-0 handler that advances the state byte to 1), so that state byte selects which of the overlay''s scenario handlers runs this frame. It takes no arguments and returns nothing, and its 0x18-byte frame only holds $ra across the indirect call.'
   - - 3340
     - c
-    - stateStartScenario
+    - stateStart
   - - 3360
     - c
     - statePendingIdSteps
@@ -76,7 +76,7 @@ segments:
     - c
     - dispatchPrimaryStateByte
     - '@source: src/bof3/scenario/dispatchPrimaryStateByte.c'
-    - '@behavior: Per-frame primary state dispatcher of this overlay: it reads the signed shared primary state byte D_80146874 (0x80146874), scales it by four and dispatches through the overlay-local handler table at 0x801FE3EC, so that byte selects which of the overlay''s seventeen primary states runs this frame. It reads no state other than that byte and writes none, takes no arguments and returns nothing of its own, and its 0x18-byte frame exists only to hold $ra across the indirect call, with the state-byte read hoisted above the frame setup. No in-image jal targets the address: its only image word is 0x801FE3E8, word 2 of the twenty-word state-handler table at 0x801FE3E0 whose entry 0 is stateStartScenario and whose word at 0x801FE430 (0xFF000100) is not a pointer, so the overlay reaches this dispatcher only indirectly, through the same-overlay state dispatcher dispatchScenarioStateHandler (0x801F78D0) that indexes that table with D_80146872. Its 60 bytes are instruction-for-instruction identical to that dispatcher and to the exact sibling dispatchPrimaryStateHandlerScenarioScena0600_801F7A00 (0x801F7A00), which dispatches the same D_80146874 byte through its own table at 0x801FE3E4; they differ only in the two symbol immediates.'
+    - '@behavior: Per-frame primary state dispatcher of this overlay: it reads the signed shared primary state byte D_80146874 (0x80146874), scales it by four and dispatches through the overlay-local handler table at 0x801FE3EC, so that byte selects which of the overlay''s seventeen primary states runs this frame. It reads no state other than that byte and writes none, takes no arguments and returns nothing of its own, and its 0x18-byte frame exists only to hold $ra across the indirect call, with the state-byte read hoisted above the frame setup. No in-image jal targets the address: its only image word is 0x801FE3E8, word 2 of the twenty-word state-handler table at 0x801FE3E0 whose entry 0 is stateStart and whose word at 0x801FE430 (0xFF000100) is not a pointer, so the overlay reaches this dispatcher only indirectly, through the same-overlay state dispatcher dispatchScenarioStateHandler (0x801F78D0) that indexes that table with D_80146872. Its 60 bytes are instruction-for-instruction identical to that dispatcher and to the exact sibling dispatchPrimaryStateHandlerScenarioScena0600_801F7A00 (0x801F7A00), which dispatches the same D_80146874 byte through its own table at 0x801FE3E4; they differ only in the two symbol immediates.'
   - - 6164
     - c
     - stateNoopHandler
@@ -141,7 +141,7 @@ segments:
     - '@behavior: Word 16 (the word stored at 0x801FE42C) of the seventeen-word in-image primary state table at 0x801FE3EC that dispatchPrimaryStateByte (0x801F83D8) indexes with the signed shared primary state byte D_80146874 and invokes with no arguments, so no in-image jal targets this address and that table word is its only reference. It reads the shared sub-state byte D_80146875 once through one address taken into a local pointer, which keeps that base in $s0 across both calls: sub-state 0 runs the shared helper func_801BE1B0(2) and advances the sub-state byte to 1; sub-state 1, once the shared scenario progress byte g_ScenarioProgress (0x80146864) reads 3, sets scenario flag bit 0x24 of the shared flag word D_8014686C (0x8014686C, read with lw) through func_8015B580, runs the shared release helper func_8015C058 and then clears the sub-state byte and the primary state byte D_80146874 back to zero, which ends the state; every other sub-state value does nothing. It takes no arguments, reads no other state and writes no other byte, and its 0x18-byte frame only keeps $ra and $s0.'
   - - 20748
     - c
-    - callClearUnlessScenario
+    - callClearUnless
   - - 20844
     - c
     - waitRecordsThroughSteps
@@ -152,7 +152,7 @@ segments:
     - stateNoopHandler2
   - - 22928
     - c
-    - signedTableStepScenario
+    - signedTableStep
   - - 23004
     - c
     - stateNoopHandler3
@@ -176,14 +176,14 @@ segments:
     - '@behavior: Entry 2 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE43C) that the overlay dispatcher dispatchRecordFieldCallback indexes with byte 0x7A of a record, so the overlay reaches this handler only indirectly. It runs the shared front-end startup helper func_8015C088 and then clears the shared scenario progress byte g_ScenarioProgress (0x80146864) to zero and requests primary scene state 5 with secondary sub-state 5: it stores 5 in the shared sub-state byte D_80146875 and then 5 in the shared state byte D_80146874. Takes no arguments and returns nothing; the 0x18-byte frame only keeps $ra across the call, each of the three byte stores materialises the 0x8014 page in $at on its own, and the stored constant 5 is materialised in $v0 (addiu $v0,$zero,5) ahead of the zero store. Its 0x3C bytes keep the progress-clear-then-request shape of the exact sibling requestState5Substate0 (0x801FC62C, the table entry 1), which clears the same progress byte and requests state 5 with sub-state 0 after the same helper call; the two handlers differ only in the sub-state constant, so the two stores share the register holding 5.'
   - - 23204
     - c
-    - requestPrimaryState4Scenario
+    - requestPrimaryState4
   - - 23260
     - c
     - requestState0ASubstate0
   - - 23312
     - c
-    - requestPrimarySubstate1Scenario
-    - '@source: src/bof3/scenario/requestPrimarySubstate1Scenario.c'
+    - requestPrimarySubstate1
+    - '@source: src/bof3/scenario/requestPrimarySubstate1.c'
     - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 0x0A with secondary sub-state 1 by storing 0x0A in the shared state byte D_80146874 and then 1 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. No in-image jal targets the address; its only image word is entry 5 of the 16-word handler table at 0x801FE434 that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record.'
   - - 23368
     - c
@@ -195,8 +195,8 @@ segments:
     - setFlagBit0E
   - - 23472
     - c
-    - requestPrimarySubstate100Scenario
-    - '@source: src/bof3/scenario/requestPrimarySubstate100Scenario.c'
+    - requestPrimarySubstate100
+    - '@source: src/bof3/scenario/requestPrimarySubstate100.c'
     - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 6 with secondary sub-state 0x64 by storing 6 in the shared state byte D_80146874 and then 0x64 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. No in-image jal targets the address; its only image word is entry 8 of the 16-word handler table at 0x801FE434 that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record.'
   - - 23528
     - c
@@ -208,9 +208,9 @@ segments:
     - '@behavior: Thin overlay wrapper: it reads the shared scenario flag word D_8014686C (0x8014686C, lui plus lw into $a0) and passes it with 0x14 to the shared bit-set helper func_8015B580, so it sets flag bit 0x14 of that word. It takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. No in-image jal targets the address; its only image word is 0x801FE45C, entry 10 of the 16-word in-image callback table at 0x801FE434 that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Its 0x28 bytes differ from the same-target sibling setFlagBit10 (0x801FC7E8) only in the stored flag-bit constant, and they equal the scena06 sibling setScenarioFlagBit0CScenarioScena0600_801FCF98 (0x801FCF98) apart from that same constant.'
   - - 23608
     - c
-    - requestPrimaryState8Scenario
-    - '@source: src/bof3/scenario/requestPrimaryState8Scenario.c'
-    - '@behavior: Entry 11 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE460) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 8 with secondary sub-state 0x0F by storing 8 in the shared state byte D_80146874 and then 0x0F in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. Its 0x38 bytes are the same shape as the exact sibling requestPrimarySubstate1Scenario (0x801FC710), differing only in the two stored constants.'
+    - requestPrimaryState8
+    - '@source: src/bof3/scenario/requestPrimaryState8.c'
+    - '@behavior: Entry 11 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE460) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 8 with secondary sub-state 0x0F by storing 8 in the shared state byte D_80146874 and then 0x0F in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. Its 0x38 bytes are the same shape as the exact sibling requestPrimarySubstate1 (0x801FC710), differing only in the two stored constants.'
   - - 23664
     - c
     - stateNoopHandler5
@@ -219,13 +219,13 @@ segments:
     - requestState0FSubstate0
   - - 23724
     - c
-    - requestPrimarySubstate14Scenario
-    - '@source: src/bof3/scenario/requestPrimarySubstate14Scenario.c'
-    - '@behavior: Entry 14 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE46C) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 0x0F with secondary sub-state 0x14 by storing 0x0F in the shared state byte D_80146874 and then 0x14 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. Its 0x38 bytes are the same shape as the exact sibling requestPrimaryState8Scenario (0x801FC838), differing only in the two stored constants.'
+    - requestPrimarySubstate14
+    - '@source: src/bof3/scenario/requestPrimarySubstate14.c'
+    - '@behavior: Entry 14 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE46C) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 0x0F with secondary sub-state 0x14 by storing 0x0F in the shared state byte D_80146874 and then 0x14 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. Its 0x38 bytes are the same shape as the exact sibling requestPrimaryState8 (0x801FC838), differing only in the two stored constants.'
   - - 23780
     - c
-    - requestPrimarySubstate28Scenario
-    - '@source: src/bof3/scenario/requestPrimarySubstate28Scenario.c'
+    - requestPrimarySubstate28
+    - '@source: src/bof3/scenario/requestPrimarySubstate28.c'
     - '@behavior: Entry 15 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE470) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 0x0F with secondary sub-state 0x28 by storing 0x0F in the shared state byte D_80146874 and then 0x28 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 23836
     - c
@@ -242,8 +242,8 @@ segments:
     - '@behavior: Looks up two unsigned halfword coordinates in fourteen records at 0x801FE474 through helper 0x801A7AD8, returns -1 for a negative signed-byte index, otherwise invokes the indexed no-argument handler at 0x801FE4BC and returns its signed low byte.'
   - - 26344
     - c
-    - waitRequestPrimaryScenario
-    - '@source: src/bof3/scenario/waitRequestPrimaryScenario.c'
+    - waitRequestPrimary
+    - '@source: src/bof3/scenario/waitRequestPrimary.c'
     - '@behavior: Overlay handler reached only indirectly: the address is word 0 of the 38-entry in-image code-pointer table at 0x801FE4BC that callCoordinateLookupScenario (0x801FD280) indexes with the signed byte returned by func_801A7AD8 (0x801FE474, 0x0E) and calls with jalr, so no in-image jal targets this address. It branches on the party byte of local work record 0 (D_80145F09, 0x80145F09): any value other than 5 runs the shared front-end startup helper func_8015C088 and requests primary scene state 6 with sub-state 0 in the shared sub-state byte D_80146875, while the value 5 takes the two-stage wait func_8015B5D4 on the shared flag word D_8014686C for wait id 0x0C and requests the same primary state 6 with sub-state 0x14 when the wait is done or sub-state 5 when it is still running. All three paths store 6 in the shared state byte D_80146874 and answer 1. It takes no arguments, reads no other state and writes no other byte, and its 0x18-byte frame only keeps $ra across the calls.'
   - - 26504
     - c

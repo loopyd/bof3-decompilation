@@ -18,7 +18,7 @@ extern u16 D_801FCF42[];
  * the table base in a register, spill a slot and widen the frame from 0x20 to
  * 0x28. */
 /* @source 0x801FCF40 @kind data */
-extern Scena0300DrawAreaOrigin renderAreaOrigin;
+extern Scena0300DrawAreaOrigin renderOrigin;
 
 void func_8014E5A0(u8 arg0, u8 arg1);
 void func_80196070(void);
@@ -53,8 +53,8 @@ void tickCountdownIndexedRect(void) {
     rect.y = D_801FCF42[D_1F800044[1] * 2] + 0x100;
     rect.w = 0x10;
     rect.h = 0x28;
-    SetDrawMove(prim, &rect, renderAreaOrigin.x / 4 + 0x2C0,
-                renderAreaOrigin.y + 0x100);
+    SetDrawMove(prim, &rect, renderOrigin.x / 4 + 0x2C0,
+                renderOrigin.y + 0x100);
 
     D_1F800044[1]++;
     D_1F800044[0x29] = 0;

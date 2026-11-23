@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/stateArmCounters.c",
     "src/bof3/bmagic/decrementJitterPointerExpiry.c",
-    "src/bof3/bmagic/callLocalHandlerBmagic.c",
+    "src/bof3/bmagic/callLocalHandler.c",
 ]
 support_sources = [
     "src/bof3/bmagic/invokeSharedHelper15.c",

@@ -15,11 +15,11 @@ support_sources = [
     "src/bof3/bmagic/incrementGlobalHelperReady.c",
     "src/bof3/bmagic/stateDoubleIntoTriplet.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic07503_801EEC10.c",
-    "src/bof3/bmagic/drawSixteenGouraudRingQuadsWithParityJitterBmagicMagic07503_801EF500.c",
+    "src/bof3/bmagic/renderSixteenGouraudJitter.c",
     "src/bof3/support/magic075_03_psyq.c",
     "src/bof3/bmagic/magic07503DispatchTables.c",
     "src/bof3/bmagic/renderTriangleParityJitter.c",
-    "src/bof3/bmagic/dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038.c",
+    "src/bof3/bmagic/callStateByte2Tablef7.c",
     "src/bof3/bmagic/decrementEffectAngularSamples.c",
 ]
 psyq_source = "src/bof3/support/magic075_03_psyq.c"

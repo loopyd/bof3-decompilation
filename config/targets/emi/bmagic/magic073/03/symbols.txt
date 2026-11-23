@@ -1,12 +1,12 @@
 func_801EEC28 = 0x801EEC28;
 statePerEligibleOrdinal = 0x801EED18;
 func_801EEF50 = 0x801EEF50;
-callStateTable0668Bmagic = 0x801EEFB0;
+callStateTable0668 = 0x801EEFB0;
 func_801EEFF4 = 0x801EEFF4;
 func_801EF06C = 0x801EF06C;
 func_801EF2DC = 0x801EF2DC;
 incrementCountersDecrementZero = 0x801EF3D4;
-stateIncrementByteBmagic = 0x801EF4E4;
+stateIncrementByte = 0x801EF4E4;
 func_801EF52C = 0x801EF52C;
 decrementGlobalIsZero = 0x801EF6B8;
 dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724 = 0x801EF724;

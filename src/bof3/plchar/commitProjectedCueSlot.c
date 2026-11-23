@@ -99,7 +99,7 @@ void func_801B0DFC(void);
  * @behavior Overlay step of the front-end work object read through the
  *           scratchpad pointer cell 0x1F800044, reached only through the
  *           eight-word pointer run based at 0x801CFDB8 that
- *           callWorkTablefdb8Plchar indexes with the
+ *           callWorkTablefdb8 indexes with the
  *           work step counter byte 0x02: this body's own address is word 0 of
  *           that run, which is also word 14 of the
  *           sixteen-word run starting at 0x801CFD80, and no jal in this payload

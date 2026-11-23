@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/stateIncrementGlobalTwo.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06703_801F0068.c",
+    "src/bof3/bmagic/decrementGlobalInvokeZero.c",
     "src/bof3/bmagic/callHelperOneIncrement.c",
     "src/bof3/bmagic/decrementRaiseBattleTarget.c",
     "src/bof3/bmagic/forwardBattleByteZero.c",
@@ -23,10 +23,10 @@ support_sources = [
     "src/bof3/bmagic/callHandlerPopNonzero.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801F033C.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801EF284.c",
-    "src/bof3/bmagic/stateBytesAdvanceBmagic.c",
-    "src/bof3/bmagic/callHandlerNonzeroBmagic.c",
+    "src/bof3/bmagic/stateBytesAdvance.c",
+    "src/bof3/bmagic/callHandlerNonzero.c",
     "src/bof3/bmagic/stateDecrementGlobalTwo.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic06703_801EFFCC.c",
+    "src/bof3/bmagic/incrementWorkAdvanceWork.c",
     "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06703_801F001C.c",
     "src/bof3/bmagic/stateSetByteIncrement.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06703_801F038C.c",

@@ -115,9 +115,9 @@ void func_801F2E04(VECTOR* center, s32 scale, s32 start_angle, s32 xofs,
 void func_801F300C(void);
 void func_801F305C(void);
 
-void setScenarioFlagBit29ClearBit28(void);
-void clearScenarioFlagBit29(void);
-void setScenarioFlagBit28(void);
+void stateFlagBit29Clear(void);
+void stateFlagBit29(void);
+void stateFlagBit28(void);
 void clearScenarioFlagBit28(void);
 
 #endif

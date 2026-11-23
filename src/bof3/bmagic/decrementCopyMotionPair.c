@@ -90,7 +90,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *   the third word of the code-pointer run at 0x801EF89C, holds this address,
  *   so the work-byte-2 dispatcher of this overlay reaches it as entry 0 of its
  *   handler table. The decrement and advance shape follows this target's exact
- *   sibling decrementIncrementZeroBmagic
+ *   sibling decrementIncrementZero
  *   and the record copy and position accumulation follow the exact sibling
  *   seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic04403_801EEEFC,
  *   which reads the same record words with the same operand order. No overlay

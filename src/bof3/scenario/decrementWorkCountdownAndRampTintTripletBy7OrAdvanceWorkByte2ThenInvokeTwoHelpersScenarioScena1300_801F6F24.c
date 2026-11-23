@@ -22,7 +22,7 @@ void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
  * own pointer load, and the 0x5F store sits in the `j` delay slot; when the byte
  * reads zero it instead stores 2 into the object's dispatch byte 0x01 (`sb` of
  * the constant the `beqz` delay slot loads), which hands the next frame to table
- * entry 2 (0x801F6FD0, invokeTwoHelpersScenarioScena1300_801F6FD0). Both arms
+ * entry 2 (0x801F6FD0, callTwoHelpers). Both arms
  * rejoin at the two overlay helper calls func_801F6FF8 and
  * setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC, made
  * in that order with no arguments and with any result discarded, so the pair

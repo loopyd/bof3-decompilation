@@ -27,7 +27,7 @@ support_sources = [
     "src/bof3/boss/integrateFieldQuadHits.c",
     "src/bof3/boss/stateEnemyPublishRequest.c",
     "src/bof3/boss/requestHelperReadyBoss.c",
-    "src/bof3/boss/setTriplet5D5F5EToMinus16xByteBInvokeReadinessHelperTickByte9CountdownInvokeHelperWhenZeroBossBoss03316_800C26A4.c",
+    "src/bof3/boss/stateXReadinessTick.c",
     "src/bof3/boss/checkDownSubmitEnemy.c",
     "src/bof3/boss/stateWhileBelowSide.c",
     "src/bof3/support/boss033_16_psyq.c",

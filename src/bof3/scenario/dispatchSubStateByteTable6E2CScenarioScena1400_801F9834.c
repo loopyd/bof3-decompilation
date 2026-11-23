@@ -169,7 +169,7 @@ void func_8015D404(u32 arg0, s32 arg1);
 void func_80161BBC(u32 selection_id);
 void func_8015DF18(u32 arg0);
 void func_80161C20(u8 selection_id, s32 cue_level, s32 cue_shape);
-void averagePaletteChannelsScenarioScena1400_801F7960(void);
+void averagePaletteChannels(void);
 
 /* @source 0x801F9834
  * @behavior Primary-state-6 handler of this scenario overlay and sub-state
@@ -426,7 +426,7 @@ void dispatchSubStateByteTable6E2CScenarioScena1400_801F9834(void) {
       return;
     }
     D_8014832E = 0x1F;
-    averagePaletteChannelsScenarioScena1400_801F7960();
+    averagePaletteChannels();
     func_8014ECAC(1);
     state = &D_80146875;
     *state = *state + 1;

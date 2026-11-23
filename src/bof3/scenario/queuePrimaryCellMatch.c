@@ -51,7 +51,7 @@ void func_8015DF18(u32 arg0);
  *           materialises the 0x8014 page in $at on its own.
  *
  *           0x80144F5A is the shared selector byte the same overlay's
- *           publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14 reads
+ *           publishBaseSeedFront reads
  *           as the 0x801FE26C table index. No image word names 0x801FC9CC; the
  *           only `jal` to it is at 0x801F7C18, inside func_801F7A9C, on the arm
  *           that func_8015B5D4(D_8014686C, 0x2E) selects, so the overlay reaches

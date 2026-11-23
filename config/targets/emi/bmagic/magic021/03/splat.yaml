@@ -48,7 +48,7 @@ segments:
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the helper at 0x801E5988 with no arguments; the halfword store fills the call delay slot.'
   - - 988
     - c
-    - callStateTablefe00Bmagic
+    - callStateTablefe00
     - '@source: src/bof3/bmagic/magic02103DispatchTables.c'
   - - 1056
     - asm
@@ -70,7 +70,7 @@ segments:
     - '@behavior: When the readiness helper returns a nonzero byte, forwards the battle byte to a helper and increments work byte 2.'
   - - 1632
     - c
-    - callHelperAdvanceBmagic
+    - callHelperAdvance
     # @source 0x801EF260
     # @behavior Calls helper and adds four to work byte 9 below 12; otherwise advances work byte 2.
   - - 1740
@@ -91,8 +91,8 @@ segments:
     - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler run based at 0x801EFE04 (four in-image code pointers, entry 0 = 0x801EF578 through entry 3 = 0x801EF7A0) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 2424
     - c
-    - callHelpersNonzeroBmagic
-    - '@source: src/bof3/bmagic/callHelpersNonzeroBmagic.c'
+    - callHelpersNonzero
+    - '@source: src/bof3/bmagic/callHelpersNonzero.c'
     - '@behavior: Dispatches work byte 2, then calls three helpers when work bytes 0 and 2 are nonzero.'
   - - 2560
     - asm

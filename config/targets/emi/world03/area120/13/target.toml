@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/support/area12013_symbols.c",
     "src/bof3/world/area12013DispatchTables.c",
     "src/bof3/world/stateOverlayWordQuad.c",
-    "src/bof3/world/stateStatusScenarioGate.c",
+    "src/bof3/world/stateStatusGate.c",
     "src/bof3/world/stateRampReturnExpiry.c",
     "src/bof3/world/stateGateResetStatus.c",
     "src/bof3/world/redirectMaskedSceneQuad.c",
@@ -29,7 +29,7 @@ support_sources = [
     "src/bof3/world/stateStatesRenderActive.c",
     "src/bof3/world/renderPassTexturedSpread.c",
     "src/bof3/world/renderProjectedDotTile.c",
-    "src/bof3/world/setStatusFFFFAndScenarioProgress1EIfGateElse28World03Area12013_801F4320.c",
+    "src/bof3/world/stateStatusGateElse28.c",
 ]
 psyq_source = "src/bof3/support/area120_13_psyq.c"
 

@@ -4,7 +4,7 @@ func_801EED28 = 0x801EED28;
 func_801EEE50 = 0x801EEE50;
 decrementWorkByte9InvokeHelper101AndRaiseBattleTargetFlag10ThenAdvanceWorkByte1BmagicMagic21903_801EEF54 = 0x801EEF54;
 func_801EEFC4 = 0x801EEFC4;
-callStateTablefa00Bmagic = 0x801EF024;
+callStateTablefa00 = 0x801EF024;
 func_801EF068 = 0x801EF068;
 func_801EF118 = 0x801EF118;
 checkShiftHitBand = 0x801EF3CC;
@@ -13,6 +13,6 @@ decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZeroBmagicM
 projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic21903_801EF664 = 0x801EF664;
 func_801EF71C = 0x801EF71C;
 reserveFirstFreeRecordBmagicMagic21903_801EF934 = 0x801EF934;
-stateWorkThrough4Bmagic = 0x801EF998;
+stateWorkThrough4 = 0x801EF998;
 D_801EF9E8 = 0x801EF9E8;
 magic21903RecordFlags = 0x801EFA14;

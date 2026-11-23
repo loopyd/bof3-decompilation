@@ -97,8 +97,8 @@ segments:
     - '@behavior: Draws the overlay cursor band, a closed translucent gouraud ring of sixteen quads around the three-word work-cursor position handed as arg0: it offsets that position in x and y by the cosine and sine of a 0x100-stepped 12-bit phase scaled by 0x200 and shifted right four, projects each step at the position depth word and at that depth plus 0x08000000, fills one semi-transparent POLY_G4 per step from the previous and current projected pairs, and ramps the shared grey level from 0x20 biased by the low bit of D_80143E6C down by four over quads 4 to 0x0B and up by four outside that window.'
   - - 4240
     - c
-    - setStatusFFFFAndScenarioProgress8IfGateElse0AState3Substate10World03Area14514_801F3C90
-    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress8IfGateElse0AState3Substate10World03Area14514_801F3C90.c'
+    - stateStatusProgress8Gate
+    - '@source: src/bof3/world/stateStatusProgress8Gate.c'
     - '@behavior: Overlay reset handler reading the shared gate byte D_801490C7, storing 0xFFFF into the shared status halfword D_801490A8, and then storing 8 into the shared scenario progress byte g_ScenarioProgress when the gate byte is nonzero or 0xA when it is zero, in which case it also requests primary state 3 with sub-state 10 through D_80146874 and D_80146875.'
   - - 4324
     - asm

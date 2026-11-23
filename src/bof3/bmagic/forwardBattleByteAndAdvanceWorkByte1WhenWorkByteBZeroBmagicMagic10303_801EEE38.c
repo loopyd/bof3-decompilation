@@ -23,7 +23,7 @@ extern u8 D_80146384; /* @source 0x80146384 @kind unknown */
  *           leading data at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94).
  *           The run's second word at 0x801EEC08 holds this address, and its
  *           consumer is the payload's own dispatcher
- *           dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10, which
+ *           callWorkHandlerTableec04, which
  *           copies the three words into its 0x28-byte frame and calls the entry
  *           named by the scratchpad work object's unsigned byte 0x1. This body
  *           reads the work-object pointer cell at 0x1F800044 and tests work

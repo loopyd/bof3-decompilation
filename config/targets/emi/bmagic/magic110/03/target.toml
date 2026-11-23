@@ -17,14 +17,14 @@ sources = [
 ]
 support_sources = [
     "src/bof3/bmagic/renderWideTintingOuter.c",
-    "src/bof3/bmagic/callStateTable0478Bmagic.c",
+    "src/bof3/bmagic/callStateTable0478.c",
     "src/bof3/support/magic110_03_psyq.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8.c",
     "src/bof3/bmagic/magic11003DispatchTables.c",
     "src/bof3/bmagic/offsetChannelMotionWord.c",
     "src/bof3/bmagic/offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11003_801EF8F8.c",
-    "src/bof3/bmagic/decrementAdvanceZeroBmagic.c",
+    "src/bof3/bmagic/decrementAdvanceZero.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11003_801EF93C.c",
     "src/bof3/bmagic/stateRandomNearDecrement.c",
     "src/bof3/bmagic/stateRandomNearBelow.c",

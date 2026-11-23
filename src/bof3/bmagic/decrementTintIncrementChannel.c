@@ -3,7 +3,7 @@
 /* Scratchpad work-object pointer cell, shared by this overlay's dispatchers and
  * handlers and bound at 0x1F800044 by this target's map. It is the named cell
  * symbol the exact sibling
- * incrementByteZeroBmagic uses: the
+ * incrementByteZero uses: the
  * symbolic address lets the assembler fold it into each load (lui $vN,0x1F80 /
  * lw $vN,68($vN)), so the original's two separate reads each re-materialise the
  * base. The plain cell is kept rather than the volatile one several siblings

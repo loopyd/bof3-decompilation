@@ -1062,7 +1062,7 @@ void stageSharedPaletteBank(void);
  * scenario state.
  * @source 0x801A7804
  */
-void requestScenarioOverlay(void);
+void requestOverlay(void);
 
 /* @behavior enters the loaded scenario-local dispatch path after the SCENA loader
  * completes.

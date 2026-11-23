@@ -62,7 +62,7 @@ segments:
     - c
     - stepAngleDownParity
     - '@source: src/bof3/bmagic/stepAngleDownParity.c'
-    - '@behavior: Advances the work record angle halfword at offset 0x0E by 0x40 within 0x1000, projects the two position words at offsets 0x10 and 0x14 from the shared battle word offsets 0x34 and 0x38 plus the two rotator helper results scaled by the record signed halfword 0x0C, adds record byte 0x0A onto halfword 0x1A, increments byte 0x0B, and when bit 0 of the shared battle word at 0x80143E6C is set counts down byte 0x09 and on zero decrements byte 0x0B of the shared battle word and calls clearWorkRecordBytesZeroThroughFourBmagicMagic10603_801EF970 to clear the record.'
+    - '@behavior: Advances the work record angle halfword at offset 0x0E by 0x40 within 0x1000, projects the two position words at offsets 0x10 and 0x14 from the shared battle word offsets 0x34 and 0x38 plus the two rotator helper results scaled by the record signed halfword 0x0C, adds record byte 0x0A onto halfword 0x1A, increments byte 0x0B, and when bit 0 of the shared battle word at 0x80143E6C is set counts down byte 0x09 and on zero decrements byte 0x0B of the shared battle word and calls stateBytesThroughFour to clear the record.'
   - - 2348
     - c
     - projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C
@@ -78,8 +78,8 @@ segments:
     - reserveFirstFreeRecordBmagicMagic10603_801EF914
   - - 3440
     - c
-    - clearWorkRecordBytesZeroThroughFourBmagicMagic10603_801EF970
-    - '@source: src/bof3/bmagic/clearWorkRecordBytesZeroThroughFourBmagicMagic10603_801EF970.c'
+    - stateBytesThroughFour
+    - '@source: src/bof3/bmagic/stateBytesThroughFour.c'
     - '@behavior: Clears work-record bytes 0x00 through 0x04 through the pointer cell at 0x801F05F8, re-reading the cell before each byte store. Takes no arguments and returns nothing.'
   - - 3520
     - textbin

@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell, shared by this overlay's dispatchers and
  * handlers. Declared as the same volatile u8 pointer the exact siblings
- * stateHelperReadyBmagic and
+ * stateHelperReady and
  * decrementMotionCountdownAndAdvanceMotionPairThenSeedWorkByte9FromHelperAFF98
  * AndAdvanceWorkByte2BmagicMagic00800_801F037C use: the original re-reads the
  * cell before each of this function's two store groups, and the named symbol
@@ -13,7 +13,7 @@ extern u8* volatile g_battle_work; /* @source 0x1F800044 @kind data */
 /* Shared readiness helper, outside this overlay's image. It reports a readiness
  * byte, which the exact main-executable lifts (clearWorkFlagsWhenReady,
  * stepWorkSequenceAndClearByte12BOnNonzero) read as a non-zero ready flag, and
- * the exact sibling stateHelperReadyBmagic
+ * the exact sibling stateHelperReady
  * declares the same u8 return for the same andi 0xff test of the same result.
  * Splat binds the address through this target's generated
  * undefined_funcs_auto.txt, so no target-map row is needed. */

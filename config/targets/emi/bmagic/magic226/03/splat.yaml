@@ -115,8 +115,8 @@ segments:
     - func_801F0724
   - - 7124
     - c
-    - drawThirtyTwoTranslucentGouraudQuadsWithWorkByte9RadiiAndWorkByteATintBmagicMagic22603_801F07D4
-    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudQuadsWithWorkByte9RadiiAndWorkByteATintBmagicMagic22603_801F07D4.c'
+    - renderThirtyGouraudRadii
+    - '@source: src/bof3/bmagic/renderThirtyGouraudRadii.c'
     - '@behavior: Draw thirty-two translucent Gouraud quads with work-byte radii and tint.'
   - - 8076
     - asm

@@ -204,8 +204,8 @@ segments:
     - '@behavior: reads the +0x79 byte of the work record published through the global pointer cell 0x80146250 and, when that byte is nonzero, advances the halfword at offset 0x0A of the record published through 0x80148210 by 0x17.'
   - - 11128
     - c
-    - stateScenarioProgressClear
-    - '@source: src/bof3/world/stateScenarioProgressClear.c'
+    - stateProgressClear
+    - '@source: src/bof3/world/stateProgressClear.c'
     - '@behavior: reads byte 0x79 of the work record published through the pointer cell at 0x80146250 and, while that byte is zero, advances the low byte of the shared scenario-progress cell at 0x80146864 by one through a single computed cell address.'
   - - 11188
     - c

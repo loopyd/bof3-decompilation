@@ -21,7 +21,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * only keeps $ra across that call, so no other state is read or written. The
  * guard byte and the stored byte belong to different records: the guard is the
  * scratchpad work-object byte 0xB (the same guard as the sibling
- * incrementByteZeroBmagic), the store
+ * incrementByteZero), the store
  * target is the shared battle work record's byte 0xB.
  * @status exact
  * @match 100.00

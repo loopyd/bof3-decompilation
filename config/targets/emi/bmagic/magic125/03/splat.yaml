@@ -38,7 +38,7 @@ segments:
     - '@behavior: When work byte 0xB is zero, forward the battle byte, raise halfword mask 4 and invoke the helper.'
   - - 704
     - c
-    - callStateTable05Bmagic
+    - callStateTable05
     - '@source: src/bof3/bmagic/magic12503DispatchTables.c'
   - - 772
     - asm
@@ -84,7 +84,7 @@ segments:
     - '@behavior: Decrement signed word 0x14 above 8; on odd frames count down byte 9, then decrement record byte 0xB and invoke 0x801E5988 on zero.'
   - - 3912
     - c
-    - dispatchStateByte1Table05f8BmagicMagic12503_801EFB48
+    - callStateByte1Table05
     - '@source: src/bof3/bmagic/magic12503DispatchTables.c'
   - - 3980
     - asm
@@ -97,8 +97,8 @@ segments:
     - func_801EFE8C
   - - 5064
     - c
-    - drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusWorkByteATintedBySignedBytes5d5e5fTimesSixteenWithCentre240BmagicMagic12503_801EFFC8
-    - '@source: src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusWorkByteATintedBySignedBytes5d5e5fTimesSixteenWithCentre240BmagicMagic12503_801EFFC8.c'
+    - renderTrianglesTintedTimes
+    - '@source: src/bof3/bmagic/renderTrianglesTintedTimes.c'
     - '@behavior: Publish work byte 0xA as the radius and the signed work bytes 0x5D through 0x5F shifted left four as the rim tint, then emit eight translucent Gouraud triangles around work halfwords 0x2E and 0x30 from the phase-zero rim point at 0x1F800014 with centre colour 0xF0.'
   - - 5644
     - asm

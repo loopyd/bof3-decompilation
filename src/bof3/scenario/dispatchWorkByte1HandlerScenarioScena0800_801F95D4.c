@@ -13,7 +13,7 @@ extern ScenarioScena0800WorkStateHandler D_801FE908[];
  * at 0x801FE894 (entries 0 through 50, ending at 0x801FE960), and its entries are
  * 0x801F9618, 0x801F9668
  * (invokeHelperScenarioScena0800_801F9668) and
- * 0x801F98B0 (incrementSetCountdownScenario) followed
+ * 0x801F98B0 (incrementSetCountdown) followed
  * by the rest of the run. It reads no other state and writes none: the pointer
  * slot is loaded before the 0x18-byte frame is created, and that frame only keeps
  * $ra across the indirect call while the callee's return value in $v0 is

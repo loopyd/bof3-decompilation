@@ -1,5 +1,5 @@
 func_801E5988 = 0x801E5988;
-workHandlerTableBmagic = 0x801EEC04;
+workHandlerTable = 0x801EEC04;
 workByte1HeaderTable = 0x801EEC14;
 workByte1ClearTable = 0x801EEC24;
 workByte2SlotTable = 0x801EEC34;

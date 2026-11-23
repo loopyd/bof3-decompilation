@@ -18,7 +18,7 @@ void func_8015C058(void);
 
 /* @source 0x801F7BFC
  * @behavior Word 2 of the overlay-local second-level handler run at 0x801FAEFC,
- * which the exact dispatcher dispatchSecondaryStateScenarioScena1100_801F7748
+ * which the exact dispatcher callSecondaryState
  * (0x801F7748) reaches through the shared primary state byte D_80146874; no jal
  * or j in the payload targets 0x801F7BFC, so that table word is its only
  * reference. It takes the address of the shared secondary sub-state byte

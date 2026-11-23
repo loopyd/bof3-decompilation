@@ -20,7 +20,7 @@ s32 requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F
  * this address: its only image word is 0x801F9DB4 at 0x801FA1F8, word 5 of the
  * eight-word code-pointer run at 0x801FA1E4 (0x801F7AC8, 0x801F7B00, 0x801F7BC0,
  * 0x801F8124, 0x801F9D48, 0x801F9DB4, 0x801F9DAC, 0x801FA010) that the work
- * byte 1 dispatcher callObjectHandlerScenario indexes
+ * byte 1 dispatcher callObjectHandler indexes
  * with no arguments of its own.
  *
  * Name evidence: the body is the exact instruction shape of the exact lift

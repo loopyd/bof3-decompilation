@@ -12,7 +12,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * work-object byte 1: it is entry 3 of the eleven-entry code-pointer run at
  * 0x801F05D8 (0x801EEF04, 0x801EF808, 0x801EEFF8, 0x801EF0F8, 0x801EF148,
  * 0x801EF890, 0x801EF960, 0x801EFAB0, 0x801EFB8C, 0x801EFCE4, 0x801EFE8C),
- * whose dispatcher is callStateTable05Bmagic. It
+ * whose dispatcher is callStateTable05. It
  * reads the scratchpad work-object pointer cell at 0x1F800044 once and then
  * works on the object in place: it decrements byte 0xA with a byte-width
  * read-modify-write (lbu / addiu -1 / sb) and subtracts the encoded 16.16 step

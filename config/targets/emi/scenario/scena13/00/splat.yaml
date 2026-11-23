@@ -39,7 +39,7 @@ segments:
     - decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoHelpersScenarioScena1300_801F6F24
   - - 976
     - c
-    - invokeTwoHelpersScenarioScena1300_801F6FD0
+    - callTwoHelpers
   - - 1016
     - asm
     - func_801F6FF8
@@ -169,10 +169,10 @@ segments:
     - '@behavior: Derives the palette fade step total 0x1E * (frames & 0xFF) - 1 from the second argument, stores it in the scratchpad halfword 0x1F800002, publishes the first argument as the shared status halfword 0x801490A8, stores the total minus the shared countdown 0x80146876 in the scratchpad halfword 0x1F800000, and while that difference compares below the total submits one 0x50 by 0x3C func_8014F800 window with the 0x80010002 plus main-RAM offset-table entry selected by the first argument and then steps the palette window through clampPaletteChannels at 0x801FB0B8 below 0x20 and above total minus 0x20, or copies the palette block at exactly 0x20; a difference that no longer compares below the total copies the block only when it still equals the total.'
   - - 17592
     - c
-    - clampPaletteChannelsScenarioScena1300_801FB0B8
+    - mathPaletteChannels
   - - 17764
     - c
-    - copyPaletteSerialScenario
+    - copyPaletteSerial
   - - 17844
     - c
     - runPrimaryState8SubstateSequenceScenarioScena1300_801FB1B4
@@ -183,17 +183,17 @@ segments:
     - dispatchRecordCallbackScenarioScena1300_801FB350
   - - 18320
     - c
-    - incrementWorkHalfword7Scenario
+    - incrementWorkHalfword7
   - - 18340
     - c
-    - requestPrimaryState3Substate5ScenarioScena1300_801FB3A4
+    - requestPrimaryState3Substate5
   - - 18396
     - c
-    - requestPrimaryState6Substate19ScenarioScena1300_801FB3DC
+    - requestPrimaryState6Substate19
   - - 18452
     - c
-    - stateScenarioFlagRequest
-    - '@source: src/bof3/scenario/stateScenarioFlagRequest.c'
+    - stateFlagRequest
+    - '@source: src/bof3/scenario/stateFlagRequest.c'
     - '@behavior: Sets bit 0x1C of the shared scenario flag word D_8014686C through the shared bit-set helper func_8015B580, runs the shared front-end startup helper func_8015C088, then requests shared state entry 0x2C by storing 0x2C in the shared state-entry selector byte D_801448EB, 0 in the shared progress byte D_801448EC and 0x11 in the companion byte D_801448ED; takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the two calls, with each byte store materialising the 0x8014 page in $at on its own.'
   - - 18532
     - asm

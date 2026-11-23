@@ -12,7 +12,7 @@ extern ScenarioScena0800WorkStateHandler D_801FE938[];
  * D_801FE938 with no arguments. D_801FE938 is entry 41 of the 51-entry per-frame
  * handler-pointer run at 0x801FE894 (0x801FE894 + 41*4 = 0x801FE938), whose
  * words from there on are 0x801F9E00, 0x801F9E50, 0x801F9EC4, 0x801F9F2C
- * (incrementWorkByte1ScenarioScena0800_801F9F2C), 0x801F9F4C
+ * (incrementWorkByte1), 0x801F9F4C
  * (incrementWorkByte1ScenarioScena0800_801F9F4C), 0x801F9F6C
  * (invokeHelperScenarioScena0800_801F9F6C), 0x801FA19C, 0x801FE018
  * (dispatchRecordCallbackScenarioScena0800_801FE018), 0x801FE12C and

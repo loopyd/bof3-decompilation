@@ -6,7 +6,7 @@ extern void (*D_801F05CC[])(void); /* @source 0x801F05CC @kind data */
 extern s32 GetGraphType(void); /* @source 0x8017B2B4 */
 extern void func_80155A08(s32 x, s32 y, s32 kind, s32 size); /* @source 0x80155A08 */
 extern void func_800AF764(void); /* @source 0x800AF764 */
-extern void drawEightTranslucentGouraudFanTrianglesRadius32TintedByWorkByteATimesSignedBytes5d5e5fBmagicMagic12903_801F030C(void); /* @source 0x801F030C */
+extern void renderFanTrianglesTinted(void); /* @source 0x801F030C */
 
 /* @source 0x801EFF84
  * @behavior Dispatches the unbounded work-byte-2 handler through the table at
@@ -36,7 +36,7 @@ void dispatchWorkByte2HandlerThenDrawFanBetweenGraphTypeDrawModesWhenActiveBmagi
         func_80155A08(FIELD_REF(s32, g_battle_work, 0x34),
                      FIELD_REF(s32, g_battle_work, 0x38), 2, 0xC);
         func_800AF764();
-        drawEightTranslucentGouraudFanTrianglesRadius32TintedByWorkByteATimesSignedBytes5d5e5fBmagicMagic12903_801F030C();
+        renderFanTrianglesTinted();
         if (GetGraphType() == 1 || GetGraphType() == 2) {
             mode = 0x25;
         } else {

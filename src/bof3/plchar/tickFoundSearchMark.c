@@ -86,7 +86,7 @@ u8 func_801CF940(s16 col, s16 row);
  *           address appears once in the payload, as the word 0x801CF4E0 at
  *           0x801D0324, entry 12 of the twenty-eight-word code-pointer run based
  *           at 0x801D02F4 and index 1 of the run based at 0x801D0320 that the
- *           byte-3 dispatcher callWorkTable0320Plchar
+ *           byte-3 dispatcher callWorkTable0320
  *           indexes from that base with work byte 3 scaled by four, so no jal in
  *           this payload names the body and the run is its only in-image
  *           reference. It reads the front-end work object published at the

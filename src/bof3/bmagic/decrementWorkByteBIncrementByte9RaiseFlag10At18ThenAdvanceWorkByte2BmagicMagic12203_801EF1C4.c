@@ -23,7 +23,7 @@ extern u8 D_80146384; /* @source 0x80146384 @kind unknown */
 /* @source 0x801EF1C4
  * @behavior Frame step of the overlay work object: entry 3 of the six-entry
  *           handler table at 0x801F02CC that this overlay's byte-1 dispatcher
- *           dispatchStateByte1Table02ccBmagicMagic12203_801EEE5C indexes with
+ *           callStateByte1Table02 indexes with
  *           work byte 1. It decrements the work object's byte 0xB by one through
  *           the scratchpad pointer cell 0x1F800044 (lbu / addiu -1 / sb; the
  *           stored result is not used, so no truncation mask appears), then

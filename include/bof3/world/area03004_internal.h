@@ -543,7 +543,7 @@ extern Area030ScaleRecord D_801E2AB8[]; /* @source 0x801E2AB8 @kind table */
 extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind bss */
 
 /* Scoped companion-call ABI for func_801E0C20; not a callback contract. */
-void dispatchArea030CompanionHandler(void); /* @source 0x800F500C */
+void callCompanionHandler(void); /* @source 0x800F500C */
 void projectQueueActiveWork(void);
 u8   func_8014D978(void);
 /* Executable matching-entry amount consumer at 0x801665A0. AREA030 sites
@@ -631,7 +631,7 @@ void renderLureListColumn(s16 x, s16 y);
 void renderMessageTokenCell(u8 arg0, u8* arg1, u8 arg2, s16 arg3);
 /* Target-local compact AREA030 panel drawer at 0x801E1758: the AREA030 panel
  * steps call it with the computed horizontal origin and the constant 0x56. */
-void drawArea030CompactPanel(s16 x, s16 y);
+void renderCompactPanel(s16 x, s16 y);
 void func_80196070(void);
 /* Same-binary entry-table clearer at 0x801960C0 (clearRecord in the game00
  * view): clears the five head bytes of one 0x74-byte record slot. The AREA030
@@ -687,7 +687,7 @@ void stateWorkScrollWords(void); /* per-record scroll updater on the 0x1F800044 
 void func_80199440(void);
 /* Same-binary frame-service entries (executable space) run in this order by the
  * AREA030 frame chain functions updateArea030OverlayFrame (jals at 0x801E0BE8,
- * 0x801E0BF0, 0x801E0BF8, 0x801E0C00, 0x801E0C08) and runArea030FrameServices
+ * 0x801E0BF0, 0x801E0BF8, 0x801E0C00, 0x801E0C08) and runFrameServices
  * (jals at 0x801E0C48, 0x801E0C50, 0x801E0C58, 0x801E0C60, 0x801E0C68). The
  * game00 view declares them void(void). Bodies not lifted in this target. */
 void func_801527E4(void);
@@ -706,7 +706,7 @@ void stateActiveScrollWords(void);
 void updateArea030OverlayFrame(void);
 /* Shared frame-service chain at 0x801E0C40: invoked by the front-end substate-4
  * wait loops func_801985C8 (jals 0x80198614, 0x80198694). */
-void runArea030FrameServices(void);
+void runFrameServices(void);
 
 void publishPanelTemplateSelect(void);
 void callStateByte3Table1(void);

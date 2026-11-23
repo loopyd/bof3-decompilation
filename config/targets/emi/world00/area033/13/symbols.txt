@@ -7,7 +7,7 @@ statePrepareRecord15 = 0x801F2F94;
 func_801F3020 = 0x801F3020;
 stateSeedHalfwordsByte9 = 0x801F3158;
 stateSeedHalfwordsMode5 = 0x801F31D4;
-decrementByte9RetreatWord40By2000ThenResetWorkAreaWhenSharedMode5OrSetState1OnByte9ExpiryWorld00Area03313_801F3294 = 0x801F3294;
+decrementRetreatResetExpiry = 0x801F3294;
 stateSeedWorkHalfwords = 0x801F3334;
 callStateTable4World00 = 0x801F3350;
 stateAdvanceScratchClone = 0x801F3394;
@@ -20,7 +20,7 @@ decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHal
 dispatchStateByte3Table4f90World00Area03313_801F35C0 = 0x801F35C0;
 setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604 = 0x801F3604;
 stateDecrementHalfword30 = 0x801F3684;
-advanceWorkByte9To0x5aAndSetByteBThenAdvanceState3WhenGatedThenDrawHalfword30World00Area03313_801F375C = 0x801F375C;
+stateSetGatedDraw = 0x801F375C;
 advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World00Area03313_801F385C = 0x801F385C;
 renderSemiTransSprite = 0x801F390C;
 func_801F3A34 = 0x801F3A34;

@@ -42,7 +42,7 @@ segments:
     - func_801EEE5C
   - - 700
     - c
-    - callStateTable0064Bmagic
+    - callStateTable0064
     - '@source: src/bof3/bmagic/magic06603DispatchTables.c'
   - - 768
     - c
@@ -59,8 +59,8 @@ segments:
     - func_801EF04C
   - - 1188
     - c
-    - decrementByteIncrementBmagic
-    - '@source: src/bof3/bmagic/decrementByteIncrementBmagic.c'
+    - decrementByteIncrement
+    - '@source: src/bof3/bmagic/decrementByteIncrement.c'
   - - 1288
     - asm
     - func_801EF108
@@ -72,7 +72,7 @@ segments:
     - func_801EF784
   - - 3124
     - c
-    - callStateTable0080Bmagic
+    - callStateTable0080
     - '@source: src/bof3/bmagic/magic06603DispatchTables.c'
   - - 3192
     - c
@@ -84,8 +84,8 @@ segments:
     - '@behavior: Runs the target-local slot-grid draw routine at 0x801EF984 through a 0x18-byte frame that keeps only the return address, then adds one to the scratchpad work-object byte at offset 0x9 modulo 256 and tests that truncated byte for equality with 0x60, and only on that match re-reads the pointer cell at 0x1F800044 and increments the work-object byte at offset 0x2; takes no arguments and returns nothing.'
   - - 3376
     - c
-    - workInvokeHelperBmagic
-    - '@source: src/bof3/bmagic/workInvokeHelperBmagic.c'
+    - workInvokeHelper
+    - '@source: src/bof3/bmagic/workInvokeHelper.c'
     - '@behavior: Entry 2 of this overlay three-address work-byte-2 handler table based at 0x801F0080, so it runs while the work object byte 2 holds 2. It runs the target-local slot-grid draw routine at 0x801EF984 through a 0x18-byte frame that keeps only the return address, then adds one to the scratchpad work-object byte at offset 0x9 modulo 256 and tests that truncated byte for equality with 0x80, and only on that match invokes the shared battle helper at 0x801E5988; takes no arguments and returns nothing.'
   - - 3460
     - asm

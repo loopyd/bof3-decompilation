@@ -18,6 +18,6 @@ support_sources = [
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic10503_801EFC8C.c",
     "src/bof3/bmagic/magic10503DispatchTables.c",
     "src/bof3/bmagic/copyTripletOffsetPair.c",
-    "src/bof3/bmagic/incrementWorkByteAAndAdvanceWorkByte2At40BmagicMagic10503_801EF250.c",
+    "src/bof3/bmagic/incrementWorkByteAdvance.c",
 ]
 psyq_source = "src/bof3/support/magic105_03_psyq.c"

@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell. The original folds the symbolic address
  * into the load (lui $v1,0x1F80 / lw $v1,0x44($v1)), and the exact same-target
- * sibling dispatchWorkRecordByte1HandlerBmagicMagic06403_801F0448 declares the
+ * sibling callWorkRecordHandler declares the
  * same cell for the same role. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 

@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic15403_801EF4B4.c",
-    "src/bof3/bmagic/decrementSeedHeaderBmagic.c",
+    "src/bof3/bmagic/decrementSeedHeader.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic15403_801EEC24.c",
     "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic15403_801EF544.c",
     "src/bof3/bmagic/decrementMotionTintIs.c",
@@ -25,7 +25,7 @@ sources = [
 support_sources = [
     "src/bof3/bmagic/invokeHelperBmagicMagic15403_801EF6AC.c",
     "src/bof3/bmagic/magic15403DispatchTables.c",
-    "src/bof3/bmagic/incrementMotionPairBmagic.c",
+    "src/bof3/bmagic/incrementMotionPair.c",
     "src/bof3/support/magic154_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic154_03_psyq.c"

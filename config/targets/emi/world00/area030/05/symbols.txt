@@ -1,4 +1,4 @@
-dispatchArea030CompanionHandler = 0x800F500C;
+callCompanionHandler = 0x800F500C;
 func_800F5048 = 0x800F5048;
 func_800F50B4 = 0x800F50B4;
 func_800F510C = 0x800F510C;

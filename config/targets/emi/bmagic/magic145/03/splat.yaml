@@ -46,7 +46,7 @@ segments:
     - func_801EEDE4
   - - 556
     - c
-    - callStateTablef414Bmagic
+    - callStateTablef414
     - '@source: src/bof3/bmagic/magic14503DispatchTables.c'
   - - 624
     - asm

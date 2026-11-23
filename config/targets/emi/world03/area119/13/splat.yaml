@@ -63,8 +63,8 @@ segments:
     - '@source: src/bof3/world/retreatWordScratchCountdown.c'
   - - 592
     - c
-    - stateAreaRestartCycle
-    - '@source: src/bof3/world/stateAreaRestartCycle.c'
+    - stateRestartCycle
+    - '@source: src/bof3/world/stateRestartCycle.c'
     - '@behavior: Entry 7 of the byte-1 handler table based at 0x801F45CC: compares the shared scenario progress byte at 0x80146864 with 0x28 and, at that value, calls the shared main-executable work-area reset at 0x80196070; otherwise stores 0 into byte 0x01 of the work record published at the scratchpad pointer cell 0x1F800044 so the next dispatch takes entry 0 at 0x801F2C48 and reseeds that byte from the mode table at 0x801F45C4.'
   - - 664
     - c
@@ -184,14 +184,14 @@ segments:
     - func_801F44A4
   - - 6436
     - c
-    - setScenarioFlagBit3CAndQueueCue203World03Area11913_801F4524
+    - stateFlagQueueCue203
   - - 6484
     - c
-    - clearScenarioFlagBit3CAndQueueCue203World03Area11913_801F4554
+    - stateFlagBit3Queue
   - - 6532
     - c
-    - setStatusFFFFAndScenarioProgress0AOr14ByGateWorld03Area11913_801F4584
-    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress0AOr14ByGateWorld03Area11913_801F4584.c'
+    - stateStatusOr14Gate
+    - '@source: src/bof3/world/stateStatusOr14Gate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 with a signed byte read, clears the shared status halfword D_801490A8 to 0xFFFF, then stores 0x0A into the shared scenario progress byte g_ScenarioProgress when the gate byte reads 0 and 0x14 when it reads 1; any other gate value leaves that byte untouched. Takes no arguments, calls nothing, returns nothing.'
   - - 6596
     - textbin

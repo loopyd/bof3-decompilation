@@ -5,8 +5,8 @@ typedef void (*ScenarioScena1300RecordCallback)(u8* record, u32 arg1);
 extern u32 D_8014686C;
 
 /* Overlay-local per-record callback table at 0x801FBFB8: thirteen code-pointer
- * words running from incrementWorkHalfword7Scenario
- * (0x801FB390, word 0) and requestPrimaryState3Substate5ScenarioScena1300_801FB3A4
+ * words running from incrementWorkHalfword7
+ * (0x801FB390, word 0) and requestPrimaryState3Substate5
  * (0x801FB3A4, word 1) through noopHandlerScenarioScena1300_801FBEE8
  * (0x801FBEE8, word 12), indexed by byte 0x7A of a record. It begins
  * immediately after the data word 0x020AFFFF at 0x801FBFB4 and ends immediately
@@ -21,10 +21,10 @@ extern ScenarioScena1300RecordCallback D_801FBFB8[];
  * @behavior Dispatches this overlay's per-record callback selected by the
  * record's unsigned byte field at offset 0x7A through the overlay-local
  * callback-pointer table at 0x801FBFB8 (thirteen entries: word 0
- * incrementWorkHalfword7Scenario, word 1
- * requestPrimaryState3Substate5ScenarioScena1300_801FB3A4, word 2
- * requestPrimaryState6Substate19ScenarioScena1300_801FB3DC, word 3
- * stateScenarioFlagRequest,
+ * incrementWorkHalfword7, word 1
+ * requestPrimaryState3Substate5, word 2
+ * requestPrimaryState6Substate19, word 3
+ * stateFlagRequest,
  * word 4
  * armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1300_801FBB78,
  * word 5

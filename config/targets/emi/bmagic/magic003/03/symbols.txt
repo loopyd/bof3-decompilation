@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 callEachOccupiedIts = 0x801EEC28;
 stateMotionPairBytes = 0x801EED14;
-runDecrementAdvanceBmagic = 0x801EEDAC;
+runDecrementAdvance = 0x801EEDAC;
 callPairDecrementRearm = 0x801EEE28;
 func_801EEEA4 = 0x801EEEA4;
 renderGlyphMatchDpad = 0x801EEF4C;

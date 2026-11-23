@@ -1,7 +1,7 @@
 callDrawRecordActive = 0x801D0C04;
-stateWordArmScenario = 0x801D0C70;
+stateWordArm = 0x801D0C70;
 workWordTickCountdown = 0x801D0CA0;
-tickCountdownAdvanceScenario = 0x801D0D00;
+tickCountdownAdvance = 0x801D0D00;
 subtract16WordTickExpired = 0x801D0D5C;
 callStepRunHandler = 0x801D0DA4;
 armClearCountdownTable = 0x801D0DE8;

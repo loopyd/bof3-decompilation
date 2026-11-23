@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/projectRotationHalfNegated.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordHalfword3EOrPositionDistanceByWorkByte2BmagicMagic10003_801EF8E8.c",
+    "src/bof3/bmagic/projectTransformHalfNegated.c",
     "src/bof3/bmagic/renderThirtyPulsingTwelve.c",
 ]
 support_sources = [

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-void clampPaletteChannelsScenarioScena1300_801FB0B8(u32 intensity);
+void mathPaletteChannels(u32 intensity);
 void copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164(void);
 
 /* Shared scenario countdown halfword that this overlay's states reload through
@@ -39,7 +39,7 @@ extern u16 D_1F800000[]; /* @source 0x1F800000 @kind data */
  * signed so a total below its own 0x20 bias stays negative. Takes the texture
  * id and the fade length as its two arguments and returns nothing. Evidence for
  * the shapes: the two stepping callees are the exact siblings
- * clampPaletteChannelsScenarioScena1300_801FB0B8 (0x801FB0B8) and
+ * mathPaletteChannels (0x801FB0B8) and
  * copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164 (0x801FB164),
  * whose recorded measurements name these two `jal` sites in this range, and the
  * 0x80010000 offset table is the table the sisyou00 header records as an
@@ -83,11 +83,11 @@ void armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena
                   0x80010002u + (u32)PSX_PTR(u16, 0x80010000u)[(u16)id]);
     remain = D_1F800000[0];
     if (remain < 0x20u) {
-      clampPaletteChannelsScenarioScena1300_801FB0B8(remain & 0xFFu);
+      mathPaletteChannels(remain & 0xFFu);
     } else if (remain == 0x20u) {
       copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164();
     } else if ((s32)(*steps - 0x20u) < (s32)remain) {
-      clampPaletteChannelsScenarioScena1300_801FB0B8(
+      mathPaletteChannels(
           (0x20 - (remain - (*steps - 0x20u))) & 0xFF);
     }
   } else if (D_1F800000[0] == limit) {

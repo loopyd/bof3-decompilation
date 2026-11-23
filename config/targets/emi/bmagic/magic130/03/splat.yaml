@@ -44,12 +44,12 @@ segments:
     - func_801EEE74
   - - 724
     - c
-    - callStateTablefa44Bmagic
+    - callStateTablefa44
     - '@source: src/bof3/bmagic/magic13003DispatchTables.c'
   - - 792
     - c
-    - callStateTablefa4Bmagic
-    - '@source: src/bof3/bmagic/callStateTablefa4Bmagic.c'
+    - callStateTablefa4
+    - '@source: src/bof3/bmagic/callStateTablefa4.c'
     - '@behavior: Publish dispatch context, dispatch work byte 2, conditionally invoke the shared service, and restore context.'
   - - 948
     - asm
@@ -87,8 +87,8 @@ segments:
     - func_801EF4D4
   - - 2864
     - c
-    - drawEightTranslucentGouraudRingQuadsAtWorkHalfwords2EAnd30BmagicMagic13003_801EF730
-    - '@source: src/bof3/bmagic/drawEightTranslucentGouraudRingQuadsAtWorkHalfwords2EAnd30BmagicMagic13003_801EF730.c'
+    - renderEightTranslucentGouraud
+    - '@source: src/bof3/bmagic/renderEightTranslucentGouraud.c'
     - '@behavior: Emit eight translucent Gouraud ring quads centred on work halfwords 0x2E and 0x30.'
   - - 3652
     - textbin

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Scratchpad work-object pointer cell, the same named cell this target's exact
- * lifts stateHelperReadyBmagic,
+ * lifts stateHelperReady,
  * invokeReadinessHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvance
  * WorkByte2OnZeroBmagicMagic00800_801F1384 and
  * setGlobalWorkByteBToFFAtWorkByte2State8ThenAdvanceWorkByte2WhenHelperReady

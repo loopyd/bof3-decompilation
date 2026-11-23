@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell, shared by this overlay's dispatchers and
  * handlers. Declared as the same volatile u8 pointer the exact siblings
- * setupMotionFieldsBmagic and
+ * setupMotionFields and
  * decrementMotionCountdownAndSubtractMotionPairThenAdvanceWorkByte2
  * BmagicMagic00800_801F04DC use: the original re-reads the cell before every
  * store group, and the named symbol lets the assembler fold the constant address

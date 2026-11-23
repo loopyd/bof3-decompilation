@@ -8,9 +8,9 @@ splat = "config/targets/emi/bmagic/magic066/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/workInvokeHelperBmagic.c",
+    "src/bof3/bmagic/workInvokeHelper.c",
     "src/bof3/bmagic/stateSlotCountersIncrement.c",
-    "src/bof3/bmagic/decrementByteIncrementBmagic.c",
+    "src/bof3/bmagic/decrementByteIncrement.c",
     "src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic06603_801EF8C8.c",
     "src/bof3/bmagic/callPopWhileRunning.c",
     "src/bof3/bmagic/renderUpGreyPer.c",

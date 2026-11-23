@@ -133,13 +133,13 @@ segments:
     - '@behavior: Two-pass textured-quad drawer of the byte-2 handlers at 0x801F3B28, 0x801F3B84 and 0x801F3DF0. It advances work record byte 0x0A, read through the scratchpad pointer cell 0x1F800044, by its third argument, wraps that byte back below 0x0C, then halves it: the two per-pass texture-state words take that halved byte and the halved byte plus two wrapped below six as their low halfwords, biased by the high halfword formed from the first argument and 0xBF009111. Each of the two passes links one 0x0C-byte draw mode whose texture page is 0x225 for graph types 1 and 2 and 0x95 otherwise and one 0x28-byte textured quad through func_80155A08 with kind 1, builds the quad corners from the work halfwords 0x36 and 0x3A as ((halfword - 0x80) << 7) + 0x10, spreads the first pass over y and the second over x by plus or minus the second argument, pulls the leading corners down by the fourth argument, projects the four scratchpad vectors at 0x1F800014 with RotTransPers4 and fills the texture state with func_80155560.'
   - - 5872
     - c
-    - stateStatusScenarioGate
-    - '@source: src/bof3/world/stateStatusScenarioGate.c'
+    - stateStatusGate
+    - '@source: src/bof3/world/stateStatusGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 (s8), stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x14 into the shared scenario progress byte g_ScenarioProgress while the gate byte is nonzero, and 0xA when it is zero.'
   - - 5920
     - c
-    - setStatusFFFFAndScenarioProgress1EIfGateElse28World03Area12013_801F4320
-    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress1EIfGateElse28World03Area12013_801F4320.c'
+    - stateStatusGateElse28
+    - '@source: src/bof3/world/stateStatusGateElse28.c'
     - '@behavior: Loads the shared gate byte D_801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword D_801490A8 unconditionally, then stores 0x1E into the shared scenario progress byte g_ScenarioProgress while the gate byte is nonzero, and 0x28 when it is zero. Leaf, no arguments, no return value.'
   - - 5968
     - c

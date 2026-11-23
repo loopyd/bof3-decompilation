@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable0Plchar
-    - '@source: src/bof3/plchar/callStateTable0Plchar.c'
+    - callStateTable0
+    - '@source: src/bof3/plchar/callStateTable0.c'
   - - 72
     - asm
     - func_801CE448
@@ -37,8 +37,8 @@ segments:
     - func_801CE628
   - - 812
     - c
-    - dispatchStateByte2Table0a60PlcharPlp02600_801CE72C
-    - '@source: src/bof3/plchar/dispatchStateByte2Table0a60PlcharPlp02600_801CE72C.c'
+    - callStateByte2Table0
+    - '@source: src/bof3/plchar/callStateByte2Table0.c'
   - - 880
     - asm
     - func_801CE770
@@ -171,10 +171,10 @@ segments:
     - '@behavior: Two-layer position refresh called at the end of the work-byte-3 steps 0x801CFBD8 and 0x801D0484: claims work byte 0x2B with 1, then probes the layer point pairs 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5 through the route-parameterised position routine func_80154F78, and for each probe, while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed sample is at least 0x41, clears work byte 0x2B when the signed reference halfword 0x3E is below the point func_80154F28 answers.'
   - - 9676
     - c
-    - callWorkTable0Plchar
+    - callWorkTable0
   - - 9744
     - c
-    - dispatchWorkHalfword2cTable0ac0PlcharPlp02600_801D0A10
+    - callWorkHalfword2Table0
   - - 9812
     - textbin
     - codePointerTable0a54

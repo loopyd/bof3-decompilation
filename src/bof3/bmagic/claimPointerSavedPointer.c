@@ -70,7 +70,7 @@ extern u8 func_8014DAEC(void); /* @source 0x8014DAEC */
  *           that register. With the previous work object published again it sets
  *           work byte 0xB to 1 and increments work byte 1, the handler index this
  *           overlay dispatches on - the local dispatcher
- *           callStateTablefa84Bmagic loads that byte
+ *           callStateTablefa84 loads that byte
  *           and indexes the pointer run at 0x801EFA84 with it - so the next
  *           frame reaches word 3 of the run. Byte 0xB is the countdown the
  *           sibling decrementGlobalWorkByteBAndClearWorkBytes0Through4BmagicMag

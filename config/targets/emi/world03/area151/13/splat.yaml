@@ -52,8 +52,8 @@ segments:
     - func_801F3210
   - - 1744
     - c
-    - decrementRetreatAreaExpiry
-    - '@source: src/bof3/world/decrementRetreatAreaExpiry.c'
+    - decrementRetreatExpiry
+    - '@source: src/bof3/world/decrementRetreatExpiry.c'
   - - 1904
     - c
     - setWorkHalfwordsWorld03Area15113_801F3370

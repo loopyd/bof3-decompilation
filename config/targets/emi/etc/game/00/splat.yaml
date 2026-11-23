@@ -893,8 +893,8 @@ segments:
     - '@behavior: stores a scenario index, clears adjacent state, requests SCENA[index], waits for loader readiness, then dispatches into the scenario-local jump table.'
   - - 73732
     - c
-    - requestScenarioOverlay
-    - '@source: src/bof3/ui/requestScenarioOverlay.c'
+    - requestOverlay
+    - '@source: src/bof3/ui/requestOverlay.c'
     - '@behavior: requests the scenario overlay selected by the signed scenario ID.'
   - - 73772
     - c
@@ -906,8 +906,8 @@ segments:
     - func_801A7878
   - - 73976
     - c
-    - setScenarioField01Bit7
-    - '@source: src/bof3/ui/setScenarioField01Bit7.c'
+    - stateField01Bit7
+    - '@source: src/bof3/ui/stateField01Bit7.c'
     - '@behavior: sets bit 7 in scenarioState.field_01'
   - - 74004
     - asm
@@ -972,8 +972,8 @@ segments:
     - '@behavior: dispatches through the handler table at D_801C85F0 indexed by the work byte at 0x7A, passing D_80144F28 as the second argument.'
   - - 77588
     - c
-    - stateScenarioProgress
-    - '@source: src/bof3/ui/stateScenarioProgress.c'
+    - stateProgress
+    - '@source: src/bof3/ui/stateProgress.c'
     - '@behavior: stores 0xF0 to g_ScenarioProgress and returns zero.'
   - - 77608
     - asm
@@ -2053,8 +2053,8 @@ segments:
     - func_801C57B4
   - - 196596
     - c
-    - dispatchScenarioSubstate
-    - '@source: src/bof3/ui/dispatchScenarioSubstate.c'
+    - callSubstate
+    - '@source: src/bof3/ui/callSubstate.c'
     - '@behavior: dispatches the current scenario sub-state through the local state-handler table at 0x801CD568.'
   - - 196656
     - c
@@ -2073,8 +2073,8 @@ segments:
     - func_801C5BB8
   - - 197756
     - c
-    - clearScenarioSubstateFlags
-    - '@source: src/bof3/ui/clearScenarioSubstateFlags.c'
+    - stateSubstateFlags
+    - '@source: src/bof3/ui/stateSubstateFlags.c'
     - '@behavior: clears D_80143F4A and bit 5 of D_80143FBC unless scenario ID is 2.'
   - - 197812
     - asm

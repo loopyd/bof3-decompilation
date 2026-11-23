@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/bmagic/queuePointerTargetKind.c",
     "src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F0000.c",
     "src/bof3/bmagic/checkTargetKindFlag.c",
-    "src/bof3/bmagic/incrementGlobalByteBmagic.c",
+    "src/bof3/bmagic/incrementGlobalByte.c",
     "src/bof3/bmagic/stateIncrementGlobalByte.c",
     "src/bof3/bmagic/incrementSetGlobalByte.c",
     "src/bof3/bmagic/incrementGlobalByteOne.c",

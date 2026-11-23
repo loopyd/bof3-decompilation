@@ -129,8 +129,8 @@ segments:
     - '@behavior: Increments work byte 9 modulo 256 and, at 0x31, stores 5 into shared battle work byte 0xB, reloads the scratchpad work pointer and increments byte 2.'
   - - 5656
     - c
-    - callGlobalByteBmagic
-    - '@source: src/bof3/bmagic/callGlobalByteBmagic.c'
+    - callGlobalByte
+    - '@source: src/bof3/bmagic/callGlobalByte.c'
     - '@behavior: If shared battle work byte 0xB equals 0x84, dispatches sound cue 0x103, then reads the scratchpad work pointer and increments byte 2.'
   - - 5740
     - asm

@@ -58,7 +58,7 @@ void func_8014D6B8(u32 resource); /* @source 0x8014D6B8 */
  *           0x5F clear before the call filled the jal delay slot and matched.
  *
  *           Byte 1 is the position this overlay's handler dispatcher
- *           callHandlerPublishScenario
+ *           callHandlerPublish
  *           reads (lbu 0x1 then the scaled load from the run at 0x801FAEC0).
  *           Word 3 of that run is byte data, not a code word, so the 3 stored
  *           here does not name an entry of that run and no handler is claimed.

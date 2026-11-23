@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic09303_801EEC04.c",
-    "src/bof3/bmagic/workDecrementByteBmagic.c",
+    "src/bof3/bmagic/workDecrementByte.c",
     "src/bof3/bmagic/decrementGlobalBytesZero.c",
     "src/bof3/bmagic/decrementGlobalWorkByte9AndInvokeHelperBmagicMagic09303_801EF3A4.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C.c",
@@ -27,7 +27,7 @@ support_sources = [
     "src/bof3/bmagic/clearWorkBytesBmagicMagic09303_801F0620.c",
     "src/bof3/support/magic093_03_psyq.c",
     "src/bof3/bmagic/magic09303DispatchTables.c",
-    "src/bof3/bmagic/workByte9AdvanceBmagic.c",
+    "src/bof3/bmagic/workByte9Advance.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs8BmagicMagic09303_801EF710.c",
 ]
 psyq_source = "src/bof3/support/magic093_03_psyq.c"

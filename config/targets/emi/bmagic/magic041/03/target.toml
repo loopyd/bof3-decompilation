@@ -23,7 +23,7 @@ support_sources = [
     "src/bof3/bmagic/magic04103DispatchTables.c",
     "src/bof3/bmagic/addByteTallyAdvance.c",
     "src/bof3/bmagic/copyWorkWordTriplet.c",
-    "src/bof3/bmagic/incrementWorkByteBmagic.c",
+    "src/bof3/bmagic/incrementWorkByte.c",
     "src/bof3/bmagic/incrementByteAtOne.c",
     "src/bof3/bmagic/incrementCountersByteByte.c",
     "src/bof3/bmagic/decrementCountersForwardReaches.c",

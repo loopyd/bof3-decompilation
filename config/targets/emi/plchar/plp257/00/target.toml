@@ -8,16 +8,16 @@ splat = "config/targets/emi/plchar/plp257/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTablefedcPlchar.c",
-    "src/bof3/plchar/callWorkTablefee8Plchar.c",
-    "src/bof3/plchar/callWorkTablefef0Plchar.c",
-    "src/bof3/plchar/callWorkTablefefcPlchar.c",
+    "src/bof3/plchar/callWorkTablefedc.c",
+    "src/bof3/plchar/callWorkTablefee8.c",
+    "src/bof3/plchar/callWorkTablefef0.c",
+    "src/bof3/plchar/callWorkTablefefc.c",
 ]
 support_sources = [
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp25700_801CF330.c",
-    "src/bof3/plchar/callWorkTableff08Plchar.c",
-    "src/bof3/plchar/callWorkTableff14Plchar.c",
-    "src/bof3/plchar/callWorkTableff20Plchar.c",
+    "src/bof3/plchar/callWorkTableff08.c",
+    "src/bof3/plchar/callWorkTableff14.c",
+    "src/bof3/plchar/callWorkTableff20.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp25700_801CFC3C.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp25700_801CED0C.c",

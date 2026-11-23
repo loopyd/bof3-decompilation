@@ -18,7 +18,7 @@ sources = [
     "src/bof3/world/renderTriangleShadeBlue.c",
 ]
 support_sources = [
-    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordFromModeTableWorld02Area07714_801F5AAC.c",
+    "src/bof3/world/publishBaseSeedFront.c",
     "src/bof3/world/selectPaletteBlocksMatch.c",
     "src/bof3/world/copyPaletteBlocksMatch.c",
     "src/bof3/world/cycleTwoPaletteBlocks.c",
@@ -42,7 +42,7 @@ support_sources = [
     "src/bof3/world/stateSharedFlagBit4.c",
     "src/bof3/world/publishModeStatusWorld02Area07714_801F59DC.c",
     "src/bof3/world/setStateQueueCue202World02Area07714_801F5A58.c",
-    "src/bof3/world/decrementCountdownId71InSlot1World02Area07714_801F5BAC.c",
+    "src/bof3/world/decrementCountdownId71Slot1.c",
     "src/bof3/world/stateWorkIncrementWork.c",
     "src/bof3/world/initArea07714State.c",
     "src/bof3/world/retreatCounterQueueCue200.c",
@@ -52,7 +52,7 @@ support_sources = [
     "src/bof3/world/stateDistancePairArm.c",
     "src/bof3/support/area077_14_psyq.c",
     "src/bof3/world/incrementStepSharedSet.c",
-    "src/bof3/world/markSelectedFrontEndRecordActiveWithValueWorld02Area07714_801F61F0.c",
+    "src/bof3/world/markSelectedActiveValue.c",
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5B2C.c",
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area07714_801F5C00.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F5C80.c",

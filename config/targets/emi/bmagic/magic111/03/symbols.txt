@@ -4,7 +4,7 @@ dispatchWorkByte1HandlerBmagicMagic11103_801EEC1C = 0x801EEC1C;
 func_801EEC7C = 0x801EEC7C;
 callForwardBattleZero = 0x801EEF44;
 raiseFlag4AndInvokeHelperBmagicMagic11103_801EEFC4 = 0x801EEFC4;
-callStateTablefa9Bmagic = 0x801EEFF8;
+callStateTablefa9 = 0x801EEFF8;
 func_801EF03C = 0x801EF03C;
 setWorkByte29AndIncrementWorkByte2BmagicMagic11103_801EF0C0 = 0x801EF0C0;
 decrementGlobalByteIncrement = 0x801EF0F0;
@@ -17,7 +17,7 @@ decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic
 func_801EF330 = 0x801EF330;
 dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic11103_801EF7F8 = 0x801EF7F8;
 stateAdvanceGlobalByte = 0x801EF870;
-add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF8C4 = 0x801EF8C4;
+workByte9AdvanceAt10 = 0x801EF8C4;
 decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF914 = 0x801EF914;
 func_801EF970 = 0x801EF970;
 T_801EFA9C = 0x801EFA9C;

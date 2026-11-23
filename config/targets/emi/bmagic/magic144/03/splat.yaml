@@ -51,8 +51,8 @@ segments:
     - func_801EF078
   - - 1308
     - c
-    - incrementWorkByte2WhenWorkByteBFlag80SetBmagicMagic14403_801EF11C
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenWorkByteBFlag80SetBmagicMagic14403_801EF11C.c'
+    - incrementWorkByteSet
+    - '@source: src/bof3/bmagic/incrementWorkByteSet.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and, when bit 0x80 of the work object byte at offset 0xB is set, increments the byte at offset 0x2 through the same pointer.'
   - - 1364
     - c
@@ -80,12 +80,12 @@ segments:
     - '@behavior: Dispatches the handler indexed by work byte 2 at 0x801F04EC, then re-reads the work pointer and calls 0x800AF764 and 0x801EF818 when work bytes 0 and 2 are nonzero.'
   - - 2516
     - c
-    - clearWorkFlag40AndCopyRecordTripletSetBytes9ATo1ThenAdvanceWorkByte2BmagicMagic14403_801EF5D4
-    - '@source: src/bof3/bmagic/clearWorkFlag40AndCopyRecordTripletSetBytes9ATo1ThenAdvanceWorkByte2BmagicMagic14403_801EF5D4.c'
+    - stateCopyTripletSet
+    - '@source: src/bof3/bmagic/stateCopyTripletSet.c'
   - - 2644
     - c
-    - add4ToWorkByte9AndAdvanceWorkByte2At11BmagicMagic14403_801EF654
-    - '@source: src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At11BmagicMagic14403_801EF654.c'
+    - workByte9AdvanceAt11
+    - '@source: src/bof3/bmagic/workByte9AdvanceAt11.c'
     - '@behavior: Adds four to scratchpad work-object byte 9 modulo 256 through the work pointer cell at 0x1F800044, re-reads the cell and that byte, and increments work-object byte 2 only when the byte equals 0x11.'
   - - 2724
     - c

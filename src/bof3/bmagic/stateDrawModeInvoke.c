@@ -39,7 +39,7 @@ extern s32 GetGraphType(void);
 /* @source 0x801EF104
  * @behavior Work byte 2 step entry of this overlay's work object, entry 0 of the
  *           six-word code pointer run at 0x801EF6CC that the exact lift
- *           callStateTablef6Bmagic indexes with
+ *           callStateTablef6 indexes with
  *           work-object byte 1. It selects the draw-mode tpage from
  *           GetGraphType - 0xA5 for graph types 1 and 2, 0x35 otherwise - seeds
  *           SetDrawMode on the shared primitive cursor at 0x8014598C with dfe 0,

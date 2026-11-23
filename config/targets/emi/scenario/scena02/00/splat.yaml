@@ -431,16 +431,16 @@ segments:
     - queuePrimaryCellMatch
   - - 24404
     - c
-    - stateRequestPrimaryScenario
+    - stateRequestPrimary
   - - 24468
     - c
-    - stateProgressSubstateScenario
+    - stateProgressSubstate
   - - 24540
     - c
     - alternateTickCounterPhases
   - - 24852
     - c
-    - publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14
+    - publishBaseSeedFront
   - - 25292
     - c
     - publishBaseRecord19
@@ -476,7 +476,7 @@ segments:
     - stateSetByte101Twice
   - - 26256
     - c
-    - stateScenarioFlagScenario
+    - stateFlag
   - - 26296
     - c
     - stateSetFlag14
@@ -497,7 +497,7 @@ segments:
     - requestState15Clear
   - - 26704
     - c
-    - requestPrimaryQueueScenario
+    - requestPrimaryQueue
   - - 26768
     - c
     - clearProgressAndSharedStateBytesThenRequestPrimaryState12ScenarioScena0200_801FD490
@@ -509,7 +509,7 @@ segments:
     - stateBytesRequestPrimary
   - - 26940
     - c
-    - requestPrimarySubstate10Scenario
+    - requestPrimarySubstate10
   - - 26996
     - c
     - requestPrimaryClearSubstate
@@ -521,13 +521,13 @@ segments:
     - stateProgressBytesQueue
   - - 27228
     - c
-    - setScenarioFlagBit31ScenarioScena0200_801FD65C
+    - stateFlagBit31
   - - 27268
     - c
-    - requestPrimarySubstate19Scenario
+    - requestPrimarySubstate19
   - - 27324
     - c
-    - requestPrimarySubstate5Scenario
+    - requestPrimarySubstate5
   - - 27380
     - c
     - zeroResultScenarioScena0200_801FD6F4
@@ -545,7 +545,7 @@ segments:
     - invokeHelperArgThenHelperScenarioScena0200_801FE198
   - - 30144
     - c
-    - clearTwoIndexedRecordFlagBitsThenInvokeHelperTwiceThenHelperScenarioScena0200_801FE1C0
+    - stateIndexedBitsTwice
   - - 30316
     - textbin
     - T_801FE26C

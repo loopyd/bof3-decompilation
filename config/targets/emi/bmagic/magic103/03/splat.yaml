@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 16
     - c
-    - dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10.c'
+    - callWorkHandlerTableec04
+    - '@source: src/bof3/bmagic/callWorkHandlerTableec04.c'
     - '@behavior: Overlay step dispatcher and the first body of this payload. Reads the scratchpad work-object pointer cell at 0x1F800044 once, copies the three-entry code pointer table at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94) into a three-word local handler array in its own 0x28-byte frame, and invokes the entry selected by the work object''s unsigned byte 0x01 with no arguments. The table words are read back from the copy and the index is not bounds-checked; nothing is returned and nothing outside the frame is written.'
   - - 112
     - asm
@@ -40,15 +40,15 @@ segments:
     - c
     - forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic10303_801EEE38
     - '@source: src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic10303_801EEE38.c'
-    - '@behavior: Entry 1 of the three-entry code pointer run in this payload''s leading data at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94); the run''s second word at 0x801EEC08 holds this address and the payload dispatcher dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10 calls the entry named by work byte 0x1. Reads the scratchpad work-object pointer cell at 0x1F800044 and tests work byte 0xB; only when that byte is zero does it forward the unsigned battle byte 0x80146384 to helper 0x800A9820, re-read the cell, and increment work byte 1. The 0x18-byte frame only keeps the return address across that call. Nothing is returned and no other state is read or written.'
+    - '@behavior: Entry 1 of the three-entry code pointer run in this payload''s leading data at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94); the run''s second word at 0x801EEC08 holds this address and the payload dispatcher callWorkHandlerTableec04 calls the entry named by work byte 0x1. Reads the scratchpad work-object pointer cell at 0x1F800044 and tests work byte 0xB; only when that byte is zero does it forward the unsigned battle byte 0x80146384 to helper 0x800A9820, re-read the cell, and increment work byte 1. The 0x18-byte frame only keeps the return address across that call. Nothing is returned and no other state is read or written.'
   - - 660
     - c
     - raiseFlag4AndInvokeHelperBmagicMagic10303_801EEE94
     - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic10303_801EEE94.c'
-    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the helper at 0x801E5988 with no arguments. Its address is the third word (index 2) of the three-word code pointer run at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94) in this payload''s leading data; the payload dispatcher dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10 copies those words into its frame and calls the entry named by work byte 0x1. The halfword address is materialized once and kept live across the call, so the read-modify-write goes through a local pointer; the 0x18-byte frame holds only the return address. Nothing is returned and no other state is read or written.'
+    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the helper at 0x801E5988 with no arguments. Its address is the third word (index 2) of the three-word code pointer run at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94) in this payload''s leading data; the payload dispatcher callWorkHandlerTableec04 copies those words into its frame and calls the entry named by work byte 0x1. The halfword address is materialized once and kept live across the call, so the read-modify-write goes through a local pointer; the 0x18-byte frame holds only the return address. Nothing is returned and no other state is read or written.'
   - - 712
     - c
-    - callStateTable0794Bmagic
+    - callStateTable0794
     - '@source: src/bof3/bmagic/magic10303DispatchTables.c'
   - - 780
     - asm

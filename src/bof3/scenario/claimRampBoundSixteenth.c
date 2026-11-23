@@ -44,7 +44,7 @@ extern u8 D_801FDD84[];
 /* @source 0x801F7480
  * @behavior Entry 1 (the word at 0x801FDD74) of this overlay's three-entry
  * in-image code-pointer run based at 0x801FDD70 (0x801F7408 / this address /
- * stateTableIdleScenario), which
+ * stateTableIdle), which
  * dispatchWorkByte2HandlerScenarioScena0700_801F73C4 indexes with the work
  * object's unsigned byte at offset 0x02; no in-image `jal` reaches the address
  * and that run word is the only image reference to it. It loads the scratchpad

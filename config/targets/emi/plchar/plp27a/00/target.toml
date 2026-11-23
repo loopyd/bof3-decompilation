@@ -8,17 +8,17 @@ splat = "config/targets/emi/plchar/plp27a/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTablef900Plchar.c",
-    "src/bof3/plchar/callWorkTablef90Plchar.c",
-    "src/bof3/plchar/callWorkTablef914Plchar.c",
-    "src/bof3/plchar/callWorkTablef920Plchar.c",
+    "src/bof3/plchar/callWorkTablef900.c",
+    "src/bof3/plchar/callWorkTablef90.c",
+    "src/bof3/plchar/callWorkTablef914.c",
+    "src/bof3/plchar/callWorkTablef920.c",
 ]
 support_sources = [
     "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448.c",
     "src/bof3/plchar/getAndClearPlcharPlp27a00_801CF868.c",
     "src/bof3/plchar/queryClearPlchar.c",
-    "src/bof3/plchar/callWorkTablef92Plchar.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablef938PlcharPlp27a00_801CF8BC.c",
+    "src/bof3/plchar/callWorkTablef92.c",
+    "src/bof3/plchar/callWorkHalfword2Tablef938.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640.c",
     "src/bof3/plchar/testRecordPosition.c",
     "src/bof3/plchar/checkProjectedAgainstRecords.c",

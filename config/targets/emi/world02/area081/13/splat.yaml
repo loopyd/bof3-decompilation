@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatusFFFFAndScenarioProgress1Or2ByGateWorld02Area08113_801F2C04
-    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress1Or2ByGateWorld02Area08113_801F2C04.c'
+    - stateStatusOr2Gate
+    - '@source: src/bof3/world/stateStatusOr2Gate.c'
     - '@behavior: Reads the signed shared byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 1 into g_ScenarioProgress when that byte reads 0 and 2 when it reads 1, leaving the progress byte untouched otherwise.'
   - - 68
     - c

@@ -33,7 +33,7 @@ segments:
     - callScenarioHandlerScenario
   - - 1748
     - c
-    - stateSharedFieldsScenario
+    - stateSharedFields
   - - 1792
     - c
     - statePendingIdSetup
@@ -651,8 +651,8 @@ segments:
     - stateSharedFieldSeed
   - - 26444
     - c
-    - forwardArgsHandlerScenario
-    - '@source: src/bof3/scenario/forwardArgsHandlerScenario.c'
+    - forwardArgsHandler
+    - '@source: src/bof3/scenario/forwardArgsHandler.c'
     - '@behavior: Overlay step dispatch on work byte 0x04 of the record that the
       scratchpad pointer cell 0x1F800044 publishes. It scales that unsigned byte
       by four and calls the matching word of the three-word in-image handler run

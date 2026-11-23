@@ -54,7 +54,7 @@ segments:
     - func_801EEE7C
   - - 952
     - c
-    - findFreeRecordBmagicMagic11603_801EEFB8
+    - queryFreeRecord
   - - 1012
     - c
     - stateAllActiveBytes

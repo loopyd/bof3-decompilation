@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - callWorkTablef900Plchar
-    - '@source: src/bof3/plchar/callWorkTablef900Plchar.c'
+    - callWorkTablef900
+    - '@source: src/bof3/plchar/callWorkTablef900.c'
     - '@behavior: Overlay step dispatch on the work-record byte 0x02 read through the scratchpad pointer cell 0x1F800044: the body loads that record pointer once, scales its unsigned byte 2 by four and calls the matching entry of this payload handler run based at 0x801CF900 with no arguments, discarding any result; the index is not bounded before the scaled table load and the run base 0x801CF900 is entry 0, 0x801CE448. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame keeps only $ra at 0x10 across the indirect call.'
   - - 72
     - c
@@ -42,8 +42,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object: when the current route index byte 0x08 equals the chosen candidate index byte 0x03 it selects that route''s arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 5 and 0x41 for route 3 and none for any other route, then increments the step counter byte 0x02; otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index, masks that index with 7 and selects the sequence of the new route index.'
   - - 528
     - c
-    - callWorkTablef90Plchar
-    - '@source: src/bof3/plchar/callWorkTablef90Plchar.c'
+    - callWorkTablef90
+    - '@source: src/bof3/plchar/callWorkTablef90.c'
     - '@behavior: Overlay step dispatch on work-record byte 2 read through the scratchpad pointer cell 0x1F800044: the body loads that record pointer once, takes its unsigned byte 2, scales it by four and calls the matching entry of this payload handler run at 0x801CF90C with no arguments, discarding any result; the index is not bounded before the scaled table load, and that interior base is entry 3 of the seventeen-word run at 0x801CF900, so entry 0 is 0x801CE654. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame keeps only $ra at 0x10 across the indirect call.'
   - - 596
     - asm
@@ -66,8 +66,8 @@ segments:
     - checkProjectedAgainstRecords
   - - 2044
     - c
-    - callWorkTablef914Plchar
-    - '@source: src/bof3/plchar/callWorkTablef914Plchar.c'
+    - callWorkTablef914
+    - '@source: src/bof3/plchar/callWorkTablef914.c'
     - '@behavior: Overlay step dispatch on the work-record byte 0x02 read through the scratchpad pointer cell 0x1F800044: the body loads that record pointer once, takes its unsigned byte 2, scales it by four and calls the matching entry of this payload handler run based at 0x801CF914 with no arguments, discarding any result; the index is not bounded before the scaled table load, and that interior base is entry 5 of the seventeen-word run at 0x801CF900, so entry 0 is 0x801CEC40. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame keeps only $ra at 0x10 across the indirect call.'
   - - 2112
     - c
@@ -81,8 +81,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044 and entry 6 of this payload handler run at 0x801CF900, the word 0x801CF918: when the current route index byte 0x08 equals the chosen candidate index byte 0x03 it selects that route arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 3 and 0x41 for route 5 and none for any other route, then increments the step counter byte 0x02; otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index, masks that index with 7 and selects the sequence of the new route index.'
   - - 2608
     - c
-    - callWorkTablef920Plchar
-    - '@source: src/bof3/plchar/callWorkTablef920Plchar.c'
+    - callWorkTablef920
+    - '@source: src/bof3/plchar/callWorkTablef920.c'
     - '@behavior: Overlay step dispatch on work-record byte 2 read through the scratchpad pointer cell 0x1F800044: it scales that unsigned byte by four and calls the matching entry of this payload handler run based at 0x801CF920 with no arguments, so its base is entry 8 of the seventeen-word run at 0x801CF900 and it reaches entries 8 through 16. It reads no other state and writes none; the 0x18-byte frame only keeps the return address across the indirect call. Its own word sits at 0x801CF93C, entry 15 of that run.'
   - - 2676
     - c
@@ -119,10 +119,10 @@ segments:
     - getAndClearPlcharPlp27a00_801CF868
   - - 5240
     - c
-    - callWorkTablef92Plchar
+    - callWorkTablef92
   - - 5308
     - c
-    - dispatchWorkHalfword2cTablef938PlcharPlp27a00_801CF8BC
+    - callWorkHalfword2Tablef938
   - - 5376
     - textbin
     - codePointerTablef900

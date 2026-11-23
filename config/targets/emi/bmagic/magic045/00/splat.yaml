@@ -40,7 +40,7 @@ segments:
     - '@behavior: Work-byte-1 handler, entry 1 of the two-entry handler array that 0x801EEC04 seeds in its own frame, selected by the scratchpad work object''s unsigned byte at offset 1; no word of this payload stores this address, so the dispatcher''s immediate is the only reference to it. Reads the work-object pointer cell at 0x1F800044 once and, only when the work object''s byte 0xB is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments. Takes no arguments and returns nothing.'
   - - 676
     - c
-    - callStateTablef8Bmagic
+    - callStateTablef8
     - '@source: src/bof3/bmagic/magic04500DispatchTables.c'
   - - 744
     - c

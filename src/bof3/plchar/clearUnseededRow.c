@@ -50,7 +50,7 @@ void func_8014D978(void);
  *           and writes no dispatch byte; its address is published at the
  *           pointer word 0x801D033C inside the twenty-eight-word code-pointer
  *           run based at 0x801D02F4, which is index 2 of the run based at
- *           0x801D0334 that callWorkTable0334Plchar
+ *           0x801D0334 that callWorkTable0334
  *           indexes from work byte 3, and it has no jal caller. The
  *           pointer-cell load precedes frame creation, the 0x18-byte frame only
  *           keeps $ra at 0x10 across the call, and the slots after the index

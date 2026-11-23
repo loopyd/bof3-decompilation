@@ -19,7 +19,7 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
  * is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-void renderEffectRecordsScenario(void);
+void renderEffectRecords(void);
 /* Overlay beam draw helper at 0x801D1678: draws the translucent quad pair
  * between the head point at +0x18 and the point at +0x34 of the work object and
  * then its stepped trail, shading both with the intensity byte it is handed. */
@@ -115,7 +115,7 @@ void drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsRe
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
-  renderEffectRecordsScenario();
+  renderEffectRecords();
   point = D_1F800044;
   drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
       point + 0x18, point + 0x34, 0x40);

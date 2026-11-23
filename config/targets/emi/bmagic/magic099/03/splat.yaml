@@ -55,7 +55,7 @@ segments:
     - func_801EF0EC
   - - 1388
     - c
-    - callStateTable0994Bmagic
+    - callStateTable0994
     - '@source: src/bof3/bmagic/magic09903DispatchTables.c'
   - - 1456
     - asm
@@ -118,8 +118,8 @@ segments:
     - '@behavior: Increment work byte B and word 0x0C, project position words 0x34 and 0x38 at radius 16, then count down byte 9 and advance byte 2 at zero.'
   - - 5908
     - c
-    - incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteAAndAdvanceSourceByteBAndCallE5988WhenZeroBmagicMagic09903_801F0314
-    - '@source: src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteAAndAdvanceSourceByteBAndCallE5988WhenZeroBmagicMagic09903_801F0314.c'
+    - incrementProjectSubtractSource
+    - '@source: src/bof3/bmagic/incrementProjectSubtractSource.c'
     - '@behavior: Increment work byte B and word 0x0C, project position words 0x34 and 0x38 at radius 24, subtract two from byte A, then advance source byte B and call 0x801E5988 when byte A re-reads zero.'
   - - 6204
     - asm

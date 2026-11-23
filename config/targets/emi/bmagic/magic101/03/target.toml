@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/bmagic/drawThirtyOnePulsingGouraudQuadBandBmagicMagic10103_801EF88C.c",
+    "src/bof3/bmagic/renderThirtyPulsingBand.c",
     "src/bof3/bmagic/renderTrianglePulsingRadius.c",
     "src/bof3/bmagic/stateQueueSixteenSlots.c",
     "src/bof3/bmagic/accumulateHalfIntoWords.c",

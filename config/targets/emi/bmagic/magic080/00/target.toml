@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/bmagic/decayDrawRaiseExpires.c",
     "src/bof3/bmagic/renderSevenTileTile.c",
-    "src/bof3/bmagic/drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94.c",
+    "src/bof3/bmagic/renderSixTileTextured.c",
     "src/bof3/bmagic/stateChannelDistanceRandom.c",
     "src/bof3/support/magic080_00_psyq.c",
 ]

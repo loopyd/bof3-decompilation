@@ -9,9 +9,9 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/incrementGlobalBytesZero.c",
-    "src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes8BmagicMagic14603_801EF604.c",
-    "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic14603_801EEFD0.c",
-    "src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic14603_801EF520.c",
+    "src/bof3/bmagic/renderTranslucentTexturedTinted.c",
+    "src/bof3/bmagic/incrementWorkByteZero.c",
+    "src/bof3/bmagic/workBytes9AdvanceAt16.c",
 ]
 support_sources = [
     "src/bof3/support/magic146_03_psyq.c",

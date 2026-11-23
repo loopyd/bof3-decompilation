@@ -53,7 +53,7 @@ void func_8015C088(void);
  * $at on its own.
  *
  * Name evidence: the action words follow the accepted request names of this
- * overlay (requestResetAreaUnless
+ * overlay (requestResetUnless
  * and callRecordCallback), the route and
  * flag-guard wording follows the exact sibling
  * requestPrimaryState4Or5OnClearedFlag6Or7AndSetFlagBit16OnRoute46PackedWordMatchScenarioScena0800_801FE170,

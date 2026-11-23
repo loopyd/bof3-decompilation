@@ -36,7 +36,7 @@ void func_8015C088(void);
 /* @source 0x801FAA74
  * @behavior Overlay frame handler reached only indirectly: the address is word
  * 10 (0x801FAEE8) of the overlay-local handler run based at 0x801FAEC0 that
- * callHandlerPublishScenario
+ * callHandlerPublish
  * (0x801F70B4) indexes with the work record unsigned byte at offset 1 taken
  * through the scratchpad pointer cell 0x1F800044 and calls with jalr, so a work
  * byte reading 0x0A selects this body. That dispatcher writes only $v0 and $at

@@ -18,7 +18,7 @@ extern u8* D_1F800044;
  * work + 0x0C argument: signed halfwords at +0x0 (intensity), +0x2, +0x4,
  * +0x6 (width) and +0x8 (height), and colour bytes at +0xA, +0xB and +0xC.
  * Offsets and the scratchpad spelling follow the sibling lift of the same
- * table, src/bof3/scenario/renderShrinkHalfwordsScenario.c,
+ * table, src/bof3/scenario/renderShrinkHalfwords.c,
  * which shrank halfwords 0x12 and 0x14 from the 0x100 seeded here, and which
  * shows the same tail shape: the reload after the colour stores has to land in
  * its own local, so the pointer is built in $v1 instead of surviving in $s0.

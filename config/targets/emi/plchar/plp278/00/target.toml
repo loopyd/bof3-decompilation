@@ -8,14 +8,14 @@ splat = "config/targets/emi/plchar/plp278/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTablefcb4Plchar.c",
-    "src/bof3/plchar/callWorkTablefcc0Plchar.c",
-    "src/bof3/plchar/callWorkTablefcc8Plchar.c",
-    "src/bof3/plchar/callWorkTablefcd4Plchar.c",
-    "src/bof3/plchar/callWorkTablefcecPlchar.c",
-    "src/bof3/plchar/callWorkTablefce0Plchar.c",
-    "src/bof3/plchar/callWorkTablefcf4Plchar.c",
-    "src/bof3/plchar/callWorkTablefd00Plchar.c",
+    "src/bof3/plchar/callWorkTablefcb4.c",
+    "src/bof3/plchar/callWorkTablefcc0.c",
+    "src/bof3/plchar/callWorkTablefcc8.c",
+    "src/bof3/plchar/callWorkTablefcd4.c",
+    "src/bof3/plchar/callWorkTablefcec.c",
+    "src/bof3/plchar/callWorkTablefce0.c",
+    "src/bof3/plchar/callWorkTablefcf4.c",
+    "src/bof3/plchar/callWorkTablefd00.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp27800_801CFBC0.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27800_801CF89C.c",
 ]

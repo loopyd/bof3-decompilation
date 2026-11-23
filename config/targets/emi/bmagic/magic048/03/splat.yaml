@@ -48,7 +48,7 @@ segments:
     - '@behavior: Step 2 of this overlay work sequence: the handler the dispatcher at 0x801EEC10 selects through work byte 1, which the three-entry code pointer table at 0x801EEC04 binds at entry 2. It reads the scratchpad work-object pointer cell at 0x1F800044 once, before the frame is created, and returns immediately when the work object byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned, passes it to the shared main-executable helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword load, ori and halfword store that re-materialises the address into $at, then invokes the shared main-executable helper func_801E5988. The 0x18-byte frame only keeps the return address at 0x10 across the two calls. Takes no arguments and returns nothing.'
   - - 624
     - c
-    - callStateTablef818Bmagic
+    - callStateTablef818
     - '@source: src/bof3/bmagic/magic04803DispatchTables.c'
   - - 692
     - asm

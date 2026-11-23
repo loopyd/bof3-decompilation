@@ -37,7 +37,7 @@ s32 func_801783C8(s32 arg0); /* @source 0x801783C8 */
  * which calls the same 0x34/0x38/0x3C cell triple the position triple and byte 0
  * the claim flag. The only in-image reference to this address is jal 0x801F802C
  * at 0x801F6FDC inside
- * tickCountdownBitScenario,
+ * tickCountdownBit,
  * which passes no arguments and discards the result. func_801782FC and
  * func_801783C8 are the concurrently loaded etc/game overlay's 12-bit rotation
  * pair that this overlay's own

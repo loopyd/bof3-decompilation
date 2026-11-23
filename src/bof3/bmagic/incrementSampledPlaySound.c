@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell at 0x1F800044, already bound at that
  * address by this target's map as g_battle_work, the name its exact lifts
- * incrementWorkByteBAndWorkByte9DecrementWorkByteAThenClearWorkBytesAtZeroElseInvokeHelperAtEF9E0BmagicMagic12303_801EF4AC,
+ * incrementBytesZeroInvoke,
  * decrementGlobalWorkByteBThenClearWorkBytesBmagicMagic12303_801EF550 and
  * clearWorkBytesBmagicMagic12303_801EFD04 use. The cell is re-read once per
  * access group because every byte store through the pointer may republish the
@@ -59,7 +59,7 @@ extern void func_801EF750(void); /* @source 0x801EF750 @kind function */
 /* @source 0x801EF28C
  * @behavior Entry index 1 of the four-word handler run based at 0x801EFD5C
  *           that this target's exact dispatcher
- *           callStateTablefd5Bmagic indexes with
+ *           callStateTablefd5 indexes with
  *           work byte 2, which is why no jal word in this payload names
  *           0x801EF28C. It advances the work record's unsigned byte 0xB by one
  *           and samples 0x801782FC at that tick masked to six bits and shifted

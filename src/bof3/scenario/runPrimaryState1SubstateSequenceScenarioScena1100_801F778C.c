@@ -34,7 +34,7 @@ void func_801C601C(s32 arg0);
 /* @source 0x801F778C
  * @behavior Word 1 (the word stored at 0x801FAF00) of the ten-entry
  *           overlay-local second-level handler run at 0x801FAEFC that the exact
- *           dispatcher dispatchSecondaryStateScenarioScena1100_801F7748
+ *           dispatcher callSecondaryState
  *           (0x801F7748) indexes with the shared primary state byte D_80146874,
  *           so a primary state reading 1 selects it; no jal or j of the payload
  *           names 0x801F778C, and that table word is its only reference. It

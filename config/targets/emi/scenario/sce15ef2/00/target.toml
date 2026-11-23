@@ -11,11 +11,11 @@ sources = []
 support_sources = [
     "src/bof3/scenario/callDrawRecordActive.c",
     "src/bof3/scenario/armAdvanceByteScenario.c",
-    "src/bof3/scenario/stateWordArmScenario.c",
+    "src/bof3/scenario/stateWordArm.c",
     "src/bof3/scenario/claimExpiryReloadRandom.c",
     "src/bof3/support/sce15ef2_00_psyq.c",
     "src/bof3/scenario/callStepRunHandler.c",
-    "src/bof3/scenario/tickCountdownAdvanceScenario.c",
+    "src/bof3/scenario/tickCountdownAdvance.c",
     "src/bof3/scenario/armClearScreenPair.c",
     "src/bof3/scenario/stateArmCountdown.c",
     "src/bof3/scenario/callCountdownStepHandler.c",

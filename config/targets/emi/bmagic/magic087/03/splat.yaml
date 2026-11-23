@@ -36,19 +36,19 @@ segments:
     - func_801EF048
   - - 1192
     - c
-    - callStateTable0508Bmagic
+    - callStateTable0508
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 1260
     - c
-    - callStateTable050Bmagic
+    - callStateTable050
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 1328
     - asm
     - func_801EF130
   - - 1728
     - c
-    - clearWorkByte4SetWorkByte9To8SetWorkByteATo16AndIncrementWorkByte2WhenWorkByteBIs2BmagicMagic08703_801EF2C0
-    - '@source: src/bof3/bmagic/clearWorkByte4SetWorkByte9To8SetWorkByteATo16AndIncrementWorkByte2WhenWorkByteBIs2BmagicMagic08703_801EF2C0.c'
+    - stateSetSetIncrement
+    - '@source: src/bof3/bmagic/stateSetSetIncrement.c'
   - - 1828
     - asm
     - func_801EF324
@@ -67,7 +67,7 @@ segments:
     - func_801EF580
   - - 3416
     - c
-    - dispatchStateByte1Table0520BmagicMagic08703_801EF958
+    - callStateByte1Table0520
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 3484
     - c

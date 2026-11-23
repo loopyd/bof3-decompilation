@@ -29,7 +29,7 @@ support_sources = [
     "src/bof3/support/magic056_03_psyq.c",
     "src/bof3/bmagic/copyWordTripletClear.c",
     "src/bof3/bmagic/copyTripletClearPair.c",
-    "src/bof3/bmagic/incrementByteTwoBmagic.c",
+    "src/bof3/bmagic/incrementByteTwo.c",
     "src/bof3/bmagic/incrementWorkAdvanceBmagic.c",
     "src/bof3/bmagic/decrementColorTripletChannel.c",
     "src/bof3/bmagic/addTintGuardedFade.c",

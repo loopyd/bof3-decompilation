@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/bmagic/stateSampleIntoLimit.c",
     "src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EEFA0.c",
     "src/bof3/bmagic/decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic16203_801EF478.c",
-    "src/bof3/bmagic/drawEightRotatedTrianglesFromPublishedCenterTintedByPaletteRowAtWorkBytes3And4BmagicMagic16203_801EFCD8.c",
+    "src/bof3/bmagic/renderRotatedPublishedCenter.c",
     "src/bof3/bmagic/renderRotatedSpokesCenter.c",
 ]
 psyq_source = "src/bof3/support/magic162_03_psyq.c"

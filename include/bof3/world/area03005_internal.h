@@ -21,7 +21,7 @@ extern u8 D_800F7244; /* @source 0x800F7244 @kind unknown */
  * as an AREA030 transition-idle flag. */
 extern u16 D_80143C40; /* @source 0x80143C40 @kind unknown */
 
-void dispatchArea030CompanionHandler(void); /* @source 0x800F500C */
+void callCompanionHandler(void); /* @source 0x800F500C */
 void func_800F5048(void); /* @source 0x800F5048 */
 void func_800F50B4(void); /* @source 0x800F50B4 */
 void func_800F510C(void); /* @source 0x800F510C */

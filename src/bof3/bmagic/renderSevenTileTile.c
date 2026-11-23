@@ -18,7 +18,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * offset of the loop counter times four, so the run is a byte table of
  * 4-byte entries. This body reads the interior word 0x801EF13C, six entries
  * beyond the head that the six-tile row variant
- * drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94
+ * renderSixTileTextured
  * reads, the same way, so the run keeps its address-qualified name and one
  * splat row. */
 extern u8 D_801EF13C[]; /* @source 0x801EF13C @kind unknown */
@@ -35,7 +35,7 @@ extern u8 D_801EF13C[]; /* @source 0x801EF13C @kind unknown */
  *   draw entry the work byte 1 state 1 handler func_801EECE4 selects when the
  *   random frame-mask byte 0x0B is non-zero, where the same handler selects the
  *   six-tile row variant
- *   drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94
+ *   renderSixTileTextured
  *   for a zero mask. It emits seven 0x28-byte POLY_FT4 primitives from the
  *   cursor cell 0x8014598C, one per loop iteration, each after SetPolyFT4
  *   stamps it. Every primitive is a 12x12 texel cell: x0 and x2 take the work

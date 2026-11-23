@@ -49,7 +49,7 @@ segments:
     - '@source: src/bof3/bmagic/raiseFlag4CallHelper5.c'
   - - 1456
     - c
-    - callStateTable0744Bmagic
+    - callStateTable0744
     - '@source: src/bof3/bmagic/magic05603DispatchTables.c'
   - - 1524
     - c
@@ -91,8 +91,8 @@ segments:
     - '@source: src/bof3/bmagic/copyTripletClearPair.c'
   - - 3896
     - c
-    - incrementByteTwoBmagic
-    - '@source: src/bof3/bmagic/incrementByteTwoBmagic.c'
+    - incrementByteTwo
+    - '@source: src/bof3/bmagic/incrementByteTwo.c'
   - - 4004
     - c
     - incrementWorkAdvanceBmagic

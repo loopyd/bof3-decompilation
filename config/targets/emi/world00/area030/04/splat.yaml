@@ -563,17 +563,17 @@ segments:
     - c
     - decrementCompactPanelSlide
     - '@source: src/bof3/world/decrementCompactPanelSlide.c'
-    - '@behavior: AREA030 panel step: decrements byte 9 of the slideWork record published at the scratchpad cursor 0x1F800044 and redraws the panel at the origin 0x50 * count + 0x6C through drawArea030CompactPanel; once that count reaches zero it arms record byte 6 and advances its dispatch byte 3; then the dim tile is appended through appendDimTile, the inset panel rectangle 0x12 - 8 * count is submitted through renderFilledInsetBorder and the encoded-text run at y argument 0x15 - 8 * count is drawn through drawEncodedTextAt using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
+    - '@behavior: AREA030 panel step: decrements byte 9 of the slideWork record published at the scratchpad cursor 0x1F800044 and redraws the panel at the origin 0x50 * count + 0x6C through renderCompactPanel; once that count reaches zero it arms record byte 6 and advances its dispatch byte 3; then the dim tile is appended through appendDimTile, the inset panel rectangle 0x12 - 8 * count is submitted through renderFilledInsetBorder and the encoded-text run at y argument 0x15 - 8 * count is drawn through drawEncodedTextAt using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
   - - 38248
     - c
     - togglePadPressInset
     - '@source: src/bof3/world/togglePadPressInset.c'
-    - '@behavior: AREA030 panel pad handler: draws the compact panel at (0x6C, 0x56) through drawArea030CompactPanel, then reacts to the shared pad mask D_80145AA8. While its 0x5000 bits are set it plays sound cue 0x100 through func_8015DF18 and inverts the mode byte at offset 6 of the work record published at the scratchpad cursor 0x1F800044. While its 0x50 bits are set it plays cue 0x106 and stores 1 in that mode byte when its 0x10 bit is set, otherwise it plays cue 0x103, and then advances the record dispatch byte 3 in both cases. It then submits the row marker at (0x70, 0x82 - 0x10 * mode) through func_801647C4, appends the dim tile through appendDimTile, and draws the inset panel rectangle (0x14, 0x12, 0x118, 0x13) and the encoded-text run with coordinate arguments (0x1D, 0x15) through renderFilledInsetBorder and drawEncodedTextAt using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
+    - '@behavior: AREA030 panel pad handler: draws the compact panel at (0x6C, 0x56) through renderCompactPanel, then reacts to the shared pad mask D_80145AA8. While its 0x5000 bits are set it plays sound cue 0x100 through func_8015DF18 and inverts the mode byte at offset 6 of the work record published at the scratchpad cursor 0x1F800044. While its 0x50 bits are set it plays cue 0x106 and stores 1 in that mode byte when its 0x10 bit is set, otherwise it plays cue 0x103, and then advances the record dispatch byte 3 in both cases. It then submits the row marker at (0x70, 0x82 - 0x10 * mode) through func_801647C4, appends the dim tile through appendDimTile, and draws the inset panel rectangle (0x14, 0x12, 0x118, 0x13) and the encoded-text run with coordinate arguments (0x1D, 0x15) through renderFilledInsetBorder and drawEncodedTextAt using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
   - - 38560
     - c
     - incrementCompactSlideCounters
     - '@source: src/bof3/world/incrementCompactSlideCounters.c'
-    - '@behavior: increments byte 9 of the slideWork record published at the scratchpad cursor 0x1F800044 and redraws the AREA030 panel at the origin 0x6C - 0x50 * that slideCount through drawArea030CompactPanel; once the slideCount reaches 5 it restarts it at zero and, while the record byte 6 is clear, advances the shared halfword counter D_80143B92, otherwise advances the shared step byte D_8014403D and clears the record dispatch byte 3; then the dim tile is appended through appendDimTile, and while that restarted slideCount is nonzero the inset panel rectangle 0x12 - 8 * slideCount and the encoded-text run at y argument 0x15 - 8 * slideCount are submitted through renderFilledInsetBorder and drawEncodedTextAt using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
+    - '@behavior: increments byte 9 of the slideWork record published at the scratchpad cursor 0x1F800044 and redraws the AREA030 panel at the origin 0x6C - 0x50 * that slideCount through renderCompactPanel; once the slideCount reaches 5 it restarts it at zero and, while the record byte 6 is clear, advances the shared halfword counter D_80143B92, otherwise advances the shared step byte D_8014403D and clears the record dispatch byte 3; then the dim tile is appended through appendDimTile, and while that restarted slideCount is nonzero the inset panel rectangle 0x12 - 8 * slideCount and the encoded-text run at y argument 0x15 - 8 * slideCount are submitted through renderFilledInsetBorder and drawEncodedTextAt using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
   - - 38900
     - c
     - decrementPanelSlideZero
@@ -846,8 +846,8 @@ segments:
     - '@behavior: when the area gate is clear, advances its counter and initializes bytes 2 and 3 of the current scratch work record.'
   - - 52572
     - c
-    - dispatchStateByte3Table22fcWorld00Area03004
-    - '@source: src/bof3/world/dispatchStateByte3Table22fcWorld00Area03004_801DD95C.c'
+    - callStateTable22World00
+    - '@source: src/bof3/world/callStateTable22World00.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22FC.'
   - - 52640
     - c
@@ -1058,8 +1058,8 @@ segments:
     - '@behavior: invokes the AREA030 companion dispatch entry.'
   - - 65600
     - c
-    - runArea030FrameServices
-    - '@source: src/bof3/world/runArea030FrameServices.c'
+    - runFrameServices
+    - '@source: src/bof3/world/runFrameServices.c'
     - '@behavior: runs the shared AREA030 frame-service chain func_801527E4, func_801BDAB8, stateActiveScrollWords, func_8019A0E4 and func_8014BA54 in that order; the GAME.EMI entry-0 front-end substate-4 handler func_801985C8 calls it inside both of its wait loops (direct jals at 0x80198614 and 0x80198694) and updateArea030OverlayFrame runs the same five services after its work-area publish and record dispatch.'
   - - 65664
     - c
@@ -1103,8 +1103,8 @@ segments:
     - '@behavior: configures the dim semi-transparent AREA030 tile and appends it after selecting graphics mode 4.'
   - - 68440
     - c
-    - drawArea030CompactPanel
-    - '@source: src/bof3/world/drawArea030CompactPanel.c'
+    - renderCompactPanel
+    - '@source: src/bof3/world/renderCompactPanel.c'
     - '@behavior: draws the compact AREA030 panel at the requested origin: submits the 0x64 by 0x38 inset panel rectangle through drawFramedTexturedPanel with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, draws the 0x25 sprite at x, eight 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x48 and x + 0x60, the two renderIndexedQuadHeight text rows of width 0x20 at (x, y + 0x18) and (x + 0x60, y + 0x18), the 0x30 sprite at x on the y + 0x38 row, eleven 0x31 sprites spaced eight pixels from x + 8 on that row and the 0x32 sprite at x + 0x60 on that row, and finally the three main-RAM offset-table textures (the 0x80010000 base plus the selected halfword) at (x + 0x23, y + 6) and at (x + 0xA, y + 0x19) and (x + 0xA, y + 0x29), each with colour 0 and flag 0xFF through drawEncodedTextAt.'
   - - 69068
     - c

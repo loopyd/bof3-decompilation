@@ -57,8 +57,8 @@ segments:
     - '@source: src/bof3/world/area10213DispatchTables.c'
   - - 1704
     - c
-    - selectCountdownFromPositionHalfwordLsbsStoreDistanceAndOffsetCompareThenAdvanceStateWorld02Area10213_801F32A8
-    - '@source: src/bof3/world/selectCountdownFromPositionHalfwordLsbsStoreDistanceAndOffsetCompareThenAdvanceStateWorld02Area10213_801F32A8.c'
+    - selectLsbsOffsetCompare
+    - '@source: src/bof3/world/selectLsbsOffsetCompare.c'
   - - 1928
     - asm
     - func_801F3388

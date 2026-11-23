@@ -2,7 +2,7 @@
 
 /* @behavior AREA030 panel step: decrements byte 9 of the slideWork record published at
  * the scratchpad cursor 0x1F800044 and redraws the panel at the origin 0x50 *
- * count + 0x6C through drawArea030CompactPanel; once that count reaches zero
+ * count + 0x6C through renderCompactPanel; once that count reaches zero
  * it arms record byte 6 and advances its dispatch byte 3; then the dim tile is
  * appended through appendDimTile, the inset panel rectangle 0x12 - 8 * count
  * is submitted through renderFilledInsetBorder and the
@@ -19,7 +19,7 @@ void decrementCompactPanelSlide(void) {
 
     slideWork = D_1F800044;
     slideWork[9] = slideWork[9] - 1;
-    drawArea030CompactPanel((s16)(D_1F800044[9] * 0x50 + 0x6C), 0x56);
+    renderCompactPanel((s16)(D_1F800044[9] * 0x50 + 0x6C), 0x56);
     slideWork = D_1F800044;
     if (slideWork[9] == 0) {
         slideWork[6] = 1;

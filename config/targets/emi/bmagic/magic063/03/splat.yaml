@@ -42,7 +42,7 @@ segments:
     - func_801EEEE4
   - - 816
     - c
-    - callStateTable0400Bmagic
+    - callStateTable0400
     - '@source: src/bof3/bmagic/magic06303DispatchTables.c'
   - - 884
     - c
@@ -133,8 +133,8 @@ segments:
     - '@behavior: Scans the 0x60 records of the pool at 0x801F0454, whose stride is 0x20, sets bit 0 of the first record whose flags byte has that bit clear and returns its index, or returns 0xFF once every record is occupied; the original keeps the mask-free counter and its byte-masked copy in separate registers, scales the masked copy once per iteration and reuses it for the load and the store, re-materializes the pool address for each access, and runs in no stack frame.'
   - - 6064
     - c
-    - clearRecordBytes0Through4BmagicMagic06303_801F03B0
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic06303_801F03B0.c'
+    - stateRecordBytes0Through4
+    - '@source: src/bof3/bmagic/stateRecordBytes0Through4.c'
     - '@behavior: Clears work-record bytes 0x00 through 0x04 of the record published through the pointer cell at 0x801F1054 with one sb per byte, re-materializing the cell address and reloading the record pointer before each store; takes no arguments, returns nothing and writes no other state.'
   - - 6144
     - textbin

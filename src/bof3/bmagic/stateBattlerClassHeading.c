@@ -61,7 +61,7 @@ extern u8 D_80146374; /* @source 0x80146374 @kind unknown */
  * with its own lui 0x1F80 plus lw 0x44 pair at every read, because a store
  * through the loaded pointer may alias the cell, so the cell is named rather
  * than written as a bare scratchpad constant. The exact same-target siblings
- * callHandlerDrawBmagic and
+ * callHandlerDraw and
  * queueSlotSetByte1PublishRecordPointerCopyWorkWordTripletEveryFourthTickWhile
  * ByteABelow16ThenAdvanceWorkByte2At16BmagicMagic04403_801EF320 declare the same
  * cell the same way. */
@@ -82,7 +82,7 @@ extern void func_800AF764(void); /* @source 0x800AF764 */
 /* @source 0x801EEEFC
  * @behavior Entry 0 of the three-entry work-byte-2 handler table at 0x801F0A1C
  *           that this overlay byte 2 dispatcher
- *           callHandlerDrawBmagic
+ *           callHandlerDraw
  *           indexes with the scratchpad work-object byte 0x2, so that byte holds
  *           0 while this body runs and its final increment hands the next frame
  *           to the second entry at 0x801EF138. It takes no arguments and returns

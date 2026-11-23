@@ -36,7 +36,7 @@ segments:
     - func_801EEE90
   - - 752
     - c
-    - callStateTablef718Bmagic
+    - callStateTablef718
     - '@source: src/bof3/bmagic/magic16603DispatchTables.c'
   - - 820
     - c

@@ -1,7 +1,7 @@
 dispatchWorkByte1Seeded = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
 raiseFlag4IfZero = 0x801EEE58;
-callStateTablef8Bmagic = 0x801EEEA4;
+callStateTablef8 = 0x801EEEA4;
 publishDispatchService = 0x801EEEE8;
 func_801EEF80 = 0x801EEF80;
 func_801EF118 = 0x801EF118;

@@ -4,7 +4,7 @@
  * the two exact siblings of this family that reach the same address,
  * queueEveryFourthWhile
  * and
- * consumeRandomDecayBmagic,
+ * consumeRandomDecay,
  * call it the same way, so the prototype keeps its raw name. */
 void func_800AF764(void);
 

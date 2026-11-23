@@ -11,7 +11,7 @@ sources = [
     "src/bof3/bmagic/renderAroundJitteredFifteen.c",
     "src/bof3/bmagic/checkDownJitteredHeading.c",
     "src/bof3/bmagic/callUpdateEveryFourth.c",
-    "src/bof3/bmagic/add4ToWorkByteAAndAdvanceWorkByte2At16BmagicMagic12403_801EF588.c",
+    "src/bof3/bmagic/workByteAdvanceAt16.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12403_801F0828.c",
     "src/bof3/bmagic/stateTintTripletCountdown.c",
     "src/bof3/bmagic/add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC.c",

@@ -40,7 +40,7 @@ void func_801C1DF0(u8 index);
  * exact sibling bootProgressStateScenarioScena0100_801F8000 (0x801F8000,
  * emi/scenario/scena01/00) carries as entry 0 of that overlay's own handler
  * table: func_801C1DF0(0), then D_80146872 = 1. The shared-helper roles above
- * are recorded by the exact lifts stateScenarioFlagRequest
+ * are recorded by the exact lifts stateFlagRequest
  * (0x801FB414, func_8015C088 and func_8015B580) and
  * reinitializeAllFieldRecordsAndKeepRecordZeroFlaggedScenarioScena0800_801FA32C
  * (0x801FA32C, func_801C16B8); func_801C1DF0 is the front-end scene init its

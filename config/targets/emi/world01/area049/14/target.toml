@@ -29,12 +29,12 @@ support_sources = [
     "src/bof3/world/clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate6IfPartyByte6World01Area04914_801F3908.c",
     "src/bof3/world/stateQueueAnimParty.c",
     "src/bof3/world/queueUiBlockEight.c",
-    "src/bof3/world/syncAreaFlagsBounds.c",
+    "src/bof3/world/syncFlagsBounds.c",
     "src/bof3/world/stateRetreatCounter.c",
     "src/bof3/world/stateCounterAdvance4.c",
     "src/bof3/world/publishModeStatusTable5.c",
     "src/bof3/world/stateSharedFrontSide.c",
-    "src/bof3/world/stateScenarioFlagBit3.c",
+    "src/bof3/world/stateFlagBit3.c",
     "src/bof3/world/publishModeStatusFlag.c",
 ]
 psyq_source = "src/bof3/support/area049_14_psyq.c"

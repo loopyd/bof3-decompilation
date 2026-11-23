@@ -42,7 +42,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  *           out/binaries/emi/bmagic found no byte-identical or near-identical
  *           copy of this 0xB0-byte span, so no clone is eligible; the entry and
  *           the shared-countdown shape follow this target's own exact sibling
- *           decrementWorkByte9ThenIncrementWorkByte1WhenZeroBmagicMagic11803_801EEEC0,
+ *           decrementWorkIncrementZero,
  *           and the record-triplet copy group follows the exact
  *           copyRecordTripletMinus4000Plus4000000SetBytes9BTo10AndAToB0ThenAdvanceWorkByte2BmagicMagic07903_801EEE64
  *           spelling (named word/byte bases with separate cell re-reads).

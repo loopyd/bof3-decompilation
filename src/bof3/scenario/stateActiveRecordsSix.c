@@ -14,7 +14,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
 
 /* @source 0x801F70DC
  * @behavior Per-frame sweep of the shared work records, run from
- *           invokeTwoHelpersScenarioScena1300_801F6FD0 (0x801F6FD0) and from the
+ *           callTwoHelpers (0x801F6FD0) and from the
  *           byte-1 step at 0x801F6F24, which call it with no arguments after the
  *           overlay helper func_801F6FF8 and consume no result. It first reads
  *           the scratchpad pointer cell 0x1F800044 once (`lui $s1,0x1F80` /

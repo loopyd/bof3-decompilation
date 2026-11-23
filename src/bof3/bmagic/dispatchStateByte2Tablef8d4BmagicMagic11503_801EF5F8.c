@@ -45,7 +45,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 */
  *           service call. The 0x18-byte frame only keeps $ra across the two
  *           calls; the body takes no arguments, returns nothing and reads or
  *           writes no other state. The 0x98-byte span equals the 0x98-byte body
- *           of dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098 in every
+ *           of callStateByte2Tablef8 in every
  *           word except the %lo immediate of the table load (0x801EF8D4 here,
  *           0x801EF8C4 there), and a search for these 152 bytes over the 396
  *           payloads under out/binaries returns only this target's own copy at

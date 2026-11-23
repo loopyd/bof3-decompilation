@@ -36,7 +36,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/bmagic/stateInvokeHelperIs.c",
-    "src/bof3/bmagic/stateHelperReadyBmagic.c",
+    "src/bof3/bmagic/stateHelperReady.c",
     "src/bof3/bmagic/stateHelperAdvanceBmagic.c",
     "src/bof3/bmagic/seedByteFromHelper.c",
     "src/bof3/bmagic/raiseInvokeHelperZero.c",
@@ -49,8 +49,8 @@ support_sources = [
     "src/bof3/bmagic/invokeSharedHelper5.c",
     "src/bof3/bmagic/invokeSharedHelper4.c",
     "src/bof3/bmagic/invokeSharedHelper3.c",
-    "src/bof3/bmagic/setupMotionFieldsBmagic.c",
-    "src/bof3/bmagic/raiseInvokeHelperBmagic.c",
+    "src/bof3/bmagic/setupMotionFields.c",
+    "src/bof3/bmagic/raiseInvokeHelper.c",
     "src/bof3/bmagic/resolveKindResultCode.c",
     "src/bof3/bmagic/dispatchWorkByte1Three.c",
     "src/bof3/bmagic/dispatchWorkByte1Hold.c",

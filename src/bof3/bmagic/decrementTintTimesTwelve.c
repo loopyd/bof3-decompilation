@@ -39,7 +39,7 @@ extern s32 func_801783C8(s32 angle);
 /* @source 0x801EF49C
  * @behavior Per-frame work-handler step of this overlay, entry index 2 of the
  *           eight-word code pointer run based at 0x801EF8C4 that the state-byte-2
- *           dispatcher dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098
+ *           dispatcher callStateByte2Tablef8
  *           indexes with the work object byte 2 scaled by four; no jal word of
  *           the payload targets this address, so this entry is selected through
  *           that table from outside the payload. It reads the scratchpad work

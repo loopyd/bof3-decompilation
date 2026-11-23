@@ -60,17 +60,17 @@ segments:
     - func_801EF148
   - - 2040
     - c
-    - callStateTable046Bmagic
+    - callStateTable046
     - '@source: src/bof3/bmagic/magic11003DispatchTables.c'
   - - 2108
     - c
-    - callStateTable0478Bmagic
-    - '@source: src/bof3/bmagic/callStateTable0478Bmagic.c'
+    - callStateTable0478
+    - '@source: src/bof3/bmagic/callStateTable0478.c'
     - '@behavior: Publishes 0x800C3800 into 0x801459F0, dispatches through the table at 0x801F0478 using work byte 2, re-reads the work pointer and calls 0x8014D290 when work byte 0 has bit 0 set and byte 2 is at least 2, then publishes 0x800D3800 into 0x801459F0.'
   - - 2268
     - c
-    - decrementAdvanceZeroBmagic
-    - '@source: src/bof3/bmagic/decrementAdvanceZeroBmagic.c'
+    - decrementAdvanceZero
+    - '@source: src/bof3/bmagic/decrementAdvanceZero.c'
     - '@behavior: Entry 3 of the fourteen-word byte-1 handler table at 0x801F046C: reads the scratchpad work pointer cell 0x1F800044 once, decrements work byte 9 modulo 256, and only when it reaches zero re-reads the cell and increments work byte 2 to advance the work-byte-2 dispatcher step.'
   - - 2344
     - c

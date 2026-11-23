@@ -138,8 +138,8 @@ segments:
     - '@behavior: Overlay handler published in the local handler pointer run at 0x801F49BC. It reads the +0x79 byte of the work record published through the shared pointer cell 0x80146250 and, when that byte equals 7, advances the halfword at offset 0x0A of the record published through the shared pointer cell 0x80148210 by 3; every other value returns before that halfword is touched. Takes no arguments, returns nothing, calls nothing and reserves no frame.'
   - - 5476
     - c
-    - stepSharedModeStartThenSetFlag55AndRequestSelectorAtCounter24World04Area19713_801F4164
-    - '@source: src/bof3/world/stepSharedModeStartThenSetFlag55AndRequestSelectorAtCounter24World04Area19713_801F4164.c'
+    - stepSharedStartSelector
+    - '@source: src/bof3/world/stepSharedStartSelector.c'
     - '@behavior: Shared front-end mode step for this overlay. It reads the shared mode byte 0x801448EC as a signed byte and returns untouched for every value other than 0 and 1: mode 0 runs the shared GAME.EMI start helper func_801BE1B0 with 0 and moves the mode byte to 1, while mode 1 returns until the shared counter byte 0x80146867 reads 0x24 and then raises flag 0x55 of the shared main-RAM flag bank 0x80144F28, requests the shared front selector context seed 0xAA at 0x60000 and 0x3F0000 with kind 0x82 through func_8019FA28 and moves the mode byte to 0x1E.'
   - - 5620
     - asm

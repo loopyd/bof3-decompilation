@@ -38,7 +38,7 @@
  * one twelve-bit shift and one centre add. The packet sizes are the 0x0C-byte
  * DR_MODE and the 0x24-byte POLY_G4, the same (1, size) append idiom the two
  * exact siblings use. The only reference to this span is the jal in
- * callHelperConditionallyScenario,
+ * callHelperConditionally,
  * which passes no arguments, so the body stays argumentless and void.
  *
  * Boundary: the span runs 0x1E4 bytes and ends exactly at the next declared

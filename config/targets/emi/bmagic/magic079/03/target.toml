@@ -23,6 +23,6 @@ support_sources = [
     "src/bof3/bmagic/decrementIncrementByteGlobal.c",
     "src/bof3/bmagic/incrementDecrementHelperZero.c",
     "src/bof3/bmagic/incrementDecrementDecrementGlobal.c",
-    "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByte9TintedByShadeRampIndexedByWorkByteALowNibbleBmagicMagic07903_801F002C.c",
+    "src/bof3/bmagic/renderShadeLowNibble.c",
 ]
 psyq_source = "src/bof3/support/magic079_03_psyq.c"

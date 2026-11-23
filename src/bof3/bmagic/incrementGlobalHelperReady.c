@@ -22,7 +22,7 @@ extern void func_801E5988(void); /* @source 0x801E5988 @kind function */
  * @behavior Third word of the twelve-byte code-pointer run at 0x801EF7A0
  *           (0x801EF038, 0x801EF0D0, 0x801EF2A8), reached as entry 1 of the
  *           two-entry run based at 0x801EF7A4 that
- *           dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038 selects by
+ *           callStateByte2Tablef7 selects by
  *           scaling the work record's unsigned byte 2 by four; no jal in this
  *           payload names it, so that run alone reaches it. It calls the
  *           shared readiness helper func_8014DAEC and keeps only that helper's

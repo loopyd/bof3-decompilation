@@ -81,7 +81,7 @@ extern u32 func_800AF66C(u8 *record, u32 size); /* @source 0x800AF66C */
 /* Service helpers of the main executable called unconditionally by this step,
  * and the battler status helper that raises one flag of the shared target byte.
  * The no-argument service shape is the one the exact same-target sibling
- * callStateTable09Bmagic calls, and the status
+ * callStateTable09 calls, and the status
  * helper keeps the two-argument shape every bmagic lift of this family uses. */
 extern void func_800AF764(void); /* @source 0x800AF764 */
 extern void func_800A9610(u8 arg0, s32 arg1); /* @source 0x800A9610 */
@@ -101,7 +101,7 @@ extern void func_801F02B0(void); /* @source 0x801F02B0 */
  * @behavior Entry 3 of the ten-entry code-pointer run based at 0x801F0988,
  *           indexed by the scratchpad work-object byte 0x1 by this overlay
  *           step dispatcher
- *           callStateTable0988Bmagic, whose word 3
+ *           callStateTable0988, whose word 3
  *           holds 0x801EF148; no jal of this payload reaches this address, so
  *           the table row proves the boundary and the no-argument ABI. It takes
  *           no arguments, returns nothing, and the 0x30-byte frame keeps the

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Scratchpad work-object pointer cell, the same named cell this target's exact
- * lifts stateHelperReadyBmagic and
+ * lifts stateHelperReady and
  * copyRecordPositionPairOnFrameParityElseAddStepPairThenDecrementWorkByte9AndO
  * nZeroInvokeBattleHelpersWhenWorkByteBIsZeroAndAdvanceWorkByte2Bmagic
  * Magic00800_801F1090 declare. The named symbol lets the assembler fold the
