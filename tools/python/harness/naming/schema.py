@@ -117,7 +117,8 @@ def name_report(
     tokens = name_tokens(ADDRESS_SUFFIX_RE.sub("", name))
 
     found = set()
-    if name[:1].isupper():
+    # Underscore spellings are the data/API style; camelCase is the lift style.
+    if "_" not in name and name[:1].isupper():
         found.add("case")
     if len(name) > MAX_LENGTH:
         found.add("length")
