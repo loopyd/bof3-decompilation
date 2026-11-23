@@ -6,7 +6,7 @@ void func_80196070(void);
 
 /* @source 0x801F7F84
  * @behavior Entry 2 of the overlay's three-word work-object handler table
- * workByte1HandlersScenarioScena0300_801FCF88 (0x801F7E34 / 0x801F7E6C / this
+ * claimHandlerTable (0x801F7E34 / 0x801F7E6C / this
  * function), which the frame dispatcher func_801F7DF0 selects with byte 0x1 of
  * the work object published at scratchpad pointer slot 0x1F800044. It walks the
  * five record-pointer slots of that work object at offset 0x0C and returns as

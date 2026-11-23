@@ -120,7 +120,7 @@ extern s32 func_8019601C(void);
  * arm per pending world id halfword D_80143F00 (0x80143F00, read with lhu, never
  * written here) and then advances the shared scenario state byte D_80146872
  * (0x80146872) to 2 on every path, so the shared state dispatcher
- * dispatchScenarioStateHandlerScenarioScena0900_801F78D0 (0x801F78D0) leaves
+ * dispatchScenarioStateHandler (0x801F78D0) leaves
  * state 2 for the primary state this body armed. The arms 0x25, 0x27, 0x29,
  * 0x35, 0x37, 0x45, 0x31, 0x64, 0x76 and 0x77 each probe the shared flag word
  * D_8014686C (0x8014686C) with func_8015B5D4 and, where the probed step is

@@ -134,7 +134,7 @@ extern void func_801C16B8(void);
 /* @source 0x801F8A04
  * @behavior Overlay second-level state handler: it is the word at 0x801FD1D4,
  * entry 4 of the ten-word handler run at 0x801FD1C4 that
- * dispatchSecondaryStateScenarioScena1200_801F886C (0x801F886C) indexes with
+ * callSecondLevelState (0x801F886C) indexes with
  * the signed shared state byte D_80146874, so it runs while that byte reads 4;
  * no jal or j of the payload names 0x801F8A04 and that table word is its only
  * image reference. It switches on the shared sub-state byte D_80146875 through
@@ -223,7 +223,7 @@ extern void func_801C16B8(void);
  * exact same-target siblings
  * stepSubstatesArmingRelease
  * (0x801FAE04) and
- * stepSubstatesThroughFrontEndContextsThenReleaseFrontEndAndResetStateScenarioScena1200_801FA7DC
+ * stepFrontEndSubstates
  * (0x801FA7DC), which carry the same masked-work-byte switch over the ids 7
  * through 0x12 and the same post-switch state-clearing tail. The palette arm's
  * closing stores were the only undecided shape: written serial, progress,

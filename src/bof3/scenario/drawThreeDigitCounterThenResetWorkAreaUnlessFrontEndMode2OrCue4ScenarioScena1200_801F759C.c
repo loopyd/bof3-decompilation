@@ -20,7 +20,7 @@ extern u16 D_80143B90;
 /* @source 0x801F759C
  * @behavior Overlay per-frame work handler, and the pointer word at 0x801FD180,
  * that is entry 2 of the code-pointer run based at 0x801FD178 that
- * dispatchWorkByte1HandlerScenarioScena1200_801F7174 selects with the work
+ * callWorkByte1State selects with the work
  * object unsigned byte at offset 0x01 scaled by four (entry 0 is the byte-2
  * dispatcher 0x801F71B8 and entry 1 is 0x801F73CC). It first calls
  * drawFramedThreeDigitCounterScenarioScena1200_801F75EC, the next subsegment at

@@ -30,11 +30,11 @@ void func_8015C088(void);
 /* @source 0x801FC80C
  * @behavior Overlay per-frame work handler and the word at 0x801FD1B0, entry 14
  * of the code-pointer run based at 0x801FD178 that
- * dispatchWorkByte1HandlerScenarioScena1200_801F7174 (0x801F7174) selects with
+ * callWorkByte1State (0x801F7174) selects with
  * the work object's unsigned byte at offset 0x01 scaled by four, so it is the
  * handler for that byte reading 0x0E. The run's neighbour entries are 13
  * (0x801FD1AC, the raw-named func_801FC890) and 15 (0x801FD1B4,
- * dispatchCoordinateLookupHandlerScenarioScena1200_801FCC54), and its own
+ * callCoordinateRecordSelect), and its own
  * pointer word is the only little-endian word of the payload that holds
  * 0x801FC80C while no jal targets the address. On the arm it selects, it first
  * runs the shared front-end startup helper func_8015C088 and then requests
@@ -54,7 +54,7 @@ void func_8015C088(void);
  *
  * Name evidence: the action words follow the accepted request names of this
  * overlay (requestResetAreaUnless
- * and dispatchRecordCallbackByByte7AScenarioScena1200_801FC574), the route and
+ * and callRecordCallback), the route and
  * flag-guard wording follows the exact sibling
  * requestPrimaryState4Or5OnClearedFlag6Or7AndSetFlagBit16OnRoute46PackedWordMatchScenarioScena0800_801FE170,
  * and the route-word role of D_80143F00 plus the func_8015B5D4 flag test are

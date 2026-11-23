@@ -17,7 +17,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
 /* @source 0x801FD234
  * @behavior Word 13, the last pointer word of the overlay-local per-record
  * callback table D_801FE42C (0x801FE42C, word at 0x801FE460), reached only
- * through dispatchRecordCallbackScenarioScena0600_801FCDD0 (0x801FCDD0) as
+ * through dispatchRecordByte7A (0x801FCDD0) as
  * (record, D_8014686C); it reads neither argument and no in-image jal targets
  * the address. It runs the shared front-end startup helper func_8015C088
  * (0x8015C088), clears the shared progress byte g_ScenarioProgress (0x80146864)

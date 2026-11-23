@@ -5,7 +5,7 @@ void func_8015DF18(u16 arg0);
 /* @source 0x801F8328
  * @behavior Entry 0 of the overlay's work-object handler table at 0x801FCF94
  * (the three words 0x801F8328 / 0x801F8370 / 0x801F842C), which the frame
- * dispatcher dispatchWorkByte1HandlerScenarioScena0300_801F82E4 selects with
+ * dispatcher dispatchEndTickHandler selects with
  * unsigned byte 0x1 of the work object published at scratchpad pointer cell
  * 0x1F800044 and calls with no arguments: it arms that object's countdown byte
  * at +0x9 with 0x60 (96), advances the work byte at +0x1 by one so the next
@@ -18,7 +18,7 @@ void func_8015DF18(u16 arg0);
  * loaded pointer may alias that cell.
  * The slot-offset spelling and statement order are the ones the sibling lift of
  * the same instruction stream without the cue call
- * (src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioScena0300_801F7AE0.c,
+ * (src/bof3/scenario/armCountdownAdvance.c,
  * identical here except for the countdown immediate 0xF/0x60 and this target's
  * extra cue call) reproduces.
  * @status exact

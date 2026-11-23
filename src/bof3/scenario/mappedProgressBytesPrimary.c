@@ -6,7 +6,7 @@ extern s32 func_8016628C(s32 table, s32 code, s32 mode);
 /* @source 0x801FDD7C
  * @behavior Entry 0 (the word at 0x801FE48C) of the 22-word in-image
  * code-pointer run 0x801FE48C..0x801FE4E4 that
- * dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14 (0x801FDD14) calls
+ * dispatchCoordinateLookup (0x801FDD14) calls
  * with jalr after func_801A7AD8 answers the index of a matched lookup record,
  * so it takes no arguments. It first asks the shared command-code mapper
  * func_8016628C (0x8016628C) for the mapped code of table 1 at code 0x47 and
@@ -21,7 +21,7 @@ extern s32 func_8016628C(s32 table, s32 code, s32 mode);
  * merges into the single D_80146874 (0x80146874) store and epilogue after the
  * arm bodies. Its 0x18-byte frame only keeps $ra across the two calls, and each
  * byte store materialises the 0x8014 page in $at on its own. The following run
- * word waitFlag27ThenClearProgressAndSharedStateBytesAndRequestPrimaryState0DScenarioScena0600_801FDE34
+ * word waitFlag27RequestPrimary13
  * (0x801FDE34) keeps the same startup-and-clear sequence for a flag-0x27 wait,
  * so it is shape evidence and not clone proof, and no other payload in the tree
  * carries these 0xB0 bytes. Seen with the mirrored guard (`!= 0` and the

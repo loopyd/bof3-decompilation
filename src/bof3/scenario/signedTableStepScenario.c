@@ -7,7 +7,7 @@ extern u16 D_8014932A;
 /* Four bytes: 0, 1, 0, -1 when interpreted as signed steps.
  * @source 0x801FE430 @kind table
  */
-extern u8 signedStepTableScenarioScena0900_801FE430[];
+extern u8 signedStepTable[];
 
 /* @source 0x801FC590
  * @behavior Selects a byte from the four-entry table at 0x801FE430 using
@@ -20,7 +20,7 @@ extern u8 signedStepTableScenarioScena0900_801FE430[];
 void signedTableStepScenario(void) {
     u8 step;
 
-    step = signedStepTableScenarioScena0900_801FE430[D_80146876 & 3];
+    step = signedStepTable[D_80146876 & 3];
     D_80149333 = 2;
     D_8014932A = (u16)(D_8014932A + (s32)(s8)step * 4);
 }

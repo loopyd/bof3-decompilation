@@ -8,7 +8,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
 /* @source 0x801FCEC0
  * @behavior Word 3 of the overlay-local per-record callback table D_801FE42C
  * (0x801FE42C, word at 0x801FE438), reached only through
- * dispatchRecordCallbackScenarioScena0600_801FCDD0 (0x801FCDD0) as
+ * dispatchRecordByte7A (0x801FCDD0) as
  * (record, D_8014686C); it reads neither argument and no in-image jal targets
  * the address. It first takes the two-stage wait func_8015B5D4 (0x8015B5D4) on
  * the shared scenario flag word D_8014686C (0x8014686C, read with lui/lw into
@@ -22,9 +22,9 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
  * (0x80146874). Takes no arguments and returns nothing. Its 0x18-byte frame
  * only keeps $ra across the two calls, and each byte store materialises the
  * 0x8014 page in $at on its own. The two table neighbours
- * clearProgressAndSharedStateBytesThenRequestPrimaryState2ScenarioScena0600_801FCE6C
+ * stateRequestPrimary2
  * (word 2) and
- * clearProgressAndSharedStateBytesThenRequestPrimaryState4ScenarioScena0600_801FCFC0
+ * stateRequestPrimary4
  * (word 6) keep the same clear-then-request shape for primary states 0x02 and
  * 0x04 but run the helper unconditionally and arm D_80146875 with zero, so the
  * flag-0x05 wait and the 0x0A sub-state are this word's own shape and the

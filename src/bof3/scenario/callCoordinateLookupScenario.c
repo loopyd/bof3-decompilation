@@ -9,10 +9,10 @@ s32 func_801A7AD8(u8 *records, s32 count, u16 coordA, u16 coordB);
 /* Fourteen five-byte lookup records, followed by two alignment bytes.
  * @source 0x801FE474 @kind table
  */
-extern u8 scenarioScena0900CoordinateLookupRecords[];
+extern u8 coordinateLookupRecords[];
 
 /* @source 0x801FE4BC @kind table */
-extern ScenarioScena0900LookupHandler scenarioScena0900CoordinateLookupHandlers[];
+extern ScenarioScena0900LookupHandler coordinateLookupHandlers[];
 
 /* @source 0x801FD280
  * @behavior Passes two unsigned halfword coordinates and the fourteen lookup
@@ -28,9 +28,9 @@ extern ScenarioScena0900LookupHandler scenarioScena0900CoordinateLookupHandlers[
 s32 callCoordinateLookupScenario(u16 coordA, u16 coordB) {
     s8 index;
 
-    index = func_801A7AD8(scenarioScena0900CoordinateLookupRecords, 14, coordA, coordB);
+    index = func_801A7AD8(coordinateLookupRecords, 14, coordA, coordB);
     if (index < 0) {
         return -1;
     }
-    return (s8)scenarioScena0900CoordinateLookupHandlers[index]();
+    return (s8)coordinateLookupHandlers[index]();
 }

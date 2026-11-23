@@ -69,7 +69,7 @@ void func_801FCD38(void);
  * with the signed shared main-RAM state byte D_80146872 (word 0 is the state-0
  * seeder stateSharedFieldsScenario at
  * 0x801F72D4 and word 2 is the primary state dispatcher
- * dispatchPrimaryStateHandlerScenarioScena0600_801F7A00 at 0x801F7A00), so no
+ * dispatchPrimaryStateTable at 0x801F7A00), so no
  * jal or j inside the payload reaches 0x801F7300. It reads the pending world id
  * halfword D_80143F00 (0x80143F00) once per arm and applies one arm per world
  * id, then stores 2 in D_80146872 so the next frame dispatches word 2. World

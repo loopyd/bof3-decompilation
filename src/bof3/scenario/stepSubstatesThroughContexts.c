@@ -140,7 +140,7 @@ extern void func_8015C058(void);
 /* @source 0x801F9F0C
  * @behavior Overlay secondary-state handler: it is the word stored at
  * 0x801FD1DC, entry 6 of the ten-word handler run at 0x801FD1C4 that
- * dispatchSecondaryStateScenarioScena1200_801F886C (0x801F886C) indexes with
+ * callSecondLevelState (0x801F886C) indexes with
  * the signed shared state byte D_80146874, so it runs while that byte reads 6;
  * that table word is the only image reference to this address, no jal or j in
  * the payload targets it, and the walker clears D_80146874 itself on its last

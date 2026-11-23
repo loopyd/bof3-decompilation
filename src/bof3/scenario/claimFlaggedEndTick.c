@@ -7,7 +7,7 @@ extern u8 D_80143FC8[];
 /* @source 0x801F8370
  * @behavior Entry 1 of the overlay's work-object handler table at 0x801FCF94
  * (the three words 0x801F8328 / 0x801F8370 / 0x801F842C), which the frame
- * dispatcher dispatchWorkByte1HandlerScenarioScena0300_801F82E4 selects with
+ * dispatcher dispatchEndTickHandler selects with
  * unsigned byte 0x1 of the work object published at scratchpad pointer cell
  * 0x1F800044 and calls with no arguments: while that object's countdown byte
  * at +0x9 still has bit 2 set, it takes one record index from func_8019601C

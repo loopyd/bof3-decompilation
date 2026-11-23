@@ -5,7 +5,7 @@
  * is left, and the fields of one slot are addressed through their own canonical
  * labels so the compiler emits the original per-access `lui %hi` /
  * `addu $at,$at,index` / `store %lo($at)` triple instead of one shared base. */
-extern u8 workRecordBytesScenarioScena0300_80146888[]; /* @source 0x80146888 @kind data */
+extern u8 workRecordTable[]; /* @source 0x80146888 @kind data */
 extern u8 D_801468FF[];
 extern u8 D_80146900[];
 extern u8 D_80146904[];
@@ -85,7 +85,7 @@ s32 claimSlotIndexedPosition(s32 arg0) {
     return 0;
   }
   offset = (u8)index * 0x98;
-  slot = &workRecordBytesScenarioScena0300_80146888[offset];
+  slot = &workRecordTable[offset];
   D_1F800044 = slot;
   D_80146884 = slot;
 

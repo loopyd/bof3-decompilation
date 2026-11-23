@@ -11,9 +11,9 @@ void func_8015C088(void);
  * overlay's nine-pointer record callback table at 0x801FD00C, but the shared
  * tail of that table's four scenario-flag slots
  * stateFlagInvokeHelper,
- * setScenarioFlagBit11ThenInvokeHelperScenarioScena0300_801FC520,
- * setScenarioFlagBit12ThenInvokeHelperScenarioScena0300_801FC54C and
- * setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578, which each
+ * stateFlagSetBit11,
+ * stateFlagSetBit12 and
+ * stateFlagSetBit13, which each
  * raise one bit of the shared scenario flag word and then call it without
  * arguments, discarding its result. It reads the shared main-RAM byte
  * D_80144EA2 (0x80144EA2) with lui/lbu and masks its low nibble, and when that

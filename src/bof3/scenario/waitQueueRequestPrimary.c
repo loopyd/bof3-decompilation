@@ -32,7 +32,7 @@ void func_8015DF18(u16 arg0);
  * delay slot and each byte store materialises the 0x8014 page in $at on its
  * own. The arm taken on a non-zero return is the state-8 request, the opposite
  * polarity to the next table word
- * waitFlag2CThenRequestPrimaryState9Substate14ScenarioScena0900_801FDC1C
+ * waitFlag2CSubstate14
  * (0x801FDC1C), which answers -1 while func_8015B5D4 still returns non-zero.
  * Its neighbours keep the same wait-then-request shape with their own wait ids
  * and stored constants: words 9 and 10 (0x801FDA90, 0x801FDB1C) test the same

@@ -33,12 +33,12 @@ void func_8015C058(void);
 /* @source 0x801F88B0
  * @behavior Overlay secondary-state handler: it is the word at 0x801FD1C8,
  * entry 1 of the ten-word handler table at 0x801FD1C4 that
- * dispatchSecondaryStateScenarioScena1200_801F886C (0x801F886C) indexes with
+ * callSecondLevelState (0x801F886C) indexes with
  * the signed shared state byte D_80146874, so it runs while that byte reads 1;
  * the table word is the only image reference to this address, and no jal or j
  * in the payload reaches it. It steps the shared sub-state byte D_80146875
  * through two values. Sub-state 0x0A, the value
- * requestPrimaryState1Substate10ScenarioScena1200_801FC7D4 (0x801FC7D4)
+ * requestState1Substate10 (0x801FC7D4)
  * requests together with state 1, returns untouched while the shared front-end
  * mode byte D_80143BB0 reads 2 and otherwise stores 0x32 in the shared progress
  * byte g_ScenarioProgress (0x80146864) and advances the sub-state byte to 0x0B.

@@ -23,7 +23,7 @@ void func_80196070(void);
 /* @source 0x801F7240
  * @behavior Overlay per-frame work handler and entry 1 of the code-pointer run
  * based at 0x801FD184 (the word at 0x801FD188), which is the run the byte-2
- * dispatcher dispatchWorkByte2HandlerScenarioScena1200_801F71B8 selects with
+ * dispatcher callWorkByte2State selects with
  * the work object's unsigned byte at offset 0x02, so it runs while that byte
  * reads 1; entry 0 of the same run is 0x801F71FC and entry 2 is 0x801F7348. It
  * first returns after the shared work-area reset func_80196070 when the shared

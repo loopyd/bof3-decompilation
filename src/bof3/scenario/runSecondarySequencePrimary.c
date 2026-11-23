@@ -29,7 +29,7 @@ void func_801C601C(u32 arg0);
 /* @source 0x801F7A44
  * @behavior Primary state 1 of this overlay, reached as word 1 of the
  *           eighteen-word overlay handler table at 0x801FE3E4 that
- *           dispatchPrimaryStateHandlerScenarioScena0600_801F7A00 indexes with
+ *           dispatchPrimaryStateTable indexes with
  *           the shared primary scene state byte D_80146874. It steps the shared
  *           secondary scene state byte D_80146875 through an eleven-entry case
  *           table, and every value of that byte above 0x0A falls to the

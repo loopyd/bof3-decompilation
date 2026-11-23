@@ -29,7 +29,7 @@ void func_8015C058(void);
 /* @source 0x801F894C
  * @behavior Overlay secondary-state handler: it is the word at 0x801FD1CC,
  * entry 2 of the ten-word handler run at 0x801FD1C4 that
- * dispatchSecondaryStateScenarioScena1200_801F886C (0x801F886C) indexes with the
+ * callSecondLevelState (0x801F886C) indexes with the
  * signed shared state byte D_80146874, so it runs while that byte reads 2. That
  * table word is the only little-endian word of the payload equal to this address
  * and no jal or j in the payload targets it. The body steps the shared sub-state

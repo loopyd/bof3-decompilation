@@ -24,9 +24,9 @@ void func_8015C088(void);
  * Name evidence: the flag-word helper call is the same
  * `func_8015B580(arg1, const)` shape the accepted exact siblings
  * stateFlagInvokeHelper
- * (0x801FC4F4, const 0x10), setScenarioFlagBit11ThenInvokeHelperScenarioScena0300_801FC520
- * (0x801FC520, const 0x11), setScenarioFlagBit12ThenInvokeHelperScenarioScena0300_801FC54C
- * (0x801FC54C, const 0x12) and setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578
+ * (0x801FC4F4, const 0x10), stateFlagSetBit11
+ * (0x801FC520, const 0x11), stateFlagSetBit12
+ * (0x801FC54C, const 0x12) and stateFlagSetBit13
  * (0x801FC578, const 0x13) carry, so 0x14 continues that wording as flag bit
  * 0x14; the stored 4 is the emitted `addiu v0,zero,0x4` and the cleared 0 is
  * the emitted `sb $zero`, the pair the same repository names
@@ -36,7 +36,7 @@ void func_8015C088(void);
  *
  * Table evidence: the address is word 0 of the nine-entry callback-pointer run
  * at 0x801FD00C, and the only reader of that run is
- * dispatchRecordCallbackScenarioScena0300_801FC46C (0x801FC46C); no jal in the
+ * dispatchRecordCallback (0x801FC46C); no jal in the
  * image targets 0x801FC4AC.
  * @status exact
  * @match 100.00

@@ -42,7 +42,7 @@ void func_8015DF18(u16 arg0);
  * @behavior Overlay callback reached only indirectly: the word at 0x801FD248,
  * index 3 of the nineteen-word code-pointer run based at 0x801FD23C, is this
  * address and is its only in-image reference, so the selector
- * dispatchCoordinateLookupHandlerScenarioScena1200_801FCC54 (0x801FCC54) calls
+ * callCoordinateRecordSelect (0x801FCC54) calls
  * it with jalr and answers its signed low byte when the fourth of the four
  * five-byte lookup records at 0x801FD228 is selected, and no jal names it.
  * It first asks the main-executable flag tester func_8015B5D4 (0x8015B5D4)

@@ -135,7 +135,7 @@ extern void func_8015B5A8(u32 arg0, s32 arg1);
 /* @source 0x801FAE04
  * @behavior Overlay second-level state handler: it is the word stored at
  * 0x801FD1E4, entry 8 of the ten-word handler run at 0x801FD1C4 that
- * dispatchSecondaryStateScenarioScena1200_801F886C (0x801F886C) indexes with
+ * callSecondLevelState (0x801F886C) indexes with
  * the signed shared state byte D_80146874, so it runs while that byte reads 8;
  * that table word is the only image reference to this address and every exiting
  * arm clears D_80146874 itself. It switches on the shared sub-state byte
@@ -179,7 +179,7 @@ extern void func_8015B5A8(u32 arg0, s32 arg1);
  * payload under out/binaries matched no second file, so the body was written
  * from this span's own bytes with the statement order, operand forms and
  * declaration style of the same-target sibling
- * stepSubstatesThroughFrontEndContextsThenReleaseFrontEndAndResetStateScenarioScena1200_801FA7DC
+ * stepFrontEndSubstates
  * (0x801FA7DC), which carries the same switch on D_80146875 and the same
  * request, gate and clearing arm shapes. The 0x18-byte frame keeps $ra and $s0,
  * the latter for the one cell pointer that each of the three arms holding a

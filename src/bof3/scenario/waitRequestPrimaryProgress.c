@@ -36,7 +36,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
  * bytes, the sub-state byte and the progress byte; its 0x18-byte frame only
  * keeps $ra across the calls, and the $ra save fills the bne delay slot. At the
  * time of writing this 0x150-byte span differed from the then exact sibling
- * waitFlags0E100FForParty5ThenRequestPrimaryState6Substate2Or3Or28Or5ScenarioScena0900_801FD498
+ * waitFlag0EParty5
  * (0x801FD498) in the fourth wait step it adds, in the four wait ids (0x10,
  * 0x12, 0x1D, 0x11 here against 0x0E, 0x10, 0x0F there), in the third and
  * fourth sub-state constants (0x32 and 7 against 0x28 and 5), in the extra

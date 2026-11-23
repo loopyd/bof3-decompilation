@@ -7,7 +7,7 @@ extern u16 D_801FD288; /* @source 0x801FD288 @kind data */
 /* @source 0x801F71FC
  * @behavior Overlay per-frame work handler and entry 0 of the code-pointer run
  * based at 0x801FD184 (the word at 0x801FD184), which is the run the byte-2
- * dispatcher dispatchWorkByte2HandlerScenarioScena1200_801F71B8 selects with the
+ * dispatcher callWorkByte2State selects with the
  * work object's byte at offset 0x02. It stores (rand() & 1) << 15, that is
  * 0x8000 or 0x0000, into the overlay-local halfword D_801FD288: bit 15 of that
  * halfword is the flag the next handler of the same run, func_801F7240, shifts

@@ -12,7 +12,7 @@ void func_8015C088(void);
 /* @source 0x801FC6E0
  * @behavior Overlay per-record callback and entry 11 (the word at 0x801FD218)
  * of the 15-word record-callback table at 0x801FD1EC that
- * dispatchRecordCallbackByByte7AScenarioScena1200_801FC574 (0x801FC574)
+ * callRecordCallback (0x801FC574)
  * selects with the record unsigned byte at offset 0x7A: it runs the shared
  * front-end startup helper func_8015C088 (0x8015C088), requests secondary
  * sub-state 2 in the shared sub-state byte D_80146875, clears the shared

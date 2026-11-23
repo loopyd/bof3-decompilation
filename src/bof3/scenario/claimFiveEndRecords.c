@@ -6,7 +6,7 @@ extern u8 D_80143FC8[];
 
 /* @source 0x801F7E6C
  * @behavior Entry 1 of the overlay's three-word work-object handler table
- * workByte1HandlersScenarioScena0300_801FCF88 (0x801F7E34 / 0x801F7E6C / this
+ * claimHandlerTable (0x801F7E34 / 0x801F7E6C / this
  * function), which the frame dispatcher func_801F7DF0 selects with byte 0x1 of
  * the work object published at scratchpad pointer slot 0x1F800044 and calls
  * with no arguments: it claims five front-end records into that work object's

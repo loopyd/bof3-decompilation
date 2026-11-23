@@ -41,10 +41,10 @@ void func_80196070(void);
 /* @source 0x801F7348
  * @behavior Overlay per-frame work handler and the word at 0x801FD18C, entry 5
  * of the code-pointer run based at 0x801FD178 that
- * dispatchWorkByte1HandlerScenarioScena1200_801F7174 (0x801F7174) selects with
+ * callWorkByte1State (0x801F7174) selects with
  * the work object unsigned byte at offset 0x01 scaled by four, so it is the
  * handler for that byte reading 5; the neighbours in the same run are the byte-2
- * dispatcher dispatchWorkByte2HandlerScenarioScena1200_801F71B8 (0x801F71B8,
+ * dispatcher callWorkByte2State (0x801F71B8,
  * entry 0) and drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C
  * (0x801F759C, entry 2). It requests primary scene state 5 with secondary
  * sub-state 0x19, raises bit 8 in the mode halfword D_80146258 and then calls

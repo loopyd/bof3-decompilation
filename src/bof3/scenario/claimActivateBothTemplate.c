@@ -11,7 +11,7 @@ extern u16 D_1F800000; /* @source 0x1F800000 @kind data */
  * through their own canonical labels so the compiler emits the original
  * per-access `lui %hi` / `addu $at,$at,index` / `%lo($at)` triple instead of one
  * shared base. */
-extern u8 workRecordBytesScenarioScena0300_80146888[]; /* @source 0x80146888 @kind data */
+extern u8 workRecordTable[]; /* @source 0x80146888 @kind data */
 extern u8 D_801468BC[]; /* @source 0x801468BC @kind data */
 extern u8 D_801468C0[]; /* @source 0x801468C0 @kind data */
 extern u8 D_801468E4[]; /* @source 0x801468E4 @kind data */
@@ -88,16 +88,16 @@ void claimActivateBothTemplate(void) {
   }
 
   offset = D_1F800044[3] * 0x98;
-  workRecordBytesScenarioScena0300_80146888[offset] = 1;
+  workRecordTable[offset] = 1;
   D_1F800044[4] = func_8015CA48();
   if (D_1F800044[4] == 0xFF) {
     offset = D_1F800044[3] * 0x98;
-    workRecordBytesScenarioScena0300_80146888[offset] = 0;
+    workRecordTable[offset] = 0;
     return;
   }
 
   offset = D_1F800044[4] * 0x98;
-  workRecordBytesScenarioScena0300_80146888[offset] = 1;
+  workRecordTable[offset] = 1;
 
   cursor = D_1F800044;
   entry = D_801FCF30;
@@ -129,13 +129,13 @@ void claimActivateBothTemplate(void) {
   *(s32 *)(D_801468C0 + offset) = accum;
 
   offset = cursor[3] * 0x98;
-  value = workRecordBytesScenarioScena0300_80146888[offset];
+  value = workRecordTable[offset];
   value |= 0x20;
-  workRecordBytesScenarioScena0300_80146888[offset] = value;
+  workRecordTable[offset] = value;
   offset = D_1F800044[4] * 0x98;
-  value = workRecordBytesScenarioScena0300_80146888[offset];
+  value = workRecordTable[offset];
   value |= 0x20;
-  workRecordBytesScenarioScena0300_80146888[offset] = value;
+  workRecordTable[offset] = value;
 
   pair = D_1F800044;
   offset = pair[4] * 0x98;
@@ -143,8 +143,8 @@ void claimActivateBothTemplate(void) {
   offset = pair[3] * 0x98;
   D_801468E4[offset] = 0;
 
-  func_8019651C(workRecordBytesScenarioScena0300_80146888 + cursor[3] * 0x98, 0xF, 0, 0, 1);
-  func_8019651C(workRecordBytesScenarioScena0300_80146888 + cursor[4] * 0x98, 0, 0, 0xF, 1);
+  func_8019651C(workRecordTable + cursor[3] * 0x98, 0xF, 0, 0, 1);
+  func_8019651C(workRecordTable + cursor[4] * 0x98, 0, 0, 0xF, 1);
 
   D_1F800044[9] = 4;
   D_1F800044[1] = 1;

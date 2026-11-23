@@ -15,7 +15,7 @@ void func_8015C088(void);
 /* @source 0x801FCCBC
  * @behavior Overlay handler reached only indirectly: the three words at
  * 0x801FD23C, entries 0, 1 and 2 of the nineteen-word code-pointer run that the
- * coordinate selector dispatchCoordinateLookupHandlerScenarioScena1200_801FCC54
+ * coordinate selector callCoordinateRecordSelect
  * (0x801FCC54) indexes with the signed byte func_801A7AD8 returns and calls
  * with jalr, so three of the four selectable lookup records run this body and
  * that selector answers its signed low byte. No in-image jal and no other image
@@ -39,7 +39,7 @@ void func_8015C088(void);
  * siblings
  * stateProgressBytesPrimary
  * (0x801FC6E0) and
- * setSubstate1EClearSharedStateBytesAndRequestPrimaryState8ScenarioScena1200_801FC784
+ * requestState8Substate30
  * (0x801FC784) of this overlay, and the party-test-then-request shape with the
  * answer 1 of
  * waitFlag0CForParty5ThenRequestPrimaryState6Substate0Or14Or5ScenarioScena0900_801FD2E8

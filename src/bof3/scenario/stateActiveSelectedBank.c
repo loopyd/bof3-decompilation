@@ -2,7 +2,7 @@
 #include <rand.h>
 
 /* @source 0x1F800044 @kind unknown */
-extern u8 *scenarioScena0900Work;
+extern u8 *stateWorkObject;
 
 /* 0x801AFE18 — shared projection setup consuming a 0x20-byte stack scratch
  * area; only a0 is live at the call site. */
@@ -68,7 +68,7 @@ s32 stateActiveSelectedBank(void) {
 
   handled = 0;
   record = (ScenarioScena0900EffectRecord *)(
-      PSX_PTR(u8, 0x800E5000u) + scenarioScena0900Work[6] * 0x500);
+      PSX_PTR(u8, 0x800E5000u) + stateWorkObject[6] * 0x500);
   i = 0;
   do {
     if (record->flags_00 != 0) {

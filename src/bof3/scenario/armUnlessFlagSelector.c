@@ -22,7 +22,7 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
 /* @source 0x801FA08C
  * @behavior Word 7 of the seventeen-word in-image primary state table at
  * 0x801FE3EC, the word stored at 0x801FE408, that
- * dispatchPrimaryStateHandlerScenarioScena0900_801F83D8 (0x801F83D8) indexes
+ * dispatchPrimaryStateByte (0x801F83D8) indexes
  * with the signed shared primary state byte D_80146874 and invokes with no
  * arguments, so no in-image jal targets 0x801FA08C and that one table word is
  * its only reference in this payload. It reads the shared sub-state byte

@@ -19,7 +19,7 @@ void func_8015C058(void);
 /* @source 0x801F9354
  * @behavior Word 5 of the seventeen-word in-image primary state table at
  * 0x801FE3EC, the word stored at 0x801FE400, that
- * dispatchPrimaryStateHandlerScenarioScena0900_801F83D8 (0x801F83D8) indexes
+ * dispatchPrimaryStateByte (0x801F83D8) indexes
  * with the signed shared primary state byte D_80146874 and invokes with no
  * arguments, so no in-image jal targets 0x801F9354 and that one table word is
  * its only reference in this payload. It reads the shared sub-state byte

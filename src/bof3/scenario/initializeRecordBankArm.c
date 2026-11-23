@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8 *scenarioScena0900Work;
+extern u8 *stateWorkObject;
 
 void stateSelectedBankLead(void);
 void stateRecordsSelectedBank(void);
@@ -20,6 +20,6 @@ void stateRecordsSelectedBank(void);
 void initializeRecordBankArm(void) {
     stateSelectedBankLead();
     stateRecordsSelectedBank();
-    scenarioScena0900Work[9] = 255;
-    scenarioScena0900Work[1]++;
+    stateWorkObject[9] = 255;
+    stateWorkObject[1]++;
 }

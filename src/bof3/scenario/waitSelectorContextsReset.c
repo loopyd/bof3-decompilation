@@ -32,7 +32,7 @@ u32 func_80163EA0(void);
 /* @source 0x801FAC88
  * @behavior Word 14 (the word stored at 0x801FE424) of the seventeen-word
  * in-image primary state table at 0x801FE3EC that
- * dispatchPrimaryStateHandlerScenarioScena0900_801F83D8 (0x801F83D8) indexes
+ * dispatchPrimaryStateByte (0x801F83D8) indexes
  * with the signed shared primary state byte D_80146874 and invokes with no
  * arguments, so no in-image jal targets this address and that table word is its
  * only reference in this payload. It switches on the shared sub-state byte

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044;
-extern u8 workRecordBytesScenarioScena0300_80146888[]; /* @source 0x80146888 @kind data */
+extern u8 workRecordTable[]; /* @source 0x80146888 @kind data */
 
 void func_80196718(void *arg0);
 void func_80196070(void);
@@ -20,7 +20,7 @@ void func_80196070(void);
  * @residual none
  */
 void submitSelectedRecordsArea(void) {
-  func_80196718(&workRecordBytesScenarioScena0300_80146888[D_1F800044[3] * 0x98]);
-  func_80196718(&workRecordBytesScenarioScena0300_80146888[D_1F800044[4] * 0x98]);
+  func_80196718(&workRecordTable[D_1F800044[3] * 0x98]);
+  func_80196718(&workRecordTable[D_1F800044[4] * 0x98]);
   func_80196070();
 }

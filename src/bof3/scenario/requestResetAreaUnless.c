@@ -41,10 +41,10 @@ void func_80196070(void);
 /* @source 0x801F7518
  * @behavior Overlay per-frame work handler and the word at 0x801FD194, entry 1
  * of the code-pointer run based at 0x801FD190 that
- * dispatchWorkByte2HandlerScenarioScena1200_801F73CC (0x801F73CC) selects with
+ * callWorkByte2State2 (0x801F73CC) selects with
  * the work object unsigned byte at offset 0x02 scaled by four, so it is the
  * handler for that byte reading 1; the neighbours in the same run are entry 0,
- * advanceCounterPhaseQueueCue20AOnRolloverAndAdvanceWorkByte2WhenCounterFullScenarioScena1200_801F7410
+ * statePhaseCounterRollover
  * (0x801F7410), and
  * stateFieldQueueScenario (0x801F7BEC,
  * entry 2). That pointer word is the only little-endian word of the overlay

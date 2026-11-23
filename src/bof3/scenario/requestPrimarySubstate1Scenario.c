@@ -18,7 +18,7 @@ void func_8015C088(void);
  * the shared scenario flag word D_8014686C in the second argument register), so
  * the overlay reaches this handler only indirectly. Its 0x38 bytes are the same
  * shape as the exact sibling
- * requestPrimaryState0AAndClearSubstateScenarioScena0900_801FC6DC (0x801FC6DC),
+ * requestState0ASubstate0 (0x801FC6DC),
  * which requests the same primary state and differs only in the cleared
  * sub-state it stores.
  * @status exact

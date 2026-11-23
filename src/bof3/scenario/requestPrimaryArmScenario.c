@@ -13,7 +13,7 @@ s32 func_8015C088(void);
  * what a value-returning declaration produces here.
  * Slot 8, the word 0x801FC6C4 at 0x801FD02C that closes the overlay's nine
  * code-pointer words at 0x801FD00C..0x801FD02C (D_801FD00C), which
- * dispatchRecordCallbackScenarioScena0300_801FC46C selects with the record's
+ * dispatchRecordCallback selects with the record's
  * unsigned byte at offset 0x7A and calls as (record, D_8014686C): it runs the
  * shared front-end startup helper func_8015C088 and then requests primary scene
  * state 7 by storing 7 in the shared state byte D_80146874 while arming the

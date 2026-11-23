@@ -1,8 +1,8 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044;
-extern u8 countdownFlagByteScenarioScena0300_80145E90[]; /* @source 0x80145E90 @kind data */
-extern u8 workRecordBytesScenarioScena0300_80146888[]; /* @source 0x80146888 @kind data */
+extern u8 countdownFlagByte[]; /* @source 0x80145E90 @kind data */
+extern u8 workRecordTable[]; /* @source 0x80146888 @kind data */
 
 /* @source 0x801F7260
  * @behavior Handles work-byte-1 state 1 through the table at 0x801FCF24.
@@ -22,16 +22,16 @@ void tickCountdownTwoBytes(void) {
 
   work = D_1F800044;
   if (work[9] != 0) {
-    countdownFlagByteScenarioScena0300_80145E90[0] |= 0x40;
+    countdownFlagByte[0] |= 0x40;
     work[9]--;
   } else {
-    countdownFlagByteScenarioScena0300_80145E90[0] &= ~0x40;
+    countdownFlagByte[0] &= ~0x40;
     /* The PSX address fits u32. Reuse it only after the byte store; the
      * second value is the freshly loaded unsigned record index, 0..255. */
-    address_or_index = (u32)&workRecordBytesScenarioScena0300_80146888[work[3] * 0x98];
+    address_or_index = (u32)&workRecordTable[work[3] * 0x98];
     *(u8 *)address_or_index = 0;
     address_or_index = D_1F800044[4];
-    workRecordBytesScenarioScena0300_80146888[address_or_index * 0x98] = 0;
+    workRecordTable[address_or_index * 0x98] = 0;
     D_1F800044[1] = 2;
   }
 }

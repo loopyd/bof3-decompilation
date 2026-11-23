@@ -1,0 +1,63 @@
+#include "bof3/bof3.h"
+
+extern u16 D_80143F00;
+
+s32 requestPrimaryPackedMatch(s32 arg0, s32 arg1);
+s32 requestRoute29State3(s32 arg0, s32 arg1);
+s32 requestPrimaryQueueEnd(s32 arg0, s32 arg1);
+s32 requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(s32 arg0, s32 arg1);
+s32 requestRoute63FrontEnd(s32 arg0, s32 arg1);
+s32 requestRoute32FrontEnd(s32 arg0, s32 arg1);
+
+/* @source 0x801FC704
+ * @behavior Route dispatcher of this overlay: it reads the shared unsigned
+ * route word D_80143F00 and, for the six route values 0x25, 0x29, 0x32, 0x33,
+ * 0x45 and 0x63, runs the matching overlay route handler — 0x25 runs
+ * requestPrimaryQueueEnd, 0x29 runs
+ * requestRoute29State3, 0x32 runs
+ * requestRoute32FrontEnd,
+ * 0x33 runs
+ * requestPrimaryPackedMatch, 0x45 runs
+ * requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC
+ * and 0x63 runs requestRoute63FrontEnd — and
+ * returns that handler's result sign-extended from its low byte (sll/sra 24).
+ * Every other route value returns 0. Both incoming packed record words are
+ * forwarded unchanged: the body never writes $a0 or $a1, and all six callees
+ * save them into $s0/$s1 before testing that pair against their own literals.
+ * Routes 0x25, 0x32, 0x45 and 0x63 write the shared state byte D_80146874 and
+ * sub-state byte D_80146875 and return the front-end mode id that
+ * queueFrontEndPrimary consumes; 0x29 writes the
+ * same two bytes as state 3 / sub-state 0xA and returns 1, and 0x33 writes
+ * only the state byte and returns 0. The route word is compared as a signed int after its zero-extended
+ * halfword load, so the dispatch tree is the compiler's balanced equality
+ * chain over 0x25..0x63 rather than a table. The 0x18-byte frame only keeps
+ * $ra across the selected call; no jal in the image targets this address, its
+ * only image word is 0x801FC704 at 0x801FCFC8, word 17 of the overlay's
+ * 32-word code-pointer run at 0x801FCF84.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+s32 dispatchRouteHandler(s32 arg0, s32 arg1) {
+  switch (D_80143F00) {
+  case 0x25:
+    return (s8)requestPrimaryQueueEnd(arg0, arg1);
+
+  case 0x29:
+    return (s8)requestRoute29State3(arg0, arg1);
+
+  case 0x32:
+    return (s8)requestRoute32FrontEnd(arg0, arg1);
+
+  case 0x33:
+    return (s8)requestPrimaryPackedMatch(arg0, arg1);
+
+  case 0x45:
+    return (s8)requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(arg0, arg1);
+
+  case 0x63:
+    return (s8)requestRoute63FrontEnd(arg0, arg1);
+  }
+
+  return 0;
+}

@@ -24,7 +24,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
  * @behavior Overlay coordinate-lookup handler reached only indirectly: no
  * in-image jal targets the address, and its only image word is the pointer at
  * 0x801FE498, word 3 of the 22-word code-pointer run 0x801FE48C..0x801FE4E4
- * that dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14 (0x801FDD14)
+ * that dispatchCoordinateLookup (0x801FDD14)
  * indexes with the answer of func_801A7AD8 and calls with jalr, so this body
  * takes no arguments and answers 1. It first runs the shared flag tester
  * func_8015B5D4 (0x8015B5D4) on the shared scenario flag word D_8014686C
@@ -46,7 +46,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
  * materialised above the $ra save, and the 0x18-byte frame keeps $ra plus $s0,
  * which holds the D_80144F28 base across the two bank probes. The neighbouring
  * table words
- * waitFlag27ThenClearProgressAndSharedStateBytesAndRequestPrimaryState0DScenarioScena0600_801FDE34
+ * waitFlag27RequestPrimary13
  * (0x801FDE34, word 2) and the flag-0x05 record callback at 0x801FCEC0 kept the
  * same wait-then-clear shape for primary states 0x0D and 0x02 when this body
  * was written, so they were shape evidence and not clone proof.

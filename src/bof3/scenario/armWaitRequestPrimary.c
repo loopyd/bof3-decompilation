@@ -8,7 +8,7 @@ void func_801BE1B0(u32 arg0);
 /* @source 0x801F97F8
  * @behavior Slot 2 of the overlay's nine-entry primary-state handler table
  * D_801FCFE0, i.e. word 25 (0x801FCFE8) of the 32-word code-pointer run at
- * 0x801FCF84 that dispatchPrimaryStateHandlerScenarioScena0300_801F92F4
+ * 0x801FCF84 that dispatchPrimaryStateHandler
  * indexes with the signed shared primary state byte D_80146874; the overlay
  * reaches it only through that indirect call, so no in-image jal names it.
  * It switches on the shared sub-state byte D_80146875, loaded once into a

@@ -11,7 +11,7 @@ void func_801C1630(void);
  * 22-word in-image code-pointer run at 0x801FE48C (0x801FDD7C ... 0x801FE38C,
  * terminated by the null word at 0x801FE4E4) - so the overlay selects and calls
  * it through a pointer. That run's only consumer is
- * dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14, which sizes the
+ * dispatchCoordinateLookup, which sizes the
  * sibling record table at 0x801FE478 with the length 4 (four five-byte records,
  * 20 bytes ending on the run boundary), so only entries 0 through 3 are
  * reachable and this entry 4 is never called in this payload. It first re-arms
@@ -31,7 +31,7 @@ void func_801C1630(void);
  * (0x801FDD7C), differing only in the effect-group ids (0, 1, 5 here, 7, 8, 5
  * there) and the first per-id argument (0 here, 8 there), and they are the
  * three-helper body of the adjacent in-image entry 2
- * armEffectGroupThenInvokeThreeHelpersScenarioScena0600_801FE08C with the extra
+ * armGroup015Arg1 with the extra
  * func_801C187C(0) call inserted before its func_801C187C(5).
  * @status exact
  * @match 100.00

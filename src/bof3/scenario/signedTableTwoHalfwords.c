@@ -8,7 +8,7 @@ extern u16 D_8014600E;
 /* Signed steps -1, 0, 1, 0 at indices 0 through 3.
  * @source 0x801FD004 @kind table
  */
-extern s8 signedStepTableScenarioScena0300_801FD004[];
+extern s8 signedStepTable[];
 
 /* @source 0x801FC3B4
  * @behavior Indexes the four signed bytes at 0x801FD004 with the low two
@@ -26,6 +26,6 @@ void signedTableTwoHalfwords(void) {
 
     index = D_80146876 & 3;
     first = &D_80145ECE;
-    *first += signedStepTableScenarioScena0300_801FD004[index] * 16;
-    D_8014600E += signedStepTableScenarioScena0300_801FD004[index] * 16;
+    *first += signedStepTable[index] * 16;
+    D_8014600E += signedStepTable[index] * 16;
 }

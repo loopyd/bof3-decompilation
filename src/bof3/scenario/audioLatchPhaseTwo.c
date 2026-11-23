@@ -42,7 +42,7 @@ extern void func_8015C088(void);
 /* @source 0x801FCE18
  * @behavior Word 0 of the overlay's four-word no-argument handler run at 0x801FD038
  * ({0x801FCE18, 0x801FCE6C, 0x801FCEDC, 0x801FCEFC}), which
- * dispatchRoute63CoordinateLookupHandlerScenarioScena0300_801FCDB4 (0x801FCDB4)
+ * dispatchRoute63Lookup (0x801FCDB4)
  * indexes with the signed-byte answer of the resident route lookup
  * func_801A7AD8 and calls after its gate, discarding the handler's answer. That
  * pointer word is this span's only in-image reference: no `jal` or `j` word of

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044;
-extern u8 workRecordBytesScenarioScena0300_80146888[]; /* @source 0x80146888 @kind data */
+extern u8 workRecordTable[]; /* @source 0x80146888 @kind data */
 
 /* @source 0x801F78E0
  * @behavior Handles work-byte-1 state 1 through the table at 0x801FCF50.
@@ -22,17 +22,17 @@ void tickCountdownSelectedBytes(void) {
   work = D_1F800044;
   if (work[9] != 0) {
     address_or_index = work[11] * 0x98;
-    workRecordBytesScenarioScena0300_80146888[address_or_index] = workRecordBytesScenarioScena0300_80146888[address_or_index] | 0x40;
+    workRecordTable[address_or_index] = workRecordTable[address_or_index] | 0x40;
     D_1F800044[9]--;
   } else {
     address_or_index = work[11] * 0x98;
-    workRecordBytesScenarioScena0300_80146888[address_or_index] = workRecordBytesScenarioScena0300_80146888[address_or_index] & ~0x40;
+    workRecordTable[address_or_index] = workRecordTable[address_or_index] & ~0x40;
     /* Each previous value is consumed before reuse. PSX pointers fit u32;
      * the unsigned byte record index times 0x98 cannot overflow. */
-    address_or_index = (u32)&workRecordBytesScenarioScena0300_80146888[D_1F800044[3] * 0x98];
+    address_or_index = (u32)&workRecordTable[D_1F800044[3] * 0x98];
     *(u8 *)address_or_index = 0;
     address_or_index = D_1F800044[4];
-    workRecordBytesScenarioScena0300_80146888[address_or_index * 0x98] = 0;
+    workRecordTable[address_or_index * 0x98] = 0;
     D_1F800044[1] = 2;
   }
 }

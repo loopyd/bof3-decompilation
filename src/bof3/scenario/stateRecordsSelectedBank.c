@@ -2,7 +2,7 @@
 #include <rand.h>
 
 /* @source 0x1F800044 @kind unknown */
-extern u8 *scenarioScena0900Work;
+extern u8 *stateWorkObject;
 
 /* @source 0x801F76D0
  * @behavior Re-seeds all 0x20 records of the 0x28-byte-stride effect bank at
@@ -57,10 +57,10 @@ void stateRecordsSelectedBank(void) {
    * writes this object, so removing it only shortens the frame. */
   u8 scratch[0x20];
 
-  record = PSX_PTR(u8, 0x800E5000u) + scenarioScena0900Work[6] * 0x500;
+  record = PSX_PTR(u8, 0x800E5000u) + stateWorkObject[6] * 0x500;
   i = 0;
   do {
-    if (scenarioScena0900Work[6] == 0) {
+    if (stateWorkObject[6] == 0) {
       *(s32 *)(record + 0x18) = 0x120000 + (rand() & 0x1FF) * 0x100;
       *(s32 *)(record + 0x1C) = 0x2E8000 + (rand() & 0x1FF) * 0x100;
       *(s32 *)(record + 0x20) =

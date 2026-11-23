@@ -17,7 +17,7 @@ void func_80161D74(s32 arg0);
 
 /* @source 0x801FC5FC
  * @behavior Handler slot 5 of the overlay record-callback run at 0x801FD00C,
- *           which dispatchRecordCallbackScenarioScena0300_801FC46C selects with
+ *           which dispatchRecordCallback selects with
  *           the record byte at offset 0x7A and calls as (record, D_8014686C);
  *           the record pointer and the shared word are never read and the
  *           callback return value is discarded, while the 0x18-byte frame only

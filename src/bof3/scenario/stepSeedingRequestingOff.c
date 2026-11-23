@@ -152,7 +152,7 @@ extern void func_8015C058(void);
 /* @source 0x801F9680
  * @behavior Overlay second-level state handler: it is the word at 0x801FD1D8,
  * entry 5 of the ten-word handler run at 0x801FD1C4 that
- * dispatchSecondaryStateScenarioScena1200_801F886C (0x801F886C) indexes with
+ * callSecondLevelState (0x801F886C) indexes with
  * the signed shared state byte D_80146874, so it runs while that byte reads 5.
  * That table word is the only image reference to this address: no jal or j of
  * the payload targets it. It switches on the shared sub-state byte D_80146875
@@ -255,7 +255,7 @@ extern void func_8015C058(void);
  * RecordSlotsThenReleaseStateScenarioScena1200_801F9F0C (0x801F9F0C) supplies
  * the per-cell declaration form, the pointer local that keeps a guarded cell
  * address in a saved register across a call, and the record-seeding statement
- * order, and applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1200_801F7F78
+ * order, and statePendingWorldSetup
  * (0x801F7F78) supplies the masked-work-byte switch over the ids 7 through 0x12
  * whose arms call func_801C1E3C and func_801C1DF0.
  * @status exact

@@ -8,7 +8,7 @@ void func_8015B580(u32 arg0, s32 arg1);
 /* @source 0x801FCF30
  * @behavior Word 4 of the overlay-local record callback table D_801FE42C
  * (0x801FE42C, pointer word at 0x801FE43C), reached as (record, D_8014686C) by
- * dispatchRecordCallbackScenarioScena0600_801FCDD0 (0x801FCDD0); it reads
+ * dispatchRecordByte7A (0x801FCDD0); it reads
  * neither argument. It runs the shared front-end startup helper func_8015C088
  * (0x8015C088), requests secondary sub-state 0x0F in the shared sub-state byte
  * D_80146875, clears the shared progress byte g_ScenarioProgress (0x80146864)
@@ -25,7 +25,7 @@ void func_8015B580(u32 arg0, s32 arg1);
  * g_ScenarioProgress, 0x80146865, 0x80146866, 0x80146867, D_80146874 is the
  * source statement order. No in-image jal targets the address. Its 0x68 bytes
  * keep the sub-state-then-clear-then-request shape of this target's own
- * setSubstate14ClearProgressAndSharedStateBytesAndRequestPrimaryState4ScenarioScena0600_801FD014
+ * stateRequestPrimary4Sub14
  * (0x801FD014), which differs in the sub-state and primary state constants and
  * carries no flag call. The address anchor keeps the name target-qualified.
  * @status exact
