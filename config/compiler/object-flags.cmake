@@ -52,10 +52,10 @@ set(BOF3_OBJFLAGS_bof3_battle_pickRandomUnblockedId_c -O2 -Wa,--expand-div)
 # division-trap sequence.
 set(BOF3_OBJFLAGS_bof3_battle_pickRandomUnblockedId_battle15_800AB760_c -O2 -Wa,--expand-div)
 
-# markBattlersMeetingOpposingThresholds keeps the original's signed division-trap
+# markBattlersMeetingOpposing keeps the original's signed division-trap
 # sequences (break 7 / break 6). This object-local assembler expansion restores
 # those exact checks. /* @source 0x801DB058 */
-set(BOF3_OBJFLAGS_bof3_battle_markBattlersMeetingOpposingThresholds_c -O2 -Wa,--expand-div)
+set(BOF3_OBJFLAGS_bof3_battle_markBattlersMeetingOpposing_c -O2 -Wa,--expand-div)
 
 # calculateScaledSlotValueForAmountWorld00Area03004 scales a slot amount with a signed division whose original
 # expansion keeps the full MIPS division-trap sequence (break 7 / break 6).
@@ -71,12 +71,12 @@ set(BOF3_OBJFLAGS_bof3_world_updateWorkMotionAndStepModeOrAdvanceHandler_c -O2 -
 # The selector-specific expansion check verified the complete function.
 set(BOF3_OBJFLAGS_bof3_world_updateWorkScrollWordsWorld00Area03004_801E084C_c -O2 -Wa,--expand-div)
 
-# copyCurrentBattlerToQueuedSlot reloads the scratchpad work-pointer cell per access as a fresh
+# copyCurrentBattlerQueued reloads the scratchpad work-pointer cell per access as a fresh
 # lui+lw pair; the canonical -G0 build CSEs the cell address into one
 # lui+addiu register. With -G4 the small-data threshold keeps the access
 # split per load, matching the original byte-for-byte.
 # Verified by bin/harness lift flag-search (100% exact; -G8 also exact).
-set(BOF3_OBJFLAGS_bof3_battle_copyCurrentBattlerToQueuedSlot_c -O2 -G4)
+set(BOF3_OBJFLAGS_bof3_battle_copyCurrentBattlerQueued_c -O2 -G4)
 
 # resetSelectionState hoists the single call's argument setup (move a0,zero) to the
 # top of the entry block, so the jal delay slot gets a nop instead of the move.

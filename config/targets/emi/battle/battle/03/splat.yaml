@@ -52,8 +52,8 @@ segments:
   subsegments:
   - - 16708
     - c
-    - advanceBattlerCountdownsAndReleaseSuppression
-    - '@source: src/bof3/battle/advanceBattlerCountdownsAndReleaseSuppression.c'
+    - stateBattlerCountdownsRelease
+    - '@source: src/bof3/battle/stateBattlerCountdownsRelease.c'
 - - 17416
   - bin
   - header_retained_00004408
@@ -96,8 +96,8 @@ segments:
   subsegments:
   - - 22724
     - c
-    - isBattlerBlockedOrUnavailable
-    - '@source: src/bof3/battle/isBattlerBlockedOrUnavailable.c'
+    - checkBattlerBlockedUnavailable
+    - '@source: src/bof3/battle/checkBattlerBlockedUnavailable.c'
 - - 22892
   - bin
   - header_retained_0000596c
@@ -135,8 +135,8 @@ segments:
     - '@behavior: Restarts the local state chain of each of the three active party work records at state 2, resets the front-end selection effect while the 0x80146325 bit-0x40 gate is clear, initializes the battle UI bundle slot 0, queues the opening event cue and then advances the battle state byte 0x801462E2.'
   - - 24976
     - c
-    - advanceStateWhenLoaderGated
-    - '@source: src/bof3/battle/advanceStateWhenLoaderGated.c'
+    - stateLoaderGated
+    - '@source: src/bof3/battle/stateLoaderGated.c'
     - '@behavior: Advances the global battle state when the EXE loader gate is ready and enabled.'
   - - 25060
     - c
@@ -148,10 +148,10 @@ segments:
     - '@behavior: Resets the front-end selection effect while the 0x80146325 bit-0x40 gate is clear, initializes the battle UI bundle slot 0, queues the fixed event cue 0x11 into dispatch slot 0 with mode 2, and then advances the battle state byte 0x801462E2.'
   - - 25260
     - c
-    - advanceStateWhenLoaderReady
+    - stateLoaderReady
   - - 25324
     - c
-    - dispatchStateTableAd0c
+    - callStateTableAd0
   - - 25384
     - c
     - submitActiveBattlerRecordsAndAdvanceState
@@ -164,14 +164,14 @@ segments:
     - '@behavior: Once the EXE-side EMI loader reports ready (func_80162D00), raises the 0x20 transfer flag of the shared EMI loader state byte D_80146854, starts the EMI stream slot selected by the shared u16 D_80143F00 plus 0x2AB through func_80161FDC, and advances the battle loader state byte BATTLE_GLOBAL_BYTE_62E2.'
   - - 25964
     - c
-    - enterPhase4WhenLoaderReady
+    - enterPhase4LoaderReady
   - - 26020
     - c
     - dispatchStateTableAd20
   - - 26080
     - c
-    - snapshotBattlersAndAdvanceState
-    - '@source: src/bof3/battle/snapshotBattlersAndAdvanceState.c'
+    - snapshotBattlersAdvanceState
+    - '@source: src/bof3/battle/snapshotBattlersAdvanceState.c'
     - '@behavior: Copies the visible state of battlers 0, 1 and 2 into their templates, runs one shared front-end frame slice, starts EMI stream slot 0x256 and advances the battle state byte.'
   - - 26164
     - c
@@ -185,14 +185,14 @@ segments:
     - '@behavior: Resets the eight enemy work records and every queued slot key byte, arms the field record of each active local work record (halfword +0x14 and byte +0x18 set to 1, +0x1A advanced while below 5, bit 0x4000 of halfword +0x0C and bit 0x02 of byte +0x07 cleared) and rebuilds it through func_80164A44, copies the armed templates into the local work records, then clears the pending bytes 0x80146329 and 0x801462E0..0x801462E4 and advances the shared front-end sub-state word 0x80143B92.'
   - - 26836
     - c
-    - retreatStateWhenGateClear
-    - '@source: src/bof3/battle/retreatStateWhenGateClear.c'
+    - retreatStateGateClear
+    - '@source: src/bof3/battle/retreatStateGateClear.c'
     - '@behavior: Clears the battle selection flag and decrements its counter when the gate is clear.'
   - - 26892
     - c
     - drawBattlerStatusColumns
     - '@source: src/bof3/battle/drawBattlerStatusColumns.c'
-    - '@behavior: Draws the battler status window at the panel anchor: the two quadrangle caps and the body tile whose rows follow the local battler count, then one framed column per local battler carrying the row-9 colour tile, the textured gauge of UI owner record entry index + 0x0D, up to two status sprites while the battler record halfword +0x0E is set, the record text through func_8014FC90, two emitBattlerStatusAccentSprite accents and the digit runs of the record halfwords +0x14 and +0x16, with the frame in palette entry 1 of the CLUT bank byte D_80144952.'
+    - '@behavior: Draws the battler status window at the panel anchor: the two quadrangle caps and the body tile whose rows follow the local battler count, then one framed column per local battler carrying the row-9 colour tile, the textured gauge of UI owner record entry index + 0x0D, up to two status sprites while the battler record halfword +0x0E is set, the record text through func_8014FC90, two emitBattlerStatusAccent accents and the digit runs of the record halfwords +0x14 and +0x16, with the frame in palette entry 1 of the CLUT bank byte D_80144952.'
   - - 28224
     - c
     - drawBattlerCountdownEntries
@@ -215,8 +215,8 @@ segments:
     - '@behavior: Draws a narrow battle panel strip at the anchor (arg0, arg1): opens the 0x3C0-texture draw mode, emits the 0x48 x 0x0F panel tile (D_801EAE50 row 6) at (arg0, arg1 + 2) and the two quadrangle caps from D_801EAD30 rows 4 and 5 at (arg0, arg1) and (arg0, arg1 + 0x11), then outlines the rectangle inset to (arg0 + 2, arg1 + 2) through (arg0 + 0x45, arg1 + 0x10) with four semi-transparent sprite prims, drawing the top and left edges from texture page 1 and the right and bottom edges from texture page 0 with the red/green/blue channels of palette entry 1 of the CLUT bank byte D_80144952.'
   - - 30320
     - c
-    - drawBattlePanelMessageStrip
-    - '@source: src/bof3/battle/drawBattlePanelMessageStrip.c'
+    - renderBattlePanelMessage
+    - '@source: src/bof3/battle/renderBattlePanelMessage.c'
     - '@behavior: Draws the narrow battle message-panel strip at the anchor (arg0, arg1): opens the 0x3C0-texture draw mode, emits the D_801EAE50 panel tile row 0x0A at (arg0, arg1 + 2) and the two quadrangle caps from D_801EAD30 rows 6 and 7 at (arg0, arg1) and (arg0, arg1 + 0x11), then outlines the rectangle inset to (arg0 + 2, arg1 + 2) through (arg0 + 0x65, arg1 + 0x10) with four semi-transparent sprite prims, drawing the top and left edges from texture page 1 and the right and bottom edges from texture page 0 with the red/green/blue channels of palette entry 1 of the CLUT bank byte D_80144952.'
   - - 30800
     - c
@@ -225,9 +225,9 @@ segments:
     - '@behavior: Draws the battle command strip of the command selected by the low byte of arg0: opens the 0x3C0-texture draw mode, emits the D_801EAE50 panel tile row 5 at (x, y + 2) and the two quadrangle caps from D_801EAD30 rows 0x0A and 0x0B at (x, y) and (x, y + 0x11), then outlines the rectangle inset to (x + 2, y + 2) through (x + 0x25, y + 0x10) with four semi-transparent sprite prims, drawing the top and left edges from texture page 1 and the right and bottom edges from texture page 0 with the red/green/blue channels of palette entry 1 of the CLUT bank byte D_80144952, and finally prints the 8-character command label at (x + 8, y + 3) through func_8014F800. The anchor comes from the signed halfword at 0x801EAEE8 and the unsigned halfword at 0x801EAEEA selected by that byte, and the label is the 8-byte row of 0x801EAEB0 selected by it (Atk/Abl/Use/Exa/Def/Chg/Esc). Its only in-image caller, callD8450WhenIdle, passes the selection byte D_801462F4 while D_80144955 is zero.'
   - - 31376
     - c
-    - drawShadowedBattlerStatusPanel
-    - '@source: src/bof3/battle/drawShadowedBattlerStatusPanel.c'
-    - '@behavior: Draws the battle status panel of the battler whose panel index is arg2 at the anchor (arg0, arg1) over an offset copy of itself: under GetTPage(0, 0, 0x3C0, 0) it first emits the D_801EAE50 row-8 panel tile at (arg0 + 4, arg1 + 8) and the two D_801EAD30 quadrangle caps of rows 2 and 3 at (arg0 + 4, arg1 + 6) and (arg0 + 4, arg1 + 0x19) in palette entry 1, then under GetTPage(0, 1, 0x3C0, 0) the panel itself in opaque palette entry 0: the row-8 tile at (arg0, arg1 + 2), the row-9 colour tile at (arg0 + 6, arg1 + 0xB) and the caps of rows 2 and 3 at (arg0, arg1) and (arg0, arg1 + 0x13). The red/green/blue channels come from palette entry 1 of the CLUT bank byte D_80144952. It reads byte +0x7F of the 0x118-byte D_801EB630 record selected by arg2 - 3: when that byte reads 1 it submits the textured gauge through drawBattlerStatusGaugeBar at (arg0 + 6, arg1 + 0xA) with the current panel object bytes +0x0B/+0x0D as the two gauge widths, otherwise it blanks the numeric field through drawDecimalGlyphRun at (arg0 + 0x24, arg1 + 0xC), and it then always draws the record text pointer at +0x74 through func_8014FC90 at (arg0 + 4, arg1 + 3). Finally it outlines the box from (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12): the top and left edges as texture-page-1 sprite prims in that palette colour and the right and bottom edges as flat line prims in the same channels lowered by 0x10 and clamped to 0 through 0xFF. Its only in-image caller, func_801E99AC, feeds it the active panel halfwords +0x04/+0x06 and panel byte +0x0A.'
+    - renderShadowedBattlerStatus
+    - '@source: src/bof3/battle/renderShadowedBattlerStatus.c'
+    - '@behavior: Draws the battle status panel of the battler whose panel index is arg2 at the anchor (arg0, arg1) over an offset copy of itself: under GetTPage(0, 0, 0x3C0, 0) it first emits the D_801EAE50 row-8 panel tile at (arg0 + 4, arg1 + 8) and the two D_801EAD30 quadrangle caps of rows 2 and 3 at (arg0 + 4, arg1 + 6) and (arg0 + 4, arg1 + 0x19) in palette entry 1, then under GetTPage(0, 1, 0x3C0, 0) the panel itself in opaque palette entry 0: the row-8 tile at (arg0, arg1 + 2), the row-9 colour tile at (arg0 + 6, arg1 + 0xB) and the caps of rows 2 and 3 at (arg0, arg1) and (arg0, arg1 + 0x13). The red/green/blue channels come from palette entry 1 of the CLUT bank byte D_80144952. It reads byte +0x7F of the 0x118-byte D_801EB630 record selected by arg2 - 3: when that byte reads 1 it submits the textured gauge through renderBattlerStatusGauge at (arg0 + 6, arg1 + 0xA) with the current panel object bytes +0x0B/+0x0D as the two gauge widths, otherwise it blanks the numeric field through drawDecimalGlyphRun at (arg0 + 0x24, arg1 + 0xC), and it then always draws the record text pointer at +0x74 through func_8014FC90 at (arg0 + 4, arg1 + 3). Finally it outlines the box from (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12): the top and left edges as texture-page-1 sprite prims in that palette colour and the right and bottom edges as flat line prims in the same channels lowered by 0x10 and clamped to 0 through 0xFF. Its only in-image caller, func_801E99AC, feeds it the active panel halfwords +0x04/+0x06 and panel byte +0x0A.'
   - - 32484
     - c
     - drawBattlerStatusPanel
@@ -235,9 +235,9 @@ segments:
     - '@behavior: Draws the battle status panel of the battler whose panel index is arg2 at the anchor (arg0, arg1): the row-8 panel tile, the row-9 colour tile, the row-2/row-3 quadrangle caps, then either the textured gauge of the 0x118-byte D_801EB630 record selected by arg2 - 3 (when its +0x7F byte reads 1) or a blanked numeric run, then the record text pointer at +0x74 when func_801DA69C accepts that index, and finally the four sprite-prim box outline from (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12).'
   - - 33272
     - c
-    - drawShadowedBattlerHpStatusPanel
-    - '@source: src/bof3/battle/drawShadowedBattlerHpStatusPanel.c'
-    - '@behavior: Draws the HP status panel of the battler whose panel index is arg2 at the anchor (arg0, arg1) over an offset shadow copy of itself: under GetTPage(0, 0, 0x3C0, 0) the row-8 panel tile at (arg0 + 4, arg1 + 8) and the row-2/row-3 quadrangle caps at (arg0 + 4, arg1 + 6) and (arg0 + 4, arg1 + 0x19) in palette entry 1, then under GetTPage(0, 1, 0x3C0, 0) the panel itself in opaque palette entry 0 (the row-8 tile at (arg0, arg1 + 2) and the caps of rows 2 and 3 at (arg0, arg1) and (arg0, arg1 + 0x13)), with the red/green/blue channels from palette entry 1 of the CLUT bank byte D_80144952. It then draws the name string at +0x00 of the 0x140-stride battler row D_80145F04 selected by arg2 through func_8014FC90 at (arg0 + 4, arg1 + 2), styled from the row halfword +0x0C; one emitBattlerStatusAccentSprite accent at (arg0 + 2, arg1 + 0x0A); the row current HP halfword +0x14 through drawDecimalGlyphRun at (arg0 + 0x14, arg1 + 0xC); the separator string at 0x801D0C6C formatted through sprintf into D_80145AD4 with that halfword shifted 13 and drawn through func_80150098 at (arg0 + 0x28, arg1 + 0x0A) in the shade (halfword >> 13) & 2; the row maximum HP halfword +0x1C through drawDecimalGlyphRun at (arg0 + 0x30, arg1 + 0xC) in that same shade; and finally the box outline from (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12) as two texture-page-1 sprite prims for the top and left edges and two flat line prims for the right and bottom edges in the same channels lowered by 0x10 and clamped to 0 through 0xFF.'
+    - renderShadowedBattlerHp
+    - '@source: src/bof3/battle/renderShadowedBattlerHp.c'
+    - '@behavior: Draws the HP status panel of the battler whose panel index is arg2 at the anchor (arg0, arg1) over an offset shadow copy of itself: under GetTPage(0, 0, 0x3C0, 0) the row-8 panel tile at (arg0 + 4, arg1 + 8) and the row-2/row-3 quadrangle caps at (arg0 + 4, arg1 + 6) and (arg0 + 4, arg1 + 0x19) in palette entry 1, then under GetTPage(0, 1, 0x3C0, 0) the panel itself in opaque palette entry 0 (the row-8 tile at (arg0, arg1 + 2) and the caps of rows 2 and 3 at (arg0, arg1) and (arg0, arg1 + 0x13)), with the red/green/blue channels from palette entry 1 of the CLUT bank byte D_80144952. It then draws the name string at +0x00 of the 0x140-stride battler row D_80145F04 selected by arg2 through func_8014FC90 at (arg0 + 4, arg1 + 2), styled from the row halfword +0x0C; one emitBattlerStatusAccent accent at (arg0 + 2, arg1 + 0x0A); the row current HP halfword +0x14 through drawDecimalGlyphRun at (arg0 + 0x14, arg1 + 0xC); the separator string at 0x801D0C6C formatted through sprintf into D_80145AD4 with that halfword shifted 13 and drawn through func_80150098 at (arg0 + 0x28, arg1 + 0x0A) in the shade (halfword >> 13) & 2; the row maximum HP halfword +0x1C through drawDecimalGlyphRun at (arg0 + 0x30, arg1 + 0xC) in that same shade; and finally the box outline from (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12) as two texture-page-1 sprite prims for the top and left edges and two flat line prims for the right and bottom edges in the same channels lowered by 0x10 and clamped to 0 through 0xFF.'
   - - 34564
     - c
     - func_801D9304
@@ -265,8 +265,8 @@ segments:
     - '@source: src/bof3/battle/drawDecimalGlyphRun.c'
   - - 35460
     - c
-    - drawDecimalGlyphRun8x8
-    - '@source: src/bof3/battle/drawDecimalGlyphRun8x8.c'
+    - renderDecimalGlyphRun8
+    - '@source: src/bof3/battle/renderDecimalGlyphRun8.c'
     - '@behavior: Formats arg3 through the 3-column decimal format string at 0x801D0C78 into the shared UI buffer, then emits a run of 8x8 glyphs: for every buffer byte other than the 0x20 pad it converts the digit in place, takes the CLUT of palette row 0x1e0 column (arg2 & 0xff) and appends one semi-transparent SPRT at (arg0, arg1) tinted by the neutral gray 0x80, with texture row 0xd0 and texel column digit * 8 - 0x50, advancing arg0 by 8 until the next buffer byte is 0.'
   - - 35844
     - c
@@ -299,23 +299,23 @@ segments:
     - '@behavior: Emits one colored tile primitive at the current primitive cursor: the dimensions come from the 2-entry row of D_801EAE50 selected by the low byte of arg2, the three colour bytes take the 5-bit channels of the 15-bit value arg3 (bits 10-14 at +0x04, bits 5-9 at +0x05, bits 0-4 at +0x06), the primitive is marked semi-transparent with the arg4 byte and the packet is closed with the 0x10-byte primitive-append helper.'
   - - 37532
     - c
-    - drawBattlerStatusGaugeBar
-    - '@source: src/bof3/battle/drawBattlerStatusGaugeBar.c'
+    - renderBattlerStatusGauge
+    - '@source: src/bof3/battle/renderBattlerStatusGauge.c'
     - '@behavior: Draws the two-segment textured gauge bar at (arg0, arg1): the first segment is a POLY_FT4 quad from (arg0, arg1) through (arg0 + the arg2 low byte, arg1 + 7) textured with the 8x8 tile at u 0x90..0x97 when arg4 is zero and u 0x80..0x87 otherwise on rows 0xd8..0xdf, and the second is the same quad continued from that x for the arg3 low byte with the tile at u 0x98..0x9f. Both take the texture page GetTPage(0, 0, 0x3c0, 0), the neutral gray 0x80 in r0/g0/b0, the CLUT row 0x1e0 at column 0xe0 or 0xb0 selected by arg4 for the first segment and at column 0xb0 for the second, and are appended under ordering-table index 1 as 0x28-byte primitives.'
   - - 38008
     - c
-    - emitBattlerStatusAccentSprite
-    - '@source: src/bof3/battle/emitBattlerStatusAccentSprite.c'
-    - '@behavior: Emits one 16x8 textured battle sprite at (arg0, arg1) into the shared primitive cursor: a DR_MODE carrying GetTPage(0, 1, 0x3c0, 0), then a SPRT with the size words 0x10 and 8, the CLUT 0x7800, texture row 0xd8 and texture column arg2 * 16, tinted by the neutral gray 0x80 and appended under ordering-table index 1. drawBattlerStatusColumns draws the two column accents of each battler status column with it, and drawShadowedBattlerHpStatusPanel draws the column-0 accent at (x + 2, y + 0xA).'
+    - emitBattlerStatusAccent
+    - '@source: src/bof3/battle/emitBattlerStatusAccent.c'
+    - '@behavior: Emits one 16x8 textured battle sprite at (arg0, arg1) into the shared primitive cursor: a DR_MODE carrying GetTPage(0, 1, 0x3c0, 0), then a SPRT with the size words 0x10 and 8, the CLUT 0x7800, texture row 0xd8 and texture column arg2 * 16, tinted by the neutral gray 0x80 and appended under ordering-table index 1. drawBattlerStatusColumns draws the two column accents of each battler status column with it, and renderShadowedBattlerHp draws the column-0 accent at (x + 2, y + 0xA).'
   - - 38220
     - c
-    - drawSpritePrimFt4Clut
-    - '@source: src/bof3/battle/drawSpritePrimFt4Clut.c'
+    - renderSpritePrimFt4
+    - '@source: src/bof3/battle/renderSpritePrimFt4.c'
     - '@behavior: Emits one 4x4 textured battle quad at (arg0, arg1) into the shared primitive cursor: a POLY_FT4 opened by SetPolyFT4 with the texture page GetTPage(0, 0, 0x3c0, 0) at +0x16, the CLUT of column (D_80144952 * 2 + arg3) * 0x10 on row 0x1e1 at +0x0e, the neutral gray 0x80 in r0/g0/b0 and the corners (arg0, arg1), (arg0 + 4, arg1), (arg0, arg1 + 4) and (arg0 + 4, arg1 + 4) at +0x08 to +0x22. Its texture window comes from the 4-byte row {u, v, du, dv} of the table D_801EAF2C inside this overlay, selected by the low byte of arg2: u0/u2 take u, u1/u3 add du, v0/v1 take v less 8 rows per arg3 band, and v2/v3 add dv to that same base. The four rows at 0x801EAF2C are {0x34, 0xf4, 4, 4}, {0x37, 0xf4, 0xfc, 4}, {0x34, 0xf7, 4, 0xfc} and {0x37, 0xf7, 0xfc, 0xfc}, so du and dv are signed texel offsets stored as bytes and added modulo 0x100. The quad is marked semi-transparent with the arg3 byte and appended under ordering-table index 1 as a 0x28-byte primitive.'
   - - 38696
     - c
-    - drawSpritePrim8x8Clut
-    - '@source: src/bof3/battle/drawSpritePrim8x8Clut.c'
+    - renderSpritePrim8X8
+    - '@source: src/bof3/battle/renderSpritePrim8X8.c'
     - '@behavior: Emits one 8x8 textured battle sprite at (arg0, arg1) into the shared primitive cursor: a DR_MODE carrying GetTPage(0, 0, 0x3c0, 0), then a SPRT with the size words 8 and 8, the texel bytes arg2 and arg3 at +0x0C and +0x0D, the CLUT halfword built from the low six bits of arg4 over the 0x7800 base, tinted by the neutral gray 0x80 and appended under ordering-table index 1.'
   - - 38920
     - c
@@ -344,8 +344,8 @@ segments:
     - '@behavior: Builds and sorts the mixed local and enemy ranking list used by the owner selection bytes at 0x8014630C, then resets the current owner cursor byte 0x80146322.'
   - - 42072
     - c
-    - markBattlersMeetingOpposingThresholds
-    - '@source: src/bof3/battle/markBattlersMeetingOpposingThresholds.c'
+    - markBattlersMeetingOpposing
+    - '@source: src/bof3/battle/markBattlersMeetingOpposing.c'
   - - 42744
     - c
     - func_801DB2F8
@@ -397,19 +397,19 @@ segments:
     - '@behavior: Reports whether one battler slot is a usable candidate for the actor phase, applying the active bit, the base local/enemy rejection masks, the 0x801463CE-gated +0x10 requirement, and the global actor-phase byte at 0x80146324.'
   - - 44832
     - c
-    - findLocalWorkByKind
-    - '@source: src/bof3/battle/findLocalWorkByKind.c'
+    - queryLocalWorkKind
+    - '@source: src/bof3/battle/queryLocalWorkKind.c'
     - '@behavior: Returns the first of three local work records whose byte +0x79 matches the selector.'
   - - 44920
     - c
-    - applyResolvedDamageToTarget
-    - '@source: src/bof3/battle/applyResolvedDamageToTarget.c'
+    - stateResolvedDamageTarget
+    - '@source: src/bof3/battle/stateResolvedDamageTarget.c'
     - '@behavior: Applies the damage one attacker deals to one target battler and returns the amount: marks the target status byte 0x11, resolves the amount through resolveBattlerDamageAmount with the 0xFFFF kind mask, replaces it with the target HP halfword and queues the 0x1E event row with 0x801EB075 while the target flag 0x100 is set, subtracts a positive amount with the party threshold-byte and D_80145FB8 gated 0x4 flags bit or zeroes the halfword, clamps a non-positive amount at the target maximum with status bit 4, and rolls func_800A3DF8 for the 0x4A/0x4C/0x4F party kinds to apply the 0x40/0x8/0x20 mask to the target.'
   - - 46148
     - c
     - resolveBattlerDamageAmount
     - '@source: src/bof3/battle/resolveBattlerDamageAmount.c'
-    - '@behavior: Resolves the damage amount one attacker deals to one target: seeds the scratchpad damage-kind halfword from the caller mask or the attacker kind table, scales and clears the defence accumulator 0x801EC30C from the attacker guard flag 0x40 and guard byte, doubles the func_801DCAD8 base amount for the attacker kind pairs 0x13/0x17/0x33 and 0x16/0x35/0x40, applies the target status bits 0x64 through func_800A36F0 and 0x801463DA (or routes a clear status through func_801DC73C and resolveEnemyTargetDamageThroughGates), rolls the 0x32/0x3C/0x46 percent band on the target guard bit 2, adds the full-damage bonus plus a quarter, drops a quarter for a party target while 0x80144F58 reads 2 and for status bit 0x80, zeroes on the target guard word bit 0x10000, and clamps to 9999 and -9999.'
+    - '@behavior: Resolves the damage amount one attacker deals to one target: seeds the scratchpad damage-kind halfword from the caller mask or the attacker kind table, scales and clears the defence accumulator 0x801EC30C from the attacker guard flag 0x40 and guard byte, doubles the func_801DCAD8 base amount for the attacker kind pairs 0x13/0x17/0x33 and 0x16/0x35/0x40, applies the target status bits 0x64 through func_800A36F0 and 0x801463DA (or routes a clear status through func_801DC73C and resolveEnemyTargetDamage), rolls the 0x32/0x3C/0x46 percent band on the target guard bit 2, adds the full-damage bonus plus a quarter, drops a quarter for a party target while 0x80144F58 reads 2 and for status bit 0x80, zeroes on the target guard word bit 0x10000, and clamps to 9999 and -9999.'
   - - 47932
     - c
     - func_801DC73C
@@ -417,8 +417,8 @@ segments:
     - '@behavior: Returns the signed damage value unchanged while the battle global halfword 0x801462E8 has bit 0x80 set. Otherwise it reads the status halfword of the local work record selected by the low byte of arg1 (or of the enemy work record when that byte is at least 3), and clears bit 0x10 of the local work record byte +0x120 selected by the low byte of arg2 when the status carries bit 8 and the first random gate passes, or when the second random gate lands below the percent byte 0x801EC303.'
   - - 48276
     - c
-    - resolveEnemyTargetDamageThroughGates
-    - '@source: src/bof3/battle/resolveEnemyTargetDamageThroughGates.c'
+    - resolveEnemyTargetDamage
+    - '@source: src/bof3/battle/resolveEnemyTargetDamage.c'
     - '@behavior: Returns the signed value arg0 unchanged while the full-damage flag 0x80 of the battle global halfword 0x801462E8 is set. Otherwise it gates on the attacker state: bit 8 of the local work record halfword +0x80 selected by the low byte of arg1, or of the enemy work record halfword +0x82 when that byte is at least 3, cancels on a nonzero rand() & 2; a party attacker with flag 0x100 set in its 0x80145FB8 word still returns arg0, as does an enemy attacker after the target gate. The target gate cancels on bit 4 of the +0x80 halfword of the enemy work record selected by the low byte of arg2 together with a nonzero rand() & 2, and a party attacker also cancels when rand() % 100 does not stay below the chance byte 0x801EC324. Cancelling clears bit 0x10 of the +0xFC pending byte of that enemy work record and returns zero.'
   - - 48856
     - asm
@@ -439,8 +439,8 @@ segments:
     - '@source: src/bof3/battle/initDeferredBattlerCountdown.c'
   - - 50128
     - c
-    - copyLocalWorkToTemplates
-    - '@source: src/bof3/battle/copyLocalWorkToTemplates.c'
+    - copyLocalWorkTemplates
+    - '@source: src/bof3/battle/copyLocalWorkTemplates.c'
     - '@behavior: Writes each active local work record''s inline 0xA4-byte block at +0x74 back into the shared template record selected by that record''s byte +0x13C.'
   - - 50316
     - c
@@ -458,8 +458,8 @@ segments:
     - '@behavior: Drains the pending group queue from its cursor, publishing each queued group id as the selected group and arming that group''s local work record until an empty slot or the third entry is reached.'
   - - 51024
     - c
-    - transformFirstPointPairByMode
-    - '@source: src/bof3/battle/transformFirstPointPairByMode.c'
+    - transformFirstPointPair
+    - '@source: src/bof3/battle/transformFirstPointPair.c'
   - - 51148
     - c
     - func_801DD3CC
@@ -495,8 +495,8 @@ segments:
     - '@behavior: Steps the oscillating factor byte 0x80146308 by two toward the opposite bound: a value above 0x1E sets the direction latch 0x80146304 and a zero value clears it, so the byte ramps up to 0x20 and back down to zero.'
   - - 52312
     - c
-    - submitCurrentWorkEffectVariant
-    - '@source: src/bof3/battle/submitCurrentWorkEffectVariant.c'
+    - submitCurrentWorkEffect
+    - '@source: src/bof3/battle/submitCurrentWorkEffect.c'
   - - 52396
     - c
     - copyCurrentBattlerVisibleStateToTemplate
@@ -512,16 +512,16 @@ segments:
     - '@source: src/bof3/battle/submitPositionalEffectBit80.c'
   - - 52976
     - c
-    - copyCurrentBattlerToQueuedSlot
-    - '@source: src/bof3/battle/copyCurrentBattlerToQueuedSlot.c'
+    - copyCurrentBattlerQueued
+    - '@source: src/bof3/battle/copyCurrentBattlerQueued.c'
   - - 53116
     - c
     - queueActiveBattlerSnapshots
     - '@source: src/bof3/battle/queueActiveBattlerSnapshots.c'
   - - 53428
     - c
-    - shouldTriggerBattlerCountdownRetry
-    - '@source: src/bof3/battle/shouldTriggerBattlerCountdownRetry.c'
+    - shouldTriggerBattlerCountdown
+    - '@source: src/bof3/battle/shouldTriggerBattlerCountdown.c'
     - '@behavior: Decides whether the countdown of the battler selected by arg0 fires on this frame: the countdown byte is local work +0x121 for the first three battlers and enemy work +0xFD otherwise, a zero countdown never fires, a roll of rand() % 100 at or below the rate byte keeps the countdown (the battleCommandEntryTable byte +8 selected by the countdown byte for the countdown values 1 and 2, the fixed 0x4C bound otherwise), and the retry roll compares rand() % 10000 with 10000 minus 50 times the entry byte of battleCommandEntryTable selected by the retry index byte (local work +0xA6 or enemy work +0xB6).'
   - - 53884
     - c
@@ -742,7 +742,7 @@ segments:
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 61472
     - c
-    - copyScratchToLocalWork
+    - copyScratchLocalWork
   - - 61552
     - c
     - dispatchWorkByte3Table
@@ -774,13 +774,13 @@ segments:
     - '@behavior: Starts the scratch work position transform selected by the published local work record 0x80146250: with that record''s halfword +0x80 bit 0x4000 set it only stores 2 into scratch work byte +0x03 and clears the +0x0A countdown byte; otherwise it clears record halfword +0x11C, publishes the scratch work delta pair +0x0C/+0x10 as 0/-0x2000, mode-transforms that pair, reloads the +0x0A countdown byte to 4, runs localReadyOrHelper2 and func_8015D71C(0x205), then advances scratch work byte +0x03.'
   - - 63828
     - c
-    - countdownWorkByteAdvancePair
+    - countdownWorkByteAdvance
     - '@source: src/bof3/battle/countdownWorkByteAdvancePair_battle03.c'
     - '@behavior: Counts down scratch work byte +0x0A, reloading it to 4 and advancing work byte +0x03 when it expires, then advances the work position pair +0x34/+0x38 by the delta pair +0x0C/+0x10 and runs localReadyOrHelper2.'
   - - 63980
     - c
-    - retreatWorkPairOrQueueSlot
-    - '@source: src/bof3/battle/retreatWorkPairOrQueueSlot.c'
+    - retreatWorkPairQueue
+    - '@source: src/bof3/battle/retreatWorkPairQueue.c'
     - '@behavior: Retreats the scratch position pair while byte +0x0A counts down; when zero, calls func_800AAC88 or queues a mode-1 slot and advances scratch byte +0x03.'
   - - 64236
     - c
@@ -789,7 +789,7 @@ segments:
     - '@behavior: Increments scratchpad work byte +3 and calls forwardSelectedPresentationOffset unless local work flags +0x80 contain bit 2.'
   - - 64324
     - c
-    - dispatchSubstate3TableB1f4
+    - callSubstate3Table1
   - - 64392
     - c
     - selectLocalCleanupSubstate
@@ -827,8 +827,8 @@ segments:
     - '@behavior: Scans the localBattlerCount active local work records for flag 0x2000 and returns as soon as one carries it; otherwise sets that flag on the current work record published at 0x80146250, selects queued-slot kind 0xB when work byte +0x79 is 4 and 0xC otherwise, allocates the matching slot-store entry through func_801E590C, publishes the scratch work pointer into that entry and increments scratch byte +0x04.'
   - - 67512
     - c
-    - resetWorkWhenFlag2000Clear
-    - '@source: src/bof3/battle/resetWorkWhenFlag2000Clear.c'
+    - stateWorkFlag2000Clear
+    - '@source: src/bof3/battle/stateWorkFlag2000Clear.c'
     - '@behavior: When the current work record flag 0x2000 is clear, clears the record 0x70 and 0x200 bits, clears the scratch pending bit and resets the scratch work state to 2.'
   - - 67664
     - c
@@ -851,8 +851,8 @@ segments:
     - '@behavior: Dispatches the current local state-2 class byte through its table.'
   - - 68276
     - c
-    - initCastVoiceCountdownWhenTriggered
-    - '@source: src/bof3/battle/initCastVoiceCountdownWhenTriggered.c'
+    - setupCastVoiceCountdown
+    - '@source: src/bof3/battle/setupCastVoiceCountdown.c'
     - '@behavior: Entry 0 of the cast-voice class table at 0x801EB224. Once the EXE-side EMI loader reports ready it arms the cast-voice countdown byte +0x09 of the scratch battle work from the trigger scan of the current actor: while the published local work record byte +0x119 reads 4, a record without flag 0x2 stores 0x1E when the scan submits and 0 when it does not, while a record with flag 0x2 scans only when the actor byte at 0x801463C9 equals that same byte or reads 7 or 8 and stores 0 when the scan submits; every other byte +0x119 value stores 0. It then selects the current kind from the global halfword 0x801463C0: a kind without the 0x800 mask re-arms the countdown from the byte table at 0x801EB23C indexed by the actor byte 0x801463C9 or the table at 0x801EB230 indexed by record byte +0x79, as the record flag 0x2 selects, submits the effect id scratch byte +0x08 + 0x2C through func_8014D8D4 and advances scratch battle work byte +0x02; a kind with that mask instead advances scratch battle work byte +0x01. Both paths finish with the second local readiness helper.'
   - - 68744
     - c
@@ -868,7 +868,7 @@ segments:
     - c
     - dispatchByte2ThenReset
     - '@source: src/bof3/battle/battle03DispatchTables.c'
-    - '@behavior: Dispatches the handler selected by scratchpad slot 0x44 byte 2, then calls resetScratchWhenGlobalBit4.'
+    - '@behavior: Dispatches the handler selected by scratchpad slot 0x44 byte 2, then calls stateScratchGlobalBit4.'
   - - 69084
     - c
     - checkReadyAdvanceByte2
@@ -894,8 +894,8 @@ segments:
     - '@behavior: Calls the preceding battle handler and stores its result.'
   - - 69420
     - c
-    - resetScratchWhenGlobalBit4
-    - '@source: src/bof3/battle/resetScratchWhenGlobalBit4.c'
+    - stateScratchGlobalBit4
+    - '@source: src/bof3/battle/stateScratchGlobalBit4.c'
   - - 69468
     - c
     - stubHandler1B5c
@@ -913,8 +913,8 @@ segments:
     - setWorkBytes20
   - - 69752
     - c
-    - forwardEffectThenDispatchLocalReady
-    - '@source: src/bof3/battle/forwardEffectThenDispatchLocalReady.c'
+    - forwardEffectDispatchLocal
+    - '@source: src/bof3/battle/forwardEffectDispatchLocal.c'
     - '@behavior: Forwards the selected local effect id, then runs the local readiness helper selected by the current local work word +0x124: bit 0x10 takes localReadyOrHelper1, otherwise bit 0x20 takes localReadyOrHelper2.'
   - - 69848
     - c
@@ -941,13 +941,13 @@ segments:
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 70336
     - c
-    - copySelectedWorkToQueuedSlot
-    - '@source: src/bof3/battle/copySelectedWorkToQueuedSlot.c'
+    - copySelectedWorkQueued
+    - '@source: src/bof3/battle/copySelectedWorkQueued.c'
     - '@behavior: Allocates the queued slot-store entry for mode byte 0xF, copies the 0x74-byte head of the D_80145E90 work record selected by battle byte 0x80146374 into it, re-initializes the entry header bytes, publishes the scratch work pointer at +0x74, then raises scratch flag 0x40, arms the scratch 0x10 byte pair and increments the scratch byte +0x02.'
   - - 70692
     - c
-    - submitRolledEffectAndAdvance
-    - '@source: src/bof3/battle/submitRolledEffectAndAdvance.c'
+    - submitRolledEffectAdvance
+    - '@source: src/bof3/battle/submitRolledEffectAdvance.c'
     - '@behavior: Middle handler of the 0x801EB27C default-class dispatch: counts down the scratch work byte +0x09, and once it expires asks gate func_800A8F58 and, while that gate stays clear, rolls rand() % 100 against the unsigned chance byte +0xAA of the D_80146250 record, raising bit 0x80 of 0x801462E8 (the flag func_801DC73C reads to skip its damage roll) and submitting effect variant 3 on a roll below the chance and variant 2 otherwise; a set gate low byte submits variant 3 without rolling. Both paths then submit effect variant 4 and increment scratch work byte +0x02.'
   - - 70944
     - c
@@ -1038,12 +1038,12 @@ segments:
     - '@behavior: Publishes D_801EB288 as the current enemy work script pointer at +0xEC, registers requestFrontSelectorState1Substate19 and enterFrontendMode4 as the battle hooks at 0x801463A4/0x801463A8, runs the enemy script byte helper func_801E2314 for class argument 0, raises bit 0x40 of scratch work byte +0x00, submits the positional 0x80 effect for the work flags halfword +0x82, then increments scratch work byte +0x01.'
   - - 75436
     - c
-    - dispatchByte2TableB3e4
+    - callByte2Table3
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 75504
     - c
-    - dispatchByte3TableB3ec
-    - '@source: src/bof3/battle/dispatchByte3TableB3ec.c'
+    - callByte3Table3
+    - '@source: src/bof3/battle/callByte3Table3.c'
   - - 75572
     - c
     - initScratchWorkState
@@ -1363,7 +1363,7 @@ segments:
     - c
     - func_801E62BC
     - '@source: src/bof3/battle/func_801E62BC.c'
-    - '@behavior: Rolls the current queued slot digit counter halfword +0x32 forward by one modulo 10, then redraws its digit run: for the slot digit index byte +0x0A counted down to 0 it forwards the recomputed halfword +0x36, the signed halfword +0x3A, the caller delay byte and the rolled digit to drawDecimalGlyphRun8x8.'
+    - '@behavior: Rolls the current queued slot digit counter halfword +0x32 forward by one modulo 10, then redraws its digit run: for the slot digit index byte +0x0A counted down to 0 it forwards the recomputed halfword +0x36, the signed halfword +0x3A, the caller delay byte and the rolled digit to renderDecimalGlyphRun8.'
   - - 88000
     - c
     - dispatchSlotByte1TableF20
@@ -1601,7 +1601,7 @@ segments:
     - c
     - func_801E9538
     - '@source: src/bof3/battle/func_801E9538.c'
-    - '@behavior: Draws one battle panel message row: takes byte +0x0A of the state object published at 0x80148648 as the index of the 12-byte message slot entries bound at 0x801EB4F4 (the message view of the battleDispatchSlots entries, with the message stream pointer at +0x00 and the panel byte at +0x06), counts the tokens of that slot message through countMessageTokens, forwards the state object halfwords +0x04 (minus 0x10) and +0x06 to drawBattlePanelMessageStrip, then draws through func_8014F800 the state halfword +0x04 lowered by four per token and raised by 0x26, the state halfword +0x06 raised by 3, the slot panel byte, style 0x12 and the same slot message pointer.'
+    - '@behavior: Draws one battle panel message row: takes byte +0x0A of the state object published at 0x80148648 as the index of the 12-byte message slot entries bound at 0x801EB4F4 (the message view of the battleDispatchSlots entries, with the message stream pointer at +0x00 and the panel byte at +0x06), counts the tokens of that slot message through countMessageTokens, forwards the state object halfwords +0x04 (minus 0x10) and +0x06 to renderBattlePanelMessage, then draws through func_8014F800 the state halfword +0x04 lowered by four per token and raised by 0x26, the state halfword +0x06 raised by 3, the slot panel byte, style 0x12 and the same slot message pointer.'
   - - 100876
     - c
     - func_801E960C
@@ -1621,7 +1621,7 @@ segments:
     - c
     - func_801E99AC
     - '@source: src/bof3/battle/func_801E99AC.c'
-    - '@behavior: Selects the 0x118-byte record D_801EB630[panel byte +0x0A - 3] and stores panel halfword +0x04 as that record signed halfword +0x2E plus its signed byte +0xDA, adding the module byte 0x801EAEA4 while the record byte +0x08 is 0 or 3 and 0x801EAEA6 otherwise; then stores panel halfword +0x06 as the record unsigned halfword +0x30 plus its signed byte +0xDB plus 0xC and forwards panel halfwords +0x04/+0x06 with panel byte +0x0A to drawShadowedBattlerStatusPanel.'
+    - '@behavior: Selects the 0x118-byte record D_801EB630[panel byte +0x0A - 3] and stores panel halfword +0x04 as that record signed halfword +0x2E plus its signed byte +0xDA, adding the module byte 0x801EAEA4 while the record byte +0x08 is 0 or 3 and 0x801EAEA6 otherwise; then stores panel halfword +0x06 as the record unsigned halfword +0x30 plus its signed byte +0xDB plus 0xC and forwards panel halfwords +0x04/+0x06 with panel byte +0x0A to renderShadowedBattlerStatus.'
   - - 102168
     - c
     - func_801E9B18
@@ -1639,7 +1639,7 @@ segments:
     - c
     - func_801E9FDC
     - '@source: src/bof3/battle/func_801E9FDC.c'
-    - '@behavior: Recomposes the active panel halfwords +0x04/+0x06 from the D_80145E90 local work record selected by panel byte +0x0A: halfword +0x04 is the record signed halfword +0x2E plus the signed byte at D_801EB0B0 indexed by (record byte +0x08) * 2 + (record byte +0x79) * 8, plus D_801EAEA4 while that record byte +0x08 is 0 or 3 and D_801EAEA6 otherwise; halfword +0x06 is the record unsigned halfword +0x30 plus that same index byte at D_801EB0B1 sign-extended plus 0xC. While the selection gate byte 0x801462EF is set, a queued slot byte D_801EB4D8 with no 0xC0 bits that equals panel byte +0x0A, or that has bit 0x80 set, forwards panel halfwords +0x04/+0x06 and panel byte +0x0A to drawShadowedBattlerHpStatusPanel and returns; otherwise panel byte +0x0F is cleared and panel byte +0x03 is decremented.'
+    - '@behavior: Recomposes the active panel halfwords +0x04/+0x06 from the D_80145E90 local work record selected by panel byte +0x0A: halfword +0x04 is the record signed halfword +0x2E plus the signed byte at D_801EB0B0 indexed by (record byte +0x08) * 2 + (record byte +0x79) * 8, plus D_801EAEA4 while that record byte +0x08 is 0 or 3 and D_801EAEA6 otherwise; halfword +0x06 is the record unsigned halfword +0x30 plus that same index byte at D_801EB0B1 sign-extended plus 0xC. While the selection gate byte 0x801462EF is set, a queued slot byte D_801EB4D8 with no 0xC0 bits that equals panel byte +0x0A, or that has bit 0x80 set, forwards panel halfwords +0x04/+0x06 and panel byte +0x0A to renderShadowedBattlerHp and returns; otherwise panel byte +0x0F is cleared and panel byte +0x03 is decremented.'
   - - 103796
     - c
     - activatePanelTask

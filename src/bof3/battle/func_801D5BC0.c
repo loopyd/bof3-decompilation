@@ -14,7 +14,7 @@ u8 func_801D5BC0(void) {
   count = 0u;
   index = 0u;
   do {
-    if (isBattlerBlockedOrUnavailable(index) == 0u) {
+    if (checkBattlerBlockedUnavailable(index) == 0u) {
       if ((D_80145E90[index].unk_80 & 0x80u) != 0u) {
         D_80145E90[index].unk_11e = 0u;
         D_80145E90[index].unk_11c = 0u;
@@ -35,7 +35,7 @@ u8 func_801D5BC0(void) {
   do {
     u32 slot;
 
-    if (isBattlerBlockedOrUnavailable(index) == 0u) {
+    if (checkBattlerBlockedUnavailable(index) == 0u) {
       slot = index - 3u;
       if ((D_801EB630[slot].unk_82 & 0x80u) != 0u) {
         D_801EB630[slot].unk_fa = 0u;

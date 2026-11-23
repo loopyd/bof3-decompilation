@@ -23,7 +23,7 @@
  * is spilled to its own frame slot and reloaded for the 0x801EAEEA read and the
  * 0x801EAEB0 label address, and each table keeps its own symbol-relative base.
  * The seed copied the statement order, operand forms and cast spelling of the
- * exact twins drawBattlePanelStrip, drawBattlePanelMessageStrip and
+ * exact twins drawBattlePanelStrip, renderBattlePanelMessage and
  * func_801D8090 and added the trailing func_8014F800 label call.
  */
 void drawBattleCommandStrip(u32 arg0) {

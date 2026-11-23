@@ -259,14 +259,14 @@ typedef struct Battle03QueuedSlot {
 } Battle03QueuedSlot;
 
 /* The 0x74-byte record image copied from a D_80145E90 work record into a
- * D_801EC330 slot-store entry by copySelectedWorkToQueuedSlot; the original
+ * D_801EC330 slot-store entry by copySelectedWorkQueued; the original
  * moves it as one block. */
 typedef struct Battle03SlotBody {
   u32 words_00[29];
 } Battle03SlotBody;
 
 typedef struct Battle03SlotStore {
-  /* unk_01..unk_06 and unk_0b are initialized by copySelectedWorkToQueuedSlot
+  /* unk_01..unk_06 and unk_0b are initialized by copySelectedWorkQueued
    * after the 0x74-byte body copy. */
   u8  unk_00;
   u8  unk_01;
@@ -461,7 +461,7 @@ extern u8*          g_PrimCursor; /* @source 0x8014598C @kind bss */
 extern u8           D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
 extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind rodata */
 extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
-extern const char   minimumWidthThreeDecimalFormatStrings[]; /* @source 0x801D0C78 @kind rodata */
+extern const char   minimumWidthThreeDecimal[]; /* @source 0x801D0C78 @kind rodata */
 extern Battle03FiveDispatchTable D_801D0C84; /* @source 0x801D0C84 @kind table */
 extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */
 extern const u8     D_801EAF88[][6]; /* @source 0x801EAF88 */
@@ -525,7 +525,7 @@ extern Battle03FiveDispatchTable    D_801D0F58; /* @source 0x801D0F58 @kind unkn
 extern Battle03FiveDispatchTable    D_801D0F6C; /* @source 0x801D0F6C @kind table */
 extern Battle03DispatchTable        D_801D0F20; /* @source 0x801D0F20 @kind unknown */
 
-Battle03LocalWork *findLocalWorkByKind(u8 arg0);
+Battle03LocalWork *queryLocalWorkKind(u8 arg0);
 
 s16 scalePercentClamp999(s32 arg0, s32 arg1);
 extern Battle03DispatchTable        D_801D0F2C; /* @source 0x801D0F2C @kind unknown */
@@ -729,7 +729,7 @@ u8   selectionSetupEnabled(void);
 u8   selectionSetupEnabledB(void);
 /* Owned by the SLUS address space (asm span func_800A8F58 in
  * emi/battle/battle/15); only its low return byte is consumed, by the
- * default-class countdown handler submitRolledEffectAndAdvance and by the
+ * default-class countdown handler submitRolledEffectAdvance and by the
  * local byte-2 handler callLocalReady2ThenSubmitRolledEffectAndAdvance. */
 u8   func_800A8F58(void);
 /* Owned by the SLUS address space (boundary func_800A9820 in emi/battle/battle/15);
@@ -754,8 +754,8 @@ void func_80164A44(u32 arg0);
 s32  func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_80196718(void* arg0);
 void drawBattlePanelStrip(s32 arg0, s32 arg1);
-u8   isBattlerBlockedOrUnavailable(u32 arg0);
-u8   shouldTriggerBattlerCountdownRetry(u32 arg0);
+u8   checkBattlerBlockedUnavailable(u32 arg0);
+u8   shouldTriggerBattlerCountdown(u32 arg0);
 void func_801644D8(u32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u32 arg5);
 extern Battle03Handler D_801EB120[]; /* @source 0x801EB120 @kind unknown */
 
@@ -772,8 +772,8 @@ u32  func_801502D0(u32 arg0);
 void func_801501E4(void* arg0, u32 arg1, u32 arg2);
 void func_80150098(s16 arg0, s16 arg1, u32 arg2, void* arg3);
 u32  func_801E590C(u32 arg0, u32 arg1);
-void copySelectedWorkToQueuedSlot(void);
-void submitRolledEffectAndAdvance(void);
+void copySelectedWorkQueued(void);
+void submitRolledEffectAdvance(void);
 u8   func_801E2E30(void);
 s16  func_8015477C(s32 arg0, s32 arg1);
 
@@ -790,7 +790,7 @@ void resetReadyAdvanceByte1(void);
 void callNextLocalHandler(void);
 void func_801DF914(void);
 void callLocalReady2ThenSubmitRolledEffectAndAdvance(void);
-void copyScratchToLocalWork(void);
+void copyScratchLocalWork(void);
 void waitReadyAdvanceSubstate3(void);
 extern Battle03Handler D_801EB1E0[]; /* @source 0x801EB1E0 @kind unknown */
 
@@ -823,16 +823,16 @@ u8   advanceLocalFlag20Countdown(void);
 u8   func_801D5A60(void);
 u8   func_801D5BC0(void);
 u8   func_801D5DCC(void);
-void advanceBattlerCountdownsAndReleaseSuppression(void);
+void stateBattlerCountdownsRelease(void);
 void drawBattlerStatusColumns(s32 arg0, s32 arg1);
 void drawBattlerCountdownEntries(s16 arg0, s16 arg1);
 void drawBattlerCountdownTile(u8 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4, u8 arg5);
-void drawBattlePanelMessageStrip(s32 arg0, s32 arg1);
+void renderBattlePanelMessage(s32 arg0, s32 arg1);
 void drawBattleCommandStrip(u32 arg0);
-void drawShadowedBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2);
+void renderShadowedBattlerStatus(s32 arg0, s32 arg1, s32 arg2);
 void drawBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2);
-void drawShadowedBattlerHpStatusPanel(s32 arg0, s32 arg1, u32 arg2);
-u8   markBattlersMeetingOpposingThresholds(void);
+void renderShadowedBattlerHp(s32 arg0, s32 arg1, u32 arg2);
+u8   markBattlersMeetingOpposing(void);
 /* arg1 and arg3 are the coordinates/data the run consumes: both call sites in
  * the original sign-extend arg1 (`sll`/`sra` pair) and pass arg3 either as a
  * bare `lhu` or as the unsigned 0xFFFF constant (`ori`), so arg1 is signed and
@@ -843,7 +843,7 @@ void drawDecimalGlyphRun(s16 arg0, s16 arg1, u8 arg2, u16 arg3);
  * func_801E62BC) sign-extend it in the original binary (`lh`) and the callee
  * stores only its low half, so the declaration stays signed to reproduce that
  * caller-side extension. */
-void drawDecimalGlyphRun8x8(s32 arg0, s32 arg1, s32 arg2, u16 arg3);
+void renderDecimalGlyphRun8(s32 arg0, s32 arg1, s32 arg2, u16 arg3);
 extern s8  D_80144952; /* @source 0x80144952 @kind unknown */
 extern u16 D_80033A08[]; /* @source 0x80033A08 @kind table */
 extern u16 D_801EAD30[]; /* @source 0x801EAD30 @kind table */
@@ -880,7 +880,7 @@ extern s8  D_801EAEA4; /* @source 0x801EAEA4 @kind unknown */
 extern s8  D_801EAEA6; /* @source 0x801EAEA6 @kind unknown */
 extern u8  D_801EAF27[]; /* @source 0x801EAF27 @kind unknown */
 /* @source 0x801EAF2C @kind unknown — 4-byte texture-window rows {u, v, du, dv}
- * that drawSpritePrimFt4Clut selects with the low byte of its arg2; the row is
+ * that renderSpritePrimFt4 selects with the low byte of its arg2; the row is
  * reached once per field at the byte displacements +0x2c..+0x2f of the same
  * base, and the four rows of this overlay's table hold the signed texel offsets
  * {0x34, 0xf4, 4, 4}, {0x37, 0xf4, 0xfc, 4}, {0x34, 0xf7, 4, 0xfc} and
@@ -897,9 +897,9 @@ extern const s8 D_801EAF48[];
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9C80(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void drawColorTilePrim(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
-void drawBattlerStatusGaugeBar(s16 arg0, s16 arg1, u16 arg2, u16 arg3,
+void renderBattlerStatusGauge(s16 arg0, s16 arg1, u16 arg2, u16 arg3,
                                u8 arg4);
-void emitBattlerStatusAccentSprite(u16 arg0, u16 arg1, u8 arg2);
+void emitBattlerStatusAccent(u16 arg0, u16 arg1, u8 arg2);
 void drawFlatLinePrim(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
 u8   func_801DA69C(u32 arg0);
@@ -918,18 +918,18 @@ u32  func_801DCCB0(void);
 u32  func_801DCD50(u32 arg0, u8 arg1, s32 arg2);
 s32  resolveBattlerDamageAmount(u8 attacker, u8 target, u16 kind_mask);
 u32  func_801DCAD8(u8 arg0, u8 arg1, s8 arg2);
-u32  resolveEnemyTargetDamageThroughGates(s16 arg0, u8 arg1, u8 arg2);
-s16  applyResolvedDamageToTarget(u8 attacker, u8 target);
+u32  resolveEnemyTargetDamage(s16 arg0, u8 arg1, u8 arg2);
+s16  stateResolvedDamageTarget(u8 attacker, u8 target);
 void copyLocalTemplates(void);
 void clearBattlerActionFlags(u8 arg0);
 void func_801DD29C(void);
-void transformFirstPointPairByMode(s32 arg0);
+void transformFirstPointPair(s32 arg0);
 void func_801DD3CC(s32 arg0);
 u8   checkLocalQueuedBranch(void);
-void submitCurrentWorkEffectVariant(u32 arg0);
+void submitCurrentWorkEffect(u32 arg0);
 void copyCurrentBattlerVisibleStateToTemplate(u32 arg0);
 void submitPositionalEffectBit80(u32 arg0);
-void copyCurrentBattlerToQueuedSlot(void);
+void copyCurrentBattlerQueued(void);
 void func_801DD800(void);
 u8   advanceCounterStorePacked(u32 arg0, u32 arg1);
 void initModeTuple530(void);
@@ -949,7 +949,7 @@ void queueActiveBattlerSnapshots(void);
 u8   func_801E0E0C(void);
 void selectLocalCleanupSubstate(void);
 void rebuildLocalWorkBandsFromFieldRecords(void);
-void resetScratchWhenGlobalBit4(void);
+void stateScratchGlobalBit4(void);
 void func_801E1DD4(void);
 u8   enemyReadyOrHelper2(void);
 u8   checkEnemyQueuedPredicate(void);
@@ -984,8 +984,8 @@ void drawSpritePrimTpage0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 ar
                    u8 arg6);
 void drawSpritePrimTpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
-void drawSpritePrim8x8Clut(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u8 arg4);
-void drawSpritePrimFt4Clut(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+void renderSpritePrim8X8(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u8 arg4);
+void renderSpritePrimFt4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 u8   pickRandomUnblockedId(u8 arg0);
 u8   func_801E2A88(u8 arg0);
 u8   func_801E2CA4(void);
@@ -1328,7 +1328,7 @@ u8   countMessageTokens(u8* arg0);
 
 /* @source 0x801EAFF4 @kind unknown — 12-byte command parameter rows; byte +0
  * is the retry rate index and byte +8 the trigger rate read by
- * shouldTriggerBattlerCountdownRetry. */
+ * shouldTriggerBattlerCountdown. */
 extern u8 battleCommandEntryTable[];
 
 /* @source 0x801EB4E8 @kind unknown */

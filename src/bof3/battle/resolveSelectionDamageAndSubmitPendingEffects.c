@@ -43,7 +43,7 @@ typedef struct Battle03SelectionBlock {
  * halfword +0x80 carries bit 0x800, and advances the 0x801EC303 byte by 0x19 up
  * to 0x64 while record word +0x124 carries bit 1. It then selects the action
  * through the battle mode byte 0x80146375: mode 1 resolves the damage through
- * applyResolvedDamageToTarget for actor byte 0x80146374 and stores it in the
+ * stateResolvedDamageTarget for actor byte 0x80146374 and stores it in the
  * selection halfword +0x04, modes 4 and 5 call func_8009D198. A record byte
  * +0x120 bit 1 with a zero +0x11C returns early after storing 3 into scratch
  * work byte +0x02. While record word +0x124 has no 0x200 bit the pass forwards
@@ -110,7 +110,7 @@ void resolveSelectionDamageAndSubmitPendingEffects(void) {
   switch (*(u8*)&BATTLE_GLOBAL_BYTE_6375) {
   case 1u:
     D_801463A0[2] =
-        applyResolvedDamageToTarget(BATTLE_GLOBAL_BYTE_6374, D_80146394);
+        stateResolvedDamageTarget(BATTLE_GLOBAL_BYTE_6374, D_80146394);
     break;
   case 4u:
   case 5u:
@@ -166,11 +166,11 @@ void resolveSelectionDamageAndSubmitPendingEffects(void) {
       }
       record = D_80146250;
       if ((record->unk_128 & 2u) == 0u) {
-        submitCurrentWorkEffectVariant(1u);
+        submitCurrentWorkEffect(1u);
       }
       func_80196718(D_1F800044);
     } else {
-      submitCurrentWorkEffectVariant(0u);
+      submitCurrentWorkEffect(0u);
     }
   }
   record = D_80146250;

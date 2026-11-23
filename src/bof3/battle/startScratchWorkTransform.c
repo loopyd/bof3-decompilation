@@ -26,7 +26,7 @@ void startScratchWorkTransform(void) {
     record->unk_11c = 0;
     work->unk_0c = 0;
     work->unk_10 = delta;
-    transformFirstPointPairByMode((s32)work);
+    transformFirstPointPair((s32)work);
     D_1F800044->pad_0a[0] = 4;
     localReadyOrHelper2();
     func_8015D71C(0x205);

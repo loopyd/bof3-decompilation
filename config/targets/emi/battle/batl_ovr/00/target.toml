@@ -11,8 +11,8 @@ sources = []
 support_sources = [
     "src/bof3/battle/initBattleScenePrimsAndAdvanceSubstate.c",
     "src/bof3/battle/emitTintedPanelSprite.c",
-    "src/bof3/battle/drawSlidingPanelWithGradientEdge.c",
-    "src/bof3/battle/dispatchSubstateTableF5f8.c",
+    "src/bof3/battle/renderSlidingPanelGradient.c",
+    "src/bof3/battle/callSubstateTable5.c",
     "src/bof3/support/batl_ovr_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/batl_ovr_00_psyq.c"

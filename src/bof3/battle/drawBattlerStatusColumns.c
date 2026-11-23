@@ -23,13 +23,13 @@ extern u8 D_8014833E[];
  * through func_801D9C80 at (arg0, arg1 + 2), whose tile rows follow the
  * localBattlerCount byte 0x801462F0. It then draws one framed column per local
  * battler at x = arg0 + index * 0x5E: the row-9 colour tile and the textured
- * gauge through drawBattlerStatusGaugeBar at (x + 0x14, arg1 + 0xE) with the
+ * gauge through renderBattlerStatusGauge at (x + 0x14, arg1 + 0xE) with the
  * byte +0x1B and +0x1D widths of UI owner record 0x80148320 entry index + 0x0D,
  * up to two sprites for that entry's +0x1C offset while the battler record
  * halfword +0x0E (0x80145F22) is non-zero and the entry's +0x1E byte is
  * non-zero, the record text through func_8014FC90 at (x + 6, arg1 + 5) with
  * the record halfword +0x0C (0x80145F10) selecting style 2, two
- * emitBattlerStatusAccentSprite accents at (x + 0x3A, arg1 + 6) and (x + 4,
+ * emitBattlerStatusAccent accents at (x + 0x3A, arg1 + 6) and (x + 4,
  * arg1 + 0xE), and the record halfwords +0x14 (0x80145F18) and +0x16
  * (0x80145F1A) as digit runs through drawDecimalGlyphRun at (x + 0x48,
  * arg1 + 0x0F) and (x + 0x48, arg1 + 8), the second styled 2 when its
@@ -77,7 +77,7 @@ void drawBattlerStatusColumns(s32 arg0, s32 arg1) {
   if (localBattlerCount != 0) {
     do {
       drawColorTilePrim((s16)(arg0 + index * 0x5e + 0x14), (s16)y, 9, 0, 0);
-      drawBattlerStatusGaugeBar((s16)(arg0 + index * 0x5e + 0x14), (s16)y,
+      renderBattlerStatusGauge((s16)(arg0 + index * 0x5e + 0x14), (s16)y,
                     D_8014833B[((u8)index + 0x0d) * 0x24],
                     D_8014833D[((u8)index + 0x0d) * 0x24], 0);
       if (*(u16*)&D_80145F22[(u8)index * 0x140] != 0) {
@@ -101,9 +101,9 @@ void drawBattlerStatusColumns(s32 arg0, s32 arg1) {
       func_8014FC90((s16)(arg0 + index * 0x5e + 6), (s16)(arg1 + 5),
                     (flags & 0x4000) ? 2 : ((flags & 0xbfc) != 0), 5,
                     &D_80145F04[(u8)index * 0x140]);
-      emitBattlerStatusAccentSprite((u16)(arg0 + index * 0x5e + 0x3a),
+      emitBattlerStatusAccent((u16)(arg0 + index * 0x5e + 0x3a),
                                     (u16)(arg1 + 6), 1);
-      emitBattlerStatusAccentSprite((u16)(arg0 + index * 0x5e + 4), (u16)y, 0);
+      emitBattlerStatusAccent((u16)(arg0 + index * 0x5e + 4), (u16)y, 0);
       flags = *(volatile u16*)&D_80145F10[(u8)index * 0x140];
       drawDecimalGlyphRun((s16)(arg0 + index * 0x5e + 0x48), (s16)(arg1 + 0x0f),
                           (flags & 0x4000) ? 2 : ((flags >> 11) & 4),

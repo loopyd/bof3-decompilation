@@ -29,7 +29,7 @@ void applyModeOffsetPairToWork(void)
     pair_work->unk_10 = 0;
     pair_work->unk_18 = mirror_x;
     pair_work->unk_1c = mirror_y;
-    transformFirstPointPairByMode((s32)pair_work);
+    transformFirstPointPair((s32)pair_work);
 
     offset_work = D_1F800044;
     pair_offset = offset_work->unk_34;
@@ -43,7 +43,7 @@ void applyModeOffsetPairToWork(void)
     ((volatile Battle03LocalWork *)offset_work)->unk_34 = pair_offset;
     pair_offset -= pair_y;
     offset_work->unk_34 = pair_offset;
-    transformFirstPointPairByMode((s32)offset_work);
+    transformFirstPointPair((s32)offset_work);
 
     counter_work = D_1F800044;
     counter_work->unk_02++;

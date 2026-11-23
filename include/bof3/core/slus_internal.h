@@ -146,7 +146,7 @@ void buildEmiEntryLbas(u32 base_lba, const EmiTocEntry* entries,
 u32  emiSlotToLba(const u32* slot_lba_table, size_t slot_count, u32 slot_id);
 
 /* @source 0x8014ED6C @kind unknown */
-void frontLocalModeCallbackLoop(void);
+void frontLocalModeCallback(void);
 
 #define GAME_CALLBACK_FORCE_SWITCH ((s32)0xff000000u)
 

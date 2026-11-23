@@ -25,10 +25,10 @@ void advanceWorkCountdownAndSubmitPendingEffects(void) {
   if (record->unk_88 <= (s16)record->unk_11c) {
     record->unk_80 = 0x4000;
     record->unk_88 = 0;
-    submitCurrentWorkEffectVariant(1u);
+    submitCurrentWorkEffect(1u);
   } else {
     if ((s16)record->unk_11c >= 0) {
-      submitCurrentWorkEffectVariant(0u);
+      submitCurrentWorkEffect(0u);
     } else {
       func_8015D71C(0x206u);
     }

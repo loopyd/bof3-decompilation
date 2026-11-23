@@ -17,7 +17,7 @@ u8 resolveLocalFlag800Countdown(void) {
   last_index = 0u;
   index = 0u;
   do {
-    if ((isBattlerBlockedOrUnavailable(index) == 0u) &&
+    if ((checkBattlerBlockedUnavailable(index) == 0u) &&
         ((D_80145E90[index].unk_80 & 0x0800u) != 0u) &&
         (D_80145E90[index].unk_137 == 5u)) {
       last_index = index;

@@ -16,5 +16,5 @@ void __attribute__((noinline)) setFrontLocalMode(u16 local_mode) {
   }
 
   gameFront[0x3c90 / sizeof(u16)] = local_mode & 0xffu;
-  installCallbackSlot(2, frontLocalModeCallbackLoop);
+  installCallbackSlot(2, frontLocalModeCallback);
 }

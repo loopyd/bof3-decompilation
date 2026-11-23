@@ -18,7 +18,7 @@ extern u8 D_801C90EB[]; /* @source 0x801C90EB @kind data */
  * body applies. */
 extern u16 D_801463DA; /* @source 0x801463DA @kind data */
 
-extern u32 resolveEnemyTargetDamageThroughGates(s16 damage, u8 attacker,
+extern u32 resolveEnemyTargetDamage(s16 damage, u8 attacker,
                                                 u8 target);
 
 /* @source 0x801DC044
@@ -40,7 +40,7 @@ extern u32 resolveEnemyTargetDamageThroughGates(s16 damage, u8 attacker,
  *   through func_800A36F0 and zeroes the target's +0x121/+0xFD byte, and bit
  *   0x04 as well as both of those arms raise a zero amount to one; with none of
  *   bits 0x64 set the amount instead passes through func_801DC73C for a party
- *   target or resolveEnemyTargetDamageThroughGates for an enemy target. A
+ *   target or resolveEnemyTargetDamage for an enemy target. A
  *   target guard byte carrying bit 0x02 rolls the frame band by rand() % 8 and
  *   keeps rand()'s percentage of the amount. While 0x801462E8 carries bit 0x80
  *   the amount grows to twice itself plus a quarter of the second
@@ -162,7 +162,7 @@ s32 resolveBattlerDamageAmount(u8 attacker, u8 target, u16 kind_mask) {
     if (target < 3u) {
       damage = func_801DC73C(damage, attacker, target);
     } else {
-      damage = resolveEnemyTargetDamageThroughGates(damage, attacker, target);
+      damage = resolveEnemyTargetDamage(damage, attacker, target);
     }
   }
 

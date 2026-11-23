@@ -43,7 +43,7 @@ typedef struct Battle03EnemySubjectBlock {
  * +0x06/+0x08 and the damage gates 0x801463D8/0x801463DA, then copies the
  * record block +0xA0 to 0x801EC2E8. It selects the action through
  * the battle mode byte 0x80146375: mode 1 resolves the damage through
- * applyResolvedDamageToTarget for actor byte 0x80146374 and target byte
+ * stateResolvedDamageTarget for actor byte 0x80146374 and target byte
  * 0x80146384 and stores the halfword in the subject +0x04, while modes 4 and 5
  * call func_8009D198. While the 0x801462EA byte is set it runs the current
  * enemy work handler +0xE4 with argument 1. A record byte +0xFC bit 1 with a
@@ -97,7 +97,7 @@ void resolveEnemySelectionDamageAndSubmitPendingEffects(void) {
   switch (D_80146375) {
   case 1u:
     D_801463A0[2] =
-        applyResolvedDamageToTarget(BATTLE_GLOBAL_BYTE_6374, D_80146384);
+        stateResolvedDamageTarget(BATTLE_GLOBAL_BYTE_6374, D_80146384);
     break;
   case 4u:
   case 5u:

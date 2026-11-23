@@ -12,10 +12,10 @@
  */
 void submitCastVoiceEvent(void) {
   if (D_1F800044->unk_09 == 0) {
-    submitCurrentWorkEffectVariant(5);
+    submitCurrentWorkEffect(5);
     if ((D_80146250->unk_128 & 0x2u) != 0u && BATTLE_GLOBAL_BYTE_63C9 != 4u &&
         (BATTLE_GLOBAL_BYTE_63C9 < 7u || BATTLE_GLOBAL_BYTE_63C9 > 8u)) {
-      submitCurrentWorkEffectVariant(3);
+      submitCurrentWorkEffect(3);
     }
     D_1F800044->unk_02++;
   } else {

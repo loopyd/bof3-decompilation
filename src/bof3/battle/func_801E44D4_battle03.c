@@ -16,7 +16,7 @@ void func_801E44D4(void) {
   work = D_1F800044;
   work->unk_0c = -0x2000;
   work->unk_10 = 0;
-  transformFirstPointPairByMode((s32)work);
+  transformFirstPointPair((s32)work);
   D_1F800044->pad_0a[0] = 4;
   enemyReadyOrHelper1();
   func_8015DF18(0x205);

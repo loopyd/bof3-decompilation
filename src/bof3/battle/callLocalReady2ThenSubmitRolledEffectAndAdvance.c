@@ -44,7 +44,7 @@ void callLocalReady2ThenSubmitRolledEffectAndAdvance(void) {
       kind = 2u;
     }
   }
-  submitCurrentWorkEffectVariant(kind);
-  submitCurrentWorkEffectVariant(4u);
+  submitCurrentWorkEffect(kind);
+  submitCurrentWorkEffect(4u);
   D_1F800044->unk_02++;
 }

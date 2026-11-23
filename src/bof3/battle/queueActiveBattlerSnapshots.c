@@ -17,7 +17,7 @@ void queueActiveBattlerSnapshots(void) {
 
       BATTLE_LOCAL_SCRATCH_PTR = battle_work;
       BATTLE_LOCAL_WORK_PTR = battle_work;
-      copyCurrentBattlerToQueuedSlot();
+      copyCurrentBattlerQueued();
     } else {
       func_801E590C(0u, 0u);
     }
@@ -31,7 +31,7 @@ void queueActiveBattlerSnapshots(void) {
 
       BATTLE_ENEMY_SCRATCH_PTR = battle_work;
       BATTLE_CURRENT_ENEMY_PTR = battle_work;
-      copyCurrentBattlerToQueuedSlot();
+      copyCurrentBattlerQueued();
     } else {
       func_801E590C(0u, 0u);
     }
