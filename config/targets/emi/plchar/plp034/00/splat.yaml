@@ -116,16 +116,16 @@ segments:
     - '@source: src/bof3/plchar/callWorkTable0334Plchar.c'
   - - 6268
     - c
-    - queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp03400_801CFC7C
-    - '@source: src/bof3/plchar/queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp03400_801CFC7C.c'
+    - queueCueSelectSequence
+    - '@source: src/bof3/plchar/queueCueSelectSequence.c'
     - '@behavior: Overlay step dispatched on work-record byte 3, reached from callWorkTable0334Plchar as entry 0 of the handler run based at 0x801D02F4. It reads the work record published at the scratchpad pointer cell 0x1F800044 and in order queues the cue taken from that record unsigned halfword 0x2C plus 0x100 through func_8015DF18, selects the shared work sequence ((record byte 8 - 1) / 2 + 0x42) truncated to a byte through func_8014D8D4, arms the countdown byte 0x0A with 8 and sets the dispatch byte 3 to 1.'
   - - 6388
     - asm
     - func_801CFCF4
   - - 6676
     - c
-    - clearStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp03400_801CFE14
-    - '@source: src/bof3/plchar/clearStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp03400_801CFE14.c'
+    - clearUnseededRow
+    - '@source: src/bof3/plchar/clearUnseededRow.c'
     - '@behavior: Overlay step reached from outside this payload at the pointer word 0x801D033C of the twenty-eight-word code-pointer run based at 0x801D02F4, index 2 of the run based at 0x801D0334 that callWorkTable0334Plchar indexes from work byte 3. It reads work byte 0x0B of the record published at the scratchpad pointer cell 0x1F800044 as the index of the shared 0x74-byte front-end record table at 0x80143FC8 and, when the selected row reads free at row byte 0 or already at row byte 1 value 1 and the shared gate byte 0x80149332 reads zero, clears the state byte 0x12B of the record published at 0x80146250, and both paths then run the shared no-argument update helper func_8014D978.'
   - - 6828
     - c
@@ -148,7 +148,7 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload through the code-pointer word 0x801D0344 at index 1 of the nine-word handler run based at 0x801D0340 that callWorkTable0340Plchar indexes with work byte 2 scaled by four, so no jal in this payload names it. Byte 0x08 is the current route index of the eight-entry route window, byte 0x03 the chosen candidate index, byte 0x09 the countdown, byte 0x02 the step counter and byte 0x0B the step sign of that route walk. When the current route index already equals the chosen index the walk has arrived, so the body selects the route arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 3 and sequence 0x41 for route 5 and none for any other route, which is why the lookup is a two-case route switch, and then increments the step counter byte 0x02 so the next dispatch of the run based at 0x801D0340 reaches its entry 2. Otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks that index into the eight-entry window with 7 and selects the sequence of the new route index through the same selector. It takes no arguments, returns nothing and answers no value. The 0x18-byte frame only keeps the return address at 0x10 across the calls, the increment of byte 0x02 issues in the delay slot of the jump to the epilogue, the countdown store reuses the pointer load of the first comparison, and the constant 2 is materialised in the delay slot of the branch that skips the expiry path. The first pointer load precedes frame creation.'
   - - 7772
     - c
-    - getAndClearPlcharPlp03400_801D025C
+    - queryClearRow
   - - 7788
     - c
     - callWorkTable034Plchar
@@ -159,5 +159,5 @@ segments:
     - dispatchWorkHalfword2cTable0358PlcharPlp03400_801D02B0
   - - 7924
     - textbin
-    - T_801D02F4
+    - codePointerTable02f4
 - - 8036

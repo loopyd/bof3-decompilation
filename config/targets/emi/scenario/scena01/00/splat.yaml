@@ -36,7 +36,7 @@ segments:
     - func_801F729C
   - - 1976
     - c
-    - dispatchWorkByte1HandlerScenarioScena0100_801F73B8
+    - callWorkStateRun
   - - 2044
     - c
     - stateObjectClearTable
@@ -48,10 +48,10 @@ segments:
     - decrementAdvanceStateScenario
   - - 2504
     - c
-    - decrementWorkByte9AndAdvanceStateScenarioScena0100_801F75C8
+    - stateCountdownAdvance
   - - 2628
     - c
-    - resetWorkStateWhenNoEntryClearedScenarioScena0100_801F7644
+    - stateResetNoEntry
   - - 2680
     - asm
     - func_801F7678
@@ -60,7 +60,7 @@ segments:
     - func_801F7A24
   - - 3768
     - c
-    - clearWorkTableAt800E4800ScenarioScena0100_801F7AB8
+    - stateClearWorkTable128
   - - 3812
     - asm
     - func_801F7AE4
@@ -78,10 +78,10 @@ segments:
     - func_801F7EDC
   - - 5060
     - c
-    - dispatchProgressHandlerScenarioScena0100_801F7FC4
+    - callProgressTableHandler
   - - 5120
     - c
-    - bootProgressStateScenarioScena0100_801F8000
+    - bootProgressState
   - - 5200
     - asm
     - func_801F8050
@@ -156,7 +156,7 @@ segments:
     - audioLatchPhaseRelease
   - - 25136
     - c
-    - startAction34LatchPhaseByteTwoThenReleaseFrontEndAndClearPrimaryStateScenarioScena0100_801FCE30
+    - audioStartAction34
   - - 25280
     - asm
     - func_801FCEC0
@@ -177,46 +177,46 @@ segments:
     - stateTwoBytesPrimary
   - - 26932
     - c
-    - clearTwoStateBytesThenRequestPrimaryState17Substate5ScenarioScena0100_801FD534
+    - requestState23Sub5
   - - 27004
     - c
-    - clearTwoStateBytesThenRequestPrimaryState17Substate2ScenarioScena0100_801FD57C
+    - requestState23Sub2
   - - 27076
     - c
-    - clearTwoStateBytesThenRequestPrimaryState11Substate2ScenarioScena0100_801FD5C4
+    - requestState17Sub2
   - - 27148
     - c
     - stateMirrorFacingProgress
   - - 27340
     - c
-    - setRecordByte1MirrorWorkFacingThenClearProgressAndStateBytesRequestPrimaryState0DSubstate0DScenarioScena0100_801FD6CC
+    - stateMirrorFacing13
   - - 27528
     - c
-    - setRecordByte1MirrorWorkFacingThenClearProgressAndStateBytesRequestPrimaryState0DSubstate10ScenarioScena0100_801FD788
+    - stateMirrorFacing16
   - - 27724
     - c
     - stateMirrorFacingPrimary
   - - 27896
     - c
-    - setScenarioScena0100_801FD8F8
+    - stateStore100
   - - 27916
     - c
-    - setScenarioScena0100_801FD90C
+    - stateStore102
   - - 27936
     - c
-    - setScenarioScena0100_801FD920
+    - stateStore103
   - - 27956
     - c
-    - setScenarioScena0100_801FD934
+    - stateStore104
   - - 27976
     - c
-    - setSubstate28ClearProgressAndSharedStateBytesAndRequestPrimaryState9ScenarioScena0100_801FD948
+    - stateSub28Request9
   - - 28064
     - c
-    - clearTwoStateBytesThenRequestPrimaryState11ScenarioScena0100_801FD9A0
+    - requestState17Clear
   - - 28132
     - c
-    - clearTwoStateBytesThenRequestPrimaryState11Substate5ScenarioScena0100_801FD9E4
+    - requestState17Sub5
   - - 28204
     - c
     - requestPrimarySubstate0Scenario
@@ -228,7 +228,7 @@ segments:
     - func_801FDA6C
   - - 29756
     - c
-    - dispatchCoordinateLookupHandlerScenarioScena0100_801FE03C
+    - callCoordinateLookup
   - - 29860
     - asm
     - func_801FE0A4
@@ -240,10 +240,10 @@ segments:
     - func_801FE1B0
   - - 30244
     - c
-    - invokeHelperArgScenarioScena0100_801FE224
+    - callHelperArg4Solo
   - - 30276
     - c
-    - invokeHelperArgThenHelperScenarioScena0100_801FE244
+    - callHelperArg4Pair
   - - 30316
     - textbin
     - T_801FE26C

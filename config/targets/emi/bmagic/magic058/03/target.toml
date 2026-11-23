@@ -9,22 +9,22 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/accumulateWordBytesReaches.c",
-    "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic05803_801EEC28.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05803_801EF338.c",
+    "src/bof3/bmagic/runEachActiveStep.c",
+    "src/bof3/bmagic/decrementGlobalCall5.c",
 ]
 support_sources = [
     "src/bof3/support/magic058_03_psyq.c",
     "src/bof3/bmagic/magic05803DispatchTables.c",
     "src/bof3/bmagic/statePoolPosePointer.c",
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic05803_801EFE9C.c",
+    "src/bof3/bmagic/clearWorkBytesFive.c",
     "src/bof3/bmagic/decrementCoordWordsTwice.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05803_801EF3B0.c",
+    "src/bof3/bmagic/dispatchByte2DrawRecord.c",
     "src/bof3/bmagic/accumulateWordStepDecrement.c",
     "src/bof3/bmagic/renderWideOuterNinety.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWordCRadiusSixtyFourWideInSixteenStepsTintingOuterEdgeByWorkByteATimesSixBmagicMagic05803_801EFA78.c",
-    "src/bof3/bmagic/pushUiRingTripleThenAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05803_801EEE78.c",
+    "src/bof3/bmagic/renderWideRingQuads.c",
+    "src/bof3/bmagic/pushRingTripleStep.c",
     "src/bof3/bmagic/recordWithinPositionRadius.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05803_801EFE38.c",
+    "src/bof3/bmagic/reservePool36.c",
     "src/bof3/bmagic/stateWordTripletWord.c",
 ]
 psyq_source = "src/bof3/support/magic058_03_psyq.c"

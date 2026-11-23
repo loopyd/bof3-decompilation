@@ -15,7 +15,7 @@ sources = [
 support_sources = [
     "src/bof3/boss/publishBattleHooksBossBoss01516_800C18F0.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01516_800C18A0.c",
-    "src/bof3/boss/invokeHelperArgBossBoss01516_800C197C.c",
+    "src/bof3/boss/invokeHelperArg.c",
     "src/bof3/boss/zeroResultBoss015_800C1928.c",
     "src/bof3/boss/noopHandlerBoss015_800C18E8.c",
     "src/bof3/boss/noopHandlerBoss015_800C18E0.c",

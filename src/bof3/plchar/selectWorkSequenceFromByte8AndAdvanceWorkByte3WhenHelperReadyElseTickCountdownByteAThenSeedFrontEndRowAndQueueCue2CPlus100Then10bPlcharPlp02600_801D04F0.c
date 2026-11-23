@@ -41,7 +41,7 @@ extern void func_8015DF18(u32 cue);
  *           work-byte-3 run based at 0x801D0AA8: it is the word 0x801D04F0 at
  *           0x801D0AAC inside the thirty-word code-pointer run at 0x801D0A54,
  *           which the dispatcher
- *           dispatchStateByte3Table0aa8PlcharPlp02600_801D0440 indexes from
+ *           dispatchByte3Table0aa8 indexes from
  *           that base, so it takes no arguments, no jal names it, and any
  *           result is discarded. It first runs the shared readiness helper
  *           func_8014DAEC and keeps only that answer's low byte. While the

@@ -169,7 +169,7 @@ void func_80178804(VECTOR* arg0, SVECTOR* arg1);
  * entry's vector by the per-entry initializer func_801F2FD4. */
 void func_80178818(void* arg0, void* arg1);
 s32  dispatchWorkStates(void);
-void advanceWorkStateWithDoubleVelocity(void);
+void advanceWorkDoubleVelocity(void);
 void advanceWorkStateUntilExpired(void);
 void func_801F362C(void);
 void func_801F3708(void* arg0, void* arg1, s16* arg2);

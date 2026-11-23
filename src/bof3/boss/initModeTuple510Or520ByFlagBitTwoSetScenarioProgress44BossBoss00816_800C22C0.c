@@ -11,7 +11,7 @@ void initModeTuple520(void); /* @source 0x801DDF00 */
 
 /* @source 0x800C22C0
  * @behavior Battle-flag state switch of this overlay and first member of the
- * fourth hook trio, the one its installer publishBattleHooksBossBoss00816_800C2280
+ * fourth hook trio, the one its installer publishBattleHooks4
  * writes over the preceding trio in slot 0x801463A4. It loads the shared battle
  * flag byte 0x80146328 once and tests bit 0x2; while the bit is set it stores 0x44
  * into the shared scenario progress byte 0x80146864 and runs initModeTuple510

@@ -4,7 +4,7 @@
  * overlays. This function reads it once (lui $a1,0x1F80 / lw $a1,68($a1)) and
  * keeps the loaded pointer for its two record reads. The map row of this
  * target binds the same cell as g_battle_work; the overlay's own
- * clearWorkBytesBmagicMagic05803_801EFE9C lift uses that spelling. */
+ * clearWorkBytesFive lift uses that spelling. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Scratchpad halfword at the base of the block the dispatchers of this overlay

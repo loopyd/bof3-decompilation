@@ -27,16 +27,16 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1LocalPairBmagicMagic04500_801EEC04
-    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairBmagicMagic04500_801EEC04.c'
+    - dispatchWorkByte1Seeded
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Seeded.c'
     - '@behavior: Overlay step dispatcher: reads the scratchpad work-object pointer cell at 0x1F800044 once, seeds 0x801EEC5C into entry 0 and 0x801EEE58 into entry 1 of a two-entry local handler array in its own 0x20-byte frame, and invokes the entry selected by the work object''s unsigned byte at offset 1 with no arguments. The index is unchecked and the body reads no other state; the frame only keeps $ra across the indirect call.'
   - - 92
     - asm
     - func_801EEC5C
   - - 600
     - c
-    - raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04500_801EEE58
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04500_801EEE58.c'
+    - raiseFlag4IfZero
+    - '@source: src/bof3/bmagic/raiseFlag4IfZero.c'
     - '@behavior: Work-byte-1 handler, entry 1 of the two-entry handler array that 0x801EEC04 seeds in its own frame, selected by the scratchpad work object''s unsigned byte at offset 1; no word of this payload stores this address, so the dispatcher''s immediate is the only reference to it. Reads the work-object pointer cell at 0x1F800044 once and, only when the work object''s byte 0xB is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments. Takes no arguments and returns nothing.'
   - - 676
     - c
@@ -44,8 +44,8 @@ segments:
     - '@source: src/bof3/bmagic/magic04500DispatchTables.c'
   - - 744
     - c
-    - dispatchStateByte2Tablef8e0BmagicMagic04500_801EEEE8
-    - '@source: src/bof3/bmagic/dispatchStateByte2Tablef8e0BmagicMagic04500_801EEEE8.c'
+    - publishDispatchService
+    - '@source: src/bof3/bmagic/publishDispatchService.c'
     - '@behavior: Step wrapper around one overlay work handler: publishes 0x800C3800 into the global at 0x801459F0, reads the work object published at the scratchpad pointer cell 0x1F800044, scales that object byte 2 by four and invokes the selected entry of the eight-entry handler table based at 0x801EF8E0 (0x801EEF80, 0x801EF118, 0x801EF2B0, 0x801EF3D8, 0x801EF4A4, 0x801EF608, 0x801EF724, 0x801EF8A4) with no arguments. After the handler returns it re-reads the pointer cell and, when the work object byte 0 and byte 2 are both non-zero, runs the shared main-executable service func_8014D290. It then publishes 0x800D3800 into 0x801459F0. Each literal reaches the cell through its own lui/ori pair and a lui %hi / sw %lo store; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 896
     - asm
@@ -59,8 +59,8 @@ segments:
     - '@source: src/bof3/bmagic/workAngleAccumulateInto.c'
   - - 2008
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic04500_801EF3D8
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic04500_801EF3D8.c'
+    - decrementGlobalCall2
+    - '@source: src/bof3/bmagic/decrementGlobalCall2.c'
     - '@behavior: Work-byte-2 handler, entry 3 of this overlay''s eight-entry handler-pointer run based at 0x801EF8E0, selected by the step wrapper at 0x801EEEE8 with the scratchpad work object''s unsigned byte 2 scaled by four; the table word at 0x801EF8EC is the only in-image reference to this address. Reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record''s byte 0xB by one at byte width and then invokes the shared helper at 0x801E5988 unconditionally, the store filling the call delay slot. The pointer load precedes frame creation because the decrement needs no stack; the 0x18-byte frame only keeps $ra across the call. Takes no arguments and returns nothing.'
   - - 2060
     - asm
@@ -80,8 +80,8 @@ segments:
     - func_801EF724
   - - 3236
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic04500_801EF8A4
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic04500_801EF8A4.c'
+    - decrementGlobalCall3
+    - '@source: src/bof3/bmagic/decrementGlobalCall3.c'
     - '@behavior: Work-byte-2 handler, entry 7 of this overlay''s eight-entry handler-pointer run based at 0x801EF8E0, selected by the step wrapper at 0x801EEEE8 with the scratchpad work object''s unsigned byte 2 scaled by four; the table word at 0x801EF8FC is the only in-image reference to this address. Reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record''s byte 0xB by one at byte width and then invokes the shared helper at 0x801E5988 unconditionally, the store filling the call delay slot. The pointer load precedes frame creation because the decrement needs no stack; the 0x18-byte frame only keeps $ra across the call. Takes no arguments and returns nothing.'
   - - 3288
     - textbin

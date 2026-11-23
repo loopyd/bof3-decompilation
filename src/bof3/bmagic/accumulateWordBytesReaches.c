@@ -3,7 +3,7 @@
 /* This overlay's work-byte clear routine, already an exact lift of this target
  * at 0x801EFE9C: the jal at 0x801EF684 reaches it with no argument and no
  * return value consumed. */
-void clearWorkBytesBmagicMagic05803_801EFE9C(void);
+void clearWorkBytesFive(void);
 
 /* Shared frame counter in main RAM, outside this overlay's image, which this
  * target's generated undefined_syms_auto.txt already binds. Bit 0 is the
@@ -59,7 +59,7 @@ void accumulateWordBytesReaches(void) {
     tint = --work[0x0A];
     if (tint == 0) {
       D_801EB4E0[0x0B]--;
-      clearWorkBytesBmagicMagic05803_801EFE9C();
+      clearWorkBytesFive();
     }
   }
 }

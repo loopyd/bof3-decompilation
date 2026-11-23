@@ -9,10 +9,10 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/bmagic/drawThirtyTwoProjectedTranslucentTexturedRingQuadsFromWorkBytes9AB_BmagicMagic05503_801EF240.c",
+    "src/bof3/bmagic/renderRingTextureBand.c",
     "src/bof3/bmagic/renderFanTwiceTen.c",
     "src/bof3/bmagic/decrementTwoIncrementGlobal.c",
-    "src/bof3/bmagic/incrementWorkBytes9AndAThenAdvanceWorkByte1At10BmagicMagic05503_801EEE3C.c",
+    "src/bof3/bmagic/incrementPairAdvance.c",
     "src/bof3/bmagic/incrementTwoDecrementTwo.c",
     "src/bof3/support/magic055_03_psyq.c",
 ]

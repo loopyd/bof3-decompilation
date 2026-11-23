@@ -20,7 +20,7 @@ void renderFullscreenFifteenGraph(
  * @behavior Third entry, index 2, of the six-pointer work-step run at
  *           0x801EEC04 (0x801EECC0, 0x801EF0F8, 0x801EF234, 0x801EF2A8,
  *           0x801EF31C, 0x801EF350), which
- *           dispatchWorkByte1HandlerBmagicMagic02003_801EEC48 copies into its
+ *           dispatchWorkByte1Six copies into its
  *           own 0x30-byte frame and indexes with work-object unsigned byte 1, so
  *           this body runs with no arguments and returns no value. It first calls
  *           the full-screen fade-tile drawer at 0x801EFD88 with no arguments. It then loads

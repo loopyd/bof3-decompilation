@@ -9,13 +9,13 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/stateChannel932World00.c",
-    "src/bof3/world/stopSelectionEffectWorld00Area01913_801F2D6C.c",
+    "src/bof3/world/audioStopSelectionEffect.c",
 ]
 support_sources = [
-    "src/bof3/world/invokeHelperArgWorld00Area01913_801F2CB4.c",
-    "src/bof3/world/invokeHelperArgWorld00Area01913_801F2C94.c",
-    "src/bof3/world/invokeHelperArgWorld00Area01913_801F2C74.c",
-    "src/bof3/world/invokeHelperArgWorld00Area01913_801F2C54.c",
+    "src/bof3/world/callWindowReset4.c",
+    "src/bof3/world/callWindowReset3.c",
+    "src/bof3/world/callWindowReset2.c",
+    "src/bof3/world/callWindowReset1.c",
     "src/bof3/world/retreatChannel932World00.c",
     "src/bof3/support/area019_13_psyq.c",
 ]

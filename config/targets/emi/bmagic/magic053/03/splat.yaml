@@ -64,8 +64,8 @@ segments:
     - '@source: src/bof3/bmagic/decrementTwoNonReady.c'
   - - 2776
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByte4IsZeroBmagicMagic05303_801EF6D8
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByte4IsZeroBmagicMagic05303_801EF6D8.c'
+    - decrementGlobalOnZero
+    - '@source: src/bof3/bmagic/decrementGlobalOnZero.c'
   - - 2856
     - asm
     - func_801EF728
@@ -74,8 +74,8 @@ segments:
     - func_801EF7E0
   - - 3632
     - c
-    - drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByteATimesFourBmagicMagic05303_801EFA30
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByteATimesFourBmagicMagic05303_801EFA30.c'
+    - renderTintRingQuads
+    - '@source: src/bof3/bmagic/renderTintRingQuads.c'
     - '@behavior: Draw sixty-four translucent Gouraud quads that span the ring between work byte 0xB and twice that radius, one sixty-fourth of a turn per pass, choosing page 0x125 for graph types 1 and 2 and 0x55 otherwise, seeding the four quad cells from the shared rotator pair at turn zero, tinting the work-byte-0xB edge with work byte 0xA shifted left two and leaving the doubled edge at 1.'
   - - 4432
     - c
@@ -83,8 +83,8 @@ segments:
     - '@source: src/bof3/bmagic/magic05303DispatchTables.c'
   - - 4500
     - c
-    - dispatchWorkByte2HandlerThenInvoke0110And01C0AndPopWhenWorkBytes0And2SetBmagicMagic05303_801EFD94
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0110And01C0AndPopWhenWorkBytes0And2SetBmagicMagic05303_801EFD94.c'
+    - dispatchByte2PopPair
+    - '@source: src/bof3/bmagic/dispatchByte2PopPair.c'
     - '@behavior: Dispatch work byte 2, then invoke 0x801F0110, 0x801F01C0 and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 4636
     - c
@@ -105,12 +105,12 @@ segments:
     - func_801F01C0
   - - 6292
     - c
-    - reserveFirstFreeRecordBmagicMagic05303_801F0494
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05303_801F0494.c'
+    - reservePool32
+    - '@source: src/bof3/bmagic/reservePool32.c'
   - - 6392
     - c
-    - clearWorkBytesBmagicMagic05303_801F04F8
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic05303_801F04F8.c'
+    - clearWorkHeadFive
+    - '@source: src/bof3/bmagic/clearWorkHeadFive.c'
   - - 6472
     - textbin
     - D_801F0548

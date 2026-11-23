@@ -77,7 +77,7 @@ typedef struct ScenarioSce15ef000ScreenPoint {
  * GetTPage call: the word spelling measured 114 of 116 instructions with its
  * first difference at +0x14, where the copy sat two slots early. The signed
  * spelling is the one the same overlay's
- * drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20
+ * renderTranslucentSectorFan
  * gives the identical pair input it hands to func_801AFFD8.
  *
  * Levers: the data lever is declined because the range opens with the

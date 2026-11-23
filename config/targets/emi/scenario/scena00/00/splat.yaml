@@ -57,15 +57,15 @@ segments:
     - renderAdoptedCursorBeam
     - '@source: src/bof3/scenario/renderAdoptedCursorBeam.c'
     - '@behavior: Adopts the 152-byte work-area record named by the shared scratchpad work object (pointer published at 0x1F800044) and draws that record cursor beam: the work object word at 0x18 selects the record at 0x80147A58 + index * 152, the record cursor words at 0x34/0x38/0x3C are copied into the work object at the same offsets, and the record pointer replaces the work object at 0x1F800044. The work object cursor pair is then linked through the shared grid-cell primitive linker func_80155A08 with kind 0x11 and size class 0x0C; before that call an 8-byte (x, y, w, h) rect of (0, 240, 16, 16) is written at the primitive cursor g_PrimCursor, the cursor is advanced by 8, and the 12-byte texture-window packet that follows the rect is built from it by the LIBGPU texture-window setter func_8017C1A8. The record fixed-point origin is then resolved through func_801AC1DC(origin, work byte 0x1C) and turned into a position vector whose x and y are ((origin + record word 0x34/0x38) >> 9) - 0x4000 and whose z is -(origin z + record halfword 0x3E) / 2; RotTransPers projects it into the flat textured quad found at the primitive cursor, so x0 = projected x - 8 and x2 = projected x - 8 while x1 = x3 = projected x + 8, y0 and y1 are zeroed, y2 and y3 keep the projected y, clut comes from GetClut(176, 483), tpage from GetTPage(0, 0, 704, 256), u0 = u2 = 0 and u1 = u3 = 16, the four v coordinates are ((D_80143E6C >> 2) & 0x15), with v2/v3 additionally adding the quad low byte at 0x1A, r0/g0/b0 are 0x80, the shade texture is cleared, and the projection depth is stored in the work object word at 0x60. The published scratchpad object is restored to the work object, its cursor pair is linked again with size class 0x28, a second rect of (0, 0, 256, 256) reserves one more texture-window packet through func_8017C1A8, and a final 0x0C-class link closes the frame.'
-- name: dispatchWorkByte1Handler_801F70F0
+- name: callWorkStateHandler
   type: code
   start: 1264
   vram: 2149544176
   subsegments:
   - - 1264
     - c
-    - dispatchWorkByte1Handler_801F70F0
-    - '@source: src/bof3/scenario/dispatchWorkByte1Handler_801F70F0.c'
+    - callWorkStateHandler
+    - '@source: src/bof3/scenario/callWorkStateHandler.c'
     - '@behavior: Dispatches the overlay''s per-frame handler for the scratchpad work object''s later states: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects entry (state + 2) of the local handler table at 0x801FC980 whose 0x801FC988 word is the 0x801F7264 handler, and that entry is invoked; no other state is read or written. The 0x801F6DC0 dispatcher indexes the same table from its first entry.'
 - name: renderObjectTintSprite
   type: code

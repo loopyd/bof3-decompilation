@@ -9,7 +9,7 @@ void renderZigzagFiveSegments(s16 level);
 
 /* @source 0x801D11B4
  * @behavior Entry 7, the last of the overlay's step-handler run at 0x801D1F88,
- * which the overlay entry dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04 indexes with the unsigned work byte at
+ * which the overlay entry callAngleBandHandler indexes with the unsigned work byte at
  * offset +0x1 of the scratchpad work object published at pointer slot
  * 0x1F800044 (`sll $v0,$v0,2` then `lw` from the run base and `jalr`). It takes
  * no arguments and returns nothing. It first takes the work object's halfword at
@@ -28,7 +28,7 @@ void renderZigzagFiveSegments(s16 level);
  *
  * Evidence: the eight words from 0x801D1F88 are 0x801D0C48, 0x801D0CEC,
  * 0x801D0DB0, 0x801D0E5C, 0x801D0F44, 0x801D101C, 0x801D10C4 and 0x801D11B4, so
- * this body is element 7 of the run whose base dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04 loads. This address
+ * this body is element 7 of the run whose base callAngleBandHandler loads. This address
  * has no in-payload `jal` and no other word in the payload holds it, so the
  * entry is reached only through that run. The head reads +0x2E with `lhu` and
  * stores it with `sh` at the same offset, and the single `sll $a0,$a0,16` plus

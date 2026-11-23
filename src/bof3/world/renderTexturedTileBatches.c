@@ -16,7 +16,7 @@ extern u8 D_8014933B;
 /* @source 0x801F37F4
  * @behavior Overlay step handler, entry 0 of the five-handler work-byte-+0x02
  * run based at 0x801F4D80 that the byte-+0x02 dispatcher
- * dispatchStateByte2Table4d80World01Area04813_801F37B0 indexes. It emits two
+ * dispatchByte2Table4d80 indexes. It emits two
  * batches of eight textured tiles through the tile emitter at 0x801F3AE4:
  * position 0 with texture page 0x858000 and index 0, then position 0x800 with
  * texture page 0x878000 and index 1. While the shared overlay state byte at

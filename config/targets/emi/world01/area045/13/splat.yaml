@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatusFFFFAndSelectMode2IfGateClearWorld01Area04513_801F2C04
-    - '@source: src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld01Area04513_801F2C04.c'
+    - stateSelectModeGate
+    - '@source: src/bof3/world/stateSelectModeGate.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword D_801490A8 on every path, and first writes 2 to the shared mode byte D_801448EC when the shared gate byte D_801490C7 is zero.'
   - - 56
     - asm
@@ -65,7 +65,7 @@ segments:
     - '@source: src/bof3/world/area04513_work_state.c'
   - - 2208
     - c
-    - invokeTwoHelpersWorld01Area04513_801F34A0
+    - callTwoOverlaySteps
   - - 2248
     - c
     - callStateTable5354World01
@@ -92,8 +92,8 @@ segments:
     - '@source: src/bof3/world/callStateByte3Table5364.c'
   - - 2768
     - c
-    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld01Area04513_801F36D0
-    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld01Area04513_801F36D0.c'
+    - stateHalfword30Advance
+    - '@source: src/bof3/world/stateHalfword30Advance.c'
     - '@behavior: Returns while the shared mode byte 0x801454F2 is set and work-record byte 0x0B at the scratchpad pointer cell 0x1F800044 is nonzero, and also when byte 0x80143BB0 is 2 or bit 0x100 of halfword 0x80146258 is set; otherwise writes 0xF0 to work-record halfword 0x30 and increments work byte 0x03, the index the overlay dispatcher 0x801F368C reads.'
   - - 2896
     - asm

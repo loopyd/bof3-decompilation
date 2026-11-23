@@ -25,7 +25,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 /* @source 0x801F04F0
  * @behavior Entry 0 of the three-entry work-byte-2 handler table based at
  *           0x801F0A2C, which this overlay's byte 2 dispatcher
- *           dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478
+ *           dispatchByte2DrawActive
  *           indexes with the scratchpad work object byte 0x2; no jal in this
  *           payload reaches this address, only that table word. It calls the
  *           shared main-executable update pass func_800AF764 first, then reads

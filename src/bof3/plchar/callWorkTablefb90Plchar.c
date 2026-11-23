@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 /* This overlay's handler run at 0x801CFB84: sixteen code pointers, entry 0 =
- * 0x801CE448 through entry 15 = 0x801CF91C. The Splat `textbin` row T_801CFB84
+ * 0x801CE448 through entry 15 = 0x801CF91C. The Splat `textbin` row codePointerTablefb84
  * places the words, so the run is only referenced here. This dispatcher
  * indexes the run from its word 3, so its base sits at 0x801CFB90 and the entries
  * it can reach are 0x801CE770 through 0x801CF91C, the shared main-executable

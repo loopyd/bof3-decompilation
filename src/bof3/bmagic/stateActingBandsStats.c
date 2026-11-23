@@ -90,7 +90,7 @@ typedef struct BmagicMagic05603QueuedRecordHead {
 /* @source 0x801EEC94
  * @behavior Word 0 of the three-entry code pointer run at 0x801EEC04 (0x801EEC94,
  *           0x801EEF3C, 0x801EF17C), which the entry dispatcher
- *           dispatchWorkByte1HandlerBmagicMagic05603_801EEC34 copies into its own
+ *           dispatchWorkByte1Triad copies into its own
  *           0x28-byte frame and invokes with the scratchpad work object byte 1
  *           scaled by four as index, so no jal in this payload names this body.
  *           It first calls the shared seeding helper at 0x800AFD9C, then clears

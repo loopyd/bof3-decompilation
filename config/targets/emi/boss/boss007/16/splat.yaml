@@ -35,8 +35,8 @@ segments:
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this payload handler run based at 0x800C1DA0 with no arguments, leaving the selected handler return value untouched. The original bounds nothing before the scaled table load and the delay slots after the index byte and after the table load stay nops. The 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal and no payload word names 0x800C1820, so the overlay loader steps it.'
   - - 100
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00716_800C1864
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00716_800C1864.c'
+    - publishWorkStepSetup
+    - '@source: src/bof3/boss/publishWorkStepSetup.c'
     - '@behavior: Step-0 setup of this overlay work state machine: publishes this payload data row pointer 0x800C1D78 into +0xEC of the current enemy work record from 0x801EB4E8, the byte dispatcher 0x800C18BC into +0xE4 and the in-row flag-byte pointer 0x800C1D90 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 188
     - c

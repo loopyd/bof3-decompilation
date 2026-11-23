@@ -52,24 +52,24 @@ segments:
     - '@behavior: Entry 3 of this overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it subtracts 0x10 from that object word at +0xC and ticks its countdown byte at +0x9 down by one through the one loaded pointer, and when the decremented byte reaches zero it calls the resident reset helper func_80196070, which clears the work-area header bytes 0x00 through 0x04 so the run restarts at entry 0.'
   - - 420
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4.c'
+    - callStepRunHandler
+    - '@source: src/bof3/scenario/callStepRunHandler.c'
     - '@behavior: Overlay step dispatch on work-record byte 1 of this payload: loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that object unsigned byte at +0x1 and calls that entry of the handler run based at 0x801D1B2C (entry 4 of the run at 0x801D1B1C) with no arguments, without bounding the index; the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the index and table load delay slots stay nops.'
   - - 488
     - c
     - armClearCountdownTable
     - '@source: src/bof3/scenario/armClearCountdownTable.c'
-    - '@behavior: Entry 0 of this overlay step handler run at 0x801D1B2C, which is word 4 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it stores 0x12C in that object halfword at +0x2E, zeroes its countdown byte at +0x9, runs the helper that clears the lead byte of every 6-byte entry of the 0x800E4800 work table, and then advances the same work byte at +0x1. It takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra at 0x10.'
+    - '@behavior: Entry 0 of this overlay step handler run at 0x801D1B2C, which is word 4 of the fourteen-word code-pointer run at 0x801D1B1C and which callStepRunHandler selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it stores 0x12C in that object halfword at +0x2E, zeroes its countdown byte at +0x9, runs the helper that clears the lead byte of every 6-byte entry of the 0x800E4800 work table, and then advances the same work byte at +0x1. It takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra at 0x10.'
   - - 560
     - c
     - claimExpiryReloadRandom
     - '@source: src/bof3/scenario/claimExpiryReloadRandom.c'
-    - '@behavior: Entry 1 of this overlay step handler run at 0x801D1B2C, which is word 5 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it reads that object countdown byte at +0x9 and, when the byte reads zero, claims a work-table entry through claimFreeTableEntry and re-arms the countdown with the low nibble of rand() plus 0x18, while a non-zero countdown only ticks down by one; both arms end in one store of that byte after the join. It then runs the work-table stepper stepEntriesDecayActive with the literal 0xF0 and, when the shared scenario progress byte at 0x80146864 reads 14, advances the work byte at +0x1. It takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra at 0x10.'
+    - '@behavior: Entry 1 of this overlay step handler run at 0x801D1B2C, which is word 5 of the fourteen-word code-pointer run at 0x801D1B1C and which callStepRunHandler selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it reads that object countdown byte at +0x9 and, when the byte reads zero, claims a work-table entry through claimFreeTableEntry and re-arms the countdown with the low nibble of rand() plus 0x18, while a non-zero countdown only ticks down by one; both arms end in one store of that byte after the join. It then runs the work-table stepper stepEntriesDecayActive with the literal 0xF0 and, when the shared scenario progress byte at 0x80146864 reads 14, advances the work byte at +0x1. It takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra at 0x10.'
   - - 708
     - c
     - stepValueNoActive
     - '@source: src/bof3/scenario/stepValueNoActive.c'
-    - '@behavior: Entry 2 of this overlay step handler run at 0x801D1B2C, which is word 6 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it runs the work-table stepper stepEntriesDecayActive with the literal 0xF0, the value that stepper stores as the halfword at +0x4 of every entry it claims in this frame, and when that stepper masked to a byte reports zero - that is, when no entry of the 0x800E4800 work table had a non-zero lead byte - it resets the shared work-area block through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte. It takes no arguments, returns nothing, reads and writes no other state, and the 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
+    - '@behavior: Entry 2 of this overlay step handler run at 0x801D1B2C, which is word 6 of the fourteen-word code-pointer run at 0x801D1B1C and which callStepRunHandler selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it runs the work-table stepper stepEntriesDecayActive with the literal 0xF0, the value that stepper stores as the halfword at +0x4 of every entry it claims in this frame, and when that stepper masked to a byte reports zero - that is, when no entry of the 0x800E4800 work table had a non-zero lead byte - it resets the shared work-area block through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte. It takes no arguments, returns nothing, reads and writes no other state, and the 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
   - - 760
     - c
     - callDrawScreenPair
@@ -97,13 +97,13 @@ segments:
     - '@behavior: Entry 10 of the overlay code-pointer run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: through the one loaded pointer it lowers that object projected screen-pair halfwords at +0x2E and +0x30 by 7 and 3, ticks its countdown byte at +0x9 down by one, and leaves the +0x30 store for the guard branch delay slot; when the decremented byte reaches zero it resets the shared work area through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte, so the overlay drops back to work state 0.'
   - - 1188
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef200_801D10A4
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef200_801D10A4.c'
+    - callCountdownStepHandler
+    - '@source: src/bof3/scenario/callCountdownStepHandler.c'
     - '@behavior: Overlay step dispatch on work-record byte 1 of this payload: loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that object unsigned byte at +0x1 and calls that entry of the handler run based at 0x801D1B48 (entry 11 of the run at 0x801D1B1C) with no arguments, without bounding the index; the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the index and table load delay slots stay nops.'
   - - 1256
     - c
-    - armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8
-    - '@source: src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8.c'
+    - stateArmCountdown
+    - '@source: src/bof3/scenario/stateArmCountdown.c'
     - '@behavior: Entry 0 of the overlay handler table at 0x801D1B48 dispatched by func_801D10A4 with the work object byte at +0x1: arms the countdown byte at +0x9 with 0x10 and advances the work byte at +0x1.'
   - - 1304
     - c
@@ -127,8 +127,8 @@ segments:
     - '@behavior: Draws the red gradient band of one work-table entry. It takes the 0x24-byte POLY_G4 published at the primitive cursor cell 0x8014598C, stamps it with SetPolyG4, clears its semi-transparency bit through SetSemiTrans with zero and fills the first quad as the full-width 0x140 slab that ends on the entry halfword at +0x4: both top vertices sit at that halfword minus the entry byte at +0x3 minus the low bit of the shared per-frame counter at 0x80143E6C, both bottom vertices sit on the halfword, the top pair stays black and the bottom pair carries red 0x80 with green and blue cleared, and func_8014E5A0 then appends the quad under OT slot 7. It reloads the cursor cell and repeats with the mirrored second quad, whose top pair carries red 0x80 and whose bottom pair sits at the halfword plus that same entry byte plus the counter bit over black, so the pair is one vertically symmetric red-to-black band centred on the entry halfword with a half height of the entry byte plus the frame parity. The halfword and the byte are reloaded for every vertex because the stores through the loaded cursor may alias the entry, which the caller passes in $a0 from the jal at 0x801D1754. It returns nothing and its 0x38-byte frame only keeps $ra and $s0-$s4 of the two quads.'
   - - 2480
     - c
-    - clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0
-    - '@source: src/bof3/scenario/clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0.c'
+    - stateClearWorkTable16
+    - '@source: src/bof3/scenario/stateClearWorkTable16.c'
     - '@behavior: Clears the lead byte of each of the 0x10 entries of the 6-byte-stride record table at 0x800E4800 in a bottom-tested unsigned-byte loop; takes no arguments and returns nothing.'
   - - 2524
     - c

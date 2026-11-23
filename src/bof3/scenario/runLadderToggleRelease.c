@@ -18,7 +18,7 @@ void func_8015C058(void);
 
 /* @source 0x801F9678
  * @behavior Slot 15 of the 31-word code-pointer run at 0x801FE288 (pointer
- *   word at 0x801FE2C4) that dispatchProgressHandlerScenarioScena0200_801F719C
+ *   word at 0x801FE2C4) that callProgressChainHandler
  *   indexes with the signed chain byte D_80146872, so the overlay reaches this
  *   span as that chain slot. It walks the shared sub-state byte D_80146875
  *   (0x80146875) through the five-slot absolute jump table the payload keeps at
@@ -54,7 +54,7 @@ void func_8015C058(void);
  * the overlay through func_8015C058 and clears the shared bytes 0x80146865
  * through 0x80146867 before returning to sub-state 0 and primary state 0, and
  * of the exact sibling
- * waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate7ScenarioScena0200_801FD1DC
+ * stateToggleModeRequest
  * (0x801FD1DC), which flips bits of the same mode word. The mode-bit constant,
  * the progress gates, the front-end pair and the cleared bytes are this span's
  * own.

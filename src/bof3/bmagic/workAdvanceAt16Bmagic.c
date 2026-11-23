@@ -31,7 +31,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           order, operand forms and reload points come from the family sibling
  *           incrementWorkByte9Add2ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic
  *           05903_801EF504 and the target-local sibling
- *           incrementWorkByte1WhenWorkByteBZeroBmagicMagic00903_801EF068, both
+ *           incrementByteWhenZero, both
  *           measured exact when this body was written.
  * @status exact
  * @match 100.00

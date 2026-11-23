@@ -84,7 +84,7 @@ u8 func_8014DAEC(void);
  *           code-pointer run based at 0x801D09B0 that the byte-3 dispatcher of
  *           this payload at 0x801CEE6C indexes with work byte 3 scaled by four,
  *           and so entry 11 of the thirty-word code-pointer run based at
- *           0x801D0988 that this target places as the textbin row T_801D0988.
+ *           0x801D0988 that this target places as the textbin row codePointerTable0988.
  *           The body address appears once in the payload bytes, as the run word
  *           at 0x801D09B4, and no jal in this payload names it. While the work
  *           countdown byte 0x0A reads nonzero the step only decrements it and

@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/stateObjectStampOrdinal.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0.c",
+    "src/bof3/bmagic/installZeroSpinMatrix.c",
     "src/bof3/bmagic/renderGradedWhiteWeighted.c",
     "src/bof3/bmagic/renderRandProfileGraded.c",
 ]
@@ -21,15 +21,15 @@ support_sources = [
     "src/bof3/bmagic/workByteAdvanceBmagic.c",
     "src/bof3/support/magic041_03_psyq.c",
     "src/bof3/bmagic/magic04103DispatchTables.c",
-    "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic04103_801EF4D4.c",
-    "src/bof3/bmagic/copyWorkWordTripletAndClearByte9ThenAdvanceWorkByte2BmagicMagic04103_801EF484.c",
+    "src/bof3/bmagic/addByteTallyAdvance.c",
+    "src/bof3/bmagic/copyWorkWordTriplet.c",
     "src/bof3/bmagic/incrementWorkByteBmagic.c",
-    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic04103_801EF524.c",
+    "src/bof3/bmagic/incrementByteAtOne.c",
     "src/bof3/bmagic/incrementCountersByteByte.c",
     "src/bof3/bmagic/decrementCountersForwardReaches.c",
     "src/bof3/bmagic/workDecrementGlobalZero.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04103_801EEC38.c",
+    "src/bof3/bmagic/dispatchProjectDrawPop.c",
+    "src/bof3/bmagic/dispatchWorkByte1Prefix.c",
     "src/bof3/bmagic/decrementCopyWordTriplet.c",
 ]
 psyq_source = "src/bof3/support/magic041_03_psyq.c"

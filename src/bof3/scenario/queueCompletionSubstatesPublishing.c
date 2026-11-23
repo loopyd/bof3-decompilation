@@ -39,7 +39,7 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
 /* @source 0x801FBC6C
  * @behavior Slot 30, the last entry (pointer word at 0x801FE300) of the
  *   31-word code-pointer run at 0x801FE288 that
- *   dispatchProgressHandlerScenarioScena0200_801F719C indexes with the signed
+ *   callProgressChainHandler indexes with the signed
  *   chain byte D_80146872, so the overlay reaches this span as that chain
  *   slot. It switches on the shared sub-state byte D_80146875 (0x80146875,
  *   read with lbu before the frame is grown) through the twenty-six-word
@@ -77,7 +77,7 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
  *
  * Name evidence: no in-payload `jal` targets 0x801FBC6C and the only payload
  * word equal to that address is at 0x801FE300, the last entry of the chain run
- * that dispatchProgressHandlerScenarioScena0200_801F719C indexes, so the role
+ * that callProgressChainHandler indexes, so the role
  * word is the chain-slot sub-state stepper the sibling
  * runCompletionSubstatesSeeding
  * (0x801F936C, slot 14 of the same run) already established for this overlay:

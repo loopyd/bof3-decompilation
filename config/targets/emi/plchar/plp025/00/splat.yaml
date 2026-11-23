@@ -93,8 +93,8 @@ segments:
     - '@behavior: Reads the unsigned countdown byte 0x09 of the active work object through the scratchpad pointer cell 0x1F800044: while that byte is nonzero it stores the value one lower and runs the work advance step func_801B0DFC, and when it reads zero it clears state byte 0x12B of the front-end record published at 0x80146250 and clears bit 0x1000 of the world-flag halfword 0x80146258, after which both paths run the shared no-argument update helper func_8014D978'
   - - 4564
     - c
-    - findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp02500_801CF5D4
-    - '@source: src/bof3/plchar/findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp02500_801CF5D4.c'
+    - findRecordIndex
+    - '@source: src/bof3/plchar/findRecordIndex.c'
     - '@behavior: Finds the index of the first front-end record whose stored position matches the projected work-area position: the record published at 0x80146250 must report state byte 0x79 == 2 with bit 0 of byte 0x12C clear, the work area read through the scratchpad pointer cell 0x1F800044 supplies the route byte at 0x08 that selects the movement offsets at 0x80181B94 and 0x80181B98 added to its words at 0x34 and 0x38, and the twenty 0x74-byte rows of 0x80143FC8 with nonzero byte 0 and byte 5 == 0x30 are each passed with that projected pair, the work halfword at 0x3E as a signed reference, the range 1 and the row address to the shared gate matchesProjectedWorkBounds, the row index being returned as a signed byte when the gate matches and the row word at 0x80143FFC or 0x80144000 equals the work word at 0x34 or 0x38, and -1 otherwise'
   - - 4920
     - c
@@ -138,8 +138,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: it runs the shared update helper func_8014D978 and returns while the work halfword 0x58 does not read 0x0A; when it does, it claims a front-end record through the allocator func_8019601C, stores the answer in work byte 0x0B and, unless that byte reads 0xFF, seeds the 0x74-byte row at 0x80143FC8 it indexes with the occupancy flag 1 in row byte 0 and the handler selector 0x3A in row byte 5, then hands the cue id 0x100 plus the work halfword 0x2C to the cue dispatcher func_8015DF18, clears work byte 0x07 and increments the work step counter byte 0x02'
   - - 6732
     - c
-    - selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp02500_801CFE4C
-    - '@source: src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp02500_801CFE4C.c'
+    - selectSequenceByte8
+    - '@source: src/bof3/plchar/selectSequenceByte8.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044 and reached from outside this payload as entry 0 of the seven-word code-pointer run 0x801CFFE8 through 0x801D0000, which the payload two work-halfword 0x2C dispatchers index from the interior bases 0x801CFFEC and 0x801CFFF8: while the work pending-request flag byte 0x07 is nonzero it runs the shared readiness helper func_8014DAEC, returns while that helper reports not-ready and otherwise hands the work route byte 0x08 to the shared arrival-sequence selector func_8014D8D4 and clears the flag, while for a zero flag it runs the same readiness helper and, once ready and while the front-end row selected by the work byte 0x0B at stride 0x74 of 0x80143FC8 still has occupancy byte 0 clear, clears work byte 0x2B and the state byte 0x12B of the front-end record published at 0x80146250'
   - - 6944
     - c
@@ -151,7 +151,7 @@ segments:
     - '@behavior: Overlay step dispatch on the work record halfword at offset 0x2C: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales the u16 at 0x2C by four and calls that entry of this overlay handler run based at 0x801CFFF8 with no arguments, discarding any result'
   - - 7080
     - textbin
-    - T_801CFFA8
+    - codePointerTableffa8
   - - 7144
     - textbin
     - T_801CFFE8

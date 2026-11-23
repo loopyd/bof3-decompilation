@@ -33,7 +33,7 @@ void func_8015C058(void);
  * increment of the loaded byte. No in-image jal targets 0x801F8264: the only
  * word in the payload equal to that address is at 0x801FE2A8, eight words into
  * the code-pointer run that begins at 0x801FE288, the table
- * dispatchProgressHandlerScenarioScena0200_801F719C indexes with the signed
+ * callProgressChainHandler indexes with the signed
  * chain byte D_80146872, so the overlay reaches this span as a table slot. Its
  * 0x90 bytes have no byte-identical copy in the tree: a scan of every payload
  * under out/binaries that compares all 36 words with only the j and jal targets

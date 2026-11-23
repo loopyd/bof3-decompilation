@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 40
     - c
-    - dispatchWorkByte1HandlerTableec04BmagicMagic00903_801EEC28
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic00903_801EEC28.c'
+    - dispatchWorkByte1Nine
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Nine.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its unsigned work byte at offset 1 selects an entry of the five-entry code pointer run at 0x801EEC04 (0x801EEC98, 0x801EEF08, 0x801EF01C, 0x801EF068, 0x801EF09C), and that entry is invoked with no arguments. The five table words are copied into this dispatcher frame first, so the call target is read back from the copy and the index is not bounds-checked. It reads no other state and writes none.'
   - - 152
     - asm
@@ -45,8 +45,8 @@ segments:
     - '@source: src/bof3/bmagic/decrementIncrementZeroBmagic.c'
   - - 1128
     - c
-    - incrementWorkByte1WhenWorkByteBZeroBmagicMagic00903_801EF068
-    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic00903_801EF068.c'
+    - incrementByteWhenZero
+    - '@source: src/bof3/bmagic/incrementByteWhenZero.c'
   - - 1180
     - asm
     - func_801EF09C
@@ -72,8 +72,8 @@ segments:
     - '@behavior: Entry 3 of the five-entry work-byte-2 handler pointer run at 0x801EF89C. Reads the scratchpad work-object pointer cell at 0x1F800044, adds two modulo 256 to the work object unsigned byte at offset 0x9 and then, after re-reading the cell, adds two modulo 256 to its byte at offset 0xA; re-reads the cell once more and, only when that object byte 0x9 equals 0x10, increments the byte at offset 0x2 through the pointer the test already loaded, advancing to the next handler step. Leaf with no frame, no arguments, no return value and no other state touched.'
   - - 1856
     - c
-    - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00903_801EF340
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00903_801EF340.c'
+    - incrementCountdownGlobal
+    - '@source: src/bof3/bmagic/incrementCountdownGlobal.c'
     - '@behavior: Step handler of the shared overlay handler run at 0x801EF89C. The word at 0x801EF8AC, entry 4 of that code-pointer run and entry 2 of the dispatch base at 0x801EF8A4, holds this address and no jal in this payload reaches it, so the table is its only incoming path: it runs with work byte 1 equal to 4 through the dispatcher at 0x801EF0DC and with work byte 2 equal to 2 through the dispatcher at 0x801EF120. It reads the scratchpad work-object pointer cell at 0x1F800044 once ahead of frame creation, adds one to that object unsigned byte 0x9 at byte width, re-reads the cell and subtracts one from unsigned byte 0xA the same way, then tests the stored value truncated to eight bits (andi 0xFF) so the truncated register supplies the compared value. Only when byte 0xA reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0xB by one and invoke the shared helper at 0x801E5988, the store filling the call delay slot. Takes no arguments, returns nothing, reads or writes no other state, and the 0x18-byte frame only keeps the return address across the call.'
   - - 1976
     - c
@@ -82,13 +82,13 @@ segments:
     - '@behavior: Quad emitter of this overlay work-byte-2 handler group, reached with no arguments from 0x801EF120 once the scratchpad work record bytes 0x0 and 0x2 are both non-zero. It reads the shared graphic type twice and selects the draw-mode value 0xA5 when either answer is 1 or 2, else 0x35, links a 0xC-byte draw-mode packet through SetDrawMode at g_PrimCursor with dfe 0 and dtd 1 at the work object projection words 0x34 and 0x38 with kind 2 through func_80155A08, publishes work byte 9 shifted left 1 into the signed word cell at 0x1F800000, then takes a fresh g_PrimCursor POLY_FT4, seeds it through SetPolyFT4, marks it semi-transparent and writes four corners around the work screen halfwords 0x2E (x) and 0x30 (y) at the eighth-turn angles 0x200, 0x600, 0xE00 and 0xA00 of the 12-bit circle. Each corner x adds the func_801783C8 sample scaled by the published radius and shifted right 12 and each corner y adds the func_801782FC sample of the same angle. The texture is tpage GetTPage(0, 1, 0x340, 0x100) and clut GetClut(0x20, 0x1FA) over the 0x20-by-0x20 uv window at (0x80, 0x20), and the flat tint is work byte 0xA times 10 in red, 0 in green and that byte times 9 in blue. It links the 0x28-byte polygon at the same projection words with kind 2 and returns, having stored nothing but the scratchpad radius cell and the primitive itself.'
   - - 2736
     - c
-    - dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic00903_801EF6B0
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic00903_801EF6B0.c'
+    - dispatchWorkByte2Reset
+    - '@source: src/bof3/bmagic/dispatchWorkByte2Reset.c'
     - '@behavior: Work byte 2 step dispatcher with a reset pass of the overlay work object. It reads the work-object pointer cell at 0x1F800044 once before its frame exists, copies the four-entry work byte 2 handler run at 0x801EEC18 (0x801EF740, 0x801EF788, 0x801EF814, 0x801EF87C) into its own 0x28-byte frame at 0x10 as three word moves followed by one, and invokes the copied entry selected by that object unsigned byte 2 scaled by four, with no arguments and no bounds test. After the handler returns it reads the pointer cell a second time and, when the work object byte 0 is non-zero, invokes the shared main-executable helper at 0x8014D290. It takes no arguments and returns nothing, the frame keeps the four-word copy at 0x10 and $ra at 0x20, and it reads or writes no other state. No word of this payload holds its own address and no jal reaches it, so the caller lies outside the overlay and the argument roles stay structural.'
   - - 2880
     - c
-    - seedWorkByte9FromHelperB0058AndAdvanceWorkByte2BmagicMagic00903_801EF740
-    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperB0058AndAdvanceWorkByte2BmagicMagic00903_801EF740.c'
+    - stateHelperAdvance
+    - '@source: src/bof3/bmagic/stateHelperAdvance.c'
     - '@behavior: Handler entry 0 of the nine-word pointer run at 0x801EEC04, whose tail 0x801EEC18..0x801EEC27 is the four-word table that 0x801EF6B0 copies into its frame and dispatches on scratchpad work byte 2, so this span runs for work byte 2 equal to 0. It calls the out-of-image helper at 0x800B0058 with no arguments and stores the returned byte at byte width into the work record countdown byte at offset 0x9, then re-reads the scratchpad pointer cell at 0x1F800044 and increments that record work byte at offset 0x2, advancing the state the table indexes. The 0x18-byte frame only keeps $ra at 0x10 across the call, the cell is re-read for the second access because the store through the loaded pointer may republish it, and the span reads or writes no other state. The pointer word at 0x801EEC18 holds its address and no jal in this payload reaches it, which is the dispatch-table shape rather than a missing caller.'
   - - 2952
     - c
@@ -100,7 +100,7 @@ segments:
     - '@source: src/bof3/bmagic/decrementGlobalByteZero.c'
   - - 3196
     - c
-    - invokeHelperBmagicMagic00903_801EF87C
+    - invokeSharedHelper7
   - - 3228
     - textbin
     - D_801EF89C

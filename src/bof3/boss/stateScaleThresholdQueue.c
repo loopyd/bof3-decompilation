@@ -15,7 +15,7 @@ void func_8015DF18(u16 cue_id); /* @source 0x8015DF18 */
 
 /* @source 0x800C196C
  * @behavior Entry 0 of the nine-word handler run based at 0x800C26B0, the run
- * that dispatchStateByte4Table26b0BossBoss00816_800C1928 indexes with the work
+ * that callWorkByte4State indexes with the work
  * record dispatch byte at +4, and the only in-image word that names this
  * function. It seeds the two work bytes the appear sequence below it animates:
  * byte +9, which the ring renderer at 0x800C236C takes as its scale, and byte

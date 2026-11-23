@@ -55,8 +55,8 @@ segments:
     - dispatchIndexedHandlerBossBoss00216_800C19C8
   - - 512
     - c
-    - setBossStateThreeClearScratchByte4AndInvokeHelper602WhenWorkExpiredBossBoss00216_800C1A00
-    - '@source: src/bof3/boss/setBossStateThreeClearScratchByte4AndInvokeHelper602WhenWorkExpiredBossBoss00216_800C1A00.c'
+    - setStateThreeClear
+    - '@source: src/bof3/boss/setStateThreeClear.c'
     - '@behavior: Entry 2 of the twelve-word handler run based at 0x800C1FEC, the word 0x800C1FF4 of the payload data row D_800C1F9C: the dispatcher at 0x800C18A0 indexes that run from work-record byte 2 and calls the selected entry with no arguments, and no jal in the payload names this body, so its parameters stay structural. It loads the current enemy work record pointer published at 0x801EB4E8 ahead of its own frame setup and reads that record''s halfword at 0x94, the field the neighboring entry 0x800C1A4C overwrites with 0xFFFF once the work is expired. While that halfword equals 0xFFFF it reads the scratchpad pointer cell 0x1F800044, stores the constant 3 into the shared battle state byte 0x80146375, clears byte 4 of the scratch work record and invokes the shared main-executable helper 0x8015D71C with the selector 0x602; otherwise it returns without touching any state. The 0x18-byte frame only keeps $ra at 0x10 across that call. The roles of state value 3 and of the scratch byte at offset 4 are not established here, so they stay named by offset.'
   - - 588
     - c
@@ -73,8 +73,8 @@ segments:
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 0x01, scales it by four and calls the handler pointer at that index of the local handler table based at 0x800C2000, the +0x64 word of the reviewed textbin row D_800C1F9C, with no arguments; the selected handler''s $v0 is left untouched through the epilogue. The original does not bound the index before the scaled table load, and the slots after the index byte and after that load stay nops. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and no word or jal site in the payload names this function, so its caller is outside this overlay and it takes no arguments.'
   - - 748
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00216_800C1AEC
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00216_800C1AEC.c'
+    - publishWorkStepSetup2
+    - '@source: src/bof3/boss/publishWorkStepSetup2.c'
     - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C1F9C into +0xEC of the current enemy work record from 0x801EB4E8, the byte dispatcher 0x800C1C08 into +0xE4 and the in-row data pointer 0x800C1FAC into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 836
     - c
@@ -106,8 +106,8 @@ segments:
     - '@source: src/bof3/boss/callStateTable2054Boss.c'
   - - 1180
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss00216_800C1C9C
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss00216_800C1C9C.c'
+    - publishWorkStepSetup3
+    - '@source: src/bof3/boss/publishWorkStepSetup3.c'
     - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C1F9C into +0xEC of the current enemy work record from 0x801EB4E8, the indexed dispatcher 0x800C1D00 into +0xE4 and the in-row data pointer 0x800C1FB4 into +0xE8, raises bit 0x8 of the record +0x104 flag word, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 1280
     - c
@@ -120,7 +120,7 @@ segments:
     - noopHandlerBossBoss00216_800C1D40
   - - 1352
     - c
-    - noopHandlerBossBoss00216_800C1D48
+    - noopHandler7
   - - 1360
     - c
     - publishBattleHooksBossBoss00216_800C1D50
@@ -150,13 +150,13 @@ segments:
     - '@behavior: Progress hook this overlay publishes into the shared battle hook slot 0x801463A4: it reads the shared battle flag word D_80146328 and, when the 0x6 mask of that word is set, copies the owner-0 field group of the shared battle record base 0x801EB630, stores 0x6D into the shared scenario progress byte 0x80146864 and 0x18 into the shared selected-record index byte 0x80145029, then calls the shared initializer at 0x801DDED8; when the mask is clear it calls the one at 0x801DDF00 instead.'
   - - 1768
     - c
-    - invokeZeroArgBossBoss00216_800C1EE8
+    - invokeZeroArgHelper
   - - 1800
     - c
-    - publishBattleHooksBossBoss00216_800C1F08
+    - publishBattleHooks3
   - - 1856
     - c
-    - zeroResultBossBoss00216_800C1F40
+    - zeroResult2
   - - 1864
     - c
     - initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48
@@ -164,7 +164,7 @@ segments:
     - '@behavior: Mode-transition handler at the first slot of the trio this overlay publishes into the shared battle hook slots: reads the shared battle flag byte D_80146328 and, when its 0x2 bit is set, stores 5 into the shared mode byte D_80146875 and calls the shared initializer at 0x801DDED8, otherwise calls the one at 0x801DDF00.'
   - - 1940
     - c
-    - noopHandlerBossBoss00216_800C1F94
+    - noopHandler9
   - - 1948
     - textbin
     - D_800C1F9C

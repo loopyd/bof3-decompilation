@@ -4,7 +4,7 @@
  * map. The original materializes the cell address once at entry and reads the
  * work record through that single loaded pointer, so every field access below
  * is an offset of one local. This overlay's lifts
- * clearWorkBytesBmagicMagic05803_801EFE9C and
+ * clearWorkBytesFive and
  * decrementCoordWordsTwice
  * read the same cell and had measured exact when this seed was written. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */

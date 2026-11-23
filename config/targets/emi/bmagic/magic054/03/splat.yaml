@@ -30,21 +30,21 @@ segments:
   subsegments:
   - - 44
     - c
-    - dispatchWorkByte1HandlerBmagicMagic05403_801EEC2C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic05403_801EEC2C.c'
+    - dispatchWorkByte1Quad
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Quad.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects an entry of the four-entry code pointer table at 0x801EEC04 (0x801EEC98, 0x801EF05C, 0x801EF0B8, 0x801EF0EC), and that entry is invoked with no arguments. The four table words are copied into this function''s own 0x28-byte frame first, so the call target is read back from that copy. It reads no other state and writes none.'
   - - 152
     - asm
     - func_801EEC98
   - - 1116
     - c
-    - forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05403_801EF05C
-    - '@source: src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05403_801EF05C.c'
+    - forwardBattleAdvance
+    - '@source: src/bof3/bmagic/forwardBattleAdvance.c'
     - '@behavior: Entry 1 of the four-entry code pointer table at 0x801EEC04 that the overlay dispatcher at 0x801EEC2C indexes with work byte 1. Reads the work-object pointer cell at 0x1F800044 and tests work byte 0xB; only when that byte is zero does it forward the unsigned battle target byte 0x80146384 to helper 0x800A9820, re-read the pointer cell and increment work byte 1 at byte width. Otherwise it returns without touching anything. The 0x18-byte frame only keeps $ra across the call; it takes no arguments, returns nothing and writes no other state.'
   - - 1208
     - c
-    - raiseFlag4AndInvokeHelperBmagicMagic05403_801EF0B8
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic05403_801EF0B8.c'
+    - raiseFlag4CallHelper4
+    - '@source: src/bof3/bmagic/raiseFlag4CallHelper4.c'
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments. It is the third word (index 2) of the four-entry code pointer run at 0x801EEC04 (0x801EEC98, 0x801EF05C, 0x801EF0B8, 0x801EF0EC) that the overlay dispatcher at 0x801EEC2C copies into its own frame and selects with work byte 1. The original materializes the halfword address once in a register (unsigned halfword load, ori, halfword store through that one register, the store filling the call delay slot) and keeps it live across the call, so the read-modify-write is written through a local pointer. The 0x18-byte frame only keeps $ra at 0x10 across the helper call; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 1260
     - asm
@@ -55,8 +55,8 @@ segments:
     - '@source: src/bof3/bmagic/magic05403DispatchTables.c'
   - - 1436
     - c
-    - dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic05403_801EF19C
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic05403_801EF19C.c'
+    - dispatchWorkByte2Six
+    - '@source: src/bof3/bmagic/dispatchWorkByte2Six.c'
     - '@behavior: Work-byte-2 dispatcher of the overlay work object. The work-object pointer cell at 0x1F800044 is read once before the frame is created, and its state byte at offset 2 selects an entry of the six-entry code pointer table at 0x801EEC14 (0x801EF238, 0x801EF3A4, 0x801EF43C, 0x801EF4A8, 0x801EF534, 0x801EF624), which is invoked with no arguments. The six table words are copied into this function''s own 0x30-byte frame at offset 0x10 first, so the call target is read back from that copy and the index is not bounded before the scaled load. After the handler returns it re-reads the pointer cell, tests work byte 0, and when that byte is nonzero it invokes the helper at 0x8014D290. The 0x30-byte frame only holds the six-word copy and keeps $ra at 0x28; it takes no arguments, returns nothing and writes no state of its own. Its only in-image reference is the pointer word 0x801EF19C that ends the payload at 0x801EF658, so the overlay loader installs it.'
   - - 1592
     - c
@@ -79,8 +79,8 @@ segments:
     - func_801EF534
   - - 2596
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05403_801EF624
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05403_801EF624.c'
+    - decrementGlobalCall4
+    - '@source: src/bof3/bmagic/decrementGlobalCall4.c'
     - '@behavior: Work-byte-2 handler, entry 5 of the six-entry handler-pointer run at 0x801EEC14 that the overlay dispatcher at 0x801EF19C copies into its frame and indexes with byte 2 of the scratchpad work object at 0x1F800044; the payload word at 0x801EEC28 is the only in-image reference to this address. Reads the shared battle work record pointer at 0x801EB4E0 once, decrements its byte 0xB by one at byte width, and then invokes the shared helper at 0x801E5988 with the store filling the call delay slot; takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra across the call.'
   - - 2648
     - textbin

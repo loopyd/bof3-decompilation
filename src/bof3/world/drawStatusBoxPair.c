@@ -31,31 +31,31 @@ void drawStatusBoxPair(s16 x, s16 y) {
   drawFramedTexturedPanel((u16)x, (u16)(y + 0x42), 0x8A, 0x5C, 0x80, *clutBank);
   submitTpageDrawMode(9, 1);
 
-  appendIndexedSpriteWorld00Area03004(0x25, 1, x, y);
+  appendIndexedSprite(0x25, 1, x, y);
   for (i = 0; i < 10; i++)
-    appendIndexedSpriteWorld00Area03004(0x26, 1, (s16)(x + 0x20 + i * 8), y);
-  appendIndexedSpriteWorld00Area03004(0x27, 1, (s16)(x + 0x70), y);
-  appendIndexedSpriteWorld00Area03004(0x28, 1, (s16)(x + 0x88), y);
+    appendIndexedSprite(0x26, 1, (s16)(x + 0x20 + i * 8), y);
+  appendIndexedSprite(0x27, 1, (s16)(x + 0x70), y);
+  appendIndexedSprite(0x28, 1, (s16)(x + 0x88), y);
 
   renderIndexedQuadHeight(x, (s16)(y + 0x18), 0x1E, 0);
   renderIndexedQuadHeight((s16)(x + 0x88), (s16)(y + 0x18), 0x1E, 1);
 
-  appendIndexedSpriteWorld00Area03004(0x3C, 1, x, (s16)(y + 0x36));
+  appendIndexedSprite(0x3C, 1, x, (s16)(y + 0x36));
   for (i = 0; i < 16; i++)
-    appendIndexedSpriteWorld00Area03004(0x3D, 1, (s16)(x + 8 + i * 8), (s16)(y + 0x36));
-  appendIndexedSpriteWorld00Area03004(0x3E, 1, (s16)(x + 0x88), (s16)(y + 0x36));
+    appendIndexedSprite(0x3D, 1, (s16)(x + 8 + i * 8), (s16)(y + 0x36));
+  appendIndexedSprite(0x3E, 1, (s16)(x + 0x88), (s16)(y + 0x36));
 
-  appendIndexedSpriteWorld00Area03004(0x25, 1, x, (s16)(y + 0x40));
+  appendIndexedSprite(0x25, 1, x, (s16)(y + 0x40));
   for (i = 0; i < 10; i++)
-    appendIndexedSpriteWorld00Area03004(0x26, 1, (s16)(x + 0x20 + i * 8), (s16)(y + 0x40));
-  appendIndexedSpriteWorld00Area03004(0x27, 1, (s16)(x + 0x70), (s16)(y + 0x40));
-  appendIndexedSpriteWorld00Area03004(0x28, 1, (s16)(x + 0x88), (s16)(y + 0x40));
+    appendIndexedSprite(0x26, 1, (s16)(x + 0x20 + i * 8), (s16)(y + 0x40));
+  appendIndexedSprite(0x27, 1, (s16)(x + 0x70), (s16)(y + 0x40));
+  appendIndexedSprite(0x28, 1, (s16)(x + 0x88), (s16)(y + 0x40));
 
   renderIndexedQuadHeight(x, (s16)(y + 0x58), 0x40, 0);
   renderIndexedQuadHeight((s16)(x + 0x88), (s16)(y + 0x58), 0x40, 1);
 
-  appendIndexedSpriteWorld00Area03004(0x3C, 1, x, (s16)(y + 0x98));
+  appendIndexedSprite(0x3C, 1, x, (s16)(y + 0x98));
   for (i = 0; i < 16; i++)
-    appendIndexedSpriteWorld00Area03004(0x3D, 1, (s16)(x + 8 + i * 8), (s16)(y + 0x98));
-  appendIndexedSpriteWorld00Area03004(0x3E, 1, (s16)(x + 0x88), (s16)(y + 0x98));
+    appendIndexedSprite(0x3D, 1, (s16)(x + 8 + i * 8), (s16)(y + 0x98));
+  appendIndexedSprite(0x3E, 1, (s16)(x + 0x88), (s16)(y + 0x98));
 }

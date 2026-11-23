@@ -39,13 +39,13 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte2Table1ea4BossBoss01216_800C18B4.c'
   - - 248
     - c
-    - dispatchStateByte3Table1ebcBossBoss01216_800C18F8
-    - '@source: src/bof3/boss/dispatchStateByte3Table1ebcBossBoss01216_800C18F8.c'
+    - callWorkByte3State
+    - '@source: src/bof3/boss/callWorkByte3State.c'
     - '@behavior: Overlay state dispatch on work-record byte 3: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 3, scales it by four and calls the entry of the handler run based at 0x800C1EBC, so the handler''s result stays in the return register.'
   - - 316
     - c
-    - setStateByte3To1WhenHelperReturnsNonzeroBossBoss01216_800C193C
-    - '@source: src/bof3/boss/setStateByte3To1WhenHelperReturnsNonzeroBossBoss01216_800C193C.c'
+    - setByte3OnHelper
+    - '@source: src/bof3/boss/setByte3OnHelper.c'
     - '@behavior: Entry 0 of the byte-3 handler run based at 0x800C1EBC: calls the shared main-program helper func_8014D978 with no arguments, keeps the low byte of its returned word and, while that byte is nonzero, writes 1 into the work-record byte at offset 3 read through the scratchpad pointer cell 0x1F800044. It writes nothing when that byte is zero, and the handler table types this entry as a void function of no arguments. The 0x18-byte frame only keeps the return address at 0x10 across the call.'
   - - 376
     - asm

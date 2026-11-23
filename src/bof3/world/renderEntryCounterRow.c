@@ -18,7 +18,7 @@ void renderEntryCounterRow(void) {
   u8* counterWork;
 
   submitTpageDrawMode(0, 1);
-  appendIndexedSpriteWorld00Area03004(0x12, 1, 0xF0, 0x42);
+  appendIndexedSprite(0x12, 1, 0xF0, 0x42);
   func_8014FF0C(0x11C, 0x45, 0, D_801D0C10);
 
   textBuffer = D_80145AD4;

@@ -13,5 +13,5 @@ stateRecordsReportActive = 0x801F330C;
 statePositionClearDraw = 0x801F3448;
 func_801F34A0 = 0x801F34A0;
 stateChannelPairWorld = 0x801F38F4;
-claimFrontEndRecordAndSetHandler3DWorld01Area04713_801F396C = 0x801F396C;
+claimFrontendRecord3d = 0x801F396C;
 D_801F39C8 = 0x801F39C8;

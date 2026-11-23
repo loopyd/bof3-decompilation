@@ -2,7 +2,7 @@
 
 /* @behavior AREA030 panel-step handler, index 1 of the work-byte-3 dispatch table
  * 0x801E20C4, walking the second step-record chain at
- * panelStepRecordTableWorld00Area03004_801E20CC. While work byte 9 of the
+ * panelStepRecordTable. While work byte 9 of the
  * record published at the scratchpad cursor 0x1F800044 is nonzero it
  * decrements that byte and, unless bit 7 of the stepped-from record's first
  * byte is set, runs the shared func_8014D978 helper. Once the countdown
@@ -56,16 +56,16 @@ void stateEntryCountValue(
   work = D_1F800044;
   if (work[9] == 0) {
     step = work[0xA];
-    if ((s8)panelStepRecordTableWorld00Area03004_801E20CC[step].unk_00 == -1) {
-      work[0xA] = panelStepRecordTableWorld00Area03004_801E20CC[step].count_01;
+    if ((s8)panelStepRecordTable[step].unk_00 == -1) {
+      work[0xA] = panelStepRecordTable[step].count_01;
       D_1F800044[0xB] = 0x37;
       seed = D_1F800044;
       *(s32*)(seed + 0x0C) = 0x6A;
       *(s32*)(seed + 0x10) = 0x6A;
     }
     func_8014D8D4(
-        panelStepRecordTableWorld00Area03004_801E20CC[D_1F800044[0xA]].unk_00 & 0x7F);
-    if ((panelStepRecordTableWorld00Area03004_801E20CC[D_1F800044[0xA]].unk_00 & 0x7F) == 9) {
+        panelStepRecordTable[D_1F800044[0xA]].unk_00 & 0x7F);
+    if ((panelStepRecordTable[D_1F800044[0xA]].unk_00 & 0x7F) == 9) {
       slot = (u8)findFreeRecord();
       if (slot != 0xFF) {
         WORLD00_AREA030_ARM_PANEL_ENTRY(slot);
@@ -77,12 +77,12 @@ void stateEntryCountValue(
     }
     refresh = D_1F800044;
     refresh[9] =
-        panelStepRecordTableWorld00Area03004_801E20CC[refresh[0xA]].count_01;
+        panelStepRecordTable[refresh[0xA]].count_01;
     refresh = D_1F800044;
     refresh[0xA] = refresh[0xA] + 1;
   } else {
     work[9] = work[9] - 1;
-    if (((s8)panelStepRecordTableWorld00Area03004_801E20CC[D_1F800044[0xA] - 1]
+    if (((s8)panelStepRecordTable[D_1F800044[0xA] - 1]
              .unk_00 &
          0x80) == 0) {
       func_8014D978();
@@ -92,14 +92,14 @@ void stateEntryCountValue(
   cursor = D_1F800044;
   *(s32*)(cursor + 0x0C) =
       *(s32*)(cursor + 0x0C) +
-      (s8)panelStepRecordTableWorld00Area03004_801E20CC[cursor[0xA] - 1].unk_02;
+      (s8)panelStepRecordTable[cursor[0xA] - 1].unk_02;
   *(s32*)(cursor + 0x10) =
       *(s32*)(cursor + 0x10) +
-      (s8)panelStepRecordTableWorld00Area03004_801E20CC[cursor[0xA] - 1].unk_03;
+      (s8)panelStepRecordTable[cursor[0xA] - 1].unk_03;
   cursor[6] =
       cursor[6] -
-      (u8)panelStepRecordTableWorld00Area03004_801E20CC[cursor[0xA] - 1].unk_02;
-  if ((s8)panelStepRecordTableWorld00Area03004_801E20CC[D_1F800044[0xA] - 1].unk_03 <
+      (u8)panelStepRecordTable[cursor[0xA] - 1].unk_02;
+  if ((s8)panelStepRecordTable[D_1F800044[0xA] - 1].unk_03 <
       0) {
     mathMarkerPositionsRow(0);
   } else {
@@ -107,7 +107,7 @@ void stateEntryCountValue(
   }
   if ((D_80143E6C & 0xF) == 0) {
     count = D_1F800044;
-    if ((s8)panelStepRecordTableWorld00Area03004_801E20CC[count[0xA] - 1].unk_03 >
+    if ((s8)panelStepRecordTable[count[0xA] - 1].unk_03 >
         0) {
       count[0xB] = count[0xB] + 1;
       count = D_1F800044;

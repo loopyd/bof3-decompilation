@@ -45,14 +45,14 @@ segments:
     - '@behavior: Overlay step dispatcher and the handler this overlay work state machine reaches at index 4 of the fifteen-word byte-2 run based at 0x800C2690: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 3, scales it by four and calls the matching entry of this payload handler run based at 0x800C26A8 with no arguments, discarding any result, and does not bound the index before the scaled table load.'
   - - 296
     - c
-    - dispatchStateByte4Table26b0BossBoss00816_800C1928
-    - '@source: src/bof3/boss/dispatchStateByte4Table26b0BossBoss00816_800C1928.c'
+    - callWorkByte4State
+    - '@source: src/bof3/boss/callWorkByte4State.c'
     - '@behavior: Step dispatcher of this overlay that indexes the handler run based at 0x800C26B0 with work record byte 4: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 4, scales it by four and calls the matching entry of the run with no arguments, and does not bound the index before the scaled table load. The only in-image word that names it is 0x800C26A8, index 0 of the nine-word run callStateTable26Boss indexes with work byte 3.'
   - - 364
     - c
     - stateScaleThresholdQueue
     - '@source: src/bof3/boss/stateScaleThresholdQueue.c'
-    - '@behavior: Entry 0 of the nine-word handler run based at 0x800C26B0, which dispatchStateByte4Table26b0BossBoss00816_800C1928 indexes with work record byte 4, and the only in-image word that names this function. It seeds two bytes of the work record published at the scratchpad pointer cell 0x1F800044: byte 9, which the ring renderer at 0x800C236C takes as its scale, and byte 0x0A, the threshold the next entry of that run compares byte 9 against and halves each time the two meet. Both take 0x40. It then plays sound cue 0x601 through func_8015DF18 and increments work byte 4, which hands the record to entry 1 of the same run at 0x800C19C0. The body re-reads the pointer cell for the second byte store and once more after the call.'
+    - '@behavior: Entry 0 of the nine-word handler run based at 0x800C26B0, which callWorkByte4State indexes with work record byte 4, and the only in-image word that names this function. It seeds two bytes of the work record published at the scratchpad pointer cell 0x1F800044: byte 9, which the ring renderer at 0x800C236C takes as its scale, and byte 0x0A, the threshold the next entry of that run compares byte 9 against and halves each time the two meet. Both take 0x40. It then plays sound cue 0x601 through func_8015DF18 and increments work byte 4, which hands the record to entry 1 of the same run at 0x800C19C0. The body re-reads the pointer cell for the second byte store and once more after the call.'
   - - 448
     - asm
     - func_800C19C0
@@ -106,18 +106,18 @@ segments:
     - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 1544
     - c
-    - publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1E08
-    - '@source: src/bof3/boss/publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1E08.c'
-    - '@behavior: Step-3 handler of this overlay work state machine, entry 3 of the 0x800C26FC run that dispatchIndexedHandlerBossBoss00816_800C1D74 selects from: publishes the data block pointer 0x800C264C into +0xEC of the current enemy work record from 0x801EB4E8, the no-op-run step handler dispatchIndexedHandlerBossBoss00816_800C1E60 into +0xE4 and the in-row data pointer 0x800C2658 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
+    - publishNoopStepSetup
+    - '@source: src/bof3/boss/publishNoopStepSetup.c'
+    - '@behavior: Step-3 handler of this overlay work state machine, entry 3 of the 0x800C26FC run that dispatchIndexedHandlerBossBoss00816_800C1D74 selects from: publishes the data block pointer 0x800C264C into +0xEC of the current enemy work record from 0x801EB4E8, the no-op-run step handler callIndexedHandler3 into +0xE4 and the in-row data pointer 0x800C2658 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 1632
     - c
-    - dispatchIndexedHandlerBossBoss00816_800C1E60
+    - callIndexedHandler3
   - - 1688
     - c
     - noopHandlerBossBoss00816_800C1E98
   - - 1696
     - c
-    - noopHandlerBossBoss00816_800C1EA0
+    - noopHandler8
   - - 1704
     - c
     - noopHandlerBossBoss00816_800C1EA8
@@ -127,21 +127,21 @@ segments:
     - '@source: src/bof3/boss/callStateTable2744Boss.c'
   - - 1780
     - c
-    - publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1EF4
-    - '@source: src/bof3/boss/publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1EF4.c'
-    - '@behavior: Entry 0 of the overlay state run based at 0x800C2744, the table the state dispatcher callStateTable2744Boss indexes with the work record dispatch byte at +1: publishes the data block pointer 0x800C264C into +0xEC of the current enemy work record from 0x801EB4E8, the no-op-run step handler dispatchIndexedHandlerBossBoss00816_800C1F4C into +0xE4 and the in-row data pointer 0x800C2658 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
+    - publishNoopStepSetup2
+    - '@source: src/bof3/boss/publishNoopStepSetup2.c'
+    - '@behavior: Entry 0 of the overlay state run based at 0x800C2744, the table the state dispatcher callStateTable2744Boss indexes with the work record dispatch byte at +1: publishes the data block pointer 0x800C264C into +0xEC of the current enemy work record from 0x801EB4E8, the no-op-run step handler callIndexedHandler4 into +0xE4 and the in-row data pointer 0x800C2658 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 1868
     - c
-    - dispatchIndexedHandlerBossBoss00816_800C1F4C
+    - callIndexedHandler4
   - - 1924
     - c
-    - noopHandlerBossBoss00816_800C1F84
+    - noopHandler10
   - - 1932
     - c
-    - noopHandlerBossBoss00816_800C1F8C
+    - noopHandler11
   - - 1940
     - c
-    - noopHandlerBossBoss00816_800C1F94
+    - noopHandler12
   - - 1948
     - c
     - publishBattleHooksBossBoss00816_800C1F9C
@@ -166,8 +166,8 @@ segments:
     - zeroResultBossBoss00816_800C20C0
   - - 2248
     - c
-    - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress20BossBoss00816_800C20C8
-    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress20BossBoss00816_800C20C8.c'
+    - setupModeFlagProgress2
+    - '@source: src/bof3/boss/setupModeFlagProgress2.c'
     - '@behavior: Battle-flag state switch of this overlay and first member of the second hook trio its installer publishBattleHooksBossBoss00816_800C2088 writes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x20 into the shared scenario progress byte 0x80146864 and calls initModeTuple510, and otherwise calls initModeTuple520.'
   - - 2324
     - asm
@@ -177,7 +177,7 @@ segments:
     - publishBattleHooksBossBoss00816_800C2184
   - - 2492
     - c
-    - zeroResultBossBoss00816_800C21BC
+    - zeroResult3
   - - 2500
     - c
     - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C4
@@ -190,7 +190,7 @@ segments:
     - '@behavior: Battle setup hook of this overlay for owner record 2, installed into the shared battle hook slot 0x801463A8 by the exact installer publishBattleHooksBossBoss00816_800C2184: clears the 0x40 flag of owner record 2 through func_800AC844, looks the same record up through func_800AC754 and publishes it into the scratchpad work-record cursor 0x1F800044, applies main lookup record 0x83 through func_8014DD3C, marks the published record by storing 1 into its byte 0x2A, requests resource 0 through func_8014D6B8, and then copies the adjacent halfword pair D_801EB688/D_801EB68A into that record at 0x58 and 0x5A.'
   - - 2688
     - c
-    - publishBattleHooksBossBoss00816_800C2280
+    - publishBattleHooks4
   - - 2744
     - c
     - zeroResultBossBoss00816_800C22B8
@@ -198,12 +198,12 @@ segments:
     - c
     - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress44BossBoss00816_800C22C0
     - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress44BossBoss00816_800C22C0.c'
-    - '@behavior: Battle-flag state switch of this overlay and first member of the fourth hook trio its installer publishBattleHooksBossBoss00816_800C2280 writes into shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x44 into the shared scenario progress byte 0x80146864 and calls initModeTuple510, and otherwise calls initModeTuple520.'
+    - '@behavior: Battle-flag state switch of this overlay and first member of the fourth hook trio its installer publishBattleHooks4 writes into shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x44 into the shared scenario progress byte 0x80146864 and calls initModeTuple510, and otherwise calls initModeTuple520.'
   - - 2828
     - c
     - setupBattleWorkRecordForOwnerThreeThenCopyHalfwordPair58And5ABossBoss00816_800C230C
     - '@source: src/bof3/boss/setupBattleWorkRecordForOwnerThreeThenCopyHalfwordPair58And5ABossBoss00816_800C230C.c'
-    - '@behavior: Battle setup hook of this overlay and second member of the fourth hook trio its installer publishBattleHooksBossBoss00816_800C2280 writes into shared battle-hook slot 0x801463A8: clears the 0x40 flag of owner record 3 through func_800AC844, publishes the record func_800AC754 returns for the same owner id into the scratchpad work-record cursor 0x1F800044, applies main lookup record 0x83 through func_8014DD3C, requests resource 0 through func_8014D6B8, and then copies the adjacent halfword pair D_801EB688/D_801EB68A into that published record at +0x58 and +0x5A.'
+    - '@behavior: Battle setup hook of this overlay and second member of the fourth hook trio its installer publishBattleHooks4 writes into shared battle-hook slot 0x801463A8: clears the 0x40 flag of owner record 3 through func_800AC844, publishes the record func_800AC754 returns for the same owner id into the scratchpad work-record cursor 0x1F800044, applies main lookup record 0x83 through func_8014DD3C, requests resource 0 through func_8014D6B8, and then copies the adjacent halfword pair D_801EB688/D_801EB68A into that published record at +0x58 and +0x5A.'
   - - 2924
     - asm
     - func_800C236C

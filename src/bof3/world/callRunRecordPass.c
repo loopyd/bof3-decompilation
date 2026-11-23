@@ -6,7 +6,7 @@
  * reachable entries begin with
  * raiseFlagReseedRecords,
  * followed by claimEveryFourthFrame, lowerMirrorEveryFourth,
- * clearWorkFlagsAndModeFlagBit40WhenNoEntryHandledWorld01Area04913_80117818,
+ * stateClearWorkFlag40,
  * mathRedBlueHalf, func_80117ACC, func_80117C38, func_80117C58 and
  * stateFramesComplementShade, the last word of the run. The run stays one row, so this
  * declaration binds the interior word through the generated
@@ -14,7 +14,7 @@
 extern void (*D_8011819C[])(void); /* @source 0x8011819C @kind data */
 
 /* Record pass of this overlay: sets the draw state up and walks the sixteen
- * records of the 0x800E4800 work table, repointing the record cell world01Area04913WorkRecordCursor
+ * records of the 0x800E4800 work table, repointing the record cell workRecordCursor
  * once per record and running the renderer func_801170D8 on each claimed one. */
 extern void func_80117900(void); /* @source 0x80117900 */
 

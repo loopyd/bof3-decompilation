@@ -15,10 +15,10 @@ void renderHeaderCounterMarker(s16 x, s16 y) {
   s32 counterValue;
 
   submitTpageDrawMode(5, 3);
-  appendIndexedSpriteWorld00Area03004(0x0D, 3, (s16)(x + 24), (s16)(y + 8));
+  appendIndexedSprite(0x0D, 3, (s16)(x + 24), (s16)(y + 8));
   submitTpageDrawMode(0, 3);
-  appendIndexedSpriteWorld00Area03004(0x0E, 3, x, y);
-  appendIndexedSpriteWorld00Area03004(0x0F, 3, (s16)(x + 256), y);
+  appendIndexedSprite(0x0E, 3, x, y);
+  appendIndexedSprite(0x0F, 3, (s16)(x + 256), y);
 
   if (D_80143FC9 == 0u) {
     counterValue = 0;

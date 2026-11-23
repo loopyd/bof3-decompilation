@@ -22,10 +22,10 @@ void func_8015C088(void);
  * 0x80146865, 0x80146866, 0x80146867, D_80146874 is the source statement
  * order. No in-image jal targets the address; its only image word is
  * 0x801FE350, entry 19 of the overlay callback table D_801FE304 that
- * dispatchRecordCallbackByByte7AScenarioScena0200_801FD084 (0x801FD084)
+ * callRecordCallbackTable (0x801FD084)
  * indexes with a record's byte field 0x7A, so the overlay reaches this handler
  * only indirectly. Its 80 bytes are the shape of the exact sibling lifts
- * setProgress1ClearSharedBytes6566AndRequestPrimaryState7ScenarioScena0200_801FD2E0
+ * stateProgress1Request7
  * (0x801FD2E0) and clearSharedStateBytesThenRequestPrimaryState3ScenarioScena1100_801FA674
  * (0x801FA674), differing in the stored constants and in additionally clearing
  * 0x80146867. The address anchor keeps the name target-qualified.

@@ -127,7 +127,7 @@ void func_801A78F8(void);
 void func_801BE1B0(u32 arg0);
 void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
-void addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC(void);
+void addSignedTableStep(void);
 
 /* @source 0x801F8F98
  * @behavior The overlay handler of primary state 2: word 2 of the primary-state
@@ -138,7 +138,7 @@ void addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC(void);
  *           0..30 select a case and 23..29 fall straight to the exit, and after
  *           the switch every substate from 2 to 12 steps the shared word
  *           D_80149318 through the overlay's signed step table by calling
- *           addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC, which
+ *           addSignedTableStep, which
  *           is what makes this body one per-frame substate controller.
  *           Substates 0, 3, 5, 11, 12 and 13 wait out the shared countdown
  *           D_80146876 and decrement it while it is non-zero; substates 9, 10,
@@ -619,7 +619,7 @@ void runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98(void) {
       *counter = count;
 
       if (0x13u <= count) {
-        addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC();
+        addSignedTableStep();
       }
 
       if (*counter != 0) {
@@ -651,6 +651,6 @@ void runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98(void) {
   }
 
   if ((u32)(D_80146875 - 2) < 11u) {
-    addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC();
+    addSignedTableStep();
   }
 }

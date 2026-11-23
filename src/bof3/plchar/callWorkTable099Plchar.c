@@ -2,7 +2,7 @@
 
 /* This overlay's handler run: the thirty code pointers from 0x801D0988 through
  * 0x801D09FC, this payload's functions with the shared main-executable handler
- * 0x801B2D54 at entries 2 and 20. The Splat `textbin` row named T_801D0988 places
+ * 0x801B2D54 at entries 2 and 20. The Splat `textbin` row named codePointerTable0988 places
  * all thirty words, so the run is only referenced here. This dispatcher indexes it
  * from 0x801D099C, so its base is entry 5 of that pointer data and the entries it
  * reaches at indices 0 to 24 are 0x801CEC40 through 0x801CFED8, the shared handler

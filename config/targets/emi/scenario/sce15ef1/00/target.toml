@@ -10,8 +10,8 @@ load_address = 0x801D0C00
 sources = [
     "src/bof3/scenario/swapWords.c",
     "src/bof3/scenario/stateRecordActiveFlags.c",
-    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2170.c",
-    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC.c",
+    "src/bof3/scenario/callPatternBlinkStep.c",
+    "src/bof3/scenario/callEffectRecordStep.c",
     "src/bof3/scenario/claimFreeSeedPosition.c",
     "src/bof3/scenario/stepClaimedLifeExpired.c",
     "src/bof3/scenario/invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54.c",
@@ -28,7 +28,7 @@ sources = [
     "src/bof3/scenario/stateHeadIntegrateNegate.c",
     "src/bof3/scenario/renderBlinkingTintedVelocity.c",
     "src/bof3/scenario/emitProjectedPatternGrid.c",
-    "src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D30AC.c",
+    "src/bof3/scenario/emitPatternEffectRecords.c",
     "src/bof3/scenario/renderBlinkingBeforeLife.c",
     "src/bof3/scenario/renderEffectRecordsScenario.c",
     "src/bof3/scenario/claimFrontEndRecordFromWorkBlockSetPatternGridOriginAndSpritePageRequestResource7ResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D2E30.c",
@@ -40,9 +40,9 @@ sources = [
     "src/bof3/scenario/renderOffsetsRedGreen.c",
     "src/bof3/scenario/renderSliverSteppedLags.c",
     "src/bof3/scenario/renderRadiiOrangeBlack.c",
-    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D0C04.c",
+    "src/bof3/scenario/callBeamStepHandler.c",
     "src/bof3/scenario/stateOriginTripleArm.c",
-    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2B64.c",
+    "src/bof3/scenario/callHeadPairStep.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",

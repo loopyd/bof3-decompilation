@@ -8,7 +8,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x80117864
  * @behavior Spawn step of this overlay's 0x800E4800 work table: it takes the
  * free record its caller has just obtained from
- * findFreeWorkRecordAt800E4800World01Area04913_801178C4 (the 16 records of
+ * queryFreeWorkSlot (the 16 records of
  * 0x28-byte stride whose lead byte is the claim flag) and seeds it from the
  * scratch work object published at the scratchpad pointer cell 0x1F800044. The
  * record's claim byte at offset 0 takes 1, its byte at 1 takes 0 - the
@@ -20,7 +20,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * drawWorkCursorQuadWorld03Area14514_801F3938 projects and
  * claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0 also copies
  * into a record. Both callers, claimEveryFourthFrame and lowerMirrorEveryFourth, publish the
- * record in world01Area04913WorkRecordCursor and then overwrite the word at 0x1C with their own
+ * record in workRecordCursor and then overwrite the word at 0x1C with their own
  * value, so that clear is only the record's default. The renderer func_801170D8
  * tests the byte at 0x26 bitwise and substitutes the record's byte at 3 as one
  * of the three color components it passes to func_8014E5A0, so the 2 and the

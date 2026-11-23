@@ -8,7 +8,7 @@
  * and all twenty entries 0x801CE448 through 0x801CF04C are reachable. The
  * overlay's other byte-2 dispatchers at 0x801CEE18 and 0x801CF04C start eight and
  * eleven entries further in along the same run. */
-extern void (*T_801CFAFC[])(void); /* @source 0x801CFAFC @kind data */
+extern void (*codePointerTablefafc[])(void); /* @source 0x801CFAFC @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step dispatch on work-record byte 2: loads the work-record
@@ -29,4 +29,4 @@ extern void (*T_801CFAFC[])(void); /* @source 0x801CFAFC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefafcPlchar, T_801CFAFC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefafcPlchar, codePointerTablefafc);

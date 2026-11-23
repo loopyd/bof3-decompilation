@@ -200,9 +200,9 @@ void func_80196070(void);
 u8   func_8019601C(void);
 s16  func_8015477C(s32 arg0, s32 arg1);
 /* @source 0x8019A194 */
-u8   findCurrentWorldSlotIndex(void);
+u8   queryWorldSlotIndex(void);
 
-void setStatusFFFFAndSelectMode2IfGateClearWorld00Area01613_801F2C04(void);
+void stateGateSelectMode(void);
 void seedScratchDefaults(void);
 void dispatchState02(void);
 void advanceScratchHeightState02(void);

@@ -46,7 +46,7 @@ segments:
     - func_801F3064
   - - 1452
     - c
-    - dispatchStateByte2Table42ecWorld01Area04113_801F31AC
+    - dispatchByte2Table42ec
     - '@source: src/bof3/world/area04113DispatchTables.c'
   - - 1520
     - asm
@@ -134,7 +134,7 @@ segments:
     - '@behavior: stores the signed halfword -0x100 (0xFF00) into 0x8014932C and then the constant 0x02 into the byte at 0x80149333.'
   - - 4640
     - c
-    - setTwoWorld01Area04113_801F3E20
+    - stateCounterClearTwo
   - - 4668
     - c
     - callStateByte4Table567

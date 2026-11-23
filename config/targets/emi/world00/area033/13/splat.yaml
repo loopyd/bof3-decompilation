@@ -35,8 +35,8 @@ segments:
     - func_801F2C38
   - - 208
     - c
-    - queueSharedUiElementBlock11x15To16And12x16Size0World00Area03313_801F2CD0
-    - '@source: src/bof3/world/queueSharedUiElementBlock11x15To16And12x16Size0World00Area03313_801F2CD0.c'
+    - queueUiTripleZero
+    - '@source: src/bof3/world/queueUiTripleZero.c'
     - '@behavior: Queues shared UI elements at (0x11, 0x15), (0x11, 0x16) and (0x12, 0x16), all with size zero, through func_801A4BC0.'
   - - 280
     - asm
@@ -46,20 +46,20 @@ segments:
     - func_801F2E20
   - - 916
     - c
-    - prepareWorkRecordForLookup15AndArmState1World00Area03313_801F2F94
-    - '@source: src/bof3/world/prepareWorkRecordForLookup15AndArmState1World00Area03313_801F2F94.c'
+    - statePrepareRecord15
+    - '@source: src/bof3/world/statePrepareRecord15.c'
     - '@behavior: State-handler word 0 of the handler run at 0x801F4F64 that the overlay update 0x801F2E20 indexes with work byte 0x01. Stores 0x80 in work byte 0x24, applies main lookup entry 0xF through the shared 0x8014DD3C helper, stores 5 in work byte 0x29, clears work bytes 0x2A and 0x5D..0x5F, and arms work byte 0x01 with 1, re-reading the scratchpad cell 0x1F800044 before every store.'
   - - 1056
     - asm
     - func_801F3020
   - - 1368
     - c
-    - setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld00Area03313_801F3158
-    - '@source: src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld00Area03313_801F3158.c'
+    - stateSeedHalfwordsByte9
+    - '@source: src/bof3/world/stateSeedHalfwordsByte9.c'
   - - 1492
     - c
-    - seedWorkHalfwordsThenResetRecordWhenEntryDiffersOrModeIs5ThenStepFrameWorld00Area03313_801F31D4
-    - '@source: src/bof3/world/seedWorkHalfwordsThenResetRecordWhenEntryDiffersOrModeIs5ThenStepFrameWorld00Area03313_801F31D4.c'
+    - stateSeedHalfwordsMode5
+    - '@source: src/bof3/world/stateSeedHalfwordsMode5.c'
     - '@behavior: Seeds the work halfwords at record offsets 0x2E and 0x30 through the local 0x801F3334 helper. Then, unless the shared state halfword 0x80143B90 reads 1, resets the work record published at scratchpad pointer slot 0x44 when its byte 0x0B differs from its byte 0x07, or the shared mode byte 0x80143BB0 reads 5, or byte 0x0B reads 1 while the record word at 0x18 differs from the shared context seed 0x80143F10. The reset writes 2 to record byte 0x48, 8 to byte 0x09 and 4 to record byte 0x01, each through a fresh read of the pointer slot. Finally the shared helper 0x8014D4E0 runs. Takes no arguments, uses no result and saves only the return address in its 0x18-byte frame.'
   - - 1684
     - c
@@ -68,7 +68,7 @@ segments:
     - '@behavior: Seeds the work halfwords through the local 0x801F3334 helper, which writes 0xA0 to work offset 0x2E and 0x50 to offset 0x30, then decrements the countdown byte at 0x09 of the record published at scratchpad pointer cell 0x1F800044 and retreats the word at 0x40 by 0x2000. Once the countdown reads zero it calls the shared work-area reset 0x80196070 when the shared mode byte 0x80143BB0 reads 5, and otherwise clears work byte 0x48 and writes 1 to the work mode byte 0x01 through a third read of the cell. While the countdown is still running it calls the shared per-frame helper 0x8014D4E0 instead. Takes no arguments and returns nothing.'
   - - 1844
     - c
-    - setWorkHalfwordsWorld00Area03313_801F3334
+    - stateSeedWorkHalfwords
     - '@source: src/bof3/world/area03313_work_state.c'
   - - 1872
     - c
@@ -83,22 +83,22 @@ segments:
     - invokeTwoHelpersWorld00Area03313_801F33D4
   - - 2044
     - c
-    - dispatchStateByte2Table4f80World00Area03313_801F33FC
+    - dispatchByte2Table4f80
     - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 2112
     - c
-    - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld00Area03313_801F3440
-    - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld00Area03313_801F3440.c'
+    - stateHalfword2eAdvance
+    - '@source: src/bof3/world/stateHalfword2eAdvance.c'
     - '@behavior: Entry 0 of the work-byte-2 handler run based at 0x801F4F80 in this overlay, and entry 2 of the work-byte-1 run based at 0x801F4F78. Returns when the shared mode byte 0x801454F2 reads 2 or bit 0x100 of halfword 0x80146258 is set. Otherwise writes -0x30 to halfword 0x2E of the work record published at the scratchpad pointer cell 0x1F800044 and increments that record state byte 0x02.'
   - - 2192
     - c
-    - advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld00Area03313_801F3490
-    - '@source: src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld00Area03313_801F3490.c'
+    - stateAdvanceHalfword2e
+    - '@source: src/bof3/world/stateAdvanceHalfword2e.c'
     - '@behavior: Advances the work halfword at offset 0x2E of the record published at the scratchpad pointer cell 0x1F800044 by 0x10 and stores the truncated halfword, increments work state byte 0x02 once the stored signed value is at least 0x10, then runs the state-2 handler at 0x801F34EC. Takes no arguments and returns nothing.'
   - - 2284
     - c
-    - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld00Area03313_801F34EC
-    - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld00Area03313_801F34EC.c'
+    - stateHalfword2eMode2
+    - '@source: src/bof3/world/stateHalfword2eMode2.c'
     - '@behavior: When the shared mode byte at 0x801454F2 reads 2, writes 3 to byte 0x02 of the work record published at the scratchpad pointer cell 0x1F800044, then reloads that cell and calls the local drawer 0x801F3A34 with 0x10 and the signed halfword at record offset 0x2E. Takes no arguments and returns nothing.'
   - - 2364
     - c
@@ -115,8 +115,8 @@ segments:
     - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604.c'
   - - 2692
     - c
-    - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World00Area03313_801F3684
-    - '@source: src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World00Area03313_801F3684.c'
+    - stateDecrementHalfword30
+    - '@source: src/bof3/world/stateDecrementHalfword30.c'
     - '@behavior: Subtracts 0x0A from the work halfword at offset 0x30 of the record published at the scratchpad pointer cell 0x1F800044 and stores the truncated halfword, then increments work state byte 0x03 once that stored signed value falls below 0xC9. When the shared mode byte 0x801454F2 and work byte 0x0B are both nonzero, or byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, it writes 3 to work byte 0x03 through a second read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the overlay emitter 0x801F3FF8. Takes no arguments and returns nothing.'
   - - 2908
     - c
@@ -130,8 +130,8 @@ segments:
     - '@behavior: Entry 9 of the work-byte-1 handler table based at 0x801F4F78 in this overlay, entry 7 of the work-byte-2 table at 0x801F4F80 and entry 3 of the four-entry work-byte-3 run at 0x801F4F90, for the work record published at the scratchpad pointer cell 0x1F800044. Adds 0x0A to record halfword 0x30, stores the truncated halfword, and clears work state byte 0x03 once that stored signed value reaches 0xF0. Unless the shared mode byte 0x801454F2 is set, byte 0x80143BB0 reads 2, or bit 0x100 of halfword 0x80146258 is set, it writes 1 to work byte 0x03 through a second read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the overlay emitter 0x801F3FF8. Takes no arguments and returns nothing.'
   - - 3340
     - c
-    - emitSemiTransSpriteFromIndexedEntryTableWorld00Area03313_801F390C
-    - '@source: src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld00Area03313_801F390C.c'
+    - renderSemiTransSprite
+    - '@source: src/bof3/world/renderSemiTransSprite.c'
     - '@behavior: Emits a semi-transparent flat-grey sprite at signed x and y using an indexed four-byte width, height and texture-coordinate record at 0x801F4FA0; appends its draw mode and sprite at ordering-table index 1.'
   - - 3636
     - asm
@@ -151,8 +151,8 @@ segments:
     - func_801F40F0
   - - 5676
     - c
-    - seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld00Area03313_801F422C
-    - '@source: src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld00Area03313_801F422C.c'
+    - stateFacingStepResource
+    - '@source: src/bof3/world/stateFacingStepResource.c'
     - '@behavior: Seeds the facing-selected step pair and shared position, adjusts position halfwords, advances mode byte 0x01 and requests the facing-selected resource.'
   - - 6236
     - asm

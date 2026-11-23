@@ -4,7 +4,7 @@
  * 0x801CF900 through 0x801CF940, entry 0 = 0x801CE448 through entry 16 =
  * 0x801CF868, holding this payload's own step handlers plus the shared
  * main-executable handler 0x801B2D54 at entries 2 and 7. The reviewed Splat
- * layout places all seventeen words in the one `textbin` row `T_801CF900`, so the
+ * layout places all seventeen words in the one `textbin` row `codePointerTablef900`, so the
  * run is only referenced here. This dispatcher indexes it from 0x801CF920, so its
  * base is entry 8 and the nine entries it can reach run from 0x801CEE74 (entry 8)
  * through 0x801CF868 (entry 16). */

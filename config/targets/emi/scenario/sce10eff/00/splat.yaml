@@ -28,8 +28,8 @@ segments:
     - T_801D0C00
   - - 16
     - c
-    - dispatchWorkByte1HandlerScenarioSce10eff00_801D0C10
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce10eff00_801D0C10.c'
+    - callWorkByte1Handler
+    - '@source: src/bof3/scenario/callWorkByte1Handler.c'
     - '@behavior: Dispatches the scratchpad work byte at offset 1 through the three-entry local handler table published at 0x801D0C04 (stateEndRecordsQueue, stateWorkFlagsWork, func_801D0E9C).'
   - - 112
     - c

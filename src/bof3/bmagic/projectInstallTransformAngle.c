@@ -6,7 +6,7 @@
  * plain `u8 *` view carries every field this body touches. Declaration style
  * follows the exact same-overlay siblings
  * checkHalvedRotatorRand
- * and reserveFirstFreeRecordBmagicMagic01303_801F0358. */
+ * and reserveFirstFreeFlag. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Shared screen matrix composed under the freshly built work-object transform.

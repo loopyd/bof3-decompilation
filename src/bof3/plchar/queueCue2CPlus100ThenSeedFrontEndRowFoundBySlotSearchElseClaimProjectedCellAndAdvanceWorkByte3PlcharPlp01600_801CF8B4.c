@@ -72,7 +72,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * the original converts each retry index to that width before the call. Its own
  * Splat row sits before this one in the payload, so the symbol is defined inside
  * this payload and needs no foreign binding. */
-u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp01600_801CFD24(
+u8 claimMapCodesCue(
     s16 col, s16 row);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
@@ -160,15 +160,15 @@ void queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCell
         }
         cx = x >> 16;
         cy = y >> 16;
-        claimed = claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp01600_801CFD24(
+        claimed = claimMapCodesCue(
             cx, cy);
         if ((claimed & 0xFF) == 0) {
           if ((x & 0xFFFF) != 0) {
-            claimed = claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp01600_801CFD24(
+            claimed = claimMapCodesCue(
                 cx + 1, cy);
           }
           if ((claimed & 0xFF) == 0 && (y & 0xFFFF) != 0) {
-            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp01600_801CFD24(
+            claimMapCodesCue(
                 cx, cy + 1);
           }
         }

@@ -11,5 +11,5 @@ func_801E5988 = 0x801E5988;
 func_801EEC14 = 0x801EEC14;
 submitStoreEffectClear = 0x801EEC80;
 incrementByteRecordCounters = 0x801EED0C;
-decrementWorkByteBRecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic01000_801EEE20 = 0x801EEE20;
+decrementCountersSubmit = 0x801EEE20;
 forwardBattleRaiseHelper = 0x801EEF58;

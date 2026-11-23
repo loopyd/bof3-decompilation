@@ -46,7 +46,7 @@ void func_8015D71C(s32 arg0);
  *           frame and indexes with scratchpad work-object byte 2, so the body
  *           runs while work byte 2 is 2. That dispatcher is itself the single
  *           entry of the run at 0x801EF990 which the work-byte-1 dispatcher
- *           dispatchWorkByte1HandlerBmagicMagic01703_801EF014 selects, and no
+ *           dispatchWorkByte1Index selects, and no
  *           jal in this payload names this function (the only occurrence of
  *           0x801EF300 in the payload is the table word), so the table word is
  *           its only incoming path. Per call it increments the work object's

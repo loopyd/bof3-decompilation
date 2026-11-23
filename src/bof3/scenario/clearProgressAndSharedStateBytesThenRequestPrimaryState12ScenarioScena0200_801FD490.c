@@ -3,14 +3,14 @@
 /* @source 0x801FD490
  * @behavior Overlay record callback at index 17 of the local callback table
  * D_801FE304 (pointer word at 0x801FE348), invoked as (record, work) by
- * dispatchRecordCallbackByByte7AScenarioScena0200_801FD084 (0x801FD084); it
+ * callRecordCallbackTable (0x801FD084); it
  * reads neither argument. It runs the shared front-end startup helper
  * func_8015C088 (0x8015C088), clears the shared progress byte
  * g_ScenarioProgress (0x80146864), clears the shared bytes 0x80146865,
  * 0x80146866 and 0x80146867, clears the shared sub-state byte D_80146875 and
  * then requests primary scene state 0x12 through D_80146874, which selects
  * word 0x12 of the primary-state table D_801FE294 (0x801FAA68) in
- * dispatchPrimaryStateHandlerScenarioScena0200_801F7A60 (0x801F7A60). The
+ * callPrimaryStateHandler (0x801F7A60). The
  * 0x18-byte frame only keeps $ra across the call, and every byte store
  * materialises the 0x8014 page in $at on its own. The constant 0x12 is
  * materialised in $v0 straight after the call and survives the five clearing

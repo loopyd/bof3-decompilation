@@ -13,6 +13,6 @@
  * way, because it truncates the sprite index with an explicit cast. */
 void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
   submitTpageDrawMode(0, arg2);
-  appendIndexedSpriteWorld00Area03004(0x17, arg2, arg0, arg1);
-  appendIndexedSpriteWorld00Area03004((u8)(arg3 + 0x17), arg2, (s16)(arg0 + 0x28), arg1);
+  appendIndexedSprite(0x17, arg2, arg0, arg1);
+  appendIndexedSprite((u8)(arg3 + 0x17), arg2, (s16)(arg0 + 0x28), arg1);
 }

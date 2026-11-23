@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 56
     - c
-    - dispatchWorkByte1HandlerBmagicMagic04103_801EEC38
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04103_801EEC38.c'
+    - dispatchWorkByte1Prefix
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Prefix.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, copies the six leading words of the code pointer run at 0x801EEC04 (0x801EECB0, 0x801EEE14, 0x801EEEB4, 0x801EEFC4, 0x801EEFF8, 0x801EF130) into its own 0x30-byte frame, and invokes the copy selected by the work object''s state byte at offset 0x1 with no arguments. It reads no other state and writes none.'
   - - 176
     - c
@@ -67,8 +67,8 @@ segments:
     - '@source: src/bof3/bmagic/magic04103DispatchTables.c'
   - - 1492
     - c
-    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4.c'
+    - dispatchProjectDrawPop
+    - '@source: src/bof3/bmagic/dispatchProjectDrawPop.c'
   - - 1660
     - c
     - decrementCopyWordTriplet
@@ -88,16 +88,16 @@ segments:
     - '@source: src/bof3/bmagic/callProjectTrianglesPop.c'
   - - 2180
     - c
-    - copyWorkWordTripletAndClearByte9ThenAdvanceWorkByte2BmagicMagic04103_801EF484
-    - '@source: src/bof3/bmagic/copyWorkWordTripletAndClearByte9ThenAdvanceWorkByte2BmagicMagic04103_801EF484.c'
+    - copyWorkWordTriplet
+    - '@source: src/bof3/bmagic/copyWorkWordTriplet.c'
   - - 2260
     - c
-    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic04103_801EF4D4
-    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic04103_801EF4D4.c'
+    - addByteTallyAdvance
+    - '@source: src/bof3/bmagic/addByteTallyAdvance.c'
   - - 2340
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic04103_801EF524
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic04103_801EF524.c'
+    - incrementByteAtOne
+    - '@source: src/bof3/bmagic/incrementByteAtOne.c'
   - - 2404
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF564
@@ -105,8 +105,8 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 before the frame is set up, decrements the work object byte at offset 0x9 at byte width and returns while the stored value stays non-zero; only on zero it reads the shared battle record pointer at 0x801EB4E0, decrements that record byte 0xB at byte width and invokes func_801E5988 with no arguments, the byte store filling the call delay slot. The 0x18-byte frame keeps only $ra. Reached through word 12 of the overlay code pointer run at 0x801EEC04.'
   - - 2496
     - c
-    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0.c'
+    - installZeroSpinMatrix
+    - '@source: src/bof3/bmagic/installZeroSpinMatrix.c'
     - '@behavior: Pushes the GTE matrix stack with PushMatrix inside a 0x50-byte frame that keeps $ra at 0x4C and $s0 at 0x48, loads the scratchpad work-record pointer cell at 0x1F800044 once, and zeroes the halfword triplet at 0x18..0x1D. The three halfwords at 0x10..0x15 are built from that record: word 0x34 and word 0x38 each shifted right by nine and biased by minus 0x4000, and half the negated signed halfword 0x3E, negated and halved through the signed divide-by-two fixup sequence. RotTrans projects that triplet through the matrices the caller left installed, writing the result vector into the translation field of the 0x20-byte scratch matrix at 0x20 and a flag word at 0x40; RotMatrix turns the zeroed triplet into an identity rotation in that same matrix; MulMatrix2 composes the shared screen matrix at 0x801492E8 under it; and the composed matrix is published through SetRotMatrix and SetTransMatrix. It pops no matrix of its own, so both callers run PopMatrix after their draw pass. Takes no arguments, returns nothing, and its only in-image references are the jal words at 0x801EF254 and 0x801EF45C.'
   - - 2672
     - c

@@ -33,18 +33,18 @@ void func_8015C088(void);
  * each of the six byte stores materialises the 0x8014 page in $at on its own,
  * so the store order 0x80146864, 0x80146865, 0x80146866, 0x80146867,
  * D_80146875, D_80146874 is the source statement order. The record-callback
- * dispatcher dispatchRecordCallbackScenarioScena0500_801FCA58 (0x801FCA58)
+ * dispatcher callCallbackTable (0x801FCA58)
  * reaches the address only through word 2 of the nine-word overlay callback
  * run at 0x801FD644 (0x801FD64C holds 0x801FCB1C), so the record byte at offset
  * 0x7A selects it with the value 2; no in-image `jal` targets the address and
  * that table word is its only image reference. Its 100 bytes are the body of
  * the exact in-target sibling
- * clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCBD4
+ * stateClearProgressRequest13
  * (0x801FCBD4) preceded by that flag-bit call. The neighbouring word 1
  * callback func_801FCAA0 differs by guarding the whole body on the shared flag
  * test func_8015B5D4 (0x8015B5D4) and by its own bit index 2 and stored
  * 0x15, and word 3's
- * clearProgressAndSharedStateBytesThenRequestPrimaryState0CScenarioScena0500_801FCB80
+ * stateClearProgressRequest12
  * (0x801FCB80) omits the flag-bit call and stores 0xC.
  * @status exact
  * @match 100.00

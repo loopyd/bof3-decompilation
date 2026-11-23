@@ -22,7 +22,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* Scratchpad work-object pointer cell. Declared as a named symbol so every
  * access is a lui plus offset load, the form this target's other lifts use
- * (subtractWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic00100_801EF5CC).
+ * (subtractFadeCopyTriplet).
  * The original re-reads the cell after a store through the previously loaded
  * pointer, because that store may alias the cell. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */

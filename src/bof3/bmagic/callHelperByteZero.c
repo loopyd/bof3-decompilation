@@ -42,7 +42,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  *           materialized ahead of the guard branch in its delay slot, the
  *           0x18-byte frame only keeps $ra at 0x10 across that call, and the
  *           pointer-cell load precedes frame creation as in the sibling
- *           dispatchWorkByte1HandlerBmagicMagic01703_801EF014. It takes no
+ *           dispatchWorkByte1Index. It takes no
  *           arguments, returns nothing and reads or writes no other state. The
  *           body matches invokeHelperThenClearRecordFlag40WhenWorkByteBIsFF
  *           ThenAdvanceWorkByte1BmagicMagic00800_801EEF6C in its statement order

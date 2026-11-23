@@ -29,7 +29,7 @@ void func_801BE1B0(u32 arg0);
 
 /* @source 0x801F8538
  * @behavior Slot 10 of the 31-word code-pointer run at 0x801FE288, the chain
- *   table dispatchProgressHandlerScenarioScena0200_801F719C indexes with the
+ *   table callProgressChainHandler indexes with the
  *   signed chain byte D_80146872; its own pointer word sits at 0x801FE2B0 and
  *   no jal or j in the payload targets 0x801F8538, so the overlay reaches this
  *   span as that chain slot. It reads the shared sub-state byte D_80146875

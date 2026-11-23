@@ -13,7 +13,7 @@ void initModeTuple520(void); /* @source 0x801DDF00 */
  * shared mode byte D_80146875 and runs the shared initializer this archive
  * family binds as initModeTuple510 at 0x801DDED8; when the bit is clear it
  * runs initModeTuple520 at 0x801DDF00 instead. It takes no arguments and
- * returns nothing. The installer publishBattleHooksBossBoss00216_800C1F08 of
+ * returns nothing. The installer publishBattleHooks3 of
  * this overlay materializes this function's address and stores it into the
  * shared battle hook slot 0x801463A4; no jal of this payload reaches it, so the
  * main program calls it through that slot. Its body is the same shape as the

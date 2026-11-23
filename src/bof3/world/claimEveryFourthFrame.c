@@ -6,7 +6,7 @@
  * Splat textbin row D_8011818C. A store through the record pointer can alias the
  * cell, so the original re-reads it after the seeding call instead of reusing
  * the pointer it published. */
-extern u8* world01Area04913WorkRecordCursor; /* @source 0x801181DC @kind data */
+extern u8* workRecordCursor; /* @source 0x801181DC @kind data */
 
 /* Shared per-frame phase word of the main executable: several lifted bodies in
  * this target take its low bits as the phase of a frame cycle, here the low two
@@ -24,7 +24,7 @@ extern u32 D_80143E6C;
 extern u8* D_1F800044;
 
 /* Both callees are lifted members of this overlay's own code spans. */
-u8* findFreeWorkRecordAt800E4800World01Area04913_801178C4(void);
+u8* queryFreeWorkSlot(void);
 void claimRecordSeedPosition(u8* record);
 
 /* @source 0x801176B8
@@ -35,7 +35,7 @@ void claimRecordSeedPosition(u8* record);
  * whose shared phase word 0x80143E6C holds zero in its low two bits it claims
  * the first record that is free in this overlay's 0x800E4800 work table, the
  * sixteen records of 0x28-byte stride whose lead byte is the claim flag,
- * publishes the record in the cursor world01Area04913WorkRecordCursor, seeds it through
+ * publishes the record in the cursor workRecordCursor, seeds it through
  * claimRecordSeedPosition - which clears the
  * record's word at 0x1C - and then overwrites that word with 0x200000. That is
  * the value the next handler at 0x80117768 takes as its base, subtracts 0x10000
@@ -61,11 +61,11 @@ void claimEveryFourthFrame(
   u8* cur;
 
   if ((D_80143E6C & 3) == 0) {
-    record = findFreeWorkRecordAt800E4800World01Area04913_801178C4();
-    world01Area04913WorkRecordCursor = record;
+    record = queryFreeWorkSlot();
+    workRecordCursor = record;
     if (record != 0) {
       claimRecordSeedPosition(record);
-      *(u32*)(world01Area04913WorkRecordCursor + 0x1C) = 0x200000;
+      *(u32*)(workRecordCursor + 0x1C) = 0x200000;
     }
   }
   work = D_1F800044;

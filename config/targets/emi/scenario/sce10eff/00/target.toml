@@ -8,7 +8,7 @@ splat = "config/targets/emi/scenario/sce10eff/00/splat.yaml"
 load_address = 0x801d0c00
 
 sources = [
-    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce10eff00_801D0C10.c",
+    "src/bof3/scenario/callWorkByte1Handler.c",
     "src/bof3/scenario/stateEndRecordsQueue.c",
     "src/bof3/scenario/stateWorkFlagsWork.c",
     "src/bof3/scenario/func_801D0E9C.c",

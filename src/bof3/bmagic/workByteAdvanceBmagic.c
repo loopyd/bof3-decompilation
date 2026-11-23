@@ -29,7 +29,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           this function's own constant 4 and compared literal 0x20 replace
  *           its 1 and 8. The arm re-reads the cell instead of reusing the first
  *           base, the reload-in-arm-only shape of
- *           incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic04103_801EF524
+ *           incrementByteAtOne
  *           on this target. 0x801EF308..0x801EF357 match no byte-identical
  *           span in any other bmagic overlay image, so no clone applies.
  * @status exact

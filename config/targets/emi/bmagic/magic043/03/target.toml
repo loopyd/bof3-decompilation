@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/bmagic/decrementCountersQueueAction.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic04303_801EFC24.c",
+    "src/bof3/bmagic/reserveClearFlagSlot.c",
     "src/bof3/bmagic/workMotionPairIncrement.c",
     "src/bof3/support/magic043_03_psyq.c",
     "src/bof3/bmagic/magic04303DispatchTables.c",

@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void clearWorkBytesBmagicMagic02103_801EFDB0(void);
+void clearWorkFive(void);
 
 /* Scratchpad work-object pointer cell shared by the battle and bmagic overlays,
  * bound at 0x1F800044 by this target's map. The body reads it once, before the
@@ -48,6 +48,6 @@ void decrementTwoGlobalBytes(
     void) {
   if ((g_battle_work[0xA] -= 2) == 0) {
     D_801EB4E0[0xB]--;
-    clearWorkBytesBmagicMagic02103_801EFDB0();
+    clearWorkFive();
   }
 }

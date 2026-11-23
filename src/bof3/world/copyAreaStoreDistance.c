@@ -6,7 +6,7 @@
  * across the call.
  * @source 0x1F800044 @kind data
  */
-extern u8* area05113WorkCursor_1F800044;
+extern u8* workCursorPointer;
 /* Work-area pointer cell of the main executable. This step reads the record
  * that sits 0x5F0 bytes before the record the cell currently points at.
  * @source 0x80146884 @kind unknown
@@ -63,11 +63,11 @@ void copyAreaStoreDistance(
 
   source = D_80146884;
   source -= 0x5F0;
-  work = area05113WorkCursor_1F800044;
+  work = workCursorPointer;
   *(s32*)(work + 0x34) = *(s32*)(source + 0x34);
   y = *(s32*)(source + 0x38);
   *(s32*)(work + 0x38) = y;
   distance = func_8015477C(*(s32*)(work + 0x34), y) - 0x40;
-  target = area05113WorkCursor_1F800044;
+  target = workCursorPointer;
   *(s16*)(target + 0x3E) = distance;
 }

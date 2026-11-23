@@ -11,7 +11,7 @@ void func_801F3AE4(s32 position, u32 texturePage, s16 index);
 /* @source 0x801F3874
  * @behavior Overlay step handler, entry 1 of the five-handler work-byte-+0x02
  * run based at 0x801F4D80 that the byte-+0x02 dispatcher
- * dispatchStateByte2Table4d80World01Area04813_801F37B0 indexes. It reads the
+ * dispatchByte2Table4d80 indexes. It reads the
  * scratch work record byte +0x09 as a scroll column and emits two batches of
  * eight textured tiles through the tile emitter at 0x801F3AE4: position
  * (column << 4) with texture page 0x858000 and index 0, or 0x10 once the column

@@ -30,7 +30,7 @@ sources = [
     "src/bof3/world/advanceCounter.c",
     "src/bof3/world/resetCounter.c",
     "src/bof3/world/func_801F32B8.c",
-    "src/bof3/world/setScenarioFlagBit2E.c",
+    "src/bof3/world/stateFlagSet2e.c",
     "src/bof3/world/func_801F3360_area02613.c",
 ]
 support_sources = [

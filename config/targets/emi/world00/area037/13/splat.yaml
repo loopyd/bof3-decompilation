@@ -58,8 +58,8 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x60 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2380
     - c
-    - setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F354C
-    - '@source: src/bof3/world/setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F354C.c'
+    - stateStatus60Mode6
+    - '@source: src/bof3/world/stateStatus60Mode6.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x60 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2448
     - c
@@ -119,8 +119,8 @@ segments:
     - func_801F38DC
   - - 3636
     - c
-    - initFrontendStateSelector4AndSecondStateByte0BWorld00Area03713_801F3A34
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte0BWorld00Area03713_801F3A34.c'
+    - initFrontendByte0b
+    - '@source: src/bof3/world/initFrontendByte0b.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xB into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3692
     - c
@@ -129,13 +129,13 @@ segments:
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xC into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3748
     - c
-    - initFrontendStateSelector4AndSecondStateByte0EWorld00Area03713_801F3AA4
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte0EWorld00Area03713_801F3AA4.c'
+    - initFrontendByte0e
+    - '@source: src/bof3/world/initFrontendByte0e.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xE into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3804
     - c
-    - initFrontendStateSelector4AndSecondStateByte0DWorld00Area03713_801F3ADC
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte0DWorld00Area03713_801F3ADC.c'
+    - initFrontendByte0d
+    - '@source: src/bof3/world/initFrontendByte0d.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xD into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3860
     - c

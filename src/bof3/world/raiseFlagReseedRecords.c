@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Work-table seed of this overlay, still on its asm row: it publishes the
- * 0x800E4800 work table in world01Area04913WorkRecordCursor and rewrites all sixteen 0x28-byte
+ * 0x800E4800 work table in workRecordCursor and rewrites all sixteen 0x28-byte
  * records of it from the work object at the scratchpad pointer cell, giving each
  * a rand velocity pair, a set claim byte and a cleared step byte. */
 void func_801172D0(void);
@@ -27,7 +27,7 @@ extern u8* D_1F800044;
  * callRunRecordPass indexes
  * from the work object's byte at offset 1. It raises bit 0x40 of the shared
  * world/mode flag halfword 0x80146258, runs the work-table seed func_801172D0,
- * which republishes the 0x800E4800 table in world01Area04913WorkRecordCursor and rewrites all sixteen
+ * which republishes the 0x800E4800 table in workRecordCursor and rewrites all sixteen
  * of its records from the work object, and then arms that object's countdown
  * byte at offset 9 to 0xB4, the 180 the next handler
  * claimEveryFourthFrame counts down before it re-arms the byte to 0x40. Finally it

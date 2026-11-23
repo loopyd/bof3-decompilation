@@ -21,7 +21,7 @@ extern u8 *volatile g_battle_work; /* @source 0x1F800044 @kind data */
 /* @source 0x801F05AC
  * @behavior Entry 1 of the three-entry handler table at 0x801F0A2C that this
  *           overlay's work-byte-2 dispatcher
- *           dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478
+ *           dispatchByte2DrawActive
  *           indexes with the scratchpad work object's byte 0x2, so no jal in
  *           this payload reaches this address; the table words
  *           0x801F04F0/0x801F05AC/0x801F0638 are the three state blocks that

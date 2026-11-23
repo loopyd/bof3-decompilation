@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/magic012_00_psyq.c",
     "src/bof3/bmagic/magic01200DispatchTables.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01200_801EF670.c",
+    "src/bof3/bmagic/decrementGlobalCall.c",
     "src/bof3/bmagic/stateFrameParityPoint.c",
     "src/bof3/bmagic/stateAngleAccumulateInto.c",
     "src/bof3/bmagic/stateNotSixFinish.c",

@@ -6,7 +6,7 @@
  * Splat textbin row D_8011818C. A store through the record pointer can alias the
  * cell, so the original re-reads it after the seeding call instead of reusing
  * the pointer it published. */
-extern u8* world01Area04913WorkRecordCursor; /* @source 0x801181DC @kind data */
+extern u8* workRecordCursor; /* @source 0x801181DC @kind data */
 
 /* Shared per-frame phase word of the main executable: several lifted bodies in
  * this target take its low bits as the phase of a frame cycle, here the low two
@@ -25,7 +25,7 @@ extern u32 D_80143E6C;
 extern u8* D_1F800044;
 
 /* Both callees are lifted members of this overlay's own code spans. */
-u8* findFreeWorkRecordAt800E4800World01Area04913_801178C4(void);
+u8* queryFreeWorkSlot(void);
 void claimRecordSeedPosition(u8* record);
 
 /* @source 0x80117768
@@ -36,7 +36,7 @@ void claimRecordSeedPosition(u8* record);
  * whose shared phase word 0x80143E6C holds zero in its low two bits it claims
  * the first record that is free in this overlay's 0x800E4800 work table, the
  * sixteen records of 0x28-byte stride whose lead byte is the claim flag,
- * publishes the record in the cursor world01Area04913WorkRecordCursor, seeds it
+ * publishes the record in the cursor workRecordCursor, seeds it
  * through claimRecordSeedPosition - which
  * clears the record's word at 0x1C - and then takes the work object's word at
  * 0x0C, the 0x200000 base the previous handler writes there, lowers it by
@@ -67,13 +67,13 @@ void lowerMirrorEveryFourth(
   u32 height;
 
   if ((D_80143E6C & 3) == 0) {
-    record = findFreeWorkRecordAt800E4800World01Area04913_801178C4();
-    world01Area04913WorkRecordCursor = record;
+    record = queryFreeWorkSlot();
+    workRecordCursor = record;
     if (record != 0) {
       claimRecordSeedPosition(record);
       work = D_1F800044;
       height = *(u32*)(work + 0x0C) - 0x10000u;
-      cur = world01Area04913WorkRecordCursor;
+      cur = workRecordCursor;
       *(u32*)(work + 0x0C) = height;
       *(u32*)(cur + 0x1C) = height;
     }

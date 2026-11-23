@@ -9,10 +9,10 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/callWorkByte4Table37.c",
-    "src/bof3/world/initializeWorkModeWithTintMinus64SetByte48To2AdvanceHandlerTo1Consume2CountdownWorld01Area04313_801F2C48.c",
+    "src/bof3/world/initWorkModeTint.c",
 ]
 support_sources = [
-    "src/bof3/world/seedFrontEndRecordHandler37FromWorkPositionWorld01Area04313_801F2E28.c",
+    "src/bof3/world/seedFrontEndRecord37.c",
     "src/bof3/world/submitSeedPairTint.c",
     "src/bof3/support/area043_13_psyq.c",
 ]

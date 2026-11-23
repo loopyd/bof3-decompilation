@@ -10,16 +10,16 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/bmagic/statePoolPoseHalf.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic04603_801EEFB4.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic04603_801EF1F0.c",
+    "src/bof3/bmagic/dispatchWorkByte2First.c",
+    "src/bof3/bmagic/dispatchWorkByte2Second.c",
     "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusTenTimesWorkByte9PlusSixTintedByWorkByteATimesSixBmagicMagic04603_801EFC48.c",
     "src/bof3/bmagic/renderPlusTwiceTwenty.c",
-    "src/bof3/bmagic/invokeHelperBmagicMagic04603_801EF304.c",
+    "src/bof3/bmagic/invokeSharedHelper14.c",
     "src/bof3/bmagic/magic04603DispatchTables.c",
     "src/bof3/bmagic/publishDriftSevenSampled.c",
     "src/bof3/bmagic/publishSampledTurnDrift.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic04603_801EFB90.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic04603_801EFED0.c",
+    "src/bof3/bmagic/projectInstallTransform.c",
+    "src/bof3/bmagic/reservePool48.c",
     "src/bof3/support/magic046_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic046_03_psyq.c"

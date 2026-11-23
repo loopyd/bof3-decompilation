@@ -38,7 +38,7 @@ void renderSlidingAmountSummary(s32 entryId, s32 amount, s32 slideCount) {
       x = coordinatePair[0] + ((slideCount & 0xff) * 25);
       y = coordinatePair[1];
     }
-    appendIndexedSpriteWorld00Area03004((index + 3) & 0xff, 1, (s16)x, (s16)y);
+    appendIndexedSprite((index + 3) & 0xff, 1, (s16)x, (s16)y);
   }
 
   textCursor = D_80145AD4;

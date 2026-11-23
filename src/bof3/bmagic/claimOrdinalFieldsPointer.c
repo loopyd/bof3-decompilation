@@ -1,8 +1,8 @@
 #include "base/types.h"
 
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
-extern u8 magic00303Records[]; /* @source 0x801F0B38 @kind data */
-extern u8 reserveFirstFreeRecordBmagicMagic00303_801F09C4(void); /* @source 0x801F09C4 @kind function */
+extern u8 effectRecordTable[]; /* @source 0x801F0B38 @kind data */
+extern u8 reserveFreeRecordSlot(void); /* @source 0x801F09C4 @kind function */
 
 /* @source 0x801F0078
  * @behavior Claims one 0x78-byte pool record per ordinal below the shared
@@ -26,16 +26,16 @@ void claimOrdinalFieldsPointer(void) {
     u8 *counter;
 
     for (ordinal = 0; ordinal < D_801EB4E0[0xA]; ordinal++) {
-        index = reserveFirstFreeRecordBmagicMagic00303_801F09C4();
+        index = reserveFreeRecordSlot();
         offset = index * 0x78;
         work = D_801EB4E0;
-        magic00303Records[offset + 1] = 0;
-        magic00303Records[offset + 2] = 0;
-        magic00303Records[offset + 4] = ordinal;
-        magic00303Records[offset + 0xB] = (ordinal >> 1) & 7;
-        magic00303Records[offset + 9] = ordinal * 4 + 1;
+        effectRecordTable[offset + 1] = 0;
+        effectRecordTable[offset + 2] = 0;
+        effectRecordTable[offset + 4] = ordinal;
+        effectRecordTable[offset + 0xB] = (ordinal >> 1) & 7;
+        effectRecordTable[offset + 9] = ordinal * 4 + 1;
         counter = D_801EB4E0;
-        *(u8 **)&magic00303Records[offset + 0x74] = work;
+        *(u8 **)&effectRecordTable[offset + 0x74] = work;
         counter[0xB]++;
     }
 }

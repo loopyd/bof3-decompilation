@@ -8,19 +8,19 @@ splat = "config/targets/emi/bmagic/magic057/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic05703_801EEC50.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerTableec38BmagicMagic05703_801EF55C.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerTableec10BmagicMagic05703_801EED2C.c",
+    "src/bof3/bmagic/dispatchWorkByte1Stage.c",
+    "src/bof3/bmagic/dispatchWorkByte2Turn.c",
+    "src/bof3/bmagic/dispatchWorkByte2Stage.c",
     "src/bof3/bmagic/incrementNegativeOtherwiseDecrement.c",
-    "src/bof3/bmagic/incrementGlobalWorkByteAAndInvokeHelperBmagicMagic05703_801EF528.c",
+    "src/bof3/bmagic/incrementGlobalByteCall.c",
     "src/bof3/bmagic/publishSavedReadinessStage.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/invokeHelperBmagicMagic05703_801EFABC.c",
-    "src/bof3/bmagic/invokeHelperBmagicMagic05703_801EF81C.c",
+    "src/bof3/bmagic/invokeSharedHelper18.c",
+    "src/bof3/bmagic/invokeSharedHelper17.c",
     "src/bof3/support/magic057_03_psyq.c",
     "src/bof3/bmagic/stateObjectDecrementedDistance.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic05703_801EF02C.c",
+    "src/bof3/bmagic/dispatchWorkByte1Shift.c",
     "src/bof3/bmagic/stateClearEqualBmagic.c",
     "src/bof3/bmagic/decrementAdvanceBelowBmagic.c",
     "src/bof3/bmagic/stateStageTableIncrement.c",

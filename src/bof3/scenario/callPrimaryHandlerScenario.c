@@ -17,7 +17,7 @@ extern u32 D_801FA210[];
  * stateClearSharedByte (0x801F8160) and
  * func_801F817C (0x801F817C), so the overlay reaches this dispatcher only
  * indirectly, through the same-overlay chain dispatcher
- * dispatchProgressHandlerScenarioScena0400_801F8124 (0x801F8124) that indexes
+ * callStateChainHandler (0x801F8124) that indexes
  * that run with D_80146872. Its own table at 0x801FA210 holds three code words -
  * the inert entry noopHandlerScenarioScena0400_801F8678 (0x801F8678, word 0),
  * func_801F8680 (word 1) and func_801F8F98 (word 2) - and the word that follows

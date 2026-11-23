@@ -4,12 +4,12 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0(void);
+void stateClearWorkTable16(void);
 
 /* @source 0x801D0DE8
  * @behavior Entry 0 of this overlay step handler run at 0x801D1B2C, which is
  * word 4 of the fourteen-word code-pointer run at 0x801D1B1C and which
- * dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the
+ * callStepRunHandler selects with the
  * unsigned work byte at offset +0x1 of the scratchpad work object published at
  * pointer slot 0x1F800044. It arms that object with no arguments by storing
  * 0x12C in its halfword at +0x2E, zeroes its countdown byte at +0x9, runs the
@@ -46,6 +46,6 @@ void armClearCountdownTable(void) {
   work = D_1F800044;
   *(u16*)(work + 0x2E) = 0x12C;
   work[9] = 0;
-  clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0();
+  stateClearWorkTable16();
   D_1F800044[1]++;
 }

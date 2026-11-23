@@ -6,7 +6,7 @@
  * read, and again before each of the four record accesses, because every call
  * in between may republish the cell. Declaration style follows the exact
  * same-target sibling
- * dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224. */
+ * dispatchByte2DrawSpokes. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Scratchpad phase halfword 0x1F80000E. The original forms its address as one

@@ -35,7 +35,7 @@ void stepIndexLatchPad(
         if (D_801442BC >= 0x17) {
             D_801442BC = 0;
         }
-        gateByteWorld00Area03004_80144288 = 0;
+        stateGateByte = 0;
         *state = *state + 1;
     } else if (D_80145AA8 & 0x8000) {
         func_8015DF18(0x102);
@@ -43,7 +43,7 @@ void stepIndexLatchPad(
         if ((s16)D_801442BC < 0) {
             D_801442BC = 0x16;
         }
-        gateByteWorld00Area03004_80144288 = 1;
+        stateGateByte = 1;
         *state = *state + 1;
     } else if (D_80145AA8 & D_80145AC4) {
         func_8015DF18(0x106);

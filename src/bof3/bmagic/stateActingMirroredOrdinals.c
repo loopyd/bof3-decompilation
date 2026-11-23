@@ -88,7 +88,7 @@ typedef struct BmagicMagic02003SlotBody {
  * @behavior Work byte 1 state 0 of this overlay: entry 0 of the six-word handler
  *           table at 0x801EEC04 (0x801EECC0, 0x801EF0F8, 0x801EF234, 0x801EF2A8,
  *           0x801EF31C, 0x801EF350), which
- *           dispatchWorkByte1HandlerBmagicMagic02003_801EEC48 copies into its
+ *           dispatchWorkByte1Six copies into its
  *           frame and indexes with the scratchpad work object's byte 1, so the
  *           body runs while work byte 1 is 0 and raises that byte to 1 itself. It
  *           first copies the shared battle work record's byte 8 and word triplet

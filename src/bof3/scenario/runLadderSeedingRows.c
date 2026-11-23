@@ -26,7 +26,7 @@ void func_8015C058(void);
 
 /* @source 0x801F9800
  * @behavior Slot 16 of the 31-word code-pointer run at 0x801FE288 (pointer
- *   word at 0x801FE2C8) that dispatchProgressHandlerScenarioScena0200_801F719C
+ *   word at 0x801FE2C8) that callProgressChainHandler
  *   indexes with the signed chain byte D_80146872, so the overlay reaches this
  *   span as that chain slot. It walks the shared sub-state byte D_80146875
  *   (0x80146875) through the seven-slot absolute jump table the payload keeps at

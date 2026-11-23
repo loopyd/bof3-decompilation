@@ -1,12 +1,12 @@
 #include "base/types.h"
 
 /* Record pool of this overlay at 0x801EFF3C: 48 records of stride 0x78 whose
- * byte 0 is the flags byte that reserveFirstFreeRecordBmagicMagic04603_801EFED0
+ * byte 0 is the flags byte that reservePool48
  * tested for bit 0 and set on reservation, and whose bytes 0x00, 0x01 and 0x02
  * this body clears for every record. The pool base carries the map row of the
  * reservation lift; the two bytes that follow it are bound by the
  * address-anchored rows of this target generated symbol table. */
-extern u8 magic04603RecordFlags[]; /* @source 0x801EFF3C @kind data */
+extern u8 slotFlagTable[]; /* @source 0x801EFF3C @kind data */
 extern u8 D_801EFF3D[]; /* @source 0x801EFF3D @kind data */
 extern u8 D_801EFF3E[]; /* @source 0x801EFF3E @kind data */
 
@@ -129,7 +129,7 @@ void statePoolPoseHalf(
       index++;
     } while (0);
     offset = priorIndex * 0x78u;
-    magic04603RecordFlags[offset] = 0;
+    slotFlagTable[offset] = 0;
     D_801EFF3D[offset] = 0;
     D_801EFF3E[offset] = 0;
   }

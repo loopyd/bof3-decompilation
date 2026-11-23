@@ -6,7 +6,7 @@
  * Splat `textbin` row of the same name places the words, so the run is only
  * referenced here. This dispatcher indexes it from the run base, so entry 0 is
  * reachable and every one of the twenty-eight words is. */
-extern void (*T_801D02F4[])(void); /* @source 0x801D02F4 @kind data */
+extern void (*codePointerTable02f4[])(void); /* @source 0x801D02F4 @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step dispatch on work-record byte 2: loads the work-record
@@ -27,4 +27,4 @@ extern void (*T_801D02F4[])(void); /* @source 0x801D02F4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable02Plchar, T_801D02F4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable02Plchar, codePointerTable02f4);

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 modeAt8014933Scenario; /* @source 0x8014933B @kind data */
-extern u8* scenarioScena0100Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void func_801F7DCC(s32 red, s32 green, s32 blue);
 void func_801F7EDC(void);
 
@@ -22,14 +22,14 @@ void stateWorkDrawScenario(void) {
 
   switch (modeAt8014933Scenario) {
   case 1:
-    FIELD_REF(s16, scenarioScena0100Work, 0x2E) = 0;
+    FIELD_REF(s16, workObjectPointer, 0x2E) = 0;
     func_801F7DCC(64, 90, 255);
     break;
   case 2:
-    if (FIELD_REF(s16, scenarioScena0100Work, 0x2E) < 191) {
-      FIELD_REF(s16, scenarioScena0100Work, 0x2E)++;
+    if (FIELD_REF(s16, workObjectPointer, 0x2E) < 191) {
+      FIELD_REF(s16, workObjectPointer, 0x2E)++;
     }
-    value = FIELD_REF(s16, scenarioScena0100Work, 0x2E);
+    value = FIELD_REF(s16, workObjectPointer, 0x2E);
     blue = 255 - value * 2;
     if (blue < 0) {
       blue = 0;

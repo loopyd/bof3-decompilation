@@ -62,7 +62,7 @@ extern u8 D_801EB6C4[]; /* @source 0x801EB6C4 @kind data */
 /* @source 0x801EEF3C
  * @behavior Word 1 of the three-entry code pointer run at 0x801EEC04, whose
  *           words are 0x801EEC94, 0x801EEF3C and 0x801EF17C: the dispatcher
- *           dispatchWorkByte1HandlerBmagicMagic05603_801EEC34 copies them into
+ *           dispatchWorkByte1Triad copies them into
  *           its 0x28-byte frame and selects one with the scratchpad work
  *           object's byte 1 scaled by four. It reads the work-object pointer
  *           cell at 0x1F800044 before its frame exists and returns at once when

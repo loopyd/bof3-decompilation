@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0100Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 /* @source 0x8015477C @kind unknown
  * Shared fixed-point distance helper over the word pair passed as (x, z);
  * callers publish its result scaled by 0x10000.
@@ -10,7 +10,7 @@ extern s16 func_8015477C(s32 arg0, s32 arg1);
  * Resident front-end sound-cue dispatcher; consumes one u32 cue id.
  */
 extern void func_8015DF18(u32 cue_id);
-void clearWorkTableAt800E4800ScenarioScena0100_801F7AB8(void);
+void stateClearWorkTable128(void);
 
 /* @source 0x801F73FC
  * @behavior Entry 0 of the work-byte-1 handler table at 0x801FE26C, so no
@@ -35,17 +35,17 @@ void stateObjectClearTable(void) {
   u8* state;
   s16 distance;
 
-  work = scenarioScena0100Work;
+  work = workObjectPointer;
   *(u32*)(work + 0x34) = 0x600000;
   *(u32*)(work + 0x38) = 0x110000;
   distance = func_8015477C(*(s32*)(work + 0x34), 0x110000);
-  record = scenarioScena0100Work;
+  record = workObjectPointer;
   *(u32*)(record + 0x3C) = distance << 16;
   *(u16*)(record + 0x2E) = 0x180;
   *(u16*)(record + 0x30) = 0x500;
   record[9] = 0;
-  clearWorkTableAt800E4800ScenarioScena0100_801F7AB8();
-  state = scenarioScena0100Work;
+  stateClearWorkTable128();
+  state = workObjectPointer;
   state[1]++;
   func_8015DF18(0x202);
 }

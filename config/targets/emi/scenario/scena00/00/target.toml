@@ -14,7 +14,7 @@ sources = [
     "src/bof3/scenario/brightenObjectColorCommit.c",
     "src/bof3/scenario/callRecordCallbackByte7.c",
     "src/bof3/scenario/dispatchWorkByte1Handler.c",
-    "src/bof3/scenario/dispatchWorkByte1Handler_801F70F0.c",
+    "src/bof3/scenario/callWorkStateHandler.c",
     "src/bof3/scenario/renderAdoptedCursorBeam.c",
     "src/bof3/scenario/renderObjectEntryEffect.c",
     "src/bof3/scenario/emitWorkObjectTexturedQuad_801F8BCC.c",

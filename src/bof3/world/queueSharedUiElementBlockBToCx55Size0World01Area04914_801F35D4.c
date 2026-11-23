@@ -19,7 +19,7 @@ void func_801A4BC0(s16 x, s16 y, u32 size);
  * (`addu a2,zero,zero`). That is two adjacent x columns at a single row, so the
  * name follows the block grammar of
  * queueSharedUiElementBlock48To49xBToCSize0World00Area02313_801F2C88 and
- * queueSharedUiElementBlock4DTo4Ex22To25Size0World01Area04914_801F37EC. The
+ * queueUiBlockEight. The
  * element pair is the one its neighbour at 0x801F360C later queues with size
  * 0xC0, and this entry queues it with size 0.
  *
@@ -29,7 +29,7 @@ void func_801A4BC0(s16 x, s16 y, u32 size);
  * starts immediately at 0x801F360C. No payload under out/binaries holds a
  * second copy of these 0x38 bytes, so no byte-identical sibling exists and the
  * clone lever does not apply. The nearest exact sibling,
- * queueSharedUiElementBlock4DTo4Ex22To25Size0World01Area04914_801F37EC,
+ * queueUiBlockEight,
  * carries the same call topology (constant x/y literals with a zero size) with
  * different literals, so it supplied the statement order, operand forms and
  * declaration style while every literal here is written from this span's own

@@ -32,13 +32,13 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7; while that byte is zero it stores 0x42 into the shared status halfword D_801490A8, and while it is nonzero it stores 0x44 into D_801490A8 and then 6 into the shared mode byte at 0x801D4285; both arms join at one return.'
   - - 72
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld00Area00313_801F2C48
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld00Area00313_801F2C48.c'
+    - stateHandlerIndex3Gate
+    - '@source: src/bof3/world/stateHandlerIndex3Gate.c'
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it sets the handler index byte at 0x801D4286 to 3, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 120
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld00Area00313_801F2C78
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld00Area00313_801F2C78.c'
+    - stateHandlerIndex5Gate
+    - '@source: src/bof3/world/stateHandlerIndex5Gate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 5 into the shared handler index byte at 0x801D4286; it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 168
     - c
@@ -47,23 +47,23 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x44 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 236
     - c
-    - setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CEC
-    - '@source: src/bof3/world/setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CEC.c'
+    - stateStatus44ModeGate2
+    - '@source: src/bof3/world/stateStatus44ModeGate2.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x44 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 304
     - c
-    - queueSharedUiElementBlock55x1CTo1DAnd54x1CTo1DSize0World00Area00313_801F2D30
-    - '@source: src/bof3/world/queueSharedUiElementBlock55x1CTo1DAnd54x1CTo1DSize0World00Area00313_801F2D30.c'
+    - queueUiBlockZero
+    - '@source: src/bof3/world/queueUiBlockZero.c'
     - '@behavior: Queues four shared UI elements through func_801A4BC0: the element at (0x55, 0x1C) with size 0, the element at (0x55, 0x1D) with size 0, the element at (0x54, 0x1C) with size 0 and the element at (0x54, 0x1D) with size 0.'
   - - 392
     - c
-    - queueSharedUiElementBlock55x1CTo1DSizeC0And54x1CTo1DSizeA1World00Area00313_801F2D88
-    - '@source: src/bof3/world/queueSharedUiElementBlock55x1CTo1DSizeC0And54x1CTo1DSizeA1World00Area00313_801F2D88.c'
+    - queueUiBlockSized
+    - '@source: src/bof3/world/queueUiBlockSized.c'
     - '@behavior: Queues four shared UI elements through func_801A4BC0: the element at (0x55, 0x1C) with size 0xC0, the element at (0x55, 0x1D) with size 0xC0, the element at (0x54, 0x1C) with size 0xA1 and the element at (0x54, 0x1D) with size 0xA1.'
   - - 480
     - c
-    - initFrontendStateSelector4AndClearSecondStateByteWorld00Area00313_801F2DE0
-    - '@source: src/bof3/world/initFrontendStateSelector4AndClearSecondStateByteWorld00Area00313_801F2DE0.c'
+    - initFrontendStateSelector
+    - '@source: src/bof3/world/initFrontendStateSelector.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088 and then writes 4 to the shared front-end state selector at 0x801448EB and clears the shared byte at 0x801448ED, returning 0.'
 - - 532
   - bin

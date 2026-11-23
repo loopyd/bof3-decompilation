@@ -48,7 +48,7 @@ extern void func_8015C058(void);
  * The payload refers to 0x801FCD9C through exactly one word, the pointer at
  * 0x801FE2FC: no `jal` or `j` immediate targets it, and that word is entry 24 of
  * the contiguous code-pointer run based at 0x801FE29C that the exact dispatcher
- * dispatchProgressHandlerScenarioScena0100_801F7FC4 (0x801F7FC4) indexes with
+ * callProgressTableHandler (0x801F7FC4) indexes with
  * the shared scenario progress byte D_80146872.
  *
  * No byte-identical copy of these 0x94 bytes exists in any other of the 396 EMI
@@ -56,7 +56,7 @@ extern void func_8015C058(void);
  * to them in every word that is not an absolute `j`/`jal` immediate, so the
  * clone lever is declined on measurement. The body was seeded from the
  * in-target exact sibling
- * startAction34LatchPhaseByteTwoThenReleaseFrontEndAndClearPrimaryStateScenarioScena0100_801FCE30
+ * audioStartAction34
  * (0x801FCE30), which carries the same statement order, the same saved
  * sub-state pointer and the same delay-slot constants 1 and 2 and differs only
  * in the closing store: 0 there, 6 here, which costs this body the one extra

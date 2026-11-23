@@ -32,16 +32,16 @@ segments:
     - '@behavior: Overlay step dispatch: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once before the frame is created, takes its byte at offset 4, scales it by four and calls that entry of this overlay''s two-entry handler table at 0x801F37F8, whose entries are the routines at 0x801F2C48 and 0x801F2D0C. The original does not bound the index, it reads no other state and writes none, and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call.'
   - - 72
     - c
-    - initializeWorkModeWithTintMinus64SetByte48To2AdvanceHandlerTo1Consume2CountdownWorld01Area04313_801F2C48
-    - '@source: src/bof3/world/initializeWorkModeWithTintMinus64SetByte48To2AdvanceHandlerTo1Consume2CountdownWorld01Area04313_801F2C48.c'
+    - initWorkModeTint
+    - '@source: src/bof3/world/initWorkModeTint.c'
     - '@behavior: Entry 0 of this overlay two-entry work-byte-4 handler table at 0x801F37F8, the entry the byte-4 dispatch step at 0x801F2C04 calls. It submits the work record published through the scratchpad pointer cell 0x1F800044 through the shared helper 0x8019651C with three zero offsets and mode 1 and stores the returned effect byte at +0x93 of the record published by the pointer cell 0x80146884, raises flag bit 0x20 of record byte 0, writes -0x40 into the signed level triplet at +0x5F, +0x5E and +0x5D in that order through one load of the cell, writes 1 into marker byte +0x5C, writes 2 into record byte +0x48, writes 1 into the handler byte at offset +0x04 that the local dispatcher indexes its table with, and consumes two units of the 0x80146884 countdown halfword at +0x7E. Takes no arguments, returns nothing, and the 0x20-byte frame keeps only $ra at 0x18 and the fifth 0x8019651C argument at 0x10.'
   - - 268
     - asm
     - func_801F2D0C
   - - 552
     - c
-    - seedFrontEndRecordHandler37FromWorkPositionWorld01Area04313_801F2E28
-    - '@source: src/bof3/world/seedFrontEndRecordHandler37FromWorkPositionWorld01Area04313_801F2E28.c'
+    - seedFrontEndRecord37
+    - '@source: src/bof3/world/seedFrontEndRecord37.c'
   - - 956
     - c
     - submitSeedPairTint

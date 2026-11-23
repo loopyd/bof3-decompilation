@@ -1,9 +1,9 @@
 g_battle_work = 0x1F800044;
 func_8015D71C = 0x8015D71C;
-dispatchWorkByte1HandlerBmagicMagic04803_801EEC10 = 0x801EEC10;
+dispatchWorkByte1Trio = 0x801EEC10;
 func_801EEC70 = 0x801EEC70;
-decrementWorkByte9ThenInvokeHelperAt100AndAdvanceWorkByte1WhenZeroBmagicMagic04803_801EEDB0 = 0x801EEDB0;
-forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04803_801EEE10 = 0x801EEE10;
+decrementCallAdvance = 0x801EEDB0;
+forwardBattleFlagCall = 0x801EEE10;
 callStateTablef818Bmagic = 0x801EEE70;
 func_801EEEB4 = 0x801EEEB4;
 func_801EEF3C = 0x801EEF3C;

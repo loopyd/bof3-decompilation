@@ -31,7 +31,7 @@ extern void func_801E257C(u8 index, u8 arg1);
  *           func_801EF058 copies that table into its frame and indexes it with
  *           scratchpad work-object byte 2, so the body runs while work byte 2 is
  *           6. That dispatcher is the single entry of the byte-1 run at
- *           0x801EF990 which dispatchWorkByte1HandlerBmagicMagic01703_801EF014
+ *           0x801EF990 which dispatchWorkByte1Index
  *           selects, and no jal in this payload names this function, so the
  *           table word is its only incoming path. It decrements the work
  *           object's unsigned countdown byte 9 in place (lbu / addiu -1 / sb /

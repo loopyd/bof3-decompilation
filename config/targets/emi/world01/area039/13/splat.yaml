@@ -32,18 +32,18 @@ segments:
     - '@behavior: Overlay step dispatch: reads the handler byte at +4 of the work record published at the scratchpad pointer cell 0x1F800044, scales it by four and calls that entry of the local handler table at 0x801F4C10, whose two entries are the routines at 0x801F2C48 and 0x801F2C88. Takes no arguments, returns nothing and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 72
     - c
-    - armWorkPhase40SelectHandler1ThenLowerSharedHalfword7eBy2World01Area03913_801F2C48
-    - '@source: src/bof3/world/armWorkPhase40SelectHandler1ThenLowerSharedHalfword7eBy2World01Area03913_801F2C48.c'
+    - stateArmWorkPhase40
+    - '@source: src/bof3/world/stateArmWorkPhase40.c'
     - '@behavior: Overlay step handler, entry 0 of the local handler table at 0x801F4C10 that the dispatcher at 0x801F2C04 reaches with the work record byte at +0x04. It stores 0x40 in the phase byte at +0x0A of the work record published at the scratchpad pointer cell 0x1F800044, reads that cell again and stores 1 in the handler byte at +0x04 so the next dispatch reaches entry 1 at 0x801F2C88, then lowers the unsigned halfword at +0x7E of the record published at 0x80146884 by 2. Takes no arguments, returns nothing and builds no frame.'
   - - 136
     - c
-    - stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area03913_801F2C88
-    - '@source: src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area03913_801F2C88.c'
+    - stepWorkPhaseTable
+    - '@source: src/bof3/world/stepWorkPhaseTable.c'
     - '@behavior: Overlay step handler, entry 1 of the local handler table at 0x801F4C10 that the dispatcher at 0x801F2C04 reaches with the work record byte at +0x04. It loads the work record published at the scratchpad pointer cell 0x1F800044 and, while its phase byte at +0x0A is nonzero, moves the record words at +0x34 and +0x38 apart by the signed phase-table entry at 0x801F4C18 selected by the phase nibble and scaled by 0x800, decrements the phase byte and lowers the unsigned halfword at +0x7E of the record published at 0x80146884 by 2. Once the phase byte reads zero it clears the handler byte at +0x04 instead, which reselects entry 0 at 0x801F2C48. Takes no arguments, returns nothing and builds no frame.'
   - - 280
     - c
-    - setHalfwordFF00AndTwoWorld01Area03913_801F2D18
-    - '@source: src/bof3/world/setHalfwordFF00AndTwoWorld01Area03913_801F2D18.c'
+    - stateHalfwordFF00Two
+    - '@source: src/bof3/world/stateHalfwordFF00Two.c'
     - '@behavior: stores the signed halfword -0x100 (0xFF00) into 0x8014932C and then the constant 0x02 into the byte at 0x80149333.'
   - - 312
     - c
@@ -55,8 +55,8 @@ segments:
     - '@behavior: Overlay record claim: asks the shared allocator at 0x8019601C for a row of the front-end record table at 0x80143FC8 and masks the answer to a byte. When that index is not 0xFF it seeds the row through the 0x74-byte stride with 1 in the occupancy byte, 0x36 in the handler selector byte at 0x80143FCD and 0 in the anchored row byte at 0x80143FD1; when the allocator answers 0xFF it instead lowers the unsigned halfword at 0x7E of the work-entity record published at 0x80146884 by 2. Takes no arguments, returns nothing and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 484
     - c
-    - queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4
-    - '@source: src/bof3/world/queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4.c'
+    - queueUiPairZero
+    - '@source: src/bof3/world/queueUiPairZero.c'
     - '@behavior: Queues the two shared UI elements at x = 0x43 and x = 0x44 with y = 0x36, both at size 0, through the shared marker queue func_801A4BC0; takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the two calls.'
   - - 540
     - c
@@ -73,19 +73,19 @@ segments:
     - noopHandlerWorld01Area03913_801F2E8C
   - - 660
     - c
-    - noopHandlerWorld01Area03913_801F2E94
+    - noopOverlayHandlerTwo
   - - 668
     - c
-    - invokeHelperByteArgWorld01Area03913_801F2E9C
+    - callHelperWithByte
   - - 708
     - c
-    - queueFrontendCueA3World01Area03913_801F2EC4
-    - '@source: src/bof3/world/queueFrontendCueA3World01Area03913_801F2EC4.c'
+    - queueFrontendCueA3
+    - '@source: src/bof3/world/queueFrontendCueA3.c'
     - '@behavior: Queues the frontend cue 0xA3 with level 0x64 and shape 8 through the shared front cue helper func_80161C20 and returns; takes no arguments, reads no state and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 748
     - c
-    - raiseWorldFlag8World01Area03913_801F2EEC
-    - '@source: src/bof3/world/raiseWorldFlag8World01Area03913_801F2EEC.c'
+    - raiseWorldFlag8
+    - '@source: src/bof3/world/raiseWorldFlag8.c'
     - '@behavior: raises bit 0x8 of the shared world-flags halfword D_80146258 with one halfword read-modify-write through a folded lui/lhu load, an empty load delay slot, ori 0x8 and a halfword store back through a re-materialised lui $at base; takes no arguments, returns nothing and keeps no frame.'
   - - 780
     - c

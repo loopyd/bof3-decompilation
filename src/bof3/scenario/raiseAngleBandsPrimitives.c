@@ -5,7 +5,7 @@
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 void func_8015DF18(u32 cue_id); /* @source 0x8015DF18 */
-void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+void renderTranslucentSectorFan(
     const void* origin, s16 extent, s32 channel_mask);
 void renderSliversSteppedSegments(
     u8* origin, u8* tint, u8 red);
@@ -21,7 +21,7 @@ typedef struct ScenarioSce15ef000WorkRamps {
 
 /* @source 0x801D0CEC
  * @behavior Entry 1 of the overlay's step-handler run at 0x801D1F88, which the
- * overlay entry dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04 indexes with the unsigned work byte at offset
+ * overlay entry callAngleBandHandler indexes with the unsigned work byte at offset
  * +0x1 of the scratchpad work object published at pointer slot 0x1F800044
  * (`sll $v0,$v0,2` then `lw` from the run base and `jalr`). It takes no
  * arguments and returns nothing. It raises the work object's tint byte at
@@ -44,7 +44,7 @@ typedef struct ScenarioSce15ef000WorkRamps {
  * Evidence: the run word at 0x801D1F8C is 0x801D0CEC and the eight words from
  * 0x801D1F88 are 0x801D0C48, 0x801D0CEC, 0x801D0DB0, 0x801D0E5C, 0x801D0F44,
  * 0x801D101C, 0x801D10C4 and 0x801D11B4, so this body is element 1 of the run
- * whose base dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04 loads. This address has no in-payload `jal` and no
+ * whose base callAngleBandHandler loads. This address has no in-payload `jal` and no
  * other word in the payload holds it, so the entry is reached only through that
  * run. The two ramp heads fix their widths: `lbu`/`addiu 8`/`sb` on +0x5D is an
  * unsigned byte add with no clamp, and `lhu`/`addiu 0x10`/`sh` on +0x2E is an
@@ -83,7 +83,7 @@ void raiseAngleBandsPrimitives(void) {
   work->angle_2e += 0x10;
   renderSliversSteppedSegments(
       D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
-  drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+  renderTranslucentSectorFan(
       D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 0x3C;

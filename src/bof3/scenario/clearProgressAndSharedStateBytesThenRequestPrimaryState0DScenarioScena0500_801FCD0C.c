@@ -31,14 +31,14 @@ void func_8015C088(void);
  * image word, 0x801FD664, and no in-image `jal`: that word is word 31 (the last)
  * of the thirty-two-word overlay primary handler table
  * D_801FD5E8 (0x801FD5E8) that
- * dispatchPrimaryStateHandlerScenarioScena0500_801F83EC (0x801F83EC) indexes
+ * callPrimaryRunHandler (0x801F83EC) indexes
  * with D_80146874, and at the same time word 8 (the last) of the nine-word
  * record-callback run at 0x801FD644 that
- * dispatchRecordCallbackScenarioScena0500_801FCA58 (0x801FCA58) indexes with the
+ * callCallbackTable (0x801FCA58) indexes with the
  * record byte at offset 0x7A, so the two dispatchers select this entry with
  * primary state 31 and record byte 8. Its 84 bytes at 0x801FCD0C..0x801FCD5F
  * compare equal word for word with the exact in-target sibling
- * clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCBD4
+ * stateClearProgressRequest13
  * (0x801FCBD4), so that sibling supplied the statement order, operand forms and
  * name this body writes, and every literal here is that same span's own
  * immediate. The name records the proven behavior and the address anchor keeps

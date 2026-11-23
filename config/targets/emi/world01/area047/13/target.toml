@@ -12,7 +12,7 @@ sources = [
     "src/bof3/world/renderDiscSpawnPeriod.c",
     "src/bof3/world/statePositionClearDraw.c",
     "src/bof3/world/tickCountdownClearTable.c",
-    "src/bof3/world/claimFrontEndRecordAndSetHandler3DWorld01Area04713_801F396C.c",
+    "src/bof3/world/claimFrontendRecord3d.c",
 ]
 support_sources = [
     "src/bof3/support/area047_13_psyq.c",

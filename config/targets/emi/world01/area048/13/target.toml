@@ -20,11 +20,11 @@ sources = [
     "src/bof3/world/renderPointsSquaresConnector.c",
 ]
 support_sources = [
-    "src/bof3/world/invokeHelperWorld01Area04813_801F2EA0.c",
+    "src/bof3/world/callSharedHelper.c",
     "src/bof3/world/area04813DispatchTables.c",
     "src/bof3/support/area048_13_psyq.c",
     "src/bof3/world/stateFlagClearMode.c",
-    "src/bof3/world/drawTwoTexturedTileBatchesWorld01Area04813_801F3AA4.c",
+    "src/bof3/world/renderTileBatchPair.c",
     "src/bof3/world/renderTexturedTileBatches.c",
     "src/bof3/world/renderMoveBlockThird.c",
     "src/bof3/world/renderMoveBlockWrap.c",

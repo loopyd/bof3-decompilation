@@ -7,7 +7,7 @@
  * claimRecordsForGlobalWorkByteASeedOrdinalFieldsAndWorkPointerIncrementByteB
  * BmagicMagic00303_801F0078 writes it. The base is bound by this target's map
  * row. */
-extern u8 magic00303Records[]; /* @source 0x801F0B38 @kind data */
+extern u8 effectRecordTable[]; /* @source 0x801F0B38 @kind data */
 
 /* Scratchpad work-object pointer cell at 0x1F800044, bound by this target's map
  * row. The original loads it at the head of the body, before the frame is
@@ -30,14 +30,14 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
  * object's unsigned byte 1 scaled by four and does not bound the index. It sits
  * inside the reviewed trailing `textbin` row labelled 0x801F0A78, whose base no
  * map row names, so the offset binds through this target's own map row. */
-extern void (*magic00303WorkByte1StateTable[])(void); /* @source 0x801F0AD8 @kind table */
+extern void (*workByte1StateTable[])(void); /* @source 0x801F0AD8 @kind table */
 
 /* This target's byte-1 step dispatcher at 0x801EFA9C, exact through
- * src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C.c: it reads
+ * src/bof3/bmagic/dispatchWorkByte1Scaled.c: it reads
  * the work object published at 0x1F800044 and calls the handler its byte 1
  * selects from the table at 0x801F0B00, so publishing a record there makes it
  * run that record's step. */
-void dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C(void);
+void dispatchWorkByte1Scaled(void);
 
 /* @source 0x801EEC28
  * @behavior Per-frame entry of this overlay. It reads the scratchpad work-object
@@ -70,17 +70,17 @@ void callEachOccupiedIts(
   u8 *savedRecord;
   u8 *recordWork;
 
-  magic00303WorkByte1StateTable[g_battle_work[1]]();
+  workByte1StateTable[g_battle_work[1]]();
   for (index = 0; index < 0x20; index++) {
     offset = index * 0x78;
-    if (magic00303Records[offset] & 1) {
-      record = &magic00303Records[offset];
+    if (effectRecordTable[offset] & 1) {
+      record = &effectRecordTable[offset];
       savedWork = g_battle_work;
       savedRecord = D_801EB4E0;
-      recordWork = *(u8 **)&magic00303Records[offset + 0x74];
+      recordWork = *(u8 **)&effectRecordTable[offset + 0x74];
       g_battle_work = record;
       D_801EB4E0 = recordWork;
-      dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C();
+      dispatchWorkByte1Scaled();
       D_801EB4E0 = savedRecord;
       g_battle_work = savedWork;
     }

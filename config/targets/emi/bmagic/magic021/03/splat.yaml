@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 40
     - c
-    - dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic02103_801EEC28
-    - '@source: src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic02103_801EEC28.c'
+    - runEachPublishStep
+    - '@source: src/bof3/bmagic/runEachPublishStep.c'
     - '@behavior: Copies the three code-pointer words at 0x801EEC04 into its frame and calls the entry selected by work byte 1, then publishes each occupied 0x78-stride record at 0x801EFE14 as the work object, runs the record step at 0x801EF534 and restores both pointer cells.'
   - - 304
     - asm
@@ -43,8 +43,8 @@ segments:
     - '@behavior: Work byte 1 state 1 of this overlay: entry 1 of the three-word code-pointer run at 0x801EEC04, dispatched on work byte 1. When the scratchpad work object''s byte 0xB is zero it calls the shared helper at 0x800AEF98 with 4 and 0, clears bit 0x40 of byte 0 of the shared battle work record at 0x801EB4E0 and increments work byte 1.'
   - - 936
     - c
-    - raiseFlag4AndInvokeHelperBmagicMagic02103_801EEFA8
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic02103_801EEFA8.c'
+    - raiseFlag4CallStep
+    - '@source: src/bof3/bmagic/raiseFlag4CallStep.c'
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the helper at 0x801E5988 with no arguments; the halfword store fills the call delay slot.'
   - - 988
     - c
@@ -55,8 +55,8 @@ segments:
     - func_801EF020
   - - 1212
     - c
-    - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic02103_801EF0BC
-    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic02103_801EF0BC.c'
+    - seedHelperAdvance
+    - '@source: src/bof3/bmagic/seedHelperAdvance.c'
     - '@behavior: Calls the shared helper at 0x800AFF98 with no arguments, stores the returned byte in scratchpad work byte 9 through the pointer cell at 0x1F800044, then reloads that cell and increments work byte 2 at byte width, selecting the next entry of the six-word handler run at 0x801EEC10.'
   - - 1284
     - c
@@ -75,12 +75,12 @@ segments:
     # @behavior Calls helper and adds four to work byte 9 below 12; otherwise advances work byte 2.
   - - 1740
     - c
-    - decrementGlobalWorkByteBAndAdvanceWorkByte2WhenWorkByteBIsZeroBmagicMagic02103_801EF2CC
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndAdvanceWorkByte2WhenWorkByteBIsZeroBmagicMagic02103_801EF2CC.c'
+    - decrementZeroAdvance
+    - '@source: src/bof3/bmagic/decrementZeroAdvance.c'
     - '@behavior: Returns unchanged when scratchpad work byte B is nonzero; otherwise decrements the shared battle work record byte B and increments work byte 2.'
   - - 1832
     - c
-    - invokeHelperBmagicMagic02103_801EF328
+    - invokeSharedHelper13
   - - 1864
     - asm
     - func_801EF348
@@ -99,8 +99,8 @@ segments:
     - func_801EF600
   - - 2896
     - c
-    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750
-    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750.c'
+    - addByteCountAdvance
+    - '@source: src/bof3/bmagic/addByteCountAdvance.c'
   - - 2976
     - c
     - decrementTwoGlobalBytes
@@ -114,13 +114,13 @@ segments:
     - func_801EFA48
   - - 4428
     - c
-    - reserveFirstFreeRecordBmagicMagic02103_801EFD4C
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic02103_801EFD4C.c'
+    - reservePoolSlot
+    - '@source: src/bof3/bmagic/reservePoolSlot.c'
     - '@behavior: Reserves the first of 64 records with flags bit 0 clear in the 0x78-stride pool at 0x801EFE14, sets the bit and returns its byte index or 0xFF when full.'
   - - 4528
     - c
-    - clearWorkBytesBmagicMagic02103_801EFDB0
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic02103_801EFDB0.c'
+    - clearWorkFive
+    - '@source: src/bof3/bmagic/clearWorkFive.c'
   - - 4608
     - rodata
     - dispatchHandlerTable801EFE00

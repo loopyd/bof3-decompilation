@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 32
     - c
-    - dispatchWorkByte1HandlerBmagicMagic04003_801EEC20
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04003_801EEC20.c'
+    - dispatchWorkByte1Base
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Base.c'
     - '@behavior: Dispatch work byte 1 through the three-entry code pointer run at 0x801EEC04, copied into a local frame first.'
   - - 128
     - asm
@@ -44,8 +44,8 @@ segments:
     - func_801EEEFC
   - - 840
     - c
-    - dispatchWorkByte1HandlerBmagicMagic04003_801EEF48
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04003_801EEF48.c'
+    - dispatchWorkByte1Offset
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Offset.c'
   - - 908
     - c
     - callFourEntryActive
@@ -53,8 +53,8 @@ segments:
     - '@behavior: Dispatch work byte 2 through four copied handlers, then invoke 0x801EF7FC and 0x801EF600 twice when active.'
   - - 1140
     - c
-    - copyRecordByte8AndWordTripletInvoke801EF430ClearBytes9AndAThenAdvanceWorkByte2BmagicMagic04003_801EF074
-    - '@source: src/bof3/bmagic/copyRecordByte8AndWordTripletInvoke801EF430ClearBytes9AndAThenAdvanceWorkByte2BmagicMagic04003_801EF074.c'
+    - copyRecordTripletCall
+    - '@source: src/bof3/bmagic/copyRecordTripletCall.c'
     - '@behavior: Copy record byte 8 and word triplet, invoke 0x801EF430, clear work bytes 9 and 0xA, then advance byte 2.'
   - - 1300
     - c
@@ -63,8 +63,8 @@ segments:
     - '@behavior: Increment work-object bytes 0x09 and 0x0A through the scratchpad pointer cell, then advance work byte 2 only when the stored byte 0x0A value is 0x10.'
   - - 1408
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At20BmagicMagic04003_801EF180
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At20BmagicMagic04003_801EF180.c'
+    - incrementReachTwenty
+    - '@source: src/bof3/bmagic/incrementReachTwenty.c'
   - - 1488
     - asm
     - func_801EF1D0

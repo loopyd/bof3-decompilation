@@ -57,21 +57,21 @@ segments:
     - func_800C1A08
   - - 720
     - c
-    - invokeHelperBossBoss00113_800C1AD0
+    - invokeSharedHelper
   - - 752
     - c
-    - dispatchIndexedHandlerBossBoss00113_800C1AF0
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss00113_800C1AF0.c'
+    - callIndexedHandler
+    - '@source: src/bof3/boss/callIndexedHandler.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C2210 handler table in this overlay payload, so the selected handler''s result stays in the return register.'
   - - 808
     - c
-    - noopHandlerBossBoss00113_800C1B28
+    - noopHandler
   - - 816
     - c
-    - noopHandlerBossBoss00113_800C1B30
+    - noopHandler2
   - - 824
     - c
-    - noopHandlerBossBoss00113_800C1B38
+    - noopHandler3
   - - 832
     - c
     - callStateTable221Boss
@@ -100,22 +100,22 @@ segments:
     - func_800C1D24
   - - 1504
     - c
-    - invokeHelperBossBoss00113_800C1DE0
+    - invokeSharedHelper2
   - - 1536
     - c
-    - dispatchIndexedHandlerBossBoss00113_800C1E00
+    - callIndexedHandler2
   - - 1592
     - c
-    - noopHandlerBossBoss00113_800C1E38
+    - noopHandler4
   - - 1600
     - c
-    - noopHandlerBossBoss00113_800C1E40
+    - noopHandler5
   - - 1608
     - c
-    - noopHandlerBossBoss00113_800C1E48
+    - noopHandler6
   - - 1616
     - c
-    - publishBattleHooksBossBoss00113_800C1E50
+    - publishBattleHooks
   - - 1672
     - asm
     - func_800C1E88

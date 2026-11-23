@@ -40,8 +40,8 @@ segments:
     - func_801F2D64
   - - 672
     - c
-    - invokeHelperWorld01Area04813_801F2EA0
-    - '@source: src/bof3/world/invokeHelperWorld01Area04813_801F2EA0.c'
+    - callSharedHelper
+    - '@source: src/bof3/world/callSharedHelper.c'
   - - 704
     - asm
     - func_801F2EC0
@@ -58,7 +58,7 @@ segments:
     - func_801F3434
   - - 2992
     - c
-    - dispatchStateByte2Table4d80World01Area04813_801F37B0
+    - dispatchByte2Table4d80
     - '@source: src/bof3/world/area04813DispatchTables.c'
   - - 3060
     - c
@@ -78,15 +78,15 @@ segments:
     - func_801F39E0
   - - 3748
     - c
-    - drawTwoTexturedTileBatchesWorld01Area04813_801F3AA4
-    - '@source: src/bof3/world/drawTwoTexturedTileBatchesWorld01Area04813_801F3AA4.c'
+    - renderTileBatchPair
+    - '@source: src/bof3/world/renderTileBatchPair.c'
     - '@behavior: emits two batches of eight textured tiles through the tile emitter at 0x801F3AE4, at position 0x400 with texture page 0x848000 and index 0x10, then at position 0xC00 with texture page 0x888000 and index 0x11; takes no arguments and returns nothing.'
   - - 3812
     - asm
     - func_801F3AE4
   - - 4448
     - c
-    - dispatchStateByte2Table4e54World01Area04813_801F3D60
+    - dispatchByte2Table4e54
     - '@source: src/bof3/world/area04813DispatchTables.c'
   - - 4516
     - c

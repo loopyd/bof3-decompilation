@@ -22,7 +22,7 @@ extern u16 D_801492D8; /* @source 0x801492D8 @kind unknown */
 
 /* Fields of the 32-record, 0x78-byte-stride pool at 0x801F0578 in this
  * overlay's own image, whose free records
- * reserveFirstFreeRecordBmagicMagic05303_801F0494 hands out. The original
+ * reservePool32 hands out. The original
  * reaches each seeded field as its own symbol: lui $at,%hi(0x801F05xx) /
  * addu $at,$at,index*0x78 / sb or sw %lo(0x801F05xx)($at), so the three
  * fields stay three flat addresses rather than one base plus offset. */
@@ -31,11 +31,11 @@ extern u8 D_801F0583[]; /* @source 0x801F0583 @kind data */
 extern u8 D_801F05EC[]; /* @source 0x801F05EC @kind data */
 
 /* This target's own pool claim helper, lifted in
- * reserveFirstFreeRecordBmagicMagic05303_801F0494.c: it returns the index of
+ * reservePool32.c: it returns the index of
  * the first record whose flags byte has bit 0 clear, or 0xFF when all 32
  * records are taken, and the original zero-extends that byte at the call site
  * (andi 0xFF) before both the 0xFF test and the stride scaling. */
-u8 reserveFirstFreeRecordBmagicMagic05303_801F0494(void);
+u8 reservePool32(void);
 
 /* Main-executable helper at 0x8015D71C, outside this overlay's image and bound
  * by this target's generated undefined_funcs_auto.txt. The handler family
@@ -83,7 +83,7 @@ extern void func_8014D6B8(s32 arg0); /* @source 0x8014D6B8 */
  *   zero. On that tick it re-reads the cell and passes 0x100 or 0x101 to
  *   func_8015D71C according to bit 0 of work byte 0x04, clears work byte 0x04,
  *   and in an eight-iteration loop claims a free record of the pool at
- *   0x801F0578 through reserveFirstFreeRecordBmagicMagic05303_801F0494,
+ *   0x801F0578 through reservePool32,
  *   skipping the iteration when the claim returns 0xFF. For a claimed record it
  *   scales the index by the 0x78-byte stride, clears record byte 0x01, stores
  *   the loop ordinal in record byte 0x0B, and publishes the work pointer into
@@ -138,7 +138,7 @@ void stepEightSpawnPool(void) {
     func_8015D71C((g_battle_work[0x04] & 1) ? 0x101 : 0x100);
     g_battle_work[0x04] = 0;
     for (slot = 0; slot < 8; slot++) {
-      index = reserveFirstFreeRecordBmagicMagic05303_801F0494();
+      index = reservePool32();
       if (index == 0xFF) {
         continue;
       }

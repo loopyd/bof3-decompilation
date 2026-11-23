@@ -8,10 +8,10 @@ splat = "config/targets/emi/world00/area037/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0DWorld00Area03713_801F3ADC.c",
+    "src/bof3/world/initFrontendByte0d.c",
     "src/bof3/world/stateModeGateElse5.c",
     "src/bof3/world/stateStatus60ModeGate.c",
-    "src/bof3/world/setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F354C.c",
+    "src/bof3/world/stateStatus60Mode6.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld00Area03713_801F34A8.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld00Area03713_801F34D8.c",
     "src/bof3/world/stateStatus74ModeClone.c",
@@ -25,9 +25,9 @@ sources = [
     "src/bof3/world/stateStatus9ModeGate.c",
     "src/bof3/world/stateModeGateClone.c",
     "src/bof3/world/stateVectorRunsFocus.c",
-    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0BWorld00Area03713_801F3A34.c",
+    "src/bof3/world/initFrontendByte0b.c",
     "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0CWorld00Area03713_801F3A6C.c",
-    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0EWorld00Area03713_801F3AA4.c",
+    "src/bof3/world/initFrontendByte0e.c",
     "src/bof3/world/stateStatusGateEnd.c",
 ]
 support_sources = [

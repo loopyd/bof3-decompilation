@@ -162,7 +162,7 @@ navigate_second_record:
             if (position == 0) {
                 if (D_801442B8 != 0) {
                     func_8015DF18(0x100);
-                    gateByteWorld00Area03004_80144288 = 4;
+                    stateGateByte = 4;
                     page = D_801442B8;
                     D_8014428A = 3;
                     D_801442B8 = page - 1;
@@ -184,7 +184,7 @@ navigate_second_record:
                 if (page + 8 < limit) {
                     func_8015DF18(0x100);
                     page_after_cue = D_801442B8;
-                    gateByteWorld00Area03004_80144288 = 0;
+                    stateGateByte = 0;
                     D_8014428A = 3;
                     D_801442B8 = page_after_cue + 1;
                 }

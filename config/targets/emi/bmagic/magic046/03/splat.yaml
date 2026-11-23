@@ -45,8 +45,8 @@ segments:
     - '@source: src/bof3/bmagic/magic04603DispatchTables.c'
   - - 948
     - c
-    - dispatchWorkByte2HandlerBmagicMagic04603_801EEFB4
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic04603_801EEFB4.c'
+    - dispatchWorkByte2First
+    - '@source: src/bof3/bmagic/dispatchWorkByte2First.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its work byte at offset 2 selects an entry of the three-entry code pointer table at 0x801EEC04 (0x801EF014, 0x801EF090, 0x801EF1A0), and that entry is invoked with no arguments. The three table words are copied into this function''s own 0x28-byte frame first, so the call target is read back from the copy; it reads no other state and writes none.'
   - - 1044
     - asm
@@ -59,8 +59,8 @@ segments:
     - func_801EF1A0
   - - 1520
     - c
-    - dispatchWorkByte2HandlerBmagicMagic04603_801EF1F0
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic04603_801EF1F0.c'
+    - dispatchWorkByte2Second
+    - '@source: src/bof3/bmagic/dispatchWorkByte2Second.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its work byte at offset 2 selects an entry of the three-entry code pointer table at 0x801EEC10 (0x801EF250, 0x801EF2A8, 0x801EF304), and that entry is invoked with no arguments. The three table words are copied into this function''s own 0x28-byte frame first, so the call target is read back from the copy; it reads no other state and writes none.'
   - - 1616
     - asm
@@ -70,7 +70,7 @@ segments:
     - func_801EF2A8
   - - 1796
     - c
-    - invokeHelperBmagicMagic04603_801EF304
+    - invokeSharedHelper14
   - - 1828
     - asm
     - func_801EF324
@@ -94,8 +94,8 @@ segments:
     - '@behavior: Translucent textured-quad draw pass of the second stage of this overlay draw state machine, reached only from the two stage handlers at 0x801EF540 and 0x801EF660 after each of them advanced the work record projection words 0x34 and 0x38. It selects the draw-mode texture page argument 0xA5 when the shared graphic type is 1 or 2 and 0x35 otherwise, installs it at g_PrimCursor with dfe 0 and dtd 1 and links a 0xC-byte draw-mode packet at those work words with kind 2. It then seeds four scratchpad cells: the signed halfword at 0x1F800000 takes six times work byte 0x9 plus one while that byte is below eight and twice the byte plus 0x20 otherwise, the halfword at 0x1F800008 takes twenty times work byte 0xA as the flat tint, the halfword at 0x1F800004 takes work record halfword 0x2E and the one at 0x1F800006 takes 0x30. It emits one semi-transparent POLY_GT4 seeded through the shared seeder at 0x8017A9E0 whose four corners lie on the circle of that radius around the screen pair at phases 0xC00, 0x800, 0 and 0x400 in vertex order, each corner x the 0x801782FC sample of its phase scaled by the radius and shifted right twelve and each corner y the 0x801783C8 sample scaled the same way, with uv pairs 1,1 and 0x1F,1 and 1,0x1F and 0x1F,0x1F, texture page GetTPage(0, 1, 0x340, 0x100), clut GetClut(0, 0x1FA) and all twelve colour bytes stored from their own read of the tint halfword. Finally it links the finished 0x34-byte polygon at the same work words with kind 2. Takes no arguments and returns nothing; the 0x28-byte frame keeps ra at 0x20, the primitive pointer at 0x1C, the tint base at 0x18 and the fifth draw-mode argument at 0x10, and the scratchpad cells and the work record offsets stay address-anchored.'
   - - 3984
     - c
-    - projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic04603_801EFB90
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic04603_801EFB90.c'
+    - projectInstallTransform
+    - '@source: src/bof3/bmagic/projectInstallTransform.c'
     - '@behavior: Pushes the GTE matrix stack and reads the work record published at the scratchpad pointer cell 0x1F800044 once. It fills a translation halfword triplet with zeros, then builds a rotation triplet whose first two elements are work record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 and whose third element is half the negated signed halfword 0x3E of the shared battle record read through the main-RAM pointer cell 0x801EB4E0. RotTrans projects that triplet into the translation field of a 0x20-byte scratch matrix while storing a flag word beside it, RotMatrix turns the zeroed triplet into an identity rotation in that same matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and the result is published through SetRotMatrix and SetTransMatrix. Takes no arguments and returns nothing; the 0x50-byte frame keeps the return address at 0x4C and the saved register at 0x48 across the matrix calls, and the caller pairs it with a PopMatrix.'
   - - 4168
     - c
@@ -104,8 +104,8 @@ segments:
     - '@behavior: Translucent radial fan of the second stage of this overlay draw machine, reached only from the draw branch of the dispatcher at 0x801EF324 after that caller installed the work record transform and before the PopMatrix that pairs with the install, so the fan is drawn under that matrix. It reads no incoming register, takes no arguments and returns nothing. It selects draw-mode texture page 0x125 when the shared graphic type is 1 or 2 and 0x55 otherwise, installs it at g_PrimCursor with dfe 0 and dtd 1 and links a 0xC-byte draw-mode packet, then seeds three scratchpad cells: the radius halfword 0x1F800000 takes ten times work byte 0x9 plus six, the tint halfword 0x1F800008 takes six times work byte 0xA, and the phase-zero fan point at 0x1F800024 and 0x1F800026 takes the sine and the cosine sample of phase zero scaled by the signed radius and shifted right twelve. It emits eight semi-transparent gouraud POLY_G3 triangles, one per 0x200 step of the 0x1000 circle, so the eight wedges close the ring: each takes a fresh g_PrimCursor primitive seeded through func_8017A97C and marked semi-transparent, and its vertices are the origin, the previous ring point and the current ring point, that last taken from the sampler pair of the step phase scaled by the radius and shifted right twelve and kept for the next step through the two halfwords read back before it is overwritten. Every vertex takes the same tint in colour bytes 0x04, 0x05 and 0x06, each stored from its own read of the tint halfword low byte because the primitive stores may alias the cell, and bytes 0x0C to 0x0E and 0x14 to 0x16 are fixed at 1. The three z halfwords are cleared in every step from the shape base the original holds, and the packet is linked as 0x1C bytes. After the loop the draw mode is closed with texture page 0x25 when the graphic type is 1 or 2 and 0x15 otherwise and a 0xC-byte packet is appended. The 0x48-byte frame keeps ra at 0x40, s0 to s5 at 0x28 to 0x3C, the four outgoing RotTransPers3 stack arguments at 0x10 to 0x1C and the projected depth and flag the call publishes at 0x20 and 0x24; the scratchpad cells and the work record offsets stay address-anchored.'
   - - 4816
     - c
-    - reserveFirstFreeRecordBmagicMagic04603_801EFED0
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic04603_801EFED0.c'
+    - reservePool48
+    - '@source: src/bof3/bmagic/reservePool48.c'
     - '@behavior: Reserves the first of 48 records in the pool at 0x801EFF3C whose flags byte has bit 0 clear, sets that bit and returns its index. Records have stride 0x78. The original re-materializes the pool address for the flags load and again for the store, and returns 0xFF once all 48 records are occupied. The caller at 0x801EF090 masks the result to a byte and indexes the same pool with it to fill record word 0x74 and bytes 0xA and 0xB, the sweep at 0x801EEC60 treats that same bit 0 as the in-use flag and the reset at 0x801EED50 clears bytes 0 through 2 of every record, so a zero-extended byte result is what they consume. Takes no arguments.'
   - - 4916
     - textbin

@@ -4,7 +4,7 @@
  * 0x801CE448 through 0x801CFB50, with the shared main-executable handler
  * 0x801B2D54 at entries 2 and 8. The Splat `textbin` row of the same name
  * places the words, so the table is only referenced here. */
-extern void (*T_801D0A54[])(void); /* @source 0x801D0A54 @kind data */
+extern void (*codePointerTable0a54[])(void); /* @source 0x801D0A54 @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step dispatch: reads the work-record pointer published at
@@ -18,4 +18,4 @@ extern void (*T_801D0A54[])(void); /* @source 0x801D0A54 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable0Plchar, T_801D0A54);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable0Plchar, codePointerTable0a54);

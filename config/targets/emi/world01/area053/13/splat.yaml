@@ -33,7 +33,7 @@ segments:
     - noopHandlerWorld01Area05313_801F2C5C
   - - 100
     - c
-    - noopHandlerWorld01Area05313_801F2C64
+    - noopEmptyHandler
 - - 108
   - bin
   - tail

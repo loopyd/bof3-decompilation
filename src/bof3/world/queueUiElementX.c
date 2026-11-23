@@ -18,7 +18,7 @@ void func_801A4BC0(s16 x, s16 y, u32 size);
  * a0 = 0x58 then 0x59, a1 = 0xD in both, and a2 = 0x51 in both. That is one
  * pair of adjacent x columns at a single y and a single size, so the name
  * follows the block grammar of the exact same-target sibling
- * queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4 at
+ * queueUiPairZero at
  * 0x801F2DE4 and of
  * queueSharedUiElementBlock9x59To5BSize51World03Area13613_801F2E08.
  *

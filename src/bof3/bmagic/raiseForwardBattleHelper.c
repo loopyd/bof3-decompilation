@@ -30,7 +30,7 @@ extern u8 D_80146384; /* @source 0x80146384 @kind unknown */
  *           Reachability: this 0x40-byte span is word 2 of the three-word code
  *           pointer table at 0x801EEC04 (0x801EECB0, 0x801EED2C, 0x801EEFEC).
  *           The dispatcher
- *           dispatchWorkByte1HandlerTableec04BmagicMagic05703_801EEC50 loads
+ *           dispatchWorkByte1Stage loads
  *           those three words, copies them into its 0x28-byte frame and indexes
  *           the copy with the scratchpad work object's unsigned byte 0x01
  *           (lbu / sll 2 / addu / lw / jalr), so this body runs on the frames

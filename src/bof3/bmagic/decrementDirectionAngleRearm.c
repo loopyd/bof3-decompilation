@@ -5,7 +5,7 @@
  * plus lw 68($vN) pair at every read, because a store through the loaded pointer
  * may alias the cell, so the cell is named rather than written as a bare
  * scratchpad constant. The exact same-target siblings
- * copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4 and
+ * copyRecordWordTriplet and
  * decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagic
  * Magic00603_801EF41C declare the same cell the same way. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
@@ -15,7 +15,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * remaining asm spans func_801EEC90, func_801EF298 and func_801F0684 still load
  * it, so the name needs no map row. Words 0x34, 0x38 and 0x3C read here are the
  * position triplet the exact bmagic siblings
- * copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4 and
+ * copyRecordWordTriplet and
  * copyWorkWordPairAndHalfwordClearBytes9AThenAdvanceWorkByte2BmagicMagic10303
  * _801EEF94 copy out of the record they read through 0x8014638C: the record
  * layout is shared and the address is not this target's own. */
@@ -25,7 +25,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * lift reads words 0x34 and 0x38 and halfwords 0x2E and 0x30 of the record it
  * points to as the aim target; its role is not proven, so the name stays
  * address-anchored, exactly as the exact bmagic siblings
- * copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4 and
+ * copyRecordWordTriplet and
  * seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPair
  * AndAdvanceWorkByte2BmagicMagic04403_801EEEFC declare it. The address keeps its
  * generated undefined_syms_auto.txt row because the remaining asm spans

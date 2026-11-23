@@ -55,7 +55,7 @@ void publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14(u8 step);
  *
  * Name evidence: no in-payload `jal` targets 0x801FB6C4. The only payload word
  * equal to that address is at 0x801FE2F8, word 28 of the 31-word code-pointer
- * run based at 0x801FE288 that dispatchProgressHandlerScenarioScena0200_801F719C
+ * run based at 0x801FE288 that callProgressChainHandler
  * indexes with the signed chain byte D_80146872, so the overlay reaches this
  * span as that chain slot. The state walk is the same shape as the exact sibling
  * queueEndWaitRelease

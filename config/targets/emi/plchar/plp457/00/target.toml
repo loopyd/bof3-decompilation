@@ -10,7 +10,7 @@ load_address = 0x801CE400
 sources = []
 support_sources = [
     "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp45700_801CF37C.c",
-    "src/bof3/plchar/dispatchWorkByte2Tablef900PlcharPlp45700_801CE404.c",
+    "src/bof3/plchar/dispatchByte2Tablef900.c",
     "src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp45700_801CEB48.c",
     "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp45700_801CEC60.c",
     "src/bof3/plchar/callWorkTablef924Plchar.c",
@@ -27,7 +27,7 @@ support_sources = [
     "src/bof3/plchar/stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp45700_801CE870.c",
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp45700_801CEE94.c",
     "src/bof3/support/plp457_00_psyq.c",
-    "src/bof3/plchar/dispatchWorkByte2Tablef90cPlcharPlp45700_801CE620.c",
+    "src/bof3/plchar/dispatchByte2Tablef90c.c",
     "src/bof3/plchar/callWorkTablef918Plchar.c",
     "src/bof3/plchar/callWorkTablef93Plchar.c",
     "src/bof3/plchar/callWorkTablef948Plchar.c",

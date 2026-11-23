@@ -4,7 +4,7 @@
  * access is a lui plus offset load, the form this target's other lifts use
  * (integrateIntoHelpersZero
  * and
- * subtractWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic00100_801EF5CC).
+ * subtractFadeCopyTriplet).
  * The original re-reads the cell in the taken arm after the stores through the
  * previously loaded pointer, because those stores may alias the cell. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */

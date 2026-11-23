@@ -6,7 +6,7 @@
  * target's Splat `textbin` row of the same name places entries 0 through 15 and
  * the following row carries the rest of the run, so the run is only referenced
  * here, at its first entry. */
-extern void (*T_801CFEDC[])(void); /* @source 0x801CFEDC @kind data */
+extern void (*codePointerTablefedc[])(void); /* @source 0x801CFEDC @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step entry on work-record byte 2: loads the work-record
@@ -26,4 +26,4 @@ extern void (*T_801CFEDC[])(void); /* @source 0x801CFEDC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefedcPlchar, T_801CFEDC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefedcPlchar, codePointerTablefedc);

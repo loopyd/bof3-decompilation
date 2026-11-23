@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef100_801D0C04
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D0C04.c'
+    - callBeamStepHandler
+    - '@source: src/bof3/scenario/callBeamStepHandler.c'
     - '@behavior: First per-frame step dispatcher of the overlay step-handler run at 0x801D3918: loads the work-record pointer from the scratchpad pointer cell 0x1F800044, takes that record unsigned byte 0x1, scales it by four and invokes that entry of the overlay-local code-pointer run at 0x801D3918 with no arguments and no result consumed, creating its 0x18-byte frame only to keep the return address across the indirect call. It does not bound the index before the scaled table load, reads nothing else and writes no state.'
   - - 72
     - c
@@ -123,8 +123,8 @@ segments:
     - swapWords
   - - 5488
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef100_801D2170
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2170.c'
+    - callPatternBlinkStep
+    - '@source: src/bof3/scenario/callPatternBlinkStep.c'
     - '@behavior: Dispatches the overlay step from the work-record byte at offset 1 through the ten-word local code-pointer run at 0x801D3954; the record comes from the scratchpad pointer cell 0x1F800044 and takes no arguments.'
   - - 5556
     - c
@@ -153,8 +153,8 @@ segments:
     - invokeHelperScenarioSce15ef100_801D2B44
   - - 8036
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef100_801D2B64
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2B64.c'
+    - callHeadPairStep
+    - '@source: src/bof3/scenario/callHeadPairStep.c'
     - '@behavior: Third per-frame step dispatcher of this overlay: loads the work-record pointer from the scratchpad pointer cell 0x1F800044, takes that record unsigned byte 0x1, scales it by four and invokes that entry of the four-word overlay-local code-pointer run at 0x801D396C with no arguments and no result consumed, creating its 0x18-byte frame only to keep the return address across the indirect call. It does not bound the index before the scaled table load, reads nothing else and writes no state.'
   - - 8104
     - c
@@ -178,8 +178,8 @@ segments:
     - '@behavior: Entry 9 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it hands the work object point at +0x34 and its word pair +0x0C/+0x10 to the overlay quad ring emitter 0x801D36BC, then re-reads that cell and through one pointer ticks countdown byte +0x9 down by one, adds the head point pair +0x18/+0x1C into the word pair +0x0C/+0x10, subtracts 0x100 from +0x18 and 0x200 from +0x1C, and when the countdown reaches zero calls the resident reset helper 0x80196070.'
   - - 8684
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC.c'
+    - callEffectRecordStep
+    - '@source: src/bof3/scenario/callEffectRecordStep.c'
     - '@behavior: Dispatches the overlay step from the work-record byte at offset 1 through the eleven-word local code-pointer run at 0x801D397C; the record comes from the scratchpad pointer cell 0x1F800044 and the entry takes no arguments.'
   - - 8752
     - c
@@ -191,8 +191,8 @@ segments:
     - func_801D2FD8
   - - 9388
     - c
-    - emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D30AC
-    - '@source: src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D30AC.c'
+    - emitPatternEffectRecords
+    - '@source: src/bof3/scenario/emitPatternEffectRecords.c'
     - '@behavior: Word 7 of the eleven-word code-pointer run at 0x801D397C that the dispatcher 0x801D2DEC indexes with work byte 1: through work pointer word 0x4C it projects the object point at +0x34/+0x38/+0x3C with 0x801AFF04 after filling the scratch through 0x801AFE18, then walks the pattern-cell pointer 0x801D40B0 over the bound-by-bound grid of the eight-byte entry at 0x801D393C that the byte 0x801D40AC selects, appends a ten-byte effect record at the cursor 0x801D40B4 for every nonzero cell with the cell as its colour halfword and the projected pair less the entry base plus the column and cell index as its position, raises the live count 0x801D40A8, and finally increments work byte 9 and advances work byte 1 when that value reads 2.'
   - - 9972
     - c

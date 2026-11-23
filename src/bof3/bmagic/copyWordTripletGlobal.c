@@ -32,7 +32,7 @@ extern u8 D_80145988; /* @source 0x80145988 @kind data */
 /* @source 0x801EECB0
  * @behavior First handler of this overlay's three-word handler table at
  *           0x801EEC04 (0x801EECB0, 0x801EED2C, 0x801EEFEC), whose dispatcher
- *           dispatchWorkByte1HandlerTableec04BmagicMagic05703_801EEC50 copies
+ *           dispatchWorkByte1Stage copies
  *           those three words into its own 0x28-byte frame and indexes them
  *           with the scratchpad work object's byte 0x01; no jal in the image
  *           names this span.

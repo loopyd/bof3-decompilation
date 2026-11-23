@@ -19,7 +19,7 @@ void func_8015DF18(u16 arg0);
  * delay slot of the final call. No in-image `jal` targets the address; the
  * only in-image reference is the pointer word at 0x801FE344, entry 16 of the
  * overlay callback table D_801FE304 that
- * dispatchRecordCallbackByByte7AScenarioScena0200_801FD084 (0x801FD084)
+ * callRecordCallbackTable (0x801FD084)
  * indexes with a record's byte field 0x7A, so the overlay reaches this
  * handler only indirectly. Its sub-state-then-state store shape is the one
  * used by the sibling lifts

@@ -19,7 +19,7 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
 
 /* @source 0x801D2DC4
  * @behavior entry 2 of the local handler table at 0x801E1D80, which the
- * dispatcher dispatchStateByte1Table1d80World00Area03004 indexes with the work record's unsigned step byte at
+ * dispatcher dispatchByte1Table1d80 indexes with the work record's unsigned step byte at
  * +0x1: it first selects draw mode (0, 2) and submits panel sprite 0x11 at
  * (0x87, 0xB4), then advances the work record's halfword at +0x30 towards the
  * signed byte that the slot index D_801E3208 selects from D_80146892 (stride
@@ -76,7 +76,7 @@ void slideTowardSlotTarget(void) {
   u32      rowIndex;
 
   submitTpageDrawMode(0, 2);
-  appendIndexedSpriteWorld00Area03004(0x11, 2, 0x87, 0xB4);
+  appendIndexedSprite(0x11, 2, 0x87, 0xB4);
 
   approachWork = D_1F800044;
   if (*(s32*)(approachWork + 0x10) == 0) {

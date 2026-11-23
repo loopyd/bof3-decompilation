@@ -5,7 +5,7 @@
  * the shared main-executable handler 0x801B2D54 at entries 2 and 8. The Splat
  * `textbin` row of the same name places the words, so the run is only referenced
  * here. This dispatcher indexes it from the run base, so entry 0 is reachable. */
-extern void (*T_801D0630[])(void); /* @source 0x801D0630 @kind data */
+extern void (*codePointerTable0630[])(void); /* @source 0x801D0630 @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step dispatch on work-record byte 2: loads the work-record
@@ -23,4 +23,4 @@ extern void (*T_801D0630[])(void); /* @source 0x801D0630 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable0630Plchar, T_801D0630);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable0630Plchar, codePointerTable0630);

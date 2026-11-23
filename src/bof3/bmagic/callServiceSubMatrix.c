@@ -12,7 +12,7 @@ typedef struct BmagicMagic01500SevenByte2DispatchTable {
  * 0x801F0F2C, entry 4 = 0x801F1088, entry 5 = 0x801F1180 and entry 6 =
  * 0x801F1230, all function starts of this overlay. The run is the interior
  * window 0x20..0x26 of the work byte 2 handler run based at 0x801EEC34 that
- * dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic01500_801EFA28
+ * dispatchWorkByte2Eight
  * copies in full, so the extern is declared at the word the scaled index adds
  * to and the run stays one row. That word sits in the overlay's leading data
  * block, which no map row owns, so the reference is bound by the target's
@@ -45,7 +45,7 @@ extern void renderOriginRadiusTimes(void);
 /* @source 0x801F0C30
  * @behavior Work byte 1 handler, entry 3 of the four-entry handler run at
  *           0x801F1630 (0x801EFA28, 0x801EFF1C, 0x801F0334, 0x801F0C30) that
- *           dispatchWorkByte1HandlerBmagicMagic01500_801EF9E4 selects on
+ *           dispatchWorkByte1Word selects on
  *           unsigned work byte 1. It copies the seven-word work byte 2 handler
  *           run at 0x801EEC84 (0x801F0D48, 0x801F0DB4, 0x801F0E54, 0x801F0F2C,
  *           0x801F1088, 0x801F1180, 0x801F1230) into its own 0x38-byte frame as

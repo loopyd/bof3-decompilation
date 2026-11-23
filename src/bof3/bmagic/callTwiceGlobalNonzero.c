@@ -2,7 +2,7 @@
 
 extern u8 func_8014DAEC(void); /* @source 0x8014DAEC @kind function */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
-extern void clearWorkBytesBmagicMagic00303_801F0A28(void); /* @source 0x801F0A28 @kind function */
+extern void clearWorkHead(void); /* @source 0x801F0A28 @kind function */
 
 /* @source 0x801EFCF8
  * @behavior Calls helper 0x8014DAEC twice and discards the first result.
@@ -20,6 +20,6 @@ void callTwiceGlobalNonzero(void) {
         u8 *work = D_801EB4E0;
 
         work[0xB]--;
-        clearWorkBytesBmagicMagic00303_801F0A28();
+        clearWorkHead();
     }
 }

@@ -16,25 +16,25 @@ void renderListColumnFrame(s16 x, s16 y) {
   submitTpageDrawMode(9, 1);
 
   headerY = y;
-  appendIndexedSpriteWorld00Area03004(0x3F, 1, x, headerY);
-  appendIndexedSpriteWorld00Area03004(0x40, 1, (s16)(x + 8), headerY);
-  appendIndexedSpriteWorld00Area03004(0x41, 1, (s16)(x + 0x10), headerY);
+  appendIndexedSprite(0x3F, 1, x, headerY);
+  appendIndexedSprite(0x40, 1, (s16)(x + 8), headerY);
+  appendIndexedSprite(0x41, 1, (s16)(x + 0x10), headerY);
 
   for (spriteIndex = 0; spriteIndex < 8; spriteIndex++)
-    appendIndexedSpriteWorld00Area03004(0x26, 1, (s16)(x + 0x28 + spriteIndex * 8), y);
+    appendIndexedSprite(0x26, 1, (s16)(x + 0x28 + spriteIndex * 8), y);
 
-  appendIndexedSpriteWorld00Area03004(0x42, 1, (s16)(x + 0x68), y);
-  appendIndexedSpriteWorld00Area03004(0x43, 1, (s16)(x + 0x78), y);
-  appendIndexedSpriteWorld00Area03004(0x44, 1, (s16)(x + 0x80), y);
+  appendIndexedSprite(0x42, 1, (s16)(x + 0x68), y);
+  appendIndexedSprite(0x43, 1, (s16)(x + 0x78), y);
+  appendIndexedSprite(0x44, 1, (s16)(x + 0x80), y);
 
   renderIndexedQuadHeight(x, (s16)(y + 0x18), 0x78, 0);
-  appendIndexedSpriteWorld00Area03004(0x46, 1, (s16)(x + 0x80), (s16)(y + 0x18));
+  appendIndexedSprite(0x46, 1, (s16)(x + 0x80), (s16)(y + 0x18));
   renderIndexedQuadHeight((s16)(x + 0x80), (s16)(y + 0x28), 0x68, 4);
 
-  appendIndexedSpriteWorld00Area03004(0x2A, 1, x, (s16)(y + 0x90));
+  appendIndexedSprite(0x2A, 1, x, (s16)(y + 0x90));
 
   for (spriteIndex = 0; spriteIndex < 15; spriteIndex++)
-    appendIndexedSpriteWorld00Area03004(0x2B, 1, (s16)(x + 8 + spriteIndex * 8), (s16)(y + 0x90));
+    appendIndexedSprite(0x2B, 1, (s16)(x + 8 + spriteIndex * 8), (s16)(y + 0x90));
 
-  appendIndexedSpriteWorld00Area03004(0x45, 1, (s16)(x + 0x80), (s16)(y + 0x88));
+  appendIndexedSprite(0x45, 1, (s16)(x + 0x80), (s16)(y + 0x88));
 }

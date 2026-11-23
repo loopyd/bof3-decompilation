@@ -13,7 +13,7 @@ void func_8015C088(void);
 /* @source 0x801FD164
  * @behavior Overlay record callback at entry 4 of the local callback table
  * D_801FE304 (pointer word at 0x801FE314), invoked as (record, work) by
- * dispatchRecordCallbackByByte7AScenarioScena0200_801FD084; it reads neither
+ * callRecordCallbackTable; it reads neither
  * argument. It first takes the two-stage wait func_8015B5D4 on the shared
  * scenario flag word D_8014686C (0x8014686C, read with lui/lw into $a0) for
  * wait id 5: a non-zero return leaves the bnez arm jumping straight to the

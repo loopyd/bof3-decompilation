@@ -4,14 +4,14 @@ stepWorkRecordPhaseClaimAtStepZeroRunRecordStepAndCountGroupsToByteBWorld01Area0
 stepActiveFlagsNone = 0x801F2E94;
 func_801F2EC8 = 0x801F2EC8;
 claimFourRecordsAround = 0x801F3084;
-findFreeWorkRecordByte15At800E4800World01Area05213_801F3158 = 0x801F3158;
+queryFreeRecordByte15 = 0x801F3158;
 stateWorkTableByte15 = 0x801F3194;
 func_801F31C0 = 0x801F31C0;
 func_801F3280 = 0x801F3280;
 func_801F3414 = 0x801F3414;
 func_801F35A0 = 0x801F35A0;
 stateWorkPositionAdvance = 0x801F37A8;
-updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F3894 = 0x801F3894;
+stateModeWorkPosition = 0x801F3894;
 projectCueCellsProgress = 0x801F3980;
 func_801F3A14 = 0x801F3A14;
 func_801F3BA0 = 0x801F3BA0;

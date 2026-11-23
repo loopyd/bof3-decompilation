@@ -2,7 +2,7 @@
 
 /* This overlay's handler run at 0x801CFDC0: six code pointers, entry 0 =
  * 0x801CE404 through entry 5 = 0x801CF70C, all pointing at functions of this
- * payload. That run sits inside the target's `textbin T_801CFDC0` boundary, so it
+ * payload. That run sits inside the target's `textbin codePointerTablefdc0` boundary, so it
  * is only referenced here. This dispatcher indexes it from 0x801CFDCC, so its base
  * is entry 3 and the entries this payload places from that base are 0x801CE72C,
  * 0x801CF338 and 0x801CF70C. The sibling dispatcher at 0x801CFCF8 indexes the same

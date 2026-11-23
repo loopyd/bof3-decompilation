@@ -47,8 +47,8 @@ segments:
     - '@behavior: selects the halfword indexed by the signed shared mode byte at 0x801490C7 from the target-local halfword table at 0x801F3634 and publishes it into the shared status halfword at 0x801490A8.'
   - - 220
     - c
-    - seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC
-    - '@source: src/bof3/world/seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC.c'
+    - seedFrontEndRecord
+    - '@source: src/bof3/world/seedFrontEndRecord.c'
     - '@behavior: claims one front-end record through the shared allocator func_8019601C and, unless the returned index is 0xFF, sets the record occupancy byte, writes handler selector 0x1C and copies the scratch work object position words 0x34/0x38.'
 - - 348
   - bin

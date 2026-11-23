@@ -20,7 +20,7 @@ typedef struct Area030PanelStepModeRecordBytes {
   u8 mode;
 } Area030PanelStepModeRecordBytes;
 
-extern Area030PanelStepModeRecord panelStepModeTableWorld00Area03004_801E2024[]; /* @source 0x801E2024 @kind table */
+extern Area030PanelStepModeRecord panelStepModeTable[]; /* @source 0x801E2024 @kind table */
 
 /* @source 0x801D6128
  * @behavior AREA030 panel-step sequence handler, index 1 of the work-byte-3 dispatch
@@ -63,18 +63,18 @@ void stateSequenceBouncingMarker(void) {
   work = D_1F800044;
   if (work[9] == 0) {
     step = work[0xA];
-    if (panelStepModeTableWorld00Area03004_801E2024[step].resource == 0) {
-      work[0xA] = panelStepModeTableWorld00Area03004_801E2024[step].countdown;
+    if (panelStepModeTable[step].resource == 0) {
+      work[0xA] = panelStepModeTable[step].countdown;
       D_1F800044[6] = 0;
     }
     cursor = D_1F800044;
     selectActiveWorkSequence(((Area030PanelStepModeRecordBytes*)
-                        panelStepModeTableWorld00Area03004_801E2024)[cursor[0xA]]
+                        panelStepModeTable)[cursor[0xA]]
                       .resource);
     reload = D_1F800044;
-    reload[9] = panelStepModeTableWorld00Area03004_801E2024[reload[0xA]].countdown;
+    reload[9] = panelStepModeTable[reload[0xA]].countdown;
     check = D_1F800044;
-    if (panelStepModeTableWorld00Area03004_801E2024[check[0xA]].mode == 0x50) {
+    if (panelStepModeTable[check[0xA]].mode == 0x50) {
       slot = (u8)findFreeRecord();
       WORLD00_AREA030_ARM_PANEL_ENTRY(slot);
       D_80143FC8[slot].unk_02 = 2u;
@@ -91,7 +91,7 @@ void stateSequenceBouncingMarker(void) {
 
   queueUnprojectedActiveWork();
   stepped = D_1F800044;
-  mode = panelStepModeTableWorld00Area03004_801E2024[stepped[0xA] - 1].mode;
+  mode = panelStepModeTable[stepped[0xA] - 1].mode;
   if (mode != 0x50 && (D_80143E6C & 3) == 0) {
     stepped[6] = stepped[6] + mode;
     bounce = D_1F800044;
@@ -111,9 +111,9 @@ void stateSequenceBouncingMarker(void) {
   renderBlueGradientQuad16(0xEC, 0x70, 1u);
   renderCounterIndexedSprite16(0xEC, 0x80, 1u);
   submitTpageDrawMode(0, 1);
-  appendIndexedSpriteWorld00Area03004(0x14, 1, 0xE4, 0x68);
+  appendIndexedSprite(0x14, 1, 0xE4, 0x68);
   marker = D_1F800044;
-  if (panelStepModeTableWorld00Area03004_801E2024[marker[0xA] - 1].mode != 0) {
+  if (panelStepModeTable[marker[0xA] - 1].mode != 0) {
     renderFixedCellSprite8(0xFC, marker[6] + 0x70, 1u);
   }
 }

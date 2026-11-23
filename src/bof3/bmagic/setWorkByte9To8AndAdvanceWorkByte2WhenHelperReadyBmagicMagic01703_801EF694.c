@@ -21,7 +21,7 @@ extern u8 func_8014DAEC(void);
  *           frame and indexes with scratchpad work-object byte 2, so the body
  *           runs while work byte 2 is 5. That dispatcher is itself the single
  *           entry of the run at 0x801EF990 which the work-byte-1 dispatcher
- *           dispatchWorkByte1HandlerBmagicMagic01703_801EF014 selects, and no
+ *           dispatchWorkByte1Index selects, and no
  *           jal in this payload names this function, so the table word is its
  *           only incoming path. Per call it runs the shared readiness helper
  *           func_8014DAEC and tests the returned byte zero-extended (andi 0xff,

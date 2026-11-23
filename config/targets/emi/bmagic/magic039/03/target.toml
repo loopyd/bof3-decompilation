@@ -9,18 +9,18 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/copyTripletClearByte.c",
-    "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic03903_801EEEA8.c",
+    "src/bof3/bmagic/incrementByteOnZero.c",
     "src/bof3/bmagic/incrementCountersCounterIs.c",
 ]
 support_sources = [
     "src/bof3/bmagic/workAdvanceAt80Bmagic.c",
     "src/bof3/bmagic/workClearByteBmagic.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic03903_801EEC34.c",
-    "src/bof3/bmagic/resolveKindResultCodeBmagicMagic03903_801EEF3C.c",
+    "src/bof3/bmagic/dispatchWorkByte1Entry.c",
+    "src/bof3/bmagic/queryKindResultCode.c",
     "src/bof3/bmagic/magic03903DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByte9ThenAdd2ToWorkByteBRecordCountersAndAdvanceWorkByte2WhenCounterIs10BmagicMagic03903_801EF1F4.c",
+    "src/bof3/bmagic/incrementRampRecordCounters.c",
     "src/bof3/support/magic039_03_psyq.c",
-    "src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic03903_801EF6E0.c",
+    "src/bof3/bmagic/addCountdownGlobalCall.c",
     "src/bof3/bmagic/callHelpersPopActive.c",
     "src/bof3/bmagic/incrementSubmitStoreEffect.c",
     "src/bof3/bmagic/renderAboveWidthGraded.c",

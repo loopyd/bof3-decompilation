@@ -18,9 +18,9 @@ u8 func_801D06C4(void);
 /* Two-layer position refresh of this payload; the original calls it through a
  * plain `jal` with nothing set up in the argument registers, so it takes no
  * arguments. This payload lifts it as
- * claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868.
+ * claimWorkTwoLayer.
  */
-void claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868(
+void claimWorkTwoLayer(
     void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. Splat
@@ -40,7 +40,7 @@ u32 func_8014D8D4(u8 arg0);
  *           neighbour two steps the other way ((byte 8 + 2) & 7) and calls the
  *           same test again; if that call reads zero too the byte is put back to
  *           the decremented direction. Both paths then run the payload refresh
- *           claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868,
+ *           claimWorkTwoLayer,
  *           select the shared work sequence through func_8014D8D4
  *           with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clear work byte
  *           0xB, write 0xB into work byte 0xA and 1 into work byte 3, which
@@ -71,7 +71,7 @@ void adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenc
       }
     }
   }
-  claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868();
+  claimWorkTwoLayer();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xB] = 0;
   D_1F800044[0xA] = 0xB;

@@ -8,14 +8,14 @@ splat = "config/targets/emi/bmagic/magic053/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05303_801F0494.c",
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic05303_801F04F8.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByte4IsZeroBmagicMagic05303_801EF6D8.c",
+    "src/bof3/bmagic/reservePool32.c",
+    "src/bof3/bmagic/clearWorkHeadFive.c",
+    "src/bof3/bmagic/decrementGlobalOnZero.c",
     "src/bof3/bmagic/decrementTwoNonReady.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0110And01C0AndPopWhenWorkBytes0And2SetBmagicMagic05303_801EFD94.c",
+    "src/bof3/bmagic/dispatchByte2PopPair.c",
     "src/bof3/bmagic/stateScaleEightFifteen.c",
     "src/bof3/bmagic/stepEightSpawnPool.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByteATimesFourBmagicMagic05303_801EFA30.c",
+    "src/bof3/bmagic/renderTintRingQuads.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic053_03_symbols.c",

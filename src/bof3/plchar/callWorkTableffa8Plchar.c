@@ -7,7 +7,7 @@
  * so the run is only referenced here. This dispatcher indexes the run from its
  * first word, so its base is entry 0 and the entries it can reach are entry 0 =
  * 0x801CE448 through entry 15 = 0x801CFD40. */
-extern void (*T_801CFFA8[])(void); /* @source 0x801CFFA8 @kind data */
+extern void (*codePointerTableffa8[])(void); /* @source 0x801CFFA8 @kind data */
 
 /* Seeded from the lift of the same body at plp349/00 0x801CE404
  * (dispatchWorkByte2Tablef5ecPlcharPlp34900_801CE404), whose metadata recorded
@@ -39,4 +39,4 @@ extern void (*T_801CFFA8[])(void); /* @source 0x801CFFA8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTableffa8Plchar, T_801CFFA8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTableffa8Plchar, codePointerTableffa8);

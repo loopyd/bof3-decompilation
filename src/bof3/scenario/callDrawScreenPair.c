@@ -23,7 +23,7 @@ void renderThirtyBottomCenter(
  * func_801D0C04 dispatches on and that the step handlers advance), scales it by
  * four and calls that entry of the handler run based at 0x801D1B38 with no
  * arguments, discarding any result. That base is word 7 of the same run whose
- * word 4 the exact sibling dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4
+ * word 4 the exact sibling callStepRunHandler
  * indexes, so the reachable entries are the arm and draw step handlers
  * 0x801D0F68, 0x801D0F9C, 0x801D1008, 0x801D1050, 0x801D10E8, 0x801D1118 and
  * 0x801D11A4 (entries 7 through 13); the original does not bound the index

@@ -43,7 +43,7 @@ void func_8015C058(void);
  * Name evidence: no in-image `jal` targets the address. The only payload word
  *   equal to 0x801FB300 is at 0x801FE2F0, word 0x17 of the code-pointer run
  *   based at 0x801FE294 that
- *   dispatchPrimaryStateHandlerScenarioScena0200_801F7A60 indexes with the
+ *   callPrimaryStateHandler indexes with the
  *   signed primary state byte D_80146874, and
  *   requestPrimaryClearSubstate stores 0x17
  *   into that same byte, so the overlay reaches this span as the handler of

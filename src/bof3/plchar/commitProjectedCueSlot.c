@@ -66,7 +66,7 @@ s8 queryIndexProjectedPosition(void);
 u8 checkPositionAgainstRecords(u8 slot);
 /* Position test of this same payload: it answers nonzero when the supplied
  * front-end record holds its own position projected along its route. */
-u8 testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFBDC(
+u8 testProjectedRecord(
     u8 slot);
 
 /* Slot search of the shared EXE image, outside this payload: it answers the
@@ -153,7 +153,7 @@ void commitProjectedCueSlot(
   if (slot != 0xFF) {
     if (checkPositionAgainstRecords(slot) ==
             0 &&
-        testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFBDC(
+        testProjectedRecord(
             slot) == 0) {
       D_80143FD3[(u32)slot * 0x74u] = 1;
       func_8015DF18(*(u16*)(D_1F800044 + 0x2C) + 0x100);

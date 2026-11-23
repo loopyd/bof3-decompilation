@@ -23,7 +23,7 @@ extern u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7P
  * calls it through a plain `jal` with the work halfword 0x2C plus 0x100 in $a0,
  * computes that argument before the frame is created for the call, and the
  * added constant issues in the call's own delay slot. The exact sibling
- * queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp03400_801CFC7C
+ * queueCueSelectSequence
  * of this payload declares the same word argument and passes the same
  * expression.
  */

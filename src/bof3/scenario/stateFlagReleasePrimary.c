@@ -40,12 +40,12 @@ void func_8015C058(void);
  * slot of the D_80146875 test to feed the second comparison. Its only image
  * word is 0x801FD600, word 6 of the thirty-two-word primary handler table at
  * 0x801FD5E8, so the primary state dispatcher
- * dispatchPrimaryStateHandlerScenarioScena0500_801F83EC (0x801F83EC) reaches
+ * callPrimaryRunHandler (0x801F83EC) reaches
  * the address only through that table word indexed by D_80146874 and no
  * in-image `jal` targets it. No span of any payload under `out/binaries`
  * compares equal to its 136 bytes, so it has no byte-identical twin; its
  * helper-and-clear tail repeats the shape of the exact in-target sibling
- * clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCBD4
+ * stateClearProgressRequest13
  * (0x801FCBD4), which runs the same clears and stores 0xD where this body
  * stores 0.
  * @status exact

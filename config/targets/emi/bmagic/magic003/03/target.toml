@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/callEachOccupiedIts.c",
     "src/bof3/bmagic/decrementWorkAdvanceBmagic.c",
-    "src/bof3/bmagic/runHelpers2DecrementWorkByte9Rearm10AdvanceWorkByte1BmagicMagic00303_801EEE28.c",
+    "src/bof3/bmagic/callPairDecrementRearm.c",
     "src/bof3/bmagic/renderDecimalPairDecrement.c",
     "src/bof3/bmagic/renderGlyphMatchDpad.c",
 ]
@@ -26,14 +26,14 @@ support_sources = [
     "src/bof3/bmagic/queueActingHeadOrdinal.c",
     "src/bof3/bmagic/stepWordTripletHelper.c",
     "src/bof3/bmagic/stateInvokeHelperZero.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenBelow2BmagicMagic00303_801EF6CC.c",
+    "src/bof3/bmagic/decrementBelowTwoCall.c",
     "src/bof3/bmagic/claimOrdinalFieldsPointer.c",
     "src/bof3/bmagic/runDecrementAdvanceBmagic.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic00303_801F09C4.c",
+    "src/bof3/bmagic/reserveFreeRecordSlot.c",
     "src/bof3/bmagic/stateMotionPairBytes.c",
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic00303_801F0A28.c",
-    "src/bof3/bmagic/dispatchWorkByte1LocalPairBmagicMagic00303_801EF2CC.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C.c",
+    "src/bof3/bmagic/clearWorkHead.c",
+    "src/bof3/bmagic/dispatchWorkByte1Local.c",
+    "src/bof3/bmagic/dispatchWorkByte1Scaled.c",
     "src/bof3/support/emi_bmagic_magic003_03_symbols.c",
     "src/bof3/support/magic003_03_psyq.c",
 ]

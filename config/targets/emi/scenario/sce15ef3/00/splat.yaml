@@ -68,10 +68,10 @@ segments:
     - func_801D0F94
   - - 1032
     - c
-    - incrementWorkByte1ScenarioSce15ef300_801D1008
+    - stateIncrementByte1
   - - 1064
     - c
-    - incrementWorkByte1ScenarioSce15ef300_801D1028
+    - stateIncrementByte1Twice
   - - 1096
     - c
     - invokeHelperScenarioSce15ef300_801D1048
@@ -165,8 +165,8 @@ segments:
     - func_801D2424
   - - 6592
     - c
-    - clearWorkTableAt800E60A0ScenarioSce15ef300_801D25C0
-    - '@source: src/bof3/scenario/clearWorkTableAt800E60A0ScenarioSce15ef300_801D25C0.c'
+    - stateClearRecordTable
+    - '@source: src/bof3/scenario/stateClearRecordTable.c'
     - '@behavior: Overlay init helper: clears the lead byte of each of the 16 6-byte-stride entries of the record table at 0x800E60A0 in main RAM, walking the table with an unsigned byte counter in a bottom-tested loop; it takes no arguments, returns nothing and touches no other state. Its only in-payload caller is the work-state handler at 0x801D15CC (entry 16 of the handler table at 0x801D27CC), and the same table is swept at 0x801D2634, which reads those lead bytes as active flags. The 44-byte instruction shape is already exact in this tree as clearWorkTableAt800E4800ScenarioScena0100_801F7AB8; only the base, stride and count immediates differ.'
   - - 6636
     - asm

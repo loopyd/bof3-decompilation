@@ -9,9 +9,9 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/decrementTwoGlobalBytes.c",
-    "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic02103_801EEC28.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic02103_801EEFA8.c",
-    "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic02103_801EF0BC.c",
+    "src/bof3/bmagic/runEachPublishStep.c",
+    "src/bof3/bmagic/raiseFlag4CallStep.c",
+    "src/bof3/bmagic/seedHelperAdvance.c",
     "src/bof3/bmagic/callHelperClearZero.c",
 ]
 support_sources = [
@@ -19,12 +19,12 @@ support_sources = [
     "src/bof3/bmagic/forwardBattleHelperReady.c",
     "src/bof3/bmagic/callHelpersNonzeroBmagic.c",
     "src/bof3/bmagic/callHelperAdvanceBmagic.c",
-    "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750.c",
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic02103_801EFDB0.c",
-    "src/bof3/bmagic/invokeHelperBmagicMagic02103_801EF328.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndAdvanceWorkByte2WhenWorkByteBIsZeroBmagicMagic02103_801EF2CC.c",
+    "src/bof3/bmagic/addByteCountAdvance.c",
+    "src/bof3/bmagic/clearWorkFive.c",
+    "src/bof3/bmagic/invokeSharedHelper13.c",
+    "src/bof3/bmagic/decrementZeroAdvance.c",
     "src/bof3/bmagic/magic02103DispatchTables.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic02103_801EFD4C.c",
+    "src/bof3/bmagic/reservePoolSlot.c",
     "src/bof3/support/magic021_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic021_03_psyq.c"

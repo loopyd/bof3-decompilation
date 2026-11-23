@@ -8,7 +8,7 @@
  * undefined_syms_auto.txt row and owes no target-map row. A store through any
  * of the record offsets above can alias the cell, so the original re-loads it
  * instead of reusing the pointer of the first read. */
-extern u8* world01Area04913WorkRecordCursor; /* @source 0x801181DC @kind data */
+extern u8* workRecordCursor; /* @source 0x801181DC @kind data */
 
 /* @source 0x80117514
  * @behavior Step handler 2 of this overlay's per-record handler run: word 2 of
@@ -16,7 +16,7 @@ extern u8* world01Area04913WorkRecordCursor; /* @source 0x801181DC @kind data */
  * 0x80118194, reached through callWorkTable818World01
  * when the work record's byte at offset 1 reads 2, and the counterweight of the
  * adjacent step handler 3 at 0x8011759C. It reads the work record published in
- * world01Area04913WorkRecordCursor once and adds twice its word at 0x14 to its word at 0x04 and twice
+ * workRecordCursor once and adds twice its word at 0x14 to its word at 0x04 and twice
  * its word at 0x18 to its word at 0x08: the position pair
  * claimRecordSeedPosition seeds from the shared
  * coordinate triple, moved per frame by the random angle-step velocity pair those
@@ -39,14 +39,14 @@ void stepDoubledVelocityDown(
   u8* work;
   u8 timer;
 
-  work = world01Area04913WorkRecordCursor;
+  work = workRecordCursor;
   timer = work[2] - 1;
   *(s32*)(work + 0x04) += *(s32*)(work + 0x14) * 2;
   *(s32*)(work + 0x08) += *(s32*)(work + 0x18) * 2;
   work[2] = timer;
   *(u16*)(work + 0x24) += 0x80;
   if (timer == 0) {
-    world01Area04913WorkRecordCursor[2] = 0x40;
-    world01Area04913WorkRecordCursor[1]++;
+    workRecordCursor[2] = 0x40;
+    workRecordCursor[1]++;
   }
 }

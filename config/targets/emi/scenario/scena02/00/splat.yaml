@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 1436
     - c
-    - dispatchProgressHandlerScenarioScena0200_801F719C
+    - callProgressChainHandler
   - - 1496
     - c
     - stateSharedByteProgress
@@ -39,7 +39,7 @@ segments:
     - func_801F71FC
   - - 3680
     - c
-    - dispatchPrimaryStateHandlerScenarioScena0200_801F7A60
+    - callPrimaryStateHandler
   - - 3740
     - asm
     - func_801F7A9C
@@ -57,7 +57,7 @@ segments:
     - runSelectorContextsRelease
     - '@source: src/bof3/scenario/runSelectorContextsRelease.c'
     - '@behavior: Slot 7 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      chain table callProgressChainHandler indexes with
       the signed chain byte D_80146872; its pointer word sits at 0x801FE2A4. It
       switches the shared sub-state byte D_80146875 through the nine-word case
       table at 0x801F6CCC, where sub-states 2, 3 and 4 have no body. Sub-state 0
@@ -84,7 +84,7 @@ segments:
     - runLadderContextBank
     - '@source: src/bof3/scenario/runLadderContextBank.c'
     - '@behavior: Slot 10 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      chain table callProgressChainHandler indexes with
       the signed chain byte D_80146872; its pointer word sits at 0x801FE2B0. It
       switches the shared sub-state byte D_80146875 through the five-word case
       table at 0x801F6D0C, where every sub-state from 0 to 4 has a body.
@@ -115,7 +115,7 @@ segments:
     - runLadderRowsToggle
     - '@source: src/bof3/scenario/runLadderRowsToggle.c'
     - '@behavior: Slot 12 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      chain table callProgressChainHandler indexes with
       the signed chain byte D_80146872; its pointer word sits at 0x801FE2B8. It
       switches the shared sub-state byte D_80146875 through the eight-word case
       table at 0x801F6D54; sub-states 0 through 7 select a case and any larger
@@ -145,7 +145,7 @@ segments:
     - runLadderContextBits
     - '@source: src/bof3/scenario/runLadderContextBits.c'
     - '@behavior: Slot 13 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      chain table callProgressChainHandler indexes with
       the signed chain byte D_80146872; its pointer word sits at 0x801FE2B4. It
       switches the shared sub-state byte D_80146875 through the eleven-word case
       table at 0x801F6D74, where sub-states 2 and 4 have no body. Sub-state 0
@@ -166,7 +166,7 @@ segments:
     - runCompletionSubstatesSeeding
     - '@source: src/bof3/scenario/runCompletionSubstatesSeeding.c'
     - '@behavior: Slot 14 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      chain table callProgressChainHandler indexes with
       the signed chain byte D_80146872. It switches the shared sub-state byte
       D_80146875 through the twenty-five-word case table at 0x801F6DA4. Sub-state
       0 ends the front-end phase: on progress 0x64 it clears that byte, requests
@@ -190,7 +190,7 @@ segments:
     - runLadderToggleRelease
     - '@source: src/bof3/scenario/runLadderToggleRelease.c'
     - '@behavior: Slot 15 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      chain table callProgressChainHandler indexes with
       the signed chain byte D_80146872. It steps the shared sub-state byte
       D_80146875 through the five-slot jump table at 0x801F6E0C: slot 0 raises
       mode bit 0x8 of D_80146258, runs the shared helper with 0x1A and the
@@ -206,7 +206,7 @@ segments:
     - runLadderSeedingRows
     - '@source: src/bof3/scenario/runLadderSeedingRows.c'
     - '@behavior: Slot 16 of the 31-word code-pointer run at 0x801FE288 (pointer
-      word at 0x801FE2C8) that dispatchProgressHandlerScenarioScena0200_801F719C
+      word at 0x801FE2C8) that callProgressChainHandler
       indexes with the signed chain byte D_80146872. It steps the shared
       sub-state byte D_80146875 through the seven-slot jump table at 0x801F6E24:
       slot 0 runs func_801BE1B0 with 6 and func_801C601C with 2 and advances;
@@ -227,7 +227,7 @@ segments:
     - runLadderCuesBits
     - '@source: src/bof3/scenario/runLadderCuesBits.c'
     - '@behavior: Slot 17 of the 31-word code-pointer run at 0x801FE288 (pointer
-      word at 0x801FE2CC) that dispatchProgressHandlerScenarioScena0200_801F719C
+      word at 0x801FE2CC) that callProgressChainHandler
       indexes with the signed chain byte D_80146872. It steps the shared
       sub-state byte D_80146875 through the eleven-slot jump table at 0x801F6E44:
       slots 0 through 10 are declared, and a sub-state of 11 or more, which the
@@ -266,7 +266,7 @@ segments:
     - runLadderSelectorContexts
     - '@source: src/bof3/scenario/runLadderSelectorContexts.c'
     - '@behavior: Slot 22 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      chain table callProgressChainHandler indexes with
       the signed chain byte D_80146872. It walks the shared sub-state byte
       D_80146875 through the eleven-slot jump table at 0x801F6FA4: sub-states
       0x0A through 0x11 hold bodies, 0x12 through 0x14 point at the body exit,
@@ -299,7 +299,7 @@ segments:
     - runCueBankRelease
     - '@source: src/bof3/scenario/runCueBankRelease.c'
     - '@behavior: Slot 24 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      chain table callProgressChainHandler indexes with
       the signed chain byte D_80146872. It walks the shared sub-state byte
       D_80146875 through the eight-slot jump table at 0x801F6FD4: slot 0 arms
       the effect bank D_8014832E with 0x1F, queues the front-end cue
@@ -331,7 +331,7 @@ segments:
     - runSubstateStepsRelease
     - '@source: src/bof3/scenario/runSubstateStepsRelease.c'
     - '@behavior: Slot 28 of the 31-word code-pointer run at 0x801FE288, the chain
-      table dispatchProgressHandlerScenarioScena0200_801F719C indexes with the
+      table callProgressChainHandler indexes with the
       signed chain byte D_80146872. It steps the shared sub-state byte D_80146875
       through the 18-slot jump table at 0x801F704C: slot 0 seeds progress 0x15
       and flag bit 0x27 and runs the shared slot setter with group 4, slot 1
@@ -348,7 +348,7 @@ segments:
     - queueCompletionSubstatesPublishing
     - '@source: src/bof3/scenario/queueCompletionSubstatesPublishing.c'
     - '@behavior: Slot 30 of the 31-word code-pointer run at 0x801FE288, the
-      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes
+      chain table callProgressChainHandler indexes
       with the signed chain byte D_80146872. It steps the shared sub-state byte
       D_80146875 through the 26-slot jump table at 0x801F7134: slot 0 requests
       front-end mode 0x6F and arms the primary mode byte D_80143BB0 with 2,
@@ -443,10 +443,10 @@ segments:
     - publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14
   - - 25292
     - c
-    - publishWorkBaseAndSeedFrontEndRecord19ScenarioScena0200_801FCECC
+    - publishBaseRecord19
   - - 25732
     - c
-    - dispatchRecordCallbackByByte7AScenarioScena0200_801FD084
+    - callRecordCallbackTable
   - - 25796
     - c
     - noopHandlerScenarioScena0200_801FD0C4
@@ -455,7 +455,7 @@ segments:
     - stateSharedRequestPrimary
   - - 25876
     - c
-    - clearSharedBytes6566AndRequestPrimaryState0BSubstate2ScenarioScena0200_801FD114
+    - requestState11Sub2
   - - 25948
     - c
     - noopHandlerScenarioScena0200_801FD15C
@@ -464,37 +464,37 @@ segments:
     - waitToggleRequestPrimary
   - - 26076
     - c
-    - waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate7ScenarioScena0200_801FD1DC
+    - stateToggleModeRequest
   - - 26196
     - c
-    - setScenarioScena0200_801FD254
+    - stateSetByte101
   - - 26216
     - c
-    - setScenarioScena0200_801FD268
+    - stateSetByte102
   - - 26236
     - c
-    - setScenarioScena0200_801FD27C
+    - stateSetByte101Twice
   - - 26256
     - c
     - stateScenarioFlagScenario
   - - 26296
     - c
-    - setScenarioFlagBit0EScenarioScena0200_801FD2B8
+    - stateSetFlag14
   - - 26336
     - c
-    - setProgress1ClearSharedBytes6566AndRequestPrimaryState7ScenarioScena0200_801FD2E0
+    - stateProgress1Request7
   - - 26416
     - c
-    - clearSharedBytes6566AndRequestPrimaryState0BScenarioScena0200_801FD330
+    - requestState11Clear
   - - 26484
     - c
-    - clearSharedBytes6566AndRequestPrimaryState0BSubstate5ScenarioScena0200_801FD374
+    - requestState11Sub5
   - - 26556
     - c
     - setProgress14Substate14ClearSharedBytes6566AndRequestPrimaryState2ScenarioScena0200_801FD3BC
   - - 26636
     - c
-    - clearSharedBytes6566AndRequestPrimaryState0FScenarioScena0200_801FD40C
+    - requestState15Clear
   - - 26704
     - c
     - requestPrimaryQueueScenario
@@ -515,7 +515,7 @@ segments:
     - requestPrimaryClearSubstate
   - - 27048
     - c
-    - clearProgressAndSharedStateBytesThenRequestPrimaryState19ScenarioScena0200_801FD5A8
+    - requestState19Clear
   - - 27132
     - c
     - stateProgressBytesQueue

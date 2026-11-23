@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x801F3158 */
-extern u8 *findFreeWorkRecordByte15At800E4800World01Area05213_801F3158(void);
+extern u8 *queryFreeRecordByte15(void);
 /* @source 0x801782FC */
 extern s32 func_801782FC(u16 phase);
 /* @source 0x801783C8 */
@@ -18,7 +18,7 @@ extern s32 *D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x801F3084
  * @behavior Claims four work records, one per phase step of 0x100 from 0x80.
  *           Each pass asks the free-record scan
- *           findFreeWorkRecordByte15At800E4800World01Area05213_801F3158 for the
+ *           queryFreeRecordByte15 for the
  *           first record of the 0x800E4800 work table whose occupancy byte reads
  *           zero and skips the rest of the pass when it returns none. For a
  *           claimed record it sets occupancy byte 0x15 to 1 and byte 0x16 to 8,
@@ -45,7 +45,7 @@ void claimFourRecordsAround(void) {
   i = 0u;
 
   do {
-    record = findFreeWorkRecordByte15At800E4800World01Area05213_801F3158();
+    record = queryFreeRecordByte15();
     if (record != 0) {
       record[0x15] = 1;
       record[0x16] = 8;

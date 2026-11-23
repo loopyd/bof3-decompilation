@@ -37,7 +37,7 @@ s32 queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0400_801F9FD0(s32 arg0);
 
 /* @source 0x801F9DF4
  * @behavior Packed-record dispatcher of this overlay. Its only caller is
- *   forwardRoute28RecordScenarioScena0400_801F9DB4 (0x801F9DB4), which reaches
+ *   forwardRoute28Record (0x801F9DB4), which reaches
  *   it through the jal at 0x801F9DD4 once the shared route word D_80143F00
  *   reads 0x28 and forwards both incoming packed record words unchanged; no
  *   image word holds this address, so that jal is its only reference. The body

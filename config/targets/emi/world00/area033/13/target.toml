@@ -9,15 +9,15 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/renderScrollingNearFocus.c",
-    "src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld00Area03313_801F390C.c",
+    "src/bof3/world/renderSemiTransSprite.c",
     "src/bof3/world/decrementByte9RetreatWord40By2000ThenResetWorkAreaWhenSharedMode5OrSetState1OnByte9ExpiryWorld00Area03313_801F3294.c",
-    "src/bof3/world/queueSharedUiElementBlock11x15To16And12x16Size0World00Area03313_801F2CD0.c",
-    "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld00Area03313_801F422C.c",
+    "src/bof3/world/queueUiTripleZero.c",
+    "src/bof3/world/stateFacingStepResource.c",
     "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld00Area03313_801F2C04.c",
-    "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld00Area03313_801F3440.c",
+    "src/bof3/world/stateHalfword2eAdvance.c",
     "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World00Area03313_801F385C.c",
     "src/bof3/world/advanceWorkByte9To0x5aAndSetByteBThenAdvanceState3WhenGatedThenDrawHalfword30World00Area03313_801F375C.c",
-    "src/bof3/world/prepareWorkRecordForLookup15AndArmState1World00Area03313_801F2F94.c",
+    "src/bof3/world/statePrepareRecord15.c",
 ]
 support_sources = [
     "src/bof3/world/area03313_work_state.c",
@@ -26,12 +26,12 @@ support_sources = [
     "src/bof3/world/invokeTwoHelpersWorld00Area03313_801F4674.c",
     "src/bof3/world/invokeTwoHelpersWorld00Area03313_801F33D4.c",
     "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604.c",
-    "src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld00Area03313_801F34EC.c",
+    "src/bof3/world/stateHalfword2eMode2.c",
     "src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld00Area03313_801F353C.c",
-    "src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld00Area03313_801F3490.c",
-    "src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World00Area03313_801F3684.c",
-    "src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld00Area03313_801F3158.c",
-    "src/bof3/world/seedWorkHalfwordsThenResetRecordWhenEntryDiffersOrModeIs5ThenStepFrameWorld00Area03313_801F31D4.c",
+    "src/bof3/world/stateAdvanceHalfword2e.c",
+    "src/bof3/world/stateDecrementHalfword30.c",
+    "src/bof3/world/stateSeedHalfwordsByte9.c",
+    "src/bof3/world/stateSeedHalfwordsMode5.c",
     "src/bof3/support/area033_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area033_13_psyq.c"

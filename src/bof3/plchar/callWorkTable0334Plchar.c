@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 /* Second work-record step dispatcher of this overlay. The Splat `textbin` row
- * T_801D02F4 places the overlay's handler run, twenty-eight code pointers from
+ * codePointerTable02f4 places the overlay's handler run, twenty-eight code pointers from
  * 0x801D02F4 through 0x801D0358. This dispatcher indexes it from 0x801D0334,
  * which is entry 16 of that run, so its reachable entries start at 0x801CFC7C
  * (the following function) and continue to 0x801D025C. It reads the same

@@ -4,7 +4,7 @@
  * every access group because a store through the loaded pointer may alias it, so
  * the compiler re-materializes `lui 0x1F80` / `lw 0x44` exactly where the
  * original does. Statement order, cell spelling and declaration style follow the
- * exact sibling incrementWorkBytes9AndAThenAdvanceWorkByte1At10BmagicMagic05503_801EEE3C
+ * exact sibling incrementPairAdvance
  * (0x801EEE3C), which reaches the same cell through SPAD_PTR_TABLE; this body
  * carries its own stored bytes, its own -2 step and its own 0x10 threshold. The
  * guard test reads the value the byte 0x09 store just took instead of re-reading

@@ -17,7 +17,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  *           arguments, returns nothing and reads or writes no other state. The
  *           address is entry 24 of this overlay's 39-word code-pointer run, the
  *           word the tabledata segment stores at 0x801EEC64; the run's only
- *           in-payload reader, dispatchWorkByte1HandlerBmagicMagic01500_801EECA0,
+ *           in-payload reader, dispatchWorkByte1Header,
  *           copies its first four words, and no jal word in the payload targets
  *           0x801F0300, so the caller that selects this entry lies outside the
  *           overlay. The 52 bytes are identical to the exact siblings

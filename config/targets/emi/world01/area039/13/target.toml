@@ -8,24 +8,24 @@ splat = "config/targets/emi/world01/area039/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area03913_801F2C88.c",
-    "src/bof3/world/queueFrontendCueA3World01Area03913_801F2EC4.c",
+    "src/bof3/world/stepWorkPhaseTable.c",
+    "src/bof3/world/queueFrontendCueA3.c",
     "src/bof3/world/audioScriptedMotionZero.c",
     "src/bof3/world/claimEndRowLower.c",
     "src/bof3/world/claimFirstSlotFour.c",
-    "src/bof3/world/queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4.c",
+    "src/bof3/world/queueUiPairZero.c",
     "src/bof3/world/queueUiElementX.c",
     "src/bof3/world/queueSharedUiElementBlock58To59xDSize50World01Area03913_801F2E54.c",
 ]
 support_sources = [
     "src/bof3/world/stateSharedFourOne.c",
-    "src/bof3/world/setHalfwordFF00AndTwoWorld01Area03913_801F2D18.c",
+    "src/bof3/world/stateHalfwordFF00Two.c",
     "src/bof3/world/setTwoWorld01Area03913_801F2D38.c",
-    "src/bof3/world/noopHandlerWorld01Area03913_801F2E94.c",
+    "src/bof3/world/noopOverlayHandlerTwo.c",
     "src/bof3/world/noopHandlerWorld01Area03913_801F2E8C.c",
-    "src/bof3/world/invokeHelperByteArgWorld01Area03913_801F2E9C.c",
-    "src/bof3/world/raiseWorldFlag8World01Area03913_801F2EEC.c",
-    "src/bof3/world/armWorkPhase40SelectHandler1ThenLowerSharedHalfword7eBy2World01Area03913_801F2C48.c",
+    "src/bof3/world/callHelperWithByte.c",
+    "src/bof3/world/raiseWorldFlag8.c",
+    "src/bof3/world/stateArmWorkPhase40.c",
     "src/bof3/world/callWorkByte4Table4.c",
     "src/bof3/support/area039_13_psyq.c",
 ]

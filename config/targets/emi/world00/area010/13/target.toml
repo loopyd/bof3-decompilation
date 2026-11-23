@@ -13,7 +13,7 @@ sources = [
     "src/bof3/world/setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area01013_801F2C44.c",
 ]
 support_sources = [
-    "src/bof3/world/seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC.c",
+    "src/bof3/world/seedFrontEndRecord.c",
     "src/bof3/world/publishModeStatusTable362.c",
     "src/bof3/support/area010_13_psyq.c",
 ]

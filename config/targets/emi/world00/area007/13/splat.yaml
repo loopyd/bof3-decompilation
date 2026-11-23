@@ -27,31 +27,31 @@ segments:
   subsegments:
   - - 4
     - c
-    - invokeZeroArgWorld00Area00713_801F2C04
+    - callResetSelector0
   - - 36
     - c
-    - invokeHelperArgWorld00Area00713_801F2C24
+    - callResetSelector1
   - - 68
     - c
-    - invokeHelperArgWorld00Area00713_801F2C44
+    - callResetSelector2
   - - 100
     - c
-    - invokeHelperArgWorld00Area00713_801F2C64
+    - callResetSelector3
   - - 132
     - asm
     - func_801F2C84
   - - 764
     - c
-    - invokeTwoZeroArgsWorld00Area00713_801F2EFC
+    - callSelectionEffectZero
   - - 800
     - c
-    - retreatCounter2By10World00Area00713_801F2F20
+    - stateCounterRetreat0a
   - - 840
     - c
-    - advanceCounter2By10World00Area00713_801F2F48
+    - stateCounterAdvance0a
   - - 880
     - c
-    - setTwoWorld00Area00713_801F2F70
+    - stateCounterClearActive
   - - 908
     - textbin
     - D_801F2F8C

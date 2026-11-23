@@ -102,11 +102,11 @@ void stepSelectorPadRow(void) {
             break;
         case 1:
             drawEncodedTextAt(0x1Du, 0x14, 0, 0xFFu,
-                          0x80010000u + (u32)handlerSelectorOneTextOffsetState);
+                          0x80010000u + (u32)stateHandlerSelectorOne);
             break;
         case 2:
             drawEncodedTextAt(0x1Du, 0x14, 0, 0xFFu,
-                          0x80010000u + (u32)handlerSelectorTwoTextOffsetState);
+                          0x80010000u + (u32)stateHandlerSelectorTwo);
             break;
         default:
             break;

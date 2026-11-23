@@ -48,7 +48,7 @@ void func_800AFC98(s32 arg0, s32 arg1);
  *           frame and indexes with scratchpad work-object byte 2, so the body
  *           runs while work byte 2 is 4. That dispatcher is the single entry of
  *           the run selected by
- *           dispatchWorkByte1HandlerBmagicMagic01703_801EF014, and no jal in
+ *           dispatchWorkByte1Index, and no jal in
  *           this payload names this function, so the table word is its only
  *           incoming path. It first reads the shared battle work record pointer
  *           at 0x801EB4E0 once, ahead of frame creation, and compares that

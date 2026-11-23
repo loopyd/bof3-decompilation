@@ -61,7 +61,7 @@ s32 GetGraphType(void);
 /* @source 0x801F06D8
  * @behavior Quad emitter of this overlay's work-byte-2 handler group. Its only
  *           in-image caller is the dispatcher
- *           dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478
+ *           dispatchByte2DrawActive
  *           at 0x801F0478, which reaches it with no arguments once the work
  *           object byte 0x0 and the handler index byte 0x2 are both non-zero,
  *           and the body reads no incoming register, so it takes none.

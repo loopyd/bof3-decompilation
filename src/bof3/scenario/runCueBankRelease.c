@@ -30,7 +30,7 @@ void func_801C601C(u32 arg0);
 
 /* @source 0x801FB0F0
  * @behavior Slot 24 of the 31-word code-pointer run at 0x801FE288 (pointer
- *   word at 0x801FE2E8) that dispatchProgressHandlerScenarioScena0200_801F719C
+ *   word at 0x801FE2E8) that callProgressChainHandler
  *   indexes with the signed chain byte D_80146872, so the overlay reaches this
  *   span as that chain slot. It walks the shared sub-state byte D_80146875
  *   (0x80146875) through the eight-slot absolute jump table the payload keeps at
@@ -66,7 +66,7 @@ void func_801C601C(u32 arg0);
  *
  * Name evidence: no in-payload `jal` targets 0x801FB0F0, and the only payload
  *   word equal to that address is the chain-table pointer at 0x801FE2E8, word
- *   24 of the run dispatchProgressHandlerScenarioScena0200_801F719C indexes, so
+ *   24 of the run callProgressChainHandler indexes, so
  *   the span is a progress-chain step handler and takes a target-qualified step
  *   name. The two-step queue-and-release walk, the effect-bank arm with 0x1F,
  *   the flag-word bit set through func_8015B580 and the return to sub-state 0

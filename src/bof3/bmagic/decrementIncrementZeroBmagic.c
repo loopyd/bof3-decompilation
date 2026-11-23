@@ -30,7 +30,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           which decrements and zero-tests the same countdown byte and then
  *           increments a re-read work byte, here offset 0x1 instead of 0x2,
  *           and the conditional increment copies this target's exact sibling
- *           incrementWorkByte1WhenWorkByteBZeroBmagicMagic00903_801EF068. No
+ *           incrementByteWhenZero. No
  *           lifted sibling is byte-identical: the overlays' other byte-9
  *           countdowns either advance a different byte or carry extra record
  *           work in the zero arm.

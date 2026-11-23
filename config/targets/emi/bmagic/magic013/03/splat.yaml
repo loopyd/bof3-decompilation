@@ -30,24 +30,24 @@ segments:
   subsegments:
   - - 20
     - c
-    - dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic01303_801EEC14
-    - '@source: src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic01303_801EEC14.c'
+    - runEachOccupiedStep
+    - '@source: src/bof3/bmagic/runEachOccupiedStep.c'
     - '@behavior: Per-frame entry of this overlay: copies the four code-pointer words at 0x801EEC04 - the overlay header handler run 0x801EED28, 0x801EEE68, 0x801EEEA0 and 0x801EEF84 - into its 0x38-byte frame and calls the copy entry selected by the unsigned byte 0x01 of the work object published at 0x1F800044, then walks the 64 records of the 0x78-stride pool at 0x801F03E4 and, for each record whose flags byte has bit 0 set, saves the scratchpad work cell and 0x801EB4E0, publishes the record as the work object plus its word 0x74 into 0x801EB4E0, runs that record byte-1 step through the dispatcher at 0x801EFDB4 and restores both cells. Takes no arguments, returns nothing and the frame only keeps $ra and $s0 to $s3 across the two calls.'
   - - 296
     - asm
     - func_801EED28
   - - 616
     - c
-    - incrementWorkByte1WhenWorkByteBBelow2BmagicMagic01303_801EEE68
-    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBBelow2BmagicMagic01303_801EEE68.c'
+    - incrementByteUnderTwo
+    - '@source: src/bof3/bmagic/incrementByteUnderTwo.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, tests the work object''s unsigned byte at offset 0xB with sltiu against 2 and, only below that bound, increments the work byte at offset 0x1 by one through the same base; takes no arguments, returns nothing and keeps no frame.'
   - - 672
     - asm
     - func_801EEEA0
   - - 900
     - c
-    - raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic01303_801EEF84
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic01303_801EEF84.c'
+    - raiseFlag4WhenZero
+    - '@source: src/bof3/bmagic/raiseFlag4WhenZero.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, before the 0x18-byte frame is created, and, only when the work object''s byte at offset 0xB is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments. The halfword store lands in the call''s delay slot, nothing is returned and the frame only keeps $ra.'
   - - 976
     - c
@@ -67,7 +67,7 @@ segments:
     - func_801EF0A4
   - - 1440
     - c
-    - add2ToWorkByte4AndAdvanceWorkByte2At10BmagicMagic01303_801EF1A0
+    - addByteReachTen
   - - 1520
     - asm
     - func_801EF1F0
@@ -121,8 +121,8 @@ segments:
     - func_801F0164
   - - 5976
     - c
-    - reserveFirstFreeRecordBmagicMagic01303_801F0358
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic01303_801F0358.c'
+    - reserveFirstFreeFlag
+    - '@source: src/bof3/bmagic/reserveFirstFreeFlag.c'
     - '@behavior: Reserves the first of the 64 records in the pool at 0x801F03E4 whose flags byte has bit 0 clear by setting that bit and returning the index, or returns 0xFF once every record is occupied. Records have stride 0x78 and the pool runs to the end of the payload. The caller loop at 0x801EF248 masks the result to a byte and compares it with 0xFF before indexing the same pool, the sweep at 0x801EEC88 treats bit 0 as the in-use flag and the reset at 0x801EED50 clears bytes 0 through 2 of every record. Takes no arguments and reads and writes no state beyond the flags byte.'
   - - 6076
     - rodata

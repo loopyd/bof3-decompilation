@@ -23,7 +23,7 @@ extern void func_800C1CD8(u16 arg0);
  *   cell and passes the same halfword to func_800C1CD8, then re-reads the cell
  *   once more, adds two to the record's word at 0x20, stores the sum back and,
  *   when that sum equals 0x56, writes 3 into the record's byte at offset 3, the
- *   byte the byte-3 dispatcher dispatchStateByte3Table1ebcBossBoss01216_800C18F8
+ *   byte the byte-3 dispatcher callWorkByte3State
  *   indexes its own run with; 0x800C1A90, entry 3 of this run, is the body that
  *   is reached next once byte 3 is 3. Both render calls take the counter at 0x20
  *   as it stands before this step, which is why the original reads it three

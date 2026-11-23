@@ -122,7 +122,7 @@ segments:
     - callWorkTablefd00Plchar
   - - 6324
     - textbin
-    - T_801CFCB4
+    - codePointerTablefcb4
   - - 6388
     - textbin
     - T_801CFCF4

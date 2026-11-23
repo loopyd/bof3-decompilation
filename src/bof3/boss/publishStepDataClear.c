@@ -55,7 +55,7 @@ void func_8014D978(void);
  * names 0x800C1950: its only in-image reference is the word 0x800C1DDC of that
  * same data row. The three installs, the state byte and the tail call are the
  * already-exact publishers
- * publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00716_800C1864 of this
+ * publishWorkStepSetup of this
  * payload and publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848,
  * which differ only in the immediates of what they install; the byte-+0x8 clear
  * is the one statement only this body has. Both prologue and return path place

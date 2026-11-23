@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/world/stateUiBlocksModes.c",
     "src/bof3/world/queueSharedUiMode.c",
     "src/bof3/world/renderPulsingQuadsBlock.c",
-    "src/bof3/world/queueSharedUiElementBlock94To97x20To23Size0World01Area04013_801F369C.c",
+    "src/bof3/world/queueUiBlockSixteen.c",
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld01Area04013_801F3074.c",
     "src/bof3/world/queueShiftedInsideBlock.c",
     "src/bof3/support/area040_13_psyq.c",

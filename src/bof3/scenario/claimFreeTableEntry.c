@@ -13,7 +13,7 @@
  * (jal at 0x801D0E50), entry 5 of that same run, which calls it when the work
  * object countdown byte at +0x9 reads zero and then re-arms that byte with rand
  * masked to 0xF plus 0x18. The claim flag is the lead byte, the same table and
- * stride that clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0 clears and
+ * stride that stateClearWorkTable16 clears and
  * that the world and scenario overlays walk as the main-RAM work table.
  * @status exact
  * @match 100.00

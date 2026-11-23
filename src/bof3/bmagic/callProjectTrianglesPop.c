@@ -30,7 +30,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * RotMatrix builds the record's matrix, MulMatrix2 composes it with the shared
  * screen matrix at 0x801492E8 and SetRotMatrix/SetTransMatrix install both GTE
  * matrices, leaving the pushed matrix for this function's PopMatrix. */
-void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0(
+void installZeroSpinMatrix(
     void);
 
 /* This overlay's own triangle draw pass: it takes a draw mode from GetGraphType,
@@ -73,7 +73,7 @@ void callProjectTrianglesPop(
   handlers = D_801EEC28;
   handlers.handlers[g_battle_work[2]]();
   if ((g_battle_work[0] & 1u) && (g_battle_work[2] != 0u)) {
-    projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0();
+    installZeroSpinMatrix();
     renderGradedWhiteWeighted();
     PopMatrix();
   }

@@ -26,7 +26,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           callStateTable0680Bmagic; both rows sit
  *           inside the reviewed textbin row T_801F065C. Bytes
  *           0x801F0070..0x801F00DB differ from the exact same-target sibling
- *           incrementWorkByte9Add2ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801EF504
+ *           incrementPairReachTwenty
  *           in exactly one byte of one word (one payload cmp of both 0x6C-byte
  *           spans: payload +0x30, addiu 0x2 there and 0x1 here), while every
  *           other word including the relative branch stays equal, so its body

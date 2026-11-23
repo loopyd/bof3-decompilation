@@ -24,8 +24,8 @@ extern u16 D_800100C2;    /* @source 0x800100C2 @kind unknown */
  * The step at 0x801DC93C adds 0x80010000 and submits the selected byte stream
  * to drawEncodedTextAt. Live contents and resource ownership remain unresolved. */
 extern u16 handlerSelectorTextOffset;    /* @source 0x800100A0 @kind unknown */
-extern u16 handlerSelectorOneTextOffsetState;    /* @source 0x800100C0 @kind unknown */
-extern u16 handlerSelectorTwoTextOffsetState;    /* @source 0x800100DE @kind unknown */
+extern u16 stateHandlerSelectorOne;    /* @source 0x800100C0 @kind unknown */
+extern u16 stateHandlerSelectorTwo;    /* @source 0x800100DE @kind unknown */
 /* Shared main-executable equipment record table: the AREA030 name steps scale
  * the selected equipment index by 20 bytes, the serialized record stride whose
  * leading 0x0C bytes are the record name the shared text drawer prints. */
@@ -189,7 +189,7 @@ extern u8  padPressedTransitionCleared; /* @source 0x8014428B @kind unknown */
  * republishes 0xFF while the pad Cross bit D_80145AA8/0x4000 is set and 1
  * while the Triangle bit 0x1000 is set, and both 0x801DD7CC and 0x801D56F4
  * bail out while it reads nonzero. */
-extern u8  gateByteWorld00Area03004_80144288; /* @source 0x80144288 @kind unknown */
+extern u8  stateGateByte; /* @source 0x80144288 @kind unknown */
 /* Shared AREA030 list index stepped by the pad handlers: 0x801DD7CC cycles it
  * over 0..5 on the Cross/Triangle bits and 0x801DD664 cycles it over 0..0x16
  * before publishing 0x80144281 + 1. */
@@ -277,7 +277,7 @@ extern void (*D_801E20C4[])(void); /* @source 0x801E20C4 @kind table */
  * byte 9. Bytes 2 and 3 supply deltas for work words 0x0C and 0x10. The latter's
  * sign selects the marker mode and counter step. Request reads use unsigned
  * bytes; end-marker, delta and marker-sense reads cast individual bytes to s8. */
-extern Area030StepRecordBytes panelStepRecordTableWorld00Area03004_801E20CC[]; /* @source 0x801E20CC @kind table */
+extern Area030StepRecordBytes panelStepRecordTable[]; /* @source 0x801E20CC @kind table */
 extern void (*D_801E21E0[])(void); /* @source 0x801E21E0 @kind table */
 extern void (*D_801E2210[])(void); /* @source 0x801E2210 @kind table */
 extern void (*D_801E221C[])(void); /* @source 0x801E221C @kind table */
@@ -591,7 +591,7 @@ void renderSpriteOptionalIndexed(s32 x, s32 y, u16 runIndex);
 void submitTpageDrawMode(s32 arg0, s32 arg1);
 u32 sumValuesNonzeroAmounts(void);
 extern u8 D_801454EC; /* @source 0x801454EC @kind unknown */
-u8*  appendIndexedSpriteWorld00Area03004(s32 spriteIndex, s32 drawMode, s16 x, s16 y);
+u8*  appendIndexedSprite(s32 spriteIndex, s32 drawMode, s16 x, s16 y);
 void renderIndexedQuadHeight(s16 x, s16 y, u8 height, u8 recordIndex);
 void drawWidePanelFrameWorld00Area03004(s16 x, s16 y);
 /* Target-local stretched panel column at 0x801D8248: emits one 8-pixel-wide
@@ -771,9 +771,9 @@ void audioCueChangedValue(void);
 void stateTextCompletedLimit(void);
 void func_801DDDBC(void);
 void callStateByte3Table22(void);
-void dispatchStateByte3Table22b0World00Area03004(void);
-void dispatchStateByte3Table22bcWorld00Area03004(void);
-void dispatchStateByte3Table22c8World00Area03004(void);
+void dispatchByte3Table22b0(void);
+void dispatchByte3Table22bc(void);
+void dispatchByte3Table22c8(void);
 void initializeBytesGateClear(void);
 void stateHeadFieldsTwo(void);
 void stateChannelPairDispatch(void);

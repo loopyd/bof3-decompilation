@@ -12,8 +12,8 @@ extern s16 func_8015477C(s32 arg0, s32 arg1);
 
 /* @source 0x801D0C48
  * @behavior Entry 0 of this overlay's step-handler run: the eight-word code
- * pointer table row T_801D1F88 labels this address as its first word, so the
- * dispatcher dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04 reaches it
+ * pointer table row angleStepHandlerTable labels this address as its first word, so the
+ * dispatcher callAngleBandHandler reaches it
  * while the work object's unsigned byte at offset +0x1 is zero. It takes no
  * arguments and returns nothing. It seeds the work object's position pair with
  * 0x308000 at +0x34 and 0x740000 at +0x38, calls the shared distance helper

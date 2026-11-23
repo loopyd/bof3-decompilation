@@ -158,4 +158,4 @@ WEAK_SYMBOL_AT(D_801E1D58, 0x801E1D58);
 WEAK_SYMBOL_AT(initializePickedEntryHandler, 0x801D36F8);
 WEAK_SYMBOL_AT(renderStatusMarkerFrame, 0x801D195C);
 WEAK_SYMBOL_AT(initFlatQuadPrimitive, 0x8017A9A4);
-WEAK_SYMBOL_AT(dispatchStateByte1Table1d10World00Area03004, 0x801D1B10);
+WEAK_SYMBOL_AT(dispatchByte1Table1d10, 0x801D1B10);

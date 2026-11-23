@@ -55,8 +55,8 @@ segments:
     - '@behavior: Claims four work records, one per phase step of 0x100 from 0x80, from the 0x800E4800 work table, marking each occupied and seeding its position words from the scratch work object at cell 0x1F800044 plus the two phase-table offsets.'
   - - 1368
     - c
-    - findFreeWorkRecordByte15At800E4800World01Area05213_801F3158
-    - '@source: src/bof3/world/findFreeWorkRecordByte15At800E4800World01Area05213_801F3158.c'
+    - queryFreeRecordByte15
+    - '@source: src/bof3/world/queryFreeRecordByte15.c'
     - '@behavior: Returns the address of the first of the 0x10 records of 0x18-byte stride in the 0x800E4800 work table whose occupancy byte 0x15 reads zero, or zero when every record is occupied.'
   - - 1428
     - c
@@ -81,8 +81,8 @@ segments:
     - '@behavior: Updates mode-selected work position and advances the shared record halfword at +0x0A.'
   - - 3220
     - c
-    - updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F3894
-    - '@source: src/bof3/world/updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F3894.c'
+    - stateModeWorkPosition
+    - '@source: src/bof3/world/stateModeWorkPosition.c'
     - '@behavior: Updates mode-selected work position and advances the shared record halfword at +0x0A.'
   - - 3456
     - c

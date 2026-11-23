@@ -21,7 +21,7 @@ u32 func_8014D8D4(u8 arg0);
  *           scratchpad pointer cell 0x1F800044, reached from outside this
  *           payload: the body address appears once in the payload, as word
  *           0x801CF610 at 0x801D0660, entry 12 of the thirty-entry handler run
- *           based at 0x801D0630 (the `textbin` row T_801D0630). Byte 0x08 is the
+ *           based at 0x801D0630 (the `textbin` row codePointerTable0630). Byte 0x08 is the
  *           current route index of the eight-entry route window, byte 0x03 the
  *           chosen candidate index that the re-arm step stores, byte 0x09 the
  *           countdown, byte 0x02 the step counter and byte 0x0B the step sign of

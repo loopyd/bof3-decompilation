@@ -25,5 +25,5 @@ func_801CFAA8 = 0x801CFAA8;
 clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp27800_801CFBC0 = 0x801CFBC0;
 callWorkTablefcf4Plchar = 0x801CFC2C;
 callWorkTablefd00Plchar = 0x801CFC70;
-T_801CFCB4 = 0x801CFCB4;
+codePointerTablefcb4 = 0x801CFCB4;
 T_801CFCF4 = 0x801CFCF4;

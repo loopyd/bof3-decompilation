@@ -3,7 +3,7 @@
 /* This overlay's handler table at 0x801F37F8: two code pointers - 0x801F2C48 and
  * 0x801F2D0C. The Splat `textbin` row D_801F30AC places the words, so the table
  * is only referenced here, at its first entry. */
-extern void (*workByte4HandlersWorld01Area04313[])(void); /* @source 0x801F37F8 @kind data */
+extern void (*workByte4DispatchTable[])(void); /* @source 0x801F37F8 @kind data */
 
 /* @source 0x801F2C04
  * @behavior Overlay step dispatch: reads the work-record pointer published at
@@ -33,4 +33,4 @@ extern void (*workByte4HandlersWorld01Area04313[])(void); /* @source 0x801F37F8 
  */
 EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4,
                       callWorkByte4Table37,
-                      workByte4HandlersWorld01Area04313);
+                      workByte4DispatchTable);

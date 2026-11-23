@@ -4,7 +4,7 @@
  * form so every access re-materialises the cell address.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* scenarioScena0100Work;
+extern u8* workObjectPointer;
 /* Shared mode byte the work facing is derived from.
  * @source 0x80145E98 @kind data
  */
@@ -61,9 +61,9 @@ void stateMirrorFacingProgress(
   *(u16*)(record + 0x7E) = 0;
   record[0x7B] = 0;
   record[0x77] = state;
-  scenarioScena0100Work[8] = D_80145E98 ^ 4;
-  func_8015BAC4(scenarioScena0100Work[8]);
-  scenarioScena0100Work[7] |= 8;
+  workObjectPointer[8] = D_80145E98 ^ 4;
+  func_8015BAC4(workObjectPointer[8]);
+  workObjectPointer[7] |= 8;
   D_80146875 = state;
   D_80146874 = 0xD;
 }

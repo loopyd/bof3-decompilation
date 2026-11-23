@@ -7,7 +7,7 @@
  * is only referenced here. This dispatcher indexes the run from its first word,
  * so its base is entry 0 and the entries it can reach are entry 0 = 0x801CE448
  * through entry 15 = 0x801CF91C. */
-extern void (*T_801CFB84[])(void); /* @source 0x801CFB84 @kind data */
+extern void (*codePointerTablefb84[])(void); /* @source 0x801CFB84 @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step dispatch on work-record byte 2: loads the work-record
@@ -31,4 +31,4 @@ extern void (*T_801CFB84[])(void); /* @source 0x801CFB84 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefb84Plchar, T_801CFB84);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefb84Plchar, codePointerTablefb84);

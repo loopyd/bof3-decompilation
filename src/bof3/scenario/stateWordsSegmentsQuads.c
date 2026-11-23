@@ -11,7 +11,7 @@ extern u8* D_1F800044;
  * @behavior Entry 1 of this overlay's nine-word work-byte-1 handler run at
  *           0x801FA180 ({0x801F6D44, 0x801F6DD4, 0x801F6EA4, 0x801F6F2C,
  *           0x801F6FF8, 0x801F7064, 0x801F77EC, 0x801F78F4, 0x801F7A64}), so
- *           the dispatcher dispatchWorkByte1HandlerScenarioScena0400_801F6D00
+ *           the dispatcher callWorkStepHandler
  *           reaches it only through its indirect call; entry 0
  *           (stateFieldsSegmentKey)
  *           leaves work byte 1 at 1 with work byte 9 armed at 8, so every frame

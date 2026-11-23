@@ -10,7 +10,7 @@ void func_801C1630(void);
 /* @source 0x801FE1C0
  * @behavior Overlay callback reached only through the word at 0x801FE378, the
  * entry 29 of the thirty-entry in-image code-pointer table D_801FE304 that
- * dispatchRecordCallbackByByte7AScenarioScena0200_801FD084 selects with a
+ * callRecordCallbackTable selects with a
  * record's unsigned byte field at offset 0x7A. No in-image jal targets the
  * address, and the body ignores the two arguments that dispatcher passes. It
  * reads the unsigned byte D_80181B14 with `lbu`, clears bit 0 of the

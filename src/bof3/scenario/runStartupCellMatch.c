@@ -50,7 +50,7 @@ extern u8 D_80145E98;
  *           queuePrimaryCellMatch
  *           showed, and the six-statement store run is the one the exact
  *           same-target sibling
- *           clearProgressAndSharedStateBytesThenRequestPrimaryState19ScenarioScena0200_801FD5A8
+ *           requestState19Clear
  *           showed; this body writes its own literals. No image word names
  *           0x801FC7E4, so the overlay reaches this body only through the
  *           front-end handler table.

@@ -28,7 +28,7 @@ typedef struct {
  * copy into the position triple at 0x04/0x08/0x0C of every 0x28-byte work
  * record and that the step handlers add their velocity words to, and read as
  * 16.16 fixed point they are 84.5, 11.5 and 256.0. It then calls func_801172D0,
- * which republishes the 0x800E4800 work table in world01Area04913WorkRecordCursor and rewrites all
+ * which republishes the 0x800E4800 work table in workRecordCursor and rewrites all
  * sixteen records from this object, giving each a rand() velocity pair at
  * 0x14/0x18, claim byte 0 = 1 and step byte 1 = 0. Finally it re-reads the
  * pointer cell and increments the object byte at 1 by one, so the state 1

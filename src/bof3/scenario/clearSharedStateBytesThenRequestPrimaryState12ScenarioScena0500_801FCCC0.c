@@ -25,7 +25,7 @@ void func_8015C088(void);
  * stores materialises the 0x8014 page in $at on its own, so the store order
  * 0x80146865, 0x80146866, 0x80146867, D_80146875, D_80146874 is the source
  * statement order. The record-callback dispatcher
- * dispatchRecordCallbackScenarioScena0500_801FCA58 (0x801FCA58) reaches the
+ * callCallbackTable (0x801FCA58) reaches the
  * address only through word 7 of the nine-word overlay callback run at
  * 0x801FD644 (0x801FD660 holds 0x801FCCC0), so the record byte at offset 0x7A
  * selects it with the value 7; no in-image `jal` targets the address and that
@@ -35,7 +35,7 @@ void func_8015C088(void);
  * differs in no word but the one stored immediate: a 76-byte compare of the two
  * payload spans under the target binary is unequal only at span offset 0x10,
  * where this span holds 0x24020012 and the sibling holds 0x24020011. The
- * neighbouring word 5 sibling clearSharedStateBytesThenRequestPrimaryState10ScenarioScena0500_801FCC28
+ * neighbouring word 5 sibling stateClearSharedRequest16
  * (0x801FCC28, stores 0x10) also carried that shape. The name records that
  * proven behavior and the address anchor keeps it target-qualified.
  * @status exact

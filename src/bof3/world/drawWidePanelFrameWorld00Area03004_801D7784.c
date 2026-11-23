@@ -16,25 +16,25 @@ void drawWidePanelFrameWorld00Area03004(s16 x, s16 y) {
   s32 spriteIndex;
 
   submitTpageDrawMode(9, 1);
-  appendIndexedSpriteWorld00Area03004(0x25, 1, x, y);
+  appendIndexedSprite(0x25, 1, x, y);
 
   for (spriteIndex = 0; spriteIndex < 0x17; spriteIndex++)
-    appendIndexedSpriteWorld00Area03004(0x26, 1, (s16)(x + 0x20 + spriteIndex * 8), y);
+    appendIndexedSprite(0x26, 1, (s16)(x + 0x20 + spriteIndex * 8), y);
 
-  appendIndexedSpriteWorld00Area03004(0x27, 1, (s16)(x + 0xD8), y);
-  appendIndexedSpriteWorld00Area03004(0x28, 1, (s16)(x + 0xF0), y);
+  appendIndexedSprite(0x27, 1, (s16)(x + 0xD8), y);
+  appendIndexedSprite(0x28, 1, (s16)(x + 0xF0), y);
   drawIndexedPanelQuadWithHeightWorld00Area03004(x, (s16)(y + 0x18), 0x78, 0);
   drawIndexedPanelQuadWithHeightWorld00Area03004((s16)(x + 0xF0), (s16)(y + 0x18), 0x78, 1);
-  appendIndexedSpriteWorld00Area03004(0x2A, 1, x, (s16)(y + 0x90));
+  appendIndexedSprite(0x2A, 1, x, (s16)(y + 0x90));
 
   for (spriteIndex = 0; spriteIndex < 0x17; spriteIndex++)
-    appendIndexedSpriteWorld00Area03004(0x2B, 1, (s16)(x + 8 + spriteIndex * 8), (s16)(y + 0x90));
+    appendIndexedSprite(0x2B, 1, (s16)(x + 8 + spriteIndex * 8), (s16)(y + 0x90));
 
-  appendIndexedSpriteWorld00Area03004(0x2C, 1, (s16)(x + 0xC0), (s16)(y + 0x90));
+  appendIndexedSprite(0x2C, 1, (s16)(x + 0xC0), (s16)(y + 0x90));
 
   for (spriteIndex = 0; spriteIndex < 3; spriteIndex++)
-    appendIndexedSpriteWorld00Area03004(0x2D, 1, (s16)(x + 0xC8 + spriteIndex * 8), (s16)(y + 0x90));
+    appendIndexedSprite(0x2D, 1, (s16)(x + 0xC8 + spriteIndex * 8), (s16)(y + 0x90));
 
-  appendIndexedSpriteWorld00Area03004(0x2E, 1, (s16)(x + 0xE0), (s16)(y + 0x90));
-  appendIndexedSpriteWorld00Area03004(0x2F, 1, (s16)(x + 0xE7), (s16)(y + 0x90));
+  appendIndexedSprite(0x2E, 1, (s16)(x + 0xE0), (s16)(y + 0x90));
+  appendIndexedSprite(0x2F, 1, (s16)(x + 0xE7), (s16)(y + 0x90));
 }

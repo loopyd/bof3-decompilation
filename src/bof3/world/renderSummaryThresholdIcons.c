@@ -21,8 +21,8 @@ void renderSummaryThresholdIcons(s16 x, s16 y)
     s32 characterIndex;
 
     submitTpageDrawMode(3, 1);
-    appendIndexedSpriteWorld00Area03004(6, 1, x, y);
-    appendIndexedSpriteWorld00Area03004(7, 1, (s16)(x + 0x58), y);
+    appendIndexedSprite(6, 1, x, y);
+    appendIndexedSprite(7, 1, (s16)(x + 0x58), y);
 
     slotValueTotal = sumValuesNonzeroAmounts();
     thresholdIndex = 0;
@@ -35,11 +35,11 @@ void renderSummaryThresholdIcons(s16 x, s16 y)
 
     iconRecord = &icons.records[thresholdIndex];
     D_801454EC = thresholdIndex;
-    appendIndexedSpriteWorld00Area03004(iconRecord->icon, 1, (s16)(x + 0x1D), (s16)(y + 0x1D));
+    appendIndexedSprite(iconRecord->icon, 1, (s16)(x + 0x1D), (s16)(y + 0x1D));
     if (iconRecord->first != 0) {
-        appendIndexedSpriteWorld00Area03004(0x48, 1, (s16)(iconRecord->offset + 0x1D + x), (s16)(y + 0x21));
+        appendIndexedSprite(0x48, 1, (s16)(iconRecord->offset + 0x1D + x), (s16)(y + 0x21));
         if (iconRecord->second != 0) {
-            appendIndexedSpriteWorld00Area03004(0x48, 1, (s16)(iconRecord->offset + x + 0x24), (s16)(y + 0x21));
+            appendIndexedSprite(0x48, 1, (s16)(iconRecord->offset + x + 0x24), (s16)(y + 0x21));
         }
     }
 

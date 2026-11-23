@@ -9,7 +9,7 @@
  * immediately by this payload's last six words at 0x801CFCF4, so the unbounded
  * byte-2 index continues into those at 16 through 21 and reads past the payload
  * end above 21. */
-extern void (*T_801CFCB4[])(void); /* @source 0x801CFCB4 @kind data */
+extern void (*codePointerTablefcb4[])(void); /* @source 0x801CFCB4 @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step dispatch on work-record byte 2: loads the work-record
@@ -32,4 +32,4 @@ extern void (*T_801CFCB4[])(void); /* @source 0x801CFCB4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefcb4Plchar, T_801CFCB4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefcb4Plchar, codePointerTablefcb4);

@@ -30,16 +30,16 @@ segments:
   subsegments:
   - - 56
     - c
-    - dispatchWorkByte1LocalPairBmagicMagic00603_801EEC38
-    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairBmagicMagic00603_801EEC38.c'
+    - dispatchWorkByte1Inline
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Inline.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, seeds 0x801EEC90 into entry 0 and 0x801EEDA4 into entry 1 of a two-entry local handler array in its own 0x20-byte frame, and invokes the entry selected by the work object''s unsigned byte at offset 1 with no arguments. The index is unchecked, and the frame only keeps $ra at 0x18 across the indirect call.'
   - - 144
     - asm
     - func_801EEC90
   - - 420
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic00603_801EEDA4
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic00603_801EEDA4.c'
+    - forwardBattleRaiseFlag
+    - '@source: src/bof3/bmagic/forwardBattleRaiseFlag.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns immediately when the work-object byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned and passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper func_801E5988. It takes no arguments, returns nothing and writes no other state; the 0x18-byte frame only keeps the return address at 0x10 across the two calls.'
   - - 516
     - c
@@ -97,8 +97,8 @@ segments:
     - '@source: src/bof3/bmagic/incrementByteFrameParity.c'
   - - 5776
     - c
-    - add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290
-    - '@source: src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290.c'
+    - addCountdownDecrementCall
+    - '@source: src/bof3/bmagic/addCountdownDecrementCall.c'
   - - 5896
     - c
     - renderExtentsGradedDark
@@ -115,23 +115,23 @@ segments:
     - func_801F0594
   - - 6564
     - c
-    - copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4
-    - '@source: src/bof3/bmagic/copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4.c'
+    - copyRecordWordTriplet
+    - '@source: src/bof3/bmagic/copyRecordWordTriplet.c'
   - - 6644
     - c
-    - add4ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic00603_801F05F4
-    - '@source: src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic00603_801F05F4.c'
+    - addByteReachAdvance
+    - '@source: src/bof3/bmagic/addByteReachAdvance.c'
   - - 6724
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic00603_801F0644
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic00603_801F0644.c'
+    - incrementByteWhenOne
+    - '@source: src/bof3/bmagic/incrementByteWhenOne.c'
   - - 6788
     - asm
     - func_801F0684
   - - 6880
     - c
-    - projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0
-    - '@source: src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0.c'
+    - installZeroShiftMatrix
+    - '@source: src/bof3/bmagic/installZeroShiftMatrix.c'
   - - 7056
     - c
     - renderSixteenOriginWeighted

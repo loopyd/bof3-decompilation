@@ -2,7 +2,7 @@
 
 /* Record pool of this overlay: 36 records of stride 0x78 starting at
  * 0x801EFEF4, so the pool ends at 0x801F0FD4. The exact reservation lift
- * reserveFirstFreeRecordBmagicMagic05803_801EFE38 walks the same run through
+ * reservePool36 walks the same run through
  * the base symbol and the still-assembled dispatcher sweep at 0x801EEC90
  * indexes it the same way, so that name is kept. This body clears the first
  * three bytes of every record and the original re-materializes the pool
@@ -56,7 +56,7 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
 /* @source 0x801EED30
  * @behavior Init stage 0 of this overlay: word 0 of the nine-word code pointer
  *           run the payload header holds at 0x801EEC04, which the frame
- *           dispatcher dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic05803_801EEC28
+ *           dispatcher runEachActiveStep
  *           copies to its own frame and calls through
  *           work byte 0x01 scaled by four, so no jal in the payload names it.
  *           It clears bytes 0x00, 0x01 and 0x02 of all 36 records of the

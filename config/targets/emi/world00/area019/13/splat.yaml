@@ -37,23 +37,23 @@ segments:
     - '@behavior: Reads the shared 16-bit channel at 0x8014932C, publishes mode 2 at the shared status byte 0x80149333 and writes the channel back retreated by 0xA00; the adjacent 0x801F2C04 twin adds it.'
   - - 84
     - c
-    - invokeHelperArgWorld00Area01913_801F2C54
+    - callWindowReset1
   - - 116
     - c
-    - invokeHelperArgWorld00Area01913_801F2C74
+    - callWindowReset2
   - - 148
     - c
-    - invokeHelperArgWorld00Area01913_801F2C94
+    - callWindowReset3
   - - 180
     - c
-    - invokeHelperArgWorld00Area01913_801F2CB4
+    - callWindowReset4
   - - 212
     - asm
     - func_801F2CD4
   - - 364
     - c
-    - stopSelectionEffectWorld00Area01913_801F2D6C
-    - '@source: src/bof3/world/stopSelectionEffectWorld00Area01913_801F2D6C.c'
+    - audioStopSelectionEffect
+    - '@source: src/bof3/world/audioStopSelectionEffect.c'
     - '@behavior: Calls the executable-side frontend helper at 0x8015D404 with both arguments zero, stopping selection effect group 0 id 0, and returns; no overlay cell is read or written.'
 - - 400
   - bin

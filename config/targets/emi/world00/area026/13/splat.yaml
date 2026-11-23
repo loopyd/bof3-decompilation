@@ -138,8 +138,8 @@ segments:
     - '@behavior: publishes the D_80145E90 work base as the scratchpad work cursor and stores the selection helper result byte +0xB into the published record unless it reports 0xFF'
   - - 1848
     - c
-    - setScenarioFlagBit2E
-    - '@source: src/bof3/world/setScenarioFlagBit2E.c'
+    - stateFlagSet2e
+    - '@source: src/bof3/world/stateFlagSet2e.c'
     - '@behavior: sets bit 0x2E in the active scenario flags.'
   - - 1888
     - c

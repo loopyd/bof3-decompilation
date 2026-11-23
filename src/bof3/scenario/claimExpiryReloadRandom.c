@@ -34,7 +34,7 @@ void claimFreeTableEntry(void);
 /* @source 0x801D0E30
  * @behavior Entry 1 of this overlay step handler run at 0x801D1B2C, which is
  * word 5 of the fourteen-word code-pointer run at 0x801D1B1C and which
- * dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned
+ * callStepRunHandler selects with the unsigned
  * work byte at offset +0x1 of the scratchpad work object published at pointer
  * slot 0x1F800044: it reads that object's countdown byte at +0x9, and when the
  * byte reads zero it claims a work-table entry through

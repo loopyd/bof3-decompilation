@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 #include "bof3/core/slus_variables.h"
 
-extern u8* scenarioScena0100Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void func_801F7678(u8 value);
 void func_801F7AE4(void);
 s32 stateTableReportActive(void);
@@ -25,8 +25,8 @@ void decrementAdvanceStateScenario(void) {
     func_801F7AE4();
   }
   stateTableReportActive();
-  if (--scenarioScena0100Work[9] == 0) {
-    scenarioScena0100Work[9] = 252;
-    scenarioScena0100Work[1]++;
+  if (--workObjectPointer[9] == 0) {
+    workObjectPointer[9] = 252;
+    workObjectPointer[1]++;
   }
 }

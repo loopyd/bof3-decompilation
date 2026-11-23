@@ -16,7 +16,7 @@
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* Scratchpad work-object pointer cell at 0x1F800044, bound by this target's own
- * map and read by its other exact lifts clearWorkBytesBmagicMagic05803_801EFE9C
+ * map and read by its other exact lifts clearWorkBytesFive
  * and recordWithinPositionRadius. Declared as a
  * named cell symbol so every read is a lui plus offset load, and the original
  * re-reads the cell after the byte 0x0A store, which is where the source takes

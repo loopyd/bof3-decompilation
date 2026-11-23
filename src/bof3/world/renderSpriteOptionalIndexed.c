@@ -11,7 +11,7 @@
  */
 void renderSpriteOptionalIndexed(s32 x, s32 y, u16 runIndex) {
   submitTpageDrawMode(3, 1);
-  appendIndexedSpriteWorld00Area03004(0xC, 1, (s16)x, (s16)y);
+  appendIndexedSprite(0xC, 1, (s16)x, (s16)y);
 
   if (runIndex != 0xFFFF) {
     drawEncodedTextAt((s16)(x + 0xA), (s16)(y + 8), 0, 0xFF,

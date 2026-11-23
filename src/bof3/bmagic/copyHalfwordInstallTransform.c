@@ -5,7 +5,7 @@
  * through the loaded pointer, so the original materializes `lui $a1,0x1F80` /
  * `lw $a1,0x44($a1)` exactly once and every later access is a field of that
  * pointer. Declaration style follows the exact same-target siblings
- * dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224 and
+ * dispatchByte2DrawSpokes and
  * incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvoke
  * HelperWhenZeroBmagicMagic05903_801EF5C0. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */

@@ -7,7 +7,7 @@
  * the payload ends at 0x801D2818. Entry 0 is therefore the handler at
  * 0x801D15CC, which writes 0x12C to the work object halfword at +0x2E, clears
  * its byte at +0x9, sweeps the record table at 0x800E60A0 through
- * clearWorkTableAt800E60A0ScenarioSce15ef300_801D25C0 and only then advances
+ * stateClearRecordTable and only then advances
  * this dispatcher's own index byte, so a work byte of 0 here does not re-enter
  * it. The base word is the last word of the T_801D27D0 `textbin` span
  * (0x801D27D0 through 0x801D280F) and the following two fall inside the Splat

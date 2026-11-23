@@ -21,16 +21,16 @@ void renderGroupedCellSprites(s16 x, s16 y, u8 groupIndex) {
   drawFramedTexturedPanel((u16)(x + 2), (u16)(y + 2), 0x28, 0x10, 0, D_80144952);
   submitTpageDrawMode(8, 1);
   spriteBase = groupIndex * 4;
-  appendIndexedSpriteWorld00Area03004((spriteBase + 0x1D) & 0xFF, 1, x, y);
+  appendIndexedSprite((spriteBase + 0x1D) & 0xFF, 1, x, y);
 
   lowerY = y + 0x10;
-  appendIndexedSpriteWorld00Area03004((spriteBase + 0x1E) & 0xFE, 1, x, lowerY);
+  appendIndexedSprite((spriteBase + 0x1E) & 0xFE, 1, x, lowerY);
 
   for (cellIndex = 0; cellIndex < 4; cellIndex++)
-    appendIndexedSpriteWorld00Area03004((spriteBase + 0x1F) & 0xFF, 1, (s16)(x + (cellIndex + 1) * 8), lowerY);
+    appendIndexedSprite((spriteBase + 0x1F) & 0xFF, 1, (s16)(x + (cellIndex + 1) * 8), lowerY);
 
   /* The final cell index is recomputed from the groupIndex instead of reusing the
    * loop's index local: the original re-derives it from the groupIndex byte here,
    * the register holding the loop value having been consumed in place. */
-  appendIndexedSpriteWorld00Area03004((groupIndex * 4 + 0x20) & 0xFC, 1, (s16)(x + 0x28), (s16)(y + 0x10));
+  appendIndexedSprite((groupIndex * 4 + 0x20) & 0xFC, 1, (s16)(x + 0x28), (s16)(y + 0x10));
 }

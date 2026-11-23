@@ -10,9 +10,9 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/workAccumulateIntoZero.c",
     "src/bof3/bmagic/workAccumulateIsAdjust.c",
-    "src/bof3/bmagic/subtractWorkColorTripletBy16AndDecrementByteABy2ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic00100_801EFFCC.c",
+    "src/bof3/bmagic/subtractFadeCountdownTriplet.c",
     "src/bof3/bmagic/stateRaiseFlag4.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00100_801EFA84.c",
+    "src/bof3/bmagic/raiseFlag4InvokeHelper.c",
     "src/bof3/bmagic/callActingEnemyScript.c",
     "src/bof3/bmagic/callAFC54ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic00100_801EEF34.c",
 ]
@@ -22,14 +22,14 @@ support_sources = [
     "src/bof3/bmagic/integrateIntoHelpersZero.c",
     "src/bof3/bmagic/callHelpersWordsReady.c",
     "src/bof3/bmagic/callInvokeHelpersActive.c",
-    "src/bof3/bmagic/addWorkColorTripletBy16ThenDecrementGlobalWorkByteBAndInvokeHelperWhenChannelIsC0BmagicMagic00100_801EF688.c",
+    "src/bof3/bmagic/addTintDecrementCall.c",
     "src/bof3/bmagic/stateWordsCopyClear.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00100_801EF72C.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00100_801EEC64.c",
+    "src/bof3/bmagic/dispatchWorkByte1Fade.c",
+    "src/bof3/bmagic/dispatchWorkByte1Slot.c",
     "src/bof3/bmagic/integrateGrowHeadingForward.c",
     "src/bof3/support/magic001_00_psyq.c",
     "src/bof3/bmagic/magic00100DispatchTables.c",
-    "src/bof3/bmagic/subtractWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic00100_801EF5CC.c",
+    "src/bof3/bmagic/subtractFadeCopyTriplet.c",
     "src/bof3/bmagic/workAccumulateIntoAdjust.c",
 ]
 psyq_source = "src/bof3/support/magic001_00_psyq.c"

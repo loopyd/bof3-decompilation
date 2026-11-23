@@ -33,8 +33,8 @@ segments:
     - func_801EEC1C
   - - 124
     - c
-    - setWorkByte9To8SetWorkByteATo4AndIncrementWorkByte1BmagicMagic05203_801EEC7C
-    - '@source: src/bof3/bmagic/setWorkByte9To8SetWorkByteATo4AndIncrementWorkByte1BmagicMagic05203_801EEC7C.c'
+    - stateArmCounters
+    - '@source: src/bof3/bmagic/stateArmCounters.c'
   - - 188
     - c
     - decrementJitterPointerExpiry
@@ -59,5 +59,5 @@ segments:
     - func_801EF070
   - - 1220
     - c
-    - invokeHelperBmagicMagic05203_801EF0C4
+    - invokeSharedHelper15
 - - 1252

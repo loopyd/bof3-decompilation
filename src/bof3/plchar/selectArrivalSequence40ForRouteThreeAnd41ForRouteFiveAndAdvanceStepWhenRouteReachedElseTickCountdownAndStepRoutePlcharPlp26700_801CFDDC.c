@@ -20,7 +20,7 @@ extern u32 func_8014D8D4(u8 arg0);
  *           scratchpad pointer cell 0x1F800044, reached from outside this
  *           payload: the body address appears once in the payload, as word
  *           0x801CFDDC at 0x801D09D4, index 1 of the run based at 0x801D09D0
- *           that dispatchWorkByte2Table09d0PlcharPlp26700_801CFCA4 indexes with
+ *           that dispatchByte2Table09d0 indexes with
  *           work byte 2 scaled by four and entry 4 of the byte-3 dispatch of
  *           callWorkTable09Plchar, which indexes the
  *           run based at 0x801D09C4 with work byte 3, so no jal in this payload

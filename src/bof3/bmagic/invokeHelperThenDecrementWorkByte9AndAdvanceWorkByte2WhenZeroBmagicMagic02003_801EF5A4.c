@@ -21,7 +21,7 @@ extern u8 func_8014DAEC(void);
  *           leading data block of this overlay: the word at 0x801EEC24 holds
  *           this function's address and is the only in-image reference to it,
  *           and no jal in this payload names it. The overlay entry's dispatcher
- *           dispatchWorkByte1HandlerBmagicMagic02003_801EEC48 copies only the
+ *           dispatchWorkByte1Six copies only the
  *           run's first six entries into its own frame, so no instruction of
  *           this payload reads entry 8 and the word is the span's only incoming
  *           path that the payload itself carries. The body first invokes the

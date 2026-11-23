@@ -31,7 +31,7 @@ typedef struct {
  * @behavior Entry 7 of this overlay's nine-word work-byte-1 handler run at
  *           0x801FA180 ({0x801F6D44, 0x801F6DD4, 0x801F6EA4, 0x801F6F2C,
  *           0x801F6FF8, 0x801F7064, 0x801F77EC, 0x801F78F4, 0x801F7A64}), so
- *           the dispatcher dispatchWorkByte1HandlerScenarioScena0400_801F6D00
+ *           the dispatcher callWorkStepHandler
  *           reaches it only through its indirect call, and the second
  *           dispatcher at 0x801F77A8 reaches it as index 1 of the three-word
  *           tail of that run, which it indexes from 0x801FA198.

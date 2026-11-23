@@ -1,10 +1,10 @@
 #include "bof3/bof3.h"
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
-extern u8 magic02103RecordFlags[]; /* @source 0x801EFE14 @kind data */
+extern u8 recordFlagPool[]; /* @source 0x801EFE14 @kind data */
 extern u8 func_8014DAEC(void); /* @source 0x8014DAEC @kind function */
 extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C @kind function */
-extern u8 reserveFirstFreeRecordBmagicMagic02103_801EFD4C(void);
+extern u8 reservePoolSlot(void);
 
 /* @source 0x801EF104
  * @behavior Calls 0x8014DAEC, ignores its result, and decrements work byte 9.
@@ -33,12 +33,12 @@ void callDownTwelvePaired(void) {
         g_battle_work[9] = 0;
         g_battle_work[0xB] = 0;
         for (ordinal = 0; ordinal < 12; ordinal++) {
-            index = reserveFirstFreeRecordBmagicMagic02103_801EFD4C();
+            index = reservePoolSlot();
             offset = index * 0x78;
             work = g_battle_work;
-            magic02103RecordFlags[offset + 9] = (ordinal >> 1) * 3 + 1;
+            recordFlagPool[offset + 9] = (ordinal >> 1) * 3 + 1;
             counter = g_battle_work;
-            *(u32 *)&magic02103RecordFlags[offset + 0x74] = (u32)work;
+            *(u32 *)&recordFlagPool[offset + 0x74] = (u32)work;
             counter[0xB]++;
         }
         g_battle_work[2]++;

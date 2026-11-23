@@ -42,21 +42,21 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 5 into the shared handler index byte D_801D4286; the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 192
     - c
-    - setStatus84AndModeIndex6IfGateElseFFFFWorld01Area05013_801F2CC0
-    - '@source: src/bof3/world/setStatus84AndModeIndex6IfGateElseFFFFWorld01Area05013_801F2CC0.c'
+    - stateStatus84ModeSix
+    - '@source: src/bof3/world/stateStatus84ModeSix.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x84 into the shared status halfword D_801490A8 and 6 into the shared mode index byte D_801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 260
     - c
-    - setStatus84AndModeIndex6IfGateElseFFFFWorld01Area05013_801F2D04
-    - '@source: src/bof3/world/setStatus84AndModeIndex6IfGateElseFFFFWorld01Area05013_801F2D04.c'
+    - stateStatus84Mode6
+    - '@source: src/bof3/world/stateStatus84Mode6.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x84 into the shared status halfword D_801490A8 and 6 into the shared mode index byte D_801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 328
     - asm
     - func_801F2D48
   - - 416
     - c
-    - initFrontendStateSelector4AndSecondStateByte4World01Area05013_801F2DA0
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte4World01Area05013_801F2DA0.c'
+    - initFrontendByte04
+    - '@source: src/bof3/world/initFrontendByte04.c'
     - '@behavior: Runs the shared front-end startup helper D_8015C088 and then stores 4 into the shared front-end state selector byte D_801448EB and 4 into the shared second state byte D_801448ED, leaving the middle byte D_801448EC untouched, and returns 0.'
 - - 468
   - bin

@@ -13,7 +13,7 @@ void func_801C187C(s32 arg0);
  * @behavior Overlay handler reached only indirectly: its address is word 2 of
  * the six-word code-pointer run at 0x801FE35C, the word stored at 0x801FE364,
  * and no in-image jal targets it. That run is the handler table that
- * dispatchCoordinateLookupHandlerScenarioScena0100_801FE03C
+ * callCoordinateLookup
  * (0x801FE03C) indexes with the signed byte returned by func_801A7AD8, so
  * this entry runs only if the lookup returns index 2; the dispatched record
  * table holds two identical records, so the reachable indices are 0 and 1 and

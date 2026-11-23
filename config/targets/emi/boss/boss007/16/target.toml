@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/boss/setupBitEffectBank.c",
     "src/bof3/boss/publishStepDataClear.c",
     "src/bof3/boss/dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4.c",
-    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00716_800C1864.c",
+    "src/bof3/boss/publishWorkStepSetup.c",
     "src/bof3/boss/dispatchStateByte1Table1ddcBossBoss00716_800C190C.c",
     "src/bof3/boss/stateHalfwordFourBoss.c",
     "src/bof3/boss/callArgZeroOne.c",

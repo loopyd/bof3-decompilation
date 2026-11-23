@@ -20,7 +20,7 @@ extern u8 scenarioScena0400CoordinateLookupRecords[];
  * terminator the lookup can also select.
  * @source 0x801FA230 @kind table
  */
-extern ScenarioScena0400CoordinateLookupHandler scenarioScena0400CoordinateLookupHandlers[];
+extern ScenarioScena0400CoordinateLookupHandler coordinateSlotsTable[];
 
 /* @source 0x801FA010
  * @behavior Work-object handler word 7 of the eight-word code-pointer run at
@@ -46,7 +46,7 @@ extern ScenarioScena0400CoordinateLookupHandler scenarioScena0400CoordinateLooku
  * (0xD038 there, 0xA230 here). The record the helper reads, its route key 0x30,
  * and both table addresses come from this span's own bytes. The route-word role
  * of D_80143F00 is the accepted form of
- * forwardRoute28RecordScenarioScena0400_801F9DB4 (0x801F9DB4) here and of
+ * forwardRoute28Record (0x801F9DB4) here and of
  * dispatchRoute63CoordinateLookupHandlerScenarioScena0300_801FCDB4 there.
  * @status exact
  * @match 100.00
@@ -59,6 +59,6 @@ s32 callCoordinateLookupHandler(u16 coordA, u16 coordB) {
   if (index < 0) {
     return -1;
   }
-  scenarioScena0400CoordinateLookupHandlers[index]();
+  coordinateSlotsTable[index]();
   return 1;
 }

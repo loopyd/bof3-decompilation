@@ -8,7 +8,7 @@ splat = "config/targets/emi/scenario/sce15ef0/00/splat.yaml"
 load_address = 0x801D0C00
 
 sources = [
-    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04.c",
+    "src/bof3/scenario/callAngleBandHandler.c",
     "src/bof3/scenario/stateOriginTripleAngle.c",
 ]
 support_sources = [
@@ -23,7 +23,7 @@ support_sources = [
     "src/bof3/scenario/raiseAngleBandsPrimitives.c",
     "src/bof3/scenario/renderFlatGreyFill.c",
     "src/bof3/scenario/renderAroundScaleAngle.c",
-    "src/bof3/scenario/drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20.c",
+    "src/bof3/scenario/renderTranslucentSectorFan.c",
     "src/bof3/scenario/renderSegmentCoreFans.c",
     "src/bof3/scenario/renderBodyPointsWidths.c",
     "src/bof3/scenario/renderSliversSteppedSegments.c",

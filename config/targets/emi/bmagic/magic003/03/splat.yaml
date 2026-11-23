@@ -44,8 +44,8 @@ segments:
     - '@behavior: Calls both overlay helpers with 1, decrements work byte 9 and rearms it to 30 while advancing byte 1 on zero.'
   - - 552
     - c
-    - runHelpers2DecrementWorkByte9Rearm10AdvanceWorkByte1BmagicMagic00303_801EEE28
-    - '@source: src/bof3/bmagic/runHelpers2DecrementWorkByte9Rearm10AdvanceWorkByte1BmagicMagic00303_801EEE28.c'
+    - callPairDecrementRearm
+    - '@source: src/bof3/bmagic/callPairDecrementRearm.c'
     - '@behavior: Calls both overlay helpers with 2, decrements work byte 9 and rearms it to 10 while advancing byte 1 on zero.'
   - - 676
     - asm
@@ -78,7 +78,7 @@ segments:
     - func_801EF268
   - - 1740
     - c
-    - dispatchWorkByte1LocalPairBmagicMagic00303_801EF2CC
+    - dispatchWorkByte1Local
   - - 1828
     - asm
     - func_801EF324
@@ -98,8 +98,8 @@ segments:
     - func_801EF644
   - - 2764
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperWhenBelow2BmagicMagic00303_801EF6CC
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenBelow2BmagicMagic00303_801EF6CC.c'
+    - decrementBelowTwoCall
+    - '@source: src/bof3/bmagic/decrementBelowTwoCall.c'
     - '@behavior: Decrements shared work byte B and invokes helper 0x801E5988 only when the byte is below 2.'
   - - 2824
     - asm
@@ -126,8 +126,8 @@ segments:
     - '@behavior: Steps work words 0x34 and 0x38; at their targets submits the work record, decrements shared work byte B and invokes helper 0x801E5988.'
   - - 3740
     - c
-    - dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C.c'
+    - dispatchWorkByte1Scaled
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Scaled.c'
   - - 3808
     - asm
     - func_801EFAE0
@@ -174,10 +174,10 @@ segments:
   # @behavior Reserves the first free 0x78-byte record among 32 slots.
   - - 7620
     - c
-    - reserveFirstFreeRecordBmagicMagic00303_801F09C4
+    - reserveFreeRecordSlot
   - - 7720
     - c
-    - clearWorkBytesBmagicMagic00303_801F0A28
+    - clearWorkHead
   - - 7800
     - textbin
     - D_801F0A78

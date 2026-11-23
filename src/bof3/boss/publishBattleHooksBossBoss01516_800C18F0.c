@@ -10,7 +10,7 @@ typedef void (*Boss01516Handler)(void);
  * drops. */
 void initModeTuple510Or520ByFlagBitTwoSetScenarioProgress4BBossBoss01516_800C1930(
     void);
-void invokeHelperArgBossBoss01516_800C197C(void);
+void invokeHelperArg(void);
 s32  zeroResultBoss015_800C1928(void);
 
 /* Shared hook slots. 0x801463A4 and 0x801463A8 head the trio every boss overlay
@@ -25,7 +25,7 @@ extern Boss01516Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * slot order: the state switch
  * initModeTuple510Or520ByFlagBitTwoSetScenarioProgress4BBossBoss01516_800C1930
  * into 0x801463A4, the helper wrapper
- * invokeHelperArgBossBoss01516_800C197C into 0x801463A8, and the zero-result
+ * invokeHelperArg into 0x801463A8, and the zero-result
  * accessor zeroResultBoss015_800C1928 into 0x801463AC through the
  * void slot type. The 0x38-byte body reserves no frame and keeps nothing across
  * the three stores. No word of this payload names this function and no jal
@@ -40,6 +40,6 @@ extern Boss01516Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 void publishBattleHooksBossBoss01516_800C18F0(void) {
   D_801463A4 =
       initModeTuple510Or520ByFlagBitTwoSetScenarioProgress4BBossBoss01516_800C1930;
-  D_801463A8 = invokeHelperArgBossBoss01516_800C197C;
+  D_801463A8 = invokeHelperArg;
   D_801463AC = (Boss01516Handler)zeroResultBoss015_800C1928;
 }

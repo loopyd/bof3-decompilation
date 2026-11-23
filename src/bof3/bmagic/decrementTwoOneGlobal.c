@@ -21,7 +21,7 @@ void func_801E5988(void);
 /* @source 0x801F0638
  * @behavior Entry 2 of the three-entry handler table at 0x801F0A2C that this
  *           overlay's work-byte-2 dispatcher
- *           dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478
+ *           dispatchByte2DrawActive
  *           indexes with the scratchpad work object's byte 0x2, so no jal in
  *           this payload reaches this address; the table words
  *           0x801F04F0/0x801F05AC/0x801F0638 are the three state blocks that

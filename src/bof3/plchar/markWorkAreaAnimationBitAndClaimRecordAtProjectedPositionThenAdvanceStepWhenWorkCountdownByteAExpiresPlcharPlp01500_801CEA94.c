@@ -44,13 +44,13 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
 /* Record claim of this same payload, carried by the exact lift of its own row in
  * this target: it sign-extends both arguments through `sll` plus `sra` in its own
  * prologue, asks the shared map probe func_80166CB0 for the cell code, claims
- * through claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp01500_801CEF14
+ * through claimRecordDistance
  * and answers one when the claim succeeded and zero when it did not. This body
  * narrows both coordinates to the signed cell pair it passes, so it declares the
  * same pair-of-signed-cells prototype the other lifts of this family declare for
  * their own payload's claim, whose bytes are the same at the same offset.
  */
-u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01500_801CED1C(
+u8 claimMapCodeCue(
     s16 x, s16 y);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
@@ -72,7 +72,7 @@ u8 func_8014DAEC(void);
  *           work record through the column base 0x801468FC and the slot stride
  *           0x98. It then claims a map cell record at the projected point
  *           through
- *           claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01500_801CED1C,
+ *           claimMapCodeCue,
  *           passing the high half of each projected word:
  *           when that claim fails and the first word has a nonzero low half it
  *           retries one unit further on that axis, and when the retry also fails
@@ -99,5 +99,5 @@ PLCHAR_DEFINE_COUNTDOWN_PROJECTED_CELL_CLAIM(
     markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp01500_801CEA94,
     D_1F800044, D_80181B94, D_80181B98, D_801468FC,
     func_801BDE14,
-    claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01500_801CED1C,
+    claimMapCodeCue,
     func_8014DAEC)

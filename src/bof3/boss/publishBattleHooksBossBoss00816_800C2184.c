@@ -8,7 +8,7 @@ void initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C
     void);
 void setupBattleWorkRecordForOwnerTwoThenSetWorkByte2AAndCopyHalfwordPair58And5ABossBoss00816_800C2210(
     void);
-s32  zeroResultBossBoss00816_800C21BC(void);
+s32  zeroResult3(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -33,5 +33,5 @@ void publishBattleHooksBossBoss00816_800C2184(void) {
   D_801463A4 = initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C4;
   D_801463A8 =
       setupBattleWorkRecordForOwnerTwoThenSetWorkByte2AAndCopyHalfwordPair58And5ABossBoss00816_800C2210;
-  D_801463AC = (Boss00816Handler)zeroResultBossBoss00816_800C21BC;
+  D_801463AC = (Boss00816Handler)zeroResult3;
 }

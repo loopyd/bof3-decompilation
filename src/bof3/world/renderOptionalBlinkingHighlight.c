@@ -18,7 +18,7 @@ void renderOptionalBlinkingHighlight(s16 x, s16 y, u8 width, s8 uOffset, u8 draw
   s32  cellWidth;
 
   submitTpageDrawMode(0, drawMode);
-  sprite = appendIndexedSpriteWorld00Area03004(0x1C, drawMode, x, y);
+  sprite = appendIndexedSprite(0x1C, drawMode, x, y);
   cellWidth = width & 0xFF;
   *(volatile u16*)(sprite + 0x10u) = (u16)cellWidth;
   sprite[0x0Cu] = (u8)(sprite[0x0Cu] + uOffset);

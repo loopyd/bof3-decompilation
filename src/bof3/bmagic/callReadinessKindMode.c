@@ -26,7 +26,7 @@ void func_800AFC98(s32 arg0, s32 arg1);
  * @behavior Step handler of this overlay's work-byte-2 handler run: it is entry
  *           1 of the four-word run at 0x801EEC18 (0x801EF9A0, 0x801EF9E8,
  *           0x801EFA70, 0x801EFAD4) that the dispatcher
- *           dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00403_801EF910
+ *           dispatchWorkByte2Service
  *           copies into its frame and indexes with scratchpad work-object byte
  *           2, so the body runs while work byte 2 is 1 and no jal in this
  *           payload names it. It first runs the shared readiness helper

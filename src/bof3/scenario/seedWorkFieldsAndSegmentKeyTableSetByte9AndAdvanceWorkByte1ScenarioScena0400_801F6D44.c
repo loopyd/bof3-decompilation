@@ -8,7 +8,7 @@ void seedSegmentKeyTableAt801FA2C0ScenarioScena0400_801F747C(void);
 /* @source 0x801F6D44
  * @behavior Step-0 handler of this overlay's work-byte-1 handler run at
  *           0x801FA180: word 0 of the nine entries 0x801F6D44 through
- *           0x801F7A64 that dispatchWorkByte1HandlerScenarioScena0400_801F6D00
+ *           0x801F7A64 that callWorkStepHandler
  *           indexes with that work byte, and reached in image only through that
  *           indirect call. It loads the work-object pointer from the scratchpad
  *           cell 0x1F800044, stamps ten words into it, calls the segment-key

@@ -14,7 +14,7 @@ typedef struct Area030BounceStepRecord {
   u8 mode;
 } Area030BounceStepRecord;
 
-extern Area030BounceStepRecord bounceStepRecordTableWorld00Area03004_801E2008[]; /* @source 0x801E2008 @kind table */
+extern Area030BounceStepRecord bounceStepRecordTable[]; /* @source 0x801E2008 @kind table */
 
 /* The AREA030 scratch work record viewed at the three offsets this handler
  * re-seeds, proven by its own stores: the work byte 6 readout counter, the work
@@ -45,7 +45,7 @@ typedef struct Area030BounceStepState {
  * advances work byte 0xA. Every call then runs queueUnprojectedActiveWork,
  * submits texture-page draw mode 0/1 and appends the sprites (0x15, 1, 0x32,
  * 0x7A), (0x16, 1, 0xBC, 0x7A) and (0x10, 1, 0x36, 0x80) through
- * appendIndexedSpriteWorld00Area03004. The stepped-from record's mode byte
+ * appendIndexedSprite. The stepped-from record's mode byte
  * then drives the animation: mode 0 moves the width by the sign-carrying delta
  * and reflects it at 0 and 0x60 (the delta is negated at either end, so the
  * bar bounces), while mode 1 advances work byte 6 once every other frame.
@@ -85,12 +85,12 @@ void stateBouncingGradientBar(void) {
   work = D_1F800044;
   if (work[9] == 0) {
     step = work[0xA];
-    if (bounceStepRecordTableWorld00Area03004_801E2008[step].resource == 0xFF) {
+    if (bounceStepRecordTable[step].resource == 0xFF) {
       s32 delta;
       do {
         delta = 4;
       } while (0);
-      work[0xA] = bounceStepRecordTableWorld00Area03004_801E2008[step].countdown;
+      work[0xA] = bounceStepRecordTable[step].countdown;
       state = (Area030BounceStepState*)D_1F800044;
       state->width_0C = 0;
       state->delta_18 = delta;
@@ -98,10 +98,10 @@ void stateBouncingGradientBar(void) {
     }
     cursor = D_1F800044;
     selectActiveWorkSequence(
-        bounceStepRecordTableWorld00Area03004_801E2008[cursor[0xA]].resource);
+        bounceStepRecordTable[cursor[0xA]].resource);
     reload = D_1F800044;
     reload[9] =
-        bounceStepRecordTableWorld00Area03004_801E2008[reload[0xA]].countdown;
+        bounceStepRecordTable[reload[0xA]].countdown;
     next = D_1F800044;
     next[0xA] = next[0xA] + 1;
   } else {
@@ -111,12 +111,12 @@ void stateBouncingGradientBar(void) {
 
   queueUnprojectedActiveWork();
   submitTpageDrawMode(0, 1);
-  appendIndexedSpriteWorld00Area03004(0x15, 1, 0x32, 0x7A);
-  appendIndexedSpriteWorld00Area03004(0x16, 1, 0xBC, 0x7A);
-  appendIndexedSpriteWorld00Area03004(0x10, 1, 0x36, 0x80);
+  appendIndexedSprite(0x15, 1, 0x32, 0x7A);
+  appendIndexedSprite(0x16, 1, 0xBC, 0x7A);
+  appendIndexedSprite(0x10, 1, 0x36, 0x80);
 
   stepped = D_1F800044;
-  mode = bounceStepRecordTableWorld00Area03004_801E2008[stepped[0xA] - 1].mode;
+  mode = bounceStepRecordTable[stepped[0xA] - 1].mode;
   if (mode == 0) {
     width = *(s32*)(stepped + 0x0C) + *(s32*)(stepped + 0x18);
     *(s32*)(stepped + 0x0C) = width;

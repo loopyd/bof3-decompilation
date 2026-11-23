@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
-forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04403_801EEDA0 = 0x801EEDA0;
+forwardBattleFlagZero = 0x801EEDA0;
 dispatchStateByte1Table0a14BmagicMagic04403_801EEE00 = 0x801EEE00;
 callHandlerDrawBmagic = 0x801EEE44;
 stateBattlerClassHeading = 0x801EEEFC;
@@ -12,7 +12,7 @@ func_801EF4E0 = 0x801EF4E0;
 renderAlongQuarterTwelve = 0x801EFA4C;
 func_801F02A0 = 0x801F02A0;
 insertEmptyShiftUp = 0x801F0390;
-dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478 = 0x801F0478;
+dispatchByte2DrawActive = 0x801F0478;
 callSeedRandomReset = 0x801F04F0;
 consumeRandomDecayBmagic = 0x801F05AC;
 decrementTwoOneGlobal = 0x801F0638;

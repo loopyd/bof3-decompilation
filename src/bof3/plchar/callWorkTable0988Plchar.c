@@ -7,7 +7,7 @@
  * referenced here. This dispatcher indexes it from its first word, so its base is
  * entry 0 and the entries it can reach are entry 0 = 0x801CE448 through entry 29
  * = 0x801CFED8. */
-extern void (*T_801D0988[])(void); /* @source 0x801D0988 @kind data */
+extern void (*codePointerTable0988[])(void); /* @source 0x801D0988 @kind data */
 
 /* Seeded from this target's own exact byte-2 dispatchers, carried by the shared
  * macro in include/bof3/emi/dispatchers.h: the 68 bytes at offset 4 agree word for
@@ -33,4 +33,4 @@ extern void (*T_801D0988[])(void); /* @source 0x801D0988 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable0988Plchar, T_801D0988);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable0988Plchar, codePointerTable0988);

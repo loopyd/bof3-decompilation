@@ -12,7 +12,7 @@ extern u8* D_1F800044;
  *           ({0x801F6D44, 0x801F6DD4, 0x801F6EA4, 0x801F6F2C, 0x801F6FF8,
  *           0x801F7064, 0x801F77EC, 0x801F78F4, 0x801F7A64}; the word after
  *           the run at 0x801FA1A4 is 0x00010000), so the dispatcher
- *           dispatchWorkByte1HandlerScenarioScena0400_801F6D00 reaches it only
+ *           callWorkStepHandler reaches it only
  *           through its indirect call, and entry 2 at 0x801F6EA4 arms work byte
  *           9 with 4 before it hands over. It loads the work-object pointer from
  *           the scratchpad cell 0x1F800044 and advances the two words entry 0

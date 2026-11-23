@@ -9,7 +9,7 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind unknown */
 /* Scratchpad work-object pointer cell shared by the battle and bmagic overlays;
  * this target's map binds it at 0x1F800044 as g_battle_work, the name the exact
  * lifts copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603
- * _801F05A4 and add4ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic00603_801F05F4
+ * _801F05A4 and addByteReachAdvance
  * of this same target used. The original re-materializes the cell with its own
  * lui $vN,0x1F80 / lw $vN,0x44($vN) pair per read, so the cell stays named
  * rather than written as a bare constant, and it needs no volatile: the store

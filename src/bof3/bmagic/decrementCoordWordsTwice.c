@@ -39,7 +39,7 @@ extern BmagicMagic05803EnemyActionRow D_801EB664[]; /* @source 0x801EB664 @kind 
 /* Scratchpad work-object pointer cell at 0x1F800044, bound by this target's own
  * map. This target's other lifts, all measured exact when this seed was written
  * and each reading the same cell once per access group, are
- * clearWorkBytesBmagicMagic05803_801EFE9C,
+ * clearWorkBytesFive,
  * recordWithinPositionRadius and
  * stateWordTripletWord.
  * The original therefore re-materializes the cell address and reloads the work

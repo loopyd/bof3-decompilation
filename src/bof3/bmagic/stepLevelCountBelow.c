@@ -53,7 +53,7 @@ extern void func_800AF4A0(u8 *record, s32 value, s32 extra); /* @source 0x800AF4
  * address through this target's generated undefined-funcs map, so no map row
  * and no target-local name substitution are needed. Its role is not
  * established, so the raw address name stays. The same-target lift
- * invokeHelperBmagicMagic01500_801F1230 calls it as a thin wrapper. */
+ * invokeSharedHelper9 calls it as a thin wrapper. */
 void func_801E5988(void);
 
 /* @source 0x801F0864

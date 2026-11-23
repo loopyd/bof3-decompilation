@@ -36,7 +36,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x800C230C
  * @behavior Battle setup hook of this overlay for owner record 3, published
  * into the shared battle hook slot 0x801463A8 by the exact installer
- * publishBattleHooksBossBoss00816_800C2280; no `jal` in this payload reaches
+ * publishBattleHooks4; no `jal` in this payload reaches
  * it, so the main program calls it through that slot. It clears the 0x40 flag
  * of owner record 3 through func_800AC844, looks the same record up through
  * func_800AC754 and publishes it into the scratchpad work-record cursor

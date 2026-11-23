@@ -40,8 +40,8 @@ segments:
     - '@source: src/bof3/bmagic/magic05903DispatchTables.c'
   - - 1572
     - c
-    - dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224.c'
+    - dispatchByte2DrawSpokes
+    - '@source: src/bof3/bmagic/dispatchByte2DrawSpokes.c'
     - '@behavior: Step handler for state 0 of the overlay work object published at the scratchpad pointer cell 0x1F800044. It reads that object unsigned byte 0x2, scales it by four and calls the handler pointer at that index of the work byte 2 handler table based at 0x801F0670. When the handler returns it re-reads the cell and, only when the record byte 0x0 and the byte 0x2 are both non-zero, calls the projection helper at 0x801EF638, then the sixteen positional draw calls to 0x801EF70C and finally PopMatrix, restoring the GTE stack the projection helper pushed. The first eight draw calls subtract the record byte 0x9 from the base angles 0x00 through 0x38 and mask to the six bit turn with offset 0x20; the next eight subtract twice that byte from the base angles 0x04 through 0x3C and mask to 0x3E with offset 0x50. Each draw re-reads the cell and the byte instead of holding the record pointer across the calls. The 0x18-byte frame only keeps $ra across the indirect call; takes no arguments, returns nothing and reads or writes no other state.'
   - - 2244
     - c
@@ -50,13 +50,13 @@ segments:
     - '@behavior: Step handler published at index 1 of the work byte 2 handler table based at 0x801F066C. It clears work object bytes 0x9 and 0xA with byte-width zero stores through the scratchpad pointer cell at 0x1F800044, re-materializing the cell before each store, then re-reads the cell and adds one to work byte 0x2 at byte width, advancing the byte 0x2 dispatch to the next handler. Leaf with no frame; the closing store sits in the return delay slot. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 2308
     - c
-    - incrementWorkByte9Add2ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801EF504
-    - '@source: src/bof3/bmagic/incrementWorkByte9Add2ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801EF504.c'
+    - incrementPairReachTwenty
+    - '@source: src/bof3/bmagic/incrementPairReachTwenty.c'
     - '@behavior: Per-frame step of an overlay work-object handler. It reads the scratchpad work-object pointer cell at 0x1F800044 once and advances that object unsigned byte 0x9 by one with a byte-width add, then re-reads the cell and adds two to the same object byte 0xA with a byte-width add. It tests the byte it just stored there, truncated to 0xFF in the stored register rather than re-loaded, against 0x20 for equality, and only on that equality re-reads the pointer cell and increments the object byte 0x2 with a byte-width add, advancing to the next byte-0x2 handler step. The function is a leaf with no frame; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 2416
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570.c'
+    - incrementReachA0
+    - '@source: src/bof3/bmagic/incrementReachA0.c'
   - - 2496
     - c
     - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05903_801EF5C0

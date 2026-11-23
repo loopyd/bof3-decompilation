@@ -108,7 +108,7 @@ u8 func_8019601C(void);
 
 /* @source 0x801F817C
  * @behavior Per-frame state-1 handler of this overlay's three-word progress
- *   chain at 0x801FA204, which dispatchProgressHandlerScenarioScena0400_801F8124
+ *   chain at 0x801FA204, which callStateChainHandler
  *   selects with the signed shared scenario state byte D_80146872; the entry-0
  *   sibling advances that byte to 1 and this body closes by storing 2 into it,
  *   so the chain moves from state 1 to state 2. It gates on the shared route
@@ -154,7 +154,7 @@ u8 func_8019601C(void);
  *   $ra, $s1 and $s0.
  *
  * Name evidence: the two exact siblings of this target name the facts this name
- *   rests on. dispatchProgressHandlerScenarioScena0400_801F8124 indexes the
+ *   rests on. callStateChainHandler indexes the
  *   chain table 0x801FA204 with D_80146872 and lists this address as its entry
  *   1, and stateClearSharedByte records that
  *   entry 1 ends by advancing D_80146872 to 2; both dispatch comments and

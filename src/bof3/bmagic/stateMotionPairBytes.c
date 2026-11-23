@@ -6,7 +6,7 @@
  * tests byte 0 bit 0 before dispatching, so the three bytes this body clears
  * are the record's leading state bytes. The base is bound by this target's map
  * row. */
-extern u8 magic00303Records[]; /* @source 0x801F0B38 @kind data */
+extern u8 effectRecordTable[]; /* @source 0x801F0B38 @kind data */
 
 /* Scratchpad work-object pointer cell at 0x1F800044, bound by this target's map
  * row; re-read before each later access group because a store through the
@@ -37,9 +37,9 @@ void stateMotionPairBytes(
   u8* step;
 
   for (i = 0, offset = 0; i < 0x20; offset += 0x78, i++) {
-    magic00303Records[offset] = 0;
-    magic00303Records[offset + 1] = 0;
-    magic00303Records[offset + 2] = 0;
+    effectRecordTable[offset] = 0;
+    effectRecordTable[offset + 1] = 0;
+    effectRecordTable[offset + 2] = 0;
   }
   work = g_battle_work;
   *(u16*)(work + 0x2E) = 0xA0;

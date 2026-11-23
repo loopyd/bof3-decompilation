@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 /* This overlay's handler run at 0x801CFEDC: twenty-three code pointers spanning
- * the two `textbin` rows that follow this dispatcher, `T_801CFEDC`
+ * the two `textbin` rows that follow this dispatcher, `codePointerTablefedc`
  * (0x801CFEDC through 0x801CFF18) and `T_801CFF1C` (0x801CFF1C through
  * 0x801CFF34), holding entry 0 = 0x801CE448 through entry 22 = 0x801CF42C: this
  * payload's own functions plus the shared main-executable handler 0x801B2D54 at

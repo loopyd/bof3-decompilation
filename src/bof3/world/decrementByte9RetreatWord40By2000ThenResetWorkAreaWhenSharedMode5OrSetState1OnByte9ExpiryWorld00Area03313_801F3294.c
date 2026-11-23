@@ -23,7 +23,7 @@ extern u8 D_80143BB0; /* @source 0x80143BB0 @kind data */
 
 /* The local seeder at 0x801F3334 writes 0xA0 to work halfword 0x2E and 0x50 to
  * work halfword 0x30 and takes no arguments. */
-void setWorkHalfwordsWorld00Area03313_801F3334(void);
+void stateSeedWorkHalfwords(void);
 
 /* Shared work-area reset at 0x80196070: clears the scratchpad game work-area
  * header bytes 0x00, 0x01, 0x02 and 0x03..0x04. */
@@ -55,7 +55,7 @@ void decrementByte9RetreatWord40By2000ThenResetWorkAreaWhenSharedMode5OrSetState
   Area03313WorkRecord* work;
   Area03313WorkRecord* state;
 
-  setWorkHalfwordsWorld00Area03313_801F3334();
+  stateSeedWorkHalfwords();
   work = D_1F800044;
   work->unk_09--;
   work->unk_40 -= 0x2000;

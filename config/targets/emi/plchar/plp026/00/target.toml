@@ -8,32 +8,32 @@ splat = "config/targets/emi/plchar/plp026/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/dispatchStateByte2Table0a78PlcharPlp02600_801CF338.c",
+    "src/bof3/plchar/dispatchByte2Table0a78.c",
 ]
 support_sources = [
     "src/bof3/plchar/callStateTable0Plchar.c",
     "src/bof3/plchar/dispatchStateByte2Table0a60PlcharPlp02600_801CE72C.c",
     "src/bof3/plchar/dispatchStateByte2Table0a6cPlcharPlp02600_801CF12C.c",
-    "src/bof3/plchar/dispatchStateByte2Table0a80PlcharPlp02600_801CF924.c",
+    "src/bof3/plchar/dispatchByte2Table0a80.c",
     "src/bof3/plchar/dispatchStateByte2Table0a8cPlcharPlp02600_801CFB50.c",
-    "src/bof3/plchar/dispatchStateByte3Table0a94PlcharPlp02600_801CFB94.c",
-    "src/bof3/plchar/dispatchStateByte3Table0aa8PlcharPlp02600_801D0440.c",
+    "src/bof3/plchar/dispatchByte3Table0a94.c",
+    "src/bof3/plchar/dispatchByte3Table0aa8.c",
     "src/bof3/plchar/invokeHelperPlcharPlp02600_801CFB30.c",
     "src/bof3/plchar/callWorkTable0Plchar.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable0ac0PlcharPlp02600_801D0A10.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp02600_801D00B4.c",
-    "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp02600_801D0484.c",
-    "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp02600_801D0628.c",
+    "src/bof3/plchar/refreshSelectSequence.c",
+    "src/bof3/plchar/clearUnseededWorkRow.c",
     "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp02600_801CFBD8.c",
     "src/bof3/support/plp026_00_psyq.c",
     "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp02600_801D0054.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp02600_801D0354.c",
     "src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp02600_801D04F0.c",
     "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp02600_801CEC30.c",
-    "src/bof3/plchar/claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868.c",
+    "src/bof3/plchar/claimWorkTwoLayer.c",
     "src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp02600_801CFF24.c",
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodesF0F1F4F6F7PlcharPlp02600_801D06C4.c",
-    "src/bof3/plchar/queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp02600_801CFCD8.c",
+    "src/bof3/plchar/queueCueSeedRow.c",
     "src/bof3/plchar/claimCodesStageName.c",
 ]
 psyq_source = "src/bof3/support/plp026_00_psyq.c"

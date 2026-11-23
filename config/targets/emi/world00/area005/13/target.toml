@@ -8,12 +8,12 @@ splat = "config/targets/emi/world00/area005/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/setStatusFFFFAndScenarioProgress64Or65ByGateWorld00Area00513_801F2C04.c",
-    "src/bof3/world/setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area00513_801F2C44.c",
+    "src/bof3/world/stateScenario64Gate.c",
+    "src/bof3/world/stateScenarioC8Gate.c",
 ]
 support_sources = [
     "src/bof3/world/publishModeStatusTable3.c",
-    "src/bof3/world/publishModeStatusFromTable3adcWorld00Area00513_801F2CB0.c",
+    "src/bof3/world/publishModeStatusTable.c",
     "src/bof3/support/area005_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area005_13_psyq.c"

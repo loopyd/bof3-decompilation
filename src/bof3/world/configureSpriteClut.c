@@ -13,7 +13,7 @@ void configureSpriteClut(s16 x, s16 y, u8 packedSelector) {
   u8* sprite;
 
   submitTpageDrawMode(1, 1);
-  sprite = appendIndexedSpriteWorld00Area03004(2, 1, x, y);
+  sprite = appendIndexedSprite(2, 1, x, y);
   sprite_index = packedSelector & 0xff;
   if (sprite_index != 0xff) {
     clut = (u16)(((packedSelector >> 4) + 0x1eb) << 6);

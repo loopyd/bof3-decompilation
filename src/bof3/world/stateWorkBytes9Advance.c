@@ -3,7 +3,7 @@
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* @behavior entry 1 of the local handler table at 0x801E1D80, which the
- *           dispatcher dispatchStateByte1Table1d80World00Area03004 indexes with the work record's unsigned step
+ *           dispatcher dispatchByte1Table1d80 indexes with the work record's unsigned step
  *           byte at +0x1: it clears the work record's unsigned bytes at +0x9,
  *           +0xA and +0xB and the halfword at +0x30, then increments that step
  *           byte, so the next frame dispatches the following entry

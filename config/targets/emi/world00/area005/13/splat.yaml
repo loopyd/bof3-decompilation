@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatusFFFFAndScenarioProgress64Or65ByGateWorld00Area00513_801F2C04
-    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress64Or65ByGateWorld00Area00513_801F2C04.c'
+    - stateScenario64Gate
+    - '@source: src/bof3/world/stateScenario64Gate.c'
     - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword at 0x801490A8, then stores 0x64 into the shared scenario progress byte at 0x80146864 when the gate byte reads 0 and 0x65 when it reads 1, leaving that byte untouched for any other gate value.'
   - - 68
     - c
-    - setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area00513_801F2C44
-    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area00513_801F2C44.c'
+    - stateScenarioC8Gate
+    - '@source: src/bof3/world/stateScenarioC8Gate.c'
     - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword at 0x801490A8, then stores 0xC8 into the shared scenario progress byte at 0x80146864 when the gate byte reads 0 and 0xC9 when it reads 1, leaving that byte untouched for any other gate value.'
   - - 132
     - c
@@ -42,8 +42,8 @@ segments:
     - '@behavior: selects the halfword indexed by the signed shared mode byte at 0x801490C7 from the target-local halfword table at 0x801F3AD4 and publishes it into the shared status halfword at 0x801490A8.'
   - - 176
     - c
-    - publishModeStatusFromTable3adcWorld00Area00513_801F2CB0
-    - '@source: src/bof3/world/publishModeStatusFromTable3adcWorld00Area00513_801F2CB0.c'
+    - publishModeStatusTable
+    - '@source: src/bof3/world/publishModeStatusTable.c'
     - '@behavior: selects the halfword indexed by the signed shared mode byte at 0x801490C7 from the target-local halfword table at 0x801F3ADC and publishes it into the shared status halfword at 0x801490A8.'
 - - 220
   - bin

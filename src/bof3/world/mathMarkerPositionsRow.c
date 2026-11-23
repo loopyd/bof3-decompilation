@@ -28,9 +28,9 @@ void mathMarkerPositionsRow(u8 cellVariant) {
 
   queueUnprojectedActiveWork();
   submitTpageDrawMode(0, 1);
-  appendIndexedSpriteWorld00Area03004(0x15, 1, 0x32, 0x96);
-  appendIndexedSpriteWorld00Area03004(0x16, 1, 0xBC, 0x96);
-  appendIndexedSpriteWorld00Area03004(0x11, 1, 0x36, 0x9C);
+  appendIndexedSprite(0x15, 1, 0x32, 0x96);
+  appendIndexedSprite(0x16, 1, 0xBC, 0x96);
+  appendIndexedSprite(0x11, 1, 0x36, 0x9C);
 
   {
     u8* work;

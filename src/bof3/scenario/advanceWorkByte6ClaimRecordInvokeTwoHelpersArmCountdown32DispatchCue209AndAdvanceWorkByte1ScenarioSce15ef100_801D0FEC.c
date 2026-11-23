@@ -40,7 +40,7 @@ void renderEffectRecordsScenario(void);
  *
  * Name evidence: the only in-image reference to 0x801D0FEC is word 5 of the
  * ten-word run at 0x801D3918, which the exact dispatcher
- * dispatchWorkByte1HandlerScenarioSce15ef100_801D2170 indexes with work byte
+ * callPatternBlinkStep indexes with work byte
  * +0x1; there is no jal caller, which is the dispatch shape rather than missing
  * evidence. The advance-claim-arm-cue roles come from this body's own literals
  * and offsets and from the field roles the already-reviewed entries of the same

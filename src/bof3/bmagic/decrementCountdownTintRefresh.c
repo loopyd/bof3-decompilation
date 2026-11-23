@@ -27,7 +27,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 /* @source 0x801EFFC0
  * @behavior Entry 20 of this overlay's header handler table, the code-pointer
  *           run that starts at 0x801EEC04 and stores this function's address at
- *           0x801EEC54, between invokeHelperBmagicMagic01500_801EFEFC and
+ *           0x801EEC54, between invokeSharedHelper8 and
  *           func_801F014C. It reads the scratchpad work-object pointer cell at
  *           0x1F800044 once, decrements the object's countdown byte 9 and
  *           stores it back with sb, keeping the decremented value in a byte

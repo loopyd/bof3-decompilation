@@ -39,8 +39,8 @@ segments:
     - func_801EEE14
   - - 1156
     - c
-    - raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic03803_801EF084
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic03803_801EF084.c'
+    - raiseFlag4ZeroCall
+    - '@source: src/bof3/bmagic/raiseFlag4ZeroCall.c'
     - '@behavior: Overlay work-byte-1 handler, entry 2 of the three-entry code pointer run at 0x801EEC04 (0x801EEC70, 0x801EEE14, 0x801EF084) that 0x801EEC10 copies into its frame and selects with the work object byte 1. Reads the scratchpad work-object pointer cell at 0x1F800044 once and, only when the work object byte at offset 0xB is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 with a halfword read-modify-write and calls the shared helper at 0x801E5988 with no arguments, the store filling the delay slot; the 0x18-byte frame only keeps $ra across that call.'
   - - 1232
     - c
@@ -66,8 +66,8 @@ segments:
     - func_801EF710
   - - 3204
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic03803_801EF884
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic03803_801EF884.c'
+    - decrementGlobalStep
+    - '@source: src/bof3/bmagic/decrementGlobalStep.c'
     - '@behavior: Work-byte-1 handler, entry 6 of this overlay''s handler-pointer table at 0x801EF9A4: reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record''s byte 0xB by one at byte width with the store filling the call delay slot, then invokes the shared helper at 0x801E5988 unconditionally; takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra across the call.'
   - - 3256
     - c
@@ -75,8 +75,8 @@ segments:
     - '@source: src/bof3/bmagic/magic03803DispatchTables.c'
   - - 3324
     - c
-    - invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic03803_801EF8FC
-    - '@source: src/bof3/bmagic/invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic03803_801EF8FC.c'
+    - callArgsSetStep
+    - '@source: src/bof3/bmagic/callArgsSetStep.c'
     - '@behavior: First step handler of this overlay two-entry work state-byte-2 handler table at 0x801EF9D0 (its first word; 0x801EF8B8 indexes that table with the work record byte 2): reads the scratchpad work record through pointer cell 0x1F800044 once, passes its unsigned byte 4 as the first argument and its unsigned byte 3 as the second to the battle helper at 0x800AEEC8, then stores 1 in the record byte 0xB and increments the unsigned state byte at offset 2 to advance the dispatcher to the second entry at 0x801EF954; takes no arguments and returns nothing.'
   - - 3412
     - c

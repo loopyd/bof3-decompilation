@@ -24,7 +24,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           callStateTable0680Bmagic indexes.
  *           Bytes 0x801F00DC..0x801F012B are byte-identical (one payload cmp of
  *           both 0x50-byte spans) to the exact same-target sibling
- *           incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570,
+ *           incrementReachA0,
  *           whose body spelling this follows with this function's own address.
  * @status exact
  * @match 100.00

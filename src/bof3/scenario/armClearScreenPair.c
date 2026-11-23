@@ -16,7 +16,7 @@
  * setScratchWorkByte9ClearHalf2eAdvanceStateWorld04Area17213_801F3034
  * (0x801F3034 in emi/world04/area172/13) with this entry's countdown store and
  * second halfword clear added; the pointer-cell spelling is the one the exact
- * sibling armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8 in this
+ * sibling stateArmCountdown in this
  * target uses.
  * @status exact
  * @match 100.00

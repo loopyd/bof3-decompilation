@@ -12,7 +12,7 @@ extern u8* D_1F800044;
  * arguments. Its own lift at 0x801D0444 came out exact, and this caller reads no
  * result from $v0.
  */
-void claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444(
+void claimWorkByte2B(
     void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. The ui
@@ -27,7 +27,7 @@ u32 func_8014D8D4(u8 arg0);
  * @behavior Work byte 3 == 0 step of this overlay: entry 0 of the work-byte-3
  *           handler run based at 0x801D0684, whose entries 1 and 2 are
  *           0x801D00CC and 0x801D0204 (the run itself starts at 0x801D0630 and
- *           is the `textbin` row T_801D0630). It first calls the payload
+ *           is the `textbin` row codePointerTable0630). It first calls the payload
  *           helper at 0x801D0444, then takes the work record published at the
  *           scratchpad pointer cell 0x1F800044, reads that record's unsigned
  *           byte 8 and selects the shared work sequence through func_8014D8D4
@@ -49,7 +49,7 @@ u32 func_8014D8D4(u8 arg0);
  */
 void refreshLayersSequenceHalf(
     void) {
-  claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444();
+  claimWorkByte2B();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xA] = 0xB;
   D_1F800044[3] = 1;

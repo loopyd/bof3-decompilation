@@ -52,7 +52,7 @@ extern s16 D_1F80000A; /* @source 0x1F80000A @kind unknown */
  *           its address is the word at 0x801EEC28, entry index 9 of the
  *           twelve-word code-pointer run 0x801EEC04..0x801EEC34. The only
  *           in-payload reader of that run,
- *           dispatchWorkByte1HandlerBmagicMagic03903_801EEC34, copies its first
+ *           dispatchWorkByte1Entry, copies its first
  *           three words into a 0x28-byte frame and indexes them with work byte
  *           0x1, and no jal word of the payload targets 0x801EF584, so this
  *           entry is selected from outside the payload. It reads the scratchpad

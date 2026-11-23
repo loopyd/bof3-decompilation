@@ -73,15 +73,15 @@ segments:
     - stateSharedOneFour
   - - 1988
     - c
-    - setSharedByteOneIfByte80144F5CFourWorld01Area04914_801F33C4
+    - stateSharedByteOne
   - - 2024
     - c
-    - advanceCounterWorld01Area04914_801F33E8
-    - '@source: src/bof3/world/advanceCounterWorld01Area04914_801F33E8.c'
+    - stateAdvanceCounter
+    - '@source: src/bof3/world/stateAdvanceCounter.c'
   - - 2064
     - c
-    - retreatCounterWorld01Area04914_801F3410
-    - '@source: src/bof3/world/retreatCounterWorld01Area04914_801F3410.c'
+    - stateRetreatCounter
+    - '@source: src/bof3/world/stateRetreatCounter.c'
     - '@behavior: Retreats the shared 16-bit overlay counter at 0x8014932A by 0x14 and marks the shared area status byte at 0x80149333 with the constant 2. Takes no arguments and returns nothing.'
   - - 2104
     - c
@@ -93,13 +93,13 @@ segments:
     - '@behavior: Publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte D_80144F5A of this payload''s mode table at 0x801F398C and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2260
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F34D4
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F34D4.c'
+    - publishSecondWorkKind4
+    - '@source: src/bof3/world/publishSecondWorkKind4.c'
     - '@behavior: Publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte D_80144F5B of this payload''s mode table at 0x801F398C and halfwords +0x2E/+0x30 from 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2388
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3554
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3554.c'
+    - publishThirdWorkKind4
+    - '@source: src/bof3/world/publishThirdWorkKind4.c'
     - '@behavior: Publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte of this payload''s mode table at 0x801F398C and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2516
     - c
@@ -113,28 +113,28 @@ segments:
     - '@behavior: Clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884. When the party byte of local work record 0 at 0x80145F09 holds 5, it claims a front-end record slot with 0x8019601C, masks the returned index to a byte and, unless it is 0xFF, marks the selected record of the 0x74-byte stride table at 0x80143FC8 with 1 at +0 and kind 0x6C at +5, then queues front-end cue 0x209 through 0x8015DF18, publishes the shared UI elements (0x0B, 0x55) and (0x0C, 0x55) with size 0xC0 through 0x801A4BC0 and requests primary state 4 and substate 0x1E through 0x80146874/0x80146875 while clearing g_ScenarioProgress; otherwise it only performs the masked store. Takes no arguments and returns nothing.'
   - - 2808
     - c
-    - noopHandlerWorld01Area04914_801F36F8
+    - noopOverlayHandlerOne
   - - 2816
     - c
-    - retreatCounter2By4World01Area04914_801F3700
-    - '@source: src/bof3/world/retreatCounter2By4World01Area04914_801F3700.c'
+    - stateCounterRetreat4
+    - '@source: src/bof3/world/stateCounterRetreat4.c'
   - - 2856
     - c
-    - advanceCounter2By4World01Area04914_801F3728
-    - '@source: src/bof3/world/advanceCounter2By4World01Area04914_801F3728.c'
+    - stateCounterAdvance4
+    - '@source: src/bof3/world/stateCounterAdvance4.c'
     - '@behavior: Overlay counter step: marks the shared counter active by storing 2 into the area status byte at 0x80149333, then advances the halfword counter at 0x8014932A by 0x04.'
   - - 2896
     - c
     - setTwoWorld01Area04914_801F3750
   - - 2924
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area04914_801F376C
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area04914_801F376C.c'
+    - publishThirdWorkKind3
+    - '@source: src/bof3/world/publishThirdWorkKind3.c'
     - '@behavior: Publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte D_80144F5C of this payload''s mode table at 0x801F398C and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 3052
     - c
-    - queueSharedUiElementBlock4DTo4Ex22To25Size0World01Area04914_801F37EC
-    - '@source: src/bof3/world/queueSharedUiElementBlock4DTo4Ex22To25Size0World01Area04914_801F37EC.c'
+    - queueUiBlockEight
+    - '@source: src/bof3/world/queueUiBlockEight.c'
   - - 3204
     - c
     - clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884

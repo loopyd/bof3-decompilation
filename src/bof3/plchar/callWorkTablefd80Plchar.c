@@ -8,7 +8,7 @@
  * run is only referenced here. This dispatcher indexes the run from its first
  * word, so its base is entry 0 and the entries it can reach are entry 0 through
  * entry 15 = 0x801CF938. */
-extern void (*T_801CFD80[])(void); /* @source 0x801CFD80 @kind data */
+extern void (*codePointerTablefd80[])(void); /* @source 0x801CFD80 @kind data */
 
 /* Seeded from the overlay lift of the same body at 0x801CE404 whose own row is
  * the 0x801CF900 handler run: its 68 bytes measured exact, and the two spans
@@ -37,4 +37,4 @@ extern void (*T_801CFD80[])(void); /* @source 0x801CFD80 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefd80Plchar, T_801CFD80);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefd80Plchar, codePointerTablefd80);

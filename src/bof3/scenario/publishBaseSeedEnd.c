@@ -8,7 +8,7 @@ extern u8 D_80145E90[];
  * form so every access re-materialises the cell address, as the original does.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* scenarioScena0100Work;
+extern u8* workObjectPointer;
 /* Front-end record table base and the field bases of its 0x74-byte rows: the
  * original re-materialises `lui at,0x8014` for every store, so each field is
  * addressed as its own absolute symbol rather than through one struct base.
@@ -69,15 +69,15 @@ u8 func_8019601C(void);
 void publishBaseSeedEnd(u8 step) {
   u8* work;
 
-  scenarioScena0100Work = D_80145E90;
-  scenarioScena0100Work[0x0B] = func_8019601C();
+  workObjectPointer = D_80145E90;
+  workObjectPointer[0x0B] = func_8019601C();
 
-  if (scenarioScena0100Work[0x0B] != 0xFFu) {
-    D_80143FC8[(u32)scenarioScena0100Work[0x0B] * 0x74u] = 1u;
-    D_80143FCD[(u32)scenarioScena0100Work[0x0B] * 0x74u] = 6u;
-    D_80143FCE[(u32)scenarioScena0100Work[0x0B] * 0x74u] = (u8)(step + 0x70u);
+  if (workObjectPointer[0x0B] != 0xFFu) {
+    D_80143FC8[(u32)workObjectPointer[0x0B] * 0x74u] = 1u;
+    D_80143FCD[(u32)workObjectPointer[0x0B] * 0x74u] = 6u;
+    D_80143FCE[(u32)workObjectPointer[0x0B] * 0x74u] = (u8)(step + 0x70u);
 
-    work = scenarioScena0100Work;
+    work = workObjectPointer;
     *(u32*)(D_80143FD4 + (u32)work[0x0B] * 0x74u) = 0u;
     *(u32*)(D_80143FD8 + (u32)work[0x0B] * 0x74u) = D_801FE280[D_80144F5A];
     *(u16*)(D_80143FF6 + (u32)work[0x0B] * 0x74u) = *(u16*)(work + 0x2E);
