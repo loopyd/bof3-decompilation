@@ -122,8 +122,10 @@ segments:
     - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte0BWorld00Area03713_801F3A34.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xB into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3692
-    - asm
-    - func_801F3A6C
+    - c
+    - initFrontendStateSelector4AndSecondStateByte0CWorld00Area03713_801F3A6C
+    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte0CWorld00Area03713_801F3A6C.c'
+    - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xC into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3748
     - asm
     - func_801F3AA4

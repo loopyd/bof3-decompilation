@@ -12,6 +12,7 @@ sources = [
     "src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusEightTintedGreyByWorkByte9TimesTwelveWithRimFromSignedBytes5d5e5fTimesWorkByte9BmagicMagic16903_801EFE3C.c",
     "src/bof3/bmagic/decrementWorkByte9ThenAdvanceWorkByte1OnZeroWhenWorkByteBZeroBmagicMagic16903_801EEFE0.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16903_801F0368.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16903_801EF03C.c",
 ]
 support_sources = [
     "src/bof3/bmagic/growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic16903_801EFBC4.c",

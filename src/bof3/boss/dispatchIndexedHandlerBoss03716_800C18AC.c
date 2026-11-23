@@ -18,7 +18,9 @@ extern Boss03716Handler D_800C19D4[]; /* @source 0x800C19D4 @kind data */
  * index shift and after the table load stay nops. It reads no state and writes
  * none; the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No
  * `jal` and no payload word names 0x800C18AC: the only in-payload reference is
- * the address the step-setup publisher func_800C1848 stores into +0xE4 of the
+ * the address the step-setup publisher
+ * publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03716_800C1848
+ * stores into +0xE4 of the
  * current enemy work record it loads from 0x801EB4E8, so whoever calls that
  * stored slot supplies the index and this function's argument role stays
  * structural. The body is instruction-for-instruction the same shape as the

@@ -1,5 +1,5 @@
 dispatchStateByte1Table1b30BossBoss04016_800C1804 = 0x800C1804;
-func_800C1848 = 0x800C1848;
+publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss04016_800C1848 = 0x800C1848;
 dispatchIndexedHandlerBossBoss04016_800C18AC = 0x800C18AC;
 noopHandlerBossBoss04016_800C18E4 = 0x800C18E4;
 noopHandlerBossBoss04016_800C18EC = 0x800C18EC;

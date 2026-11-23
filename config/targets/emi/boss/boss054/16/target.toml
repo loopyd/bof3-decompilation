@@ -12,6 +12,8 @@ sources = [
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress32BossBoss05416_800C1970.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss05416_800C18E0.c",
     "src/bof3/boss/dispatchStateByte1Table1804BossBoss05416_800C19C4.c",
+    "src/bof3/boss/raiseFlag4AndInvokeHelperBossBoss05416_800C1CFC.c",
+    "src/bof3/boss/publishSavedWorkPointerSelectSequence2RestorePreviousThenSetWorkWordCTo8AndAdvanceStateByte1BossBoss05416_800C1A54.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchStateByte1LocalHandlerBossBoss05416_800C1D30.c",

@@ -26,6 +26,7 @@ sources = [
     "src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC46C.c",
     "src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC688.c",
     "src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC3B4.c",
+    "src/bof3/scenario/setProgress14Substate14ClearSharedBytes6566AndRequestPrimaryState2ScenarioScena0200_801FD3BC.c",
 ]
 support_sources = [
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19ScenarioScena0200_801FD5A8.c",

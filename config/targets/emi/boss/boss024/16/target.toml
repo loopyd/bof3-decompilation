@@ -13,6 +13,7 @@ sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss02416_800C1998.c",
     "src/bof3/boss/dispatchStateByte1Table1b94BossBoss02416_800C18F0.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02416_800C1848.c",
+    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss02416_800C1934.c",
 ]
 support_sources = [
     "src/bof3/boss/publishBattleHooksBossBoss02416_800C1AB0.c",

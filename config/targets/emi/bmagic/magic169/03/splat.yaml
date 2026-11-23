@@ -46,8 +46,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenAdvanceWorkByte1OnZeroWhenWorkByteBZeroBmagicMagic16903_801EEFE0.c'
     - '@behavior: Step index 2 of this overlay: returns immediately when work byte 0xB is non-zero, otherwise decrements work byte 9 and, when the stored byte reaches zero, reloads the scratchpad work pointer at 0x1F800044 and advances work byte 1.'
   - - 1084
-    - asm
-    - func_801EF03C
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic16903_801EF03C
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16903_801EF03C.c'
+    - '@behavior: Entry stage 3 of this overlay: raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword read-modify-write and invokes the shared helper at 0x801E5988 with no arguments.'
   - - 1136
     - asm
     - func_801EF070
