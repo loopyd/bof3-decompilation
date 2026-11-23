@@ -6,7 +6,7 @@ advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16913_801F2F68
 func_801F3078 = 0x801F3078;
 drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8 = 0x801F30E8;
 func_801F3404 = 0x801F3404;
-func_801F3524 = 0x801F3524;
+clearSharedFlag74WhenFrontSideByteIsNot1World04Area16913_801F3524 = 0x801F3524;
 findWorkPositionBoundsIndexWorld04Area16913_801F355C = 0x801F355C;
 func_801F3628 = 0x801F3628;
 func_801F390C = 0x801F390C;

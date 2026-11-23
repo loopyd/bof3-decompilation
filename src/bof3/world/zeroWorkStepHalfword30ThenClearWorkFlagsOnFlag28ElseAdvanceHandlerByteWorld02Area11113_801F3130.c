@@ -33,7 +33,7 @@ void func_801F3244(void);
  * issues in that delay slot; the flag is the `lui/addiu $a0, %hi(D_80144F28)`
  * plus `addiu $a1, $zero, 0x28` argument pair; the reset helper at 0x80196070
  * is the already-lifted clearWorkFlags body; the increment and draw pair is
- * the shape of the unlifted handler 1 at 0x801F319C, which tests the same
+ * the shape of the handler 1 at 0x801F319C, which tests the same
  * flag with the same index; and the dispatch byte 0x02 with the three
  * in-payload pointers 0x801F3130/0x801F319C/0x801F31F0 at 0x801F489C,
  * 0x801F48A0 and 0x801F48A4 make this entry 0 of that table.

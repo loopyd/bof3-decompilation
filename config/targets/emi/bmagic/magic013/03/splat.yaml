@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801EEEA0
   - - 900
-    - asm
-    - func_801EEF84
+    - c
+    - raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic01303_801EEF84
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic01303_801EEF84.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, before the 0x18-byte frame is created, and, only when the work object''s byte at offset 0xB is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments. The halfword store lands in the call''s delay slot, nothing is returned and the frame only keeps $ra.'
   - - 976
     - c
     - dispatchStateByte1Table03bcBmagicMagic01303_801EEFD0

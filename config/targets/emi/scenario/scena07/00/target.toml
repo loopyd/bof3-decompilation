@@ -27,6 +27,7 @@ sources = [
     "src/bof3/scenario/clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358.c",
     "src/bof3/scenario/tickObjectRampByStepTableDrawQuadArmCountdownAndAdvanceHandlerScenarioScena0700_801F76D0.c",
     "src/bof3/scenario/claimStepCountWorkRecordsRampDrawBoundEverySixteenthCountdownStepTickWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7480.c",
+    "src/bof3/scenario/drawSemiTransparentQuadsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0700_801F7DDC.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c",

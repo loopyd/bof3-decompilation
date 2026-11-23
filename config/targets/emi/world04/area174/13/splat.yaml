@@ -187,8 +187,10 @@ segments:
     - '@source: src/bof3/world/decrementScratchWorkLevelTripleBy4OrSetFlag40World04Area17413_801F4C68.c'
     - '@behavior: Steps the scratch work record published at 0x1F800044 one more frame: halfword 0x3E += 8, then either level bytes 0x5D/0x5E/0x5F -= 4 plus halfword 0x0A of 0x80148210 -= 2, or, at level byte 0x5D == -0x80, flag bit 0x40 of byte 0 and work byte 4 = 0.'
   - - 8476
-    - asm
-    - func_801F4D1C
+    - c
+    - invokeHelperWithWorkWhenSharedFrontEndPhaseByte5World04Area17413_801F4D1C
+    - '@source: src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5World04Area17413_801F4D1C.c'
+    - '@behavior: State handler of this overlay, reached only through the code pointer word 0x801F6654, entry 17 of the dispatch table this overlay places at 0x801F6610 inside its textbin blob, so no jal in the payload names it. When the shared front-end phase byte at 0x80143BB0 reads 5 it passes the work record the scratchpad pointer cell 0x1F800044 holds to the main-executable helper 0x8014E4BC as its only argument; any other value leaves the record untouched. The guard is the body''s only test and the call its only effect, and the 0x18-byte frame only keeps $ra at 0x10 across that call. Takes no arguments and returns nothing.'
   - - 8532
     - c
     - passPaletteRowSelectedByWorkByte5ToPaletteBlockHelperFlag1World04Area17413_801F4D54

@@ -18,6 +18,7 @@ sources = [
     "src/bof3/world/clearSharedFlagBit46ThenClearOverlayStateByteWorld04Area16713_801F3F28.c",
     "src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall31bcWorld04Area16713_801F2FE0.c",
     "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowUnlessSharedOverlayStateByteIs20World04Area16713_801F38F0.c",
+    "src/bof3/world/advanceHalfword0aBy3WhenSharedFlag4bClearWorld04Area16713_801F40F4.c",
 ]
 support_sources = [
     "src/bof3/world/advanceHalfword0aBy3InFrontByte1OrUngated2World04Area16713_801F43B8.c",

@@ -120,8 +120,10 @@ segments:
     - asm
     - func_801F4080
   - - 5364
-    - asm
-    - func_801F40F4
+    - c
+    - advanceHalfword0aBy3WhenSharedFlag4bClearWorld04Area16713_801F40F4
+    - '@source: src/bof3/world/advanceHalfword0aBy3WhenSharedFlag4bClearWorld04Area16713_801F40F4.c'
+    - '@behavior: Entry 9 of the 25-entry overlay handler table at 0x801F6830 of this payload, published by the word at 0x801F6854. Probes bit 0x4B of the shared main-RAM flag bank 0x80144F28 through the shared flag tester func_8015B5D4 and, only while that bit reads clear, adds 3 to the published halfword +0x0A of the front-end record reached through the pointer cell 0x80148210. A set bit leaves the record untouched and returns at once. Takes no arguments and returns nothing; the 0x18-byte frame holds only the return address, and no jal in this payload reaches the span.'
   - - 5440
     - asm
     - func_801F4140

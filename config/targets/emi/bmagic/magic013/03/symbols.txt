@@ -3,7 +3,7 @@ dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic0
 func_801EED28 = 0x801EED28;
 incrementWorkByte1WhenWorkByteBBelow2BmagicMagic01303_801EEE68 = 0x801EEE68;
 func_801EEEA0 = 0x801EEEA0;
-func_801EEF84 = 0x801EEF84;
+raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic01303_801EEF84 = 0x801EEF84;
 dispatchStateByte1Table03bcBmagicMagic01303_801EEFD0 = 0x801EEFD0;
 func_801EF014 = 0x801EF014;
 T_801EF054 = 0x801EF054;

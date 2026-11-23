@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F3404
   - - 2340
-    - asm
-    - func_801F3524
+    - c
+    - clearSharedFlag74WhenFrontSideByteIsNot1World04Area16913_801F3524
+    - '@source: src/bof3/world/clearSharedFlag74WhenFrontSideByteIsNot1World04Area16913_801F3524.c'
+    - '@behavior: Clear bit 0x74 of the shared main-RAM flag bank at 0x80144F28 through the shared bit-clear helper when the shared front-side byte reads anything other than 1.'
   - - 2396
     - c
     - findWorkPositionBoundsIndexWorld04Area16913_801F355C

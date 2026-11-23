@@ -12,6 +12,7 @@ sources = [
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF5C4.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF888.c",
     "src/bof3/bmagic/seedWorkHeaderAndUnitMotionPairClearTintGroupRequestResource1ThenAdvanceWorkByte2BmagicMagic11503_801EF690.c",
+    "src/bof3/bmagic/seedWorkHeaderFromBattleRecordClearTintGroupRequestResource0SetWorkByte9ThenAdvanceWorkByte2BmagicMagic11503_801EF130.c",
 ]
 support_sources = [
     "src/bof3/support/magic115_03_psyq.c",

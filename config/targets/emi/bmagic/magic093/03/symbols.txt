@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic09303_801EEC04 = 0x801EEC04;
 func_801EED04 = 0x801EED04;
-func_801EF02C = 0x801EF02C;
+raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C = 0x801EF02C;
 dispatchStateByte1Table089cBmagicMagic09303_801EF080 = 0x801EF080;
 dispatchStateByte2Table08a0BmagicMagic09303_801EF0C4 = 0x801EF0C4;
 func_801EF108 = 0x801EF108;

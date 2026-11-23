@@ -35,8 +35,10 @@ segments:
     - asm
     - func_801EED04
   - - 1068
-    - asm
-    - func_801EF02C
+    - c
+    - raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C.c'
+    - '@behavior: Entry 1 of the overlay''s local two-entry handler pair: raises bit 0x4 of the shared halfword at 0x801462E8 and invokes the shared helper when the work object''s word 0x08 masked with 0xFF00FF00 is zero.'
   - - 1152
     - c
     - dispatchStateByte1Table089cBmagicMagic09303_801EF080

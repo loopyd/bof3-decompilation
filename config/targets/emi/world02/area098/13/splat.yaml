@@ -228,8 +228,10 @@ segments:
     - asm
     - func_801F5BA0
   - - 12752
-    - asm
-    - func_801F5DD0
+    - c
+    - queueSharedUiElementBlock4To7x5Size50World02Area09813_801F5DD0
+    - '@source: src/bof3/world/queueSharedUiElementBlock4To7x5Size50World02Area09813_801F5DD0.c'
+    - '@behavior: Queues the four shared UI elements of the horizontal run x = 4..7 at y = 5 through the shared marker queue func_801A4BC0 with size 0x50, one element per iteration of an unsigned byte counter bounded by 4 whose masked value plus 4 is the x argument; it takes no arguments and returns nothing.'
   - - 12828
     - asm
     - func_801F5E1C

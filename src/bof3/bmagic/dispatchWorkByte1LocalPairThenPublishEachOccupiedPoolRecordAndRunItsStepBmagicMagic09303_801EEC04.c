@@ -29,13 +29,14 @@ extern u8 magic09303RecordFlags[]; /* @source 0x801F08D4 @kind data */
 /* Entry 0 of the local pair is this overlay's own leading code body at
  * 0x801EED04, still an `asm` row of this target's Splat: it clears the 32 pool
  * records' bytes 0 through 2 and claims records for this overlay's own setup,
- * advancing work byte 1. Entry 1 is 0x801EF02C, also still `asm` in this target's
- * Splat: it acts when the work object's word 0x08 masked with 0xFF00FF00 is
- * zero, raising bit 0x4 of the halfword at 0x801462E8 and calling func_801E5988.
- * No jal and no pointer word in this payload names 0x801EEC04, so the overlay
- * loader is its only caller and both handler roles stay structural. */
+ * advancing work byte 1. Entry 1 is
+ * raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C, exact
+ * at 0x801EF02C: it acts when the work object's word 0x08 masked with 0xFF00FF00
+ * is zero, raising bit 0x4 of the halfword at 0x801462E8 and calling
+ * func_801E5988. No jal and no pointer word in this payload names 0x801EEC04, so
+ * the overlay loader is its only caller and both handler roles stay structural. */
 void func_801EED04(void);
-void func_801EF02C(void);
+void raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C(void);
 
 /* This target's byte-1 step dispatcher, exact at 0x801EF3D8 through
  * src/bof3/bmagic/magic09303DispatchTables.c: it calls the handler this record's
@@ -64,7 +65,9 @@ void dispatchStateByte1Table08acBmagicMagic09303_801EF3D8(void);
  */
 void dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic09303_801EEC04(
     void) {
-  void (*handlers[2])(void) = {func_801EED04, func_801EF02C};
+  void (*handlers[2])(void) = {
+      func_801EED04,
+      raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C};
   u8 *record;
   u8 *saved_work;
   u8 *saved_pointer;
