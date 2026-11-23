@@ -203,6 +203,9 @@ def _build_preflight(
     ready: list[_Record] = []
     worklist: dict[str, list[_WorkItem]] = {}
     checked: set[Path] = set()
+    # One manifest generation for the whole pass: reloading it per grouped source
+    # re-read and re-hashed every claim file, which dominated `source validate`.
+    current_manifests = load_target_manifests(root)
 
     for target, manifest in manifests:
         source_dir = root / manifest.source_dir
@@ -243,7 +246,6 @@ def _build_preflight(
                 key = ""
                 try:
                     records = parse_function_records(text)
-                    current_manifests = load_target_manifests(root)
                     _validate_grouped_source(
                         root,
                         source,

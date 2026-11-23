@@ -122,9 +122,13 @@ def local_include_files(
     """
     roots = (root, root / "include") if include_roots is None else include_roots
     replacements = {path.resolve(): text for path, text in (replacements or {}).items()}
+    # String prefixes and string identities keep the containment test and the
+    # visited set cheap; building Path parents for every candidate dominated
+    # whole-tree validation.
+    base = root.as_posix().rstrip("/") + "/"
     found: list[Path] = []
     pending = list(seeds)
-    seen = set(pending)
+    seen = {path.as_posix() for path in pending}
     while pending:
         path = pending.pop()
         if path not in replacements and not path.is_file():
@@ -163,12 +167,11 @@ def local_include_files(
                 ),
                 None,
             )
-            if (
-                resolved is not None
-                and root in resolved.parents
-                and resolved not in seen
-            ):
-                seen.add(resolved)
+            if resolved is None:
+                continue
+            key = resolved.as_posix()
+            if key.startswith(base) and key not in seen:
+                seen.add(key)
                 found.append(resolved)
                 pending.append(resolved)
     return found

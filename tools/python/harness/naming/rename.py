@@ -15,6 +15,7 @@ from pathlib import Path
 
 from harness.build.compiler import CONFIGURATION_PATH, sanitize_identifier
 from harness.common.lease import acquire_writer
+from harness.common.lexicon import mask_c_text
 from harness.decomp.consumers import identifier_consumers
 from harness.domain.claims import manifest_header_paths, manifest_source_paths
 from harness.domain.ids import normalize_target_id
@@ -26,6 +27,14 @@ from harness.match.asm_diff import match_target_source
 from .schema import name_report, token_index
 
 CONFIG = Path("config") / "targets"
+_IDENTIFIER = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
+
+# One identifier census per repository keeps a wave from rescanning every claimed
+# source for each rename. A rename only rewrites the owning target, and a foreign
+# reference refuses the rename, so another target's spelling cannot change under
+# the census while this process runs.
+_CENSUS: dict[Path, tuple[dict[str, list[tuple[str, str]]], dict[str, set[str]]]] = {}
+_MEASURED: dict[tuple[str, int, int], dict] = {}
 
 
 def _boundary(name: str) -> re.Pattern[str]:
@@ -48,6 +57,7 @@ class RenamePlan:
     address: int | None = None
     source: Path | None = None
     manifest: object | None = None
+    manifests: dict | None = None
     files: list[Path] = field(default_factory=list)
     renames: list[tuple[Path, Path]] = field(default_factory=list)
     refusals: list[dict] = field(default_factory=list)
@@ -68,7 +78,7 @@ def _resolve(root: Path, target: str, old: str, new: str) -> RenamePlan:
         plan.refuse("target", f"unknown target: {target}")
         return plan
     manifest = manifests[target]
-    plan = RenamePlan(root, target, old, new, manifest=manifest)
+    plan = RenamePlan(root, target, old, new, manifest=manifest, manifests=manifests)
 
     if old == new:
         plan.refuse("no-op", "the old and new spellings are equal")
@@ -178,19 +188,58 @@ def _collect_files(plan: RenamePlan, root: Path, manifest) -> None:
                 )
 
 
+def _census(root: Path, manifests):
+    """Index which target files mention which map name, once per repository.
+
+    Returns ``(mentions, owned)``: the mention index, and each target's own map
+    names, so a duplicated spelling in another target stays a definition rather
+    than becoming a consumer.
+    """
+    cached = _CENSUS.get(root)
+    if cached is not None:
+        return cached
+    names: set[str] = set()
+    owned: dict[str, set[str]] = {}
+    files: list[tuple[str, Path]] = []
+    for owner, manifest in sorted(manifests.items()):
+        owned[owner] = {symbol.name for symbol in load_map(map_path(root, owner))}
+        names.update(owned[owner])
+        for source in (
+            manifest_source_paths(root, manifest)
+            + manifest_header_paths(root, manifest)
+        ):
+            if source.suffix in {".c", ".h"} and source.is_file():
+                files.append((owner, source))
+    rows: dict[str, list[tuple[str, str]]] = {}
+    for owner, source in files:
+        try:
+            tokens = set(_IDENTIFIER.findall(mask_c_text(source.read_text(encoding="utf-8"))))
+        except (OSError, UnicodeError):
+            continue
+        for name in names & tokens:
+            rows.setdefault(name, []).append(
+                (owner, source.relative_to(root).as_posix())
+            )
+    cached = (rows, owned)
+    _CENSUS[root] = cached
+    return cached
+
+
 def _check_consumers(plan: RenamePlan, root: Path, target: str, old: str) -> None:
     try:
-        _, findings = identifier_consumers(root, target, {old})
+        mentions, owned = _census(
+            root, plan.manifests or load_target_manifests(root)
+        )
+        findings = [
+            (owner, source)
+            for owner, source in mentions.get(old, ())
+            if owner != target and old not in owned.get(owner, ())
+        ]
     except (OSError, ValueError, RuntimeError) as error:
         plan.refuse("consumers", f"consumer scan failed: {error}")
         return
-    for finding in findings:
-        if finding.get("code") != "foreign_consumers":
-            continue
-        plan.refuse(
-            "fan-out",
-            f"{finding.get('target')} references {old} in {finding.get('source')}",
-        )
+    for owner, source in findings:
+        plan.refuse("fan-out", f"{owner} references {old} in {source}")
 
 
 def plan_report(root: Path, target: str, old: str, new: str) -> dict:
@@ -213,6 +262,10 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
                 before = _measure(plan, plan.source)
                 wrote = True
                 _write(plan, old, new)
+                # The manifest lists claimed unit paths, so the generation that
+                # describes the renamed tree is the one the proof must read.
+                plan.manifests = load_target_manifests(root)
+                plan.manifest = plan.manifests.get(plan.target) or plan.manifest
                 after = _measure(plan, _source_after(plan))
             except (RuntimeError, ValueError, OSError) as error:
                 if wrote:
@@ -221,12 +274,6 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
                     except (RuntimeError, ValueError, OSError):
                         pass
                 plan.refuse("measure", str(error).strip()[:200])
-                return _payload(root, plan, applied=False, proof=(), attempted=True)
-            try:
-                load_target_manifests(root)
-            except (ValueError, OSError) as error:
-                _write(plan, new, old)
-                plan.refuse("manifests", str(error).strip()[:200])
                 return _payload(root, plan, applied=False, proof=(), attempted=True)
             if before != after:
                 _write(plan, new, old)
@@ -251,16 +298,25 @@ def _source_after(plan: RenamePlan) -> Path | None:
 
 
 def _measure(plan: RenamePlan, source: Path | None) -> dict:
-    """Measure one source; a rename must leave this result identical."""
+    """Measure one source; a rename must leave this result identical.
+
+    A unit measured at the same path, size and mtime is reused: a wave that
+    renames several symbols of one unit compiles that unit once.
+    """
     if source is None or plan.address is None:
         return {"selector": None, "data": True}
+    stat = source.stat()
+    key = (source.as_posix(), stat.st_mtime_ns, stat.st_size)
+    spent = _MEASURED.get(key)
+    if spent is not None:
+        return spent
     # The manifest lists claimed unit paths, so it must describe the tree as it
     # is now: a rename has already moved the file this measurement reads.
-    manifest = load_target_manifests(plan.root).get(plan.target) or plan.manifest
+    manifest = plan.manifest
     payload = match_target_source(
         plan.root, manifest, plan.address, source, diagnostics=False
     )
-    return {
+    result = {
         "selector": f"{plan.target}@0x{plan.address:08X}",
         "exact": bool(payload.get("exact_match")),
         "byte_match": payload.get("byte_match"),
@@ -269,6 +325,10 @@ def _measure(plan: RenamePlan, source: Path | None) -> dict:
         "size_delta": payload.get("size_delta"),
         "status": payload.get("status"),
     }
+    if len(_MEASURED) > 2048:
+        _MEASURED.clear()
+    _MEASURED[key] = result
+    return result
 
 
 def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
