@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/emi/dispatchers.h"
 
 typedef void (*PlcharPlp05600WorkStateHandler)(void);
 
@@ -28,6 +28,4 @@ extern PlcharPlp05600WorkStateHandler func_801D0858[]; /* @source 0x801D0858 @ki
  * @match 100.00
  * @residual none
  */
-void callWorkHandlerPlchar(void) {
-  func_801D0858[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
-}
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkHandlerPlchar, func_801D0858);
