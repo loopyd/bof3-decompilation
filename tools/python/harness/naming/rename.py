@@ -191,9 +191,17 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
         return _payload(root, plan, applied=False, proof=(), attempted=True)
     try:
         with acquire_writer(root):
-            before = _measure(plan, plan.source)
-            _write(plan, old, new)
-            after = _measure(plan, _source_after(plan))
+            wrote = False
+            try:
+                before = _measure(plan, plan.source)
+                _write(plan, old, new)
+                wrote = True
+                after = _measure(plan, _source_after(plan))
+            except (RuntimeError, ValueError, OSError) as error:
+                if wrote:
+                    _write(plan, new, old)
+                plan.refuse("measure", str(error).strip()[:200])
+                return _payload(root, plan, applied=False, proof=(), attempted=True)
             if before != after:
                 _write(plan, new, old)
                 plan.refuse("proof", "the renamed source no longer measures the same")
