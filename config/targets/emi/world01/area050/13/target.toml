@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05013_801F2C60.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05013_801F2C90.c",
     "src/bof3/world/setStatus84AndModeIndex6IfGateElseFFFFWorld01Area05013_801F2CC0.c",
+    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte4World01Area05013_801F2DA0.c",
 ]
 support_sources = [
     "src/bof3/support/area050_13_psyq.c",

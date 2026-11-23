@@ -34,8 +34,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06703_801EEC24.c'
     - '@behavior: Dispatches the work byte at offset 1 of the scratchpad work object through the five-entry code pointer run at 0x801EEC04, copied into the function own frame, and invokes the selected handler with no arguments.'
   - - 148
-    - asm
-    - func_801EEC94
+    - c
+    - setWorkByte9To18ClaimTwoSlotsCopy256HalfwordsWithBit15AndTwo16HalfwordBandsSet80145988ThenCopyActingEnemyHeadWhenKindIs29BmagicMagic06703_801EEC94
+    - '@source: src/bof3/bmagic/setWorkByte9To18ClaimTwoSlotsCopy256HalfwordsWithBit15AndTwo16HalfwordBandsSet80145988ThenCopyActingEnemyHeadWhenKindIs29BmagicMagic06703_801EEC94.c'
+    - '@behavior: Clears work byte 0xB, sets work byte 9 to 0x18 and increments work byte 1, claims two 0x78-byte-stride action slots through the shared allocator at 0x801E590C with class 1 and mode 0x13, stamps slot byte 1 with 0 and 1, copies battle work record byte 8 into the first slot byte 8, publishes the scratchpad work pointer into slot word 0x74 of both, copies 0x100 halfwords from 0x80033C00 to 0x80037C00 with bit 15 set, copies the two 16-halfword bands at 0x80036C00 into 0x8003AC00 and 0x8003AC20, sets the shared byte 0x80145988 to 1, and when the shared byte 0x801462EA is non-zero and the acting enemy record byte at 0x801EB720 equals 0x29 claims one more slot and copies that record 0x74-byte head into it with slot bytes 1, 6, 2, 5 and 9 stamped 3, 1, 0, 0x13 and 0.'
   - - 828
     - c
     - decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic06703_801EEF3C

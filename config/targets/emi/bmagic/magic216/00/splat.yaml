@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EECDC
   - - 856
-    - asm
-    - func_801EEF58
+    - c
+    - raiseFlag4AndInvokeHelperWhenByteC2E4ZeroBmagicMagic21600_801EEF58
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenByteC2E4ZeroBmagicMagic21600_801EEF58.c'
+    - '@behavior: Reads the shared battle byte at 0x801EC2E4 with an unsigned byte load before the 0x18-byte frame is created and, only when that byte is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword read-modify-write and then invokes the shared helper at 0x801E5988. The halfword address stays in one register across the read-modify-write, so it is written through a local pointer; the frame only keeps $ra across the helper call. It takes no arguments, returns nothing and writes no other state. Its address is the third word (index 2) of the three-entry code pointer table at 0x801EEC04, whose words are 0x801EEC70, 0x801EECDC and 0x801EEF58 and which the overlay entry dispatches on unsigned work byte 1.'
   - - 920
     - c
     - copyEquipmentObjectNameBmagicMagic21600_801EEF98

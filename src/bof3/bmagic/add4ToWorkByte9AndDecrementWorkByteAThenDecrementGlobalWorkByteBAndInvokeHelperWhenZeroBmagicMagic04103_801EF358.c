@@ -14,7 +14,8 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Shared battle work record pointer in main RAM, outside this overlay's image.
  * This target's generated undefined_syms_auto.txt already binds the address
- * (the assembly spans func_801EF3D0 and func_801EF670 load it), so the name
+ * (the span func_801EF3D0 and the translucent quad band draw at 0x801EF670 load
+ * it), so the name
  * needs no map row, and every access here is byte-addressed, so the local
  * declaration keeps the byte view only. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */

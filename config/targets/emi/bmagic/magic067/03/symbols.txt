@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
 dispatchWorkByte1HandlerBmagicMagic06703_801EEC24 = 0x801EEC24;
-func_801EEC94 = 0x801EEC94;
+setWorkByte9To18ClaimTwoSlotsCopy256HalfwordsWithBit15AndTwo16HalfwordBandsSet80145988ThenCopyActingEnemyHeadWhenKindIs29BmagicMagic06703_801EEC94 = 0x801EEC94;
 decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic06703_801EEF3C = 0x801EEF3C;
 forwardBattleByteSetWorkByte9To30AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic06703_801EEFA4 = 0x801EEFA4;
 func_801EF010 = 0x801EF010;

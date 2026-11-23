@@ -4,13 +4,14 @@ extern u8 *D_80148648;
 extern u8 D_80146327; /* @source 0x80146327 @kind data */
 extern u8 D_80146354[]; /* @source 0x80146354 @kind data */
 
-/* The overlay panel frame drawer at 0x801F039C: sets the draw mode and the
- * tile for a panel window and draws its border. Its own tile stores place the
- * first argument at tile +0x08, the second plus two at +0x0A, the third at
- * +0x0C and the fourth at +0x0E, so the call passes the panel origin, its
- * width and its height. Still an address-anchored asm span, so it is declared
- * here for its address. */
-extern void func_801F039C(s16 x, s16 y, s32 width, u8 height);
+/* The overlay panel frame drawer at 0x801F039C, lifted as
+ * drawPanelFrameBatlEnd00_801F039C: opens the panel draw mode, fills the window
+ * rectangle with one palette-coloured tile and borders it with a quadrangle and
+ * four flat lines. Its own tile stores place the first argument at tile +0x08,
+ * the third at +0x0C, the second plus two at +0x0A and the fourth at +0x0E, so
+ * the call passes the panel origin, its width and its height. */
+extern void drawPanelFrameBatlEnd00_801F039C(s32 x, s32 y, s32 width,
+                                             s32 height);
 
 /* The overlay per-entry drawer at 0x801F0A74, lifted as
  * drawCountedListEntryBatlEnd00_801F0A74: hands the two halves of the id to
@@ -27,9 +28,9 @@ extern void drawCountedListEntryBatlEnd00_801F0A74(s16 x, s16 y, s32 flags,
 /* @source 0x801F0650
  * @behavior Battle-end panel task handler 1 of the overlay handler run at
  *   0x801EEC28: draws the counted-list panel by calling the overlay frame
- *   drawer func_801F039C with the signed halfwords +0x04 and +0x06 of the
- *   object published at 0x80148648, the width 0x118 and byte +0x09 as the
- *   height, then walks the counted list (length byte at 0x80146327, halfword
+ *   drawer drawPanelFrameBatlEnd00_801F039C with the signed halfwords +0x04
+ *   and +0x06 of the object published at 0x80148648, the width 0x118 and
+ *   byte +0x09 as the height, then walks the counted list (length byte at 0x80146327, halfword
  *   ids at 0x80146334, per-id counts at 0x80146354) and draws every non-zero
  *   id through 0x801F0A74 in two columns: column (index & 1) steps 138
  *   pixels with a 5-pixel inset, row (index >> 1) steps 13 pixels with a
@@ -50,8 +51,9 @@ void drawCountedListPanelBatlEnd00_801F0650(void) {
   s32 x_inset;
   s32 y_inset;
 
-  func_801F039C(*(s16 *)((u8 *)D_80148648 + 4),
-                *(s16 *)((u8 *)D_80148648 + 6), 0x118, ((u8 *)D_80148648)[9]);
+  drawPanelFrameBatlEnd00_801F039C(*(s16 *)((u8 *)D_80148648 + 4),
+                                   *(s16 *)((u8 *)D_80148648 + 6), 0x118,
+                                   ((u8 *)D_80148648)[9]);
 
   count = &D_80146327;
   if (*count == 0) {

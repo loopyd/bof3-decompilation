@@ -22,10 +22,12 @@ extern void (*D_801F0754[])(void); /* @source 0x801F0754 @kind data */
 extern void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410(
     void); /* @source 0x801EF410 @kind function */
 
-/* Draws the work record's effect: reads the graph type, builds its primitives
- * with GetTPage/GetClut/SetDrawMode/SetSemiTrans and RotTransPers4 and emits
- * them through the primitive queue. Still an asm row in this target. */
-extern void func_801EF4C0(void); /* @source 0x801EF4C0 @kind function */
+/* Draws the work record's effect as an eight-band fan of textured Gouraud
+ * quads: reads the graph type, builds each primitive with
+ * GetTPage/GetClut/SetDrawMode/SetSemiTrans and RotTransPers4 and emits it
+ * through the primitive queue. Lifted from its own span. */
+extern void drawEightBandsOfThirtyTwoTranslucentTexturedQuadsWithWorkByte9FadeBmagicMagic05603_801EF4C0(
+    void); /* @source 0x801EF4C0 @kind function */
 
 /* @source 0x801EF1F4
  * @behavior One frame of the overlay's work handler over the record published at
@@ -70,7 +72,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And
   D_801F0754[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
     projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410();
-    func_801EF4C0();
+    drawEightBandsOfThirtyTwoTranslucentTexturedQuadsWithWorkByte9FadeBmagicMagic05603_801EF4C0();
     PopMatrix();
   }
 }

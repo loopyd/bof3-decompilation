@@ -20,12 +20,12 @@ extern u8 D_8014933B; /* @source 0x8014933B @kind data */
  * into one shared base. */
 extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
 
-/* Overlay quad helper at 0x801F4160, still unlifted assembly inside this
- * target, so only its prototype is declared. It fills an FT4 primitive from
- * the scratchpad coordinate block at 0x1F800014, projects the four vertices
+/* Overlay quad helper at 0x801F4160. It fills an FT4 primitive from the
+ * scratchpad coordinate block at 0x1F800014, projects the four vertices
  * through RotTransPers4, folds its second argument's 5-bit page field into the
- * texture-page word it submits, and appends the 0x28-byte primitive. */
-void func_801F4160(s32 width, s32 page);
+ * texture-page word it submits, and appends the 0x28-byte primitive; both of
+ * this step's arguments are the record's byte +0x09. */
+void drawSizedTexturedQuadAtFixedCenterWithPageFieldWorld02Area10814_801F4160(s32 size, s32 page);
 
 /* @source 0x801F405C
  * @behavior Overlay step handler, entry 1 of the four-pointer handler table at
@@ -63,7 +63,8 @@ void drawWorkQuadAdvanceWorkByte9At6dSetSharedByte1AdvanceScenarioProgressToFAnd
     return;
   }
   quad = workRecord44World02Area10814;
-  func_801F4160(quad[9], quad[9]);
+  drawSizedTexturedQuadAtFixedCenterWithPageFieldWorld02Area10814_801F4160(
+      quad[9], quad[9]);
   work = workRecord44World02Area10814;
   work[9]++;
   work = workRecord44World02Area10814;

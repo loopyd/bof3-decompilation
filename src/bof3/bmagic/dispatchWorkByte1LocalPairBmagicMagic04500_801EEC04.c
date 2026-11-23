@@ -2,10 +2,12 @@
 
 typedef void (*BmagicMagic04500Handler)(void);
 
-/* Both handlers keep their address-anchored names: this payload only stores
- * their addresses, and the overlay loader is the sole caller of this step. */
+/* Handler 0 keeps its address-anchored name: this payload stores only its
+ * address, and the overlay loader is the sole caller of this step. Handler 1 is
+ * lifted at 0x801EEE58 as
+ * raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04500_801EEE58. */
 void func_801EEC5C(void);
-void func_801EEE58(void);
+void raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04500_801EEE58(void);
 
 /* @source 0x801EEC04
  * @behavior Reads the scratchpad work-object pointer cell at 0x1F800044 once,
@@ -23,7 +25,9 @@ void func_801EEE58(void);
  * @residual none
  */
 void dispatchWorkByte1LocalPairBmagicMagic04500_801EEC04(void) {
-  BmagicMagic04500Handler handlers[2] = {func_801EEC5C, func_801EEE58};
+  BmagicMagic04500Handler handlers[2] = {
+      func_801EEC5C,
+      raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04500_801EEE58};
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
 }

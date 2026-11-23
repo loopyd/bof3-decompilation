@@ -18,6 +18,7 @@ sources = [
     "src/bof3/bmagic/seedWorkObjectClearBytesBAnd9DispatchEvent8ClaimSlot55CopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerCopyTwo15HalfwordBandsSet80145988CopyRecordStatsAndRaiseFlag40BmagicMagic05603_801EEC94.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410.c",
     "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadiusWorkByte9TimesFourPlus528FadingFromWorkByteATintToBlackBmagicMagic05603_801EFC74.c",
+    "src/bof3/bmagic/drawEightBandsOfThirtyTwoTranslucentTexturedQuadsWithWorkByte9FadeBmagicMagic05603_801EF4C0.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05603_801EFBF4.c",

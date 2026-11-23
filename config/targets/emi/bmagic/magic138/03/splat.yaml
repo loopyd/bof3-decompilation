@@ -56,8 +56,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchStateByte2Tableec10BmagicMagic13803_801EEFA4.c'
     - '@behavior: Overlay header handler, entries 3, 4 and 5 of the nine-word handler pointer run at 0x801EEC04 (the payload words at 0x801EEC10, 0x801EEC14 and 0x801EEC18); copies those three code pointers (0x801EF04C, 0x801EF3A0, 0x801EF50C) into its own 0x28-byte frame, publishes 0x800C3800 into the shared cell at 0x801459F0, and invokes the copied entry that unsigned work byte 2 of the scratchpad work object at 0x1F800044 selects. It re-reads that cell after the call and, when work byte 0 has bit 0 set, invokes the shared battle update at 0x8014D4E0, then publishes 0x800D3800 into 0x801459F0.'
   - - 1100
-    - asm
-    - func_801EF04C
+    - c
+    - seedWorkDeltaWordsFromRecordTablesThenSeedHeaderKind84RequestResourceByBattleByteParitySetWorkByte9AndAdvanceWorkByte2BmagicMagic13803_801EF04C
+    - '@source: src/bof3/bmagic/seedWorkDeltaWordsFromRecordTablesThenSeedHeaderKind84RequestResourceByBattleByteParitySetWorkByte9AndAdvanceWorkByte2BmagicMagic13803_801EF04C.c'
+    - '@behavior: Overlay header handler, entry index 3 of the nine-word handler pointer run at 0x801EEC04 (payload word 0x801EEC10) that the dispatcher at 0x801EEFA4 calls with no arguments when unsigned work byte 2 is zero. It selects one of two indexed record blocks with the shared acting-battler byte at 0x80146374: while that byte is below 3 it reads the halfwords at 0x80145EBE and 0x80145EC0 with a 0x140-byte stride, and from 3 upward it reads the halfwords at 0x801EB65E and 0x801EB660 with a 0x118-byte stride indexed by the byte minus 3. Bit 0 of byte 9 of the shared battle record at 0x801EB4E0 selects the amount 0x28 against 0x14, which is first subtracted from the work object halfword 0x2E; the difference against the selected record halfword 0x2E is scaled by 16 and divided by 8 into work word 0xC, and the work object halfwords 0x2E and 0x30 are then moved left by four into work words 0x18 and 0x1C. It seeds the rest of the work header with 0x1E at byte 0x25, 0x84 at byte 0x24, 0xA0 at byte 0x27, 1 at byte 0x48 and 3 at byte 0x29, clears bytes 0x26, 0x28, 0x2A, 0x2B and 0x5C through 0x5F and halfword 0x2C, requests resource ((0x80146384 - 3) & 1) through the shared wrapper 0x8014D6B8, stores 3 into work byte 9 and advances work byte 2.'
   - - 1952
     - asm
     - func_801EF3A0

@@ -35,11 +35,12 @@ void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic0410
  * installs it with SetDrawMode, refreshes the scratchpad screen scale through
  * func_801782FC and func_801783C8 and emits the work-record effect with
  * SetSemiTrans, SetPolyG4 and RotTransPers4 under a second draw mode, with rand
- * and the record byte 0x9 picking the shade. Still an asm row in this target,
- * so it keeps its raw name; it draws under the matrix installed by
+ * and the record byte 0x9 picking the shade. It draws under the matrix
+ * installed by
  * projectWorkRecordPositionAndInstallTransformWithZeroRotation and does not pop
  * it. */
-void func_801EF670(void);
+void drawTranslucentGouraudQuadBandOfSixtyFourRandJitteredQuadsBetweenFixedRadius128AndWorkByte9ProfileGradedWhiteToRedBmagicMagic04103_801EF670(
+    void);
 
 /* @source 0x801EF1D4
  * @behavior Dispatches one step of the overlay work handler: the work record is
@@ -53,8 +54,11 @@ void func_801EF670(void);
  *   tested for non-zero, so only when both hold does the arm run: it installs
  *   the work record's transform with
  *   projectWorkRecordPositionAndInstallTransformWithZeroRotation, draws the
- *   effect with func_801EF670 and then restores the GTE matrix stack with
- *   PopMatrix. The frame keeps the copied table at 0x10 and $ra at 0x20; the
+ *   effect with
+ *   drawTranslucentGouraudQuadBandOfSixtyFourRandJitteredQuadsBetweenFixedRadi
+ *   us128AndWorkByte9ProfileGradedWhiteToRedBmagicMagic04103_801EF670 and then
+ *   restores the GTE matrix stack with PopMatrix. The frame keeps the copied
+ *   table at 0x10 and $ra at 0x20; the
  *   pointer-cell load is issued before frame creation. Performs no stores of its
  *   own, ignores the handler result, takes no arguments and returns nothing.
  * @status exact
@@ -69,7 +73,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0
   handlers.handlers[g_battle_work[2]]();
   if ((g_battle_work[0] & 1u) && (g_battle_work[2] != 0u)) {
     projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0();
-    func_801EF670();
+    drawTranslucentGouraudQuadBandOfSixtyFourRandJitteredQuadsBetweenFixedRadius128AndWorkByte9ProfileGradedWhiteToRedBmagicMagic04103_801EF670();
     PopMatrix();
   }
 }

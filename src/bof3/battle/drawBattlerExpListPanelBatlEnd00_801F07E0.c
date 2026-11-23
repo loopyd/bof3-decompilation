@@ -26,10 +26,14 @@ extern u8 D_801EEC48[];
 
 extern int sprintf(char *buffer, const char *format, ...);
 
-/* The overlay panel frame drawer at 0x801F039C: sets the draw mode and the
- * tile for a panel window and draws its border. Still an address-anchored asm
- * span, so it is declared here for its address. */
-extern void func_801F039C(s16 x, s16 y, s32 width, u8 height);
+/* The overlay panel frame drawer at 0x801F039C, lifted as
+ * drawPanelFrameBatlEnd00_801F039C: opens the panel draw mode, fills the window
+ * rectangle with one palette-coloured tile and borders it with a quadrangle and
+ * four flat lines. Its own tile stores place the first argument at tile +0x08,
+ * the third at +0x0C, the second plus two at +0x0A and the fourth at +0x0E, so
+ * the call passes the panel origin, its width and its height. */
+extern void drawPanelFrameBatlEnd00_801F039C(s32 x, s32 y, s32 width,
+                                             s32 height);
 
 /* Shared text submitter of the main executable at 0x8014F800. It draws the
  * character run its fifth argument points at — a NUL-terminated glyph string —
@@ -56,8 +60,9 @@ extern s32 sumRemainingLevelExpBatlEnd00_801F0BB0(u8 battler);
  * @behavior Battle-end panel state handler 1 of the two-entry local handler
  *   table built by dispatchPanelStateLocalTableBatlEnd00_801F0768: it draws
  *   the per-battler experience panel. It opens the panel frame at (0x14, 0x28)
- *   through the overlay frame drawer func_801F039C with the width 0x118 and
- *   byte +0x09 of the object published at 0x80148648 as the height, then walks
+ *   through the overlay frame drawer drawPanelFrameBatlEnd00_801F039C with the
+ *   width 0x118 and byte +0x09 of the object published at 0x80148648 as the
+ *   height, then walks
  *   the local battlers below the volatile count byte at 0x801462F0 and draws
  *   one row per battler, stepping y by 0x10 from 0x2C. Every row submits the
  *   battler's four-character name, the name field of the 0x140-byte work
@@ -96,7 +101,7 @@ void drawBattlerExpListPanelBatlEnd00_801F07E0(void) {
   s32 offset;
 
   y = 0x2c;
-  func_801F039C(0x14, 0x28, 0x118, ((u8 *)D_80148648)[9]);
+  drawPanelFrameBatlEnd00_801F039C(0x14, 0x28, 0x118, ((u8 *)D_80148648)[9]);
   if (localBattlerCount != 0) {
     i = 0;
     buffer = D_80149118;

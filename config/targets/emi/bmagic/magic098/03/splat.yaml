@@ -62,8 +62,9 @@ segments:
     - asm
     - func_801EF5D4
   - - 4644
-    - asm
-    - func_801EFE24
+    - c
+    - drawRandomScaledTranslucentGouraudLineAtWorkWords34And38CountedByWorkByteAFromWorkByteBPhaseBmagicMagic09803_801EFE24
+    - '@source: src/bof3/bmagic/drawRandomScaledTranslucentGouraudLineAtWorkWords34And38CountedByWorkByteAFromWorkByteBPhaseBmagicMagic09803_801EFE24.c'
   - - 5316
     - asm
     - func_801F00C4

@@ -3,9 +3,9 @@
 extern u8 *D_80148648;
 
 /* Battle-end panel handler this shim selects: the overlay's next function at
- * 0x801EFE5C, which drives the panel through func_801F039C, func_801EF928 and
- * the overlay's 0x801EEC40 string run. Still an address-anchored asm function,
- * so it is declared here rather than renamed. */
+ * 0x801EFE5C, which drives the panel through drawPanelFrameBatlEnd00_801F039C,
+ * func_801EF928 and the overlay's 0x801EEC40 string run. Still an
+ * address-anchored asm function, so it is declared here rather than renamed. */
 extern void func_801EFE5C(void);
 
 /* @source 0x801EFE10

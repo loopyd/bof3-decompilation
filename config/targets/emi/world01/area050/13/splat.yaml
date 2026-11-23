@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801F2D48
   - - 416
-    - asm
-    - func_801F2DA0
+    - c
+    - initFrontendStateSelector4AndSecondStateByte4World01Area05013_801F2DA0
+    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte4World01Area05013_801F2DA0.c'
+    - '@behavior: Runs the shared front-end startup helper D_8015C088 and then stores 4 into the shared front-end state selector byte D_801448EB and 4 into the shared second state byte D_801448ED, leaving the middle byte D_801448EC untouched, and returns 0.'
 - - 468
   - bin
   - tail

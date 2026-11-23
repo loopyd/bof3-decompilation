@@ -18,6 +18,7 @@ sources = [
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic13703_801EFD00.c",
     "src/bof3/bmagic/invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic13703_801F007C.c",
     "src/bof3/bmagic/seedMotionOffsetPositionPairDistanceCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic13703_801EF090.c",
+    "src/bof3/bmagic/setWorkByte9To18ClaimTwoSlotsCopyHalfwordTableWithBit15SetAndWhenActingRecordByteF0Is29ClaimSlotCopyWorkHeadBmagicMagic13703_801EEC7C.c",
 ]
 support_sources = [
     "src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic13703_801EF2C4.c",
