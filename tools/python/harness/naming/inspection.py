@@ -15,6 +15,7 @@ from harness.domain.symbols import load_map, map_path
 
 from .debt import collect_naming_debt, collect_symbol_debt
 from .map_checks import symbol_findings
+from .schema import name_report, token_index
 from .source_identifiers import collect_source_identifiers
 from harness.common.lexicon import mask_c_text
 
@@ -27,7 +28,7 @@ def _target(root: Path, target: str):
     manifests = load_target_manifests(root)
     if target not in manifests:
         raise ValueError(f"unknown target: {target}")
-    return target, manifests[target]
+    return target, manifests[target], manifests
 
 
 def _locations(root: Path, manifest, names: set[str]) -> list[dict]:
@@ -57,7 +58,8 @@ def list_report(
     root: Path, target: str, *, kind: str = "debt", limit: int | None = None
 ) -> dict:
     root = root.resolve()
-    target, manifest = _target(root, target)
+    target, manifest, manifests = _target(root, target)
+    tokens_by_target = token_index(manifests)
     if kind not in KINDS or limit is not None and limit < 1:
         raise ValueError("listing requires a supported kind and a positive limit")
     rows, findings = [], []
@@ -78,6 +80,12 @@ def list_report(
                 )
                 if kind == "debt" and debt_kind is None:
                     continue
+                report = name_report(
+                    symbol.name,
+                    target=target,
+                    tokens_by_target=tokens_by_target,
+                    kind=debt_kind,
+                )
                 rows.append(
                     {
                         "kind": "symbol",
@@ -89,6 +97,7 @@ def list_report(
                         "source": path.relative_to(root).as_posix(),
                         "line": lines.get(symbol.name),
                         "alias_of": symbol.alias_of or None,
+                        **report.as_dict(),
                     }
                 )
         if kind in {"identifiers", "all"}:
@@ -140,7 +149,7 @@ def list_report(
 
 def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> dict:
     root = root.resolve()
-    target, manifest = _target(root, target)
+    target, manifest, manifests = _target(root, target)
     selected = {parse_function_id(value) for value in selectors}
     if any(value.target.value != target for value in selected):
         raise ValueError("every selector must belong to the selected target")
@@ -183,8 +192,39 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
         result["findings"].append(
             {"status": "unavailable", "code": "symbols", "message": str(error)}
         )
+    result["findings"].extend(_schema_findings(root, target, manifest, names))
     result["incomplete"] = any(
         row["status"] == "unavailable" for row in result["findings"]
     )
     result["passed"] = not result["findings"]
     return result
+
+
+def _schema_findings(root: Path, target: str, manifest, names) -> list[dict]:
+    """Report every semantic name that breaks the naming grammar."""
+    tokens_by_target = token_index(load_target_manifests(root))
+    try:
+        functions, data = collect_symbol_debt(root, {target: manifest})
+    except (OSError, ValueError):
+        functions, data = set(), set()
+    findings = []
+    for name in sorted(names):
+        key = f"{target}:{name}"
+        kind = "function" if key in functions else "data" if key in data else None
+        report = name_report(
+            name, target=target, tokens_by_target=tokens_by_target, kind=kind
+        )
+        if report.passed:
+            continue
+        findings.append(
+            {
+                "status": "failed",
+                "code": "schema",
+                "name": name,
+                "tokens": len(report.tokens),
+                "length": report.length,
+                "violations": list(report.violations),
+                "message": f"{name}: {','.join(report.violations)}",
+            }
+        )
+    return findings

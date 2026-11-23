@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..domain.manifests import TargetManifest
+from ..domain.symbols import load_target_bindings
 from ..io import RepoLayout, repo_layout
 from ..domain.tags import count_function_metadata
 
@@ -12,10 +14,40 @@ from ._asm_diff_run import _asm_diff_compare, _asm_diff_resolve, run_build_objec
 from .grouped import compare_selected_member
 
 __all__ = [
+    "match_target_source",
     "run_asm_diff_one",
 ]
 
 # -- orchestration ----------------------------------------------------------------------
+
+
+def match_target_source(
+    root,
+    manifest: TargetManifest,
+    address: int,
+    source_path,
+    *,
+    diagnostics: bool = True,
+    image_evidence: bool = False,
+):
+    """Compile one authored source and compare it against its original range.
+
+    The request is built from the owning manifest, so a caller that rewrote a
+    source (a rename, say) proves the same rendered range the lift loop proves.
+    """
+    return run_asm_diff_one(
+        AsmDiffRequest(
+            source_path=source_path,
+            address=address,
+            binary_path=root / manifest.binary,
+            load_address=manifest.load_address,
+            output_root=root / "out" / "asm-diff",
+            canonical_bindings=load_target_bindings(root, manifest),
+            section_placements=manifest.section_placements.get(address, ()),
+            diagnostics=diagnostics,
+            image_evidence=image_evidence,
+        )
+    )
 
 
 def run_asm_diff_one(

@@ -18,11 +18,9 @@ from harness.common.process import ProcessCleanupError
 
 from ..domain.ids import FUNCTION_ID_HELP, FunctionId
 from ..domain.manifests import TargetManifest
-from ..domain.symbols import load_target_bindings
 from ..domain.tags import count_function_metadata
 from ..io import repo_layout
-from ..match._asm_diff_payload import AsmDiffRequest
-from ..match.asm_diff import run_asm_diff_one
+from ..match.asm_diff import match_target_source
 from ..match.bundle import write_bundle
 from ..output import add_detail_argument, resolve_detail
 from ._asm_diff_output import (
@@ -55,18 +53,13 @@ def _run_match(
         raise ValueError(
             "function-image evidence requires an ordinary single-function source"
         )
-    payload = run_asm_diff_one(
-        AsmDiffRequest(
-            source_path=source,
-            address=function.address,
-            binary_path=root / manifest.binary,
-            load_address=manifest.load_address,
-            output_root=root / "out" / "asm-diff",
-            canonical_bindings=load_target_bindings(root, manifest),
-            section_placements=manifest.section_placements.get(function.address, ()),
-            diagnostics=diagnostics,
-            image_evidence=image_evidence,
-        )
+    payload = match_target_source(
+        root,
+        manifest,
+        function.address,
+        source,
+        diagnostics=diagnostics,
+        image_evidence=image_evidence,
     )
     if diagnostics:
         write_bundle(
