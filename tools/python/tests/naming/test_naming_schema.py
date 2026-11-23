@@ -38,6 +38,8 @@ def test_short_descriptive_name_passes() -> None:
 
 def test_identifier_case_follows_the_owned_filename() -> None:
     assert report("RenderDrawQuadBand").violations == ("case",)
+    assert report("g_battle_work").violations == ()
+    assert report("WEAPON_OBJECTS").violations == ()
 
 
 def test_caps_are_reported() -> None:

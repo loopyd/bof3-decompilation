@@ -13,6 +13,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from harness.build.compiler import CONFIGURATION_PATH, sanitize_identifier
 from harness.common.lease import acquire_writer
 from harness.decomp.consumers import identifier_consumers
 from harness.domain.claims import manifest_header_paths, manifest_source_paths
@@ -99,10 +100,22 @@ def _resolve(root: Path, target: str, old: str, new: str) -> RenamePlan:
     return plan
 
 
+def _unit_key(root: Path, path: Path) -> str:
+    """The per-object compiler key for one unit, as the build sanitises it."""
+    return sanitize_identifier(path.relative_to(root / "src").as_posix())
+
+
 def _owned_source(root: Path, manifest, name: str) -> Path | None:
+    """Return the claimed unit that owns this name.
+
+    A file whose stem is the name owns it even when the unit carries no function
+    definition, which is how a dispatch-table unit is named.
+    """
     sources = manifest_source_paths(root, manifest)
-    preferred = [path for path in sources if path.stem == name]
-    for path in preferred or sources:
+    for path in sources:
+        if path.stem == name and path.is_file():
+            return path
+    for path in sources:
         if path.is_file() and _definition(name).search(path.read_text(encoding="utf-8")):
             return path
     return None
@@ -128,6 +141,24 @@ def _collect_files(plan: RenamePlan, root: Path, manifest) -> None:
 
     if plan.source is not None and plan.source.stem == plan.old:
         plan.renames.append((plan.source, plan.source.with_name(plan.new + ".c")))
+        # Per-object flags and compiler ids are keyed by the unit's own path.
+        flags = root / CONFIGURATION_PATH
+        if flags.is_file() and _unit_key(root, plan.source) in flags.read_text(
+            encoding="utf-8"
+        ):
+            plan.files.append(flags)
+    else:
+        # A path claim that embeds the old spelling cannot follow a name whose
+        # owning unit is not being renamed: that would leave a dangling claim.
+        for path in (splat, map_file, claim):
+            if path.is_file() and re.search(
+                re.escape(plan.old) + r"[^\s\"']*\.c", path.read_text(encoding="utf-8")
+            ):
+                plan.refuse(
+                    "path-claim",
+                    f"{path.relative_to(root).as_posix()} names a file after {plan.old} "
+                    "but no owned unit carries that stem",
+                )
 
 
 def _check_consumers(plan: RenamePlan, root: Path, target: str, old: str) -> None:
@@ -210,11 +241,19 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
             if after.is_file() and not before.exists():
                 after.rename(before)
     pattern = _boundary(source_name)
+    if plan.source is not None and source_name == plan.old and plan.renames:
+        after = plan.source.with_name(plan.new + ".c")
+        before_key = _unit_key(plan.root, plan.source)
+        after_key = _unit_key(plan.root, after)
+    else:
+        before_key, after_key = "", ""
     for path in plan.files:
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
         rewritten = pattern.sub(target_name, text)
+        if before_key and path == plan.root / CONFIGURATION_PATH:
+            rewritten = rewritten.replace(before_key, after_key)
         if rewritten != text:
             path.write_text(rewritten, encoding="utf-8")
     if forward:

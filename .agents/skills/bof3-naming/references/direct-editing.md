@@ -47,8 +47,10 @@ instead of hand edits: `bin/harness naming rename TARGET OLD NEW` plans, and
 transaction applies no semantic choice.
 
 The dry run is mandatory input: it lists the filename, identifier, target-owned
-callers and declarations, Splat label and `@source`, symbol row and target claim
-it would rewrite. A refusal names its cause and writes nothing: a new spelling
+callers and declarations, Splat label and `@source`, symbol row, target claim and
+the per-object compiler key in `config/compiler/object-flags.cmake` it would
+rewrite. A unit with its own `BOF3_OBJFLAGS_`/`BOF3_OBJCOMPILER_` key rebuilds
+shorter without it, so the key follows the file. A refusal names its cause and writes nothing: a new spelling
 that breaks the [name schema](naming-style.md), a composed-map collision, a
 `config/targets/shared/symbols.txt` claim, or a consumer outside the owning
 target. Fan-out is a parent decision, not a rename.

@@ -12,6 +12,7 @@ from harness.commands import _lift_m2c, lift
 from harness.commands._lift_m2c import run_m2c
 from harness.common import cli as _common
 from harness.domain.symbols import load_target_symbols, weak_bindings_c
+from harness.match import asm_diff as _asm_diff
 from harness.match._asm_diff_payload import AsmDiffRequest
 from harness.toolchain import m2c as m2c_toolchain
 from harness.toolchain.m2c import M2cToolchain, render_context
@@ -294,7 +295,7 @@ def test_run_match_passes_bindings_without_rewriting_identical_file(
     before = bindings.stat().st_mtime_ns
     captured: list[AsmDiffRequest] = []
     monkeypatch.setattr(
-        lift,
+        _asm_diff,
         "run_asm_diff_one",
         lambda request: captured.append(request) or {"byte_match": True},
     )

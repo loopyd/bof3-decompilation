@@ -63,3 +63,26 @@ alongside it. Two names at one address are legal only *across* layers, such as a
 SDK row and a target row. When a lift needs a differently typed view of a mapped
 cell, change the one row's type or leave the spelling alone; do not plan on a
 parallel name.
+
+## Migration draft rule
+
+A migration wave may draft a name from the evidenced spelling before anyone reads
+the body; the draft is a proposal, not a decision. Draft in this order:
+
+1. Strip the trailing address and every composed target token from the name.
+2. Split the remaining camelCase tokens and drop connectors: `Then`, `And`,
+   `When`, `Else`, `Also`, `To`, `From`, `By`, `At`, `With`, `Of`, `For`, `The`,
+   `A`, `An`, `In`, `On`, `As`, `If`, `Or`, `Repeat`.
+3. Take the category word from the leading verb: draw/render/fill/plot ->
+   `render`; call/invoke/dispatch -> `call`; seed/set/clear/reset/advance/apply/
+   update/store -> `state`; find/get/scan/read/load/lookup -> `query`;
+   count/test/check/compare/is -> `check`; init/create/build/alloc -> `setup`;
+   add/sub/mul/scale/clamp/lerp/shift -> `math`; play/start/stop/sound -> `audio`;
+   write/print/text -> `text`; table/index -> `table`; otherwise keep the first
+   token as written.
+4. Keep the category plus the next three content tokens in order.
+
+Flag the draft for review when it drops three or more content tokens, collides in
+its own target, or keeps fewer than two content words: that is where the
+description usually loses its differentiator. A reviewed name may replace a
+draft freely; a draft never replaces evidence.

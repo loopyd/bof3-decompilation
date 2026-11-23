@@ -75,8 +75,10 @@ The type, macro, combiner and metadata interfaces expose only `list` and `check`
 They provide no prepare, apply, rank-account, promotion or rollback protocol.
 Naming adds one mechanical transaction, `bin/harness naming rename TARGET OLD
 NEW [--apply]`: the skill supplies both spellings, the dry run prints every
-surface it would rewrite, and `--apply` rewrites the owned surface under the
-writer lease and proves each renamed selector against its prior measurement. It
+surface it would rewrite (including the per-object compiler key in
+`config/compiler/object-flags.cmake`), and `--apply` rewrites the owned surface
+under the writer lease and proves each renamed selector against its prior
+measurement. It
 refuses a name that breaks the grammar in
 [naming style](../../.agents/skills/bof3-naming/references/naming-style.md), a
 composed-map collision, a shared-map claim and any consumer outside the owning
