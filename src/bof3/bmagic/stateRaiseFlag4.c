@@ -25,7 +25,7 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  * @match 85.71
  * @residual Preserving volatile access keeps the halfword store before the helper call instead of its delay slot, adding one instruction.
  */
-void raiseFlag4AndInvokeHelperBmagicMagic00100_801EEFA4(void) {
+void stateRaiseFlag4(void) {
   volatile u16 *flags = &D_801462E8;
 
   *flags |= 4;

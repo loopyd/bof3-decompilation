@@ -44,8 +44,8 @@ segments:
     - '@behavior: Work byte 1 state 1 of this overlay: entry 1 of the three-entry code pointer run at 0x801EEC04, selected by the dispatcher at 0x801EEC64 on unsigned work byte 1. Only when work-object byte 0xB is zero it calls the shared battle buffer-copy helper at 0x800AFC54, clears bit 0x40 of byte 0 of the shared battle work record at 0x801EB4E0 with the 0xBF mask, and advances work byte 1. Takes no arguments and returns nothing.'
   - - 932
     - c
-    - raiseFlag4AndInvokeHelperBmagicMagic00100_801EEFA4
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00100_801EEFA4.c'
+    - stateRaiseFlag4
+    - '@source: src/bof3/bmagic/stateRaiseFlag4.c'
     - '@behavior: Overlay work handler, entry 2 of the leading 24-word code pointer run at 0x801EEC04. Raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword read-modify-write, then invokes the shared helper at 0x801E5988 unconditionally; the halfword store fills the call delay slot and the 0x18-byte frame only keeps $ra. No arguments, no return value, no other state.'
   - - 984
     - c
