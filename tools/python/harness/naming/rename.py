@@ -35,6 +35,7 @@ _IDENTIFIER = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
 # reference refuses the rename, so another target's spelling cannot change under
 # the census while this process runs.
 _CENSUS: dict[Path, tuple[dict[str, list[tuple[str, str]]], dict[str, set[str]]]] = {}
+_NAMES: dict[Path, dict[str, list[tuple[str, int, frozenset[Path]]]]] = {}
 _MEASURED: dict[tuple[str, int, int], dict] = {}
 
 
@@ -127,6 +128,7 @@ def _resolve(root: Path, target: str, old: str, new: str) -> RenamePlan:
                 break
     _collect_files(plan, root, manifest)
     _check_consumers(plan, root, target, old)
+    _check_cross_target_name(plan, root, target)
     return plan
 
 
@@ -284,6 +286,56 @@ def _census(root: Path, manifests):
     cached = (rows, owned)
     _CENSUS[root] = cached
     return cached
+
+
+def _name_index(root: Path, manifests):
+    """Index every map name with its owner, address and source directories.
+
+    The symbol matrix rejects one name for different reviewed bytes in the same
+    source parent, so a rename must see the other targets' spellings, not just its
+    own map.
+    """
+    cached = _NAMES.get(root)
+    if cached is not None:
+        return cached
+    rows: dict[str, list[tuple[str, int, frozenset[Path]]]] = {}
+    for owner, manifest in sorted(manifests.items()):
+        directories = frozenset(
+            path.parent for path in manifest_source_paths(root, manifest)
+        )
+        for symbol in load_map(map_path(root, owner)):
+            rows.setdefault(symbol.name.casefold(), []).append(
+                (owner, symbol.address, directories)
+            )
+    _NAMES[root] = rows
+    return rows
+
+
+def _check_cross_target_name(plan: RenamePlan, root: Path, target: str) -> None:
+    """Refuse a name another target already uses for a different body."""
+    if plan.address is None:
+        return
+    ours = frozenset(
+        path.parent
+        for path in manifest_source_paths(root, plan.manifest)
+        if path.suffix == ".c"
+    )
+    for owner, address, directories in _name_index(
+        root, load_manifests_for(plan)
+    ).get(plan.new.casefold(), ()):
+        if owner == target or address == plan.address or not (ours & directories):
+            continue
+        plan.refuse(
+            "cross-target-name",
+            f"{plan.new} already names {owner}@0x{address:08X} in the same source parent",
+        )
+        return
+
+
+def load_manifests_for(plan: RenamePlan):
+    if plan.manifests is None:
+        plan.manifests = load_target_manifests(plan.root)
+    return plan.manifests
 
 
 def _check_consumers(plan: RenamePlan, root: Path, target: str, old: str) -> None:

@@ -111,6 +111,15 @@ def test_shared_map_claim_refuses_the_rename(tmp_path: Path) -> None:
     ]
 
 
+def test_cross_target_name_refuses_the_rename(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherRow", "stateRaiseFlag4"))
+    other = root / "src/bof3/battle" / "other.c"
+    other.write_text("void stateRaiseFlag4(void) {}\n", encoding="utf-8")
+    codes = [row["code"] for row in _plan(root, "stateRaiseFlag4")["refusals"]]
+    assert codes == ["cross-target-name"]
+
+
 def test_foreign_consumer_refuses_the_rename(tmp_path: Path) -> None:
     root = _repo(tmp_path)
     _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherTargetRow",))
