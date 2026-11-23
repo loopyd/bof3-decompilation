@@ -106,7 +106,9 @@ def compile_objects_parallel(
         output = root / "build" / source.relative_to(root).with_suffix(".o")
         try:
             result = compile_object(root, source, output)
-        except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+        except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
+            # A grouped unit needs its address-scoped route; the batch only warms
+            # what one object can carry, so record it and keep the wave moving.
             return source, str(error)
         return source, None if result.returncode == 0 else (result.stderr or "failed")
 
