@@ -87,8 +87,10 @@ segments:
     - '@source: src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At11BmagicMagic14403_801EF654.c'
     - '@behavior: Adds four to scratchpad work-object byte 9 modulo 256 through the work pointer cell at 0x1F800044, re-reads the cell and that byte, and increments work-object byte 2 only when the byte equals 0x11.'
   - - 2724
-    - asm
-    - func_801EF6A4
+    - c
+    - incrementWorkByte9AndWorkByteAThenSetGlobalWorkByteBFlag80AndAdvanceWorkByte2At19BmagicMagic14403_801EF6A4
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndWorkByteAThenSetGlobalWorkByteBFlag80AndAdvanceWorkByte2At19BmagicMagic14403_801EF6A4.c'
+    - '@behavior: Increments scratchpad work-object bytes 9 and 0xA modulo 256 through the work pointer cell at 0x1F800044 and, only when the reloaded byte 9 equals 0x19, sets bit 0x80 of the shared record byte 0xB at 0x801EB4E0 and increments work-object byte 2.'
   - - 2872
     - c
     - decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738

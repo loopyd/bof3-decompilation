@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
-func_801EEC28 = 0x801EEC28;
+dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic02103_801EEC28 = 0x801EEC28;
 func_801EED30 = 0x801EED30;
 func_801EEF38 = 0x801EEF38;
 func_801EEFA8 = 0x801EEFA8;

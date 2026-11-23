@@ -30,8 +30,10 @@ segments:
   vram: 2149510184
   subsegments:
   - - 40
-    - asm
-    - func_801EEC28
+    - c
+    - dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic02103_801EEC28
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic02103_801EEC28.c'
+    - '@behavior: Copies the three code-pointer words at 0x801EEC04 into its frame and calls the entry selected by work byte 1, then publishes each occupied 0x78-stride record at 0x801EFE14 as the work object, runs the record step at 0x801EF534 and restores both pointer cells.'
   - - 304
     - asm
     - func_801EED30

@@ -1,6 +1,6 @@
 D_1F800000 = 0x1F800000;
 D_1F800004 = 0x1F800004;
-func_801EEC04 = 0x801EEC04;
+dispatchWorkByte1LocalHandlersThenRunActiveWorkRecordsBmagicMagic10603_801EEC04 = 0x801EEC04;
 func_801EECE4 = 0x801EECE4;
 forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80 = 0x801EEE80;
 dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0 = 0x801EEEE0;

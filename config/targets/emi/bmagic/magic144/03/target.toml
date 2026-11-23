@@ -21,6 +21,7 @@ sources = [
     "src/bof3/bmagic/incrementWorkByte2WhenWorkByteBFlag80SetBmagicMagic14403_801EF11C.c",
     "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic14403_801F00A0.c",
     "src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At11BmagicMagic14403_801EF654.c",
+    "src/bof3/bmagic/incrementWorkByte9AndWorkByteAThenSetGlobalWorkByteBFlag80AndAdvanceWorkByte2At19BmagicMagic14403_801EF6A4.c",
 ]
 support_sources = [
     "src/bof3/support/magic144_03_psyq.c",

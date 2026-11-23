@@ -2,9 +2,10 @@
 
 /* Overlay work-record table at 0x801F0B38: 32 slots of 0x78 bytes, the same
  * 0x78-stride record shape the family's reserveFirstFreeRecord bodies walk.
- * func_801EEC28 indexes this base by record offset and tests byte 0 bit 0
- * before dispatching, so the three bytes this body clears are the record's
- * leading state bytes. The base is bound by this target's map row. */
+ * The per-frame entry at 0x801EEC28 indexes this base by record offset and
+ * tests byte 0 bit 0 before dispatching, so the three bytes this body clears
+ * are the record's leading state bytes. The base is bound by this target's map
+ * row. */
 extern u8 magic00303Records[]; /* @source 0x801F0B38 @kind data */
 
 /* Scratchpad work-object pointer cell at 0x1F800044, bound by this target's map

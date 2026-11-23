@@ -27,8 +27,10 @@ segments:
   vram: 2149510148
   subsegments:
   - - 4
-    - asm
-    - func_801EEC04
+    - c
+    - dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic09303_801EEC04
+    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic09303_801EEC04.c'
+    - '@behavior: Per-frame entry: dispatch work byte 1 through a local two-entry handler pair, then publish each occupied pool record as the work object and its word 0x74 into 0x801EB4E0 and run that record byte 1 step.'
   - - 260
     - asm
     - func_801EED04

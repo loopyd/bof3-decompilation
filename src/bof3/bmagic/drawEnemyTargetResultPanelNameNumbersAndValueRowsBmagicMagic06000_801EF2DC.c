@@ -107,7 +107,7 @@ void func_801EFB00(u16 value, s32 x, s32 y);
  *           Frame 0x20 holding $ra at 0x18, $s1 at 0x14 and $s0 at 0x10; no
  *           arguments, no return value and no state written outside the
  *           primitive cursor. Both call sites pass it nothing: the exact
- *           sibling above and the still-asm sibling func_801EEE00 reach it
+ *           sibling above and the sibling at 0x801EEE00 reach it
  *           from the same (selector < 3) partition with a nop in the jal delay
  *           slot, so the parameter roles stay structural.
  * @status exact

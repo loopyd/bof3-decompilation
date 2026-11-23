@@ -27,8 +27,10 @@ segments:
   vram: 2149510148
   subsegments:
   - - 4
-    - asm
-    - func_801EEC04
+    - c
+    - dispatchWorkByte1LocalPairThenStepEachReservedRecordBmagicMagic08303_801EEC04
+    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairThenStepEachReservedRecordBmagicMagic08303_801EEC04.c'
+    - '@behavior: Dispatches on byte 0x01 of the published work object through a two-entry local handler pair, then publishes each reserved record of the 24-entry pool in turn, swaps the shared battle record cell to the record word 0x74, runs the work-byte-1 dispatcher and restores both cells.'
   - - 260
     - asm
     - func_801EED04

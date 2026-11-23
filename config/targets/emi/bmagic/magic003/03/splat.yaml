@@ -30,8 +30,10 @@ segments:
   vram: 2149510184
   subsegments:
   - - 40
-    - asm
-    - func_801EEC28
+    - c
+    - dispatchWorkByte1StateTableThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic00303_801EEC28
+    - '@source: src/bof3/bmagic/dispatchWorkByte1StateTableThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic00303_801EEC28.c'
+    - '@behavior: Dispatches the byte-1 state handler of the work object from the in-image table at 0x801F0AD8, then publishes each occupied record and runs its byte-1 step.'
   - - 276
     - c
     - clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14

@@ -1,5 +1,5 @@
 g_battle_work = 0x1F800044;
-func_801EEC28 = 0x801EEC28;
+dispatchWorkByte1StateTableThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic00303_801EEC28 = 0x801EEC28;
 clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14 = 0x801EED14;
 runHelpers1DecrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EEDAC = 0x801EEDAC;
 runHelpers2DecrementWorkByte9Rearm10AdvanceWorkByte1BmagicMagic00303_801EEE28 = 0x801EEE28;
@@ -36,4 +36,5 @@ func_801F07B0 = 0x801F07B0;
 reserveFirstFreeRecordBmagicMagic00303_801F09C4 = 0x801F09C4;
 clearWorkBytesBmagicMagic00303_801F0A28 = 0x801F0A28;
 D_801F0A78 = 0x801F0A78;
+magic00303WorkByte1StateTable = 0x801F0AD8;
 magic00303Records = 0x801F0B38;

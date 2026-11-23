@@ -8,6 +8,7 @@ splat = "config/targets/emi/bmagic/magic063/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
+    "src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic06303_801EEC18.c",
     "src/bof3/bmagic/countDownWorkByte9ThenSetWorkByte2To3WhenGlobalWorkByteBIs1ElseDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic06303_801EF110.c",
 ]
 support_sources = [

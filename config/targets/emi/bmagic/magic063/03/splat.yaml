@@ -30,8 +30,10 @@ segments:
   vram: 2149510168
   subsegments:
   - - 24
-    - asm
-    - func_801EEC18
+    - c
+    - dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic06303_801EEC18
+    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic06303_801EEC18.c'
+    - '@behavior: Per-frame entry of this overlay. Seeds a two-word local handler table in its own 0x28-byte frame with the overlay code bodies at 0x801EECF8 and 0x801EEEE4 and calls the entry selected by the unsigned byte 0x01 of the work object published at 0x1F800044, with no bound on the index. It then walks the 0x60 records of the flags pool at 0x801F0454 with stride 0x20 and, for each record whose flags byte has bit 0 set, publishes the record into the pointer cell at 0x801F1054, saves the shared work pointer at 0x801EB4E0, publishes that record word 0x1C into the shared cell, runs the record byte 1 step through the dispatcher at 0x801EF340 and restores the shared cell. Takes no arguments and returns nothing.'
   - - 248
     - c
     - clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8
