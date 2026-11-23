@@ -44,25 +44,37 @@ def name_tokens(name: str) -> tuple[str, ...]:
     return tuple(TOKEN_RE.findall(name))
 
 
-def target_token(target: str) -> str | None:
-    """Return the composed family token a target's names must not carry.
+def _camel(text: str) -> str:
+    return "".join(part.capitalize() for part in text.split("_"))
+
+
+def target_tokens(target: str) -> tuple[str, ...]:
+    """Return the tokens a target's names must not carry, most specific first.
 
     Only overlay targets carry one: ``emi/bmagic/magic001/00`` composes
-    ``BmagicMagic00100``. Executable targets have no composed token.
+    ``Magic00100`` inside ``BmagicMagic00100``, and ``emi/battle/batl_end/00``
+    composes ``BatlEnd00``. Executable targets carry none.
     """
     parts = target.split("/")
     if len(parts) != 4 or parts[0] != "emi":
-        return None
-    return "".join(part.capitalize() for part in parts[1:])
+        return ()
+    index = _camel(parts[2]) + parts[3]
+    return (index, _camel(parts[1]) + index)
 
 
-def token_index(targets) -> dict[str, str]:
-    """Map every overlay target to the token it composes."""
+def target_token(target: str) -> str | None:
+    """Return the distinctive index-plus-slot token, or None for an executable."""
+    tokens = target_tokens(target)
+    return tokens[0] if tokens else None
+
+
+def token_index(targets) -> dict[str, tuple[str, ...]]:
+    """Map every overlay target to the tokens it composes."""
     rows = {}
     for target in targets:
-        token = target_token(target)
-        if token is not None:
-            rows[target] = token
+        tokens = target_tokens(target)
+        if tokens:
+            rows[target] = tokens
     return rows
 
 
@@ -90,7 +102,7 @@ def name_report(
     name: str,
     *,
     target: str | None = None,
-    tokens_by_target: dict[str, str] | None = None,
+    tokens_by_target: dict[str, tuple[str, ...]] | None = None,
     kind: str | None = None,
 ) -> NameReport:
     """Report grammar facts for one semantic name.
@@ -116,8 +128,8 @@ def name_report(
     if ADDRESS_SUFFIX_RE.search(name):
         found.add("address")
     folded = name.casefold()
-    for owner, token in sorted((tokens_by_target or {}).items()):
-        if token.casefold() in folded:
+    for owner, composition in sorted((tokens_by_target or {}).items()):
+        if any(token.casefold() in folded for token in composition):
             found.add("own-token" if owner == target else "foreign-token")
     if kind == "data" and (not tokens or tokens[-1].casefold() not in DATA_ROLE_WORDS):
         found.add("role")

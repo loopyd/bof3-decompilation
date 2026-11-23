@@ -7,11 +7,9 @@ from pathlib import Path
 from harness.naming import schema
 
 
-TOKENS = {
-    "emi/bmagic/magic001/00": "BmagicMagic00100",
-    "emi/world02/area108/14": "World02Area10814",
-    "emi/plchar/plp467/00": "PlcharPlp46700",
-}
+TOKENS = schema.token_index(
+    ["emi/bmagic/magic001/00", "emi/world02/area108/14", "emi/plchar/plp467/00"]
+)
 
 
 def report(name: str, **kwargs) -> schema.NameReport:
@@ -24,9 +22,13 @@ def test_name_tokens_keeps_digits_in_their_token() -> None:
 
 
 def test_target_token_is_composed_from_the_overlay_id() -> None:
-    assert schema.target_token("emi/bmagic/magic001/00") == "BmagicMagic00100"
-    assert schema.target_token("emi/world02/area108/14") == "World02Area10814"
-    assert schema.target_token("exe/slus_004_22") is None
+    assert schema.target_tokens("emi/bmagic/magic001/00") == (
+        "Magic00100",
+        "BmagicMagic00100",
+    )
+    assert schema.target_tokens("emi/battle/batl_end/00") == ("BatlEnd00", "BattleBatlEnd00")
+    assert schema.target_token("emi/world02/area108/14") == "Area10814"
+    assert schema.target_tokens("exe/slus_004_22") == ()
     assert schema.target_token("exe/logo") is None
 
 
@@ -87,4 +89,4 @@ def test_violation_order_is_stable() -> None:
 
 def test_index_covers_only_overlay_targets() -> None:
     rows = schema.token_index(["emi/plchar/plp467/00", "exe/logo"])
-    assert rows == {"emi/plchar/plp467/00": "PlcharPlp46700"}
+    assert rows == {"emi/plchar/plp467/00": ("Plp46700", "PlcharPlp46700")}
