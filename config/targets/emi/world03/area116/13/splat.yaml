@@ -74,8 +74,10 @@ segments:
     - dispatchStateByte1Table34e8World03Area11613_801F2EA0
     - '@source: src/bof3/world/area11613DispatchTables.c'
   - - 740
-    - asm
-    - func_801F2EE4
+    - c
+    - storeWorkCursorDistanceAt3cAndAdvanceStateByte1World03Area11613_801F2EE4
+    - '@source: src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World03Area11613_801F2EE4.c'
+    - '@behavior: Entry 0 of the two-entry state-byte-1 step dispatch table based at 0x801F34E8, whose word 0 names this span and whose word 1 names drawWorkCursorQuadWorld03Area11613_801F2F30, and which dispatchStateByte1Table34e8World03Area11613_801F2EA0 indexes with byte +1 of the work record published at the scratchpad pointer cell 0x1F800044: it loads that work-record pointer, passes the record cursor words at +0x34 and +0x38 to the shared main-executable sampler func_8015477C, stores the answer shifted left 16 into the third cursor word at +0x3C, and then advances byte +1 by one, which hands the next dispatch to entry 1. The dispatcher sets up no argument register, so the entry takes no arguments and returns nothing.'
   - - 816
     - c
     - drawWorkCursorQuadWorld03Area11613_801F2F30

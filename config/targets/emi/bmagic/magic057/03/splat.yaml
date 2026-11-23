@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801EED98
   - - 592
-    - asm
-    - func_801EEE50
+    - c
+    - publishSavedWorkPointerInvokeReadinessHelperThenClearWorkStageIndexAndCountdownBmagicMagic05703_801EEE50
+    - '@source: src/bof3/bmagic/publishSavedWorkPointerInvokeReadinessHelperThenClearWorkStageIndexAndCountdownBmagicMagic05703_801EEE50.c'
+    - '@behavior: Entry 1 of the four-word code pointer table at 0x801EEC10 (0x801EED98, 0x801EEE50, 0x801EEEB0, 0x801EEFA4), which the handler dispatchWorkByte2HandlerTableec10BmagicMagic05703_801EED2C copies into its own 0x28-byte frame and indexes with the scratchpad work object byte 0x02, so no jal in the image names this span. It reads the scratchpad work-object pointer cell at 0x1F800044 once into a callee-saved register, reads the shared battle record pointer at 0x801EC2E0 once, publishes that record word 0x74 through the cell, invokes the shared readiness helper func_8014DAEC and restores the cell to the pointer it held, which fills no delay slot. It then clears work byte 0x09 through the held pointer and work byte 0x0A through a fresh read of the same cell: byte 0x09 is the stage index the per-frame dispatcher func_801EF620 advances through the three-entry stage table at 0x801EFADC and byte 0x0A is the per-stage frame countdown that dispatcher decrements, both cleared here. Takes no arguments, returns nothing through the jr $ra at 0x801EEEA8 inside a 0x18-byte frame that keeps the previous cell value at 0x10 and $ra at 0x14, and reads or writes no other state.'
   - - 688
     - c
     - queueSlotClearBytes1And2CopyRecordWordTripletPublishWorkPointerEverySecondTickWhileWorkByte9Below32AdvanceWorkByte2At32BmagicMagic05703_801EEEB0

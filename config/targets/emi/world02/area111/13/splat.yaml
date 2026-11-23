@@ -34,8 +34,10 @@ segments:
     - dispatchStateByte1Table4890World02Area11113_801F2C64
     - '@source: src/bof3/world/area11113DispatchTables.c'
   - - 168
-    - asm
-    - func_801F2CA8
+    - c
+    - resetPartsHalvesAndArmCountdownByte9ThenQueueCue206AdvanceStateByte1World02Area11113_801F2CA8
+    - '@source: src/bof3/world/resetPartsHalvesAndArmCountdownByte9ThenQueueCue206AdvanceStateByte1World02Area11113_801F2CA8.c'
+    - '@behavior: Entry handler 0 of the byte-1 dispatch table based at 0x801F4890 for the work record published at the scratchpad pointer cell 0x1F800044. It stores 0x28 into the countdown byte at offset 0x09, zero into the halfword at offset 0x2E and 0x100 into the halfword at offset 0x30 through one read of that cell, then re-reads the cell, increments the dispatch byte at offset 0x01 and queues cue 0x206 through the shared cue dispatcher at 0x8015DF18.'
   - - 252
     - c
     - drawPartsStepHalves2eAnd30By40AndAdvanceStateOnCountdownByte9ExpiryWorld02Area11113_801F2CFC

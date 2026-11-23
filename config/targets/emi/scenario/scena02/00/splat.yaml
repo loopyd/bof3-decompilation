@@ -384,8 +384,16 @@ segments:
     - c
     - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC308
   - - 22452
-    - asm
-    - func_801FC3B4
+    - c
+    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC3B4
+    - '@source: src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC3B4.c'
+    - '@behavior: One of three consecutive indexed bounds gates the caller
+      func_801F7A9C calls this span from 0x801F7BD0 with index 6, the span at
+      0x801FC46C with index 7 and the span at 0x801FC688 with index 8. When the
+      shared front-end flag D_80143F03 is zero it reads the 152-byte-stride
+      record words at 0x801468C0 and 0x801468BC and tests the shared signed word
+      pair against them, then calls the helper that sets progress 0x1F and
+      requests primary state 7.'
   - - 22636
     - c
     - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC46C

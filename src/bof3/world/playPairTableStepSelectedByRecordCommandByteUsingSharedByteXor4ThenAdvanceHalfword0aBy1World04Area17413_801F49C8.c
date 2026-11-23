@@ -42,7 +42,8 @@ extern u8 D_80145E98[];
  * argument back into work byte 0x08.
  * @source 0x801F4A5C
  */
-extern void func_801F4A5C(u8* table, u8 index);
+extern void playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C(
+    u8* table, u32 index);
 
 /* @source 0x801F49C8
  * @behavior State handler of this overlay, reached only through the code
@@ -84,6 +85,7 @@ void playPairTableStepSelectedByRecordCommandByteUsingSharedByteXor4ThenAdvanceH
   script = (u8*)states[work[3]];
   offset = *(u16*)(work + 0xA);
   cursor = script + offset;
-  func_801F4A5C(D_801F6748[cursor[2]], D_80145E98[0] ^ 4);
+  playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C(
+      D_801F6748[cursor[2]], D_80145E98[0] ^ 4);
   *(u16*)(D_80148210 + 0xA) += 1;
 }

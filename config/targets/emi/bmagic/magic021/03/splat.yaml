@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801EEF38
   - - 936
-    - asm
-    - func_801EEFA8
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic02103_801EEFA8
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic02103_801EEFA8.c'
+    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the helper at 0x801E5988 with no arguments; the halfword store fills the call delay slot.'
   - - 988
     - c
     - dispatchStateByte1Tablefe00BmagicMagic02103_801EEFDC

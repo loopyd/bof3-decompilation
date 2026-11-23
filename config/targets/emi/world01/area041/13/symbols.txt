@@ -36,7 +36,7 @@ advanceWorkAccumulatorAndSubtract2FromSharedCounterTripleThenDecrementCountdownA
 advanceWorkAccumulatorAndAdd2ToSharedCounterTripleWorld01Area04113_801F4118 = 0x801F4118;
 queueSharedUiElementBlock40x27To28Size0World01Area04113_801F41F8 = 0x801F41F8;
 invokeHelperArgWorld01Area04113_801F4230 = 0x801F4230;
-func_801F4250 = 0x801F4250;
+initFrontendStateSelector4AndSecondStateByte0AWorld01Area04113_801F4250 = 0x801F4250;
 func_801F4288 = 0x801F4288;
 D_801F42C8 = 0x801F42C8;
 D_801F4365 = 0x801F4365;

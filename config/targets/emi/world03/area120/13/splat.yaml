@@ -34,8 +34,10 @@ segments:
     - dispatchStateByte1Table43c0World03Area12013_801F2C18
     - '@source: src/bof3/world/area12013DispatchTables.c'
   - - 92
-    - asm
-    - func_801F2C5C
+    - c
+    - step0ResetEffectTableSeedWorkPositionSetWorkByte6To0RefillWorkHalfword32AdvanceWorkByte1Cue201World03Area12013_801F2C5C
+    - '@source: src/bof3/world/step0ResetEffectTableSeedWorkPositionSetWorkByte6To0RefillWorkHalfword32AdvanceWorkByte1Cue201World03Area12013_801F2C5C.c'
+    - '@behavior: Step 0 of the run this overlay dispatches through the handler table at 0x801F43C0, whose first pointer word names this body; the exact dispatcher at 0x801F2C18 indexes that table with work record byte 0x01. The body runs the target-local reset routine at 0x801F35B8 and ignores its result, which seeds work record words +0x34, +0x38 and +0x3C and clears the lead byte of the 256 entries of the effect table at 0x800E4800, then stores 0 into work record byte +0x06, the byte the sweep at 0x801F36B0 reads as its state step. It reads the scratchpad pointer cell 0x1F800044 a second time and refills the record unsigned halfword at +0x32 with 0x78, the countdown the handler at 0x801F2CB4 decrements, through the pointer of the first read, then advances the record byte at +0x01 through the pointer of the second read, which sends the next frame to entry 1 of the same table, the handler at 0x801F2CB4. It closes by queueing cue 0x201 through the same-binary dispatcher func_8015DF18. Takes no arguments and returns nothing; its 0x18-byte frame holds only the saved return address at 0x10.'
   - - 180
     - c
     - step1ClaimFourEffectRecordsSweepArmWorkByte6To1AndAdvanceWorkByte1OnCountdownExpiryWorld03Area12013_801F2CB4

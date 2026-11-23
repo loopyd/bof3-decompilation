@@ -175,8 +175,10 @@ segments:
     - c
     - invokeHelperArgWorld01Area04113_801F4230
   - - 5712
-    - asm
-    - func_801F4250
+    - c
+    - initFrontendStateSelector4AndSecondStateByte0AWorld01Area04113_801F4250
+    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte0AWorld01Area04113_801F4250.c'
+    - '@behavior: runs the shared front-end startup helper 0x8015C088 then writes 4 into the shared front-end state selector byte 0x801448EB and 0x0A into the shared second state byte 0x801448ED, leaving 0x801448EC untouched; takes no arguments and returns 0, and no in-image jal or pointer word addresses the span.'
   - - 5768
     - asm
     - func_801F4288

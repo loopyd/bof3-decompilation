@@ -16,6 +16,7 @@ sources = [
     "src/bof3/boss/dispatchStateByte1Table26ccBossBoss03416_800C181C.c",
     "src/bof3/boss/storePartySlotMatchingFieldRecordIndexThenPublishBattleHookTrioBossBoss03416_800C1EA8.c",
     "src/bof3/boss/accumulateSpinAngleShrinkQuadThenDrawAndAdvanceStateAtSpinDelta64BossBoss03416_800C1B40.c",
+    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03416_800C1860.c",
 ]
 support_sources = [
     "src/bof3/boss/invokeHelperBossBoss03416_800C1D40.c",

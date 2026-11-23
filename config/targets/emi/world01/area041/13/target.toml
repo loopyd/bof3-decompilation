@@ -33,6 +33,7 @@ support_sources = [
     "src/bof3/world/advanceWorkAccumulatorAndAdd2ToSharedCounterTripleWorld01Area04113_801F4118.c",
     "src/bof3/world/advanceWorkAccumulatorAndSubtract2FromSharedCounterTripleThenDecrementCountdownAndClearStateOrConsumeSharedCountdownWorld01Area04113_801F3FDC.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area04113_801F3D04.c",
+    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0AWorld01Area04113_801F4250.c",
     "src/bof3/support/area041_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area041_13_psyq.c"

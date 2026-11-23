@@ -21,8 +21,8 @@ s32 func_8015C088(void);
  *           same body as the world00 sibling
  *           initFrontendStateSelector4AndClearSecondStateByteWorld00Area00313_801F2DE0,
  *           which differs only in storing 0 through $zero into 0x801448ED, and
- *           the in-target asm neighbours func_801F3A34, func_801F3A6C and
- *           func_801F3AA4 emit the identical sequence with 0xB, 0xC and 0xE in
+ *           the in-target neighbours at 0x801F3A34, 0x801F3A6C and 0x801F3AA4
+ *           emit the identical sequence with 0xB, 0xC and 0xE in
  *           that second byte. The role of the 0xD index is not established
  *           beyond its position in that run. No in-image jal or pointer word
  *           addresses 0x801F3ADC, so the overlay reaches this handler from
