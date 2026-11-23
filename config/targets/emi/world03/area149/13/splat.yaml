@@ -27,55 +27,55 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table37d0World03Area14913_801F2C04
+    - callStateTable37World03
     - '@source: src/bof3/world/area14913DispatchTables.c'
   - - 72
     - c
-    - seedChannelModeFlagsWorkTripleAndCountdownByte9ThenAdvanceWorkByte1World03Area14913_801F2C48
-    - '@source: src/bof3/world/seedChannelModeFlagsWorkTripleAndCountdownByte9ThenAdvanceWorkByte1World03Area14913_801F2C48.c'
-    - '@behavior: Entry 0 of this overlay byte-1 handler run based at 0x801F37D0, which dispatchStateByte1Table37d0World03Area14913_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: stores 0x1C80 into the shared halfword 0x8014932C, publishes 2 in the shared mode byte 0x80149333, stores 1 into the shared flag bytes 0x80145ED8, 0x80146018 and 0x80146158, fills the record bytes +0x5F, +0x5E and +0x5D with 0x7F, arms the record countdown byte +0x09 with 0x96 and stores 1 into the record byte +0x01 to hand the run to entry 1 (0x801F2CB4); takes no arguments, calls nothing and returns nothing.'
+    - stateChannelFlagsTriple
+    - '@source: src/bof3/world/stateChannelFlagsTriple.c'
+    - '@behavior: Entry 0 of this overlay byte-1 handler run based at 0x801F37D0, which callStateTable37World03 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: stores 0x1C80 into the shared halfword 0x8014932C, publishes 2 in the shared mode byte 0x80149333, stores 1 into the shared flag bytes 0x80145ED8, 0x80146018 and 0x80146158, fills the record bytes +0x5F, +0x5E and +0x5D with 0x7F, arms the record countdown byte +0x09 with 0x96 and stores 1 into the record byte +0x01 to hand the run to entry 1 (0x801F2CB4); takes no arguments, calls nothing and returns nothing.'
   - - 180
     - c
     - invokeHelperWorld03Area14913_801F2CB4
   - - 212
     - c
-    - stepCountdownByte9LowerChannel932cBy2AAndLevelTripleElseAdvanceWorkByte1To3ThenSetMode2AndInvokeDrawHelperWorld03Area14913_801F2CD4
-    - '@source: src/bof3/world/stepCountdownByte9LowerChannel932cBy2AAndLevelTripleElseAdvanceWorkByte1To3ThenSetMode2AndInvokeDrawHelperWorld03Area14913_801F2CD4.c'
-    - '@behavior: Entry 2 of this overlay''s byte-1 handler run based at 0x801F37D0, which dispatchStateByte1Table37d0World03Area14913_801F2C04 indexes with work byte 1: decrements the work countdown byte 0x09, and when it reaches 0 stores 0x400 into the shared channel halfword 0x8014932C and stores 3 into work byte 1 to hand the run to entry 3 (0x801F2DAC); while the countdown runs it subtracts 0x2A from that halfword and, when the signed level byte 0x5D is nonzero, decrements bytes 0x5D, 0x5E and 0x5F; then it stores 2 into the shared mode byte 0x80149333 and calls the local drawing helper func_801F2DE0; takes no arguments and returns nothing.'
+    - stepLowerLevelTriple
+    - '@source: src/bof3/world/stepLowerLevelTriple.c'
+    - '@behavior: Entry 2 of this overlay''s byte-1 handler run based at 0x801F37D0, which callStateTable37World03 indexes with work byte 1: decrements the work countdown byte 0x09, and when it reaches 0 stores 0x400 into the shared channel halfword 0x8014932C and stores 3 into work byte 1 to hand the run to entry 3 (0x801F2DAC); while the countdown runs it subtracts 0x2A from that halfword and, when the signed level byte 0x5D is nonzero, decrements bytes 0x5D, 0x5E and 0x5F; then it stores 2 into the shared mode byte 0x80149333 and calls the local drawing helper func_801F2DE0; takes no arguments and returns nothing.'
   - - 428
     - c
-    - advanceSharedSceneStateByteAndClearWorkFlagsWorld03Area14913_801F2DAC
-    - '@source: src/bof3/world/advanceSharedSceneStateByteAndClearWorkFlagsWorld03Area14913_801F2DAC.c'
-    - '@behavior: Entry 3 of this overlay''s byte-1 handler run based at 0x801F37D0, which dispatchStateByte1Table37d0World03Area14913_801F2C04 indexes with work byte 1 (entry 2 stores 3 into work byte 1 to hand the run here): adds one to the shared scene state request byte 0x80146875 and then runs the shared work-flag reset func_80196070, which clears the scratchpad work bytes at offsets 0x00 through 0x04 and so ends the run; takes no arguments and returns nothing.'
+    - stateSharedSceneFlags
+    - '@source: src/bof3/world/stateSharedSceneFlags.c'
+    - '@behavior: Entry 3 of this overlay''s byte-1 handler run based at 0x801F37D0, which callStateTable37World03 indexes with work byte 1 (entry 2 stores 3 into work byte 1 to hand the run here): adds one to the shared scene state request byte 0x80146875 and then runs the shared work-flag reset func_80196070, which clears the scratchpad work bytes at offsets 0x00 through 0x04 and so ends the run; takes no arguments and returns nothing.'
   - - 480
     - asm
     - func_801F2DE0
   - - 708
     - c
-    - copyWords7a8cToWork34383cWorld03Area14913_801F2EC4
+    - copyWords7Work34383World03
   - - 764
     - c
-    - dispatchStateByte4Table4580World03Area14913_801F2EFC
-    - '@source: src/bof3/world/dispatchStateByte4Table4580World03Area14913_801F2EFC.c'
+    - callStateByte4Table4580
+    - '@source: src/bof3/world/callStateByte4Table4580.c'
     - '@behavior: Overlay step dispatch: reads the state byte at +4 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler pointer at that index of the local handler table based at 0x801F4580, whose four words are the routines at 0x801F2F40, 0x801F2FC4, 0x801F3068 and 0x801F3108 in that order, the four step handlers of this overlay''s run; takes no arguments and returns nothing, and its 0x18-byte frame only keeps the return address across the call.'
   - - 832
     - c
-    - requestProgress0AAndCue1When932cBelow880AdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F2F40
-    - '@source: src/bof3/world/requestProgress0AAndCue1When932cBelow880AdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F2F40.c'
-    - '@behavior: Step 0 of this overlay''s four-entry handler run based at 0x801F4580, which dispatchStateByte4Table4580World03Area14913_801F2EFC indexes with work byte 4: when the shared signed halfword 0x8014932C is below 0x880 it stores 1 into the flag byte 0x80147AD0, stores 0xA into the scenario progress byte, queues front-end cue 1 through func_8015DF18 and increments work byte 4 to advance the run, then whether or not that gate fired it calls the local helper func_801F3140 with -4 and subtracts 2 from the +0x0A halfword of the record published through 0x80148210; takes no arguments and returns nothing.'
+    - requestStepHelperDecrement
+    - '@source: src/bof3/world/requestStepHelperDecrement.c'
+    - '@behavior: Step 0 of this overlay''s four-entry handler run based at 0x801F4580, which callStateByte4Table4580 indexes with work byte 4: when the shared signed halfword 0x8014932C is below 0x880 it stores 1 into the flag byte 0x80147AD0, stores 0xA into the scenario progress byte, queues front-end cue 1 through func_8015DF18 and increments work byte 4 to advance the run, then whether or not that gate fired it calls the local helper func_801F3140 with -4 and subtracts 2 from the +0x0A halfword of the record published through 0x80148210; takes no arguments and returns nothing.'
   - - 964
     - asm
     - func_801F2FC4
   - - 1128
     - c
-    - requestProgress14AndCue1When932cZeroSetFlag3WhileCoordBelowSharedXWindowAdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3068
-    - '@source: src/bof3/world/requestProgress14AndCue1When932cZeroSetFlag3WhileCoordBelowSharedXWindowAdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3068.c'
-    - '@behavior: Step 2 of the four-entry handler run this overlay bases at 0x801F4580, which dispatchStateByte4Table4580World03Area14913_801F2EFC indexes with work byte 4: when the shared signed halfword 0x8014932C is zero the body stores 0x14 into the scenario progress byte, queues front-end cue 1 through func_8015DF18 and increments work byte 4 to advance the run, and whether or not that gate fires it stores 3 into the flag byte 0x80147AD0 while the shared coordinate word 0x80147A8C is still below the shared X channel 0x80149308 widened by a 0x20000 window, then calls the local helper func_801F3140 with -2 and subtracts 2 from the +0x0A halfword of the record published through 0x80148210; takes no arguments and returns nothing.'
+    - requestWhileCoordBelow
+    - '@source: src/bof3/world/requestWhileCoordBelow.c'
+    - '@behavior: Step 2 of the four-entry handler run this overlay bases at 0x801F4580, which callStateByte4Table4580 indexes with work byte 4: when the shared signed halfword 0x8014932C is zero the body stores 0x14 into the scenario progress byte, queues front-end cue 1 through func_8015DF18 and increments work byte 4 to advance the run, and whether or not that gate fires it stores 3 into the flag byte 0x80147AD0 while the shared coordinate word 0x80147A8C is still below the shared X channel 0x80149308 widened by a 0x20000 window, then calls the local helper func_801F3140 with -2 and subtracts 2 from the +0x0A halfword of the record published through 0x80148210; takes no arguments and returns nothing.'
   - - 1288
     - c
-    - invokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3108
-    - '@source: src/bof3/world/invokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3108.c'
-    - '@behavior: Step 3 of the four-entry handler run this overlay bases at 0x801F4580, which dispatchStateByte4Table4580World03Area14913_801F2EFC indexes with work byte 4: the body has no gate of its own, it calls the local step helper func_801F3140 with -1 and then subtracts 2 from the +0x0A halfword of the record published through 0x80148210; takes no arguments and returns nothing, and its 0x18-byte frame only keeps the return address across the call.'
+    - callHelperDecrementRecord
+    - '@source: src/bof3/world/callHelperDecrementRecord.c'
+    - '@behavior: Step 3 of the four-entry handler run this overlay bases at 0x801F4580, which callStateByte4Table4580 indexes with work byte 4: the body has no gate of its own, it calls the local step helper func_801F3140 with -1 and then subtracts 2 from the +0x0A halfword of the record published through 0x80148210; takes no arguments and returns nothing, and its 0x18-byte frame only keeps the return address across the call.'
   - - 1344
     - asm
     - func_801F3140

@@ -8,24 +8,24 @@ splat = "config/targets/emi/world03/area140/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/advanceWorkHalfword3eBy10AndStepHalfwordPair36And3aAt80ThenAdvanceWorkByte2AndDrawWorld03Area14013_801F34F4.c",
-    "src/bof3/world/testMoveProbeAndMapCellCodeNot89World03Area14013_801F4058.c",
-    "src/bof3/world/clearWorkByte74Bit0AndSetSharedFlagBankBit54ThenResetScratchWorkByteWhenWorkRecordKind5To7World03Area14013_801F3DAC.c",
-    "src/bof3/world/setProgress5OnFlag66AndPackedArgWindowMatchWorld03Area14013_801F42F4.c",
-    "src/bof3/world/clearFlagBitFromWorkByteBAndSubmitPair36And3aThenResetWorkWorld03Area14013_801F476C.c",
-    "src/bof3/world/projectFacingStepAndDispatchLocalTriggerAtCellElseAdvanceSharedRecordHalfword0aWorld03Area14013_801F3E30.c",
-    "src/bof3/world/findWorkRecordIndexAtPositionWorld03Area14013_801F3C44.c",
+    "src/bof3/world/stateStepHalfwordDraw.c",
+    "src/bof3/world/checkMoveProbeCode.c",
+    "src/bof3/world/stateFlagBankScratch.c",
+    "src/bof3/world/statePackedWindowMatch.c",
+    "src/bof3/world/stateFlagBitSubmit.c",
+    "src/bof3/world/projectFacingTriggerCell.c",
+    "src/bof3/world/queryRecordIndexPosition.c",
     "src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area14013_801F2E64.c",
-    "src/bof3/world/applyTable47f4RecordAtWorkHalfword36ThenSetWorkByte2AndHalfword3eAndDrawWorld03Area14013_801F3320.c",
+    "src/bof3/world/stateRecordSetDraw.c",
     "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCellWindowThenDrawWorld03Area14013_801F2EC0.c",
-    "src/bof3/world/runFrontEndStartupAndSetProgress5World03Area14013_801F4674.c",
+    "src/bof3/world/runFrontEndStartup.c",
 ]
 support_sources = [
     "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C.c",
-    "src/bof3/world/stepWorkHalfword3eWorld03Area14013_801F38C4.c",
+    "src/bof3/world/stepWorkHalfword3World03.c",
     "src/bof3/support/area140_13_psyq.c",
     "src/bof3/world/area14013DispatchTables.c",
-    "src/bof3/world/armCountdownByte9To210AndAdvanceWorkByte1World03Area14013_801F46E4.c",
-    "src/bof3/world/decrementWorkByte9AndSetState2OnExpiryOrGameState5World03Area14013_801F4708.c",
+    "src/bof3/world/armCountdownAdvanceWork.c",
+    "src/bof3/world/decrementSetExpiryGame.c",
 ]
 psyq_source = "src/bof3/support/area140_13_psyq.c"

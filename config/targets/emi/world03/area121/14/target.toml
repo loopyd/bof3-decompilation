@@ -11,7 +11,7 @@ sources = [
     "src/bof3/world/setRecordByte12bThenReseedWhenByte9ExpiresElseDecrementByte9World03Area12114_801F5324.c",
 ]
 support_sources = [
-    "src/bof3/world/claimFrontEndRecordAndSetHandlerBaWorld03Area12114_801F2DC0.c",
+    "src/bof3/world/claimFrontEndHandler.c",
     "src/bof3/world/advanceWorkByte9To0x5aAndSetByteBThenAdvanceState3WhenGatedThenDrawHalfword30World03Area12114_801F3840.c",
     "src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld03Area12114_801F3620.c",
     "src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld03Area12114_801F3574.c",
@@ -22,7 +22,7 @@ support_sources = [
     "src/bof3/world/setModeFromMaskOverlapAndWorkByteBWorld03Area12114_801F5734.c",
     "src/bof3/world/setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC.c",
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area12114_801F3524.c",
-    "src/bof3/world/advanceHalfword932cTo1500World03Area12114_801F2CBC.c",
+    "src/bof3/world/stateHalfword932To1500World03.c",
     "src/bof3/world/area12114DispatchTables.c",
     "src/bof3/world/dispatchState04World03Area12114_801F2C3C.c",
     "src/bof3/world/area12114_work_state.c",
@@ -44,10 +44,10 @@ support_sources = [
     "src/bof3/world/stepWorkFacing8TowardModeByteWhenWithinThreeStepsThenArmMoveAndSetState2World03Area12114_801F5ECC.c",
     "src/bof3/world/publishSharedPositionWordsToWorkThenDrawMeterWorld03Area12114_801F5C7C.c",
     "src/bof3/world/prepareWorkRecordForLookup158AndArmMode1World03Area12114_801F3078.c",
-    "src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld03Area12114_801F323C.c",
+    "src/bof3/world/stateHalfwordsDecrementExpires.c",
     "src/bof3/world/drawSpriteFrameAndMainRamTexture0World03Area12114_801F40DC.c",
     "src/bof3/world/setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578.c",
-    "src/bof3/world/requestResourceForInteractionByteThenAdvanceMode2World03Area12114_801F3104.c",
+    "src/bof3/world/requestResourceInteractionByte.c",
     "src/bof3/world/faceSlotThenStepRotatingFacingUntilPositionHoldsNoRecordWorld03Area12114_801F5028.c",
     "src/bof3/world/faceWorkTowardResolvedSlotThenDecrementByte9AndSetState2To1World03Area12114_801F5268.c",
     "src/bof3/world/armMeterStateFromModeByteClearTintAdvanceAndSeedFourEntriesWorld03Area12114_801F5CD0.c",
@@ -58,6 +58,6 @@ support_sources = [
     "src/bof3/world/probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03Area12114_801F5380.c",
     "src/bof3/world/drawTwoLayerTexturedPanelNearSharedFocusWorld03Area12114_801F477C.c",
     "src/bof3/world/advanceWorkHalfword3eBy10AndSetState3At0x281ThenDrawRotatedTexturedDiamondWorld03Area12114_801F60F4.c",
-    "src/bof3/world/setHalfword932cMinus424SetWorkByte4ThenLowerRecordHalfword0aWorld03Area12114_801F2C80.c",
+    "src/bof3/world/stateSetLowerRecord.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"

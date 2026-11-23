@@ -27,12 +27,12 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table3dd8WorldWorld03Area13213_801F2C04
+    - callStateTable3World
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 72
     - c
-    - resetWorkCountdownAndSelectHandler1World03Area13213_801F2C48
-    - '@source: src/bof3/world/resetWorkCountdownAndSelectHandler1World03Area13213_801F2C48.c'
+    - stateWorkCountdownSelect
+    - '@source: src/bof3/world/stateWorkCountdownSelect.c'
     - '@behavior: Entry 0 of the byte-1 handler pointer run based at 0x801F3DD8: loads the work record published at the scratchpad pointer cell 0x1F800044, clears its countdown byte at +0x09 to zero, then reads that cell again and stores 1 in the record state byte at +0x01 so the next step dispatches entry 1 at 0x801F2C6C.'
   - - 108
     - asm
@@ -50,18 +50,18 @@ segments:
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 568
     - c
-    - resetWorkTableArmCountdownAdvanceWorkByte2AndQueueCue20CWorld03Area13213_801F2E38
-    - '@source: src/bof3/world/resetWorkTableArmCountdownAdvanceWorkByte2AndQueueCue20CWorld03Area13213_801F2E38.c'
+    - stateTableArmQueue
+    - '@source: src/bof3/world/stateTableArmQueue.c'
     - '@behavior: Entry 0 of the byte-2 handler pointer run based at 0x801F3DEC: clears every claim byte of the 0x20-record work table through the helper at 0x801F385C, arms the published work record byte at +0x09 with 0x40, reloads the scratchpad pointer cell 0x1F800044 and increments the record state byte at +0x02 so the next dispatch reaches entry 1 at 0x801F2E88, then queues cue 0x20C through 0x8015DF18.'
   - - 648
     - c
-    - claimSeedWorkRecordEveryFourthFrameRunRecordPassThenAdvanceWorkByte2WhenCountdownExpiresWorld03Area13213_801F2E88
-    - '@source: src/bof3/world/claimSeedWorkRecordEveryFourthFrameRunRecordPassThenAdvanceWorkByte2WhenCountdownExpiresWorld03Area13213_801F2E88.c'
+    - claimEveryFourthPass
+    - '@source: src/bof3/world/claimEveryFourthPass.c'
     - '@behavior: Entry 1 of the byte-2 handler pointer run based at 0x801F3DEC: on the frames whose published work object byte at +0x09 holds zero in its low two bits it claims the first free record of the 0x18-byte-stride table at 0x800E4800 through 0x801F3800 and seeds it through 0x801F37A4, then runs the record pass at 0x801F38B0, counts the byte at +0x09 down and, when that byte reaches zero, increments the work byte at +0x02 so the next step dispatches entry 2 at 0x801F2F20.'
   - - 800
     - c
-    - clearWorkFlagsWhenNoRecordDrawnWorld03Area13213_801F2F20
-    - '@source: src/bof3/world/clearWorkFlagsWhenNoRecordDrawnWorld03Area13213_801F2F20.c'
+    - stateFlagsNoDrawn
+    - '@source: src/bof3/world/stateFlagsNoDrawn.c'
     - '@behavior: Entry 2 of the byte-2 handler pointer run based at 0x801F3DEC: runs the record update and draw pass at 0x801F38B0, masks its returned byte with 0xFF and, when that byte reads zero because the overlay work table at 0x800E4800 held no claimed record on this frame, calls the shared work-area reset at 0x80196070, which clears work-object bytes 0x00-0x04 and returns the overlay to work state 0; it takes no argument, returns nothing and keeps only $ra across the two calls in an 0x18-byte frame.'
   - - 852
     - c
@@ -81,28 +81,28 @@ segments:
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 1216
     - c
-    - seedWorkWords34To3CAnd0CTo14DispatchCue207AndAdvanceWorkByte1World03Area13213_801F30C0
-    - '@source: src/bof3/world/seedWorkWords34To3CAnd0CTo14DispatchCue207AndAdvanceWorkByte1World03Area13213_801F30C0.c'
+    - stateWorkDispatchAdvance
+    - '@source: src/bof3/world/stateWorkDispatchAdvance.c'
     - '@behavior: Entry 0 of the byte-1 handler table based at 0x801F3E00: loads the published work record through the pointer cell 0x1F800044, copies its saved words at +0x34, +0x38 and +0x3C into the record words at +0x0C, +0x10 and +0x14 and starts the word at +0x1C from that +0x3C copy, arms the countdown byte at +0x09 with 0x40, clears the halfword at +0x20, stores the 0x01000000 step in the word at +0x24, then advances the state byte at +0x01 and passes the cue 0x207 to 0x8015DF18.'
   - - 1324
     - c
-    - advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13213_801F312C
-    - '@source: src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13213_801F312C.c'
+    - stateClampedRearmCountdown
+    - '@source: src/bof3/world/stateClampedRearmCountdown.c'
     - '@behavior: Overlay work-record step handler and entry 1 of the byte-1 handler table based at 0x801F3E00: advances the record signed word at +0x1C by 0x01000000 and clamps it to the word at +0x14 plus 0x08000000, sweeps the halfword at +0x20 down by 0x200 in the delay slot of the no-argument helper 0x801F3268, then decrements the countdown byte at +0x09 and, when it reads zero, re-arms that byte with 0x10 and advances the state byte at +0x01.'
   - - 1516
     - asm
     - func_801F31EC
   - - 1640
     - c
-    - drawTexturedRibbonAlongWorkSpanWorld03Area13213_801F3268
-    - '@source: src/bof3/world/drawTexturedRibbonAlongWorkSpanWorld03Area13213_801F3268.c'
+    - renderRibbonAlongSpan
+    - '@source: src/bof3/world/renderRibbonAlongSpan.c'
   - - 2400
     - asm
     - func_801F3560
   - - 2980
     - c
-    - seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4
-    - '@source: src/bof3/world/seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4.c'
+    - stateRecordDefaultsPosition
+    - '@source: src/bof3/world/stateRecordDefaultsPosition.c'
   - - 3072
     - c
     - findFreeWorkRecordWorld03Area13213_801F3800
@@ -110,18 +110,18 @@ segments:
     - '@behavior: Work-record free-entry scan: publishes the base 0x800E4800 of the 0x18-byte-stride work table in main RAM into this overlay cursor cell 0x801F4A88, then walks at most 0x20 records, reloading the published cursor and reading the claim byte at offset 0 of the record it names; the first record whose claim byte reads zero is returned with the cursor left pointing at it, and each claimed record advances the published cursor by 0x18 under an unsigned byte counter, so an exhausted walk returns zero with the cursor one stride past the last record; it takes no arguments, makes no call and reads no state beyond the table it publishes.'
   - - 3164
     - c
-    - clearWorkTableClaimBytesWorld03Area13213_801F385C
-    - '@source: src/bof3/world/clearWorkTableClaimBytesWorld03Area13213_801F385C.c'
+    - stateTableClaimBytes
+    - '@source: src/bof3/world/stateTableClaimBytes.c'
     - '@behavior: Table reset helper: publishes the base 0x800E4800 of the 0x18-byte-stride work table in main RAM into its own cursor cell 0x801F4A88, then walks the 0x20 records of that table with an unsigned byte counter in a bottom-tested loop, clearing the claim byte at offset 0 of each record and advancing the published cursor by 0x18 per record, so the cell ends one stride past the last record; it takes no arguments, returns nothing and reads no other state, and its two in-payload callers are the raw rows at 0x801F2E38 and 0x801F2F98, each calling it through jal at 0x801F2E40 and 0x801F2FC4 with no argument setup.'
   - - 3248
     - c
-    - tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0
-    - '@source: src/bof3/world/tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0.c'
+    - tickDrawActiveRecords
+    - '@source: src/bof3/world/tickDrawActiveRecords.c'
     - '@behavior: Per-frame pass over the 0x20 records of the 0x18-byte-stride work table based at 0x800E4800, walked through the published cursor cell 0x801F4A88: fills the 0x20-byte projection scratch through 0x801AFE18, then for each record whose claim byte at offset 0 reads non-zero advances the record word at +0x04 by 0x2000, grows the halfword at +0x14 by 8 and drops the byte at +3 by 2 when the work object at the scratchpad pointer cell 0x1F800044 has a zero state byte at +1, otherwise adds the angle helper 0x801783C8 result of its byte at +0x17 shifted left 8 to the word at +0x04 and the helper 0x801782FC result of the same shifted byte shifted left 8 to the word at +0x0C while still dropping the byte at +3 by 2, counts the byte at +2 down and clears the claim byte at 0 when it reaches zero, and draws the record through 0x801F3560 while latching one as the result; the cursor advances by 0x18 per record and the pass returns one when any record was handled.'
   - - 3620
     - c
-    - requestResource40Or41PerWorkByte8Bit2World03Area13213_801F3A24
-    - '@source: src/bof3/world/requestResource40Or41PerWorkByte8Bit2World03Area13213_801F3A24.c'
+    - requestResource40PerWork
+    - '@source: src/bof3/world/requestResource40PerWork.c'
     - '@behavior: Entry 0 of this overlay''s handler pointer run at 0x801F4A30, whose second to sixth words name 0x801F3A64, 0x801F3AEC, 0x801F3C1C, 0x801F3CA0 and 0x801F3E54; it loads the scratchpad work-object pointer cell 0x1F800044 once, reads the object''s unsigned byte at +0x08 and passes that byte''s bit 0x04 as the selector of its single argument, so the resource request helper func_8014D6B8 receives 0x40 when the bit reads set and 0x41 when it reads clear; it takes no argument, returns nothing and keeps only the return address at 0x10 in an 0x18-byte frame.'
   - - 3684
     - asm

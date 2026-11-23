@@ -65,9 +65,9 @@ extern u8 D_801F5734[]; /* @source 0x801F5734 @kind table */
  *
  * Name and shape evidence: the dispatch-table row at 0x801F5804 published by
  * this overlay's already-exact dispatcher
- * dispatchStateByte1Table5804World03Area13413_801F3E0C lists 0x801F3F78 as
+ * callStateTable5804World03 lists 0x801F3F78 as
  * entry 2, between the exact siblings
- * endAreaWhenThirdWorkWord34ExceedsLimitElseSeedRandomStatusByteAndArmMode2World03Area13413_801F3E8C
+ * endThirdExceedsLimit
  * (entry 1) and
  * endAreaWhenThirdWorkWord34ExceedsLimitElseStepWorkByte9AndArmMode1World03Area13413_801F40C8
  * (entry 3), and the first 0x20 instructions of this body are identical to

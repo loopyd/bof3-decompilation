@@ -27,41 +27,41 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte2Table3554ThenRunStepConsumerWorld03Area14213_801F2C04
-    - '@source: src/bof3/world/dispatchWorkByte2Table3554ThenRunStepConsumerWorld03Area14213_801F2C04.c'
+    - callRunStepConsumer
+    - '@source: src/bof3/world/callRunStepConsumer.c'
     - '@behavior: Overlay entry of the world03 area142 step handler. The leading two instructions read the work record pointer published at the scratchpad pointer cell 0x1F800044 before the 0x18-byte frame is reserved, then the body takes that record''s unsigned byte 2, scales it by four and calls the selected entry of the handler run based at 0x801F3554 through jalr v0 with a nop delay slot; byte 2 is the state byte the run''s own handlers move, so it selects the handler for the record''s current step. Once that handler returns the body re-reads the same scratchpad cell and passes the record''s unsigned byte 9 to the overlay''s step consumer at 0x801F2CB0. The frame only keeps ra at 0x10 across the two calls, and no call or pointer word in the payload names this function, so it is the overlay''s loader entry. Takes no arguments and returns nothing.'
   - - 96
     - c
-    - clearWorkByte9AndAdvanceWorkByte2World03Area14213_801F2C60
-    - '@source: src/bof3/world/clearWorkByte9AndAdvanceWorkByte2World03Area14213_801F2C60.c'
+    - stateWorkAdvanceWork
+    - '@source: src/bof3/world/stateWorkAdvanceWork.c'
     - '@behavior: Clears the scratchpad work-object byte at offset 0x09 with a zero byte store and then increments the work-object byte at offset 0x02 by one. The pointer cell at 0x1F800044 is read once per access, so the original re-materializes the cell address and reloads the work pointer for each of the two accesses: the zero byte is stored through the first load and the incremented byte through the second. The function takes no arguments and returns nothing.'
   - - 144
     - c
-    - advanceWorkByte9By2World03Area14213_801F2C90
-    - '@source: src/bof3/world/advanceWorkByte9By2World03Area14213_801F2C90.c'
+    - stateWorkBy2World03
+    - '@source: src/bof3/world/stateWorkBy2World03.c'
     - '@behavior: Advances the scratchpad work-object byte at offset 0x09 by two at byte width. The pointer cell at 0x1F800044 is loaded once and the same work pointer serves both the byte load and the byte store, so this body keeps one cell load where its neighbour at 0x801F2C60 re-materializes the cell for each of its two accesses. The span is entry 1 of the two-word handler run at the table base 0x801F3554, whose entry 0 is 0x801F2C60. The overlay entry at 0x801F2C04 indexes that run with the work object''s byte 2 scaled by four before dispatching, so byte 0x09 is the step byte this handler advances before 0x801F2CB0 consumes it. Takes no arguments and returns nothing.'
   - - 176
     - asm
     - func_801F2CB0
   - - 1304
     - c
-    - drawSixteenBySixteenWarpGridTintedByWorkByte9WhenNearSharedPointWorld03Area14213_801F3118
-    - '@source: src/bof3/world/drawSixteenBySixteenWarpGridTintedByWorkByte9WhenNearSharedPointWorld03Area14213_801F3118.c'
+    - renderWarpNearPoint
+    - '@source: src/bof3/world/renderWarpNearPoint.c'
     - '@behavior: Overlay warp-grid drawer. It first measures the work record read through the pointer cell at 0x1F800044 against the shared point at 0x8014930A/0x8014930E: the halfwords at record offsets 0x36 and 0x3A are subtracted from those two shared halfwords, each difference is replaced by its magnitude, and the body returns as soon as their sum is not below 0x15. Otherwise it advances the record step byte at 0x09 by two, picks the draw-mode tpage argument by re-reading GetGraphType for graphics types 1 and 2 (0x2A5) and falling back to 0xB5, arms the shared cursor with SetDrawMode(g_PrimCursor, 0, 1, tpage, 0), and links a kind-1, 0xC-class grid-cell primitive at the record cursor pair 0x34/0x38. It then walks a sixteen by sixteen grid. The row loop re-reads the record once for the row tint, which is the complement of the step byte minus the row times sixteen, and takes the row parity as the selector into the overlay byte pair at 0x801F355C. Every cell takes the primitive cursor, seeds it with func_8017AA30, marks it semi-transparent and paints its colour bytes 0x04, 0x05 and 0x06 with the row tint. The cell phase is the column shifted left by eight, offset by the low byte of the shared frame counter at 0x80143E6C shifted left by four and multiplied by the selected signed parity byte; the sine of that phase, reduced by six and tripled, biased by -0x4000 and added to record word 0x34 shifted right by nine, becomes the scratch vector x, its cosine in the same form over record word 0x38 becomes y, and z is -0x180 minus twice the cell tint before complementing. RotTransPers projects the scratch vector into the primitive halfwords at 0x08 through two address-taken locals, the cell is linked again at 0xC, and the walk advances the column until sixteen, then the row until sixteen with the row bias grown by sixteen. The trailing epilogue re-runs the same tpage selection, arms SetDrawMode with dtd 0 and links the cursor once more. Takes no arguments and returns nothing.'
   - - 2068
     - c
-    - dispatchWorkByte4Table3b7cWorld03Area14213_801F3414
-    - '@source: src/bof3/world/dispatchWorkByte4Table3b7cWorld03Area14213_801F3414.c'
+    - callWorkByte4Table3
+    - '@source: src/bof3/world/callWorkByte4Table3.c'
     - '@behavior: Overlay step dispatch. The leading two instructions read the work record pointer from the scratchpad cell 0x1F800044 before the 0x18-byte frame is reserved, then load record byte 4 unsigned, scale it by four and index the local handler table at 0x801F3B7C. The selected entry is called through jalr v0 with a nop delay slot, after which the body reloads ra from 0x10(sp), releases the frame and returns. Takes no arguments and returns nothing; the frame keeps the return address across the call. The table holds 0x801F3458 and 0x801F34D0, the two routines that set and clear that same record byte 4 from the shared mode byte at 0x80143BB0, so byte 4 selects which of the two runs, and the word at 0x801F3B34 publishes this dispatcher itself.'
   - - 2136
     - c
-    - setWorkFlag40AndByte4To1WhenMode3ThenDecrementHalfword0aUnlessScenarioProgress1World03Area14213_801F3458
-    - '@source: src/bof3/world/setWorkFlag40AndByte4To1WhenMode3ThenDecrementHalfword0aUnlessScenarioProgress1World03Area14213_801F3458.c'
+    - stateDecrementUnlessScenario
+    - '@source: src/bof3/world/stateDecrementUnlessScenario.c'
     - '@behavior: Runs only while the shared scenario progress byte at 0x80146864 is not 1. When the shared mode byte at 0x80143BB0 reads 3 it arms the scratch work record published through the pointer cell at 0x1F800044 by or-ing flag bit 0x40 into record byte 0 through a value register and then writing 1 into record byte 4 through a fresh load of the same cell, and whatever the mode byte reads it subtracts 2 from the halfword at 0x0A of the record published through the global pointer cell 0x80148210. Progress 1 returns without touching either record. Takes no arguments and returns nothing.'
   - - 2256
     - c
-    - clearWorkFlag40RequestResourceAndClearWorkByte4UnlessMode3ThenDecrementHalfword0aWorld03Area14213_801F34D0
-    - '@source: src/bof3/world/clearWorkFlag40RequestResourceAndClearWorkByte4UnlessMode3ThenDecrementHalfword0aWorld03Area14213_801F34D0.c'
+    - stateRequestResourceUnless
+    - '@source: src/bof3/world/stateRequestResourceUnless.c'
     - '@behavior: Runs when the shared mode byte at 0x80143BB0 is not 3. It clears the work-record flag bit 0x40 published through the pointer cell at 0x1F800044 by loading record byte 0 into a value register, masking the bit off and storing the value back through the record pointer, then passes record byte 8 of a freshly loaded record pointer to the resource helper func_8014D6B8 and writes 0 into record byte 4 through a third load of the same cell. Whatever the mode byte reads it subtracts 2 from the halfword at 0x0A of the record published through the global pointer cell 0x80148210. Takes no arguments and returns nothing.'
   - - 2388
     - textbin

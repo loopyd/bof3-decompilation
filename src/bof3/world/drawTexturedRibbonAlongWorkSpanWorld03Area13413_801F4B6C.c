@@ -45,7 +45,7 @@ typedef struct World03Area13413ScreenPoint {
  *           0x1F800044 by the byte-1 handler entries 1 and 2 of the table based
  *           at 0x801F5828,
  *           advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13413_801F4400
- *           and retreatWorkWord24By100000AndSweepHalfword20ThenResetWorkareaAtCountdownEndWorld03Area13413_801F44C0,
+ *           and retreatSweepResetWorkarea,
  *           which own the step word at +0x24 and the phase halfword at +0x20
  *           this body reads and both call it with no argument register set.
  *           It fills its projection scratch through func_801AFE18, copies the
@@ -77,7 +77,7 @@ typedef struct World03Area13413ScreenPoint {
  *           0x801F4454 in the entry at 0x801F4400 and the jal at 0x801F4524 in
  *           the entry at 0x801F44C0 of the byte-1 handler table based at
  *           0x801F5828 that this target's exact
- *           dispatchStateByte1Table5828World03Area13413_801F4344 indexes with
+ *           callStateTable5828World03 indexes with
  *           the work record's state byte at +1. Neither caller sets an argument
  *           register, so the callee takes none, and each moves the record step
  *           word at +0x24 and the phase halfword at +0x20 immediately before

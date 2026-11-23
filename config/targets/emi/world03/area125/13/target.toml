@@ -8,25 +8,25 @@ splat = "config/targets/emi/world03/area125/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/advanceWorkByte1WhenNoRecordActiveWorld03Area12513_801F2E10.c",
-    "src/bof3/world/runRecordSweepDecrementCountdownByte9ThenAdvanceStateByte1WhenZeroWorld03Area12513_801F2CD8.c",
-    "src/bof3/world/spawnTwoRingRecordsEveryFifteenthFrameOfCountdownByte9ThenSweepRecordsAndAdvanceStateByte1WhenZeroWorld03Area12513_801F2D6C.c",
-    "src/bof3/world/clearWorkFlagsWhenNoRecordActiveWorld03Area12513_801F2F90.c",
+    "src/bof3/world/stateNoRecordActive.c",
+    "src/bof3/world/runSweepCountdownZero.c",
+    "src/bof3/world/spawnEveryFifteenthSweep.c",
+    "src/bof3/world/stateFlagsNoActive.c",
 ]
 support_sources = [
-    "src/bof3/world/clearWorkTableAt800E4800ThenAdvanceStateByte1World03Area12513_801F2C48.c",
-    "src/bof3/world/findFreeWorkRecordAt800E4800World03Area12513_801F3348.c",
-    "src/bof3/world/seedWeightedRandomWorkRecordClearOthersPositionAndDistanceThenStoreSharedHalfwordMinus5World03Area12513_801F3504.c",
-    "src/bof3/world/clearWorkHalfwords2eAnd30ThenAdvanceStateByte1World03Area12513_801F2E58.c",
-    "src/bof3/world/clearWorkTableAt800E4800World03Area12513_801F3384.c",
+    "src/bof3/world/stateWorkTableAdvance.c",
+    "src/bof3/world/queryFreeWorkRecord.c",
+    "src/bof3/world/stateWeightedOthersDistance.c",
+    "src/bof3/world/stateWorkHalfwords2Advance.c",
+    "src/bof3/world/stateWorkTableAt800.c",
     "src/bof3/world/invokeHelperWorld03Area12513_801F362C.c",
-    "src/bof3/world/rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0.c",
+    "src/bof3/world/rampIntensityIntegrateRender.c",
     "src/bof3/world/area12513DispatchTables.c",
-    "src/bof3/world/claimFreeWorkRecordSeedRingPositionAndDirectionWorld03Area12513_801F31B0.c",
-    "src/bof3/world/stageRingSpawnsByElapsedCounterThenAdvanceStateByte1World03Area12513_801F2E7C.c",
+    "src/bof3/world/claimFreeRingDirection.c",
+    "src/bof3/world/stageRingSpawnsElapsed.c",
     "src/bof3/support/area125_13_psyq.c",
-    "src/bof3/world/drawWorkRecordSemiTransparentQuadWorld03Area12513_801F2FC4.c",
-    "src/bof3/world/armCountdownByte9To150ThenAdvanceStateByte1World03Area12513_801F2D3C.c",
-    "src/bof3/world/spawnRingRecordsSlotsSixNineThirteenArmCountdownByte9To60ThenAdvanceStateByte1World03Area12513_801F2C80.c",
+    "src/bof3/world/renderSemiTransparentQuad.c",
+    "src/bof3/world/armCountdownAdvanceState.c",
+    "src/bof3/world/spawnSixNineThirteen.c",
 ]
 psyq_source = "src/bof3/support/area125_13_psyq.c"

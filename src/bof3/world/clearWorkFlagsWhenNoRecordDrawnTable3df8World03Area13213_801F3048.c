@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-u32 tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0(void);
+u32 tickDrawActiveRecords(void);
 void func_80196070(void);
 
 /* @source 0x801F3048
@@ -19,7 +19,7 @@ void func_80196070(void);
  *
  * Name evidence: the span is byte for byte equal to the already exact entry 2
  * of the byte-2 run at 0x801F3DEC, 0x801F2F20, whose lifted source at
- * src/bof3/world/clearWorkFlagsWhenNoRecordDrawnWorld03Area13213_801F2F20.c
+ * src/bof3/world/stateFlagsNoDrawn.c
  * records this same guard and reset; one payload compare over its 0x34 bytes
  * proved the two spans identical, so the body facts here are that entry's facts.
  * The only word in the image that names 0x801F3048 is the pointer word at
@@ -33,7 +33,7 @@ void func_80196070(void);
  * @residual none
  */
 void clearWorkFlagsWhenNoRecordDrawnTable3df8World03Area13213_801F3048(void) {
-  if ((tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0() & 0xFF) == 0) {
+  if ((tickDrawActiveRecords() & 0xFF) == 0) {
     func_80196070();
   }
 }

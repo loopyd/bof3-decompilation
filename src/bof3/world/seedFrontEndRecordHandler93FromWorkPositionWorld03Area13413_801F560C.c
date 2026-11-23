@@ -55,7 +55,7 @@ u8 func_8019601C(void);
  * work object come from the family's exact siblings:
  * seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC (same
  * claim/set/copy order, word pair) and
- * claimFreeWorkRecordSeedWorkPositionWorld03Area13413_801F48B0 (this target's
+ * claimFreeSeedPosition (this target's
  * own position readers). The nearest same-payload shapes, func_801F557C and
  * func_801F54EC, are byte-identical to each other but not to this body - they
  * also clear row byte +1 and write selector 0x90 - so they are shape evidence

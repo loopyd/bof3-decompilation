@@ -12,9 +12,9 @@ extern u8 D_80146888[];
  * with 5 and republishes the saved record, so the saved record is current again
  * with mode 5 selected. The state byte it arms is the byte the exact
  * same-target siblings
- * setScratchStateToMode1WhenPadMatchesWorld03Area13413_801F3E50,
+ * stateScratchPadMatches,
  * resetScratchStateToMode1World03Area13413_801F35A4 and
- * countdownScratchStateToMode15World03Area13413_801F3254 arm, and the byte the
+ * countdownScratchStateMode15 arm, and the byte the
  * dispatchStateByte1Table* siblings dispatch through; 5 is decimal here. The
  * record base 0x80146888 is the shared 0x98-byte work-record table this overlay
  * uses (the neighbouring func_801F2DE8 loads the same record's word at

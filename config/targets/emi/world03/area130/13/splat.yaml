@@ -30,12 +30,12 @@ segments:
   subsegments:
   - - 28
     - c
-    - dispatchStateByte1Table3ed8World03Area13013_801F2C1C
+    - callStateTable3World03
     - '@source: src/bof3/world/area13013DispatchTables.c'
   - - 96
     - c
-    - seedEffectEntriesFromWorkPositionThenClearWorkByte9AndAdvanceWorkByte1World03Area13013_801F2C60
-    - '@source: src/bof3/world/seedEffectEntriesFromWorkPositionThenClearWorkByte9AndAdvanceWorkByte1World03Area13013_801F2C60.c'
+    - stateEffectEntriesPosition
+    - '@source: src/bof3/world/stateEffectEntriesPosition.c'
     - '@behavior: Overlay step handler, entry 0 of the seven-word handler run D_801F3ED8 that the dispatcher 0x801F2C1C indexes with the unsigned work byte at +0x1 of the work record published at the scratchpad pointer cell 0x1F800044. It walks the 0x2C-byte-stride effect table at 0x800E4800 with an unsigned byte counter over its 0x20 entries, calling the per-entry seed helper 0x801F30D0 once for each entry and advancing the entry cursor by 0x2C per iteration, then zeroes the work byte at +0x9 and increments the state byte at +0x1 so the next frame dispatches entry 1, the draw pass 0x801F2CDC.'
   - - 220
     - asm
@@ -46,8 +46,8 @@ segments:
     - '@source: src/bof3/world/invokeHelperWorld03Area13013_801F2E10.c'
   - - 560
     - c
-    - drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld03Area13013_801F2E30
-    - '@source: src/bof3/world/drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld03Area13013_801F2E30.c'
+    - renderTriangleOffsetsBlue
+    - '@source: src/bof3/world/renderTriangleOffsetsBlue.c'
     - '@behavior: Overlay effect entry draw pass that the overlay draw pass 0x801F2CDC calls once for each of the 0x20 entries of the 0x2C-byte-stride effect table at 0x800E4800 on the frame it adds 0x10 to the spin angle of the entry it has just drawn: it stamps the shared primitive cursor 0x8014598C through 0x8017A97C, flags it semi-transparent, projects the entry position words 0 4 and 8 into the first vertex of a POLY_G3 at cursor offset 8 through 0x801AFF04, rotates the signed-halfword extent pairs at 0x10 and 0x18 by the spin angle at 0x24 into the vertices at cursor offsets 0x10 and 0x18 with the extents scaled by the halfword at 0x28 and translated by the entry position, then clamps the shade halfword 0x2A into the red and green bytes at cursor offsets 4 and 5, writes half of it into the blue byte at 6, clears the colour bytes of the second and third vertices and appends the 0x1C-byte primitive through 0x8014E5A0 for ordering-table index 1.'
   - - 1232
     - asm
@@ -58,30 +58,30 @@ segments:
     - '@source: src/bof3/world/area13013DispatchTables.c'
   - - 1580
     - c
-    - armCountdownByte9ClearWords0cAnd10SeedHalfwords2eTo32ThenAdvanceWorkByte1World03Area13013_801F322C
-    - '@source: src/bof3/world/armCountdownByte9ClearWords0cAnd10SeedHalfwords2eTo32ThenAdvanceWorkByte1World03Area13013_801F322C.c'
+    - armCountdownClearSeed
+    - '@source: src/bof3/world/armCountdownClearSeed.c'
   - - 1668
     - c
-    - advanceSeedHalfwordF00StepWorkWords0cAnd10Invoke3400TickCountdownThenResetByte9To3cAndAdvanceWorkByte1World03Area13013_801F3284
-    - '@source: src/bof3/world/advanceSeedHalfwordF00StepWorkWords0cAnd10Invoke3400TickCountdownThenResetByte9To3cAndAdvanceWorkByte1World03Area13013_801F3284.c'
+    - stateHalfwordTickReset
+    - '@source: src/bof3/world/stateHalfwordTickReset.c'
     - '@behavior: Overlay step handler, entry 4 of the seven-word handler run D_801F3ED8 that the dispatcher 0x801F2C1C indexes with the unsigned work byte at +0x1. Adds 0xF00 to the shared seed halfword at 0x801469EA, steps the work record words at +0x0C by 0xF and at +0x10 by 0xA, invokes 0x801F3400 with the record halfwords at +0x2E, +0x30, +0x0C and the truncated word at +0x10, then decrements the countdown byte at +0x09, rearming it with 0x3C and advancing the state byte at +0x1 to entry 5 when it reaches zero.'
   - - 1852
     - c
-    - advanceSeedHalfwordF00Invoke3400AndTickCountdownWorld03Area13013_801F333C
-    - '@source: src/bof3/world/advanceSeedHalfwordF00Invoke3400AndTickCountdownWorld03Area13013_801F333C.c'
+    - stateHalfwordTickCountdown
+    - '@source: src/bof3/world/stateHalfwordTickCountdown.c'
     - '@behavior: Advances the seed halfword by 0xF00, invokes 0x801F3400, and ticks the work countdown and state.'
   - - 1996
     - c
-    - publishWorkHalfword32ToSeedThenClearWorkFlagsWorld03Area13013_801F33CC
-    - '@source: src/bof3/world/publishWorkHalfword32ToSeedThenClearWorkFlagsWorld03Area13013_801F33CC.c'
+    - publishSeedClearFlags
+    - '@source: src/bof3/world/publishSeedClearFlags.c'
     - '@behavior: Copies the work record halfword at +0x32 into the shared seed halfword at 0x801469EA, then calls the reset helper at 0x80196070.'
   - - 2048
     - asm
     - func_801F3400
   - - 2480
     - c
-    - publishModeStatusFromTable5058ThenClearSharedBytesAndRequestPrimaryState6SubstateAWhenGate0OrClearProgressWhenGate1World03Area13013_801F35B0
-    - '@source: src/bof3/world/publishModeStatusFromTable5058ThenClearSharedBytesAndRequestPrimaryState6SubstateAWhenGate0OrClearProgressWhenGate1World03Area13013_801F35B0.c'
+    - publishBytesSubstateProgress
+    - '@source: src/bof3/world/publishBytesSubstateProgress.c'
     - '@behavior: Entry handler that latches the halfword indexed by the shared gate byte at 0x801490C7 from the target-local halfword table at 0x801F5058 into the shared status halfword at 0x801490A8, then acts on that gate byte: gate 0 stores 0xA into the shared sub-state byte at 0x80146875, zeroes the shared scenario progress byte at 0x80146864 and the shared bytes at 0x80146865, 0x80146866 and 0x80146867, and stores 6 into the shared primary state request byte at 0x80146874; gate 1 zeroes only 0x80146864; any other gate value leaves those cells untouched.'
   - - 2620
     - asm
@@ -91,23 +91,23 @@ segments:
     - func_801F36BC
   - - 2876
     - c
-    - invokeTwoZeroArgsWorld03Area13013_801F373C
-    - '@source: src/bof3/world/invokeTwoZeroArgsWorld03Area13013_801F373C.c'
+    - callTwoZeroArgs
+    - '@source: src/bof3/world/callTwoZeroArgs.c'
     - '@behavior: Calls 0x8015D404 with both arguments zero, then returns.'
   - - 2912
     - c
-    - invokeFourConstantArgsWorld03Area13013_801F3760
-    - '@source: src/bof3/world/invokeFourConstantArgsWorld03Area13013_801F3760.c'
+    - callFourConstantArgs
+    - '@source: src/bof3/world/callFourConstantArgs.c'
     - '@behavior: Calls 0x8015D300 with arguments 0, 1, 100 and 100, then returns.'
   - - 2956
     - c
-    - invokeScriptedMotionStarterWorld03Area13013_801F378C
-    - '@source: src/bof3/world/invokeScriptedMotionStarterWorld03Area13013_801F378C.c'
+    - callScriptedMotionStarter
+    - '@source: src/bof3/world/callScriptedMotionStarter.c'
     - '@behavior: Calls the shared executable front-end scripted-motion starter at 0x8015D554 with arguments 0, 1, 4 and 0x1E, then returns.'
   - - 3000
     - c
-    - invokeFrontEndTimingStarterKindZeroAndStoreSelectionId83World03Area13013_801F37B8
-    - '@source: src/bof3/world/invokeFrontEndTimingStarterKindZeroAndStoreSelectionId83World03Area13013_801F37B8.c'
+    - callTimingStarterKind
+    - '@source: src/bof3/world/callTimingStarterKind.c'
     - '@behavior: Entry 5 of the overlay handler pointer run at 0x801F4FD0, which the loader reaches from outside this payload: it runs the shared front-end timing starter func_8015D300 with arguments 0, 0, 100 and 100, then stores the selection identifier 0x83 into the shared selection byte D_80145029 and returns. It takes no arguments and returns nothing; its 0x18-byte frame keeps only $ra.'
   - - 3056
     - asm
@@ -117,13 +117,13 @@ segments:
     - func_801F3870
   - - 3312
     - c
-    - seedFrontEndRecordHandler78FromWorkPositionWorld03Area13013_801F38F0
-    - '@source: src/bof3/world/seedFrontEndRecordHandler78FromWorkPositionWorld03Area13013_801F38F0.c'
+    - stateFrontEndPosition
+    - '@source: src/bof3/world/stateFrontEndPosition.c'
     - '@behavior: Seeds one front-end record from the current work position: claims the next free 0x74-byte row of the front-end entry table at 0x80143FC8 through func_8019601C and, unless the returned index is 0xFF, sets row byte +0 to 1, row byte +5 to the handler selector 0x78, and copies the scratch work object''s position triple from 0x1F800044 +0x34/+0x38/+0x3C into the row words +0x34/+0x38/+0x3C.'
   - - 3452
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F397C
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F397C.c'
+    - publishSecondBaseEnd
+    - '@source: src/bof3/world/publishSecondBaseEnd.c'
     - '@behavior: Publishes the second shared work base at 0x80145FD0 as the scratchpad work cursor, then seeds one kind-1 front-end record through 0x8015CB18 with the mode-table byte D_801F3F00[D_80144F5B] and the base halfwords at 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 3580
     - c
@@ -147,13 +147,13 @@ segments:
     - invokeHelperArgWorld03Area13013_801F3C7C
   - - 4252
     - c
-    - initFrontendStateSelector3FAndClearSecondStateByteWorld03Area13013_801F3C9C
-    - '@source: src/bof3/world/initFrontendStateSelector3FAndClearSecondStateByteWorld03Area13013_801F3C9C.c'
+    - setupFrontendClearSecond
+    - '@source: src/bof3/world/setupFrontendClearSecond.c'
     - '@behavior: Overlay step handler the loader reaches from outside this payload: it runs the shared front-end startup helper func_8015C088 with no arguments, writes 0x3F into the shared front-end state selector D_801448EB that dispatchIndexedStateHandler indexes the handler table D_801C84BC with, and clears the shared byte D_801448ED, leaving 0x801448EC untouched. It returns nothing; the 0x18-byte frame keeps only $ra.'
   - - 4304
     - c
-    - seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0
-    - '@source: src/bof3/world/seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0.c'
+    - stateEquipmentNameSelector
+    - '@source: src/bof3/world/stateEquipmentNameSelector.c'
     - '@behavior: Two-step overlay handler on the shared sub-state byte D_80146875. Step 0 runs while the shared front-end mode byte D_80143BB0 reads other than 2: it dispatches the shared selector byte D_80144E5E through the six-entry jump table at 0x801F2C04, resolves the selected name through func_80165D48 into the shared buffer D_801490D8, gates its cue through func_801650B4, clears 0x801490E4 and 0x80149100, starts action 0x49, latches the mode byte to 2 and advances the sub-state to 1. Step 1 also runs only while that mode reads other than 2: it queues sound cue 0x106 through func_8015DF18, sets flag bit 0x98 of the bank D_80144F28, runs the release helper func_8015C058 and clears 0x801448EB and 0x801448ED.'
   - - 4824
     - textbin

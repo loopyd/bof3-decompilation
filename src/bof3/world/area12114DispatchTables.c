@@ -18,7 +18,7 @@ void updateMaskChargeAndDecayWorkByteBWorld03Area12114_801F5798(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table67d8World03Area12114_801F3434, D_801F67D8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable67World03, D_801F67D8);
 
 /* @source 0x801F34E0
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record

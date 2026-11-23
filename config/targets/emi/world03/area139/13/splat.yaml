@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table4430World03Area13913_801F2C04
+    - callStateTable4430World03
     - '@source: src/bof3/world/area13913DispatchTables.c'
   - - 72
     - asm
@@ -43,8 +43,8 @@ segments:
     - func_801F2FF0
   - - 1164
     - c
-    - probeAxisPointRunAndSetFoundRecordOctantSideThenRequestAction2World03Area13913_801F308C
-    - '@source: src/bof3/world/probeAxisPointRunAndSetFoundRecordOctantSideThenRequestAction2World03Area13913_801F308C.c'
+    - probeAxisFoundOctant
+    - '@source: src/bof3/world/probeAxisFoundOctant.c'
     - '@behavior: Probe-run seeding of this overlay, called with the axis to scan: argument 0 runs the four points that fix x at 0x5C0000 and take y from the byte run at 0x801F4440, argument 1 runs the four points that fix y at 0x440000 and take x from the byte run at 0x801F4444, and any other argument returns at once. Each iteration stores the 16.16 point pair into the work record published at the scratchpad pointer cell 0x1F800044, re-reads the word at offset 0x34 and passes the pair with a zero third argument to the shared position probe at 0x801BE0C0, which answers the number of the record occupying that point or 0xFF when the point is free; a probe is skipped when the answer is 0xFF, when the shared flag halfword 0x8014625A holds the 0x1400 mask, or when the front-end phase byte 0x80143BB0 is non-zero. Otherwise the answer selects the answered record of the 0x140-byte-stride array whose first byte is 0x80145E98, and that record octant byte is set from the order of the probed axis word against the record own position word: mode 0 compares the 0x5C0000 just stored against the record word at 0x80145EC4 and writes 3 on the greater answer, 7 otherwise, and mode 1 compares the 0x440000 just stored against the record word at 0x80145EC8 and writes 5 on the greater answer, 1 otherwise; action 2 is then requested for the answered record through 0x8015C214. Takes the axis byte and returns nothing, keeping a 0x20-byte frame with ra at 0x18 and s1 and s0 at 0x14 and 0x10.'
   - - 1672
     - asm
@@ -61,17 +61,17 @@ segments:
     - '@source: src/bof3/world/noopWorld03Area13913_801F3A7C.c'
   - - 3724
     - c
-    - dispatchStateByte2Table4448World03Area13913_801F3A8C
+    - callStateTable4448World03
     - '@source: src/bof3/world/area13913DispatchTables.c'
   - - 3792
     - c
-    - seedHalfwordPairsFromWorkTablesThenAdvanceWorkByte2AndSetThreeInsideCameraWindowThenDrawWorld03Area13913_801F3AD0
-    - '@source: src/bof3/world/seedHalfwordPairsFromWorkTablesThenAdvanceWorkByte2AndSetThreeInsideCameraWindowThenDrawWorld03Area13913_801F3AD0.c'
+    - statePairsTablesInside
+    - '@source: src/bof3/world/statePairsTablesInside.c'
     - '@behavior: Byte-2 state handler entry 0 of the five-entry handler table based at 0x801F4448, the table the overlay dispatcher at 0x801F3A8C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044: seeds the record from its own step tables, the signed halfword at offset 0x36 selecting entry 0x36 * 2 of the byte tables at 0x801F4464 and 0x801F4465 and entry 0x36 of the halfword tables at 0x801F445C and 0x801F4460, whose values overwrite the halfwords at offsets 0x36, 0x3A, 0x3E and 0x2E, sets the route byte at offset 0x08 to whether the halfword read at offset 0x3A was zero, increments the state byte at offset 0x02 and zeroes the halfword at offset 0x30. It then measures the route-selected halfword against its shared camera word, 0x80145EC8 with 0x3A when the route byte is set and 0x80145EC4 with 0x36 otherwise, from the centre (((halfword + 1) << 16) | 0x8000) with an 0x8000 bound, and measures the other axis from its cell start and next cell start against 0x10000; when both stay inside that window the halfword at 0x30 becomes -0x100 and the state byte becomes 3 so the next dispatch takes entry 3 at 0x801F3E04. Every path calls the payload record draw routine at 0x801F3F84.'
   - - 4200
     - c
-    - advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld03Area13913_801F3C68
-    - '@source: src/bof3/world/advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld03Area13913_801F3C68.c'
+    - statePlayCameraInside
+    - '@source: src/bof3/world/statePlayCameraInside.c'
     - '@behavior: Byte-2 state handler entry 1 of the five-entry handler table based at 0x801F4448, the table the overlay dispatcher at 0x801F3A8C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044: reads the record route byte at offset 0x08 once and gates the axis halfword it selects against its shared camera word, 0x80145EC8 with 0x3A when the route byte is set and 0x80145EC4 with 0x36 otherwise, from the centre (((halfword + 1) << 16) | 0x8000) with an 0x8000 bound; the other axis halfword and its camera word then measure the same distance from the halfword own cell start and from the next cell start against 0x10000, and inside that window the front-end phase byte 0x80143BB0 gates the sound cue 0x200 through the main-executable dispatcher 0x8015DF18 and the state byte at offset 0x02 is advanced by one past a fresh read of the scratchpad cell, so the next dispatch takes entry 2 at 0x801F3DA8. Every path calls the payload record draw routine at 0x801F3F84, which imports SetDrawMode, SetPolyFT4, SetShadeTex and RotTransPers4.'
   - - 4520
     - c

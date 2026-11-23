@@ -8,18 +8,18 @@ splat = "config/targets/emi/world03/area149/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/dispatchStateByte4Table4580World03Area14913_801F2EFC.c",
-    "src/bof3/world/seedChannelModeFlagsWorkTripleAndCountdownByte9ThenAdvanceWorkByte1World03Area14913_801F2C48.c",
-    "src/bof3/world/invokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3108.c",
-    "src/bof3/world/stepCountdownByte9LowerChannel932cBy2AAndLevelTripleElseAdvanceWorkByte1To3ThenSetMode2AndInvokeDrawHelperWorld03Area14913_801F2CD4.c",
-    "src/bof3/world/advanceSharedSceneStateByteAndClearWorkFlagsWorld03Area14913_801F2DAC.c",
+    "src/bof3/world/callStateByte4Table4580.c",
+    "src/bof3/world/stateChannelFlagsTriple.c",
+    "src/bof3/world/callHelperDecrementRecord.c",
+    "src/bof3/world/stepLowerLevelTriple.c",
+    "src/bof3/world/stateSharedSceneFlags.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld03Area14913_801F2CB4.c",
     "src/bof3/world/area14913DispatchTables.c",
-    "src/bof3/world/copyWords7a8cToWork34383cWorld03Area14913_801F2EC4.c",
-    "src/bof3/world/requestProgress0AAndCue1When932cBelow880AdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F2F40.c",
-    "src/bof3/world/requestProgress14AndCue1When932cZeroSetFlag3WhileCoordBelowSharedXWindowAdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3068.c",
+    "src/bof3/world/copyWords7Work34383World03.c",
+    "src/bof3/world/requestStepHelperDecrement.c",
+    "src/bof3/world/requestWhileCoordBelow.c",
     "src/bof3/support/area149_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area149_13_psyq.c"

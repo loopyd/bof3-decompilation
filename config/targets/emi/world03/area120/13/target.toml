@@ -8,27 +8,27 @@ splat = "config/targets/emi/world03/area120/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/claimFreeEffectRecordWithAlternatingDirectionWorld03Area12013_801F3630.c",
-    "src/bof3/world/seedQuadPairFromSceneByteTablesAndAdvanceWorkByte2ThenDrawQuadWorld03Area12013_801F3A7C.c",
-    "src/bof3/world/returnWorkByte2ToStep2UnlessMaskedSceneStateIs20800ThenDrawQuadWorld03Area12013_801F3D94.c",
-    "src/bof3/world/runStep5HandlerOnSceneState30600ElseAdvanceWorkByte9By8AndDrawQuadWorld03Area12013_801F3E7C.c",
-    "src/bof3/world/step1ClaimFourEffectRecordsSweepArmWorkByte6To1AndAdvanceWorkByte1OnCountdownExpiryWorld03Area12013_801F2CB4.c",
-    "src/bof3/world/step0ResetEffectTableSeedWorkPositionSetWorkByte6To0RefillWorkHalfword32AdvanceWorkByte1Cue201World03Area12013_801F2C5C.c",
-    "src/bof3/world/step3ResetWorkStateWhenNoEffectRecordHandledWorld03Area12013_801F2DB0.c",
+    "src/bof3/world/claimFreeAlternatingDirection.c",
+    "src/bof3/world/stateQuadSceneTables.c",
+    "src/bof3/world/returnUnlessMaskedScene.c",
+    "src/bof3/world/runSceneDrawQuad.c",
+    "src/bof3/world/step1FourSweepExpiry.c",
+    "src/bof3/world/step0ResetEffectRefill.c",
+    "src/bof3/world/step3NoEffectHandled.c",
 ]
 support_sources = [
     "src/bof3/support/area120_13_psyq.c",
     "src/bof3/support/area12013_symbols.c",
     "src/bof3/world/area12013DispatchTables.c",
-    "src/bof3/world/advanceWorkByte2WhenOverlayStateWordIs50005ThenDrawQuadWorld03Area12013_801F3B28.c",
-    "src/bof3/world/setStatusFFFFAndScenarioProgress14IfGateElse0AWorld03Area12013_801F42F0.c",
-    "src/bof3/world/advanceWorkByte9DrawQuadWithCounterRampThenReturnToHandler2OnExpiryWorld03Area12013_801F3DF0.c",
-    "src/bof3/world/setStatus35IfGateElseResetStatusAndIncrementWorkHalfword7EState0DSubstate8World03Area12013_801F4350.c",
-    "src/bof3/world/redirectWorkByte2StepFromMaskedSceneStateThenDrawQuadWorld03Area12013_801F3B84.c",
-    "src/bof3/world/step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40.c",
-    "src/bof3/world/advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0.c",
-    "src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithArgSpreadAndByteARowWorld03Area12013_801F3F5C.c",
-    "src/bof3/world/drawProjectedEffectDotAndTileWorld03Area12013_801F3468.c",
+    "src/bof3/world/stateOverlayWordQuad.c",
+    "src/bof3/world/stateStatusScenarioGate.c",
+    "src/bof3/world/stateRampReturnExpiry.c",
+    "src/bof3/world/stateGateResetStatus.c",
+    "src/bof3/world/redirectMaskedSceneQuad.c",
+    "src/bof3/world/step2SetAdvanceScenario.c",
+    "src/bof3/world/stateStatesRenderActive.c",
+    "src/bof3/world/renderPassTexturedSpread.c",
+    "src/bof3/world/renderProjectedDotTile.c",
     "src/bof3/world/setStatusFFFFAndScenarioProgress1EIfGateElse28World03Area12013_801F4320.c",
 ]
 psyq_source = "src/bof3/support/area120_13_psyq.c"

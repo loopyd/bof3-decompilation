@@ -2,8 +2,8 @@
 
 /* The overlay's own record-table cursor. The original materialises the cell
  * address and reloads the published pointer once per record, and this target's
- * reset clearWorkTableClaimBytesWorld03Area13213_801F385C and per-frame pass
- * tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0 walk the same
+ * reset stateTableClaimBytes and per-frame pass
+ * tickDrawActiveRecords walk the same
  * 0x18-byte-stride table at 0x800E4800 through this same cell. */
 extern u8* D_801F4A88; /* @source 0x801F4A88 @kind data */
 
@@ -20,16 +20,16 @@ extern u8* D_801F4A88; /* @source 0x801F4A88 @kind data */
  *           state beyond the table it publishes.
  *
  * Field evidence: the lead byte this scan tests for zero is the record claim
- * byte. The reset helper clearWorkTableClaimBytesWorld03Area13213_801F385C
+ * byte. The reset helper stateTableClaimBytes
  * clears that same byte in every record, and the seeding helper
- * seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4 writes the
+ * stateRecordDefaultsPosition writes the
  * same lead byte to 1 when it takes the record this scan returned, so zero is
  * the unclaimed value.
  *
  * Caller evidence: the two in-payload call sites - jal 0x801F3800 at 0x801F2EAC
  * inside func_801F2E88 and at 0x801F2FD0 inside func_801F2F98 - both test the
  * returned pointer for zero and otherwise pass it in $a0 to
- * seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4, so the scan
+ * stateRecordDefaultsPosition, so the scan
  * feeds the overlay's claim path and its result is a record pointer.
  *
  * Shape evidence: this is the repository's free-record scan family

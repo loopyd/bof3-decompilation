@@ -8,16 +8,16 @@ splat = "config/targets/emi/world03/area141/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/clearWorkFlag20TintTripletAndModeThenInvokeWorkHelperWorld03Area14113_801F3588.c",
-    "src/bof3/world/dispatchStateByte4Table4dc4World03Area14113_801F3688.c",
+    "src/bof3/world/stateTintTripletMode.c",
+    "src/bof3/world/callStateByte4Table4.c",
     "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area14113_801F3AC0.c",
-    "src/bof3/world/advanceStateByte2WhenHalfword36GateSatisfiedWorld03Area14113_801F2F14.c",
-    "src/bof3/world/setWorkByte8Level7PublishQuadXScaledByte7ThenSetViewModeForStaticRecordElseArmRecordWorld03Area14113_801F35E4.c",
-    "src/bof3/world/stepWorkPositionAndFadeTintTripletThenSetFlag40AndRearmHandlerZeroAtFloorElseDecrementHalfwordAWorld03Area14113_801F3740.c",
-    "src/bof3/world/claimWorkRecordSetFlagPublishIndexActivateEntry4dfcAndRequestResource3World03Area14113_801F4508.c",
-    "src/bof3/world/stampShapeRectangleCellsWithStepCountThenAttachCellTextureAndResetWorkAtEighteenWorld03Area14113_801F2FE4.c",
-    "src/bof3/world/drawSixteenBySixteenWarpGridTintedByWorkByte9AroundSeededDepthWhenNearSharedPointWorld03Area14113_801F3234.c",
-    "src/bof3/world/stepWorkPositionAndRaiseTintTripletToMin40ThenResetFlag20AndRearmHandlerZeroAtCeilingElseDecrementHalfword7eWorld03Area14113_801F390C.c",
+    "src/bof3/world/stateHalfword36GateSatisfied.c",
+    "src/bof3/world/stateScaledViewStatic.c",
+    "src/bof3/world/stepRearmFloorHalfword.c",
+    "src/bof3/world/claimFlagIndexActivate.c",
+    "src/bof3/world/stampShapeAttachEighteen.c",
+    "src/bof3/world/renderWarpSeededDepth.c",
+    "src/bof3/world/stepTintRearmCeiling.c",
 ]
 support_sources = [
     "src/bof3/support/area141_13_psyq.c",
@@ -26,7 +26,7 @@ support_sources = [
 psyq_source = "src/bof3/support/area141_13_psyq.c"
 
 # The compiler-emitted 5-entry dispatch table of
-# advanceStateByte2WhenHalfword36GateSatisfiedWorld03Area14113_801F2F14 lives
+# stateHalfword36GateSatisfied lives
 # where the original overlay links it, at 0x801F2C04 in this payload's leading
 # tabledata header (payload offset 4): that address is 4-mod-8 while the
 # compiler's `.align 3` asks for 8, so the placement route lowers only this

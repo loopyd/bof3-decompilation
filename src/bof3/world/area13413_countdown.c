@@ -16,7 +16,7 @@
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_COUNTDOWN_TO_MODE(countdownScratchStateToMode15World03Area13413_801F3254, 0x0F)
+WORLD_DEFINE_COUNTDOWN_TO_MODE(countdownScratchStateMode15, 0x0F)
 
 /* @source 0x801F32E4
  * @behavior Overlay state handler: reads the work pointer published at the

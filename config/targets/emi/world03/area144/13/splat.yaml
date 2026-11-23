@@ -27,27 +27,27 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table3e68World03Area14413_801F2C04
+    - callStateTable3World03
     - '@source: src/bof3/world/area14413DispatchTables.c'
   - - 72
     - c
-    - latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48
-    - '@source: src/bof3/world/latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48.c'
+    - latchIntoBuildCue
+    - '@source: src/bof3/world/latchIntoBuildCue.c'
     - '@behavior: Overlay step-0 handler, entry 0 of the per-frame handler table at 0x801F3E68 that the dispatcher 0x801F2C04 indexes with byte +0x01 of the work record: latches the shared main-RAM byte 0x8014832E into record byte +0x06, stores 0x1B into that shared byte, calls the work-table bootstrap 0x801F2E18, then re-materialises the record pointer from the scratchpad cell 0x1F800044, zeroes the cue index at 0x801F4960 and advances record byte +0x01 by one. It takes no arguments, returns nothing and reserves 0x18 bytes of frame with $ra at 0x10.'
   - - 164
     - c
-    - seedWorkRecordsPlayCue203AndAdvanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CA4
-    - '@source: src/bof3/world/seedWorkRecordsPlayCue203AndAdvanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CA4.c'
+    - statePlayNoRan
+    - '@source: src/bof3/world/statePlayNoRan.c'
     - '@behavior: Overlay step handler, entry 1 of the per-frame handler pointer run at 0x801F3E68 that the dispatcher 0x801F2C04 indexes with byte +0x01 of the work record: runs the record-walk helper 0x801F34FC, and only when the low byte of its result is zero runs the step-0 bootstrap 0x801F30CC, hands cue 0x203 to the shared EXE-side cue dispatcher 0x8015DF18, then re-materialises the record pointer from the scratchpad cell 0x1F800044 and advances record byte +0x01 by one. It takes no arguments, returns nothing and reserves 0x18 bytes of frame with $ra at 0x10.'
   - - 252
     - c
-    - advanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CFC
-    - '@source: src/bof3/world/advanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CFC.c'
+    - stateNoCallbackRan
+    - '@source: src/bof3/world/stateNoCallbackRan.c'
     - '@behavior: Overlay step handler, entry 2 of the per-frame handler pointer run at 0x801F3E68 that the dispatcher 0x801F2C04 indexes with byte +0x01 of the work record: runs the record-walk helper 0x801F34FC, which leaves 1 in its return register once a work record of the shared table at 0x800E4800 has run its own handler and 0 when none did, and only when the low byte of that result is zero advances byte +0x01 of the record published through the scratchpad pointer cell 0x1F800044 by one, handing the step to the next handler of the same run. It takes no arguments, returns nothing and reserves 0x18 bytes of frame with $ra at 0x10.'
   - - 324
     - c
-    - copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44
-    - '@source: src/bof3/world/copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44.c'
+    - copyWorkIncrementWork
+    - '@source: src/bof3/world/copyWorkIncrementWork.c'
   - - 368
     - c
     - incrementWorkByte1World03Area14413_801F2D70
@@ -62,18 +62,18 @@ segments:
     - incrementWorkByte1World03Area14413_801F2DD0
   - - 496
     - c
-    - resetWorkAreaAndClearCountdownWorld03Area14413_801F2DF0
-    - '@source: src/bof3/world/resetWorkAreaAndClearCountdownWorld03Area14413_801F2DF0.c'
+    - stateAreaClearCountdown
+    - '@source: src/bof3/world/stateAreaClearCountdown.c'
     - '@behavior: Overlay step handler, entry 8 and the last word of the nine-word per-frame step handler run based at 0x801F3E68 that the dispatcher 0x801F2C04 indexes with byte +0x01 of the work record published at the scratchpad pointer cell 0x1F800044: runs the shared work-area reset at 0x80196070, the game executable map name clearWorkFlags, which clears the scratchpad work-area bytes 0x00 through 0x04, then stores zero into the shared halfword 0x80146876 that the scenario code steps as a countdown. It reads no state of its own, touches nothing else, takes no arguments and returns nothing; the 0x18-byte frame only keeps $ra across the call.'
   - - 536
     - c
-    - seedSixWorkTableRecordsPointersAndTailBytesThenDeriveMidpointRowsAt800E4800World03Area14413_801F2E18
-    - '@source: src/bof3/world/seedSixWorkTableRecordsPointersAndTailBytesThenDeriveMidpointRowsAt800E4800World03Area14413_801F2E18.c'
+    - statePointersTailDerive
+    - '@source: src/bof3/world/statePointersTailDerive.c'
     - '@behavior: Overlay step-0 bootstrap of the main-RAM work table at 0x800E4800, run once by the step-0 handler 0x801F2C48 whose jal at 0x801F2C70 is the only reference to it. A bottom-tested loop over the six 0x1C-byte-stride records stores record offsets 0x18 (1), 0x19 (the counter times 15), 0x17 (0), 0x14, 0x15 and 0x16 (0xF0 each) and then 0x1B (3 when the counter is even, 1 when odd), and after the loop each record takes five pointer words at offsets 0x00 through 0x10 into the fourteen word cells 0x800E48A8 through 0x800E48DC, the byte at 0x1A, and one call to the midpoint helper 0x801F376C with the row triples (0,5,8), (0,3,9), (2,4,10), (2,7,11), (4,7,12) and (3,5,13) that derives rows 8 through 13 of the point table at 0x801F3D80. It takes no arguments, returns nothing and reserves 0x40 bytes of frame with $ra at 0x3C and $s0 through $s6 at 0x20 through 0x38.'
   - - 1228
     - c
-    - seedSixWorkTableRecordsBytes14To19At800E4800World03Area14413_801F30CC
-    - '@source: src/bof3/world/seedSixWorkTableRecordsBytes14To19At800E4800World03Area14413_801F30CC.c'
+    - stateSixTableRecords
+    - '@source: src/bof3/world/stateSixTableRecords.c'
     - '@behavior: Overlay step-0 bootstrap of the shared work table: seeds bytes 0x14 through 0x19 of each of the six 0x1C-byte-stride records of the main-RAM work table at 0x800E4800 with the fixed pattern 0x00, 0xF0, 0x00, 0x03, 0x01, 0x1E, walking the block with an unsigned 16-bit counter in a bottom-tested loop; it takes no arguments, returns nothing, calls nothing and reserves 0x10 bytes of stack it never uses.'
   - - 1316
     - asm
@@ -83,8 +83,8 @@ segments:
     - func_801F34FC
   - - 2924
     - c
-    - storeMidpointOfTwoPointRecordsIntoThirdWorld03Area14413_801F376C
-    - '@source: src/bof3/world/storeMidpointOfTwoPointRecordsIntoThirdWorld03Area14413_801F376C.c'
+    - stateMidpointPointThird
+    - '@source: src/bof3/world/stateMidpointPointThird.c'
     - '@behavior: Componentwise midpoint of three point rows of this overlay''s own table at 0x801F3D80: masks the three byte arguments, scales each by the 0x10-byte row stride and, for each of the row''s first three words, adds the signed word of the row named by arg0 to the word of the row named by arg1 and stores the arithmetic half of the sum into the same word of the row named by arg2; the fourth word of every row is left alone.'
   - - 3096
     - asm
@@ -94,8 +94,8 @@ segments:
     - func_801F3A20
   - - 3764
     - c
-    - advanceHalfword0aBy3WhenSharedByte4World03Area14413_801F3AB4
-    - '@source: src/bof3/world/advanceHalfword0aBy3WhenSharedByte4World03Area14413_801F3AB4.c'
+    - stateHalfword0By3Shared
+    - '@source: src/bof3/world/stateHalfword0By3Shared.c'
     - '@behavior: Overlay handler word at 0x801F4900 of the local pointer run based at 0x801F48F4: when the shared main-RAM byte at 0x80146189 reads 4, advances the halfword at offset 0x0A of the work record published through the global pointer cell 0x80148210 by 3; no frame, no call and no pointer table of its own.'
   - - 3820
     - c
@@ -107,13 +107,13 @@ segments:
     - func_801F3B24
   - - 4012
     - c
-    - claimFrontEndRecordSetHandler85AndStoreWorkRecordIndexElseLowerHalfword0aBy2World03Area14413_801F3BAC
-    - '@source: src/bof3/world/claimFrontEndRecordSetHandler85AndStoreWorkRecordIndexElseLowerHalfword0aBy2World03Area14413_801F3BAC.c'
+    - claimStoreIndexLower
+    - '@source: src/bof3/world/claimStoreIndexLower.c'
     - '@behavior: Overlay handler word at 0x801F490C of the local pointer run based at 0x801F48F4: asks the shared free-record selector func_8019601C for an index, masks the answer to a byte and, unless that byte reads 0xFF, marks the selected 0x74-byte front-end record at 0x80143FC8 occupied, writes handler selector 0x85 into record byte 0x05 and stores into record byte 0x06 the index of the current work record, the 0x80146884 minus 0x80146888 pointer difference over the 0x98-byte stride; when the selector answers 0xFF it lowers the work record halfword 0x0A published at 0x80148210 by 2.'
   - - 4216
     - c
-    - publishWorkViewTripletAndViewModeThenRecomputeViewForMode3World03Area14413_801F3C78
-    - '@source: src/bof3/world/publishWorkViewTripletAndViewModeThenRecomputeViewForMode3World03Area14413_801F3C78.c'
+    - publishViewViewRecompute
+    - '@source: src/bof3/world/publishViewViewRecompute.c'
     - '@behavior: Overlay handler word at 0x801F4910 of the local pointer run based at 0x801F48F4: publishes the scratchpad work record words 0x34, 0x38 and 0x3C into the shared view cells 0x80143F7C, 0x80143F80 and 0x80143F84, copies byte 4 of the record at 0x80148210 into the view-mode byte 0x80143FC0, sets the view-offset term byte 0x80143FC3 to 1 and calls the shared view routine at 0x801C5DFC with mode 3.'
   - - 4324
     - c
@@ -122,8 +122,8 @@ segments:
     - '@behavior: Overlay handler word at 0x801F4914 of the local pointer run based at 0x801F48F4: latches 0xFFFF into the shared status halfword 0x801490A8, then stores the shared scenario progress byte 0x80146864 with 0x23 when the shared gate byte 0x801490C7 read with lb is nonzero and with 0x1E when it reads zero; no frame, no call and no pointer table of its own.'
   - - 4372
     - c
-    - setStatusFFFFAndRequestPrimaryState7Substate14WithProgress5AndStep6UnlessGateElseStep5World03Area14413_801F3D14
-    - '@source: src/bof3/world/setStatusFFFFAndRequestPrimaryState7Substate14WithProgress5AndStep6UnlessGateElseStep5World03Area14413_801F3D14.c'
+    - stateStatusUnlessGate
+    - '@source: src/bof3/world/stateStatusUnlessGate.c'
     - '@behavior: Overlay handler word at 0x801F4918 of the local pointer run based at 0x801F48F4: latches 0xFFFF into the shared status halfword 0x801490A8, then branches on the shared gate byte 0x801490C7 read with lb. When that byte reads zero it stores 5 into the shared scenario progress byte 0x80146864, runs the shared front-end step helper 0x801BE1B0 with 6, requests primary state 7 and seeds secondary sub-state 0x14 in the shared cells 0x80146874 and 0x80146875; when the gate byte is nonzero it runs only 0x801BE1B0 with 5 and leaves the progress and state cells alone.'
   - - 4480
     - textbin

@@ -30,47 +30,47 @@ segments:
   subsegments:
   - - 232
     - c
-    - dispatchStateByte2Table47e8World03Area14113_801F2CE8
+    - callStateTable47World03
     - '@source: src/bof3/world/area14113DispatchTables.c'
   - - 300
     - asm
     - func_801F2D2C
   - - 788
     - c
-    - advanceStateByte2WhenHalfword36GateSatisfiedWorld03Area14113_801F2F14
-    - '@source: src/bof3/world/advanceStateByte2WhenHalfword36GateSatisfiedWorld03Area14113_801F2F14.c'
+    - stateHalfword36GateSatisfied
+    - '@source: src/bof3/world/stateHalfword36GateSatisfied.c'
     - '@behavior: State-1 handler of the work-record state-byte-2 dispatch run of this overlay: the payload handler table at 0x801F47E8 holds this address at word 1, so the body has no jal caller. It reads the work record through the scratchpad pointer cell 0x1F800044 and switches on the record signed halfword at +0x36, guarded by an unsigned sltiu bound of 5 so a negative value returns untouched as well. Value 0 waits on bit 0x14 of the main-RAM flag bank word 0x80144EF8 through the shared flag tester 0x8015B5D4, value 1 waits on the shared state byte 0x8014933B reading 1, and values 2, 3 and 4 wait on bits 0x7A, 0x7B and 0x7C of the flag bank word 0x80144F28. When the selected gate answers non-zero the body re-reads the scratchpad cell and increments the record dispatch byte at +2 by one; that byte is the index of the state-byte-2 dispatcher at 0x801F2CE8, so the record leaves this handler for the next arm of the same run. Every other halfword value returns untouched. Takes no arguments and returns nothing; its 0x18-byte frame only holds ra at +0x10 and the record pointer load precedes the frame creation.'
   - - 996
     - c
-    - stampShapeRectangleCellsWithStepCountThenAttachCellTextureAndResetWorkAtEighteenWorld03Area14113_801F2FE4
-    - '@source: src/bof3/world/stampShapeRectangleCellsWithStepCountThenAttachCellTextureAndResetWorkAtEighteenWorld03Area14113_801F2FE4.c'
+    - stampShapeAttachEighteen
+    - '@source: src/bof3/world/stampShapeAttachEighteen.c'
     - '@behavior: State-2 handler of the work-record state-byte-2 dispatch run of this overlay: the payload handler table at 0x801F47E8 holds this address at word 2, so the body has no jal caller. It increments byte +9 of the work record published through the scratchpad pointer cell 0x1F800044, re-reads it and clamps it to 16, then walks the shape table at 0x801F47D4 with the stride-four index of the record signed halfword at +0x36. A shape record is a map rectangle, so the outer loop covers its rows and the inner loop its columns. For each cell the body takes the halfword grid entry of the resident map block at 0x80104000 and addresses that cell command word at the block base plus ((stride * 0x80104001 + 1) >> 1) * 4 plus 0x80104002 * 4 plus four times the grid entry, stores the clamped step count into bits 19 to 23 of the word and keeps every other bit, resolves the cell record with 0x801558F0 and, when it is nonzero, hands the command word and the record 0x50-byte entry of 0x8012D880 offset by 0x80143D44 * 0x28 to the texture helper 0x80155560 with mode 1. After the walk, when record byte +9 reads 0x12 or more, the body calls the shared work-area reset 0x80196070. Takes no arguments and returns nothing; its 0x28-byte frame keeps ra and the five saved registers.'
   - - 1588
     - c
-    - drawSixteenBySixteenWarpGridTintedByWorkByte9AroundSeededDepthWhenNearSharedPointWorld03Area14113_801F3234
-    - '@source: src/bof3/world/drawSixteenBySixteenWarpGridTintedByWorkByte9AroundSeededDepthWhenNearSharedPointWorld03Area14113_801F3234.c'
+    - renderWarpSeededDepth
+    - '@source: src/bof3/world/renderWarpSeededDepth.c'
     - '@behavior: Overlay warp-grid drawer. On the first step of the work record published through the scratchpad pointer cell 0x1F800044, byte +2 zero, the body seeds record word 0x3C with the signed halfword answer of the shared helper 0x8015477C over the record cursor words 0x34 and 0x38 and advances byte +2 by one. It then returns as soon as the sum of the magnitudes of the differences between the shared halfwords 0x8014930A and 0x8014930E and the record halfwords 0x36 and 0x3A is not below 0x15. Otherwise it advances record byte +9 by two, picks tpage 0x2A5 for graph types 1 and 2 and 0xB5 otherwise, arms SetDrawMode at g_PrimCursor with dtd 1 through that tpage, links a kind-1 size-0xC cell at the record cursor pair, and walks a sixteen by sixteen grid: each row takes the complement of record byte +9 minus sixteen times the row index as its cell colour and the row parity as its selector into the signed byte pair at 0x801F47F4, and each cell paints a semi-transparent primitive at the cursor, sets its scratch vertex x to record word 0x34 shifted right nine minus 0x4000 plus three times the >> six sine of a phase built from the column shifted left eight and the low byte of the shared counter 0x80143E6C shifted left four times that selected byte, its y the same over record word 0x38 with the cosine, and its z to minus half the seeded record word 0x3C less twice the cell tint, projects it with RotTransPers into the primitive, and links the cell again. The epilogue repeats the tpage selection, arms SetDrawMode with dtd 0 and links once more. Takes no arguments and returns nothing; its 0x48-byte frame keeps ra and the eight saved registers.'
   - - 2440
     - c
-    - clearWorkFlag20TintTripletAndModeThenInvokeWorkHelperWorld03Area14113_801F3588
-    - '@source: src/bof3/world/clearWorkFlag20TintTripletAndModeThenInvokeWorkHelperWorld03Area14113_801F3588.c'
+    - stateTintTripletMode
+    - '@source: src/bof3/world/stateTintTripletMode.c'
     - '@behavior: clears bit 0x20 of byte 0 of the scratchpad work record published through the pointer cell 0x1F800044, then zeroes that record''s tint channel bytes 0x5F, 0x5E and 0x5D and its mode byte 0x5C, then hands the record to the release helper at 0x80196718; takes no arguments and returns nothing.'
   - - 2532
     - c
-    - setWorkByte8Level7PublishQuadXScaledByte7ThenSetViewModeForStaticRecordElseArmRecordWorld03Area14113_801F35E4
-    - '@source: src/bof3/world/setWorkByte8Level7PublishQuadXScaledByte7ThenSetViewModeForStaticRecordElseArmRecordWorld03Area14113_801F35E4.c'
+    - stateScaledViewStatic
+    - '@source: src/bof3/world/stateScaledViewStatic.c'
     - '@behavior: Overlay step handler reached from the payload handler run based at 0x801F4D38, whose fourth word 0x801F4D44 holds this address, so it takes no arguments and returns nothing. It forms the scratch work record word at +0x34 minus 0x450000 shifted right by 15 and returns untouched when that difference is zero; otherwise it stores the absolute value into byte +0x07 of the record published at the pointer cell 0x80148210, stores the level 7 into work byte +0x08, and then, when the work record pointer equals the static main-RAM record at 0x80143F48, calls the shared view routine 0x801C5DFC with that static record byte +0x08 read at the fixed address 0x80143F50, or otherwise calls the shared arming helper 0x801ABBA8 with the published record and work byte +0x08. Each group re-reads the scratchpad pointer cell 0x1F800044 because a store through the loaded pointer may alias the cell, and the 0x18-byte frame holds only ra at +0x10.'
   - - 2696
     - c
-    - dispatchStateByte4Table4dc4World03Area14113_801F3688
-    - '@source: src/bof3/world/dispatchStateByte4Table4dc4World03Area14113_801F3688.c'
+    - callStateByte4Table4
+    - '@source: src/bof3/world/callStateByte4Table4.c'
   - - 2764
     - asm
     - func_801F36CC
   - - 2880
     - c
-    - stepWorkPositionAndFadeTintTripletThenSetFlag40AndRearmHandlerZeroAtFloorElseDecrementHalfwordAWorld03Area14113_801F3740
-    - '@source: src/bof3/world/stepWorkPositionAndFadeTintTripletThenSetFlag40AndRearmHandlerZeroAtFloorElseDecrementHalfwordAWorld03Area14113_801F3740.c'
+    - stepRearmFloorHalfword
+    - '@source: src/bof3/world/stepRearmFloorHalfword.c'
     - '@behavior: Handler index 1 of the state-byte-4 run of this overlay: the payload handler table at 0x801F4DC4 holds this address at word 1, so the body has no jal caller. It loads the work record published through the scratchpad pointer cell 0x1F800044, adds the record word +0x0C to its position word +0x34 and the record word +0x10 to its position word +0x38, then steps the three signed tint channel bytes +0x5D, +0x5E and +0x5F down by two, skipping any channel that already reads -0x80 so that floor is never crossed. The +0x5E group re-reads the cell before its test and again after its store, and the +0x5F group runs on the value that last group left. The body then re-reads the cell and tests the flag word at +0x5C with 0xFFFFFF00 against 0x80808000: when all three channels read 0x80 the tint has reached its floor, so it sets bit 0x40 of the record flag byte +0x00, re-reads the cell and stores zero into the record state byte +0x04, returning the record to handler index 0 of the same run; otherwise it reads the shared record published at the pointer cell 0x80148210 and decrements that record''s halfword +0x0A by two. Takes no arguments and returns nothing; its 0x18-byte frame reserves bytes no access of the body touches, and the record pointer load precedes the frame creation.'
   - - 3128
     - c
@@ -81,8 +81,8 @@ segments:
     - func_801F387C
   - - 3340
     - c
-    - stepWorkPositionAndRaiseTintTripletToMin40ThenResetFlag20AndRearmHandlerZeroAtCeilingElseDecrementHalfword7eWorld03Area14113_801F390C
-    - '@source: src/bof3/world/stepWorkPositionAndRaiseTintTripletToMin40ThenResetFlag20AndRearmHandlerZeroAtCeilingElseDecrementHalfword7eWorld03Area14113_801F390C.c'
+    - stepTintRearmCeiling
+    - '@source: src/bof3/world/stepTintRearmCeiling.c'
     - '@behavior: Handler index 3 of the state-byte-4 run of this overlay: the payload handler table at 0x801F4DC4 holds this address at word 3, so the body has no jal caller. It loads the work record published through the scratchpad pointer cell 0x1F800044, adds the record word +0x0C to its position word +0x34 and the record word +0x10 to its position word +0x38, then raises the three signed tint channel bytes +0x5D, +0x5E and +0x5F by four, skipping any channel that already reads -0x40 so that ceiling is never crossed. The +0x5E group re-reads the cell after its store and the +0x5F group runs on the pointer that read left. The body then re-reads the cell and tests the flag word at +0x5C with 0xFFFFFF00 against 0xC0C0C000: when all three channels read 0xC0 the tint has reached its ceiling, so it clears bit 0x20 of the record flag byte +0x00, re-reads the cell and stores zero into the record mode byte +0x5C, re-reads it and zeroes the channel bytes +0x5F, +0x5E and +0x5D in that order, then re-reads it once more and stores zero into the record state byte +0x04, returning the record to handler index 0 of the same run; otherwise it reads the shared record published at the pointer cell 0x80146884 and decrements that record''s halfword +0x7E by two. Takes no arguments and returns nothing; its 0x18-byte frame reserves bytes no access of the body touches, and the record pointer load precedes the frame creation.'
   - - 3640
     - asm
@@ -112,8 +112,8 @@ segments:
     - func_801F4400
   - - 6408
     - c
-    - claimWorkRecordSetFlagPublishIndexActivateEntry4dfcAndRequestResource3World03Area14113_801F4508
-    - '@source: src/bof3/world/claimWorkRecordSetFlagPublishIndexActivateEntry4dfcAndRequestResource3World03Area14113_801F4508.c'
+    - claimFlagIndexActivate
+    - '@source: src/bof3/world/claimFlagIndexActivate.c'
     - '@behavior: Claims one shared 0x98-byte work record and activates it: asks the shared allocator 0x8015CA48 for a free record identifier, returns when the masked identifier is 0xFF, otherwise sets the flag byte of the 0x80146888 record it indexes, publishes the identifier as the halfword at 0x1F800000, hands the payload activation entry 0x801F4DFC to the shared activator 0x801A65A0 and requests resource 3 with mode 0 through 0x8014D6DC. No jal in the payload and no word of it names this address, so it takes no arguments and returns nothing; the 0x18-byte frame holds only ra at 0x10.'
   - - 6532
     - asm

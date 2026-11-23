@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 52
     - c
-    - dispatchStateByte2Table47c4World03Area14013_801F2C34
+    - callStateTable47World03
     - '@source: src/bof3/world/area14013DispatchTables.c'
   - - 120
     - asm
@@ -65,16 +65,16 @@ segments:
     - '@source: src/bof3/world/area14013DispatchTables.c'
   - - 1824
     - c
-    - applyTable47f4RecordAtWorkHalfword36ThenSetWorkByte2AndHalfword3eAndDrawWorld03Area14013_801F3320
-    - '@source: src/bof3/world/applyTable47f4RecordAtWorkHalfword36ThenSetWorkByte2AndHalfword3eAndDrawWorld03Area14013_801F3320.c'
+    - stateRecordSetDraw
+    - '@source: src/bof3/world/stateRecordSetDraw.c'
     - '@behavior: Entry 0 of the handler run based at 0x801F47DC: reads the four-byte record at 0x801F47F4 indexed by the signed work halfword at +0x36 scaled by four, stores record bytes 0 and 1 into the work halfwords at +0x36 and +0x3A and record bytes 2 and 3 into the work bytes at +0x08 and +0x0B, then sets the work byte at +0x02 with either that +0x08 byte plus one, while storing 0 into the work halfword at +0x3E, or with 4, while storing 0x80 there, re-reads the pointer cell and calls the draw routine at 0x801F3950 with work byte +0x08 and the signed work halfword at +0x3E.'
   - - 2044
     - asm
     - func_801F33FC
   - - 2292
     - c
-    - advanceWorkHalfword3eBy10AndStepHalfwordPair36And3aAt80ThenAdvanceWorkByte2AndDrawWorld03Area14013_801F34F4
-    - '@source: src/bof3/world/advanceWorkHalfword3eBy10AndStepHalfwordPair36And3aAt80ThenAdvanceWorkByte2AndDrawWorld03Area14013_801F34F4.c'
+    - stateStepHalfwordDraw
+    - '@source: src/bof3/world/stateStepHalfwordDraw.c'
     - '@behavior: Adds 0x10 to work halfword +0x3E, and once its signed value reaches 0x80 steps the halfword pair +0x36/+0x3A and advances state byte +2 before drawing through 0x801F3950.'
   - - 2480
     - asm
@@ -84,68 +84,68 @@ segments:
     - func_801F37C4
   - - 3268
     - c
-    - stepWorkHalfword3eWorld03Area14013_801F38C4
-    - '@source: src/bof3/world/stepWorkHalfword3eWorld03Area14013_801F38C4.c'
+    - stepWorkHalfword3World03
+    - '@source: src/bof3/world/stepWorkHalfword3World03.c'
     - '@behavior: Subtracts 16 from work halfword +0x3E, advances state on expiry and calls 0x801F3950.'
   - - 3408
     - asm
     - func_801F3950
   - - 4164
     - c
-    - findWorkRecordIndexAtPositionWorld03Area14013_801F3C44
-    - '@source: src/bof3/world/findWorkRecordIndexAtPositionWorld03Area14013_801F3C44.c'
+    - queryRecordIndexPosition
+    - '@source: src/bof3/world/queryRecordIndexPosition.c'
     - '@behavior: Returns the index of the first live 0x140-byte work record at D_80145E90 whose scaled position, its +0xC/+0x10 words times the +9 scale byte added to its +0x34/+0x38 words, lies within (byte +0x70 + 3) << 15 of the given point on both axes, and -1 when D_80146254 is zero or no record matches.'
   - - 4428
     - asm
     - func_801F3D4C
   - - 4524
     - c
-    - clearWorkByte74Bit0AndSetSharedFlagBankBit54ThenResetScratchWorkByteWhenWorkRecordKind5To7World03Area14013_801F3DAC
-    - '@source: src/bof3/world/clearWorkByte74Bit0AndSetSharedFlagBankBit54ThenResetScratchWorkByteWhenWorkRecordKind5To7World03Area14013_801F3DAC.c'
+    - stateFlagBankScratch
+    - '@source: src/bof3/world/stateFlagBankScratch.c'
     - '@behavior: Clears bit 0 of the work record byte at +0x74, then once the shared work-record kind byte at 0x80145F09 reads 5, 6 or 7 sets bit 0x54 of the shared flag bank 0x80144F28, calls 0x8015507C with 2 and 7 and clears byte 0 of the scratchpad work record.'
   - - 4656
     - c
-    - projectFacingStepAndDispatchLocalTriggerAtCellElseAdvanceSharedRecordHalfword0aWorld03Area14013_801F3E30
-    - '@source: src/bof3/world/projectFacingStepAndDispatchLocalTriggerAtCellElseAdvanceSharedRecordHalfword0aWorld03Area14013_801F3E30.c'
+    - projectFacingTriggerCell
+    - '@source: src/bof3/world/projectFacingTriggerCell.c'
     - '@behavior: While flag 0x66 of the main-RAM flag bank 0x80144F28 is set, copies the shared mode byte 0x80145E98 into work byte 8 and projects the walk step from the signed route-step pair 0x80181B00 / 0x80181B01 onto the work halfwords +0x36 and +0x3A; the projected cell either arms the record published through 0x80148210 for level 2 when the movement probe 0x801F4058 rejects it inside the column 0x44..0x50 and row 0x06..0x10 window, or requests the resource named by work byte 8, and when the work-gate halfwords 0x80145AA8 and 0x80145AC0 share a set bit it raises bit 0x40 of that record and bit 0x08 of work byte 7, requests the facing step cue from the local pair table 0x801F4A6C, stores that pair second byte at work +0x2A and passes the projected cell to the local trigger lookup 0x801F4380; every other path only adds 4 to the record halfword at +0x0A.'
   - - 5208
     - c
-    - testMoveProbeAndMapCellCodeNot89World03Area14013_801F4058
-    - '@source: src/bof3/world/testMoveProbeAndMapCellCodeNot89World03Area14013_801F4058.c'
+    - checkMoveProbeCode
+    - '@source: src/bof3/world/checkMoveProbeCode.c'
     - '@behavior: Returns 1 when the shared movement probe at 0x801A1AE4 accepts the work area read through 0x80146884 and the map cell at the supplied signed column and row holds a code other than 0x89, and 0 otherwise.'
   - - 5312
     - asm
     - func_801F40C0
   - - 5876
     - c
-    - setProgress5OnFlag66AndPackedArgWindowMatchWorld03Area14013_801F42F4
-    - '@source: src/bof3/world/setProgress5OnFlag66AndPackedArgWindowMatchWorld03Area14013_801F42F4.c'
+    - statePackedWindowMatch
+    - '@source: src/bof3/world/statePackedWindowMatch.c'
     - '@behavior: While the front-side byte 0x80143F03 is zero and flag 0x66 of the main-RAM flag bank 0x80144F28 tests set through 0x8015B5D4, sets the shared progress byte 0x801448EC to 5 and runs the shared front-end startup helper 0x8015C088 once the first packed word equals 0x558000 and the second word high half falls in 0xA..0xB. Returns 0 on every path.'
   - - 6016
     - asm
     - func_801F4380
   - - 6772
     - c
-    - runFrontEndStartupAndSetProgress5World03Area14013_801F4674
-    - '@source: src/bof3/world/runFrontEndStartupAndSetProgress5World03Area14013_801F4674.c'
+    - runFrontEndStartup
+    - '@source: src/bof3/world/runFrontEndStartup.c'
     - '@behavior: Runs the shared front-end startup helper 0x8015C088 and then stores progress 5 into the shared progress byte 0x801448EC, unconditionally.'
   - - 6816
     - c
-    - dispatchStateByte1Table4ac4World03Area14013_801F46A0
+    - callStateTable4World03
     - '@source: src/bof3/world/area14013DispatchTables.c'
   - - 6884
     - c
-    - armCountdownByte9To210AndAdvanceWorkByte1World03Area14013_801F46E4
-    - '@source: src/bof3/world/armCountdownByte9To210AndAdvanceWorkByte1World03Area14013_801F46E4.c'
+    - armCountdownAdvanceWork
+    - '@source: src/bof3/world/armCountdownAdvanceWork.c'
   - - 6920
     - c
-    - decrementWorkByte9AndSetState2OnExpiryOrGameState5World03Area14013_801F4708
-    - '@source: src/bof3/world/decrementWorkByte9AndSetState2OnExpiryOrGameState5World03Area14013_801F4708.c'
+    - decrementSetExpiryGame
+    - '@source: src/bof3/world/decrementSetExpiryGame.c'
     - '@behavior: Decrements work byte 9 and sets state byte 1 to 2 on expiry or game state 5.'
   - - 7020
     - c
-    - clearFlagBitFromWorkByteBAndSubmitPair36And3aThenResetWorkWorld03Area14013_801F476C
-    - '@source: src/bof3/world/clearFlagBitFromWorkByteBAndSubmitPair36And3aThenResetWorkWorld03Area14013_801F476C.c'
+    - stateFlagBitSubmit
+    - '@source: src/bof3/world/stateFlagBitSubmit.c'
     - '@behavior: Clears the flag bit that work byte +0x0B indexes in the main-RAM flag bank 0x80144F28 through 0x8015B5A8, passes the signed work halfwords +0x36 and +0x3A to the shared request helper 0x8015507C and resets the scratchpad work area through 0x80196070.'
   - - 7108
     - textbin

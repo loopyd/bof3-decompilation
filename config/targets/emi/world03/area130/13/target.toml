@@ -8,33 +8,33 @@ splat = "config/targets/emi/world03/area130/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0.c",
-    "src/bof3/world/publishModeStatusFromTable5058ThenClearSharedBytesAndRequestPrimaryState6SubstateAWhenGate0OrClearProgressWhenGate1World03Area13013_801F35B0.c",
-    "src/bof3/world/seedEffectEntriesFromWorkPositionThenClearWorkByte9AndAdvanceWorkByte1World03Area13013_801F2C60.c",
-    "src/bof3/world/advanceSeedHalfwordF00StepWorkWords0cAnd10Invoke3400TickCountdownThenResetByte9To3cAndAdvanceWorkByte1World03Area13013_801F3284.c",
-    "src/bof3/world/invokeScriptedMotionStarterWorld03Area13013_801F378C.c",
-    "src/bof3/world/invokeFrontEndTimingStarterKindZeroAndStoreSelectionId83World03Area13013_801F37B8.c",
-    "src/bof3/world/initFrontendStateSelector3FAndClearSecondStateByteWorld03Area13013_801F3C9C.c",
+    "src/bof3/world/stateEquipmentNameSelector.c",
+    "src/bof3/world/publishBytesSubstateProgress.c",
+    "src/bof3/world/stateEffectEntriesPosition.c",
+    "src/bof3/world/stateHalfwordTickReset.c",
+    "src/bof3/world/callScriptedMotionStarter.c",
+    "src/bof3/world/callTimingStarterKind.c",
+    "src/bof3/world/setupFrontendClearSecond.c",
 ]
 support_sources = [
-    "src/bof3/world/invokeFourConstantArgsWorld03Area13013_801F3760.c",
-    "src/bof3/world/invokeTwoZeroArgsWorld03Area13013_801F373C.c",
-    "src/bof3/world/advanceSeedHalfwordF00Invoke3400AndTickCountdownWorld03Area13013_801F333C.c",
+    "src/bof3/world/callFourConstantArgs.c",
+    "src/bof3/world/callTwoZeroArgs.c",
+    "src/bof3/world/stateHalfwordTickCountdown.c",
     "src/bof3/world/invokeHelperArgWorld03Area13013_801F3C7C.c",
     "src/bof3/world/area13013DispatchTables.c",
     "src/bof3/world/invokeHelperWorld03Area13013_801F2E10.c",
-    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F397C.c",
-    "src/bof3/world/armCountdownByte9ClearWords0cAnd10SeedHalfwords2eTo32ThenAdvanceWorkByte1World03Area13013_801F322C.c",
+    "src/bof3/world/publishSecondBaseEnd.c",
+    "src/bof3/world/armCountdownClearSeed.c",
     "src/bof3/support/area130_13_psyq.c",
-    "src/bof3/world/publishWorkHalfword32ToSeedThenClearWorkFlagsWorld03Area13013_801F33CC.c",
+    "src/bof3/world/publishSeedClearFlags.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F39FC.c",
-    "src/bof3/world/seedFrontEndRecordHandler78FromWorkPositionWorld03Area13013_801F38F0.c",
-    "src/bof3/world/drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld03Area13013_801F2E30.c",
+    "src/bof3/world/stateFrontEndPosition.c",
+    "src/bof3/world/renderTriangleOffsetsBlue.c",
 ]
 psyq_source = "src/bof3/support/area130_13_psyq.c"
 
 # The compiler-emitted six-entry switch table of
-# seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0
+# stateEquipmentNameSelector
 # lives where the original overlay links it, at 0x801F2C04 in this payload's
 # leading tabledata header (offset 0x04): that address is 4-mod-8 while the
 # compiler's `.align 3` asks for 8, so the placement route lowers only this

@@ -43,7 +43,7 @@ u8 func_8019601C(void);
  * cell is loaded once and never re-read.
  *
  * Body evidence: this span is byte-identical to the already-exact sibling
- * seedFrontEndRecordHandler90AndClearRowByte1FromWorkPositionWorld03Area13413_801F54EC
+ * stateEndRowPosition
  * - one cmp of the two 0x90-byte payload spans at their own
  * runtime-minus-load offsets reports equality, including the selector
  * immediate 0x90 and the row byte +1 clear - so the statement order, the

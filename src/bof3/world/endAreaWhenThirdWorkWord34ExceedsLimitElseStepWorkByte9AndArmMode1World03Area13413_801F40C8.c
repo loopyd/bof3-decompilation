@@ -21,7 +21,7 @@ void func_80196070(void);
 /* @source 0x801F40C8
  * @behavior State-byte-1 handler 3 of the five-entry local handler run at
  * 0x801F5804, the table the exact dispatcher
- * dispatchStateByte1Table5804World03Area13413_801F3E0C indexes with the work
+ * callStateTable5804World03 indexes with the work
  * record's byte at +1: when the area status byte D_80146865 already reads 0xFE
  * it first resets the work-area header through func_80196070, then publishes
  * the third shared work base D_80146110 as the overlay work pointer D_80146250
@@ -37,7 +37,7 @@ void func_80196070(void);
  * as an addition of 0xFF rather than a subtraction), and when the read value
  * was zero it clears the shared halfword countdown D_80146876 and stores 1 into
  * the record's state byte at +1, i.e. arms the mode 1 that the exact sibling
- * setScratchStateToMode1WhenPadMatchesWorld03Area13413_801F3E50 also arms. That
+ * stateScratchPadMatches also arms. That
  * mode-1 store goes through the cell again, so it re-reads the restored pointer
  * instead of reusing the local. No jal in the payload reaches this address; its
  * only in-image word is 0x801F5810, entry 3 of that handler run. Takes no

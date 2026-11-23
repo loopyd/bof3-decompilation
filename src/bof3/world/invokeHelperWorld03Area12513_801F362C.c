@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void seedWeightedRandomWorkRecordClearOthersPositionAndDistanceThenStoreSharedHalfwordMinus5World03Area12513_801F3504(
+void stateWeightedOthersDistance(
     void);
 
 /* @source 0x801F362C
@@ -10,5 +10,5 @@ void seedWeightedRandomWorkRecordClearOthersPositionAndDistanceThenStoreSharedHa
  * @residual none
  */
 void invokeHelperWorld03Area12513_801F362C(void) {
-  seedWeightedRandomWorkRecordClearOthersPositionAndDistanceThenStoreSharedHalfwordMinus5World03Area12513_801F3504();
+  stateWeightedOthersDistance();
 }

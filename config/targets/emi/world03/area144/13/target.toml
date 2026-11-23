@@ -8,27 +8,27 @@ splat = "config/targets/emi/world03/area144/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/storeMidpointOfTwoPointRecordsIntoThirdWorld03Area14413_801F376C.c",
+    "src/bof3/world/stateMidpointPointThird.c",
     "src/bof3/world/setStatusFFFFAndScenarioProgress23IfGateElse1EWorld03Area14413_801F3CE4.c",
-    "src/bof3/world/advanceHalfword0aBy3WhenSharedByte4World03Area14413_801F3AB4.c",
-    "src/bof3/world/seedSixWorkTableRecordsBytes14To19At800E4800World03Area14413_801F30CC.c",
-    "src/bof3/world/latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48.c",
-    "src/bof3/world/advanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CFC.c",
-    "src/bof3/world/seedSixWorkTableRecordsPointersAndTailBytesThenDeriveMidpointRowsAt800E4800World03Area14413_801F2E18.c",
-    "src/bof3/world/resetWorkAreaAndClearCountdownWorld03Area14413_801F2DF0.c",
-    "src/bof3/world/seedWorkRecordsPlayCue203AndAdvanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CA4.c",
+    "src/bof3/world/stateHalfword0By3Shared.c",
+    "src/bof3/world/stateSixTableRecords.c",
+    "src/bof3/world/latchIntoBuildCue.c",
+    "src/bof3/world/stateNoCallbackRan.c",
+    "src/bof3/world/statePointersTailDerive.c",
+    "src/bof3/world/stateAreaClearCountdown.c",
+    "src/bof3/world/statePlayNoRan.c",
 ]
 support_sources = [
-    "src/bof3/world/copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44.c",
-    "src/bof3/world/claimFrontEndRecordSetHandler85AndStoreWorkRecordIndexElseLowerHalfword0aBy2World03Area14413_801F3BAC.c",
+    "src/bof3/world/copyWorkIncrementWork.c",
+    "src/bof3/world/claimStoreIndexLower.c",
     "src/bof3/world/incrementWorkByte1World03Area14413_801F2DD0.c",
     "src/bof3/world/advanceHalfword0aBy3WhenSharedByte2World03Area14413_801F3AEC.c",
     "src/bof3/world/area14413DispatchTables.c",
     "src/bof3/world/incrementWorkByte1World03Area14413_801F2DB0.c",
     "src/bof3/world/incrementWorkByte1World03Area14413_801F2D90.c",
     "src/bof3/world/incrementWorkByte1World03Area14413_801F2D70.c",
-    "src/bof3/world/publishWorkViewTripletAndViewModeThenRecomputeViewForMode3World03Area14413_801F3C78.c",
-    "src/bof3/world/setStatusFFFFAndRequestPrimaryState7Substate14WithProgress5AndStep6UnlessGateElseStep5World03Area14413_801F3D14.c",
+    "src/bof3/world/publishViewViewRecompute.c",
+    "src/bof3/world/stateStatusUnlessGate.c",
     "src/bof3/support/area144_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area144_13_psyq.c"

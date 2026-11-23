@@ -9,7 +9,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x801F4400
  * @behavior Overlay work-record step handler, entry 1 of the handler table
  * based at 0x801F5828 that this target's exact
- * dispatchStateByte1Table5828World03Area13413_801F4344 indexes with the work
+ * callStateTable5828World03 indexes with the work
  * record's state byte at +1, reached the frame after its entry 0 at 0x801F4388
  * advances that byte. Entry 0 seeds the fields this body moves: it arms the
  * countdown byte at +0x09 with 0x40, clears the halfword at +0x20, stores
@@ -35,7 +35,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
  * pointer run that starts at 0x801F581C; there is no jal caller, which is the
  * dispatch shape rather than missing evidence. That table is indexed with the
  * work record's state byte at +1 by the exact same-target dispatcher
- * dispatchStateByte1Table5828World03Area13413_801F4344, whose entries are this
+ * callStateTable5828World03, whose entries are this
  * overlay's step handlers. The advance-and-clamp role comes from this body's
  * own immediates and from entry 0's seeding of the same fields; the countdown
  * re-arm and the state-byte advance come from the byte cells the body writes.
@@ -46,7 +46,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
  * relocation-different sibling: shape evidence only, never clone eligibility.
  * The statement order, the pointer-cell reload points and the u8 accumulator
  * spelling of the countdown group follow this target's exact
- * claimWorkRecordEveryFourthCountdownTickThenAdvanceWorkByte1World03Area13413_801F4288
+ * claimEveryFourthTick
  * (`countdown = (u8)(work[9] - 1); work[9] = countdown;` tested for zero, with
  * the re-armed byte written through the cell symbol); this function's own
  * literals, clamp limit, step, sweep value and call target come from its

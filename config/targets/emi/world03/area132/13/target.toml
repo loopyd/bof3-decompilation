@@ -8,24 +8,24 @@ splat = "config/targets/emi/world03/area132/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/clearWorkTableClaimBytesWorld03Area13213_801F385C.c",
+    "src/bof3/world/stateTableClaimBytes.c",
     "src/bof3/world/findFreeWorkRecordWorld03Area13213_801F3800.c",
-    "src/bof3/world/claimSeedWorkRecordEveryFourthFrameRunRecordPassThenAdvanceWorkByte2WhenCountdownExpiresWorld03Area13213_801F2E88.c",
-    "src/bof3/world/resetWorkTableArmCountdownAdvanceWorkByte2AndQueueCue20CWorld03Area13213_801F2E38.c",
-    "src/bof3/world/clearWorkFlagsWhenNoRecordDrawnWorld03Area13213_801F2F20.c",
+    "src/bof3/world/claimEveryFourthPass.c",
+    "src/bof3/world/stateTableArmQueue.c",
+    "src/bof3/world/stateFlagsNoDrawn.c",
     "src/bof3/world/clearWorkFlagsWhenNoRecordDrawnTable3df8World03Area13213_801F3048.c",
-    "src/bof3/world/requestResource40Or41PerWorkByte8Bit2World03Area13213_801F3A24.c",
+    "src/bof3/world/requestResource40PerWork.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld03Area13213_801F2DA8.c",
     "src/bof3/world/area13213DispatchTables.c",
     "src/bof3/world/clearOverlayStateByteWorld03Area13213_801F3CA0.c",
-    "src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13213_801F312C.c",
-    "src/bof3/world/seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4.c",
-    "src/bof3/world/seedWorkWords34To3CAnd0CTo14DispatchCue207AndAdvanceWorkByte1World03Area13213_801F30C0.c",
-    "src/bof3/world/tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0.c",
-    "src/bof3/world/drawTexturedRibbonAlongWorkSpanWorld03Area13213_801F3268.c",
-    "src/bof3/world/resetWorkCountdownAndSelectHandler1World03Area13213_801F2C48.c",
+    "src/bof3/world/stateClampedRearmCountdown.c",
+    "src/bof3/world/stateRecordDefaultsPosition.c",
+    "src/bof3/world/stateWorkDispatchAdvance.c",
+    "src/bof3/world/tickDrawActiveRecords.c",
+    "src/bof3/world/renderRibbonAlongSpan.c",
+    "src/bof3/world/stateWorkCountdownSelect.c",
     "src/bof3/support/area132_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area132_13_psyq.c"

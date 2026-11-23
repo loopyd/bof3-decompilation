@@ -74,8 +74,8 @@ segments:
     - '@behavior: Byte-2 state handler that both byte-2 dispatch tables of this overlay list at entry 2 (0x801F516C, indexed by the dispatcher at 0x801F3014, and 0x801F5184, indexed by the dispatcher at 0x801F3C10); either table indexes the work record published at the scratchpad pointer cell 0x1F800044 by its state byte at offset 0x02. Subtracts 0x20 from that record unsigned halfword at offset 0x30, stores the truncated halfword, and, once the stored value read as a signed halfword falls below -0xFF, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 of the same table (0x801F3590 on the 0x801F516C table, 0x801F3FD0 on the 0x801F5184 table). It then calls the overlay record draw routine at 0x801F381C with a zero mode argument, taking that routine zero branch; the callee reads the same halfword at offset 0x30 as a sprite screen offset.'
   - - 2448
     - c
-    - setWorkState2To4WhenCameraOutsideRecordCoordinateWindowWorld03Area11813_801F3590
-    - '@source: src/bof3/world/setWorkState2To4WhenCameraOutsideRecordCoordinateWindowWorld03Area11813_801F3590.c'
+    - stateCameraOutsideWindow
+    - '@source: src/bof3/world/stateCameraOutsideWindow.c'
     - '@behavior: When the shared front-side byte 0x80143F03 reads zero, returns without touching the work record published at the scratchpad pointer cell 0x1F800044 when its byte 0x0A equals the shared overlay state byte 0x8014933B. Otherwise reads the record route byte 0x08 once: a non-zero route compares the shared camera word 0x80145EC8 with the record halfword 0x3A and a zero route compares 0x80145EC4 with the record halfword 0x36, both against the cell centre ((halfword + 1) << 16) | 0x8000 at a 0x20000 threshold, and stores 4 into the record state byte 0x02 when the camera lies outside. When that first check passes, the other axis halfword and its camera word test both the cell start (halfword << 16) and the next cell start ((halfword + 1) << 16) at the same threshold before storing 4 into the state byte.'
   - - 2740
     - c
@@ -83,72 +83,72 @@ segments:
     - '@source: src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11813_801F36B4.c'
   - - 2888
     - c
-    - stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawWorld03Area11813_801F3748
-    - '@source: src/bof3/world/stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawWorld03Area11813_801F3748.c'
+    - stampColumnNeighbourCell
+    - '@source: src/bof3/world/stampColumnNeighbourCell.c'
     - '@behavior: Byte-2 state handler that the first byte-2 dispatch table of this overlay (0x801F516C, indexed by the dispatcher at 0x801F3014) lists at entry 5. Reads the work record published at the scratchpad pointer cell 0x1F800044, takes its cursor byte 0x0B as the flag number and probes that flag in the bank at 0x80144ED0 through the shared flag tester func_8015B5D4; when the flag is clear only the draw call runs. When the flag is set it stamps 0xA1 into the map byte of the record column at offset 0x36 for the row at offset 0x3A, addressed through the resident map base pointer 0x8014931C scaled by the resident map row stride byte 0x80104000, then stamps the same 0xA1 into one neighbouring cell chosen by the record route byte at offset 0x08: the row below when that route byte is zero, otherwise the cell at the column advanced by the route byte. It then stores 1 into the record state byte at offset 0x02 so the next dispatch takes entry 1 of the same table. Every path finishes with the overlay record draw routine 0x801F381C called with mode 1.'
   - - 3100
     - asm
     - func_801F381C
   - - 4112
     - c
-    - dispatchStateByte2Table5184WorldWorld03Area11813_801F3C10
+    - callStateTable5184World
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 4180
     - c
-    - seedRecordCellPoseFromTablesStampMapColumnAdvanceStateAndClearSpriteOffsetWhenCameraInsideWorld03Area11813_801F3C54
-    - '@source: src/bof3/world/seedRecordCellPoseFromTablesStampMapColumnAdvanceStateAndClearSpriteOffsetWhenCameraInsideWorld03Area11813_801F3C54.c'
+    - statePoseTablesInside
+    - '@source: src/bof3/world/statePoseTablesInside.c'
     - '@behavior: Byte-2 state handler that the second byte-2 dispatch table of this overlay (0x801F5184, indexed by the dispatcher at 0x801F3C10) lists at entry 0. Reads the work record published at the scratchpad pointer cell 0x1F800044 and derives its cell pose from this overlay pose tables: it stores 8 minus the record halfword at offset 0x36 into the byte at offset 0x0A, the byte at 0x801F5138 indexed by the signed halfword at offset 0x3A into the byte at offset 0x0B, the byte at 0x801F515C indexed by twice the halfword at offset 0x36 back into that halfword, and the byte at 0x801F515D at that same index into the halfword at offset 0x3A, and records whether the original halfword at offset 0x36 was zero in the byte at offset 0x08. It then takes the signed distance of the record words at offsets 0x34 and 0x38 from the resident distance helper 0x8015477C, stores half its negation less the halfword at 0x801F513C into the record halfword at offset 0x3E and that table halfword into the halfword at offset 0x32, clears the halfword at offset 0x30, copies the halfword at 0x801F514C into the halfword at offset 0x2E, stamps 0x52 into the map byte of the record column at offset 0x36 for the row at offset 0x3A and again for the row below through the resident map base pointer 0x8014931C scaled by the resident map row stride byte 0x80104000, and increments the record state byte at offset 0x02 so the next dispatch takes entry 3 of the same table. When the camera word 0x80145EC4 lies no further than 0x8000 from that cell centre ((halfword at offset 0x36 plus 1) << 16 or 0x8000) and the camera word 0x80145EC8 lies no further than 0x10000 from the cell start (halfword at offset 0x3A << 16) or from the next cell start, it also stamps 0xA1 into both map bytes and stores -0x100 into the record halfword at offset 0x30. Every path finishes with the overlay record draw routine 0x801F381C called with a zero mode argument.'
   - - 4844
     - c
-    - stampRecordColumnTwoRowsAndQueueCue200WhenFrontendPhaseZeroThenSetWorkStateTo2AndDrawWorld03Area11813_801F3EEC
-    - '@source: src/bof3/world/stampRecordColumnTwoRowsAndQueueCue200WhenFrontendPhaseZeroThenSetWorkStateTo2AndDrawWorld03Area11813_801F3EEC.c'
+    - stampColumnRowsFrontend
+    - '@source: src/bof3/world/stampColumnRowsFrontend.c'
     - '@behavior: Byte-2 state handler that the second byte-2 dispatch table of this overlay (0x801F5184, indexed by the dispatcher at 0x801F3C10) lists at entry 1. Reads the work record published at the scratchpad pointer cell 0x1F800044 and compares its byte at offset 0x0A with the shared state byte 0x8014933B; when they differ the body is skipped and only the draw call runs. Otherwise the front-end phase byte 0x80143BB0 gates sound cue 0x200 through the resident cue dispatcher at 0x8015DF18, which fires only while that phase byte is zero. It then stamps 0xA1 into the map byte of the record column at offset 0x36 for the row at offset 0x3A and again for the row below, addressed through the resident map base pointer 0x8014931C scaled by the resident map row stride byte 0x80104000, and stores 2 into the record state byte at offset 0x02 so the next dispatch takes entry 2 of the same table. Every path finishes with the overlay record draw routine 0x801F381C called with mode 1. The record cell is reloaded for each of the four uses.'
   - - 5072
     - c
-    - stampRecordColumnCellsAndSetWorkStateTo4WhenCameraOutsideRecordWindowWorld03Area11813_801F3FD0
-    - '@source: src/bof3/world/stampRecordColumnCellsAndSetWorkStateTo4WhenCameraOutsideRecordWindowWorld03Area11813_801F3FD0.c'
+    - stampColumnCellsOutside
+    - '@source: src/bof3/world/stampColumnCellsOutside.c'
     - '@behavior: Byte-2 state handler that the second byte-2 dispatch table of this overlay (0x801F5184, indexed by the dispatcher at 0x801F3C10) lists at entry 3. Reads the work record published at the scratchpad pointer cell 0x1F800044 and compares its byte at offset 0x0A with the shared overlay state byte 0x8014933B; when they are equal the body is skipped and only the draw call runs. Otherwise it tests the camera against the record cell window: the shared camera word 0x80145EC4 against the record halfword at offset 0x36 through that cell centre ((halfword + 1) << 16) | 0x8000, and the shared camera word 0x80145EC8 against the record halfword at offset 0x3A through both the cell start (halfword << 16) and the next cell start ((halfword + 1) << 16), an absolute difference above 0x20000 meaning outside. Outside, it stamps 0x52 into the map byte of the record column at offset 0x36 for the row at offset 0x3A and again for the row below, through the resident map base pointer 0x8014931C scaled by the resident map row stride byte 0x80104000, then stores 4 into the record state byte at offset 0x02. Every path finishes with the overlay record draw routine 0x801F381C called with a zero mode argument.'
   - - 5388
     - c
-    - dispatchStateByte2Table519cWorldWorld03Area11813_801F410C
+    - callStateTable519World
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 5456
     - c
-    - seedRecordCursorCoordinatePairFromSlotTablesAndHalfDistanceThenAdvanceCursorAndDispatchFlagStateWorld03Area11813_801F4150
-    - '@source: src/bof3/world/seedRecordCursorCoordinatePairFromSlotTablesAndHalfDistanceThenAdvanceCursorAndDispatchFlagStateWorld03Area11813_801F4150.c'
+    - stateCoordinateTablesHalf
+    - '@source: src/bof3/world/stateCoordinateTablesHalf.c'
     - '@behavior: Byte-2 state handler that the last byte-2 dispatch table of this overlay (0x801F519C, indexed by the dispatcher at 0x801F410C) lists at entry 0. Seeds the work record published at the scratchpad pointer cell 0x1F800044 from its target halfword at offset 0x36: stores the low byte of that halfword into the cursor byte at offset 0x0B, then writes the record word at 0x34 as the byte two cursor steps into table 0x801F51B0 shifted left 16 and the record word at 0x38 the same way from table 0x801F51B1, so the pair is the cell coordinate of the indexed slot. Calls the shared distance helper func_8015477C with that coordinate pair and stores minus half of the returned signed distance less the cursor-indexed halfword of table 0x801F51B4 into the record halfword at 0x3E, then advances the cursor byte at 0x0B. Probes the flag number the advanced cursor picks from table 0x801F5198 in the flag bank at 0x80144ED0 through the shared flag tester func_8015B5D4; when that flag is set it increments the record state byte at 0x02 and calls its sibling handler at 0x801F4278, otherwise it stores 3 into that state byte and calls the sibling handler at 0x801F43FC. Takes no arguments and returns nothing; the record pointer is loaded before the frame is created and the 0x18-byte frame keeps only $ra at 0x10.'
   - - 5752
     - c
-    - setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagClearThenDrawFlagIndexedScaledFrameWorld03Area11813_801F4278
-    - '@source: src/bof3/world/setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagClearThenDrawFlagIndexedScaledFrameWorld03Area11813_801F4278.c'
+    - stateIndexedScaledFrame
+    - '@source: src/bof3/world/stateIndexedScaledFrame.c'
     - '@behavior: Byte-2 state handler that the last byte-2 dispatch table of this overlay (0x801F519C, indexed by the dispatcher at 0x801F410C) lists at entry 1, and that the handler at 0x801F4150 calls directly on the branch where its own probe of the flag bank at 0x80144ED0 with the flag number from table 0x801F5198 reports set. Reads the work record published at the scratchpad pointer cell 0x1F800044, takes its cursor byte 0x0B as an index into the four-byte flag-number table 0x801F5198 and probes that flag number in the flag bank through the shared flag tester func_8015B5D4; when that flag is clear it stores 9 into the record byte at 0x09, the countdown its neighbour at 0x801F4340 decrements before advancing the same record state byte, and increments the record state byte at 0x02 so the next dispatch takes entry 2 of the same table (0x801F4340). It then takes the same cursor byte 0x0B as an index into the four-byte flag-number table 0x801F5138, probes that flag number the same way and draws the record through the overlay record draw routine 0x801F4634 with frame index record byte 0x0B plus four times that flag result plus one, at size 0x40, so the frame steps by four once the indexed flag is set. Every path finishes with the overlay primitive setup 0x801F48E0, and the record cell is reloaded for each of the five uses.'
   - - 5952
     - c
-    - decrementWorkByte9AndAdvanceWorkByte2AtZeroThenDrawRecordAndFlagIndexedScaledFrameWorld03Area11813_801F4340
-    - '@source: src/bof3/world/decrementWorkByte9AndAdvanceWorkByte2AtZeroThenDrawRecordAndFlagIndexedScaledFrameWorld03Area11813_801F4340.c'
+    - decrementIndexedScaledFrame
+    - '@source: src/bof3/world/decrementIndexedScaledFrame.c'
     - '@behavior: Byte-2 state handler that the last byte-2 dispatch table of this overlay (0x801F519C, indexed by the dispatcher at 0x801F410C) lists at entry 2. Decrements the work record byte at offset 0x09 published at the scratchpad pointer cell 0x1F800044 and, once that countdown reads zero, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 of the same table (0x801F43FC). Draws the record through the overlay record draw routine 0x801F4634 with mode 0 and size 0x40, then takes the record cursor byte at offset 0x0B as an index into the four-byte flag-number table 0x801F5138, probes that flag number in the flag bank at 0x80144ED0 through the shared flag tester func_8015B5D4, and draws the record again with frame index record byte 0x0B plus four times that flag result plus one, so the frame steps by four once the indexed flag is set, at size record byte 0x09 times eight, so the drawn size shrinks with the countdown. Every path finishes with the overlay primitive setup 0x801F48E0, and the record cell is reloaded for each of the four uses.'
   - - 6140
     - c
-    - setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagSetThenDrawWorld03Area11813_801F43FC
-    - '@source: src/bof3/world/setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagSetThenDrawWorld03Area11813_801F43FC.c'
+    - stateIndexedFlagDraw
+    - '@source: src/bof3/world/stateIndexedFlagDraw.c'
     - '@behavior: Byte-2 state handler that the last byte-2 dispatch table of this overlay (0x801F519C, indexed by the dispatcher at 0x801F410C) lists at entry 3, and that the handler at 0x801F4150 calls directly on the branch where its own probe of flag bank 0x80144ED0 reports clear. Reads the work record published at the scratchpad pointer cell 0x1F800044, takes its cursor byte 0x0B as an index into the four-byte flag-number table 0x801F5198 and probes that flag number in the flag bank at 0x80144ED0 through the shared flag tester func_8015B5D4. When the flag is set, stores 9 into the record byte at 0x09, which the neighbours at 0x801F4340 and 0x801F447C count down before advancing the same record state byte, and increments the record state byte at 0x02 so the next dispatch takes the following entry of the same table. Every path finishes with the overlay record draw routine 0x801F4634 called with mode 0 and size 0x40, and the record cell is reloaded for each of the three uses.'
   - - 6268
     - c
-    - decrementWorkByte9AndSetWorkByte2To1AtZeroThenDrawFlagIndexedFrameWithDrawModeAndSemiTransFlatQuadWorld03Area11813_801F447C
-    - '@source: src/bof3/world/decrementWorkByte9AndSetWorkByte2To1AtZeroThenDrawFlagIndexedFrameWithDrawModeAndSemiTransFlatQuadWorld03Area11813_801F447C.c'
+    - decrementSemiTransFlat
+    - '@source: src/bof3/world/decrementSemiTransFlat.c'
     - '@behavior: Byte-2 state handler that the last byte-2 dispatch table of this overlay (0x801F519C, indexed by the dispatcher at 0x801F410C) lists at entry 4, the arm the handler at 0x801F43FC reaches by advancing the record state byte. Decrements the work record byte at offset 0x09 and, once that countdown reads zero, stores 1 into the record state byte at offset 0x02 so the next dispatch restarts the cycle at entry 1. Takes the draw-mode texture page from GetGraphType, 0x2A5 for graphics type 1 or 2 and 0xB5 otherwise, seeds that draw mode on the shared primitive cursor, and links the 0xC-byte draw-mode packet at the record position pair 0x34/0x38 through the shared grid-cell linker func_80155A08. Draws the record through the overlay record draw routine 0x801F4634 with frame index record byte 0x0B plus four times the probe of the flag number that byte indexes in table 0x801F5138, taken through the shared flag tester func_8015B5D4 against the flag bank at 0x80144ED0, at size 0x40. It then re-seeds the same cursor as a flat 0x18-byte packet through func_8017A9A4, sets its semi-transparency bit, writes record byte 0x09 times 30 into its red, green and blue bytes, projects the four scratchpad vectors at 0x1F800014 into its four screen pairs with RotTransPers4, links that packet at the same position pair and finishes with the overlay primitive setup 0x801F48E0. Takes no arguments and returns nothing.'
   - - 6708
     - c
-    - drawRecordCellTexturedQuadWorld03Area11813_801F4634
-    - '@source: src/bof3/world/drawRecordCellTexturedQuadWorld03Area11813_801F4634.c'
+    - renderCellTexturedQuad
+    - '@source: src/bof3/world/renderCellTexturedQuad.c'
     - '@behavior: Overlay record draw routine the four byte-2 state handlers of this overlay call with an animation frame index and a size. Builds the four corners of one textured quad from the work record at 0x1F800044 in the scratchpad vector deck 0x1F800014: the common x comes from the record column halfword at 0x36 as ((column - 0x80) << 7) + 0x40, the two y values from the row halfword at 0x3A as ((row - 0x80) << 7) plus and minus size - 8, and each corner z is the negated half of the func_8015477C distance of its own fixed-point x and y minus the record halfword at 0x3E, the low-y corners subtracting size - 8 and the high-y corners adding size. Seeds the shared primitive cursor 0x8014598C as a POLY_FT4, clears its shade texture, projects the four corners through RotTransPers4, fills the texture state through func_80155560 from the frame index added to 0x285000F3 and links the record position pair at 0x34/0x38 through func_80155A08 with kind 1 and size class 0x28.'
   - - 7392
     - asm
     - func_801F48E0
   - - 8072
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area11813_801F4B88
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area11813_801F4B88.c'
+    - publishBaseFrontEnd
+    - '@source: src/bof3/world/publishBaseFrontEnd.c'
     - '@behavior: Publishes the shared work base 0x80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 1 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of this payload byte table 0x801F51B8 and halfwords +0x2E/+0x30 = 0x80145EBE/0x80145EC0; unless the call reports 0xFF the returned record index is stored in work byte +0x0B, the byte the byte-2 handlers of this overlay read as their flag-number index. No jal reaches this address: its only in-image reference is the code-pointer word at 0x801F5990 in this payload textbin blob D_801F511C, where it follows the three data pointers 0x801F595C/0x801F5968/0x801F5974 and directly precedes the six-byte bounds records starting at 0x801F5994.'
   - - 8200
     - c
@@ -156,13 +156,13 @@ segments:
     - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld03Area11813_801F4C08.c'
   - - 8400
     - c
-    - syncWorkRecordsAgainstBoundsTableAndMirrorActiveKindWorld03Area11813_801F4CD0
-    - '@source: src/bof3/world/syncWorkRecordsAgainstBoundsTableAndMirrorActiveKindWorld03Area11813_801F4CD0.c'
+    - syncAgainstBoundsMirror
+    - '@source: src/bof3/world/syncAgainstBoundsMirror.c'
     - '@behavior: Per-frame work-record sync of this area: clears bit 0x2000 of the shared world flags 0x80146258, walks the live records of the 0x140-byte array at 0x80145E90 and publishes each as 0x80146250 and as the scratchpad cursor 0x1F800044, and asks the payload bounds query 0x801F4C08 which six-byte bounds record holds that record. A 0xFF answer only drops the record bit from the saved cursor byte 0x0B and from 0x8014625A. A record whose bit is clear in both masks is activated by setting shared work mode 0x80146250[0x11C] to 2, clearing countdown byte 9, raising both bits and copying kind byte 0x801F5998 of its bounds record into byte 8, with bit 2 of that kind flipped when the flag bank 0x80144F28 reports the paired 0x801F5999 id, before the kind is handed to func_8014D8D4. An already active record runs the shared step func_801C2538 and, for index 0 only, func_801C2710 while its countdown reads zero, and otherwise refreshes byte 8 the same way and, when the kind changed, mirrors the motion words +0x0C, +0x10 and +0x14 and reflects the countdown as 8 minus itself. Every active path then runs func_801B0DFC, steps the countdown down by one, releases the shared hold through func_8014D978 and raises bit 0x2000 of 0x80146258. The saved cursor is restored last, and the trailing guard clears bit 0x2000 again when 0x80143BB0 holds 5. No jal and no word of this payload names the address, so the caller stays structural.'
   - - 9260
     - c
-    - setTriggerRecordFlagAndQueueCue203OnMatchedArgumentsWorld03Area11813_801F502C
-    - '@source: src/bof3/world/setTriggerRecordFlagAndQueueCue203OnMatchedArgumentsWorld03Area11813_801F502C.c'
+    - stateTriggerMatchedArguments
+    - '@source: src/bof3/world/stateTriggerMatchedArguments.c'
     - '@behavior: Matches the two zero-extended byte arguments and the shared game-mode byte 0x80145E98 against the two records of this payload trigger table at 0x801F59E0 (record 0 reads 0x0B/0x46/0x01/0x85 and record 1 is all zeroes, the empty terminator), walking the table by a byte offset advanced 0x04 per record and stopping at the accepted record. The accepted record sets its fourth byte as a bit of the shared main-RAM flag bank 0x80144F28 through the shared setter func_8015B5F4, unless that bank already reports bit 0x1C through the shared tester func_8015B5D4, and only on that path does it call the main-executable routine 0x8019ABB0 with 0xF and queue sound cue 0x203 through the resident cue dispatcher. It returns 1 exactly on that path; a run that reaches the end of the table without acceptance, the empty terminator record and an already-set bit 0x1C all return 0. No jal and no word of this payload names the address, so the two byte arguments carry no evidenced role.'
   - - 9500
     - textbin

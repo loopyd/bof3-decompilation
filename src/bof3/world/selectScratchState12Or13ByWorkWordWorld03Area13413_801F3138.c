@@ -16,7 +16,7 @@ extern u8* D_80146250;
  * Selects state byte 1 = 12 when the first word is smaller; otherwise selects
  * state 13 and clears byte 9 through the reloaded scratchpad work pointer.
  * Takes no arguments and returns nothing. The same 0x80-byte shape as the exact
- * sibling selectScratchState4Or13ByWorkWordWorld03Area13413_801F2DE8 apart from
+ * sibling selectScratchWorkWord apart from
  * that smaller-branch immediate.
  * @status exact
  * @match 100.00
