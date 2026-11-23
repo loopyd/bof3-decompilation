@@ -1,7 +1,7 @@
 """Return the first liftable candidate for a target in one call.
 
 Consolidates the per-lane sequence measured in the fan-out runs: run
-``rev-query quick-wins``, then hand-screen every row's original bytes for
+``rev-query quick-wins``, then screen every row's original bytes for
 ``div``/``break`` trap opcodes, then take the first survivor. Lanes repeated
 that loop for up to 8 rows on every mission.
 """
@@ -10,130 +10,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
-import subprocess
-import sys
 from pathlib import Path
 
-from harness.common.commands import command_at
-from harness.domain.claims import collect_manifest_source_addresses
-from harness.domain.registry import lookup_target_manifest
+from harness.analysis.candidates import candidate_address, surviving_rows
 
 _ROOT = Path(__file__).resolve().parents[4]
-_DIV_FUNCTS = {0x1A, 0x1B}
-_BREAK_FUNCT = 0x0D
-
-
-def _load_address(root: Path, target: str) -> int | None:
-    manifest = root / "config" / "targets" / target / "target.toml"
-    if not manifest.is_file():
-        return None
-    match = re.search(
-        r"^\s*load_address\s*=\s*(0x[0-9A-Fa-f]+|\d+)",
-        manifest.read_text(encoding="utf-8"),
-        re.MULTILINE,
-    )
-    if match is None:
-        return None
-    return int(match.group(1), 0)
-
-
-def _has_trap(payload: bytes) -> bool:
-    for offset in range(0, len(payload) - 3, 4):
-        word = int.from_bytes(payload[offset : offset + 4], "little")
-        opcode = word >> 26
-        funct = word & 0x3F
-        if opcode == 0 and (funct in _DIV_FUNCTS or funct == _BREAK_FUNCT):
-            return True
-    return False
-
-
-def _address(row: dict) -> int:
-    value = row["address"]
-    return value if isinstance(value, int) else int(value, 0)
-
-
-def _claimed_addresses(root: Path, target: str) -> set[int]:
-    """Read current function claims owned by this target, not other overlays."""
-    manifest = lookup_target_manifest(root, target)
-    if manifest is None:
-        raise ValueError(f"unknown target: {target}")
-    return {address for _, address in collect_manifest_source_addresses(root, manifest)}
-
-
-def _drop_claimed(rows: list[dict], claimed: set[int]) -> list[dict]:
-    if not claimed:
-        return rows
-    return [row for row in rows if _address(row) not in claimed]
-
-
-def _trap_screen(root: Path, rows: list[dict]) -> list[dict]:
-    survivors: list[dict] = []
-    load_cache: dict[str, int | None] = {}
-    for row in rows:
-        target = row["target"]
-        if target not in load_cache:
-            load_cache[target] = _load_address(root, target)
-        load = load_cache[target]
-        binary = root / "out" / "binaries" / f"{target}.bin"
-        if load is None or not binary.is_file():
-            # Cannot screen: keep the row but mark it unverified.
-            survivors.append({**row, "trap_screened": False})
-            continue
-        offset = _address(row) - load
-        data = binary.read_bytes()
-        if offset < 0 or offset + row["size"] > len(data):
-            survivors.append({**row, "trap_screened": False})
-            continue
-        if _has_trap(data[offset : offset + row["size"]]):
-            continue
-        survivors.append({**row, "trap_screened": True})
-    return survivors
-
-
-def _ranked_rows(root: Path, target: str, limit: int) -> list[dict]:
-    result = subprocess.run(
-        command_at(
-            root,
-            "rev-query",
-            "--allow-stale",
-            "--json",
-            "quick-wins",
-            "--target",
-            target,
-            "--unlifted",
-            "--limit",
-            str(limit),
-        ),
-        cwd=root,
-        text=True,
-        capture_output=True,
-    )
-    if result.returncode != 0:
-        sys.stderr.write(result.stdout + result.stderr)
-        raise SystemExit(result.returncode)
-    return json.loads(result.stdout)
-
-
-_MAX_SCREEN_POOL = 512
-
-
-def _surviving_rows(root: Path, target: str, limit: int) -> tuple[list[dict], int]:
-    """Return screened rows, widening the ranked pool while nothing survives.
-
-    The ranking limit is applied before the claimed/trap screen, so a fixed pool
-    reports no candidate whenever the top rows all fail it. Widening doubles the
-    pool until a row survives or the ranking is exhausted.
-    """
-
-    requested = max(1, limit)
-    claimed = _claimed_addresses(root, target)
-    while True:
-        rows = _ranked_rows(root, target, requested)
-        survivors = _trap_screen(root, _drop_claimed(rows, claimed))
-        if survivors or len(rows) < requested or requested >= _MAX_SCREEN_POOL:
-            return survivors, len(rows)
-        requested = min(requested * 2, _MAX_SCREEN_POOL)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -148,8 +29,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
-    root = _ROOT
-    survivors, _screened = _surviving_rows(root, args.target, args.limit)
+    survivors, _screened = surviving_rows(_ROOT, args.target, args.limit)
     if not survivors:
         if args.json:
             print(json.dumps({"target": args.target, "candidate": None}, indent=2))
@@ -159,7 +39,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         return 1
     best = survivors[0]
-    address = _address(best)
+    address = candidate_address(best)
     if args.json:
         print(json.dumps(best, indent=2, sort_keys=True))
         return 0
