@@ -42,12 +42,12 @@ segments:
     - func_801EEE5C
   - - 700
     - c
-    - dispatchStateByte1Table0064BmagicMagic06603_801EEEBC
+    - callStateTable0064Bmagic
     - '@source: src/bof3/bmagic/magic06603DispatchTables.c'
   - - 768
     - c
-    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhileWorkStepRunningBmagicMagic06603_801EEF00
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhileWorkStepRunningBmagicMagic06603_801EEF00.c'
+    - callPopWhileRunning
+    - '@source: src/bof3/bmagic/callPopWhileRunning.c'
   - - 888
     - asm
     - func_801EEF78
@@ -59,8 +59,8 @@ segments:
     - func_801EF04C
   - - 1188
     - c
-    - decrementWorkByteBMask1FThenDecrementWorkWords14And10By2AndIncrementWorkByte2At20BmagicMagic06603_801EF0A4
-    - '@source: src/bof3/bmagic/decrementWorkByteBMask1FThenDecrementWorkWords14And10By2AndIncrementWorkByte2At20BmagicMagic06603_801EF0A4.c'
+    - decrementByteIncrementBmagic
+    - '@source: src/bof3/bmagic/decrementByteIncrementBmagic.c'
   - - 1288
     - asm
     - func_801EF108
@@ -72,11 +72,11 @@ segments:
     - func_801EF784
   - - 3124
     - c
-    - dispatchStateByte2Table0080BmagicMagic06603_801EF834
+    - callStateTable0080Bmagic
     - '@source: src/bof3/bmagic/magic06603DispatchTables.c'
   - - 3192
     - c
-    - clearSlotCountersAndWorkByte9ThenIncrementWorkByte2BmagicMagic06603_801EF878
+    - stateSlotCountersIncrement
   - - 3272
     - c
     - runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic06603_801EF8C8
@@ -84,16 +84,16 @@ segments:
     - '@behavior: Runs the target-local slot-grid draw routine at 0x801EF984 through a 0x18-byte frame that keeps only the return address, then adds one to the scratchpad work-object byte at offset 0x9 modulo 256 and tests that truncated byte for equality with 0x60, and only on that match re-reads the pointer cell at 0x1F800044 and increments the work-object byte at offset 0x2; takes no arguments and returns nothing.'
   - - 3376
     - c
-    - add1ToWorkByte9AndInvokeHelperAt80BmagicMagic06603_801EF930
-    - '@source: src/bof3/bmagic/add1ToWorkByte9AndInvokeHelperAt80BmagicMagic06603_801EF930.c'
+    - workInvokeHelperBmagic
+    - '@source: src/bof3/bmagic/workInvokeHelperBmagic.c'
     - '@behavior: Entry 2 of this overlay three-address work-byte-2 handler table based at 0x801F0080, so it runs while the work object byte 2 holds 2. It runs the target-local slot-grid draw routine at 0x801EF984 through a 0x18-byte frame that keeps only the return address, then adds one to the scratchpad work-object byte at offset 0x9 modulo 256 and tests that truncated byte for equality with 0x80, and only on that match invokes the shared battle helper at 0x801E5988; takes no arguments and returns nothing.'
   - - 3460
     - asm
     - func_801EF984
   - - 4296
     - c
-    - drawUpToFourGreyRotatedTexturedQuadsScaledByPerSlotCounterBytesBmagicMagic06603_801EFCC8
-    - '@source: src/bof3/bmagic/drawUpToFourGreyRotatedTexturedQuadsScaledByPerSlotCounterBytesBmagicMagic06603_801EFCC8.c'
+    - renderUpGreyPer
+    - '@source: src/bof3/bmagic/renderUpGreyPer.c'
     - '@behavior: Draws up to four semi-transparent grey textured quads of the transform the caller installed through 0x801EFFB0. Each of the four steps re-reads the scratchpad work-object pointer cell 0x1F800044 and draws only while three times the step index stays below that object byte 0x9 and the step counter byte at 0x801F00B0 stays below 0x10, then fills four scratchpad vectors at 0x1F800014 with half-extent counter times four plus 0x32 scaled phase samples at the 0x200, 0x600, 0xE00 and 0xA00 corners and negated depth counter times fifteen, stamps and projects a 0x28-byte POLY_FT4 with texture page 0x340, clut 0x1E2 and grey shade 0x41 minus four times half the counter byte, and links it at output list 3. Takes no arguments and returns nothing.'
   - - 5040
     - asm

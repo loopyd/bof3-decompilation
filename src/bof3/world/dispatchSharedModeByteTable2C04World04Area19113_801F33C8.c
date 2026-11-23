@@ -42,7 +42,7 @@ void func_8015B5A8(void* flag_bank, u8 bit_index);
 void func_8015C058(void);
 void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
-void resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0(void);
+void stateFieldFillRecords(void);
 
 /* @source 0x801F33C8
  * @behavior Steps the shared front-end mode byte 0x801448EC through this
@@ -107,7 +107,7 @@ void dispatchSharedModeByteTable2C04World04Area19113_801F33C8(void) {
     }
     D_8014832E = 0;
     func_80161D20(D_80145029);
-    resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0();
+    stateFieldFillRecords();
     func_801636A0(0, 1);
     D_801448EC = 4;
     break;

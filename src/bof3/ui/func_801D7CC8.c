@@ -3,7 +3,7 @@
 /* @source 0x801D7CC8
  * @behavior shop panel phase step sharing the entry sequence of the sibling
  *           steps func_801D7B74 and func_801D7D48: calls
- *           drawShopSlotPriceList with the work-block index byte
+ *           renderShopPriceList with the work-block index byte
  *           D_80148656[0], 0x98, 0x3F, 0 and 0xFF, then buildSlotList with 0,
  *           then tests the byte counter
  *           tickPhaseTimerThenAdvanceWorkCounter(&D_80148656[5], 0x10); when
@@ -19,7 +19,7 @@ void func_801D7CC8(void) {
   u8* work;
 
   work = D_80148656;
-  drawShopSlotPriceList(work[0], 0x98, 0x3F, 0, 0xFF);
+  renderShopPriceList(work[0], 0x98, 0x3F, 0, 0xFF);
   buildSlotList(0);
   if ((u8)tickPhaseTimerThenAdvanceWorkCounter(work + 5, 0x10)) {
     phaseTimer = 0;

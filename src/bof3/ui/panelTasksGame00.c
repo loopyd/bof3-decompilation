@@ -49,7 +49,7 @@ PANEL_APPLY_POSITION(applyPanelPosition)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg170, -0xAA)
+PANEL_RETREAT_X(retreatPanelXNeg170, -0xAA)
 
 /* @source 0x80199938
  * @behavior retreats panel field six by 16 and clamps it to -20.
@@ -57,7 +57,7 @@ PANEL_RETREAT_X(retreatPanelXToNeg170, -0xAA)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_FIELD6(retreatPanelField6ToNeg20, 0x10, -0x14)
+PANEL_RETREAT_FIELD6(retreatPanelField6Neg20, 0x10, -0x14)
 
 /* @source 0x80199978
  * @behavior advances the panel task field_06 by 0x10, clamps to max 0x10, and

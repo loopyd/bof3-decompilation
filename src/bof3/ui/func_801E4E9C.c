@@ -13,7 +13,7 @@
  *           0xA4-byte-stride field records at D_80144952 + 0x1B, and for every
  *           record whose byte at +2 has bit 0 set and whose byte at +0x16
  *           matches the main-RAM byte D_80148361 it emits the record through
- *           emitShopFieldRecordIconSprite at the task's x/field-6 coordinates
+ *           emitShopFieldIcon at the task's x/field-6 coordinates
  *           plus a running
  *           (x, y) icon offset (record byte at +0 as the third argument).
  *           The x offset steps by 0x25 and wraps to 0 with the y offset
@@ -38,7 +38,7 @@ void func_801E4E9C(PanelTask* task) {
   y = 0;
   for (i = 0; i < 8; i++) {
     if ((bank[0x1B + 2] & 1) != 0 && bank[0x1B + 0x16] == D_80148361) {
-      emitShopFieldRecordIconSprite(task->x + x + 4, task->field_06 + y + 5,
+      emitShopFieldIcon(task->x + x + 4, task->field_06 + y + 5,
                                     bank[0x1B], 0);
       x = x + 0x25;
       if (x >= 0x4B) {

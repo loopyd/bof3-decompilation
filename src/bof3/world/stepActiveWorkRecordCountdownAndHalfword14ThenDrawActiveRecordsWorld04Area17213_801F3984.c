@@ -2,7 +2,7 @@
 
 /* Shared projection setup that fills the 0x20-byte stack scratch the frame
  * passes of this payload read; the tile draw pass
- * drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC and
+ * renderEffectEntriesAdvance and
  * func_801F34D8, func_801F35D8 and func_801F36C0 call it from the same
  * generated map row of this target. */
 void func_801AFE18(void* arg0);

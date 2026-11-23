@@ -8,17 +8,17 @@ splat = "config/targets/emi/bmagic/magic021/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndClearWorkBytesAtZeroBmagicMagic02103_801EF7A0.c",
+    "src/bof3/bmagic/decrementTwoGlobalBytes.c",
     "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic02103_801EEC28.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic02103_801EEFA8.c",
     "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic02103_801EF0BC.c",
-    "src/bof3/bmagic/invokeHelperThenClearRecordFlag40WhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic02103_801EEF38.c",
+    "src/bof3/bmagic/callHelperClearZero.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/invokeHelperThenCountDownWorkByte9AndQueueTwelveRecordsWithPairedStepAndWorkPointerBmagicMagic02103_801EF104.c",
-    "src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte2WhenHelperReadyBmagicMagic02103_801EF208.c",
-    "src/bof3/bmagic/dispatchWorkByte2AndCallHelpersIfWorkBytes0And2NonzeroBmagicMagic02103_801EF578.c",
-    "src/bof3/bmagic/invokeHelperAndAdd4ToWorkByte9Below12ElseAdvanceWorkByte2BmagicMagic02103_801EF260.c",
+    "src/bof3/bmagic/callDownTwelvePaired.c",
+    "src/bof3/bmagic/forwardBattleHelperReady.c",
+    "src/bof3/bmagic/callHelpersNonzeroBmagic.c",
+    "src/bof3/bmagic/callHelperAdvanceBmagic.c",
     "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic02103_801EFDB0.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic02103_801EF328.c",

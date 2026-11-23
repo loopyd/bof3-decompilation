@@ -51,7 +51,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * unsigned sixteen-bit; both spellings carry the same low half, so this caller
  * keeps the signed one.
  */
-u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01200_801CED1C(
+u8 claimSizeItemName(
     s16 x, s16 y);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
@@ -100,5 +100,5 @@ PLCHAR_DEFINE_COUNTDOWN_PROJECTED_CELL_CLAIM(
     markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp01200_801CEA94,
     D_1F800044, D_80181B94, D_80181B98, D_801468FC,
     func_801BDE14,
-    claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01200_801CED1C,
+    claimSizeItemName,
     func_8014DAEC)

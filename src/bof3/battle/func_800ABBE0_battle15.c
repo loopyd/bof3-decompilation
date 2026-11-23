@@ -2,7 +2,7 @@
 
 /* @source 0x800ABBE0
  * @behavior Runs the battle substate pass
- *   claimOwnerSlotsInModeRowThenSeedCountdown, then dispatches the handler
+ *   claimOwnerSlotsRow, then dispatches the handler
  *   selected by the battle mode byte D_801462EA through the function table
  *   rooted at D_800B5108.
  * @status exact
@@ -10,6 +10,6 @@
  * @residual none
  */
 void func_800ABBE0(void) {
-  claimOwnerSlotsInModeRowThenSeedCountdown();
+  claimOwnerSlotsRow();
   D_800B5108[D_801462EA]();
 }

@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-/* Shared commu list cursor. moveCommuRowCursorByPadDirection moves it by the
+/* Shared commu list cursor. moveCommuPadDirection moves it by the
  * pad direction with a press and repeat state, and the row drawing code
  * drawRowMarkerOutlineCommu0107_801D36FC indexes the twelve-entry layout table at 0x801D4C44 with it, so
  * it is the row of this overlay's list that its handlers act on. */
@@ -24,7 +24,7 @@ extern u16 D_801D4DDA[]; /* @source 0x801D4DDA @kind data */
 extern u16 D_801D4BB0[]; /* @source 0x801D4BB0 @kind data */
 
 /* Result halfword of the current commu request, consumed as a text id: the
- * drawing handler drawCommuEntryListScreen indexes the executable's string-offset table at
+ * drawing handler renderCommuListScreen indexes the executable's string-offset table at
  * 0x80010000 with it. */
 extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
 
@@ -41,7 +41,7 @@ extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
  * @match 100.00
  * @residual none
  * The row arm writes the local rowValue and hands it to value once, as this
- * function's shape sibling publishCommuEntryTextId does for its own arm. The
+ * function's shape sibling publishCommuTextId does for its own arm. The
  * first seed assigned value in both 0x44 arms and the late jump passes merged
  * them, so this arm's `beq` jumped to a shared block with an unfilled delay slot
  * instead of branching to the store with 0x44 in it (35/43, first difference at

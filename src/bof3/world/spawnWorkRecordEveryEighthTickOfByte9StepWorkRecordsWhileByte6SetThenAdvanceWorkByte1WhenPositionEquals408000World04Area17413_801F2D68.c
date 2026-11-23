@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 u8* findFreeWorkRecordByte3At800E4800World04Area17413_801F2E88(void);
-void claimWorkRecordAndSeedPositionStepSizeAndHeadingFromWorkObjectWorld04Area17413_801F3378(
+void claimSizeHeadingObject(
     u8* record);
 void func_801F2EC4(void);
 
@@ -23,7 +23,7 @@ extern s32 D_80147A8C;
 /* @source 0x801F2D68
  * @behavior Entry 2 of this overlay's work-byte-1 state machine: entry 2 of the
  *           eight-word handler run based at 0x801F4FAC, which this target's
- *           exact dispatcher dispatchStateByte1Table4facWorld04Area17413_801F2C04
+ *           exact dispatcher callStateTable4World04
  *           indexes with the work record's state byte at +1. That base sits
  *           inside the payload textbin blob, so the word at 0x801F4FB4 names
  *           this span and no jal in the payload reaches it. Entry 1 at
@@ -66,7 +66,7 @@ void spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanc
   if ((D_1F800044[9] & 7) == 0) {
     record = findFreeWorkRecordByte3At800E4800World04Area17413_801F2E88();
     if (record != 0) {
-      claimWorkRecordAndSeedPositionStepSizeAndHeadingFromWorkObjectWorld04Area17413_801F3378(
+      claimSizeHeadingObject(
           record);
     }
   }

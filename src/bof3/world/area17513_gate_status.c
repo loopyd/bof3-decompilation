@@ -12,7 +12,7 @@ extern u16 D_801490A8;
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatus63IfGateElse62World04Area17513_801F3970, D_801490C7, D_801490A8, 0x63, 0x62)
+WORLD_DEFINE_GATE_STATUS(stateStatus63GateElse62, D_801490C7, D_801490A8, 0x63, 0x62)
 
 /* @source 0x801F3A34
  * @behavior Loads the shared gate byte D_801490C7 and stores 0x70 into the
@@ -22,7 +22,7 @@ WORLD_DEFINE_GATE_STATUS(setStatus63IfGateElse62World04Area17513_801F3970, D_801
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatus70IfGateElseFFFFWorld04Area17513_801F3A34, D_801490C7, D_801490A8, 0x70, 0xFFFF)
+WORLD_DEFINE_GATE_STATUS(stateStatus70GateWorld04, D_801490C7, D_801490A8, 0x70, 0xFFFF)
 
 /* @source 0x801F3A5C
  * @behavior Loads the shared gate byte D_801490C7 and stores 0x70 into the
@@ -42,7 +42,7 @@ WORLD_DEFINE_GATE_STATUS(setStatus70IfGateElseFFFFWorld04Area17513_801F3A5C, D_8
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatus7EIfGateElseFFFFWorld04Area17513_801F3B4C, D_801490C7, D_801490A8, 0x7E, 0xFFFF)
+WORLD_DEFINE_GATE_STATUS(stateStatus7GateWorld04, D_801490C7, D_801490A8, 0x7E, 0xFFFF)
 
 /* @source 0x801F3B74
  * @behavior Loads the shared gate byte D_801490C7 and stores 0x7E into the
@@ -62,7 +62,7 @@ WORLD_DEFINE_GATE_STATUS(setStatus7EIfGateElseFFFFWorld04Area17513_801F3B74, D_8
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatus8AIfGateElseFFFFWorld04Area17513_801F3C4C, D_801490C7, D_801490A8, 0x8A, 0xFFFF)
+WORLD_DEFINE_GATE_STATUS(stateStatus8GateWorld04, D_801490C7, D_801490A8, 0x8A, 0xFFFF)
 
 /* @source 0x801F3C74
  * @behavior Loads the shared gate byte D_801490C7 and stores 0x8A into the
@@ -82,7 +82,7 @@ WORLD_DEFINE_GATE_STATUS(setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74, D_8
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatusA0IfGateElse9FWorld04Area17513_801F3CA4, D_801490C7, D_801490A8, 0xA0, 0x9F)
+WORLD_DEFINE_GATE_STATUS(stateStatusGateElse9, D_801490C7, D_801490A8, 0xA0, 0x9F)
 
 /* @source 0x801F3E28
  * @behavior Loads the shared gate byte D_801490C7 and stores 0xF8 into the

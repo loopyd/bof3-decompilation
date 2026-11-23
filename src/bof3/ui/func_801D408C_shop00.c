@@ -2,7 +2,7 @@
 
 /* @source 0x801D408C
  * @behavior phase step sibling of func_801D4CF0: draws the phase-relative
- *           three-row selector panel through drawThreeRowSelectorPanel at
+ *           three-row selector panel through renderThreeRowSelector at
  *           x = phaseTimer * 48 + 0x6E with the y constant 0x4C, emits the shop
  *           panel strip through func_801DAB90 with the fixed panel arguments
  *           (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
@@ -34,7 +34,7 @@ void func_801D408C(void) {
    * unchanged; the qualified declaration in the shared header belongs to the
    * other shop phase steps). */
   timer = (u8*)&phaseTimer;
-  drawThreeRowSelectorPanel((*timer * 48) + 0x6E, 0x4C);
+  renderThreeRowSelector((*timer * 48) + 0x6E, 0x4C);
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
     drawShopMoneyPanel(0x62, 0x28, 0, D_80144F50);

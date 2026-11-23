@@ -43,5 +43,5 @@ void loadScenario(u8 scenario_index) {
     func_8014B87C(1u);
   }
 
-  dispatchScenarioHandlerAndState();
+  callScenarioHandlerState();
 }

@@ -9,7 +9,7 @@
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_FIELD6(retreatPanelField6ToNeg20, 0x10, -0x14)
+PANEL_RETREAT_FIELD6(retreatPanelField6Neg20, 0x10, -0x14)
 
 /* @source 0x801E2988
  * @behavior advances the panel task field_06 by 0x10, clamps to max 0x10, and
@@ -53,7 +53,7 @@ PANEL_RETREAT_FIELD6_FLOOR(retreatPanelField6ToNeg20C, 0x10, -0x14)
  * @match 100.00
  * @residual none
  */
-PANEL_ADVANCE_FIELD6_ONCE(advancePanelField6To38B, 0x26)
+PANEL_ADVANCE_FIELD6_ONCE(statePanelField6To38, 0x26)
 
 /* @source 0x801E2B94
  * @behavior passes the panel position and field six to the common UI helper.
@@ -70,7 +70,7 @@ PANEL_APPLY_POSITION(applyPanelPosition)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg150, -0x96)
+PANEL_RETREAT_X(retreatPanelXNeg150, -0x96)
 
 /* @source 0x801E2CDC
  * @behavior Adds 32 to 16-bit panel x; signed results above 17 clamp to 17 and clear state.
@@ -139,7 +139,7 @@ PANEL_RETREAT_X_CLAMP(retreatPanelXTo70, 0x46)
  * @match 100.00
  * @residual none
  */
-PANEL_ADVANCE_X(advancePanelXTo320B, 320)
+PANEL_ADVANCE_X(statePanelXTo320, 320)
 
 /* @source 0x801E37B4
  * @behavior subtracts 0x20 from the panel task x position, clamps to max 0x4B, and
@@ -182,7 +182,7 @@ PANEL_ADVANCE_X(advancePanelXTo40, 0x28)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg170, -0xAA)
+PANEL_RETREAT_X(retreatPanelXNeg170, -0xAA)
 
 /* @source 0x801E3D4C
  * @behavior Adds 32 to 16-bit panel x; signed results above 320 clamp to 320 and clear state.
@@ -234,7 +234,7 @@ PANEL_RETREAT_X(retreatPanelXToNeg150C, -0x96)
  * @match 100.00
  * @residual none
  */
-PANEL_ADVANCE_X(advancePanelXTo17B, 17)
+PANEL_ADVANCE_X(statePanelXTo17, 17)
 
 /* @source 0x801E4278
  * @behavior subtracts 0x20 from the panel task x position, clamps to min -120, and
@@ -243,7 +243,7 @@ PANEL_ADVANCE_X(advancePanelXTo17B, 17)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg120, -120)
+PANEL_RETREAT_X(retreatPanelXNeg120, -120)
 
 /* @source 0x801E42B8
  * @behavior advances the panel task x position by 0x20, clamps to max 0x64, and

@@ -30,80 +30,80 @@ segments:
   subsegments:
   - - 128
     - c
-    - dispatchStateByte1Table3c54World04Area19113_801F2C80
+    - callStateTable3World04
     - '@source: src/bof3/world/area19113DispatchTables.c'
   - - 196
     - c
-    - clearWorkColorTripletArmCountdown3CAndAdvanceWorkByte1World04Area19113_801F2CC4
-    - '@source: src/bof3/world/clearWorkColorTripletArmCountdown3CAndAdvanceWorkByte1World04Area19113_801F2CC4.c'
+    - stateColorTripletArm
+    - '@source: src/bof3/world/stateColorTripletArm.c'
     - '@behavior: Entry 0 of the work-byte-1 handler table at 0x801F3C54: zeroes the work record colour-channel bytes at 0x5F, 0x5E and 0x5D through the scratchpad pointer cell 0x1F800044, seeds that record countdown byte at 0x09 with 0x3C and moves its dispatch byte at 0x01 to 1.'
   - - 256
     - asm
     - func_801F2D00
   - - 444
     - c
-    - advanceSubstateAndWorkByte1WhileSharedPhaseNotTwoThenDrawFadeTileWorld04Area19113_801F2DBC
-    - '@source: src/bof3/world/advanceSubstateAndWorkByte1WhileSharedPhaseNotTwoThenDrawFadeTileWorld04Area19113_801F2DBC.c'
+    - stateWhileNotTile
+    - '@source: src/bof3/world/stateWhileNotTile.c'
     - '@behavior: Entry 2 of the four-word work-byte-1 handler table at 0x801F3C54: while the shared phase byte D_80143BB0 is not 2 it adds one to the shared front-end sub-state byte D_80146875 and moves the work record dispatch byte at 0x01 to 3, and every arm then redraws the fullscreen fade tile through 0x801F2E34.'
   - - 532
     - c
     - invokeHelperWorld04Area19113_801F2E14
   - - 564
     - c
-    - drawFullscreenWorkColorFadeTileWorld04Area19113_801F2E34
-    - '@source: src/bof3/world/drawFullscreenWorkColorFadeTileWorld04Area19113_801F2E34.c'
+    - renderFullscreenColorTile
+    - '@source: src/bof3/world/renderFullscreenColorTile.c'
     - '@behavior: Selects the drawing mode for tpage GetTPage(0, 2, 0x3C0, 0) with dithering enabled and queues the mode primitive on order-table head 5, then builds a 320x240 TILE at the screen origin whose red, green and blue channels are the work-record bytes at offsets 0x5D, 0x5E and 0x5F of the record published through the scratchpad pointer cell 0x1F800044, marks it semi-transparent with shading disabled and queues the finished primitive on the same head.'
   - - 792
     - c
-    - setStatusFFFFIfGateElse68World04Area19113_801F2F18
-    - '@source: src/bof3/world/setStatusFFFFIfGateElse68World04Area19113_801F2F18.c'
+    - stateStatusGateElse68
+    - '@source: src/bof3/world/stateStatusGateElse68.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xFFFF into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0x68 when the gate byte is zero.'
   - - 832
     - c
-    - setStatusFFFFAndRequestPrimaryState1Substate14WhenGateClearWorld04Area19113_801F2F40
-    - '@source: src/bof3/world/setStatusFFFFAndRequestPrimaryState1Substate14WhenGateClearWorld04Area19113_801F2F40.c'
+    - stateStatusPrimaryGate
+    - '@source: src/bof3/world/stateStatusPrimaryGate.c'
     - '@behavior: Entry 1 of the handler pointer run at 0x801F4168: stores 0xFFFF into the shared status halfword D_801490A8 on every path and, while the shared gate byte D_801490C7 is clear, runs the shared front-end startup helper func_8015C088 and then requests primary scene state 1 with secondary state 0x14 through the shared route bytes D_80146874 and D_80146875.'
   - - 916
     - c
-    - setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19113_801F2F94
-    - '@source: src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19113_801F2F94.c'
+    - stateStatusGateRow
+    - '@source: src/bof3/world/stateStatusGateRow.c'
     - '@behavior: Entry 2 of the handler pointer run at 0x801F4168: reads the shared gate byte D_801490C7, resets the shared status halfword D_801490A8 to 0xFFFF, and copies the two bytes of the gate-selected row of the 0x801F41D0 row table into record words +0x18 and +0x1C of the pointer held at D_80148208.'
   - - 1004
     - c
-    - setStatusFFFFIfGateElse6CWorld04Area19113_801F2FEC
-    - '@source: src/bof3/world/setStatusFFFFIfGateElse6CWorld04Area19113_801F2FEC.c'
+    - stateStatusGateElse6
+    - '@source: src/bof3/world/stateStatusGateElse6.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xFFFF into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0x6C when the gate byte is zero.'
   - - 1044
     - c
-    - setStatusFFFFAndProgress2Or10Or20ByGateWorld04Area19113_801F3014
-    - '@source: src/bof3/world/setStatusFFFFAndProgress2Or10Or20ByGateWorld04Area19113_801F3014.c'
+    - stateStatusOr10Gate
+    - '@source: src/bof3/world/stateStatusOr10Gate.c'
     - '@behavior: Entry 4 of the handler pointer run at 0x801F4168: loads the shared gate byte D_801490C7 into a local, stores 0xFFFF into the shared status halfword D_801490A8, and then stores into the shared front-end mode byte D_801448EC the value 2 while the gate byte is zero, 10 while it is one, and 20 for every other value.'
   - - 1108
     - asm
     - func_801F3054
   - - 1244
     - c
-    - runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19113_801F30DC
-    - '@source: src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19113_801F30DC.c'
+    - runStartupAnimIncrement
+    - '@source: src/bof3/world/runStartupAnimIncrement.c'
     - '@behavior: Runs the shared front-end startup helper 0x8015C088, clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884, then increments that record halfword at offset 0x7E after re-reading the pointer cell.'
   - - 1328
     - c
-    - runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EAndRequestPrimaryState2Substate19World04Area19113_801F3130
-    - '@source: src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EAndRequestPrimaryState2Substate19World04Area19113_801F3130.c'
+    - runStartupAnimPrimary
+    - '@source: src/bof3/world/runStartupAnimPrimary.c'
     - '@behavior: Runs the shared front-end startup helper 0x8015C088, clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884 with an `andi 0xFE` read-modify-write, increments that record halfword at offset 0x7E, then requests primary state 2 and substate 0x19 through the shared bytes 0x80146874 and 0x80146875.'
   - - 1440
     - c
-    - dispatchWorkByte4Table41dcWorld04Area19113_801F31A0
-    - '@source: src/bof3/world/dispatchWorkByte4Table41dcWorld04Area19113_801F31A0.c'
+    - callWorkByte4Table41
+    - '@source: src/bof3/world/callWorkByte4Table41.c'
   - - 1508
     - c
-    - armWorkRiseStepSeedWordPair40And44CountdownFFAndTintThenSelectRiseHandlerWorld04Area19113_801F31E4
-    - '@source: src/bof3/world/armWorkRiseStepSeedWordPair40And44CountdownFFAndTintThenSelectRiseHandlerWorld04Area19113_801F31E4.c'
+    - armRiseTintRise
+    - '@source: src/bof3/world/armRiseTintRise.c'
     - '@behavior: Arming entry of the four-word work-byte-4 handler table at 0x801F41DC, selected by work byte 4 value 0: re-reads the scratchpad pointer cell 0x1F800044 for each of six store groups and stores 2 into the record byte at 0x48, 0x10000 into the words at 0x40 and 0x44, 0xFF into the countdown byte at 0x0A, 1 into the word at 0x70, 0x50/0x3C/0 into the colour bytes at 0x5D/0x5E/0x5F, and 1 into the record byte at 0x04 to hand the record to the raise step 0x801F3278; it then subtracts two from the halfword at 0x0A of the shared record 0x80148210.'
   - - 1656
     - c
-    - advanceWorkStepAndRaiseWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3278
-    - '@source: src/bof3/world/advanceWorkStepAndRaiseWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3278.c'
+    - stateHandOffFourth
+    - '@source: src/bof3/world/stateHandOffFourth.c'
     - '@behavior: Per-frame rise step of the scratch work record published through the pointer cell 0x1F800044: adds the step word at 0x0C to the accumulator word at 0x34, adds 0x2000 to each of the words at 0x40 and 0x44 and decrements the countdown byte at 0x0A; a countdown multiple of four selects handler byte 4 value 2, and a zero countdown selects 0, otherwise the shared halfword at 0x0A of the record at 0x80148210 loses two.'
   - - 1824
     - c
@@ -120,26 +120,26 @@ segments:
     - func_801F3658
   - - 2988
     - c
-    - lookupRowTableByteByCodeAndCounterWorld04Area19113_801F37AC
-    - '@source: src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19113_801F37AC.c'
+    - queryRowCodeCounter
+    - '@source: src/bof3/world/queryRowCodeCounter.c'
     - '@behavior: Searches the caller code byte in the five-entry row table 0x801F4248, scales the found position by the nine-column stride and clamps the shared counter D_80144F56 to 8, then returns one byte of the matching row: while the shared wait 0x8015B5D4 reports the bank base 0x80144EF8 with id 0x0A as pending the row is read from 0x801F4260 through the sibling lookup 0x801F3924 with the column offset 0x801F4290[level], otherwise the byte at offset 0x1A of the 164-byte field record D_80144982[D_80181B10[code]] picks an offset of 8, of the 0x801F4250 column entry, or of a fixed 7 and the second use of the same wait over D_8014686C with id 2 picks between the 0x801F4218 and 0x801F41E8 rows.'
   - - 3364
     - c
-    - lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924
-    - '@source: src/bof3/world/lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924.c'
+    - queryTable4260ByteOffset
+    - '@source: src/bof3/world/queryTable4260ByteOffset.c'
     - '@behavior: Reads the small column offset at 0x801F4290 indexed by the low byte of the third argument and adds it to the first argument while the low byte of the fourth argument is below 5, otherwise adds the fixed offset 8, then returns the byte at 0x801F4260 indexed by the low byte of that sum.'
   - - 3428
     - c
-    - activateRecordsUnlessScenarioIs0EAndWait5PendingWorld04Area19113_801F3964
-    - '@source: src/bof3/world/activateRecordsUnlessScenarioIs0EAndWait5PendingWorld04Area19113_801F3964.c'
+    - activateRecordsUnlessPending
+    - '@source: src/bof3/world/activateRecordsUnlessPending.c'
     - '@behavior: Reads the shared signed scenario byte D_80146870 and calls the local record activator func_801F39AC whenever that byte is not 0x0E; for scenario 0x0E it first runs the shared two-stage wait 0x8015B5D4 over the scenario progress word D_8014686C with id 5 and skips the activator only when that wait reports a nonzero, unfinished result.'
   - - 3500
     - asm
     - func_801F39AC
   - - 3760
     - c
-    - resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0
-    - '@source: src/bof3/world/resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0.c'
+    - stateFieldFillRecords
+    - '@source: src/bof3/world/stateFieldFillRecords.c'
     - '@behavior: Walks the eight 164-byte field records of D_80144968 and, for every record whose flag byte at offset 0x07 has bit 0 set, clears the halfword at offset 0x0C and copies the halfwords at 0x1C and 0x1E over the pair at 0x14 and 0x16; it then walks the visible entry count D_80146254 in order, selects the field record index D_80181B10[D_80144F5A[entry]] and copies that whole 164-byte field record into offset 0x74 of the entry work record in the 0x140-byte-stride array whose array base is D_80145E90.'
   - - 4064
     - c

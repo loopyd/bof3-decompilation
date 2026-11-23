@@ -40,8 +40,8 @@ segments:
   subsegments:
   - - 15440
     - c
-    - clearPendingBattlerPairsExceptModeKind
-    - '@source: src/bof3/battle/clearPendingBattlerPairsExceptModeKind.c'
+    - statePendingPairsExcept
+    - '@source: src/bof3/battle/statePendingPairsExcept.c'
 - - 16064
   - bin
   - header_retained_00003ec0
@@ -119,19 +119,19 @@ segments:
     - c
     - queueEligibleWorkRecord
     - '@source: src/bof3/battle/queueEligibleWorkRecord.c'
-    - '@behavior: Scans the battle-local work records from the D_801462E5 cursor up to the volatile localBattlerCount count, skipping the records isBattlerInactiveOrFlag4000 reports unavailable; the first record whose D_80145FB8 flag word carries bit 0 or bit 1 has flag 0x2000 raised on its D_80145FB4 flag word, allocates the queued slot-store entry for kind 0xB when that record''s D_80145F09 byte is 4 and for kind 0xC otherwise (clearing bit 0 of the three 0x801EC048 status records first), publishes the record pointer into the entry +0x74 pointer, and advances both the cursor and the battle state byte 0x801462E2; when the scan exhausts, only the state byte advances.'
+    - '@behavior: Scans the battle-local work records from the D_801462E5 cursor up to the volatile localBattlerCount count, skipping the records checkBattlerInactiveFlag4000 reports unavailable; the first record whose D_80145FB8 flag word carries bit 0 or bit 1 has flag 0x2000 raised on its D_80145FB4 flag word, allocates the queued slot-store entry for kind 0xB when that record''s D_80145F09 byte is 4 and for kind 0xC otherwise (clearing bit 0 of the three 0x801EC048 status records first), publishes the record pointer into the entry +0x74 pointer, and advances both the cursor and the battle state byte 0x801462E2; when the scan exhausts, only the state byte advances.'
   - - 24084
     - c
-    - submitBattlerRecordsAndStartPhaseStream
-    - '@source: src/bof3/battle/submitBattlerRecordsAndStartPhaseStream.c'
+    - submitBattlerStartStream
+    - '@source: src/bof3/battle/submitBattlerStartStream.c'
     - '@behavior: Runs the battle step that waits for the queued local work records to drain and then submits them. It returns while any of the localBattlerCount 0x140-byte record flag words at D_80145FB4 still carries the queued-slot flag 0x2000, and when the D_801462E5 queue cursor differs from that count it steps the battle state byte BATTLE_GLOBAL_BYTE_62E2 back by one and returns. With the cursor matched and D_80146328 bit 0 clear it publishes each record through the scratchpad work pointer and, for a record whose D_80145F10 status halfword carries bit 0x800, copies that record''s D_80145F20/D_80145F22 halfwords and D_80145F2E byte into D_80145F18/D_80145F1A/D_80145F1C before submitting the 0xBFFF-masked status; every record is then submitted with the 0xBF5F mask, refreshed through func_80196718, ranked through func_801DDFEC, and the enemy-ready latch BATTLE_GLOBAL_BYTE_63CE is cleared. When no enemy cue is pending it maps D_80146328 bit 0 to battle mode byte 0x801462E1 = 2 and bit 1 to 1, then runs the battle hook D_801463A4, resets layout bank 0 through func_80161808, starts EMI stream slot 1 or 2 through func_80161FDC for the mode byte it ended on, and clears the battle state byte BATTLE_GLOBAL_BYTE_62E2.'
   - - 24708
     - c
     - dispatchStateTableAcf4
   - - 24768
     - c
-    - armActiveLocalWorkAndInitBattleUi
-    - '@source: src/bof3/battle/armActiveLocalWorkAndInitBattleUi.c'
+    - armActiveLocalUi
+    - '@source: src/bof3/battle/armActiveLocalUi.c'
     - '@behavior: Restarts the local state chain of each of the three active party work records at state 2, resets the front-end selection effect while the 0x80146325 bit-0x40 gate is clear, initializes the battle UI bundle slot 0, queues the opening event cue and then advances the battle state byte 0x801462E2.'
   - - 24976
     - c
@@ -143,8 +143,8 @@ segments:
     - dispatchStateTableAd00
   - - 25120
     - c
-    - initBattleUiAndQueueFixedCue
-    - '@source: src/bof3/battle/initBattleUiAndQueueFixedCue.c'
+    - setupUiFixedCue
+    - '@source: src/bof3/battle/setupUiFixedCue.c'
     - '@behavior: Resets the front-end selection effect while the 0x80146325 bit-0x40 gate is clear, initializes the battle UI bundle slot 0, queues the fixed event cue 0x11 into dispatch slot 0 with mode 2, and then advances the battle state byte 0x801462E2.'
   - - 25260
     - c
@@ -154,13 +154,13 @@ segments:
     - callStateTableAd0
   - - 25384
     - c
-    - submitActiveBattlerRecordsAndAdvanceState
-    - '@source: src/bof3/battle/submitActiveBattlerRecordsAndAdvanceState.c'
+    - submitActiveBattlerRecords
+    - '@source: src/bof3/battle/submitActiveBattlerRecords.c'
     - '@behavior: Returns while any of the localBattlerCount 0x140-byte local work record flag words at D_80145FB4 still carries the queued-slot flag 0x2000; when the D_801462E5 queue cursor differs from that count the battle state byte BATTLE_GLOBAL_BYTE_62E2 steps back by one, and otherwise it resets the layout bank through func_80161808, submits every active record with the 0xBF5F-masked status halfword at D_80145F10 through func_800A36F0 and func_80196718, publishes each record whose flag byte carries bit 0 into the scratchpad work pointer and draws its panel through func_8014D664 with the 0x800F0800 row and the 0x1800 flags, starts the EMI stream slot selected by the low seven bits of D_80145024 through func_8016728C, and then advances the battle state byte BATTLE_GLOBAL_BYTE_62E2.'
   - - 25864
     - c
-    - startEmiStreamSlotWhenLoaderReady
-    - '@source: src/bof3/battle/startEmiStreamSlotWhenLoaderReady.c'
+    - audioEmiStreamLoader
+    - '@source: src/bof3/battle/audioEmiStreamLoader.c'
     - '@behavior: Once the EXE-side EMI loader reports ready (func_80162D00), raises the 0x20 transfer flag of the shared EMI loader state byte D_80146854, starts the EMI stream slot selected by the shared u16 D_80143F00 plus 0x2AB through func_80161FDC, and advances the battle loader state byte BATTLE_GLOBAL_BYTE_62E2.'
   - - 25964
     - c
@@ -175,13 +175,13 @@ segments:
     - '@behavior: Copies the visible state of battlers 0, 1 and 2 into their templates, runs one shared front-end frame slice, starts EMI stream slot 0x256 and advances the battle state byte.'
   - - 26164
     - c
-    - startSelectionEmiStreamAndAdvanceState
-    - '@source: src/bof3/battle/startSelectionEmiStreamAndAdvanceState.c'
+    - audioSelectionEmiStream
+    - '@source: src/bof3/battle/audioSelectionEmiStream.c'
     - '@behavior: Runs the front-end hook published at D_801463A8 once the EXE-side EMI loader reports ready and, while the D_80146325 bit-0x40 gate is clear, resets the current front-end selection effect through func_8015D5D8 and then -- unless the D_80145029 selection index reads 0xFF -- stages the 0x80181EB8 entry it selects into the EMI loader state record (effect bytes D_80146855/D_80146856, 0x20 transfer bit of D_80146854 plus 0x40 while D_80146328 carries bit 0x10) and starts that entry stream slot through func_80161FDC after publishing it at D_801463B0; a 0xFF selection raises bit 0x08 of D_80146328 instead. Every path that passes the loader gate advances the battle front-end state byte 0x801462E2.'
   - - 26448
     - c
-    - initBattlerFieldRecordsAndAdvanceFrontState
-    - '@source: src/bof3/battle/initBattlerFieldRecordsAndAdvanceFrontState.c'
+    - setupBattlerFieldRecords
+    - '@source: src/bof3/battle/setupBattlerFieldRecords.c'
     - '@behavior: Resets the eight enemy work records and every queued slot key byte, arms the field record of each active local work record (halfword +0x14 and byte +0x18 set to 1, +0x1A advanced while below 5, bit 0x4000 of halfword +0x0C and bit 0x02 of byte +0x07 cleared) and rebuilds it through func_80164A44, copies the armed templates into the local work records, then clears the pending bytes 0x80146329 and 0x801462E0..0x801462E4 and advances the shared front-end sub-state word 0x80143B92.'
   - - 26836
     - c
@@ -372,19 +372,19 @@ segments:
     - '@source: src/bof3/battle/clearRankingScratch.c'
   - - 43300
     - c
-    - isBattlerInactiveOrFlag4000
+    - checkBattlerInactiveFlag4000
     - '@source: src/bof3/battle/func_801DB524.c'
     - '@behavior: reports whether one local/enemy battler slot is unavailable, either because it is inactive or because its corresponding `0x4000` flag is set.'
   - - 43468
     - c
     - func_801DB5CC
     - '@source: src/bof3/battle/func_801DB5CC.c'
-    - '@behavior: Returns the index of the first battler slot that isBattlerInactiveOrFlag4000 reports available, rotating the scan around the requested slot: for requested indices below 3 it scans the local work slots from that index up to 2 and then from 0 up to that index, and for higher indices it scans the enemy work slots from that index up to 10 and then from 3 up to that index; returns 0xFF when no slot is found.'
+    - '@behavior: Returns the index of the first battler slot that checkBattlerInactiveFlag4000 reports available, rotating the scan around the requested slot: for requested indices below 3 it scans the local work slots from that index up to 2 and then from 0 up to that index, and for higher indices it scans the enemy work slots from that index up to 10 and then from 3 up to that index; returns 0xFF when no slot is found.'
   - - 43764
     - c
     - func_801DB6F4
     - '@source: src/bof3/battle/func_801DB6F4.c'
-    - '@behavior: Returns the index of the first battler slot that isBattlerInactiveOrFlag4000 reports available, scanning downward and wrapping around the requested slot: for requested indices below three it scans the local work slots from that index down to zero and then from two down to that index plus one, and for higher indices it scans the enemy work slots from that index down to three and then from ten down to that index plus one; returns 0xFF when no slot is found.'
+    - '@behavior: Returns the index of the first battler slot that checkBattlerInactiveFlag4000 reports available, scanning downward and wrapping around the requested slot: for requested indices below three it scans the local work slots from that index down to zero and then from two down to that index plus one, and for higher indices it scans the enemy work slots from that index down to three and then from ten down to that index plus one; returns 0xFF when no slot is found.'
   - - 44100
     - c
     - func_801DB844
@@ -499,13 +499,13 @@ segments:
     - '@source: src/bof3/battle/submitCurrentWorkEffect.c'
   - - 52396
     - c
-    - copyCurrentBattlerVisibleStateToTemplate
-    - '@source: src/bof3/battle/copyCurrentBattlerVisibleStateToTemplate.c'
+    - copyCurrentVisibleTemplate
+    - '@source: src/bof3/battle/copyCurrentVisibleTemplate.c'
   - - 52600
     - c
     - func_801DD978
     - '@source: src/bof3/battle/func_801DD978.c'
-    - '@behavior: Scans the enemy work slots 3..10 that isBattlerInactiveOrFlag4000 reports available, remembers the largest record halfword +0x88, then picks among those whose +0x88 still equals that maximum the first slot whose halfword +0x94 is the smallest and publishes that slot index in the battle byte 0x80146384.'
+    - '@behavior: Scans the enemy work slots 3..10 that checkBattlerInactiveFlag4000 reports available, remembers the largest record halfword +0x88, then picks among those whose +0x88 still equals that maximum the first slot whose halfword +0x94 is the smallest and publishes that slot index in the battle byte 0x80146384.'
   - - 52916
     - c
     - submitPositionalEffectBit80
@@ -572,7 +572,7 @@ segments:
     - c
     - func_801DE1D4
     - '@source: src/bof3/battle/func_801DE1D4.c'
-    - '@behavior: Copies each active local and enemy battler work record into a kind 7 queued slot entry: local slots 0..2 whose record byte +0x00 carries bit 0x1 while their D_80145FB8 flag word lacks bit 0x8, and enemy slots 3..10 that isBattlerInactiveOrFlag4000 reports available while their D_801EB734 flag word lacks bit 0x8. For each such record it allocates the slot, copies the 0x74-byte record image, publishes the record pointer into the entry +0x74 pointer and the 0x1F800044 scratch cell, and clears the entry''s queue bytes.'
+    - '@behavior: Copies each active local and enemy battler work record into a kind 7 queued slot entry: local slots 0..2 whose record byte +0x00 carries bit 0x1 while their D_80145FB8 flag word lacks bit 0x8, and enemy slots 3..10 that checkBattlerInactiveFlag4000 reports available while their D_801EB734 flag word lacks bit 0x8. For each such record it allocates the slot, copies the 0x74-byte record image, publishes the record pointer into the entry +0x74 pointer and the 0x1F800044 scratch cell, and clears the entry''s queue bytes.'
   - - 55356
     - c
     - func_801DE43C
@@ -728,13 +728,13 @@ segments:
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 61024
     - c
-    - callLocalReady2ThenSubmitRolledEffectAndAdvance
-    - '@source: src/bof3/battle/callLocalReady2ThenSubmitRolledEffectAndAdvance.c'
+    - callLocalSubmitRolled
+    - '@source: src/bof3/battle/callLocalSubmitRolled.c'
     - '@behavior: Runs the second local readiness helper localReadyOrHelper2 and drops its result, then counts down the scratch work byte +0x09: once it expires it either submits effect variant 3 when the low byte of the func_800A8F58 gate is set, or reads the unsigned chance byte +0xAA of the D_80146250 record and rolls rand() % 100 against it, raising bit 0x80 of the battle global halfword 0x801462E8 and submitting variant 3 on a roll below the chance and variant 2 otherwise; both cases then submit effect variant 4 and increment scratch work byte +0x02. Handler index 0 of the local byte-2 handler table 0x801EB1B4 dispatched by dispatchLocalByte2Table. Takes no arguments and returns nothing.'
   - - 61284
     - c
-    - raiseFlag4AndUpdateWhenLocalReady
-    - '@source: src/bof3/battle/raiseFlag4AndUpdateWhenLocalReady.c'
+    - raiseUpdateLocalReady
+    - '@source: src/bof3/battle/raiseUpdateLocalReady.c'
     - '@behavior: When the second local readiness helper localReadyOrHelper2 reports ready, re-allocates one free queued slot with mode bytes 0/2 through func_801E590C while the battle global halfword 0x801462E8 already has bit 0x80 set, forwards the battle byte D_80146384 to func_800A9820, raises bit 0x4 of 0x801462E8 and dispatches the local work reset/update func_801E1DD4; otherwise it does nothing. Handler index 1 of the local byte-2 handler table 0x801EB1B4 dispatched by dispatchLocalByte2Table. Takes no arguments and returns nothing.'
   - - 61404
     - c
@@ -749,8 +749,8 @@ segments:
     - '@source: src/bof3/battle/dispatchWorkByte3Table.c'
   - - 61620
     - c
-    - resolveSelectionDamageAndSubmitPendingEffects
-    - '@source: src/bof3/battle/resolveSelectionDamageAndSubmitPendingEffects.c'
+    - resolveDamagePendingEffects
+    - '@source: src/bof3/battle/resolveDamagePendingEffects.c'
     - '@behavior: Arms the local selection pass, resolves the selected action damage and submits its pending effects.'
   - - 62876
     - c
@@ -795,8 +795,8 @@ segments:
     - selectLocalCleanupSubstate
   - - 65380
     - c
-    - rebuildLocalWorkBandsFromFieldRecords
-    - '@source: src/bof3/battle/rebuildLocalWorkBandsFromFieldRecords.c'
+    - rebuildLocalBandsField
+    - '@source: src/bof3/battle/rebuildLocalBandsField.c'
     - '@behavior: Rebuilds the field record selected by byte +0x13C of the published local work record D_80146250 through func_80164A44, then for all localBattlerCount D_80145E90 local work records copies the six-byte identity run at +0x0E and the 0x20-byte position/colour band at +0x1C of that record''s D_80144968 field record (selected by the record''s own D_80145FCC byte) into the record''s +0x82 bytes and +0xB0 band, calls func_800AAA74, mirrors every +0xB0 band into the parallel +0x90 band (0x80145F20), calls func_800A4458 and closes with one func_800A9BD8 refresh per battler index.'
   - - 66060
     - c
@@ -805,16 +805,16 @@ segments:
     - '@behavior: Reports whether the first three D_80145E90 local work records are all strictly ready: inactive records are skipped, and an active record fails when its +0x80 halfword carries 0x4004, its +0x124 word carries 4, its +0x128 word carries 2, or, while +0x80 carries 0x4000, its bytes +0x86/+0x87 read 0x18 or its +0x85 byte reads 0x43.'
   - - 66316
     - c
-    - countdownWorkByte9QueueSlotAndEmitEvent
-    - '@source: src/bof3/battle/countdownWorkByte9QueueSlotAndEmitEvent.c'
+    - countdownSlotEmitEvent
+    - '@source: src/bof3/battle/countdownSlotEmitEvent.c'
     - '@behavior: Counts down the scratch work byte +0x09 and returns while it is still nonzero. On expiry it re-arms the published local work record D_80146250 -- flag 0x4000 of halfword +0x80 is cleared, bit 0x4 of word +0x124 is cleared, halfword +0x88 becomes 1 and byte +0x8C is halved -- then allocates a queued slot store through func_801E590C(0, 1) and marks that entry with byte +0x07 = 1, byte +0x27 = 6 and the scratch work pointer in +0x74. It requests resource scratch byte +0x08 plus 4 through func_8014D6B8 and func_8015D71C(0x206), and while the dispatched-handler gate byte D_80146329 is clear it initializes the UI bundle slot, substitutes the name of the local work record selected by scratch byte +0x05 and queues the event row addressed by work byte +0x79. Both paths finish with scratch byte +0x03 set to 2 and localReadyOrHelper1.'
   - - 66640
     - c
     - func_801E1050
   - - 66760
     - c
-    - countdownWorkByte9ClearIdentityAndQueueEvent
-    - '@source: src/bof3/battle/countdownWorkByte9ClearIdentityAndQueueEvent.c'
+    - countdownIdentityQueueEvent
+    - '@source: src/bof3/battle/countdownIdentityQueueEvent.c'
     - '@behavior: Counts down the scratch work byte +0x09 and returns while it is still nonzero. On expiry it clears the identity byte matching the current work-state byte -- +0x86 while that byte reads 3, +0x85 followed by func_801E0B64 while it reads 5, +0x87 while it reads 6 -- and re-arms the published local work record D_80146250: flag 0x4000 of halfword +0x80 is cleared and halfword +0x88 and byte +0x8C take the values of halfword +0x90 and byte +0x9E. It then allocates a queued slot store through func_801E590C(0, 1) and marks that entry with byte +0x07 = 2, byte +0x27 = 6 and the scratch work pointer in +0x74, requests resource scratch byte +0x08 plus 4 through func_8014D6B8 and func_8015D71C(0x206), and while the dispatched-handler gate byte D_80146329 is clear it initializes the UI bundle slot and queues event row kind 2 with halfword 0x2D and the texture func_801502D0(0x2E) -- func_801502D0(0x3B) while the work-state byte reads 5. Both paths finish with scratch byte +0x03 set to 2 and localReadyOrHelper1.'
   - - 67224
     - c
@@ -836,8 +836,8 @@ segments:
     - '@source: src/bof3/battle/dispatchAltState3Table.c'
   - - 67732
     - c
-    - advanceWorkCountdownAndSubmitPendingEffects
-    - '@source: src/bof3/battle/advanceWorkCountdownAndSubmitPendingEffects.c'
+    - stateSubmitPendingEffects
+    - '@source: src/bof3/battle/stateSubmitPendingEffects.c'
     - '@behavior: Local work state-3 entry-0 step of the 0x801EB218 handler table. Counts the published local work record 0x80146250 halfword +0x88 down by that record''s signed halfword +0x11C: when +0x11C has reached +0x88 it arms halfword +0x80 with 0x4000, clears +0x88 and submits work effect variant 1; otherwise it submits variant 0, or raises front-end cue 0x206 when +0x11C is negative, then rewrites +0x88 as +0x88 minus +0x11C lowered to the +0x90 ceiling. It then plays the pending effect halves +0x11C and +0x11E with scratch work byte +0x05 gated by bits 1 and 2 of record byte +0x120, runs localReadyOrHelper1 and advances scratch work byte +0x03.'
   - - 68044
     - c
@@ -922,8 +922,8 @@ segments:
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 69916
     - c
-    - submitEffectThenAdvanceByte2WhenLoaderReady
-    - '@source: src/bof3/battle/submitEffectThenAdvanceByte2WhenLoaderReady.c'
+    - submitEffectLoaderReady
+    - '@source: src/bof3/battle/submitEffectLoaderReady.c'
     - '@behavior: Once the EXE-side EMI loader reports ready (func_80162D00), submits effect id scratch byte +0x08 plus 0x24 to func_8014D8D4, then runs the second local readiness helper localReadyOrHelper2 and advances the scratch work record byte +0x02.'
   - - 70024
     - c
@@ -981,8 +981,8 @@ segments:
     - '@behavior: Publishes the 0x118-byte work record at D_801EB2E8[index] as the current enemy work, runs the enemy script byte helper func_801E2314 for the masked argument and restores the previously published record.'
   - - 72160
     - c
-    - advanceEnemyTargetModeAndPublishWork
-    - '@source: src/bof3/battle/advanceEnemyTargetModeAndPublishWork.c'
+    - stateEnemyTargetPublish
+    - '@source: src/bof3/battle/stateEnemyTargetPublish.c'
     - '@behavior: Derives the enemy target mode byte 0x80146375 from the target mode pack table 0x800B51F8 field selected by record byte +0x7E and the low rand bits, forces it to 0 below record halfword +0xAA 2 while 0x801462E8 bit 0x4000 is set, advances it through 0..4 on record halfword +0x80 readiness bits 0x80, 0x40 and 0x20 with a +0xF6 seed from the +0x8C candidate run, picks the target through pickTargetStoreGlobal when record halfword +0x82 bit 0x20 or record word +0x104 bit 0x4000 is set and otherwise through func_801E2A88 into 0x80146384, publishes the record as the current enemy work and runs its +0xE4 handler while 0x801462EA is set, then copies the mode into record byte +0xF5 or clears both when the selected target byte reads 0xFF.'
   - - 73032
     - c
@@ -1010,7 +1010,7 @@ segments:
     - c
     - func_801E2D90
     - '@source: src/bof3/battle/func_801E2D90.c'
-    - '@behavior: Returns the index with the smallest halfword at +0x88 among the first three D_80145E90 records not blocked by isBattlerInactiveOrFlag4000. Only values below 10000 qualify; ties keep the earlier index, and no qualifying value returns 0.'
+    - '@behavior: Returns the index with the smallest halfword at +0x88 among the first three D_80145E90 records not blocked by checkBattlerInactiveFlag4000. Only values below 10000 qualify; ties keep the earlier index, and no qualifying value returns 0.'
   - - 74288
     - asm
     - func_801E2E30
@@ -1065,8 +1065,8 @@ segments:
     - '@behavior: Clears scratch work flag bit 6, runs the enemy script byte helper func_801E2314 for class 0, mirrors the work pair +0x34/+0x38 into +0x18/+0x1C, subtracts the mode-rotated 8.0 offset pair from +0x34, republishes the mode-rotated 0.5 offset pair at +0x0C/+0x10, then advances scratch work byte +0x02.'
   - - 76076
     - c
-    - integratePositionPairUntilTargetThenResetState
-    - '@source: src/bof3/battle/integratePositionPairUntilTargetThenResetState.c'
+    - integrateUntilTargetReset
+    - '@source: src/bof3/battle/integrateUntilTargetReset.c'
     - '@behavior: Integrates the scratch work delta pair +0x0C/+0x10 into the position pair +0x34/+0x38 and publishes the signed distance of that pair through func_8015477C in work halfword +0x3E; once the position pair equals the mirrored target pair +0x18/+0x1C it reseeds the scratch state bytes +0x01..+0x03 with 3/0/0.'
   - - 76248
     - c
@@ -1129,8 +1129,8 @@ segments:
     - '@behavior: Increments scratchpad byte +0x03 when enemyReadyOrHelper2 returns nonzero.'
   - - 79180
     - c
-    - updateEnemyQueuedFlagAndRearmWorkState
-    - '@source: src/bof3/battle/updateEnemyQueuedFlagAndRearmWorkState.c'
+    - stateEnemyQueuedRearm
+    - '@source: src/bof3/battle/stateEnemyQueuedRearm.c'
     - '@behavior: Runs func_8014DAEC, then submits the scratch work through func_80196718 and clears bit 0x40 of the global 0x801462E8 halfword with 6/4 in scratch work bytes +0x01/+0x02 while the current enemy work halfword +0x82 carries bit 0x4000; otherwise it clears that 0x40 bit and raises the halfword 0x1000 bit when 0x40 was set, or with the 0x80146384 byte free of 0xC0 bits raises 0x40 when the 0x80146375 byte reads 1 and checkEnemyQueuedPredicate agrees or when it reads 4 and the kind mask 0x800 of the 0x801CA71C entry selected by halfword 0x801463C0 is set, the predicate agrees and the kind-keyed byte 0x801CA718 + 0x14 * index has no 0x10 bit, clears the pending bit of byte +0x05, masks 0x70 then 0x200 out of the enemy work word +0x100 and leaves 2/0 in bytes +0x01/+0x02; both paths clear scratch work byte +0x03.'
   - - 79720
     - c
@@ -1151,8 +1151,8 @@ segments:
     - '@behavior: Counts down scratch work byte +0x0A, reloading it to 4 and advancing work byte +0x03 when it expires, then advances the work position pair +0x34/+0x38 by the delta pair +0x0C/+0x10 and runs enemyReadyOrHelper1.'
   - - 80348
     - c
-    - countdownWorkByteRetreatPairOrQueueEnemySlot
-    - '@source: src/bof3/battle/countdownWorkByteRetreatPairOrQueueEnemySlot.c'
+    - countdownRetreatEnemySlot
+    - '@source: src/bof3/battle/countdownRetreatEnemySlot.c'
     - '@behavior: Decrements scratch byte +0x0A, calls the enemy halfword helper or queues a mode-1 slot on expiry and advances scratch byte +3, then retreats the scratch position pair and runs enemyReadyOrHelper1.'
   - - 80620
     - c
@@ -1202,8 +1202,8 @@ segments:
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 81708
     - c
-    - initEnemyCueCountdownWhenLoaderReady
-    - '@source: src/bof3/battle/initEnemyCueCountdownWhenLoaderReady.c'
+    - setupEnemyCueLoader
+    - '@source: src/bof3/battle/setupEnemyCueLoader.c'
     - '@behavior: Initializes enemy cue countdown when the loader is ready and advances the selection-dependent work state.'
   - - 82044
     - c
@@ -1374,13 +1374,13 @@ segments:
     - '@behavior: Queues the 0x1E battle event with the message string selected by the 0x80146374 progress byte (Critical below 3, otherwise Lucky Strike), then raises the 0x801483C3 gate, stores 2 into queued slot byte +0x09, 0x100 into +0x0C and 0 into +0x10, and advances the slot state byte +0x01.'
   - - 88244
     - c
-    - drawSlotFadeTileAndRearmCountdown
-    - '@source: src/bof3/battle/drawSlotFadeTileAndRearmCountdown.c'
+    - renderSlotTileRearm
+    - '@source: src/bof3/battle/renderSlotTileRearm.c'
     - '@behavior: Subtracts the queued slot word +0x0C from the shared 0x8014932C channel, draws the 0x0B colour tile built from the slot level word +0x10 (replicated into all three 5-bit channels while the 0x80146374 progress byte is below 3, red channel only otherwise), publishes mode 2 at 0x80149333, steps the level up by 8, and once the slot byte +0x09 countdown expires advances the slot state byte +0x01 and re-arms the countdown at 2.'
   - - 88568
     - c
-    - drawSlotFadeTileAndClearSlot
-    - '@source: src/bof3/battle/drawSlotFadeTileAndClearSlot.c'
+    - renderSlotTileSlot
+    - '@source: src/bof3/battle/renderSlotTileSlot.c'
     - '@behavior: Advances the shared 0x8014932C channel by the queued slot word +0x0C, draws the 0x0B colour tile built from the slot level word +0x10 (replicated into all three 5-bit channels while the 0x80146374 progress byte is below 3, red channel only otherwise), publishes mode 2 at 0x80149333, steps the level down by 8 and clears the queued slot when its byte +0x09 countdown expires.'
   - - 88868
     - c
@@ -1420,8 +1420,8 @@ segments:
     - '@behavior: Copies the three 0x801D0F38 completion handlers to the stack and runs the one selected by byte +0x01 of the scratch object published at 0x1F800044, then calls func_8014D4E0 when that object''s byte +0x00 has bit 0 set.'
   - - 89896
     - c
-    - initEntry18WorkAndRequestByKindMask
-    - '@source: src/bof3/battle/initEntry18WorkAndRequestByKindMask.c'
+    - setupRequestKindMask
+    - '@source: src/bof3/battle/setupRequestKindMask.c'
     - '@behavior: Loads entry 0x18, initializes scratch bytes +0x24 and +0x2A, requests 0 or 2 according to kind mask 0x200, and advances byte +1.'
   - - 90056
     - c
@@ -1442,7 +1442,7 @@ segments:
     - c
     - func_801E6D28
     - '@source: src/bof3/battle/func_801E6D28.c'
-    - '@behavior: Returns from the battle work gate when the 0x801462E8 halfword carries bit 0x400 and the current work record byte +5 already equals the global byte 0x80146374; otherwise it masks the selected record status halfword +0x80/+0x82 with 0x58 and increments scratchpad byte +1 of the 0x1F800044 object when any group bit is set and isBattlerInactiveOrFlag4000 accepts that record.'
+    - '@behavior: Returns from the battle work gate when the 0x801462E8 halfword carries bit 0x400 and the current work record byte +5 already equals the global byte 0x80146374; otherwise it masks the selected record status halfword +0x80/+0x82 with 0x58 and increments scratchpad byte +1 of the 0x1F800044 object when any group bit is set and checkBattlerInactiveFlag4000 accepts that record.'
   - - 90708
     - c
     - initializeGroupFlagScratch
@@ -1466,7 +1466,7 @@ segments:
     - dispatchByte1PairTable
   - - 91892
     - c
-    - copyQueuedWorkToScratchAndRun
+    - copyQueuedScratchRun
   - - 92344
     - c
     - dispatchModeFiveTable
@@ -1480,13 +1480,13 @@ segments:
     - '@behavior: Decrements the active timer or sets its flag and increments scratchpad state.'
   - - 92592
     - c
-    - startWorkVariantEmiStreamAndAdvanceByte1
-    - '@source: src/bof3/battle/startWorkVariantEmiStreamAndAdvanceByte1.c'
+    - audioVariantEmiStream
+    - '@source: src/bof3/battle/audioVariantEmiStream.c'
     - '@behavior: Starts an EMI stream slot selected by work halfword +0x2C and byte +0x08, then increments scratchpad work byte +0x01.'
   - - 92724
     - c
-    - refreshSelectedBattlerRecordAndAdvanceSavedWork
-    - '@source: src/bof3/battle/refreshSelectedBattlerRecordAndAdvanceSavedWork.c'
+    - refreshSelectedBattlerSaved
+    - '@source: src/bof3/battle/refreshSelectedBattlerSaved.c'
     - '@behavior: Publishes the work record at D_801EB4E0 as the current scratchpad work, requests its resource, submits its selected D_80145E90 record, palette row and positional effect, uploads the palette, clears the counting bit of the selected record and rebuilds the local work bands, then restores the previous work pointer and advances its mode byte.'
   - - 93048
     - c
@@ -1510,8 +1510,8 @@ segments:
     - '@behavior: Decrements the active work countdown or flags it and advances scratchpad work.'
   - - 93512
     - c
-    - startHintVariantEmiStreamAndAdvanceByte1
-    - '@source: src/bof3/battle/startHintVariantEmiStreamAndAdvanceByte1.c'
+    - audioHintVariantStream
+    - '@source: src/bof3/battle/audioHintVariantStream.c'
     - '@behavior: While bit 0x8000 of the shared battle halfword 0x801462E8 is set, starts the EMI stream slot selected by the shared hint byte 0x80145024 and work byte +0x08 of D_801EB4E0, then increments scratchpad work byte +0x01.'
   - - 94004
     - c
@@ -1606,7 +1606,7 @@ segments:
     - c
     - func_801E960C
     - '@source: src/bof3/battle/func_801E960C.c'
-    - '@behavior: Dispatches the panel handler selected by state byte +0x03 through the four-entry table at 0x801D0FD0, forwards the state field pointers and the selected enemy work record halfwords +0x94/+0xA0 to func_801EA1E0, advances state byte +0x03 to 3 when isBattlerInactiveOrFlag4000 hits while state byte +0x0D is clear, then sets or clears bit 0x2000 of that record flags halfword +0x82 from the quarter comparison of halfwords +0x94/+0xA0.'
+    - '@behavior: Dispatches the panel handler selected by state byte +0x03 through the four-entry table at 0x801D0FD0, forwards the state field pointers and the selected enemy work record halfwords +0x94/+0xA0 to func_801EA1E0, advances state byte +0x03 to 3 when checkBattlerInactiveFlag4000 hits while state byte +0x0D is clear, then sets or clears bit 0x2000 of that record flags halfword +0x82 from the quarter comparison of halfwords +0x94/+0xA0.'
   - - 101288
     - c
     - func_801E97A8
@@ -1634,7 +1634,7 @@ segments:
     - c
     - activatePanelTaskUnless
     - '@source: src/bof3/battle/activatePanelTaskUnless.c'
-    - '@behavior: Returns while the battle selection gate byte 0x801462EF is clear; with the gate set it reads panel byte +0x0A as a battler index and returns only when isBattlerInactiveOrFlag4000 reports that battler inactive while both selection setup predicates report disabled, otherwise it activates the panel task for the queued selection slot whose first byte D_801EB4D8 equals panel byte +0x0A and again when that slot byte carries bit 0x80.'
+    - '@behavior: Returns while the battle selection gate byte 0x801462EF is clear; with the gate set it reads panel byte +0x0A as a battler index and returns only when checkBattlerInactiveFlag4000 reports that battler inactive while both selection setup predicates report disabled, otherwise it activates the panel task for the queued selection slot whose first byte D_801EB4D8 equals panel byte +0x0A and again when that slot byte carries bit 0x80.'
   - - 103388
     - c
     - func_801E9FDC

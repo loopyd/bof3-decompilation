@@ -42,7 +42,7 @@ extern u8* D_801F6748[];
  * argument back into work byte 0x08.
  * @source 0x801F4A5C
  */
-extern void playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C(
+extern void audioStoreFirstSecond(
     u8* table, u32 index);
 
 /* @source 0x801F48EC
@@ -100,7 +100,7 @@ void cycleWorkByte8DownThroughPairTableUntilRecordCommandByteElseAdvanceHalfword
   if (scratch[8] != entry[offset + 2]) {
     scratch[8] = (scratch[8] - 1) & 7;
     cursor = entry + *(u16*)(D_80148210 + 0xA);
-    playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C(
+    audioStoreFirstSecond(
         D_801F6748[cursor[3]], D_1F800044[8]);
     *(u16*)(D_80148210 + 0xA) -= 2;
   } else {

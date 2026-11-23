@@ -4,7 +4,7 @@
  * image. Splat binds the address through this target's generated
  * undefined_syms_auto.txt, so this lift needs no target-map row. The offsets
  * read here are the ones the exact sibling
- * addWorkWord20ToWord14AccumulateWord14IntoHalfword3EAndDecrementByteAThenWhenWord14IsZeroCopyRecordWordPairAdjustWord3CSetByte9To15AndAdvanceWorkByte2BmagicMagic00100_801EFC54
+ * workAccumulateIntoAdjust
  * copies from the same record. The pointer cell is declared volatile because
  * the original re-reads it before each of the three uses, including twice
  * across a store through the work object. */

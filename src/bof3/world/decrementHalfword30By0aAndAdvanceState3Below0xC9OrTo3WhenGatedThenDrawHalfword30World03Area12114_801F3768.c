@@ -9,7 +9,7 @@ extern u8 D_80143BB0;
 /* @source 0x80146258 @kind unknown */
 extern u16 D_80146258;
 
-void drawSpriteFrameAndMainRamTexture0World03Area12114_801F40DC(
+void renderSpriteMainRam(
     s16 arg0, s16 arg1);
 
 /* @source 0x801F3768
@@ -44,6 +44,6 @@ void decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfw
     area12114WorkCursor_1F800044[3] = 3;
   }
   emitter = area12114WorkCursor_1F800044;
-  drawSpriteFrameAndMainRamTexture0World03Area12114_801F40DC(
+  renderSpriteMainRam(
       0x5C, FIELD_REF(s16, emitter, 0x30));
 }

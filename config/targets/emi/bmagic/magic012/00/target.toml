@@ -12,10 +12,10 @@ support_sources = [
     "src/bof3/support/magic012_00_psyq.c",
     "src/bof3/bmagic/magic01200DispatchTables.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01200_801EF670.c",
-    "src/bof3/bmagic/advanceWorkByteAOnFrameParityInvokePointHelperCountdownWorkByte9DecrementWorkByte2AndDrawSpriteBmagicMagic01200_801EF6A4.c",
-    "src/bof3/bmagic/advanceWorkByteAStepWorkPositionPairByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroAndDrawSpriteMode1BmagicMagic01200_801EF3C4.c",
-    "src/bof3/bmagic/seedWorkObjectFromBattlerRecordWhenBattlerReadyAndStateByteNotSixElseFinishWorkByte2BmagicMagic01200_801EF4B8.c",
-    "src/bof3/bmagic/drawBattlerRecordPointSnapPositionWhenSlotUnavailableAndOnRangeHitRaiseFlag2000ForwardSlotSetHeadingTowardBattleRecordAndAdvanceWorkByte2BmagicMagic01200_801EF188.c",
-    "src/bof3/bmagic/drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C.c",
+    "src/bof3/bmagic/stateFrameParityPoint.c",
+    "src/bof3/bmagic/stateAngleAccumulateInto.c",
+    "src/bof3/bmagic/stateNotSixFinish.c",
+    "src/bof3/bmagic/renderSnapUnavailableHit.c",
+    "src/bof3/bmagic/renderRotatedTexturedPhased.c",
 ]
 psyq_source = "src/bof3/support/magic012_00_psyq.c"

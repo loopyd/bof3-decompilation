@@ -39,8 +39,8 @@ s32 func_801A79A4(s32 arg0, s32 arg1);
 void func_801C2BEC(void);
 void func_801C329C(void);
 void func_801C3598(void);
-void resetMode3AndWorkStateWorld03Area12114_801F564C(void);
-void turnWorkFacingOneStepTowardSavedThenDispatchStepOutcomeWorld03Area12114_801F4B4C(
+void stateMode3WorkWorld03(void);
+void turnTowardSavedOutcome(
     void);
 
 /* @source 0x801F5380
@@ -91,7 +91,7 @@ void probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03
     D_80143F22 = countdown + 2;
   }
 
-  resetMode3AndWorkStateWorld03Area12114_801F564C();
+  stateMode3WorkWorld03();
   if (func_801A79A4(*(s32*)(area12114WorkCursor_1F800044 + 0x34),
                     *(s32*)(area12114WorkCursor_1F800044 + 0x38))) {
     area12114WorkCursor_1F800044[2] = 0;
@@ -101,7 +101,7 @@ void probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03
   func_801C329C();
   if ((D_80146258 & 0x100u) == 0 && (D_8014625A & 0x40u) == 0 &&
       (((D_80145AB4 | 0xF000u) | D_80145AB6) & D_8014625C) != 0) {
-    turnWorkFacingOneStepTowardSavedThenDispatchStepOutcomeWorld03Area12114_801F4B4C();
+    turnTowardSavedOutcome();
   } else {
     D_80146250[0x12B] = 0;
     area12114WorkCursor_1F800044[2] = 0;

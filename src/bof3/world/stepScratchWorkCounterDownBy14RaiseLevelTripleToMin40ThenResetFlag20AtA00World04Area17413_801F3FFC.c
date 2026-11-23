@@ -25,7 +25,7 @@ extern u8* D_80146884;
  * units of the halfword at 0x7E of the record published through the global
  * pointer cell 0x80146884. Work byte 4 is untouched here, and this step clears
  * the flag bit and arms nothing, so it is the counterpart of the neighbouring
- * handler advanceWorkCounterTripleBy2OrArmScratchWorkMin40LevelTripleWorld04Area17413_801F4B0C,
+ * handler stateTripleLevelTriple,
  * which had measured as setting that flag bit, writing work byte 0x5C = 1 and
  * placing the level triple at -0x40. The payload's handler pointer run at
  * 0x801F6614 is the only word that names this entry and a data blob carries no

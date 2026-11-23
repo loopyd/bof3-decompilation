@@ -20,7 +20,7 @@ void stateSelectedValueRoll(void)
     if ((u8)func_800A3C9C(D_80146374, D_80146394) != 0) {
         return;
     }
-    /* Non-volatile view: storeHalvedSelectedValueWhenRollAccepted and
+    /* Non-volatile view: stateHalvedRollAccepted and
      * func_8009DE8C read the same cell through it, which keeps the widening
      * from adding a trailing `andi` to the load. */
     index = *(u8*)&D_80146394;

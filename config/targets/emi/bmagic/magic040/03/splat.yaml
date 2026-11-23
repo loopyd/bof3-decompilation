@@ -48,8 +48,8 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04003_801EEF48.c'
   - - 908
     - c
-    - dispatchWorkByte2FourEntryHandlerThenInvoke801EF7FCAnd801EF600WhenActiveBmagicMagic04003_801EEF8C
-    - '@source: src/bof3/bmagic/dispatchWorkByte2FourEntryHandlerThenInvoke801EF7FCAnd801EF600WhenActiveBmagicMagic04003_801EEF8C.c'
+    - callFourEntryActive
+    - '@source: src/bof3/bmagic/callFourEntryActive.c'
     - '@behavior: Dispatch work byte 2 through four copied handlers, then invoke 0x801EF7FC and 0x801EF600 twice when active.'
   - - 1140
     - c
@@ -58,8 +58,8 @@ segments:
     - '@behavior: Copy record byte 8 and word triplet, invoke 0x801EF430, clear work bytes 9 and 0xA, then advance byte 2.'
   - - 1300
     - c
-    - incrementWorkBytes9AndAThenAdvanceWorkByte2WhenByteAIs16BmagicMagic04003_801EF114
-    - '@source: src/bof3/bmagic/incrementWorkBytes9AndAThenAdvanceWorkByte2WhenByteAIs16BmagicMagic04003_801EF114.c'
+    - incrementAdvanceByteBmagic
+    - '@source: src/bof3/bmagic/incrementAdvanceByteBmagic.c'
     - '@behavior: Increment work-object bytes 0x09 and 0x0A through the scratchpad pointer cell, then advance work byte 2 only when the stored byte 0x0A value is 0x10.'
   - - 1408
     - c
@@ -88,8 +88,8 @@ segments:
     - func_801EF7FC
   - - 3644
     - c
-    - drawTranslucentGreyCircleOfThirtyTwoFlatLinesAtWorkHalfwords2EAnd30RadiusWorkByte9ShadeWorkByteABmagicMagic04003_801EFA3C
-    - '@source: src/bof3/bmagic/drawTranslucentGreyCircleOfThirtyTwoFlatLinesAtWorkHalfwords2EAnd30RadiusWorkByte9ShadeWorkByteABmagicMagic04003_801EFA3C.c'
+    - renderGreyCircleLines
+    - '@source: src/bof3/bmagic/renderGreyCircleLines.c'
     - '@behavior: Draw 32 translucent grey flat lines around the work screen pair using work byte 9 as radius and byte 0xA as shade, wrapped in draw-mode packets.'
   - - 4204
     - textbin

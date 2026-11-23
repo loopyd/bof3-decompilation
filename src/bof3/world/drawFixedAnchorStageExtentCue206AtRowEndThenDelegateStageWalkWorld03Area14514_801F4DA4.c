@@ -27,9 +27,9 @@ extern u8 D_801F5CDD[]; /* @source 0x801F5CDD @kind table */
 extern u8 D_801F5CDE[]; /* @source 0x801F5CDE @kind table */
 
 /* Draw request of this payload at 0x801F5190, lifted in
- * claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190.c:
+ * claimEndPointPair.c:
  * it takes two 16.16 points and queues the record pair that spans them. */
-s32 claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
+s32 claimEndPointPair(
     s32 x0, s32 y0, s32 x1, s32 y1);
 
 /* Stage walk of this payload at 0x801F4EDC, lifted in
@@ -68,7 +68,7 @@ void func_8015DF18(u16 arg0);
  * Name evidence: the caller at 0x801F4CF0 already documents this address as the
  * payload stage drawer it delegates to from step five on, and the draw request
  * it reaches is the same 0x801F5190 pair claim the exact lift
- * claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190
+ * claimEndPointPair
  * performs; 0x3D8000 and 0x638000 are two of the fixed 16.16 coordinates of the
  * window that lift and the caller record. The four-byte rows this body selects
  * hold 0, 5, 1 / 2, 7, 0 / 4, 7, 0 / 6, 5, 2, so byte 0 is an even route index
@@ -125,7 +125,7 @@ u8 drawFixedAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514
     my = limit;
   }
   y = D_80147A90 + dy * (u16)my;
-  claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
+  claimEndPointPair(
       0x3D8000, 0x638000, x, y);
   if (t < D_801F5CDD[off]) {
     return 1;

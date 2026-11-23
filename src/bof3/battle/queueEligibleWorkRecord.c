@@ -2,7 +2,7 @@
 
 /* @source 0x801D6818
  * @behavior Scans the battle-local work records from the D_801462E5 cursor up to
- * the volatile localBattlerCount, skipping every record isBattlerInactiveOrFlag4000 reports
+ * the volatile localBattlerCount, skipping every record checkBattlerInactiveFlag4000 reports
  * unavailable; for the first record whose D_80145FB8 flag word carries bit 0 or
  * bit 1 it raises flag 0x2000 on that record's D_80145FB4 flag word, allocates
  * the queued slot-store entry for kind 0xB when the record's D_80145F09 byte is
@@ -40,7 +40,7 @@ void queueEligibleWorkRecord(void) {
     cursor = start;
     work_base = (u8*)D_80145E90;
     do {
-      if (isBattlerInactiveOrFlag4000(*cursor) != 0u) {
+      if (checkBattlerInactiveFlag4000(*cursor) != 0u) {
         goto advance;
       }
       flags = D_80145FB8[*cursor].flags_00;

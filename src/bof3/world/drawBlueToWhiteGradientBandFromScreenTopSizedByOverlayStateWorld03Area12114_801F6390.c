@@ -48,7 +48,7 @@ extern u8 D_801F68B8[]; /* @source 0x801F68B8 @kind data */
  * drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8
  * (0x801D19A8) of the scenario overlay, and the graph-type-conditional texture
  * page matches the kept double probe of the exact same-target sibling
- * emitMeterBarWithPaletteWorld03Area12114_801F595C (0x801F595C). The own bytes
+ * emitMeterBarPalette (0x801F595C). The own bytes
  * fix the geometry literals 0x140 and the colour literals, and fix 0x225, 0x95
  * and the table 0x801F68B8 as this band's own texture pages and height source.
  * The measured texture page local is a plain int, and the four guarded stores

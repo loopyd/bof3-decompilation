@@ -29,5 +29,5 @@ u8 checkBattlerBlockedUnavailable(u32 arg0) {
     }
   }
 
-  return isBattlerInactiveOrFlag4000((u8)arg0) != 0u;
+  return checkBattlerInactiveFlag4000((u8)arg0) != 0u;
 }

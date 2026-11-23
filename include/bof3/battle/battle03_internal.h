@@ -331,14 +331,14 @@ extern s16                          D_801EAFC0[]; /* @source 0x801EAFC0 @kind un
 extern volatile u16                 D_1F800000; /* @source 0x1F800000 @kind unknown */
 extern u16                          D_80143F04; /* @source 0x80143F04 @kind unknown */
 /* @source 0x80143F00 @kind unknown — shared u16 added to 0x2AB to select the
- * EMI stream slot started by startEmiStreamSlotWhenLoaderReady. */
+ * EMI stream slot started by audioEmiStreamLoader. */
 extern u16                          D_80143F00;
 extern s32                          D_80143F24; /* @source 0x80143F24 @kind unknown */
 extern s32                          D_80143F28; /* @source 0x80143F28 @kind unknown */
 extern u8                           D_80146328; /* @source 0x80146328 @kind unknown */
 extern u8                           D_80146329; /* @source 0x80146329 @kind unknown */
 /* @source 0x80146854 @kind unknown — shared EMI loader state byte whose 0x20
- * bit startEmiStreamSlotWhenLoaderReady raises before starting a stream slot;
+ * bit audioEmiStreamLoader raises before starting a stream slot;
  * the same bit gates the staged transfer slots in the EXE-side
  * stageEmiTransferSlot. */
 extern u8                           D_80146854;
@@ -351,23 +351,23 @@ extern u8                           D_80146874;
 /* @source 0x80146875 @kind unknown */
 extern u8                           D_80146875;
 /* @source 0x80145029 @kind unknown — shared EXE front-end selection index byte;
- * startSelectionEmiStreamAndAdvanceState reads it and selects the 0x80181EB8
+ * audioSelectionEmiStream reads it and selects the 0x80181EB8
  * entry with it. */
 extern u8                           D_80145029;
 /* @source 0x80146855 @kind unknown — first staged byte of the D_80146854 EMI
- * loader state record; startSelectionEmiStreamAndAdvanceState copies it from
+ * loader state record; audioSelectionEmiStream copies it from
  * the selected 0x80181EB8 entry. */
 extern u8                           D_80146855;
 /* @source 0x80146856 @kind unknown — second staged byte of the same EMI loader
  * state record. */
 extern u8                           D_80146856;
-/* @source 0x801463B0 @kind unknown — halfword startSelectionEmiStreamAndAdvanceState
+/* @source 0x801463B0 @kind unknown — halfword audioSelectionEmiStream
  * publishes from the selected 0x80181EB8 entry before starting it through
  * func_80161FDC; the batl_ovr/00 sibling publishes its own 0x2C there. */
 extern u16                          D_801463B0;
 /* @source 0x80181EB8 @kind table — runtime-filled 4-byte-stride front-end
  * selection records: the EMI stream slot at +0x00 and the two staged effect
- * bytes at +0x02/+0x03. startSelectionEmiStreamAndAdvanceState re-materialises
+ * bytes at +0x02/+0x03. audioSelectionEmiStream re-materialises
  * the base for each access, so the three cells stay flat symbols. */
 extern u16                          D_80181EB8[];
 /* @source 0x80181EBA @kind table */
@@ -443,7 +443,7 @@ extern volatile u8 D_80145F1A[];
 extern volatile u8 D_80145F1C[];
 extern volatile u8 D_80145F20[]; /* @source 0x80145F20 @kind unknown */
 /* Halfword and byte of the same 0x140-stride record (+0x92 and +0x9E) that the
- * 0x800-flagged status path of submitBattlerRecordsAndStartPhaseStream copies
+ * 0x800-flagged status path of submitBattlerStartStream copies
  * into D_80145F1A and D_80145F1C. */
 extern u8 D_80145F22[]; /* @source 0x80145F22 @kind unknown */
 extern u8 D_80145F2E[]; /* @source 0x80145F2E @kind unknown */
@@ -661,8 +661,8 @@ extern volatile u8  BATTLE_GLOBAL_BYTE_6323; /* @source 0x80146323 @kind unknown
  * isBattlerEligibleForActorPhase. */
 extern u8           BATTLE_GLOBAL_BYTE_6324;
 /* @source 0x80146325 @kind unknown — battle front-end gate byte; its bit 0x40
- * selects whether armActiveLocalWorkAndInitBattleUi and
- * initBattleUiAndQueueFixedCue reset the selection effect before they initialize
+ * selects whether armActiveLocalUi and
+ * setupUiFixedCue reset the selection effect before they initialize
  * the UI bundle. */
 extern u8           D_80146325;
 extern volatile u8  BATTLE_GLOBAL_BYTE_63CE; /* @source 0x801463CE @kind unknown */
@@ -674,7 +674,7 @@ void func_8014D290(void);
 void func_8014D4E0(void);
 void dispatchByte1PairTable(void);
 void dispatchModeFiveTable(void);
-void copyQueuedWorkToScratchAndRun(void);
+void copyQueuedScratchRun(void);
 void func_8014D5F0(u8 arg0, u32 arg1, s32 arg2);
 u16  func_8017A620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8017A904(u32 arg0, s32 arg1);
@@ -700,7 +700,7 @@ void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
  * @source 0x8014FC90 */
 void func_8014FC90(s16 arg0, s16 arg1, s32 arg2, u32 arg3, const u8* arg4);
 u32  func_8014D8D4(u8 arg0);
-u8   isBattlerInactiveOrFlag4000(u8 arg0);
+u8   checkBattlerInactiveFlag4000(u8 arg0);
 s32  testFlag400WhenEligible(u8 arg0);
 u8   func_800A9304(u8 arg0);
 u8   func_800A94A8(void);
@@ -714,7 +714,7 @@ void adjustBattleWorkValuesForMode(void);
 void func_800A4458(void);
 void func_800A9BD8(u8 arg0);
 /* Owned by the SLUS address space; the band rebuild
- * rebuildLocalWorkBandsFromFieldRecords runs between its two band copies takes
+ * rebuildLocalBandsField runs between its two band copies takes
  * no argument and returns nothing. Address @source 0x800AAA74 */
 void func_800AAA74(void);
 /* Owned by the SLUS address space (lifted as selectionSetupEnabled in
@@ -730,7 +730,7 @@ u8   selectionSetupEnabledB(void);
 /* Owned by the SLUS address space (asm span func_800A8F58 in
  * emi/battle/battle/15); only its low return byte is consumed, by the
  * default-class countdown handler submitRolledEffectAdvance and by the
- * local byte-2 handler callLocalReady2ThenSubmitRolledEffectAndAdvance. */
+ * local byte-2 handler callLocalSubmitRolled. */
 u8   func_800A8F58(void);
 /* Owned by the SLUS address space (boundary func_800A9820 in emi/battle/battle/15);
  * the first parameter is the zero-extended battle byte D_80146384. */
@@ -743,8 +743,8 @@ void func_8015C088(void);
  * constant 0x205; same family/shape as func_8015DF18. */
 void func_8015D71C(u16 arg0);
 /* Owned by the SLUS address space (selection/display effect helpers in the
- * 0x8015D3xx-0x8015D5xx front-end block); armActiveLocalWorkAndInitBattleUi and
- * initBattleUiAndQueueFixedCue call both, the first with no arguments and the
+ * 0x8015D3xx-0x8015D5xx front-end block); armActiveLocalUi and
+ * setupUiFixedCue call both, the first with no arguments and the
  * second with the recorded constant quadruple 0/1/0x64/0x64 and 0/2/0x64/0x64. */
 void func_8015D5D8(void);
 void func_8015D300(u32 arg0, u32 arg1, u32 arg2, u32 arg3);
@@ -789,7 +789,7 @@ void forwardSelectedEffectId(void);
 void resetReadyAdvanceByte1(void);
 void callNextLocalHandler(void);
 void func_801DF914(void);
-void callLocalReady2ThenSubmitRolledEffectAndAdvance(void);
+void callLocalSubmitRolled(void);
 void copyScratchLocalWork(void);
 void waitReadyAdvanceSubstate3(void);
 extern Battle03Handler D_801EB1E0[]; /* @source 0x801EB1E0 @kind unknown */
@@ -807,11 +807,11 @@ void dispatchState2EventTable(void);
 void dispatchState2FollowupTable(void);
 void dispatchDefaultClassTable(void);
 void func_801E2170(void);
-void advanceEnemyTargetModeAndPublishWork(u8 arg0);
+void stateEnemyTargetPublish(u8 arg0);
 void pickTargetStoreGlobal(u8 arg0);
 void func_801D9304(u8 arg0);
 u8   resolveKindResultMode(void);
-void clearPendingBattlerPairsExceptModeKind(void);
+void statePendingPairsExcept(void);
 void initUiBundleSlot2(u8 arg0);
 void initUiBundleSlot3(u8 arg0);
 void initUiBundleSlot4(u8 arg0);
@@ -927,7 +927,7 @@ void transformFirstPointPair(s32 arg0);
 void func_801DD3CC(s32 arg0);
 u8   checkLocalQueuedBranch(void);
 void submitCurrentWorkEffect(u32 arg0);
-void copyCurrentBattlerVisibleStateToTemplate(u32 arg0);
+void copyCurrentVisibleTemplate(u32 arg0);
 void submitPositionalEffectBit80(u32 arg0);
 void copyCurrentBattlerQueued(void);
 void func_801DD800(void);
@@ -948,13 +948,13 @@ void func_801DEA64(s32 arg0);
 void queueActiveBattlerSnapshots(void);
 u8   func_801E0E0C(void);
 void selectLocalCleanupSubstate(void);
-void rebuildLocalWorkBandsFromFieldRecords(void);
+void rebuildLocalBandsField(void);
 void stateScratchGlobalBit4(void);
 void func_801E1DD4(void);
 u8   enemyReadyOrHelper2(void);
 u8   checkEnemyQueuedPredicate(void);
 void func_801E2314(u32 arg0);
-void initEnemyCueCountdownWhenLoaderReady(void);
+void setupEnemyCueLoader(void);
 void stateEnemyScratchBit4(void);
 void initializeFlippedWorkDecay(void);
 void collectRandomEnemyEntries_battle03_801E531C(void);

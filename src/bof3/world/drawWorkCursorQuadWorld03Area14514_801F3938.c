@@ -5,7 +5,7 @@
  * materialises the pointer. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 
-void drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980(
+void renderSixteenQuadsAround(
     s32 *point);
 
 /* @source 0x801F3938
@@ -14,7 +14,7 @@ void drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_80
  * that object's three cursor words at +0x34, +0x38 and +0x3C into a local
  * twelve-byte point, then passes the address of that point to the overlay's
  * quad renderer at 0x801F3980,
- * drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980.
+ * renderSixteenQuadsAround.
  * The cell pointer is loaded before the stack
  * frame because nothing between it and the local stores needs the frame, the
  * two constant seeds func_801F38E0 writes into the same words and the shared
@@ -36,6 +36,6 @@ void drawWorkCursorQuadWorld03Area14514_801F3938(void) {
   point[0] = *(s32 *)(work + 0x34);
   point[1] = *(s32 *)(work + 0x38);
   point[2] = *(s32 *)(work + 0x3C);
-  drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980(
+  renderSixteenQuadsAround(
       point);
 }

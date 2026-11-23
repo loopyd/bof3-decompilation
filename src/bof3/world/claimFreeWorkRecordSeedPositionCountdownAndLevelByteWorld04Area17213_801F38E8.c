@@ -32,7 +32,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * 0x5D of the work object is the lead byte of the signed level triple
  * 0x5D/0x5E/0x5F that this overlay's
  * armScratchWorkLevelTripleWorld04Area17213_801F4AAC and
- * advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0
+ * stateLevelAccumulatorsMarker
  * step, so byte 0x16 receives the work object's current level.
  *
  * Evidence: payload asm at 0x801F38E8 - lui/ori of 0x800E4800 into $v1 and of

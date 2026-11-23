@@ -248,7 +248,7 @@ extern volatile u16  D_80145AC8; /* @source 0x80145AC8 @kind unknown */
 extern u8            D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
 extern u8*           D_801EB4D8; /* @source 0x801EB4D8 @kind unknown */
 /* Pointer cell holding the current local battle-work record; its byte 0x01 is
- * the byte compared with 5 by pollReadyThenInvokeHelperWhenWorkByte1Is5. */
+ * the byte compared with 5 by pollReadyInvokeHelper. */
 extern BattleLocalWork* D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern u8            D_801EBEFA[]; /* @source 0x801EBEFA @kind unknown */
 extern u8*           D_801EBF08; /* @source 0x801EBF08 @kind unknown */
@@ -529,7 +529,7 @@ void                           func_800AE09C(void);
 void                           dispatchWorkByte1Pair(void);
 void                           setupRecordStateAdvance(void);
 void                           raiseFlag4PendingBits(void);
-void                           pollReadyThenInvokeHelperWhenWorkByte1Is5(void);
+void                           pollReadyInvokeHelper(void);
 void                           stateUnlockedB(void);
 void __attribute__((noinline)) runPanelTasks16To19(void);
 u8                             func_8009C8AC(u16 required_mask);
@@ -540,7 +540,7 @@ void                           func_8009DE18(void);
 void                           func_8009DE8C(void);
 void                           func_8009E500(void);
 void                           func_8009F320(void);
-void                           storeSelectedValueSetRecordByte8To1WhenRollRejected(void);
+void                           stateValueRollRejected(void);
 /* Damage modifier at 0x800A2880: the first argument is the 0x80146374 selection
  * byte, which the decoded body never reads; every call site passes the 0x80146394
  * battler byte second and the selected action's power byte third, and the fourth
@@ -566,20 +566,20 @@ s32  func_800A3B6C(s32 arg0, s32 battler_index, s32 selection_mask);
 s32  func_800A3C9C(s32 arg0, s32 battler_index);
 u16  func_800A36F0(u8 battler_index, u16 flags);
 void func_800A3F28(void);
-void claimOwnerSlotsInModeRowThenSeedCountdown(void);
+void claimOwnerSlotsRow(void);
 void func_800ABBE0(void);
-void initBattlerRecordsForActiveSlotsThenSeedCountdown(void);
+void setupBattlerActiveSlots(void);
 void func_800A9BD8(u8 battler_index);
 void clampIndexedBattleByte14(s16 delta, s32 index);
 s32  func_800A403C(u8 index);
-u8   querySelectionClampIndexedByte14FromTable(u8 index);
+u8   querySelectionClampIndexed(u8 index);
 u8   resetSelectionApplyInput(s32 input_mask);
 /* @source 0x801DB524 */
-u8   isBattlerInactiveOrFlag4000(u8 arg0);
+u8   checkBattlerInactiveFlag4000(u8 arg0);
 s16  func_800A4294(s32 kind);
 void func_800A4458(void);
 /* Selection-grid initialiser called by the confirm-selection substate step
- * initSelectionGridArmRowThenAdvanceSubstate (0x80096FBC): rebuilds the
+ * setupSelectionGridSubstate (0x80096FBC): rebuilds the
  * 0x80148570 grid band from the active message-slot work record. */
 void func_80097EC0(void);
 void setupMode104ArmWork(void);
@@ -751,13 +751,13 @@ extern BattleWorkStateDispatchTable battleWorkStateHandler2;
 
 extern u8 D_801462EC; /* @source 0x801462EC @kind unknown */
 /* Initialised battler-record counter: func_800ABCE0 raises it once per record
- * it initialises, and initBattlerRecordsForActiveSlotsThenSeedCountdown resets
+ * it initialises, and setupBattlerActiveSlots resets
  * it and publishes the total into the countdown below. */
 extern u8 D_801462F2; /* @source 0x801462F2 @kind unknown */
 extern u8 D_801462F3; /* @source 0x801462F3 @kind unknown */
 
 /* The eight 12-byte slot records of D_801463DC, read by
- * initBattlerRecordsForActiveSlotsThenSeedCountdown and filled by the battle
+ * setupBattlerActiveSlots and filled by the battle
  * setup passes: the leading byte marks an active slot, the second indexes the
  * 0x88-byte identity records at D_800E4050, and the words at 0x04 and 0x08 are
  * the pair func_800ABCE0 forwards to func_8015477C. */

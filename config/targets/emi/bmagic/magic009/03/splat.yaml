@@ -41,8 +41,8 @@ segments:
     - func_801EEF08
   - - 1052
     - c
-    - decrementWorkByte9ThenIncrementWorkByte1WhenZeroBmagicMagic00903_801EF01C
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenIncrementWorkByte1WhenZeroBmagicMagic00903_801EF01C.c'
+    - decrementIncrementZeroBmagic
+    - '@source: src/bof3/bmagic/decrementIncrementZeroBmagic.c'
   - - 1128
     - c
     - incrementWorkByte1WhenWorkByteBZeroBmagicMagic00903_801EF068
@@ -57,18 +57,18 @@ segments:
     - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler-pointer table at 0x801EF89C (five in-image code pointers, entry 0 = 0x801EF120 through entry 4 = 0x801EF340, followed by the non-code words at 0x801EF8B0) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 1312
     - c
-    - dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic00903_801EF120
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic00903_801EF120.c'
+    - callHandlerDrawSet
+    - '@source: src/bof3/bmagic/callHandlerDrawSet.c'
     - '@behavior: overlay work-byte-2 dispatcher: reads the scratchpad work object through pointer cell 0x1F800044, takes its unsigned byte at offset 2 scaled by four as the index into the handler table word at 0x801EF8A4, the tail of the code-pointer run at 0x801EF89C, and calls that entry with no arguments; it then re-reads the cell and, only when the record bytes at offsets 0 and 2 are both non-zero, calls the overlay draw step at 0x801EF3B8 with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 1432
     - c
-    - decrementWorkByte9ThenCopyRecordByte8SeedWorkMotionPairAddRecordPositionClearByteAAndAdvanceWorkByte2BmagicMagic00903_801EF198
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordByte8SeedWorkMotionPairAddRecordPositionClearByteAAndAdvanceWorkByte2BmagicMagic00903_801EF198.c'
+    - decrementCopyMotionPair
+    - '@source: src/bof3/bmagic/decrementCopyMotionPair.c'
     - '@behavior: Work-byte-2 handler entered as entry 0 of the handler run at 0x801EF8A4. Decrements the work object countdown byte 0x9 and, on zero, copies the 0x8014638C record byte 0x8 into work byte 0x8, stores the step triplet row the work byte 0xB selects into work words 0xC and 0x10, calls func_801DD350, adds the record words 0x34 and 0x38 into the work words 0x34 and 0x38, sets work word 0x3C from the record word 0x3C plus the row z word, calls func_800AF764, then clears work byte 0xA and advances work byte 0x2.'
   - - 1748
     - c
-    - add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic00903_801EF2D4
-    - '@source: src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic00903_801EF2D4.c'
+    - workAdvanceAt16Bmagic
+    - '@source: src/bof3/bmagic/workAdvanceAt16Bmagic.c'
     - '@behavior: Entry 3 of the five-entry work-byte-2 handler pointer run at 0x801EF89C. Reads the scratchpad work-object pointer cell at 0x1F800044, adds two modulo 256 to the work object unsigned byte at offset 0x9 and then, after re-reading the cell, adds two modulo 256 to its byte at offset 0xA; re-reads the cell once more and, only when that object byte 0x9 equals 0x10, increments the byte at offset 0x2 through the pointer the test already loaded, advancing to the next handler step. Leaf with no frame, no arguments, no return value and no other state touched.'
   - - 1856
     - c
@@ -77,8 +77,8 @@ segments:
     - '@behavior: Step handler of the shared overlay handler run at 0x801EF89C. The word at 0x801EF8AC, entry 4 of that code-pointer run and entry 2 of the dispatch base at 0x801EF8A4, holds this address and no jal in this payload reaches it, so the table is its only incoming path: it runs with work byte 1 equal to 4 through the dispatcher at 0x801EF0DC and with work byte 2 equal to 2 through the dispatcher at 0x801EF120. It reads the scratchpad work-object pointer cell at 0x1F800044 once ahead of frame creation, adds one to that object unsigned byte 0x9 at byte width, re-reads the cell and subtracts one from unsigned byte 0xA the same way, then tests the stored value truncated to eight bits (andi 0xFF) so the truncated register supplies the compared value. Only when byte 0xA reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0xB by one and invoke the shared helper at 0x801E5988, the store filling the call delay slot. Takes no arguments, returns nothing, reads or writes no other state, and the 0x18-byte frame only keeps the return address across the call.'
   - - 1976
     - c
-    - drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8
-    - '@source: src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8.c'
+    - renderTexturedScaledTinted
+    - '@source: src/bof3/bmagic/renderTexturedScaledTinted.c'
     - '@behavior: Quad emitter of this overlay work-byte-2 handler group, reached with no arguments from 0x801EF120 once the scratchpad work record bytes 0x0 and 0x2 are both non-zero. It reads the shared graphic type twice and selects the draw-mode value 0xA5 when either answer is 1 or 2, else 0x35, links a 0xC-byte draw-mode packet through SetDrawMode at g_PrimCursor with dfe 0 and dtd 1 at the work object projection words 0x34 and 0x38 with kind 2 through func_80155A08, publishes work byte 9 shifted left 1 into the signed word cell at 0x1F800000, then takes a fresh g_PrimCursor POLY_FT4, seeds it through SetPolyFT4, marks it semi-transparent and writes four corners around the work screen halfwords 0x2E (x) and 0x30 (y) at the eighth-turn angles 0x200, 0x600, 0xE00 and 0xA00 of the 12-bit circle. Each corner x adds the func_801783C8 sample scaled by the published radius and shifted right 12 and each corner y adds the func_801782FC sample of the same angle. The texture is tpage GetTPage(0, 1, 0x340, 0x100) and clut GetClut(0x20, 0x1FA) over the 0x20-by-0x20 uv window at (0x80, 0x20), and the flat tint is work byte 0xA times 10 in red, 0 in green and that byte times 9 in blue. It links the 0x28-byte polygon at the same projection words with kind 2 and returns, having stored nothing but the scratchpad radius cell and the primitive itself.'
   - - 2736
     - c
@@ -92,12 +92,12 @@ segments:
     - '@behavior: Handler entry 0 of the nine-word pointer run at 0x801EEC04, whose tail 0x801EEC18..0x801EEC27 is the four-word table that 0x801EF6B0 copies into its frame and dispatches on scratchpad work byte 2, so this span runs for work byte 2 equal to 0. It calls the out-of-image helper at 0x800B0058 with no arguments and stores the returned byte at byte width into the work record countdown byte at offset 0x9, then re-reads the scratchpad pointer cell at 0x1F800044 and increments that record work byte at offset 0x2, advancing the state the table indexes. The 0x18-byte frame only keeps $ra at 0x10 across the call, the cell is re-read for the second access because the store through the loaded pointer may republish it, and the span reads or writes no other state. The pointer word at 0x801EEC18 holds its address and no jal in this payload reaches it, which is the dispatch-table shape rather than a missing caller.'
   - - 2952
     - c
-    - decrementWorkByte9ThenInvokeBattleHelperOnZeroThenSetWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic00903_801EF788
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenInvokeBattleHelperOnZeroThenSetWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic00903_801EF788.c'
+    - decrementBattleZeroReady
+    - '@source: src/bof3/bmagic/decrementBattleZeroReady.c'
   - - 3092
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2WhenZeroBmagicMagic00903_801EF814
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2WhenZeroBmagicMagic00903_801EF814.c'
+    - decrementGlobalByteZero
+    - '@source: src/bof3/bmagic/decrementGlobalByteZero.c'
   - - 3196
     - c
     - invokeHelperBmagicMagic00903_801EF87C

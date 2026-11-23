@@ -16,7 +16,7 @@
  * @residual none
  */
 /* Matching note: this body is the kind-2 twin of the exact sibling
- * storeKind1EstimateMinusSelectedHalfwordClampZero: word-for-word identical
+ * stateEstimateMinusClamp: word-for-word identical
  * except the estimate kind literal, so that source's shape carries over whole.
  * The battler byte feeds a plain volatile pointer so one base register serves
  * the two post-call reloads. The two arms are deliberately not symmetric. In

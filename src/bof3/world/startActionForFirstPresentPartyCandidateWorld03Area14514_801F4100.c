@@ -18,11 +18,11 @@ extern u8 D_80143BB0;
 /* Four candidate party bytes compared against the work-record party byte.
  * @source 0x801F5CA8 @kind table
  */
-extern u8 partyCandidateByteTableWorld03Area14514_801F5CA8[];
+extern u8 partyCandidateByteTable[];
 /* Four action halfwords started for the candidate that matched.
  * @source 0x801F5CAC @kind table
  */
-extern s16 partyCandidateActionTableWorld03Area14514_801F5CAC[];
+extern s16 partyCandidateActionTable[];
 
 /* Shared front-end action starter of the main executable, outside this payload:
  * it starts the action whose id it is given. Prototype form and argument type
@@ -65,8 +65,8 @@ void startActionForFirstPresentPartyCandidateWorld03Area14514_801F4100(void) {
     for (j = 0; j < D_80146254; j++) {
       offset = j * 0x140;
       if (D_80145F09[offset] ==
-          partyCandidateByteTableWorld03Area14514_801F5CA8[i]) {
-        func_80150224(partyCandidateActionTableWorld03Area14514_801F5CAC[i]);
+          partyCandidateByteTable[i]) {
+        func_80150224(partyCandidateActionTable[i]);
         D_80143BB0 = 2;
         return;
       }

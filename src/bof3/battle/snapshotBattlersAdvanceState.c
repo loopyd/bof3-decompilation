@@ -15,9 +15,9 @@
 void snapshotBattlersAdvanceState(void) {
   u8* state;
 
-  copyCurrentBattlerVisibleStateToTemplate(0u);
-  copyCurrentBattlerVisibleStateToTemplate(1u);
-  copyCurrentBattlerVisibleStateToTemplate(2u);
+  copyCurrentVisibleTemplate(0u);
+  copyCurrentVisibleTemplate(1u);
+  copyCurrentVisibleTemplate(2u);
   func_80158E50();
   func_80161FDC(0x256u);
   state = (u8*)&BATTLE_GLOBAL_BYTE_62E2;

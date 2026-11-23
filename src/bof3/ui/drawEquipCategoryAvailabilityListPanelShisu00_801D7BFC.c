@@ -203,7 +203,7 @@ extern void func_801AFA1C(const u8 *arg0, u8 arg1, s16 arg2, s16 arg3,
  *   caption-table and sprite-stream addresses, so the three are one body and
  *   those rows are shape evidence rather than a clone source. The border,
  *   stream and caption sequence is the one the sibling
- *   drawEquipCategoryListPanelShisu00_801D8A78 writes with its own stream
+ *   renderEquipCategoryList writes with its own stream
  *   choice and corner guard.
  * @status partial
  * @match 62.08

@@ -64,8 +64,8 @@ segments:
     - queueEvent4000RingTriple
   - - 1980
     - c
-    - initSelectionGridArmRowThenAdvanceSubstate
-    - '@source: src/bof3/battle/initSelectionGridArmRowThenAdvanceSubstate.c'
+    - setupSelectionGridSubstate
+    - '@source: src/bof3/battle/setupSelectionGridSubstate.c'
     - '@behavior: Confirm-selection substate step 1: stores 4 into byte +0x01 of the active selection slot, re-initialises the 0x80148570 selection grid through func_80097EC0, stores 2 into the grid row byte 0x8014857B while bit 1 of the slot flag word +0x10 is set and bit 17 is clear, then advances the battle substate index 0x801462E3, clears the confirm-substate index 0x801462E4 and mirrors the work-record byte +0x05 into 0x80148656.'
   - - 2124
     - asm
@@ -131,7 +131,7 @@ segments:
     - dispatchSubstateTable4418
   - - 6372
     - c
-    - storeSlot3QueueScriptRecordAdvanceRoot
+    - stateQueueScriptRoot
   - - 6468
     - asm
     - func_80098144
@@ -153,7 +153,7 @@ segments:
     - dispatchSubstateTable4450
   - - 7108
     - c
-    - queueEvent4000RingTripleAndAdvanceB
+    - queueRingTripleAdvance
   - - 7176
     - c
     - armSecondaryGridAdvance
@@ -313,8 +313,8 @@ segments:
     - func_8009BFC4
   - - 24468
     - c
-    - allOtherSlotsHaveNon63RuleAndE1BitSet
-    - '@source: src/bof3/battle/allOtherSlotsHaveNon63RuleAndE1BitSet.c'
+    - allOtherHaveRule
+    - '@source: src/bof3/battle/allOtherHaveRule.c'
     - '@behavior: Returns 1 when every slot index 0 through 3 other than the given slot has a rule byte other than 0x63 at 0x800E4048 + record[0xE0]*0x88 + slot*0x10 + 0x34 and its record byte +0xE1 bit set; returns 0 on the first failed check. The other argument selects a 0x118-byte record at 0x801EB630.'
   - - 24680
     - c
@@ -332,8 +332,8 @@ segments:
     - '@behavior: Reports whether the required mask is present on the current battler: rejects an inert current work record (+0xF8), resolves the mode 0x4 kind-record mask test, then requires mode 1, an index below 3, and no 0x100 bit before testing the two-level lookup byte table.'
   - - 24980
     - c
-    - applyLocalPanelRuleToWorkRecord
-    - '@source: src/bof3/battle/applyLocalPanelRuleToWorkRecord.c'
+    - stateLocalPanelRule
+    - '@source: src/bof3/battle/stateLocalPanelRule.c'
     - '@behavior: Applies one 16-byte local panel rule to a battle work record: the rule byte +0x01 selects which work fields the rule writes (halfword 0x80, the 0x1F800044 publish pair, the masked selection calls to func_8009CCBC and func_8009CF80, bytes 0x9A and 0x9E, the percentage-scaled halfwords 0x86 and 0x84, or the selection byte 0x801463D7), and every rule stores byte +0x04 at work +0x7E, copies bytes +0x08..+0x0F to work +0x8C..+0x93, refreshes through func_800A9BD8 and appends the local panel entry of the rule halfword +0x06.'
   - - 25788
     - c
@@ -377,8 +377,8 @@ segments:
     - func_8009DD20
   - - 30032
     - c
-    - storePendingDamage9999OrEstimateThenClampZero
-    - '@source: src/bof3/battle/storePendingDamage9999OrEstimateThenClampZero.c'
+    - statePendingEstimateClamp
+    - '@source: src/bof3/battle/statePendingEstimateClamp.c'
     - '@behavior: Stores 9999 in the pending-damage halfword at byte +0x04 of the battle selection record reached through D_8014639C.record, after running the selection-input pass func_800A3F28, when the acting battler''s 0x140-stride local-work byte at D_80145F09[D_80146374 * 0x140] is 0x0A; otherwise stores the func_800A4294 kind-3 estimate minus the 0x118-stride enemy-work halfword at 0x801EB6D6 + (D_80146394 - 3) * 0x118, then clamps that halfword to zero when it is negative.'
   - - 30232
     - c
@@ -401,8 +401,8 @@ segments:
     - '@behavior: Negates the halfword selected by the active battler index byte and stores it in field 0x04 of the selection record pointer D_801463A0, or stores -1 and sets bit 2 of the enemy status byte at 0x801EB72C when the enemy-work halfword is the 0xFFFF sentinel.'
   - - 30576
     - c
-    - setRecordField4Neg5ApplyFlags68WhenRandomUnder39
-    - '@source: src/bof3/battle/setRecordField4Neg5ApplyFlags68WhenRandomUnder39.c'
+    - stateRecordApplyRandom
+    - '@source: src/bof3/battle/stateRecordApplyRandom.c'
     - '@behavior: Stores -5 into the signed halfword at byte offset 4 of the selection record pointer D_801463A0, then, when the seven-bit masked random value is below 0x27, applies the 0x68 flags value to the active battler index byte D_80146394 through func_800A36F0.'
   - - 30652
     - c
@@ -424,8 +424,8 @@ segments:
     - '@behavior: Applies the 0xBFC flags value to the active battler index byte D_80146394 through func_800A36F0, then runs the selection-input pass func_800A3F28.'
   - - 30844
     - c
-    - setRecordField4NegOneWhenBattlerFlag4000
-    - '@source: src/bof3/battle/setRecordField4NegOneWhenBattlerFlag4000.c'
+    - stateNegOneBattler
+    - '@source: src/bof3/battle/stateNegOneBattler.c'
     - '@behavior: Takes the 0x4000 bit of the active battler index byte D_80146394 work-record halfword, which is the party halfword at 0x80145F10 for an index below three and the enemy halfword at 0x801EB6B2 rebased by -3 otherwise, and when it is set stores -1 in the signed halfword at byte +0x04 of the selection record pointer D_8014639C.record, clears that bit through func_800A36F0 and advances the band counter byte D_801462F1 or D_801462F3; a clear bit stores zero in the record halfword.'
   - - 31108
     - asm
@@ -462,8 +462,8 @@ segments:
     - func_8009E844
   - - 33164
     - c
-    - setRecordField4Neg10000WhenPartyFlag4000
-    - '@source: src/bof3/battle/setRecordField4Neg10000WhenPartyFlag4000.c'
+    - stateRecordNeg10000Party
+    - '@source: src/bof3/battle/stateRecordNeg10000Party.c'
     - '@behavior: Reads the active battler index byte D_80146394 and, for an index below 3 whose 0x140-stride party-record halfword at 0x80145F10 carries bit 0x4000, stores -10000 in the halfword at byte +0x04 of the record pointed to by D_8014639C.record, advances the byte count at 0x801462F1 and clears that 0x4000 bit from the battler through func_800A36F0; an index below 3 without the bit clears the record halfword to zero, and indexes 3 and above leave the record and the count untouched.'
   - - 33328
     - asm
@@ -696,42 +696,42 @@ segments:
     - func_8009FFF8
   - - 38912
     - c
-    - addToFlaggedEnemyWorkBytesAndClampToSeven
-    - '@source: src/bof3/battle/addToFlaggedEnemyWorkBytesAndClampToSeven.c'
+    - flaggedEnemyClampSeven
+    - '@source: src/bof3/battle/flaggedEnemyClampSeven.c'
     - '@behavior: Selection-action handler at 0x800B4878 in the battle selection-action table D_800B471C. Runs the selection-input refresh pass func_800A3F28, then addresses the 0x118-byte enemy work record band by the active battler byte D_80146394 rebased by -3: when the byte at record + 0x06 (D_801EB6CA) is non-zero and bit 0 of the flag byte at record + 0x07 is clear it sets that bit and adds 2 to the value byte, and when the byte at record + 0x0A (D_801EB6CE) is non-zero and bit 0 of the flag byte at record + 0x0B is clear it sets that bit and adds 1 to the value byte, after which both value bytes are clamped to 7.'
   - - 39304
     - asm
     - func_800A0188
   - - 39492
     - c
-    - storeHalvedSelectedValueWhenRollAccepted
-    - '@source: src/bof3/battle/storeHalvedSelectedValueWhenRollAccepted.c'
+    - stateHalvedRollAccepted
+    - '@source: src/bof3/battle/stateHalvedRollAccepted.c'
     - '@behavior: Runs the battle selection roll func_800A3A10 for the current battler byte D_80146374 and selection byte D_80146394; when the roll accepts, stores half of the selected battler''s leading halfword (0x140-stride party record above 0x80145F18 below index 3, 0x118-stride enemy record above 0x801EB6C4 rebased by -3 otherwise) into the signed halfword at byte +0x04 of the selection record pointer D_8014639C.record.'
   - - 39656
     - c
-    - clearSelectedPartyByte0FThenApplyInputMask800SetRecordByte8OrRefresh
-    - '@source: src/bof3/battle/clearSelectedPartyByte0FThenApplyInputMask800SetRecordByte8OrRefresh.c'
+    - stateApplyInputRefresh
+    - '@source: src/bof3/battle/stateApplyInputRefresh.c'
     - '@behavior: Applies the 0x800 input mask to the battle selection for the selected battler byte D_80146394 when that battler''s flag word at 0x80145FB8 (stride 0x140) has neither low bit set. On that path it first clears byte +0x0F of the record when the selection byte is below three (party side only). querySelectionApplyInput reports whether the mask was applied; when it was not, the handler runs the selection refresh pass func_800A3F28 and returns. Otherwise, and whenever the flag word carries a low bit, it stores 1 in byte +0x08 of the selection record pointer D_8014639C.record.'
   - - 39800
     - c
-    - storeSelectedValueSetRecordByte8To1WhenRollRejected
-    - '@source: src/bof3/battle/storeSelectedValueSetRecordByte8To1WhenRollRejected.c'
+    - stateValueRollRejected
+    - '@source: src/bof3/battle/stateValueRollRejected.c'
     - '@behavior: Runs the battle selection roll func_800A3A10 for the current battler byte D_80146374 and selection byte D_80146394; when the roll rejects, stores 1 in byte +0x08 of the selection record pointer D_8014639C.record, otherwise copies the selected battler''s leading halfword (0x140-stride party record above 0x80145F18 below index 3, 0x118-stride enemy record above 0x801EB6C4 rebased by -3 otherwise) into the signed halfword at byte +0x04 of that record.'
   - - 39980
     - asm
     - func_800A042C
   - - 40292
     - c
-    - runSelectionRollSetRecordByte8OrFlag2000ThenRefresh
-    - '@source: src/bof3/battle/runSelectionRollSetRecordByte8OrFlag2000ThenRefresh.c'
+    - runSelectionRollRefresh
+    - '@source: src/bof3/battle/runSelectionRollRefresh.c'
     - '@behavior: Runs the battle selection roll func_800A3A10 for the acting battler byte D_80146374 and selected battler byte D_80146394; a nonzero roll stores 1 in byte +0x08 of the selection record pointer D_8014639C.record and calls func_800AAC88 with effect kind 0 and the selected battler byte, while a zero roll raises bit 0x2000 in the flag word at 0x80145FB8 (stride 0x140) below index 3 or at 0x801EB734 (stride 0x118) rebased by -3 and calls func_800A9BD8 with the selected battler byte; both paths finish with the selection refresh pass func_800A3F28.'
   - - 40544
     - asm
     - func_800A0660
   - - 40912
     - c
-    - doubleEnemyRecordHalfwordsClampedToFFFF
-    - '@source: src/bof3/battle/doubleEnemyRecordHalfwordsClampedToFFFF.c'
+    - doubleEnemyHalfwordsClamped
+    - '@source: src/bof3/battle/doubleEnemyHalfwordsClamped.c'
     - '@behavior: Runs the selection-input refresh pass func_800A3F28, then doubles the two halfwords at +0x00 and +0x02 of the 0x118-stride enemy work record field base D_801EB6B4/D_801EB6B6 selected by the active battler byte D_80146394 rebased by -3, saturates each doubled value at 0xFFFF, and stores both back.'
   - - 41112
     - asm
@@ -751,8 +751,8 @@ segments:
     - '@behavior: Arms flag 0x2000, then stores one less than the selected battler''s slot counter into the active record halfword +0x04 and resets that slot counter to 1.'
   - - 41772
     - c
-    - storeDecrementedSelectedValueWhenRollAccepted
-    - '@source: src/bof3/battle/storeDecrementedSelectedValueWhenRollAccepted.c'
+    - stateDecrementedRollAccepted
+    - '@source: src/bof3/battle/stateDecrementedRollAccepted.c'
     - '@behavior: Runs the battle selection roll func_800A3A10 for the current battler byte D_80146374 and selection byte D_80146394; when the roll accepts, stores one less than the selected battler''s leading work-record halfword (0x140-stride party record above 0x80145F18 below index 3, 0x118-stride enemy record above 0x801EB6C4 rebased by -3 otherwise) into the signed halfword at byte +0x04 of the selection record pointer D_8014639C.record, or zero when that halfword is 1.'
   - - 41972
     - c
@@ -767,8 +767,8 @@ segments:
     - func_800A0C68
   - - 42340
     - c
-    - storeScaledAttackMinusSelectedHalfwordClampZero
-    - '@source: src/bof3/battle/storeScaledAttackMinusSelectedHalfwordClampZero.c'
+    - stateAttackMinusClamp
+    - '@source: src/bof3/battle/stateAttackMinusClamp.c'
     - '@behavior: Stores the func_800A2880 scaling of the 0x14-row table byte for the active battler byte and base byte with element flag 0 into selection record halfword +0x04, subtracts the selected battler''s 0x140-stride party or 0x118-stride enemy work-record halfword, then clamps the stored halfword to zero when negative.'
   - - 42600
     - c
@@ -778,7 +778,7 @@ segments:
     - func_800A0EC4
   - - 44052
     - c
-    - runSelectionPassThenSetSelectedRecordFlag8000
+    - runSelectionPassSelected
   - - 44212
     - c
     - runSelectionPassSetSelectedFlag40ThenAdvanceByte10
@@ -807,8 +807,8 @@ segments:
     - '@behavior: Runs selection pass func_800A3F28, then sets flag 0x10000 in the selected local or reserve record guard word.'
   - - 45776
     - c
-    - setRecordByte8To2StoreIndexedModifierField6
-    - '@source: src/bof3/battle/setRecordByte8To2StoreIndexedModifierField6.c'
+    - stateStoreIndexedModifier
+    - '@source: src/bof3/battle/stateStoreIndexedModifier.c'
     - '@behavior: Sets selection record byte +0x08 to 2, applies the indexed battle modifier with element flag 1, and stores its result in record field +0x06.'
   - - 45880
     - c
@@ -817,13 +817,13 @@ segments:
     - '@behavior: Runs the selection roll func_800A3C9C for the current battler byte D_80146374 and selection byte D_80146394, then copies the selected battler''s leading halfword - the 0x140-stride party work record above 0x80145F18 for selection bytes below 3, otherwise the 0x118-stride enemy work record above 0x801EB6C4 rebased by -3 - into the selection record halfword at byte +0x04.'
   - - 46052
     - c
-    - storeKind1EstimateMinusSelectedHalfwordClampZero
-    - '@source: src/bof3/battle/storeKind1EstimateMinusSelectedHalfwordClampZero.c'
+    - stateEstimateMinusClamp
+    - '@source: src/bof3/battle/stateEstimateMinusClamp.c'
     - '@behavior: Stores into the selection-record halfword at byte +0x04 the func_800A4294 kind-1 estimate minus the selected battler''s work-record halfword - the 0x140-stride party record halfword at 0x80145F26 for battler bytes below 3, otherwise the 0x118-stride enemy record halfword at 0x801EB6C4 + 0x12 rebased by -3 - after re-reading the battler byte D_80146394 in each arm, then clamps the stored halfword to zero when it is negative.'
   - - 46260
     - c
-    - runSelectionPassSetAllLocalFlag400ThenClearSelected
-    - '@source: src/bof3/battle/runSelectionPassSetAllLocalFlag400ThenClearSelected.c'
+    - runPassAllLocal
+    - '@source: src/bof3/battle/runPassAllLocal.c'
     - '@behavior: Runs the battle selection refresh pass func_800A3F28, then, while the selected battler byte at 0x80146394 is below three, raises flag 0x400 in the flag word of every local battler record below the volatile count byte at 0x801462F0 (records at 0x80145FB8, stride 0x140) and clears flag 0x400 in the selected battler''s own record.'
   - - 46468
     - asm
@@ -850,7 +850,7 @@ segments:
     - c
     - func_800A2404
     - '@source: src/bof3/battle/func_800A2404.c'
-    - '@behavior: Stores 4 into battle state byte D_80146375 and 0x6A into battle state halfword D_801463C0, then runs the 0x6A action selection storeSelectedValueSetRecordByte8To1WhenRollRejected.'
+    - '@behavior: Stores 4 into battle state byte D_80146375 and 0x6A into battle state halfword D_801463C0, then runs the 0x6A action selection stateValueRollRejected.'
   - - 48188
     - c
     - storeKind2EstimateMinusSelectedHalfwordClampZero
@@ -858,8 +858,8 @@ segments:
     - '@behavior: Stores into the selection-record halfword at byte +0x04 the func_800A4294 kind-2 estimate minus the selected battler''s work-record halfword - the 0x140-stride party record halfword at 0x80145F26 for battler bytes below 3, otherwise the 0x118-stride enemy record halfword at 0x801EB6C4 + 0x12 rebased by -3 - after re-reading the battler byte D_80146394 in each arm, then clamps the stored halfword to zero when it is negative.'
   - - 48396
     - c
-    - runSelectionPassThenApplyMask8WhenRollClear
-    - '@source: src/bof3/battle/runSelectionPassThenApplyMask8WhenRollClear.c'
+    - runPassApplyRoll
+    - '@source: src/bof3/battle/runPassApplyRoll.c'
     - '@behavior: Runs the selection-input pass func_800A3F28, then, when the selection roll func_800A3B6C returns zero for (D_80146374, D_80146394, 0x80), applies the 0x8 input mask to the byte D_80146394 through func_800A31E0.'
   - - 48480
     - c
@@ -946,8 +946,8 @@ segments:
     - '@behavior: Calls func_800A3F28 and tests the current selection roll; on acceptance clamps indexed selection-record byte +0x14 using the signed modifier from the current 20-byte table entry, calls func_800A9BD8 with the current battler byte, and returns 0; otherwise returns 1.'
   - - 55504
     - c
-    - querySelectionClampIndexedByte14FromTable
-    - '@source: src/bof3/battle/querySelectionClampIndexedByte14FromTable.c'
+    - querySelectionClampIndexed
+    - '@source: src/bof3/battle/querySelectionClampIndexed.c'
     - '@behavior: Tests the current selection roll; on acceptance clamps indexed selection-record byte +0x14 using the signed modifier from the current 20-byte table entry, calls func_800A9BD8 with the current battler byte, and returns 0; otherwise returns 1.'
   - - 55648
     - c
@@ -975,8 +975,8 @@ segments:
     - dispatchSubstateTable4cc8
   - - 57088
     - c
-    - initSelectionStreamSlotWhenStateClear
-    - '@source: src/bof3/battle/initSelectionStreamSlotWhenStateClear.c'
+    - setupSelectionStreamSlot
+    - '@source: src/bof3/battle/setupSelectionStreamSlot.c'
     - '@behavior: Selection-handler step 0 - while the battle selection state byte D_80148573 is 0, starts EMI stream slot 0 through func_80161FDC and advances the selection handler index D_801462E4.'
   - - 57156
     - asm
@@ -1033,8 +1033,8 @@ segments:
     - '@behavior: Clears local battle selection state when its gate flag is clear.'
   - - 59748
     - c
-    - collectGridCellEntriesThenRefreshAccumulator
-    - '@source: src/bof3/battle/collectGridCellEntriesThenRefreshAccumulator.c'
+    - collectGridEntriesAccumulator
+    - '@source: src/bof3/battle/collectGridEntriesAccumulator.c'
     - '@behavior: Rebuilds the active byte list at 0x801463C4 from the three entries of the four-byte grid cell selected by the two work counters, keeping every entry that is not the 0xFF sentinel, then refreshes the list accumulator, stores 2 into 0x801485BB, sets bit 2 at +0x128 and advances the substate byte.'
   - - 59972
     - asm
@@ -1120,8 +1120,8 @@ segments:
     - func_800A6870
   - - 65700
     - c
-    - resolveDragonFormThenInstallRowAndRefresh
-    - '@source: src/bof3/battle/resolveDragonFormThenInstallRowAndRefresh.c'
+    - resolveDragonFormInstall
+    - '@source: src/bof3/battle/resolveDragonFormInstall.c'
     - '@behavior: Resets the acting battler''s party record state - the eight state bytes at +0x08 of its 0x140-stride row above 0x80145FBC zeroed, bits 0x8000 and 0x10000 cleared in the word at 0x80145FB4 and bits 0x100, 0x200, 0x800, 0x1000, 0x2000, 0x4000 and 0x40000 cleared in the word at 0x80145FB8 - then refreshes through func_800A9BD8, clears the form bytes 0x800B6F58 and 0x800B6F5C and raises bit 0x2 of the flag word. Resolves the dragon form from the gene tables: the 0xFF result runs func_800A6E14 with 0xFF, otherwise func_800A7C14 runs with the form and the form code (form + 4) is stored at 0x800B6F58, where code 8 raises flag 0x10000 and codes 7 and 4 raise flag 0x20000. Every path shifts the four-byte rows 1 through 5 of the table at 0x80145500 down from the row above, refills row 0''s bytes 0 through 2 from the active byte list 0x801463C4 up to its count 0x801463C7 and pads the rest with 0xFF, stores the packed byte (group << 5) + (code & 0x1F) in row 0''s byte 3, publishes the code at 0x801463C9 and the group at 0x801463B9, and refreshes again through func_800A9BD8.'
   - - 66604
     - c
@@ -1153,8 +1153,8 @@ segments:
     - '@behavior: Writes the nine class-slot bytes 0x801EBEFA..0x801EBF02 and their record copies at +0x2B and +0x4B of the active battler record 0x80145F04 + D_80146374 * 0x140: each signed index argument is offset by two and clamped to 0..4 before indexing the local byte tables 0x800B4E94 (slots 0-2), 0x800B4E9E (slot 5) and 0x800B4E99 (slots 7-8), while slots 3, 4 and 6 store the constant 2.'
   - - 69816
     - c
-    - fillRecordSlotListFromFormAndGroups
-    - '@source: src/bof3/battle/fillRecordSlotListFromFormAndGroups.c'
+    - renderListFormGroups
+    - '@source: src/bof3/battle/renderListFormGroups.c'
     - '@behavior: Fills the ten-entry slot list at +0x70 of the active battler record 0x80145F04 + D_80146374 * 0x140: the three bytes of the row selected by the form byte 0x800B6F58 in the three-byte table 0x800B4EA4 are copied in order up to the first zero byte, then the positive group bytes 0x800B6F60 through 0x800B6F64 append their groups 0 through 4 through func_800A7B40, groups 6 through 9 append only while the shared gate byte 0x800B6F69 is positive, group 5 and group 0xE append under 0x800B6F69 and 0x800B6F63 inside the 0x800B6F60 block, groups 0xC, 0xB and 0xD append under 0x800B6F6C, 0x800B6F6B and 0x800B6F69, and the byte 0xD9 is stored at the resulting count with every remaining entry up to ten zeroed.'
   - - 70464
     - c
@@ -1196,8 +1196,8 @@ segments:
     - func_800A8540
   - - 73128
     - c
-    - copyWorkWord3CPlus4000000IntoWord20RequestWorkByte8Plus38SetWorkByteBTo10ThenAdvanceWorkByte1
-    - '@source: src/bof3/battle/copyWorkWord3CPlus4000000IntoWord20RequestWorkByte8Plus38SetWorkByteBTo10ThenAdvanceWorkByte1.c'
+    - copyIntoRequestByte
+    - '@source: src/bof3/battle/copyIntoRequestByte.c'
     - '@behavior: Loads the scratchpad work object published at the pointer cell 0x1F800044, stores its word at 0x3C plus 0x4000000 into its own word at 0x20, requests the resource id of its byte 0x08 plus 0x38 through the main-executable helper at 0x8014D6B8, then re-reads the cell to set its byte 0x0B to 0x10 and again to advance its byte 0x01 by one.'
   - - 73232
     - asm
@@ -1225,16 +1225,16 @@ segments:
     - func_800A8CC8
   - - 75068
     - c
-    - pollReadyThenInvokeHelperWhenWorkByte1Is5
-    - '@source: src/bof3/battle/pollReadyThenInvokeHelperWhenWorkByte1Is5.c'
+    - pollReadyInvokeHelper
+    - '@source: src/bof3/battle/pollReadyInvokeHelper.c'
     - '@behavior: Invokes the shared readiness helper at 0x801DEE4C, then invokes the shared helper at 0x801E5988 while byte 0x01 of the local battle-work record pointed to by 0x801EB4E0 equals 5.'
   - - 75136
     - asm
     - func_800A8D80
   - - 75240
     - c
-    - raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkByte1
-    - '@source: src/bof3/battle/raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkByte1.c'
+    - raiseSetXByte
+    - '@source: src/bof3/battle/raiseSetXByte.c'
     - '@behavior: Loads the scratch work object at the pointer cell 0x1F800044, raises bit 0x20 of byte 0, sets byte 0x5C to 3, writes -(byte 0xB << 4) to bytes 0x5D, 0x5F and 0x5E in that order, sets byte 0x9 to 8 and advances byte 0x01 before the readiness helper func_8014DAEC.'
   - - 75448
     - asm
@@ -1336,32 +1336,32 @@ segments:
     - c
     - dispatchByBattleMode
     - '@source: src/bof3/battle/dispatchByBattleMode.c'
-    - '@behavior: Runs the battle mode pass func_800ABBE0 (claimOwnerSlotsInModeRowThenSeedCountdown then the mode handler D_800B5108[D_801462EA]) when the battle mode byte D_801462EA is nonzero, and the mode-zero pass initBattlerRecordsForActiveSlotsThenSeedCountdown when it is clear.'
+    - '@behavior: Runs the battle mode pass func_800ABBE0 (claimOwnerSlotsRow then the mode handler D_800B5108[D_801462EA]) when the battle mode byte D_801462EA is nonzero, and the mode-zero pass setupBattlerActiveSlots when it is clear.'
   - - 87008
     - c
     - func_800ABBE0
     - '@source: src/bof3/battle/func_800ABBE0_battle15.c'
-    - '@behavior: Runs the battle substate pass claimOwnerSlotsInModeRowThenSeedCountdown, then dispatches the handler selected by the battle mode byte D_801462EA through the function table rooted at D_800B5108.'
+    - '@behavior: Runs the battle substate pass claimOwnerSlotsRow, then dispatches the handler selected by the battle mode byte D_801462EA through the function table rooted at D_800B5108.'
   - - 87080
     - c
     - func_800ABC28
   - - 87088
     - c
-    - initBattlerRecordsForActiveSlotsThenSeedCountdown
-    - '@source: src/bof3/battle/initBattlerRecordsForActiveSlotsThenSeedCountdown.c'
+    - setupBattlerActiveSlots
+    - '@source: src/bof3/battle/setupBattlerActiveSlots.c'
     - '@behavior: Clears the initialised battler-record counter D_801462F2, walks the eight 12-byte slot records of D_801463DC and, for every slot whose leading byte is set, initialises the next battler record through func_800ABCE0 with that slot''s identity byte and the word pair at 0x04 and 0x08, passing the current number of initialised records as the record index. After the walk it copies D_801462F2 into D_801462F3, the countdown clearBattlerFlagsAndDecrement462F3 decrements as each battler finishes.'
   - - 87264
     - asm
     - func_800ABCE0
   - - 87900
     - c
-    - claimOwnerSlotsInModeRowThenSeedCountdown
-    - '@source: src/bof3/battle/claimOwnerSlotsInModeRowThenSeedCountdown.c'
-    - '@behavior: Clears the initialised record counter D_801462F2, walks the eight owner-slot bytes of the party row that the battle mode byte D_801462EA selects through the 4-byte rows of D_801CD78E and the 9-byte rows rooted at D_800E4000, claims a local panel record through claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount for every slot whose byte is not the empty marker 0xFF, passing the slot index and the number of records claimed so far, and then copies the counter into the countdown D_801462F3.'
+    - claimOwnerSlotsRow
+    - '@source: src/bof3/battle/claimOwnerSlotsRow.c'
+    - '@behavior: Clears the initialised record counter D_801462F2, walks the eight owner-slot bytes of the party row that the battle mode byte D_801462EA selects through the 4-byte rows of D_801CD78E and the 9-byte rows rooted at D_800E4000, claims a local panel record through claimOwnerLocalCount for every slot whose byte is not the empty marker 0xFF, passing the slot index and the number of records claimed so far, and then copies the counter into the countdown D_801462F3.'
   - - 88092
     - c
-    - claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount
-    - '@source: src/bof3/battle/claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount.c'
+    - claimOwnerLocalCount
+    - '@source: src/bof3/battle/claimOwnerLocalCount.c'
     - '@behavior: Claims the owner work record of party slot slot (findOwnerRecord), copies its 0x74-byte head into the 0x118-byte local panel record selected by index, publishes that record as the active work pointer 0x1F800044, resets the inherited work state, initialises the record from its class template through func_800AC218 and func_800AD0A8, clears band byte 0x7F, raises flag 0x40 of the owner record leading byte and advances the initialised record counter D_801462F2.'
   - - 88600
     - c
@@ -1512,8 +1512,8 @@ segments:
     - func_800AE1F8
   - - 96864
     - c
-    - setSelectedKindQueueSlotFromGroupedTableAndPublishPointer
-    - '@source: src/bof3/battle/setSelectedKindQueueSlotFromGroupedTableAndPublishPointer.c'
+    - stateKindGroupedPointer
+    - '@source: src/bof3/battle/stateKindGroupedPointer.c'
     - '@behavior: Stores the packed selection id in the selection-kind halfword D_801463C0, resolves the grouped byte at D_800B6AB0[selector >> 8][selector & 0xFF], claims a queued slot of mode 2 carrying that byte through func_801E590C, and publishes the second argument into the claimed slot''s +0x74 pointer word.'
   - - 96980
     - asm
@@ -1540,8 +1540,8 @@ segments:
     - '@behavior: Copies the four battle work-state handlers at 0x800969C4 and dispatches the entry selected by scratchpad work byte 0x01; when work bytes 0x00 and 0x01 are both non-zero it then invokes func_800AE9C4 with work byte 0x04.'
   - - 97652
     - c
-    - countdownWorkByte9CopyPositionAndAdvanceStage
-    - '@source: src/bof3/battle/countdownWorkByte9CopyPositionAndAdvanceStage.c'
+    - countdownCopyPositionStage
+    - '@source: src/bof3/battle/countdownCopyPositionStage.c'
     - '@behavior: Decrements work byte +0x09; on zero copies words +0x34 through +0x3C, calls func_800AF764, resets counters, adjusts halfwords +0x2E and +0x30, and advances work byte +0x01.'
   - - 97856
     - c
@@ -1563,8 +1563,8 @@ segments:
     - '@behavior: Copies the four battle work-state handlers at 0x800969D4 (0x800AE82C, 0x800AE640, 0x800AE6C8, 0x800AE728) and dispatches the entry selected by scratchpad work byte 0x01; when work bytes 0x00 and 0x01 are both non-zero it then invokes func_800AE9C4 with work byte 0x04.'
   - - 98348
     - c
-    - countdownWorkByte9SeedAxesFromBattlerRecordAndAdvanceStage
-    - '@source: src/bof3/battle/countdownWorkByte9SeedAxesFromBattlerRecordAndAdvanceStage.c'
+    - countdownAxesBattlerStage
+    - '@source: src/bof3/battle/countdownAxesBattlerStage.c'
     - '@behavior: Decrements work byte +0x09; on zero copies the coordinate triplet (words 0, 4 and 8) of the action record selected by work byte +0x0B from the 0x140-byte party array at 0x80145EC4 while that byte is below 3 and otherwise from the 0x118-byte enemy array at 0x801EB664 at the byte minus three into work words 0x34, 0x38 and 0x3C, calls func_800AF764, sets word +0x10 to -14, subtracts 24 from halfword +0x2E and byte +0x0A from halfword +0x30, clears byte +0x09, sets byte +0x0A to 1 and advances work byte +0x01.'
   - - 98756
     - asm
@@ -1725,8 +1725,8 @@ segments:
     - '@behavior: Runs the panel-task pass func_800B0F9C, then steps the panel x right by 0x20 while it is below 0x5B and resets it to 0x5B otherwise.'
   - - 108140
     - c
-    - panelStepLeftOrCallBelowNegA4
-    - '@source: src/bof3/battle/panelStepLeftOrCallBelowNegA4.c'
+    - panelLeftBelowNeg
+    - '@source: src/bof3/battle/panelLeftBelowNeg.c'
     - '@behavior: Runs the panel-task pass func_800B0F9C, then steps the signed panel x left by 0x20 while it is at least -0xA4 and runs func_80158E20 in place of that step once the signed x has fallen below -0xA4.'
   - - 108228
     - c
@@ -1752,8 +1752,8 @@ segments:
     - '@behavior: Runs the panel-task pass func_800B1728, then resets the panel x to 0x5B while it is below 0x5C and steps it left by 0x20 otherwise.'
   - - 109828
     - c
-    - panelStepRightOrCallAbove15A
-    - '@source: src/bof3/battle/panelStepRightOrCallAbove15A.c'
+    - panelStepRightCall
+    - '@source: src/bof3/battle/panelStepRightCall.c'
     - '@behavior: Runs the panel-task pass func_800B1728, then steps the signed panel x right by 0x20 while it is below 0x15B and runs func_80158E20 in place of that step once the signed x has reached 0x15B.'
   - - 109916
     - c

@@ -30,12 +30,12 @@ segments:
   subsegments:
   - - 248
     - c
-    - dispatchStateByte1Table57bcWorld04Area17013_801F2CF8
+    - callStateTable57World04
     - '@source: src/bof3/world/area17013DispatchTables.c'
   - - 316
     - c
-    - advanceStateByte1SetHalfword2eTo5AndPublishSelectedGlyphPhasePointerWorld04Area17013_801F2D3C
-    - '@source: src/bof3/world/advanceStateByte1SetHalfword2eTo5AndPublishSelectedGlyphPhasePointerWorld04Area17013_801F2D3C.c'
+    - stateGlyphPhasePointer
+    - '@source: src/bof3/world/stateGlyphPhasePointer.c'
     - '@behavior: Handler of the overlay dispatch table at 0x801F57BC. It reads the scratchpad work record from the pointer cell 0x1F800044, adds one to the record dispatch state byte at offset 0x01 - the byte the dispatcher at 0x801F2CF8 scales by four and indexes into that pointer run - and stores it back, then re-reads the pointer cell and stores 5 into the record halfword at 0x2E. It finally reads the record byte at 0x06, which selects one of the three glyphs of the overlay banner, and stores the address of that glyph row phase, 0x801F5990 plus the selected byte, into the record word at 0x4C: the pad handler at 0x801F2D80 loads that word, moves the phase it points at between 0 and 8 and copies it back to 0x801F5990 plus the same selected byte. Takes no arguments, calls nothing, returns nothing and keeps no frame.'
   - - 384
     - asm
@@ -61,35 +61,35 @@ segments:
     - '@behavior: Draws the overlay three-glyph banner at the signed halfword origin (x, y) and marks the glyph the work record selected. Arms draw mode 0, covers the box with three semi-transparent (0, 0x80, 0) quads 0x136 wide and 0x5A tall (two 5-pixel end caps and the body), and draws the three 9x7 glyph grids at x+9, x+0x6D and x+0xD1 from the 0x3F-byte stride table at 0x801F58D0 starting at the row phases in 0x801F5990 through 0x801F5992. When bit 4 of the shared frame word 0x80143E6C is set it steps x down one pixel and marks the glyph selected by byte 6 of the scratchpad work record at 0x1F800044, scaled by 100: two unfilled (0xC8, 0xC8, 0xC8) triangles flank the column and four lines draw the 0x5A by 0x46 selection frame. The record is re-read for each of the three marks.'
   - - 2452
     - c
-    - drawSemiTransFlatQuadPrimWorld04Area17013_801F3594
-    - '@source: src/bof3/world/drawSemiTransFlatQuadPrimWorld04Area17013_801F3594.c'
+    - renderSemiTransFlat
+    - '@source: src/bof3/world/renderSemiTransFlat.c'
     - '@behavior: Emits one semi-transparent flat-tinted 0x18-byte POLY_F4 quad at the shared primitive cursor: stamps the cursor through 0x8017A9A4, passes the semi-transparency flag to SetSemiTrans, writes the four corners as the halfwords at 0x08/0x0A/0x0C/0x0E/0x10/0x12/0x14/0x16 and the tint bytes at 0x04/0x05/0x06, then appends it through func_8014E5A0 with class 2 and size 0x18.'
   - - 2712
     - c
-    - drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698
-    - '@source: src/bof3/world/drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698.c'
+    - renderTransFlatTriangle
+    - '@source: src/bof3/world/renderTransFlatTriangle.c'
     - '@behavior: Emits one semi-transparent flat-tinted 0x14-byte POLY_F3 triangle at the shared primitive cursor: stamps the cursor through 0x8017A954, passes the semi-transparency flag to SetSemiTrans, writes the three corners as the halfwords at 0x08/0x0A/0x0C/0x0E/0x10/0x12 and the tint bytes at 0x04/0x05/0x06, then appends it through func_8014E5A0 with class 2 and size 0x14.'
   - - 2932
     - c
-    - drawSemiTransFlatLinePrimWorld04Area17013_801F3774
-    - '@source: src/bof3/world/drawSemiTransFlatLinePrimWorld04Area17013_801F3774.c'
+    - renderTransFlatLine
+    - '@source: src/bof3/world/renderTransFlatLine.c'
     - '@behavior: Emits one semi-transparent flat-tinted 0x10-byte line primitive at the shared primitive cursor: stamps the cursor through 0x8017AA80, passes the semi-transparency flag to SetSemiTrans, writes the two corner points as the halfwords at 0x08/0x0A/0x0C/0x0E and the tint bytes at 0x04/0x05/0x06, then appends it through func_8014E5A0 with class 2 and size 0x10.'
   - - 3128
     - asm
     - func_801F3838
   - - 3212
     - c
-    - drawGlyphCellMarkerWorld04Area17013_801F388C
-    - '@source: src/bof3/world/drawGlyphCellMarkerWorld04Area17013_801F388C.c'
+    - renderGlyphCellMarker
+    - '@source: src/bof3/world/renderGlyphCellMarker.c'
     - '@behavior: Draws the marker of one glyph cell of the overlay 9x7 glyph grid at the signed halfword cell origin (x, y), keyed by the signed cell value the glyph table holds. Value 1 draws a cross in 0xC8 red: a horizontal span from (x+2, y+5) to (x+8, y+5) and a vertical span from (x+5, y+2) to (x+5, y+8). Value -1 draws only the horizontal span in 0xC8 blue. Every other value draws nothing, and the semi-transparency flag stays clear on both spans.'
   - - 3476
     - c
-    - stampGlyphGridCellCodesQueueCellElementsAndAttachCellTextureWorld04Area17013_801F3994
-    - '@source: src/bof3/world/stampGlyphGridCellCodesQueueCellElementsAndAttachCellTextureWorld04Area17013_801F3994.c'
+    - stampElementsAttachTexture
+    - '@source: src/bof3/world/stampElementsAttachTexture.c'
     - '@behavior: Stamps the 7x9 cell grid of the overlay banner into the map cell entries and queues one shared UI element per cell. Flag 0x7E of the shared flag bank 0x80144F28 is probed once through func_8015B5D4; while it is clear each cell takes the union of the three 0x3F-byte glyphs of the banner at 0x801F58D0, read at row*9 plus the per-glyph row phases at 0x801F5990 wrapped to nine, folded to one for a set cell and zero otherwise, and while the flag is set the cell value stays zero. The cell then queues func_801A4BC0 at (col + 0x16, row + 0x8E) with the size byte D_801F584C[row*9 + col] scaled by the cell value, and its map entry word - the block base 0x80104000 plus ((stride*rowCount + 1) >> 1)*4 plus four times the block bias at 0x80104002 plus four times D_8010402C[bias*2 + (row + 0x8E)*stride + col] - keeps its upper three bytes and takes the code byte D_801F57CC[cellValue*0x3F + row*9 + col] in the low one. func_801558F0 resolves the same cell and, when it returns a record, func_80155560 attaches that 0x50-byte entry of D_8012D880 with kind 2. Takes no arguments and returns nothing.'
   - - 4072
     - c
-    - dispatchStateByte2Table588cWorld04Area17013_801F3BE8
+    - callStateTable588World04
     - '@source: src/bof3/world/area17013DispatchTables.c'
   - - 4140
     - asm
@@ -115,12 +115,12 @@ segments:
     - '@behavior: Byte-2 state handler, entry 4 of the five-entry handler table based at 0x801F588C. Subtracts 0x10 from the work record halfword at 0x30, stores the truncated halfword and tests it as a signed halfword; while it stays above zero the handler only draws. Once the countdown reaches zero or below, the front-end phase byte D_80143BB0 gates sound cue 0x201 through func_8015DF18 and the record state byte at 0x02 is set to 1 so the next dispatch takes entry 1 at 0x801F3DE8 of the same table. The draw routine at 0x801F40F0 runs on every call; the 0x18-byte frame only keeps ra at 0x10 and the pointer cell is re-read after the cue gate.'
   - - 5360
     - c
-    - drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0
-    - '@source: src/bof3/world/drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0.c'
+    - renderAxisSplitScaled
+    - '@source: src/bof3/world/renderAxisSplitScaled.c'
     - '@behavior: Overlay draw routine of the byte-2 state handlers 0x801F3DE8, 0x801F3F28 and 0x801F4080. Route byte 0x08 of the scratchpad work record at 0x1F800044 selects the bar axis: non-zero fixes all four corner y at ((record halfword 0x3A - 0x80) << 7) | 0x40 and spreads the corners along x, zero fixes all four corner x from the record halfword 0x36 the same way and spreads along y. The spread is the unsigned record halfword 0x30 scaled by one signed byte of D_801F58B8 per packet: corners 0 and 2 take ((axis - 0x7F) << 7) + width + 0x40 and corners 1 and 3 take ((axis - 0x80) << 7) + width - 0x40. Each corner depth is -func_8015477C over ((x + 0x4000) << 9, (y + 0x4000) << 9) halved, minus the record halfword 0x3E, with corners 0 and 1 subtracting a further 0x180. RotTransPers4 projects the four deck vectors into the primitive corners, func_80155560 fills the texture state from 0x25510000 | (0x127 - packet) plus the route byte at bit 21, and func_8014E5A0 appends the 0x28-byte packet to slot 6. One 0x0C-byte draw mode is armed first with the texture depth 0x225 for graph types 1 and 2 and 0x95 otherwise. Takes no arguments, returns nothing and keeps a 0x50-byte frame.'
   - - 6392
     - c
-    - dispatchStateByte2Table58bcWorld04Area17013_801F44F8
+    - callStateTable58World04
     - '@source: src/bof3/world/area17013DispatchTables.c'
   - - 6460
     - c
@@ -129,21 +129,21 @@ segments:
     - '@behavior: Entry 0 of the three-entry byte-2 handler table based at 0x801F58BC, the table the overlay dispatcher at 0x801F44F8 indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044. Reads that state byte, stores zero into the record halfword at 0x30 - the progress value the overlay draw routine at 0x801F4640 uses as its quad''s horizontal origin - and then stores the state byte advanced by one, so the next dispatch takes entry 1 at 0x801F4574. The draw routine at 0x801F4640 then runs with argument 0, the variant flag whose zero keeps its second rendering pass off. Takes no arguments, returns nothing and keeps a 0x18-byte frame holding only the return address.'
   - - 6516
     - c
-    - advanceWorkByte2AndPlayCue200WhenFlag67SetThenDrawWorld04Area17013_801F4574
-    - '@source: src/bof3/world/advanceWorkByte2AndPlayCue200WhenFlag67SetThenDrawWorld04Area17013_801F4574.c'
+    - statePlaySetDraw
+    - '@source: src/bof3/world/statePlaySetDraw.c'
     - '@behavior: Byte-2 state handler gated on flag 0x67 of the shared main-RAM flag bank D_80144F28, which it tests through func_8015B5D4. While the flag is clear the handler only draws. Once it is set, the front-end phase byte D_80143BB0 gates sound cue 0x200 through func_8015DF18 and the record step byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044 is advanced by one so the next dispatch takes the following entry; the pointer cell is re-read after the cue gate. The draw routine at 0x801F4640 then runs with argument 1, the variant flag that enables its second rendering pass, and it runs on every call. The 0x18-byte frame only keeps ra at 0x10.'
   - - 6628
     - asm
     - func_801F45E4
   - - 6720
     - c
-    - drawTwoPassTexturedQuadAtWorkHalfword30WithFlagSelectedDepthWorld04Area17013_801F4640
-    - '@source: src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfword30WithFlagSelectedDepthWorld04Area17013_801F4640.c'
+    - renderPassTexturedDepth
+    - '@source: src/bof3/world/renderPassTexturedDepth.c'
     - '@behavior: Overlay draw routine of the byte-2 state handlers 0x801F453C, 0x801F4574 and 0x801F45E4, run once per frame with a variant flag. It links one 0x0C-byte draw mode and then, in a two-pass loop over the per-pass texture state table D_801F58C8, one 0x28-byte POLY_FT4, both through func_80155A08 with kind 2. The scratchpad vector deck at 0x1F800014 carries the quad: corners 0 and 2 take x = record halfword 0x30 - 0x3BC0 and corners 1 and 3 take x = record halfword 0x30 - 0x3AC0, corners 0 and 1 take y = -0x3880 - (pass << 4) and corners 2 and 3 take y = -0x3880. With the flag set the two depths of each column are -func_8015477C over ((x + 0x4000) << 9, (y + 0x4000) << 9) halved with the second corner of the column adding 0x180 on the first pass, the same distance call being repeated per corner; with the flag clear the first two depths are -0x480, corner 3 depth is -0x300 on the first pass and -0x480 on the second, and corner 2 copies it back out of the deck. RotTransPers4 projects the deck into the packet, func_80155560 fills the texture state from D_801F58C8[pass] with kind 1, and the draw mode uses the shared cursor with dfe 0, dtd 0, the depth chosen by GetGraphType (0x225 for graph types 1 and 2, 0x95 otherwise) and a zero fifth argument. Takes the variant flag and returns nothing; the 0x60-byte frame keeps ra at 0x5C, fp at 0x58 and s0 through s7.'
   - - 7504
     - c
-    - setStatusFFFFAndStateEntry25Progress5WhenGateClearWorld04Area17013_801F4950
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntry25Progress5WhenGateClearWorld04Area17013_801F4950.c'
+    - stateStatusGateClear
+    - '@source: src/bof3/world/stateStatusGateClear.c'
     - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is zero, runs the shared front-end startup helper at 0x8015C088 and then requests state entry 0x25 through the shared state byte at 0x801448EB with progress 5 in the shared byte at 0x801448EC. The gate read with lb is hoisted above the status store, the 0x18-byte frame only keeps ra across the helper call, and the gate-clear path falls through its two byte stores into the epilogue.'
   - - 7588
     - c
@@ -157,8 +157,8 @@ segments:
     - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is zero, runs the shared front-end startup helper at 0x8015C088 and then requests state entry 0x25 through the shared state byte at 0x801448EB with progress 0x19 in the shared byte at 0x801448EC. The gate read with lb is hoisted above the status store, the 0x18-byte frame only keeps ra across the helper call, and the gate-clear path falls through its two byte stores into the epilogue.'
   - - 7756
     - c
-    - setStatusFFFFAndByte801448EC37IfGateElse34World04Area17013_801F4A4C
-    - '@source: src/bof3/world/setStatusFFFFAndByte801448EC37IfGateElse34World04Area17013_801F4A4C.c'
+    - stateStatusGateElse34
+    - '@source: src/bof3/world/stateStatusGateElse34.c'
     - '@behavior: Loads the shared gate byte D_801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x37 into the shared state byte D_801448EC while the gate byte is nonzero and 0x34 when it is zero.'
   - - 7804
     - c
@@ -171,16 +171,16 @@ segments:
     - '@behavior: Clears bits 0x0010 and 0x1000 of the shared world-flags halfword D_80146258 with one halfword read-modify-write: folded lui/lhu load, empty load delay slot, andi 0xEFEF, halfword store back through a re-materialised lui $at base; takes no arguments, returns nothing and keeps no frame.'
   - - 7868
     - c
-    - replaceStateEntry33With25AndDrawBannerAndQueueCue20COnCrossedFrontSideWorld04Area17013_801F4ABC
-    - '@source: src/bof3/world/replaceStateEntry33With25AndDrawBannerAndQueueCue20COnCrossedFrontSideWorld04Area17013_801F4ABC.c'
+    - replaceBannerCrossedSide
+    - '@source: src/bof3/world/replaceBannerCrossedSide.c'
     - '@behavior: Overlay step handler in two parts. It remaps the shared front-end state-entry request byte D_801448EB: while that byte holds 0x33 it is replaced by 0x25, and any other value is left alone. It then runs the overlay banner routine at 0x801F3994 unconditionally. The cue is the last part: when the staged front-side byte D_80143F06 reads 2 with the live byte D_80143F03 reading 1, or when the staged byte reads 3 with the live byte reading 2, the handler requests frontend cue 0x20C through the shared dispatcher at 0x8015DF18. The staged byte is reloaded for the second pair. Takes no arguments and returns nothing; the 0x18-byte frame only keeps ra at 0x10.'
   - - 8024
     - asm
     - func_801F4B58
   - - 10148
     - c
-    - startStateEntry25Progress0AOr14Or32Or3COr0WhenFrontSidePackedArgRangesWorld04Area17013_801F53A4
-    - '@source: src/bof3/world/startStateEntry25Progress0AOr14Or32Or3COr0WhenFrontSidePackedArgRangesWorld04Area17013_801F53A4.c'
+    - audioSidePackedRanges
+    - '@source: src/bof3/world/audioSidePackedRanges.c'
   - - 10904
     - asm
     - func_801F5698
@@ -191,8 +191,8 @@ segments:
     - '@behavior: Overlay flag raiser of the byte-2 state machine. It materializes the shared main-RAM flag bank D_80144F28 as a lui/addiu $a0 pair and sets flag 0x67 through the EXE-side flag setter func_8015B580, with 0x67 in the jal delay slot. The in-image consumer is the byte-2 state handler at 0x801F4574 of this same overlay, which tests the same flag of the same bank through func_8015B5D4 and advances the record state byte once the flag is set, so this body arms the condition that handler waits on. Takes no arguments, returns nothing, reads no other state, and the 0x18-byte frame only keeps ra at 0x10 across the setter call.'
   - - 11016
     - c
-    - raiseFlag79WhenClearWithRecord4BQueueCue106OrCue3ThenRunFrontEndStepDAndSetFrontEndPhase2World04Area17013_801F5708
-    - '@source: src/bof3/world/raiseFlag79WhenClearWithRecord4BQueueCue106OrCue3ThenRunFrontEndStepDAndSetFrontEndPhase2World04Area17013_801F5708.c'
+    - raiseQueueRunEnd
+    - '@source: src/bof3/world/raiseQueueRunEnd.c'
     - '@behavior: Front-end request of this overlay tail group. Keeps the scratchpad work pointer cell 0x1F800044 in a callee-saved register and writes it back at the end. While flag 0x79 of the main-RAM flag bank D_80144F28 is clear and the shared record gate func_801650B4 reports record 0x4B of family 1, it sets flag 0x79 through func_8015B580, requests resource 1 through func_8014D6B8, requests front-end entry action 0x22 through func_80150224 and queues sound cue 0x106 through func_8015DF18; every other case hands cue id 3 to the main-executable cue dispatcher func_80150284. Both arms then run the shared front-end helper func_801BE1B0 with the step selector 0xD, set the front-end phase byte D_80143BB0 to 2 and write the saved work pointer back. Takes no arguments and returns nothing; the 0x20-byte frame keeps s0, s1 and ra.'
   - - 11196
     - textbin

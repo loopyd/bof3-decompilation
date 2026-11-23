@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte2Table0564PlcharPlp67800_801CE404
-    - '@source: src/bof3/plchar/dispatchWorkByte2Table0564PlcharPlp67800_801CE404.c'
+    - callWorkTable0564Plchar
+    - '@source: src/bof3/plchar/callWorkTable0564Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D0564.'
   - - 72
     - asm
@@ -41,13 +41,13 @@ segments:
     - invokeHelperPlcharPlp67800_801CE610
   - - 560
     - c
-    - dispatchWorkByte2Table0570PlcharPlp67800_801CE630
-    - '@source: src/bof3/plchar/dispatchWorkByte2Table0570PlcharPlp67800_801CE630.c'
+    - callWorkTable0570Plchar
+    - '@source: src/bof3/plchar/callWorkTable0570Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D0570.'
   - - 628
     - c
-    - dispatchWorkByte3Table0578PlcharPlp67800_801CE674
-    - '@source: src/bof3/plchar/dispatchWorkByte3Table0578PlcharPlp67800_801CE674.c'
+    - callWorkTable0578Plchar
+    - '@source: src/bof3/plchar/callWorkTable0578Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D0578.'
   - - 696
     - c
@@ -80,8 +80,8 @@ segments:
     - '@behavior: Claims one free row of the shared 0x74-byte front-end record table at 0x80143FC8 through the allocator func_8019601C and seeds it from a caller-supplied position pair. The body masks the allocator answer to a byte and, unless that byte is 0xFF, scales it by the row stride and writes the row: row byte 5 takes the handler selector 0x34, row word 0x34 takes the first signed coordinate shifted left 16, row byte 0 takes the occupancy flag 1, row byte 1 takes the caller state byte and row word 0x38 takes the second coordinate the same way, so the pair lands in signed 16.16 form; row halfword 0x3E then takes the shared distance helper func_8015477C answer for that re-read word pair plus 0x200 and row byte 0x0B takes 1, while a full table leaves every row untouched. The five jal sites 0x801CEC90, 0x801CECB8, 0x801CECE8, 0x801CED18 and 0x801CEDB4 in the still-unlifted map cell claim handler func_801CEC28 of this payload pass entry states 0, 4, 0, 3 and 2 with one narrowed halfword pair and a fourth byte argument this body never reads, so only the first three argument registers are named. The roles of row byte 0x0B, of the plus 0x200 bias and of the caller state byte are not established, so the name describes the effect.'
   - - 2848
     - c
-    - dispatchWorkByte3Table058cPlcharPlp67800_801CEF20
-    - '@source: src/bof3/plchar/dispatchWorkByte3Table058cPlcharPlp67800_801CEF20.c'
+    - callWorkTable058Plchar
+    - '@source: src/bof3/plchar/callWorkTable058Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D058C.'
   - - 2916
     - c
@@ -97,7 +97,7 @@ segments:
     - c
     - clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp67800_801CF108
     - '@source: src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp67800_801CF108.c'
-    - '@behavior: Work byte 3 == 2 step of this overlay: it is the word 0x801CF108 at 0x801D0594, index 2 of the code-pointer run based at 0x801D058C, which this target dispatcher dispatchWorkByte3Table058cPlcharPlp67800_801CEF20 indexes from that base by work byte 3 scaled by four, so it takes no arguments and any result is discarded. It reads the work record published at the scratchpad pointer cell 0x1F800044, takes unsigned byte 0x0B of that record as the byte offset of a row in the shared 0x74-byte front-end record table at 0x80143FC8, scales the byte to 0x74 bytes through the multiply-and-add chain of the original, and enters its body when row byte 0 reads 0 (the record is still free) or row byte 1 reads 1, provided the shared gate byte 0x80149332 reads zero. The body then clears work byte 0x2B and the state byte at 0x12B of the record published at 0x80146250, and both paths run the shared no-argument update helper func_8014D978. The roles of work byte 0x2B, of row byte 1, of the gate byte and of the 0x12B state byte in this overlay are not established, so they stay address-anchored. The pointer-cell load precedes frame creation and is not repeated after the lookups, the 0x18-byte frame only keeps $ra at 0x10 across the call, and the delay slots after the index byte, after row byte 1, at the untaken test of row byte 1, at the branch that skips the clear, at the call and at the return stay nops. No jal in this payload names 0x801CF108 and its only in-image word is that handler-run entry, so the work-byte-3 dispatch is its caller and its own return path places the boundary.'
+    - '@behavior: Work byte 3 == 2 step of this overlay: it is the word 0x801CF108 at 0x801D0594, index 2 of the code-pointer run based at 0x801D058C, which this target dispatcher callWorkTable058Plchar indexes from that base by work byte 3 scaled by four, so it takes no arguments and any result is discarded. It reads the work record published at the scratchpad pointer cell 0x1F800044, takes unsigned byte 0x0B of that record as the byte offset of a row in the shared 0x74-byte front-end record table at 0x80143FC8, scales the byte to 0x74 bytes through the multiply-and-add chain of the original, and enters its body when row byte 0 reads 0 (the record is still free) or row byte 1 reads 1, provided the shared gate byte 0x80149332 reads zero. The body then clears work byte 0x2B and the state byte at 0x12B of the record published at 0x80146250, and both paths run the shared no-argument update helper func_8014D978. The roles of work byte 0x2B, of row byte 1, of the gate byte and of the 0x12B state byte in this overlay are not established, so they stay address-anchored. The pointer-cell load precedes frame creation and is not repeated after the lookups, the 0x18-byte frame only keeps $ra at 0x10 across the call, and the delay slots after the index byte, after row byte 1, at the untaken test of row byte 1, at the branch that skips the clear, at the call and at the return stay nops. No jal in this payload names 0x801CF108 and its only in-image word is that handler-run entry, so the work-byte-3 dispatch is its caller and its own return path places the boundary.'
   - - 3492
     - c
     - testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp67800_801CF1A4
@@ -105,8 +105,8 @@ segments:
     - '@behavior: Step test of the front-end work object read through the scratchpad pointer cell 0x1F800044, run by the work byte 3 == 0 step of this payload at 0x801CE6B8 from the two plain jal sites 0x801CE6E0 and 0x801CE710, each with nothing set up in the argument registers and each reading the answer as an unsigned byte; the two jal words are its only in-image occurrences, so no code-pointer word of this payload holds its address. It projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by work route byte 0x08 to the work words 0x34 and 0x38 and hands that pair to the slot search func_801BDE14 at range 0, so the answer starts at one when the search reports any slot rather than -1; the no-argument test func_801B5AE4 raises it to one again when it reports anything other than -1; and the body then probes the map code of the projected cell through func_80166CB0 and raises the answer to one when a code reads 0xF0, 0xF1, 0xF4, 0xF6 or 0xF7, the projected cell always, the cell one column further whenever the low half of the first projected word is nonzero and the cell one row further whenever the low half of the second projected word is nonzero. The source spells that code run as five equalities and the original folds them into three tests, (code + 0x10) & 0xFF below 2, the code byte 0xF4 alone and (code + 0xA) & 0xFF below 2. The body returns the answer as an unsigned byte and takes no arguments, the range constant 0 is materialised before the projection tables are read, and the 0x20-byte frame keeps $ra at 0x1C and $s2, $s1 and $s0 at 0x18, 0x14 and 0x10 across the four calls. The roles of the map codes, of the work-record slot search and of the helper test are not established, so they stay address-anchored. The span is byte-identical to the exact lifts at plp349 0x801CF184, plp016 0x801D02A0, plp034 0x801CFEAC, plp056 0x801D04C8, plp267 0x801CF99C and plp567 0x801CF7A0 and to the still-unlifted copies at plp026 0x801D06C4 and plp467 0x801CF3C0.'
   - - 3912
     - c
-    - claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348
-    - '@source: src/bof3/plchar/claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348.c'
+    - claimLayerPositionsLayer
+    - '@source: src/bof3/plchar/claimLayerPositionsLayer.c'
     - '@behavior: Two-layer position refresh reached by the two plain jal sites 0x801CE744 of the work-byte-3 step at 0x801CE6B8 and 0x801CEF6C of the step at 0x801CEF64, both with nothing set up in the argument registers and neither reading $v0, so the body takes no arguments. It claims work byte 0x2B with 1, then probes the work point read through the scratchpad pointer cell 0x1F800044 by adding the layer offset words 0x80181BAC/0x80181BB0 to the work words 0x34/0x38 and asking the shared route-parameterised position routine func_80154F78 for that point with route 3, then repeats the probe with the pair 0x80181BBC/0x80181BC0 and route 5. For each probe, while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed sample is at least 0x41, it asks the shared screen-space routine func_80154F28 for the same point and clears work byte 0x2B when the signed reference halfword 0x3E is below that answer, so a probed layer that sits in front releases the claim; the second probe runs whether or not the first released it. The roles of work byte 0x2B, of the two layer offset pairs and of the gate byte are not established, so the name describes the effect. The span is byte-identical to the exact plp026 lift at 0x801D0868 and to the still-unmatched span at 0x801CF564 of plp467, the 0x20-byte frame only keeps $ra at 0x18 across the calls, and the reference halfword 0x3E is re-read through a fresh pointer load rather than kept in a register.'
   - - 4268
     - c

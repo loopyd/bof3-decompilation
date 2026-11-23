@@ -33,11 +33,11 @@ extern s32 D_80147A90; /* @source 0x80147A90 @kind data */
 extern s32 D_80147AC4; /* @source 0x80147AC4 @kind data */
 
 /* Draw request of this payload at 0x801F5190, lifted in
- * claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190.c:
+ * claimEndPointPair.c:
  * it takes two 16.16 points and queues the record pair that spans them. It is
  * declared with a word result here because the original narrows the answer of
  * the stage it delegates to, not this one. */
-s32 claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
+s32 claimEndPointPair(
     s32 x0, s32 y0, s32 x1, s32 y1);
 
 /* Stage of this payload at 0x801F504C, lifted in
@@ -148,7 +148,7 @@ u8 drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area1451
     my = limit;
   }
   y = *(s32*)((u8*)&D_80147A90 + off) + dy * (u16)my;
-  claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
+  claimEndPointPair(
       *(s32*)((u8*)&D_80147A8C + off), *(s32*)((u8*)&D_80147A90 + off), x, y);
   if (t < stage->length) {
     return 1;

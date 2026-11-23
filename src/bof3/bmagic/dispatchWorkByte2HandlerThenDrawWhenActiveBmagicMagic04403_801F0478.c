@@ -20,9 +20,9 @@ extern void (*D_801F0A2C[])(void); /* @source 0x801F0A2C @kind data */
  * SetSemiTrans and draws a translucent textured quad. It was still unlifted
  * when this body was seeded and kept its raw name then; it has since been
  * lifted to exact as
- * drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimesBytes5d5e5fBmagicMagic04403_801F06D8
+ * renderTexturedScaledTimes
  * at the same address, so only this declaration changed here. */
-void drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimesBytes5d5e5fBmagicMagic04403_801F06D8(
+void renderTexturedScaledTimes(
     void);
 
 /* @source 0x801F0478
@@ -33,7 +33,7 @@ void drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByW
  * original does not check the index. When the handler returns, the pointer cell
  * is read again in a second load; if the work object's byte at offset 0x0 and
  * its byte at offset 0x2 are both non-zero it calls this overlay's quad emitter
- * drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimesBytes5d5e5fBmagicMagic04403_801F06D8.
+ * renderTexturedScaledTimes.
  * The two pointer reads are separate locals because the
  * original materializes the cell twice, before and after the indirect call, and
  * the intervening call is what invalidates the first value. The two guards are
@@ -51,6 +51,6 @@ void dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478(void) {
   D_801F0A2C[stepWork[2]]();
   gateWork = g_battle_work;
   if (gateWork[0] != 0 && gateWork[2] != 0) {
-    drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimesBytes5d5e5fBmagicMagic04403_801F06D8();
+    renderTexturedScaledTimes();
   }
 }

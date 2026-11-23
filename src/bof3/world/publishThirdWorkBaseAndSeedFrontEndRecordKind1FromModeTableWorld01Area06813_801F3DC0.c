@@ -34,7 +34,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * @residual none
  *
  * Shape notes from the original bytes: this 0x80-byte body differs from the
- * exact sibling publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area06813_801F3A98
+ * exact sibling publishThirdBaseSeed
  * at 0x801F3A98 in this same payload, and from
  * publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06813_801F3D40
  * at the preceding run entry 0x801F3D40, in exactly the two shipped bytes that

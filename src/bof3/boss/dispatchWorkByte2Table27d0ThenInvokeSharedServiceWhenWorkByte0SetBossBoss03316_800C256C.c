@@ -37,7 +37,7 @@ void func_8014D290(void);
  * 0x18-byte frame only keeps $ra at 0x10 across the calls, and this shim
  * returns whatever the guard leaves in $v0. The run word at 0x800C27B0 holds
  * this functions own address, so it is entry 1 of the byte-1 handler run based
- * at 0x800C27AC that dispatchStateByte1Table27acBossBoss03316_800C1E2C
+ * at 0x800C27AC that callStateTable27Boss
  * indexes. Same shape as the exact sibling
  * dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0Set
  * BossBoss03316_800C1E70, whose only differing instruction is the scaled table

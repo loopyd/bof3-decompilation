@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte2Tablefd80PlcharPlp01200_801CE404
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefd80PlcharPlp01200_801CE404.c'
+    - callWorkTablefd80Plchar
+    - '@source: src/bof3/plchar/callWorkTablefd80Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFD80 with no arguments, discarding any result. Entry 0 of that run is 0x801CE448 and the original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. Its only in-image reference is its own address at entry 0 of the six-word pointer run at 0x801CFDC0, so no jal in this payload names it and it takes no arguments.'
   - - 72
     - asm
@@ -40,8 +40,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 1 of the sixteen-word code-pointer run at 0x801CFD80 that the work-byte-2 dispatcher indexes: when the current route index byte 0x08 already equals the chosen candidate index byte 0x03 the walk has arrived, so it requests the resource named by work byte 0x04 through the shared helpers func_8014D6DC with the resource 0x50 and the count 2 while byte 0x04 reads 0x50 and through func_8014D6B8 with byte 0x04 otherwise, then increments the step counter byte 0x02; on every other entry it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks that index into the eight-entry window with 7 and selects the resulting sequence through func_8014D8D4'
   - - 812
     - c
-    - dispatchWorkByte2Tablefd8cPlcharPlp01200_801CE72C
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefd8cPlcharPlp01200_801CE72C.c'
+    - callWorkTablefd8Plchar
+    - '@source: src/bof3/plchar/callWorkTablefd8Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2, entry 3 of the six-word pointer run at 0x801CFDC0 that the halfword-0x2C dispatcher at 0x801CFD3C indexes, so no jal in this payload names it: it loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFD8C with no arguments, discarding any result. That base is entry 3 of the sixteen-word run at 0x801CFD80, so index 0 reaches 0x801CE770. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call.'
   - - 880
     - c
@@ -60,8 +60,8 @@ segments:
     - '@behavior: Work-step handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only through entry 5 of the sixteen-word code-pointer run based at 0x801CFD80; no jal in this payload names it. It dispatches on the unsigned work byte 0x0B and keeps one done flag in a callee-saved register across the calls: on zero it polls the shared readiness helper func_8014DAEC and reports done as soon as that helper answers nonzero, on one it polls the same helper and then passes the work byte 0x08 to the shared resource request helper func_8014D6B8 and writes 2 into byte 0x0B so the next dispatch takes the third arm while never reporting done, and on every other value it runs the shared no-argument update helper func_8014D978 and reports done whenever the local state byte 0x80143BB0 reads zero. When the one flag is set the handler clears the work-object byte 0x2B and then the state byte 0x12B of the front-end record published at 0x80146250, re-reading both pointer cells for the stores. It takes no arguments, returns nothing, and every arm joins on one epilogue of a 0x18-byte frame that keeps $ra at 0x14 and the flag register at 0x10.'
   - - 2332
     - c
-    - claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01200_801CED1C
-    - '@source: src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01200_801CED1C.c'
+    - claimSizeItemName
+    - '@source: src/bof3/plchar/claimSizeItemName.c'
     - '@behavior: Map cell claim helper of this front-end payload, called only by func_801CEA94 and absent from the sixteen-word handler run based at 0x801CFD80. It narrows both arguments to the signed cell pair that the map probe and the record claim take and asks the shared map probe func_80166CB0 for the one-byte code of that cell. For the code 0xF2 it asks the shared allocator func_8019601C for a free front-end record and, unless that answer is 0xFF, claims one record with state 0 at the cell through func_801CEF14, rolls rand() and keeps the low four bits; a roll below 0xD stops there, from 0xD on the size starts at 5 and drops to 2 for the rolls 0xD and 0xE only, and when flag bits 1 and 2 of 0x80143F02 are set a second rand() masked to two bits expands that size to ten times its truncated byte on a zero answer, after which the body hands the size to func_801B5E58 and claims a second record with state 1 at the same cell. Every path that claimed a record stores 1 into work byte 0xB of the object read through 0x1F800044. For the code 0xF8 it claims one record with state 0 at the cell, copies the twelve-byte name that func_80165D48 answers for entry 0 of stream 0x56 into 0x801490D8, clears the terminator 0x801490E4, and takes the cue selector 2 after queueing cue 0x106 through func_8015DF18 when func_801650B4 reports that entry as set and the selector 3 otherwise, dispatches the selector through func_80150284, marks the local state byte 0x80143BB0 busy with 2 and stores 1 into work byte 0xB. Any other cell code returns 0 without touching state. Both claiming paths end by handing the original pair to func_801553B8 and return 1, so the caller only makes its second attempt when no record was claimed.'
   - - 2836
     - asm
@@ -73,8 +73,8 @@ segments:
     - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp01200_801CE770 in this payload: it projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1, then probes the map code of the projected cell through func_80166CB0, the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero and the cell one row further whenever the low half of the second projected word is nonzero, each probe raising the answer to one when the code reads 0xF2, and returns that answer as an unsigned byte without taking arguments.'
   - - 3372
     - c
-    - dispatchWorkByte2Tablefd98PlcharPlp01200_801CF12C
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefd98PlcharPlp01200_801CF12C.c'
+    - callWorkTablefd98Plchar
+    - '@source: src/bof3/plchar/callWorkTablefd98Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFD98 with no arguments, discarding any result. That base is entry 6 of the sixteen-word handler run at 0x801CFD80, so index 0 reaches 0x801CF170 and the entries it can reach are 0x801CF170, 0x801CF23C, the shared main-executable handler 0x801B2D54, 0x801CF37C, 0x801CF494, 0x801CF544, 0x801CF610, 0x801B2D54, 0x801CF750 and 0x801CF938. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names it: the loader enters it through the word 0x801CF12C at 0x801CFDC4, entry 1 of the six-word pointer run at 0x801CFDC0, which the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
   - - 3440
     - c
@@ -83,13 +83,13 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: it compares the distance from the route index byte 0x08 to the candidate route indices 1 and 7, asks the shared helper func_801B2D00 for the step sign towards the closer candidate and stores that answer in byte 0x0B, both paths then storing the chosen candidate itself in byte 0x03 through one shared store; the body closes by setting the countdown byte 0x09 to 2 and incrementing the step counter byte 0x02.'
   - - 3644
     - c
-    - selectArrivalSequence40ForRouteOneAnd41ForRouteSevenAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CF23C
-    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteOneAnd41ForRouteSevenAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CF23C.c'
+    - selectArrivalSevenReached
+    - '@source: src/bof3/plchar/selectArrivalSevenReached.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: when the route index byte 0x08 equals the chosen candidate byte 0x03 the walk has arrived, so the body selects that route arrival sequence through the shared helper func_8014D8D4, sequence 0x40 for route 1 and 0x41 for route 7 and none for any other route, then increments the step counter byte 0x02; otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks it into the eight-entry window with 7 and selects the sequence of the new route index through the same helper.'
   - - 3896
     - c
-    - dispatchWorkByte2Tablefda4PlcharPlp01200_801CF338
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefda4PlcharPlp01200_801CF338.c'
+    - callWorkTablefda4Plchar
+    - '@source: src/bof3/plchar/callWorkTablefda4Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFDA4 with no arguments, discarding any result. That base is entry 9 of the sixteen-word handler run at 0x801CFD80, so index 0 reaches 0x801CF37C and the entries it can reach are 0x801CF37C, 0x801CF494, 0x801CF544, 0x801CF610, the shared main-executable handler 0x801B2D54, 0x801CF750 and 0x801CF938. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names it: the loader enters it through the word 0x801CF338 at 0x801CFDD0, entry 4 of the six-word pointer run at 0x801CFDC0, which the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
   - - 3964
     - asm
@@ -101,8 +101,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: it reads the record index from work byte 0x0B and looks that row up in the shared 0x74-byte front-end record table at 0x80143FC8, scaling the index by the row size. When the selected row byte 0 reads 0 -- the record is still free, since every seeder of this table stores 1 there -- it clears the state byte at 0x12B of the record published at 0x80146250. Both paths then run the shared no-argument update helper func_8014D978, and the body writes no other state; the pointer-cell load precedes frame creation and the 0x18-byte frame only keeps $ra at 0x10 across the call. No jal in this payload names it: its only reference is the word 0x801CF494 at 0x801CFDA8, entry 10 of the sixteen-word handler run at 0x801CFD80, which the work-byte-2 dispatchers based at 0x801CFD98 and 0x801CFDA4 reach at index 4 and index 1, so it takes no arguments.'
   - - 4352
     - c
-    - dispatchWorkByte2TablefdacPlcharPlp01200_801CF500
-    - '@source: src/bof3/plchar/dispatchWorkByte2TablefdacPlcharPlp01200_801CF500.c'
+    - callWorkTablefdacPlchar
+    - '@source: src/bof3/plchar/callWorkTablefdacPlchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFDAC with no arguments, discarding any result. That base is entry 11 of the sixteen-word handler run at 0x801CFD80, so index 0 reaches 0x801CF544 and the entries it can reach are 0x801CF544, 0x801CF610, the shared main-executable handler 0x801B2D54, 0x801CF750 and 0x801CF938. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names it: the loader enters it through the word 0x801CF500 at 0x801CFDC8, entry 2 of the six-word pointer run at 0x801CFDC0, which the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
   - - 4420
     - asm
@@ -114,25 +114,25 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: when the route index byte 0x08 equals the chosen candidate byte 0x03 the walk has arrived, so the body selects that route arrival sequence through the shared helper func_8014D8D4, sequence 0x41 for route 3 and 0x40 for route 5 and none for any other route, then increments the step counter byte 0x02; otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks it into the eight-entry window with 7 and selects the sequence of the new route index through the same helper.'
   - - 4876
     - c
-    - dispatchWorkByte2Tablefdb8PlcharPlp01200_801CF70C
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefdb8PlcharPlp01200_801CF70C.c'
+    - callWorkTablefdb8Plchar
+    - '@source: src/bof3/plchar/callWorkTablefdb8Plchar.c'
     - '@behavior: Overlay step dispatch on the work-record byte 2, the work step counter: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFDB8 with no arguments, discarding any result. That base is entry 14 of the sixteen-word run at 0x801CFD80, so index 0 reaches 0x801CF750 and the eight-entry window crosses into the next reviewed row, reaching 0x801CF750, 0x801CF938, 0x801CE404, 0x801CF12C, 0x801CF500, 0x801CE72C, 0x801CF338 and 0x801CF70C. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. No jal in this payload names it: the loader enters it through the word 0x801CF70C at 0x801CFDD4, entry 5 of the six-word pointer run at 0x801CFDC0 that the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
   - - 4944
     - c
-    - commitProjectedFrontEndRecordQueueCueAndAdvanceStepElseClaimWorkSlotAndClearState12BPlcharPlp01200_801CF750
-    - '@source: src/bof3/plchar/commitProjectedFrontEndRecordQueueCueAndAdvanceStepElseClaimWorkSlotAndClearState12BPlcharPlp01200_801CF750.c'
-    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only through the eight-word pointer run based at 0x801CFDB8 that dispatchWorkByte2Tablefdb8PlcharPlp01200_801CF70C indexes with the work step counter byte 0x02; this body is word 0 of that run and no jal in this payload names it. It asks the record lookup func_801CF9A8 for the front-end record that holds the projected work position and masks the answer into an unsigned index byte. With no record found (index 0xFF) it projects the work words 0x34 and 0x38 by the route-selected and doubled offsets of 0x80181B94 and 0x80181B98 and, unless bit 0 of byte 0x12C of the record published at 0x80146250 is set, hands that pair to the slot search func_801BDE14 with range 1 and raises bit 0 of the animation byte 0x74 of the found work record through the column base 0x801468FC and stride 0x98. With a record found it commits only when neither the record position test func_801CFB0C nor its projected position test func_801CFBDC reports a work position: it seeds row byte 0x0B through the base 0x80143FD3 and row stride 0x74, queues cue halfword 0x2C plus 0x100 through func_8015DF18, selects sequence route byte 0x08 plus 8 through func_8014D8D4, sets the shared work mode byte 0x11C to 2 and raises bit 0x1000 of the halfword 0x80146258, runs the shared update func_801C24D0, decrements work byte 0x09 and runs the work advance step func_801B0DFC, writes 1 into state byte 0x12B of that record and increments the step counter byte 0x02. Every other path clears state byte 0x12B.'
+    - commitProjectedCueSlot
+    - '@source: src/bof3/plchar/commitProjectedCueSlot.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only through the eight-word pointer run based at 0x801CFDB8 that callWorkTablefdb8Plchar indexes with the work step counter byte 0x02; this body is word 0 of that run and no jal in this payload names it. It asks the record lookup func_801CF9A8 for the front-end record that holds the projected work position and masks the answer into an unsigned index byte. With no record found (index 0xFF) it projects the work words 0x34 and 0x38 by the route-selected and doubled offsets of 0x80181B94 and 0x80181B98 and, unless bit 0 of byte 0x12C of the record published at 0x80146250 is set, hands that pair to the slot search func_801BDE14 with range 1 and raises bit 0 of the animation byte 0x74 of the found work record through the column base 0x801468FC and stride 0x98. With a record found it commits only when neither the record position test func_801CFB0C nor its projected position test func_801CFBDC reports a work position: it seeds row byte 0x0B through the base 0x80143FD3 and row stride 0x74, queues cue halfword 0x2C plus 0x100 through func_8015DF18, selects sequence route byte 0x08 plus 8 through func_8014D8D4, sets the shared work mode byte 0x11C to 2 and raises bit 0x1000 of the halfword 0x80146258, runs the shared update func_801C24D0, decrements work byte 0x09 and runs the work advance step func_801B0DFC, writes 1 into state byte 0x12B of that record and increments the step counter byte 0x02. Every other path clears state byte 0x12B.'
   - - 5432
     - asm
     - func_801CF938
   - - 5544
     - c
-    - findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp01200_801CF9A8
-    - '@source: src/bof3/plchar/findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp01200_801CF9A8.c'
+    - queryIndexProjectedPosition
+    - '@source: src/bof3/plchar/queryIndexProjectedPosition.c'
     - '@behavior: Finds the index of the first front-end record whose stored position matches the projected work-area position: the record published at 0x80146250 must report state byte 0x79 == 2 with bit 0 of byte 0x12C clear, the work area read through the scratchpad pointer cell 0x1F800044 supplies the route byte at 0x08 that selects the movement offsets at 0x80181B94 and 0x80181B98 added to its words at 0x34 and 0x38, and the twenty 0x74-byte rows of 0x80143FC8 with nonzero byte 0 and byte 5 == 0x30 are each passed with that projected pair, the work halfword at 0x3E as a signed reference, the range 1 and the row address to the shared gate matchesProjectedWorkBounds, the row index being returned as a signed byte when the gate matches and the row word at 0x80143FFC or 0x80144000 equals the work word at 0x34 or 0x38, and -1 otherwise'
   - - 5900
     - c
-    - testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFB0C
+    - checkPositionAgainstRecords
   - - 6108
     - c
     - testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFBDC

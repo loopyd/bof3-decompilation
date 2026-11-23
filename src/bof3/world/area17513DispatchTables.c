@@ -14,7 +14,7 @@ extern void (*D_801F460C[])(void); /* @source 0x801F460C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table45ecWorld04Area17513_801F2C18, D_801F45EC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable45World04, D_801F45EC);
 
 /* @source 0x801F31E4
  * @behavior Reads the non-volatile scratchpad work-object pointer cell at
@@ -26,7 +26,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table45ecWorld
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerWorld04Area17513_801F31E4, D_801F45F8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkHandlerWorld04, D_801F45F8);
 
 /* @source 0x801F352C
  * @behavior Reads the non-volatile scratchpad work-object pointer cell at
@@ -39,4 +39,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerWorld04A
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1Table460cWorld04Area17513_801F352C, D_801F460C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkTable460World04, D_801F460C);

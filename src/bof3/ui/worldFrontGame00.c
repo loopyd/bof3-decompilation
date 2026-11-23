@@ -10,7 +10,7 @@
 void updateStateMachine(void) {
   u32* counter;
 
-  dispatchScenarioHandlerAndState();
+  callScenarioHandlerState();
   func_801991B8();
 
   switch (D_80143BB0) {
@@ -102,7 +102,7 @@ void updateStateMachine(void) {
  */
 void dispatchWorldUpdate(void) {
   if (D_80143B92 == 0) {
-    adjustPairedValuesFromMask();
+    adjustPairedValuesMask();
   } else {
     updateWorldPosition();
   }
@@ -116,5 +116,5 @@ void dispatchWorldUpdate(void) {
  * @residual none
  */
 void updateWorld(void) {
-  adjustPairedValuesFromMask();
+  adjustPairedValuesMask();
 }

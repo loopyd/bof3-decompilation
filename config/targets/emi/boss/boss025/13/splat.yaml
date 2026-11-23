@@ -30,13 +30,13 @@ segments:
     - D_800C1804
   - - 148
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2AndSeedMode1aBattlerAndSharedFieldsBossBoss02513_800C1894
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2AndSeedMode1aBattlerAndSharedFieldsBossBoss02513_800C1894.c'
+    - publishDataBattlerFields
+    - '@source: src/bof3/boss/publishDataBattlerFields.c'
     - '@behavior: Entry setup of this overlay work state machine, entry 0 of the 0x800C319C state run. Publishes the data row pointer 0x800C3174 into work record +0xEC, the indexed dispatcher 0x800C1A68 into +0xE4 and the in-row pointer 0x800C318C into +0xE8, stores 2 into the work record state byte at +1 and calls the shared helper 0x8014D978; when the battle mode byte 0x801462EA holds 0x1A it also applies the class template of the class record keyed 0x59 to battler 0, stores 1 at work byte +0x7F and 0x1E at +0xF0, and copies the shared halfword run 0x80144E00, 0x80144E04 and 0x80144E06 into the record +0x94 and the +0xA0/+0xC0 runs.'
   - - 380
     - c
-    - dispatchStateByte2Table31ccBossBoss02513_800C197C
-    - '@source: src/bof3/boss/dispatchStateByte2Table31ccBossBoss02513_800C197C.c'
+    - callStateTable31Boss
+    - '@source: src/bof3/boss/callStateTable31Boss.c'
     - '@behavior: Second-level overlay dispatch on the work record byte at offset 2. Loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the handler run from its word 12 at 0x800C31CC with no arguments; the original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps the return address at 0x10 across the indirect call, and the slots after the index byte and after the table load stay nops. The only in-image reference is the pointer word at 0x800C31B4, this address as word 6 of the same 0x800C319C run, and the payload holds no jal naming it, so the overlay stepper that walks the run is its caller. Same body as the exact sibling dispatcher at 0x800C1EC8 of this overlay; their 0x44-byte spans are equal apart from the table word of the scaled load at 0x800C19A0.'
   - - 448
     - asm
@@ -52,8 +52,8 @@ segments:
     - noopHandlerBossBoss02513_800C1AF8
   - - 768
     - c
-    - completeFrontendModeEntryWhenGateClearBossBoss02513_800C1B00
-    - '@source: src/bof3/boss/completeFrontendModeEntryWhenGateClearBossBoss02513_800C1B00.c'
+    - completeFrontendEntryGate
+    - '@source: src/bof3/boss/completeFrontendEntryGate.c'
     - '@behavior: Pending frontend-mode entry retire of this overlay handler run at 0x800C1B00. Returns unless bit 0x2 of the shared battle flag halfword 0x801462E8 is set and the global gate halfword 0x80143C40 reads zero; then strips the 0x40 flag of owner record 0 through func_800AC844, clears the shared effect-bank byte 0x8014832E and clears bit 0x2 of 0x801462E8.'
   - - 876
     - c
@@ -64,8 +64,8 @@ segments:
     - func_800C1BB0
   - - 1132
     - c
-    - dispatchStateByte2Table3220BossBoss02513_800C1C6C
-    - '@source: src/bof3/boss/dispatchStateByte2Table3220BossBoss02513_800C1C6C.c'
+    - callStateTable3220Boss
+    - '@source: src/bof3/boss/callStateTable3220Boss.c'
     - '@behavior: Overlay state dispatch on work-record byte 2. Loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the six-word handler table at 0x800C3220 with no arguments, so no argument register is loaded and the callee value in $v0 is what this function returns. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps the return address at 0x10 across the indirect call, and the slots after the index byte and after the table load stay nops. The table lies in the reviewed trailing textbin row D_800C3174 and its entries are 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, this payload 0x800C1CB0 and the main-executable 0x801E4928, ending where the next run starts at 0x800C3238. The only in-image reference to this span is the pointer word at 0x800C3208, word 6 of the twelve-word run based at 0x800C31F0 that the sibling byte-1 dispatcher 0x800C1B6C indexes, and the payload holds no jal naming it, so the overlay stepper that walks that run reaches it as entry 6 of the byte-1 dispatch. Same body as the exact sibling dispatchers 0x800C197C, 0x800C1EC8 and 0x800C2030 of this overlay, which read the same record byte: their 0x44-byte spans are word-identical apart from the table address in the scaled load word, which occupies the single percent-lo slot those spans share.'
   - - 1200
     - asm
@@ -84,34 +84,34 @@ segments:
     - noopHandlerBossBoss02513_800C1D80
   - - 1416
     - c
-    - dispatchStateByte1Table3244BossBoss02513_800C1D88
-    - '@source: src/bof3/boss/dispatchStateByte1Table3244BossBoss02513_800C1D88.c'
+    - callStateTable3244Boss
+    - '@source: src/bof3/boss/callStateTable3244Boss.c'
   - - 1484
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkByte8To3AndStateTo2ThenCallHelperBossBoss02513_800C1DCC
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkByte8To3AndStateTo2ThenCallHelperBossBoss02513_800C1DCC.c'
+    - publishStepDataCall
+    - '@source: src/bof3/boss/publishStepDataCall.c'
     - '@behavior: Step setup of this overlay work state machine at 0x800C1DCC. Publishes this payload data row pointer 0x800C3180 into +0xEC of the current enemy work record from 0x801EB4E8, the byte-indexed dispatcher 0x800C20F0 into +0xE4 and the in-row pointer 0x800C3194 into +0xE8, stores 3 into that record byte at +8 and 2 into its state byte at +1 through the scratchpad pointer cell 0x1F800044, then calls the shared main-program helper 0x8014D978. Prologue and return path both place the boundary.'
   - - 1588
     - asm
     - func_800C1E34
   - - 1736
     - c
-    - dispatchStateByte2Table3274BossBoss02513_800C1EC8
-    - '@source: src/bof3/boss/dispatchStateByte2Table3274BossBoss02513_800C1EC8.c'
+    - callStateTable3274Boss
+    - '@source: src/bof3/boss/callStateTable3274Boss.c'
   - - 1804
     - c
-    - callEnemyReadyThenCountDownWorkByte9AndSubmitEffectThenAdvanceWorkByte2BossBoss02513_800C1F0C
-    - '@source: src/bof3/boss/callEnemyReadyThenCountDownWorkByte9AndSubmitEffectThenAdvanceWorkByte2BossBoss02513_800C1F0C.c'
+    - callEnemyCountDown
+    - '@source: src/bof3/boss/callEnemyCountDown.c'
     - '@behavior: Work byte 9 handler of this overlay at 0x800C1F0C, reached from word 0 of the run based at 0x800C3274 indexed by work byte 2 and from word 12 of the table based at 0x800C3244 indexed by work byte 1, with no jal in the payload naming it. Calls the shared readiness helper 0x801E30F8 and discards its byte, decrements work-object byte 9 in place through the scratchpad pointer cell 0x1F800044 and returns while the stored byte is non-zero; on zero it submits halfword 0 of the row the current enemy work record pointer 0x801EB4E8 holds at record offset 0xE8 through the shared submitter 0x801E52F0, then re-reads the cell and advances work byte 2 by one. The 0x18-byte frame only keeps the return address at 0x10.'
   - - 1936
     - c
-    - forwardWorkRecordIndexAndRollRandomActionThenRaiseFlagBit4AndResetScratchStateWhenEnemyReadyBossBoss02513_800C1F90
-    - '@source: src/bof3/boss/forwardWorkRecordIndexAndRollRandomActionThenRaiseFlagBit4AndResetScratchStateWhenEnemyReadyBossBoss02513_800C1F90.c'
+    - forwardRollActionEnemy
+    - '@source: src/bof3/boss/forwardRollActionEnemy.c'
     - '@behavior: Random-action handler of this overlay at 0x800C1F90, entry 1 of the handler run based at 0x800C3274 which the byte-2 dispatcher 0x800C1EC8 indexes with work record byte 2; entry 0 of that run is the adjacent 0x800C1F0C. It calls the shared readiness helper 0x801E30F8, masks the returned byte to eight bits and returns while it is zero; when the helper reports it forwards the shared battle byte 0x80146384 into the shared helper 0x800A9820, rolls rand() and, on a zero three-way roll, raises bit 0x80 of the shared battle flag halfword 0x801462E8 and bit 0x10 of the shared phase flag byte 0x801462ED and submits effect 2 as slot class 0 through the shared action-slot allocator 0x801E590C. Every reporting path then raises bit 0x4 of 0x801462E8 and calls the shared scratch-state reset 0x801E567C. The 0x18-byte frame only keeps the return address at 0x10.'
   - - 2096
     - c
-    - dispatchStateByte2Table327cBossBoss02513_800C2030
-    - '@source: src/bof3/boss/dispatchStateByte2Table327cBossBoss02513_800C2030.c'
+    - callStateTable327Boss
+    - '@source: src/bof3/boss/callStateTable327Boss.c'
   - - 2164
     - asm
     - func_800C2074
@@ -120,7 +120,7 @@ segments:
     - dispatchIndexedHandlerBossBoss02513_800C20F0
   - - 2344
     - c
-    - storeThreeOrZeroByFlagBitThreeBossBoss02513_800C2128
+    - stateThreeBitThree
   - - 2400
     - c
     - raiseFlagBit20BossBoss02513_800C2160
@@ -129,16 +129,16 @@ segments:
     - noopHandlerBossBoss02513_800C217C
   - - 2436
     - c
-    - publishBattleHooksSaveRecordHalfwordsAndSetActorPhase3BossBoss02513_800C2184
-    - '@source: src/bof3/boss/publishBattleHooksSaveRecordHalfwordsAndSetActorPhase3BossBoss02513_800C2184.c'
+    - publishSaveHalfwordsActor
+    - '@source: src/bof3/boss/publishSaveHalfwordsActor.c'
     - '@behavior: Overlay installer of this archive family. Publishes the step handler 0x800C2634 into the shared battle hook slot 0x801463A4, the front-end handoff handler 0x800C2680 into 0x801463A8 and the hook-mode dispatcher func_800C2208 into 0x801463AC; then loads the local work record halfword pair 0x80145F18/0x80145F1A and its 0x80145F20/0x80145F22 re-seed pair, saves the low byte of each record halfword into the overlay cells 0x800C32B4 and 0x800C32B8, re-seeds 0x80145F18/0x80145F1A from the re-seed pair, and stores 3 into the global actor-phase byte 0x80146324.'
   - - 2568
     - asm
     - func_800C2208
   - - 3636
     - c
-    - setStepByte4RestoreSavedRecordHalfwordsAndInitModeTuple530BossBoss02513_800C2634
-    - '@source: src/bof3/boss/setStepByte4RestoreSavedRecordHalfwordsAndInitModeTuple530BossBoss02513_800C2634.c'
+    - stateRestoreSavedHalfwords
+    - '@source: src/bof3/boss/stateRestoreSavedHalfwords.c'
   - - 3712
     - c
     - enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680
@@ -157,36 +157,36 @@ segments:
     - '@residual: none'
   - - 4484
     - c
-    - refreshActivePartyRecordsThenSetScenarioProgress4AndInitModeTuple530BossBoss02513_800C2984
-    - '@source: src/bof3/boss/refreshActivePartyRecordsThenSetScenarioProgress4AndInitModeTuple530BossBoss02513_800C2984.c'
+    - refreshActivePartyRecords
+    - '@source: src/bof3/boss/refreshActivePartyRecords.c'
     - '@behavior: Battle-step hook of this overlay at 0x800C2984, the routine its installer 0x800C2710 stores into the shared hook slot 0x801463A4; no jal in this payload names it and no data word holds its address, so the battle step reaches it through that slot. It refreshes the three 0x140-stride local work records that start at 0x80145E90, one block per party battler, and each block is the same four steps in the same order: take the record address into a pointer register and test the record activity bit 0x1 through it; when that bit is set, clear the battler action flags through 0x801DD14C with the record byte +0x05 index, read the party-flag halfword at +0x80, publish the record address into the scratchpad work cell 0x1F800044, and call 0x8014D5F0 with 0x800F0800 and 0x1800, selecting the record byte +0x08 with 0x1C added when bit 0x4000 of that halfword is set and with 0x04 added when it is clear. The halfword load precedes the scratchpad store and the store precedes the 0x4000 test in source order, so the published record is visible before the flag decides the region. The three blocks carry no shared gate: unlike the boss055/16 sibling 0x800C24E0, which tests bit 0x2 of 0x80146328 around the same three blocks and runs initModeTuple520 when that bit is clear, this hook tests each record on its own and has a single tail. After the third block it stores 4 into the shared scenario progress byte 0x80146864 and runs initModeTuple530 at 0x801DDF28. The stored 4 is materialised once in the delay slot of the third record test and again after the region call, because that call clobbers the register. The body takes no arguments, keeps the family 0x18-byte frame with $ra at 0x14 and $s0 at 0x10, and returns nothing. Its three record blocks are the same instructions as this payload''s 0x800C2D7C, which was on its asm row when this comparison was measured: comparing the two spans of the original payload leaves five differing words, three absolute jump targets that move by the 0x3F8 offset between them, one branch offset, and the one delay slot that carries the stored literal. That twin''s tail stamps 0x0F, 0x07 and 0x14 into 0x80146875 under the three bits of 0x801462ED instead of setting the scenario progress, so it is shape and naming evidence for this body, not a clone.'
     - '@status: exact'
     - '@match: 100.00'
     - '@residual: none'
   - - 4908
     - c
-    - raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C
+    - raiseFlagEnterFrontend
   - - 4960
     - c
     - publishBattleHooksBossBoss02513_800C2B60
   - - 5016
     - c
-    - raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98
-    - '@source: src/bof3/boss/raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98.c'
+    - raiseFlagsStartHook
+    - '@source: src/bof3/boss/raiseFlagsStartHook.c'
   - - 5500
     - c
-    - refreshActivePartyRecordsThenSetStepByteByFlagBitsAndInitModeTuple530BossBoss02513_800C2D7C
-    - '@source: src/bof3/boss/refreshActivePartyRecordsThenSetStepByteByFlagBitsAndInitModeTuple530BossBoss02513_800C2D7C.c'
+    - refreshActivePartyBits
+    - '@source: src/bof3/boss/refreshActivePartyBits.c'
     - '@behavior: Battle-step hook of this overlay at 0x800C2D7C, the first routine its installer 0x800C2B60 stores into the shared hook slot 0x801463A4; no jal in this payload names it and no data word holds its address, so the battle step reaches it through that slot. It refreshes the three 0x140-stride local work records that start at 0x80145E90, one block per party battler, and each block is the same four steps in the same order: take the record address into a pointer register and test the record activity bit 0x1 through it; when that bit is set, clear the battler action flags through 0x801DD14C with the record byte +0x05 index, read the party-flag halfword at +0x80, publish the record address into the scratchpad work cell 0x1F800044, and call 0x8014D5F0 with 0x800F0800 and 0x1800, selecting the record byte +0x08 with 0x1C added when bit 0x4000 of that halfword is set and with 0x04 added when it is clear. The halfword load precedes the scratchpad store and the store precedes the 0x4000 test in source order, so the published record is visible before the flag decides the region. The three blocks carry no shared gate and the body has a single tail: it takes the address of the shared battle flag byte 0x801462ED into one pointer register and stamps the shared battle step byte 0x80146875 from its bits, bit 0x1 storing 0x0F, bit 0x2 storing 0x07 and bit 0x4 storing 0x14, re-reading the flag byte before each test; the last block falls through to that tail, so a record whose activity bit is clear is skipped. Then it runs initModeTuple530 at 0x801DDF28. The body takes no arguments, keeps the family 0x18-byte frame with $ra at 0x14 and $s0 at 0x10, and returns nothing. Its three record blocks are the instructions of the exact sibling 0x800C2984 in this payload: comparing the two spans of the original bytes leaves five differing words, three absolute jump targets that move by the 0x3F8 offset between them, one branch offset, and the third record test delay slot, which carries the twin''s stored literal there and nothing here.'
   - - 6004
     - c
-    - setupBattleWorkRecordsForFlaggedOwnersOneAndTwoBossBoss02513_800C2F74
-    - '@source: src/bof3/boss/setupBattleWorkRecordsForFlaggedOwnersOneAndTwoBossBoss02513_800C2F74.c'
+    - setupFlaggedOwnersOne
+    - '@source: src/bof3/boss/setupFlaggedOwnersOne.c'
     - '@behavior: Battle setup hook of this overlay, the second member of the handler trio the installer 0x800C2B60 publishes into the shared battle hook slot 0x801463A8, with no jal naming it in this payload. Loads one pointer to the shared battle flag byte 0x801462ED and tests its low bits: while bit 0x1 is set it starts the enemy work record band 0x801EB630 for owner 1 through func_800AC870, and while bit 0x2 is set it starts the band 0x801EB748, one 0x118-byte record stride higher, for owner 2. Each band is then closed unconditionally by func_800AC844 with that band''s owner id, so a band starts only when its flag bit asks for it while the owner record is settled on every path. The flag byte is reloaded after each call, the saved register $s0 holds the byte pointer and the 0x18-byte frame keeps $ra at 0x14; it takes no arguments and returns nothing.'
   - - 6132
     - c
-    - dispatchStateByte1Table32a0BossBoss02513_800C2FF4
-    - '@source: src/bof3/boss/dispatchStateByte1Table32a0BossBoss02513_800C2FF4.c'
+    - callStateTable32Boss
+    - '@source: src/bof3/boss/callStateTable32Boss.c'
   - - 6200
     - c
     - advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038

@@ -66,7 +66,7 @@ void countdownGroupSelectionRefresh(void) {
   func_8014D978();
   func_8014D4E0();
 
-  if (isBattlerInactiveOrFlag4000(D_801EB4E0->unk_05) != 0u
+  if (checkBattlerInactiveFlag4000(D_801EB4E0->unk_05) != 0u
       && (D_801EB4E0->flags_00 & 0x01u) == 0u) {
     ((u8*)D_1F800044)[1] = 0;
   }

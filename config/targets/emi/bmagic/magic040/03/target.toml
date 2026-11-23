@@ -9,11 +9,11 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04003_801EEC20.c",
-    "src/bof3/bmagic/incrementWorkBytes9AndAThenAdvanceWorkByte2WhenByteAIs16BmagicMagic04003_801EF114.c",
+    "src/bof3/bmagic/incrementAdvanceByteBmagic.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/drawTranslucentGreyCircleOfThirtyTwoFlatLinesAtWorkHalfwords2EAnd30RadiusWorkByte9ShadeWorkByteABmagicMagic04003_801EFA3C.c",
-    "src/bof3/bmagic/dispatchWorkByte2FourEntryHandlerThenInvoke801EF7FCAnd801EF600WhenActiveBmagicMagic04003_801EEF8C.c",
+    "src/bof3/bmagic/renderGreyCircleLines.c",
+    "src/bof3/bmagic/callFourEntryActive.c",
     "src/bof3/bmagic/copyRecordByte8AndWordTripletInvoke801EF430ClearBytes9AndAThenAdvanceWorkByte2BmagicMagic04003_801EF074.c",
     "src/bof3/support/magic040_03_psyq.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04003_801EEF48.c",

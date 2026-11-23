@@ -10,7 +10,7 @@ WEAK_SYMBOL_AT(recordTable, 0x80143fc8);
 WEAK_SYMBOL_AT(workStateHandlerTable, 0x80195ed4);
 
 /* ---- Original Game00 ASM entry; no C prototype or emitted body ---- */
-WEAK_SYMBOL_AT(dispatchActiveGameWorkRecordsByKind, 0x801a061c);
+WEAK_SYMBOL_AT(callActiveGameKind, 0x801a061c);
 
 /* ---- Main-RAM bitmap geometry (main exe data segment, ref'd by overlay) ---- */
 WEAK_SYMBOL_AT(D_80104000, 0x80104000);
@@ -51,7 +51,7 @@ WEAK_SYMBOL_AT(D_80143FBC, 0x80143fbc);
 /* ---- Work gate pair ANDed before the front-end request path runs ---- */
 WEAK_SYMBOL_AT(D_80145AA8, 0x80145aa8);
 WEAK_SYMBOL_AT(D_80145AC0, 0x80145ac0);
-/* ---- Gate mask ANDed with the pad state word by adjustPairedValuesFromMask ---- */
+/* ---- Gate mask ANDed with the pad state word by adjustPairedValuesMask ---- */
 WEAK_SYMBOL_AT(D_80145ABA, 0x80145aba);
 WEAK_SYMBOL_AT(D_80146250, 0x80146250);
 WEAK_SYMBOL_AT(D_80144974, 0x80144974);
@@ -74,7 +74,7 @@ WEAK_SYMBOL_AT(D_801C8380, 0x801c8380);
 WEAK_SYMBOL_AT(D_801CD358, 0x801cd358);
 WEAK_SYMBOL_AT(D_801CD374, 0x801cd374);
 WEAK_SYMBOL_AT(D_801490A4, 0x801490a4);
-/* ---- World-position step pair mirrored by stepWorldPositionToTarget ---- */
+/* ---- World-position step pair mirrored by stepWorldPositionTarget ---- */
 WEAK_SYMBOL_AT(D_801481D8, 0x801481d8);
 WEAK_SYMBOL_AT(D_801481DC, 0x801481dc);
 WEAK_SYMBOL_AT(D_80143BB1, 0x80143bb1);
@@ -168,8 +168,8 @@ WEAK_SYMBOL_AT(initStreamSlot, 0x80161fdc);
 WEAK_SYMBOL_AT(stageSharedPaletteBank, 0x8014e284);
 WEAK_SYMBOL_AT(func_801651DC, 0x801651dc);
 WEAK_SYMBOL_AT(func_80164A44, 0x80164a44);
-WEAK_SYMBOL_AT(adjustPairedValuesFromMask, 0x80198f1c);
-WEAK_SYMBOL_AT(stepWorldPositionToTarget, 0x801990d0);
+WEAK_SYMBOL_AT(adjustPairedValuesMask, 0x80198f1c);
+WEAK_SYMBOL_AT(stepWorldPositionTarget, 0x801990d0);
 WEAK_SYMBOL_AT(func_801991B8, 0x801991b8);
 WEAK_SYMBOL_AT(func_801C0F9C, 0x801c0f9c);
 WEAK_SYMBOL_AT(func_801C2538, 0x801c2538);
@@ -180,7 +180,7 @@ WEAK_SYMBOL_AT(func_801C476C, 0x801c476c);
 WEAK_SYMBOL_AT(func_801C48FC, 0x801c48fc);
 WEAK_SYMBOL_AT(func_801C5474, 0x801c5474);
 WEAK_SYMBOL_AT(func_801BEDD0, 0x801bedd0);
-WEAK_SYMBOL_AT(advanceWorkRoutesOrInitializeTint, 0x801bee5c);
+WEAK_SYMBOL_AT(stateRoutesInitializeTint, 0x801bee5c);
 WEAK_SYMBOL_AT(func_801A06D8, 0x801a06d8);
 WEAK_SYMBOL_AT(applyRemapRequest, 0x801b5bdc);
 WEAK_SYMBOL_AT(func_801BF11C, 0x801bf11c);
@@ -212,7 +212,7 @@ WEAK_SYMBOL_AT(D_801C80EC, 0x801c80ec);
 /* ---- Four-entry work-flag handler table dispatched by func_801B2D90 ---- */
 WEAK_SYMBOL_AT(D_801CD120, 0x801cd120);
 /* ---- Two-entry work-flag handler table dispatched by
- * dispatchWorkFlags02HandlerThenReadyUpdate ---- */
+ * callHandlerReadyUpdate ---- */
 WEAK_SYMBOL_AT(workFlags02HandlerPairTable, 0x801cd1b0);
 WEAK_SYMBOL_AT(D_801CD140, 0x801cd140);
 WEAK_SYMBOL_AT(D_801CD1C8, 0x801cd1c8);
@@ -237,11 +237,11 @@ WEAK_SYMBOL_AT(D_801C7C0C, 0x801c7c0c);
 WEAK_SYMBOL_AT(D_801C7C70, 0x801c7c70);
 WEAK_SYMBOL_AT(D_801C8454, 0x801c8454);
 
-/* ---- Front-end clock bytes advanced by tickFrontendClockAndCountdowns ---- */
+/* ---- Front-end clock bytes advanced by tickFrontendClockCountdowns ---- */
 WEAK_SYMBOL_AT(D_80144FC1, 0x80144fc1);
 WEAK_SYMBOL_AT(D_80144FC2, 0x80144fc2);
 WEAK_SYMBOL_AT(D_80144FC3, 0x80144fc3);
-/* ---- Front-end countdown bytes decremented by tickFrontendClockAndCountdowns ---- */
+/* ---- Front-end countdown bytes decremented by tickFrontendClockCountdowns ---- */
 WEAK_SYMBOL_AT(D_80145554, 0x80145554);
 WEAK_SYMBOL_AT(D_80145555, 0x80145555);
 WEAK_SYMBOL_AT(D_80145556, 0x80145556);

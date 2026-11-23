@@ -7,7 +7,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind bss */
 /* Step-table builders of this overlay. The builder at 0x801F4544 is lifted in
  * this target and is declared here with its canonical name; the one at
  * 0x801F45C8 is still an asm subsegment, so its role stays address-anchored. */
-void projectWorkPositionFromRouteOffsetsTimesFiveAndStoreDistanceAt20World03Area14813_801F4544(
+void projectOffsetsTimesFive(
     void);
 void func_801F45C8(void);
 
@@ -32,7 +32,7 @@ void copyWorkByteBToWorkByte8AdvanceWorkHalfword3eByC0AndSetState1World03Area148
     void) {
   D_1F800044[8] = D_1F800044[0xB];
   FIELD_REF(u16, D_1F800044, 0x3E) += 0xC0;
-  projectWorkPositionFromRouteOffsetsTimesFiveAndStoreDistanceAt20World03Area14813_801F4544();
+  projectOffsetsTimesFive();
   D_1F800044[8] = (D_1F800044[8] + 3) & 7;
   func_801F45C8();
   D_1F800044[6] = 2;

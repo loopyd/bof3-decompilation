@@ -33,13 +33,13 @@ segments:
     - func_801EEC14
   - - 128
     - c
-    - submitRecordStoreEffectByteBClearWorkByte9ThenAdvanceWorkByte1BmagicMagic01000_801EEC80
-    - '@source: src/bof3/bmagic/submitRecordStoreEffectByteBClearWorkByte9ThenAdvanceWorkByte1BmagicMagic01000_801EEC80.c'
+    - submitStoreEffectClear
+    - '@source: src/bof3/bmagic/submitStoreEffectClear.c'
     - '@behavior: Loads the battle record pointer published at 0x8014638C once per call, submits it through func_80196718, submits its positional effect through func_8019651C with the 0/0/0 offsets and mode 1, stores the low return byte in work byte 0xB, then clears work byte 9 and advances work byte 1. The work-object pointer cell at 0x1F800044 is re-read for each of the three access groups.'
   - - 268
     - c
-    - incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic01000_801EED0C
-    - '@source: src/bof3/bmagic/incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic01000_801EED0C.c'
+    - incrementByteRecordCounters
+    - '@source: src/bof3/bmagic/incrementByteRecordCounters.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per access and increments the +0, +1 and (via 0x80145BD8) +2 counter bytes of the 12-byte record at 0x80145BD6 selected by the work object''s byte 0xB, then increments the work object''s byte at offset 0x9 and its byte at offset 0x1 when the truncated result reaches 0x10.'
   - - 544
     - c
@@ -48,7 +48,7 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per access group and decrements the counter bytes 0x0/0x1/0x2 of the 12-byte record selected by the work object byte 0xB in the 0x80145BD6 table with byte-width read-modify-writes, then decrements the work object countdown byte 9 and tests the stored value against zero; only when the countdown reaches zero does it submit the battle record published at 0x8014638C through func_80196718, pass the shared battle byte at 0x80146384 to func_800AF814 and increment the work object state byte 1.'
   - - 856
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperBmagicMagic01000_801EEF58
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperBmagicMagic01000_801EEF58.c'
+    - forwardBattleRaiseHelper
+    - '@source: src/bof3/bmagic/forwardBattleRaiseHelper.c'
     - '@behavior: Loads the shared battle byte at 0x80146384 unsigned, passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes the shared helper func_801E5988; it takes no arguments, returns nothing and keeps $ra in a 0x18-byte frame.'
 - - 928

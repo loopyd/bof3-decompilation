@@ -21,7 +21,7 @@ u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPl
     void);
 
 /* Layer-position refresh of this payload, lifted as
- * claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348;
+ * claimLayerPositionsLayer;
  * its bytes claim work byte 0x2B, draw the work reference positions and clear
  * the claim again when a probe reads above 64, and they are byte-identical to
  * the span at 0x801CF564 of plp467 that the exact lift of the same tail
@@ -29,7 +29,7 @@ u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPl
  * nothing set up in the argument registers, so it takes no arguments, and this
  * caller reads no result from $v0.
  */
-void claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348(
+void claimLayerPositionsLayer(
     void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. Splat
@@ -93,7 +93,7 @@ void adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectS
       }
     }
   }
-  claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348();
+  claimLayerPositionsLayer();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xB] = 0;
   D_1F800044[0xA] = 0xB;

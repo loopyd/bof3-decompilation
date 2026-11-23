@@ -42,15 +42,15 @@ segments:
     - func_801EEF98
   - - 1204
     - c
-    - decrementWorkByteARecordCountersBy2ThenQueueActionOnCountdownZeroBmagicMagic04303_801EF0B4
-    - '@source: src/bof3/bmagic/decrementWorkByteARecordCountersBy2ThenQueueActionOnCountdownZeroBmagicMagic04303_801EF0B4.c'
+    - decrementCountersQueueAction
+    - '@source: src/bof3/bmagic/decrementCountersQueueAction.c'
     - '@behavior: Subtracts two from three selected record counters; on countdown zero queues an action or resets the countdown and steps work byte 1.'
   - - 1792
     - asm
     - func_801EF300
   - - 1888
     - c
-    - dispatchStateByte1Tablefc88BmagicMagic04303_801EF360
+    - callStateTablefc88Bmagic
     - '@source: src/bof3/bmagic/magic04303DispatchTables.c'
   - - 1956
     - asm
@@ -60,18 +60,18 @@ segments:
     - func_801EF42C
   - - 2396
     - c
-    - addWorkMotionPairAndIncrementBytes9AThenAdvanceWorkByte2At10BmagicMagic04303_801EF55C
-    - '@source: src/bof3/bmagic/addWorkMotionPairAndIncrementBytes9AThenAdvanceWorkByte2At10BmagicMagic04303_801EF55C.c'
+    - workMotionPairIncrement
+    - '@source: src/bof3/bmagic/workMotionPairIncrement.c'
     - '@behavior: Adds work motion words, increments byte 9 by one and byte 0xA by two, and advances byte 2 when byte 0xA equals 0x10.'
   - - 2528
     - c
-    - incrementWorkByte9AndAddVelocityPairThenAdvanceWorkByte2At18BmagicMagic04303_801EF5E0
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAddVelocityPairThenAdvanceWorkByte2At18BmagicMagic04303_801EF5E0.c'
+    - incrementVelocityPairBmagic
+    - '@source: src/bof3/bmagic/incrementVelocityPairBmagic.c'
     - '@behavior: Advances work-object byte 0x9 by one and adds its word 0xC and word 0x10 channels into word 0x34 and word 0x38, then increments work-object byte 0x2 once byte 0x9 reaches 0x18.'
   - - 2636
     - c
-    - addWorkMotionPairIncrementByte9DecrementByteABy2ThenClearWorkBytes0To4AndDecrementGlobalWorkByteBBmagicMagic04303_801EF64C
-    - '@source: src/bof3/bmagic/addWorkMotionPairIncrementByte9DecrementByteABy2ThenClearWorkBytes0To4AndDecrementGlobalWorkByteBBmagicMagic04303_801EF64C.c'
+    - workMotionPairGlobal
+    - '@source: src/bof3/bmagic/workMotionPairGlobal.c'
     - '@behavior: Adds work words 0xC and 0x10 into work words 0x34 and 0x38, increments work byte 9, subtracts two from work byte 0xA and returns while that byte is nonzero; when it reached zero it decrements byte 0xB of the shared battle work record and clears work bytes 0 through 4.'
   - - 2860
     - asm

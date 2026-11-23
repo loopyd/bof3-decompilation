@@ -2,9 +2,9 @@
 
 /* @source 0x801DE45C
  * @behavior calls the shop background painter
- *           drawBackgroundTilesFromKindShop00_801DBD24 with the main-RAM
+ *           renderBackgroundTilesKind with the main-RAM
  *           index byte D_80144953 and then the shop slot-list renderer
- *           drawNumberedShopSlotListThenPanelStrip; afterwards it
+ *           renderNumberedShopStrip; afterwards it
  *           decrements the frame timer phaseTimer through its address and,
  *           when the decremented byte reaches zero, reads the UI phase byte
  *           D_80148651 before re-arming phaseTimer with 3 and writing the
@@ -19,8 +19,8 @@ void func_801DE45C(void) {
   u8           value;
   u8           phase;
 
-  drawBackgroundTilesFromKindShop00_801DBD24(D_80144953);
-  drawNumberedShopSlotListThenPanelStrip();
+  renderBackgroundTilesKind(D_80144953);
+  renderNumberedShopStrip();
   /* The original materializes the timer address once and reuses that base for
    * the load, the decrement store and the re-arm store (lui+addiu / lbu / sb
    * through one register). */
@@ -31,7 +31,7 @@ void func_801DE45C(void) {
     /* The original reads the phase byte before the phaseTimer store and writes
      * the incremented value back after it, with the re-arm constant hoisted
      * above the load into the branch delay slot (sibling shape:
-     * advanceUiPhaseOrSelectSavedStatePhase). The read is a byte-required plain
+     * statePhaseSavedPhase). The read is a byte-required plain
      * symbol access: the volatile view acts as a scheduling barrier, so gcc
      * materializes the constant after the load and the branch delay slot needs
      * a nop. */

@@ -37,7 +37,7 @@ extern u8 D_80146261;
  * at +0 and a y word at +4. */
 /* @source 0x801CD47C @kind table */
 extern u8 D_801CD47C[];
-/* @behavior one-byte record-index table indexed by D_801462EC; advanceWorkRoutesOrInitializeTint
+/* @behavior one-byte record-index table indexed by D_801462EC; stateRoutesInitializeTint
  * compares a work record's route byte at 0x08 against its entry. */
 /* @source 0x801CD478 @kind table */
 extern u8 D_801CD478[];
@@ -103,7 +103,7 @@ u8 func_8014DAEC(void);
  * declared here. Its callers disagree on the signature - eight sources call it
  * with no arguments (and include/bof3/battle/battle03_internal.h declares
  * `void func_8014D290(void)`), while the pre-existing exact lift
- * src/bof3/ui/updateActiveGameWorkRecords.c declares it with a struct GameWorkArea* parameter
+ * src/bof3/ui/stateActiveGameRecords.c declares it with a struct GameWorkArea* parameter
  * and materialises that argument. An empty-parameter-list declaration here
  * conflicts with that file's local prototype and breaks the target build, so the
  * one declaration is left file-local to each caller until the callee's own bytes
@@ -138,7 +138,7 @@ void func_801C2710(void);
  * restored and the tint is cleared. */
 u8 func_801C27E0(s8 arg0);
 int func_801C5474(void);
-void selectWorkSequenceForRoute7(void);
+void selectWorkSequenceRoute7(void);
 void func_801C4D58(void);
 u8 func_801C4E14(void);
 u8 func_801C4EC4(void);
@@ -166,7 +166,7 @@ void func_801AD3B4(void);
 
 /* Publishes handler index 2 into the work-area handler index at 0x03 once the
  * shared work-area service func_801C4E14 reports success. */
-void advanceHandlerIndexTo2WhenReady(void);
+void stateHandlerIndexReady(void);
 /* Publishes handler index 3 into the work-area handler index at 0x03 once the
  * shared work-area service func_801C4EC4 reports success. */
 void advanceHandlerIndexTo3WhenReady(void);
@@ -211,8 +211,8 @@ s32 func_801C29A0(s8 delta);
 u8 func_801C3A18(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 u8 func_801C3B78(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 /* Route-step positioning attempt of the active work record, referenced by the
- * two gated wrappers requestRouteStepWithValue89 (value 0x89, step 2) and
- * requestRouteStepWithValue8A (value 0x8A, step 1): the first argument is the
+ * two gated wrappers requestRouteStepValue89 (value 0x89, step 2) and
+ * requestRouteStepValue8 (value 0x8A, step 1): the first argument is the
  * tile-query value, the second
  * the step byte published into the work-record 0x0B byte, and the third enables
  * the eight-entry route-step scan. The body returns only 0 or 1 in the full
@@ -221,9 +221,9 @@ s32 func_801C364C(s32 arg0, s32 arg1, s32 arg2);
 /* Reference-scaled position checks of the same active-record range test as
  * matchesProjectedWorkBounds; the third argument is taken as a signed 16-bit reference. */
 /* @source 0x801C4040 */
-u8 isPositionRejectedForZeroSelector(s32 x, s32 y, s16 reference);
+u8 checkPositionRejectedSelector(s32 x, s32 y, s16 reference);
 /* @source 0x801C41D0 */
-u8 isPositionRejectedForNonzeroSelector(s32 x, s32 y, s16 reference);
+u8 checkRejectedNonzeroSelector(s32 x, s32 y, s16 reference);
 u8 func_801C476C(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 u8 func_801C48FC(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 u8 func_801C6FD4(s16 arg0, s16 arg1);
@@ -395,7 +395,7 @@ extern GameEntry0StateHandler* D_801CD4C0[];
 /* @source 0x801CD120 @kind table */
 extern GameEntry0StateHandler D_801CD120[];
 /* @behavior two-entry work-flag handler table dispatched by
- * dispatchWorkFlags02HandlerThenReadyUpdate: the byte at work+0x02 selects the
+ * callHandlerReadyUpdate: the byte at work+0x02 selects the
  * handler, whose entries are the sibling update routines 0x801B3768 and
  * 0x801B3A3C. */
 /* @source 0x801CD1B0 @kind table */
@@ -529,7 +529,7 @@ extern u8           D_80143FBC;
 /* @source 0x80143B92 @kind unknown */
 extern u16 D_80143B92;
 /* @behavior sub-state/flag byte selecting the direction the world y at
- * 0x801492DC is stepped toward its 512 target in stepWorldPositionToTarget
+ * 0x801492DC is stepped toward its 512 target in stepWorldPositionTarget
  * (zero = downward, nonzero = upward). */
 /* @source 0x80143BB1 @kind unknown */
 extern u8 D_80143BB1;
@@ -556,13 +556,13 @@ typedef struct GameWorldSlotRecord {
 extern GameWorldSlotRecord D_801C7F5C[11];
 /* @behavior eleven 0x1C-byte world-slot records: word 0 holds the slot's record
  * pointer, the key byte holding the current world state ID sits at record+4
- * (byte view D_801C7F74), and getCurrentWorldSlotRecord returns word 0 of the slot.
+ * (byte view D_801C7F74), and queryCurrentWorldSlot returns word 0 of the slot.
  * @source 0x801C7F70 @kind table */
 extern s32 D_801C7F70[11][7];
 /* @source 0x801C7F74 @kind table */
 extern u8 D_801C7F74[11][0x1C];
 
-u8 findCurrentWorldSlotIndex(void);
+u8 queryCurrentWorldIndex(void);
 /* @behavior world/front flags: bit0=scenario pending, bit3=alt front mode */
 /* @source 0x80143F02 @kind unknown */
 extern volatile u8 D_80143F02;
@@ -571,7 +571,7 @@ extern volatile u8 D_80143F02;
 /* @source 0x80145AA4 @kind unknown */
 extern u16 D_80145AA4;
 /* @behavior gate mask ANDed with the pad state word above by
- * adjustPairedValuesFromMask: a shared bit selects the input-driven world-axis
+ * adjustPairedValuesMask: a shared bit selects the input-driven world-axis
  * stepping path (the same word carries 0x4000/0x1000 for the x axis and
  * 0x2000/0x8000 for the y axis), no shared bit takes the no-input settle
  * path. */
@@ -605,7 +605,7 @@ extern u8 D_80143F1E;
 /* @source 0x80143F1F @kind unknown */
 extern u8 D_80143F1F;
 /* @behavior active selection id from front-end picker; the low three bytes are
- * the front-end clock advanced by tickFrontendClockAndCountdowns */
+ * the front-end clock advanced by tickFrontendClockCountdowns */
 /* @source 0x80144FC0 @kind unknown */
 extern volatile u32 D_80144FC0;
 /* @behavior front-end clock byte below D_80144FC1 */
@@ -615,11 +615,11 @@ extern u8 D_80144FC1;
 /* @source 0x80144FC2 @kind unknown */
 extern u8 D_80144FC2;
 /* @behavior front-end clock frame byte wrapping to zero at 30 in
- * tickFrontendClockAndCountdowns */
+ * tickFrontendClockCountdowns */
 /* @source 0x80144FC3 @kind unknown */
 extern u8 D_80144FC3;
 /* @behavior front-end countdown word decremented by
- * tickFrontendClockAndCountdowns; D_80145554 is its lowest byte, D_80145557 the
+ * tickFrontendClockCountdowns; D_80145554 is its lowest byte, D_80145557 the
  * frame byte wrapping at 29 */
 /* @source 0x80145554 @kind unknown */
 extern u8 D_80145554;
@@ -630,7 +630,7 @@ extern u8 D_80145556;
 /* @source 0x80145557 @kind unknown */
 extern u8 D_80145557;
 /* @behavior second front-end countdown word decremented by
- * tickFrontendClockAndCountdowns; D_80145558 is its lowest byte, D_8014555B the
+ * tickFrontendClockCountdowns; D_80145558 is its lowest byte, D_8014555B the
  * frame byte wrapping at 29 */
 /* @source 0x80145558 @kind unknown */
 extern u8 D_80145558;
@@ -860,12 +860,12 @@ extern s16 D_8014930A;
 /* @behavior signed world-coord Y argument for scenario entry */
 /* @source 0x8014930E @kind unknown */
 extern s16                 D_8014930E;
-/* @behavior 16-bit companion that stepWorldPositionToTarget keeps in step with
+/* @behavior 16-bit companion that stepWorldPositionTarget keeps in step with
  * the signed front-end world x at 0x801492D8 by mirroring every per-frame
  * delta. */
 /* @source 0x801481D8 @kind unknown */
 extern u16                 D_801481D8[];
-/* @behavior 16-bit companion that stepWorldPositionToTarget keeps in step with
+/* @behavior 16-bit companion that stepWorldPositionTarget keeps in step with
  * the signed front-end world y at 0x801492DC by mirroring every per-frame
  * delta. */
 /* @source 0x801481DC @kind unknown */
@@ -934,7 +934,7 @@ extern volatile u16        D_801490A4;
 /* @source 0x80144F28 @kind unknown */
 extern u8                  D_80144F28[];
 /* @behavior no-argument handler table selected by the current world state ID
- * resolved through findCurrentWorldSlotIndex; its 0x2C span ends where the
+ * resolved through queryCurrentWorldIndex; its 0x2C span ends where the
  * D_801C85F0 table begins. */
 /* @source 0x801C85C4 @kind table */
 extern GameEntry0StateHandler D_801C85C4[];
@@ -1038,7 +1038,7 @@ void func_80158C80(void);
 /* @behavior runs one selection-side post-dispatch update slice.
  * @source 0x80198CAC
  */
-void tickFrontendClockAndCountdowns(void);
+void tickFrontendClockCountdowns(void);
 
 /* @behavior resets the entry-0 front script/runtime bank for the requested mode.
  * @source 0x801C1400
@@ -1071,7 +1071,7 @@ void requestScenarioOverlay(void);
 /* @source 0x801C8454 @kind table */
 extern GameEntry0StateHandler* D_801C8454[];
 
-void dispatchScenarioHandlerAndState(void);
+void callScenarioHandlerState(void);
 void dispatchStateHandler(void);
 
 /* @behavior ticks the shared world/front waiting path while the scenario loader is
@@ -1179,11 +1179,11 @@ void dispatchSubstate5(void);
 void dispatchSubstate6(void);
 void dispatchSubstate7(void);
 void func_80199230(void);
-void adjustPairedValuesFromMask(void);
-void stepWorldPositionToTarget(void);
+void adjustPairedValuesMask(void);
+void stepWorldPositionTarget(void);
 void func_801991B8(void);
 void func_801BEDD0(void);
-s32  advanceWorkRoutesOrInitializeTint(void);
+s32  stateRoutesInitializeTint(void);
 void func_801A06D8(void);
 void applyRemapRequest(u8 arg0);
 u8   func_801BF11C(void);
@@ -1236,13 +1236,13 @@ void func_801A0380(s32 x, s32 y, u32 selector);
  * published record byte 6 is 10, otherwise func_8014D290.
  * @source 0x801A0514
  */
-void updateActiveGameWorkRecords(void);
+void stateActiveGameRecords(void);
 void func_801B3CCC(u32 arg0);
 void advancePanelXTo320(void);
-void retreatPanelXToNeg170(void);
+void retreatPanelXNeg170(void);
 void retreatPanelXToNeg170B(void);
 void advancePanelXTo17(void);
-void retreatPanelField6ToNeg20(void);
+void retreatPanelField6Neg20(void);
 
 /* Legacy alias for already‑matched functions that dereference 0x1F800044
  * via a literal‑address macro (lui+ori+lw 0(base) codegen). */

@@ -30,28 +30,28 @@ segments:
     - func_801F2C04
   - - 108
     - c
-    - setWorkCountdownClearOriginIncrementWorkByte1World02Area08213_801F2C6C
-    - '@source: src/bof3/world/setWorkCountdownClearOriginIncrementWorkByte1World02Area08213_801F2C6C.c'
+    - stateCountdownOriginIncrement
+    - '@source: src/bof3/world/stateCountdownOriginIncrement.c'
     - '@behavior: loads the scratchpad work object published at pointer-slot 0x1F800044, arms its countdown halfword at offset 0x2C with 0x20, clears its origin words at offsets 0x64, 0x68 and 0x6C, then advances its dispatch byte at offset 0x01 by one.'
   - - 156
     - c
-    - decrementCountdownAdd4WorkWords64And68World02Area08213_801F2C9C
-    - '@source: src/bof3/world/decrementCountdownAdd4WorkWords64And68World02Area08213_801F2C9C.c'
+    - decrementCountdownWorkAnd68
+    - '@source: src/bof3/world/decrementCountdownWorkAnd68.c'
     - '@behavior: decrements the work countdown at +0x2C and adds four to words +0x64 and +0x68; on expiry rearms the countdown to 16 and increments dispatch byte +0x01.'
   - - 240
     - c
-    - decrementCountdownRearmTo12IncrementWorkByte1World02Area08213_801F2CF0
-    - '@source: src/bof3/world/decrementCountdownRearmTo12IncrementWorkByte1World02Area08213_801F2CF0.c'
+    - decrementCountdownRearmIncrement
+    - '@source: src/bof3/world/decrementCountdownRearmIncrement.c'
     - '@behavior: loads the scratch work record cursor from scratchpad pointer-slot 0x1F800044 and decrements the unsigned halfword countdown at offset 0x2C; while that value is non-zero it stores it back and returns, and only when the countdown reaches zero does it arm the countdown with 0xC and advance the record dispatch byte at offset 0x01 by one.'
   - - 304
     - c
-    - decrementCountdownAdjustWorkWordsRearm24World02Area08213_801F2D30
-    - '@source: src/bof3/world/decrementCountdownAdjustWorkWordsRearm24World02Area08213_801F2D30.c'
+    - decrementCountdownAdjustWords
+    - '@source: src/bof3/world/decrementCountdownAdjustWords.c'
     - '@behavior: decrements countdown +0x2C, adds 0x400000 to word +0x3C, subtracts six from word +0x64 and adds six to word +0x68; on expiry rearms the countdown to 24 and increments dispatch byte +0x01.'
   - - 400
     - c
-    - decrementCountdownAdd3Word64Subtract3Word68World02Area08213_801F2D90
-    - '@source: src/bof3/world/decrementCountdownAdd3Word64Subtract3Word68World02Area08213_801F2D90.c'
+    - decrementCountdownWord64Subtract3
+    - '@source: src/bof3/world/decrementCountdownWord64Subtract3.c'
     - '@behavior: loads the work record from scratchpad pointer-slot 0x1F800044, decrements its unsigned halfword countdown at +0x2C, adds three to the word at +0x64 and subtracts three from the word at +0x68; when the decremented countdown reaches zero it rearms it to 0x10 and increments dispatch byte +0x01.'
   - - 484
     - asm
@@ -67,26 +67,26 @@ segments:
     - func_801F3264
   - - 1796
     - c
-    - dispatchWorkByte1Table5750ThenDrawWhenStepNonzeroWorld02Area08213_801F3304
-    - '@source: src/bof3/world/dispatchWorkByte1Table5750ThenDrawWhenStepNonzeroWorld02Area08213_801F3304.c'
+    - callDrawStepNonzero
+    - '@source: src/bof3/world/callDrawStepNonzero.c'
     - '@behavior: overlay step dispatcher, loads the non-volatile scratchpad work pointer cell 0x1F800044, calls the handler at the record dispatch byte +0x01 of the five-entry local table at 0x801F5750, reloads the work cell and, only when the record dispatch byte +0x01 is still non-zero, calls the quad-drawing helper at 0x801F3500; takes no arguments and returns nothing.'
   - - 1900
     - c
-    - setWorkHalfwordsIncrementWorkByte1World02Area08213_801F336C
-    - '@source: src/bof3/world/setWorkHalfwordsIncrementWorkByte1World02Area08213_801F336C.c'
+    - stateWorkHalfwordsIncrement
+    - '@source: src/bof3/world/stateWorkHalfwordsIncrement.c'
     - '@behavior: loads the scratch work record cursor from scratchpad pointer-slot 0x1F800044, writes the halfword 0x100 to the record +0x2E field, 0 to +0x30 and 0x18 to +0x32, then increments the record +0x01 step byte.'
   - - 1944
     - asm
     - func_801F3398
   - - 2056
     - c
-    - spawnWorkEntryOnOddFrameTickWorkTableIncrementWorkByte1AtScenarioProgress29World02Area08213_801F3408
-    - '@source: src/bof3/world/spawnWorkEntryOnOddFrameTickWorkTableIncrementWorkByte1AtScenarioProgress29World02Area08213_801F3408.c'
+    - spawnEntryOddFrame
+    - '@source: src/bof3/world/spawnEntryOddFrame.c'
     - '@behavior: overlay step handler, entry index 9 of the twelve-pointer step table at 0x801F5734; on the odd frames of the shared per-frame counter 0x80143E6C it spawns one work-table entry through the overlay routine at 0x801F393C, then ticks the work table through func_801F3AAC and, only when the shared scenario progress byte at 0x80146864 is 0x29, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record +0x01 step byte by one; takes no arguments and returns nothing.'
   - - 2160
     - c
-    - setWorkHalfword32To16WhenWorkTableIdleIncrementWorkByte1World02Area08213_801F3470
-    - '@source: src/bof3/world/setWorkHalfword32To16WhenWorkTableIdleIncrementWorkByte1World02Area08213_801F3470.c'
+    - stateTableIdleIncrement
+    - '@source: src/bof3/world/stateTableIdleIncrement.c'
     - '@behavior: overlay step handler, entry index 10 of the twelve-pointer step table at 0x801F5734; calls the work-table tick helper func_801F3AAC and, when it reports that no work-table entry is active, re-reads the scratch work pointer cell 0x1F800044, writes the halfword 0x10 to the work record +0x32 field and increments the record +0x01 step byte; takes no arguments and returns nothing.'
   - - 2232
     - asm
@@ -107,31 +107,31 @@ segments:
     - func_801F393C
   - - 3756
     - c
-    - updateWorkTableAndReportActiveWorld02Area08213_801F3AAC
-    - '@source: src/bof3/world/updateWorkTableAndReportActiveWorld02Area08213_801F3AAC.c'
+    - stateTableReportActive
+    - '@source: src/bof3/world/stateTableReportActive.c'
     - '@behavior: overlay per-frame helper, walks the 0x80 entries of the 0x14-byte-stride work table at 0x800E4800 and, for each entry whose lead byte is non-zero, subtracts the signed halfword at record +0x02 shifted left by eight from the record +0x0C word, stores the difference back, calls the per-record draw helper at 0x801F387C with the entry pointer and clears the lead byte once the updated +0x0C word is below the +0x3C word of the scratch work record published through 0x1F800044; it then returns 1 when at least one entry was active this frame and 0 when none was, whether or not any entry was retired.'
   - - 3932
     - c
-    - dispatchStateByte2Table576cWorld02Area08213_801F3B5C
+    - callStateTable576World02
     - '@source: src/bof3/world/area08213DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the record dispatch byte at offset 0x02 as the index and calls the handler at that index of the overlay-local handler table based at 0x801F576C (eight shipped entries, 0x801F3BA0 through 0x801F4334, ending where the overlay byte data begins at 0x801F578C); takes no arguments and forwards none.'
   - - 4000
     - c
-    - initializeWorkFieldsQueueCue204AdvanceWorkByte2AndDrawAtScenarioProgress5World02Area08213_801F3BA0
-    - '@source: src/bof3/world/initializeWorkFieldsQueueCue204AdvanceWorkByte2AndDrawAtScenarioProgress5World02Area08213_801F3BA0.c'
+    - initializeFieldsQueueDraw
+    - '@source: src/bof3/world/initializeFieldsQueueDraw.c'
     - '@behavior: at scenario progress 5, calls shared helper 0x8015B580 with block 0x80144ED8 and index 4, initializes the scratch work fields and rebases the saved position pair, clears work byte 9, queues cue 0x204, advances work byte 2 and draws through 0x801F4430.'
   - - 4220
     - asm
     - func_801F3C7C
   - - 4356
     - c
-    - incrementWorkByte9SetWorkByteBTo2AdvanceWorkByte2WhenCountReaches17World02Area08213_801F3D04
-    - '@source: src/bof3/world/incrementWorkByte9SetWorkByteBTo2AdvanceWorkByte2WhenCountReaches17World02Area08213_801F3D04.c'
+    - incrementSetByteCount
+    - '@source: src/bof3/world/incrementSetByteCount.c'
     - '@behavior: overlay per-frame handler, entry index 2 of the eight-pointer byte-2 handler table at 0x801F576C; advances the scratch work record byte +0x09 and, once that unsigned counter reaches 0x11, clears it, writes the byte 2 into the record +0x0B field so the draw helper at 0x801F4430 hands cue 0x201 plus that index to func_8015DF18, and advances the record +0x02 dispatch byte by one; every call then draws through 0x801F4430, takes no arguments and returns nothing.'
   - - 4492
     - c
-    - incrementWorkByte9QueueCue201AdvanceWorkByte2At17ThenDrawWorld02Area08213_801F3D8C
-    - '@source: src/bof3/world/incrementWorkByte9QueueCue201AdvanceWorkByte2At17ThenDrawWorld02Area08213_801F3D8C.c'
+    - incrementQueueAdvanceDraw
+    - '@source: src/bof3/world/incrementQueueAdvanceDraw.c'
     - '@behavior: entry 3 of the work-byte-2 handler table at 0x801F576C; increments work byte +0x09, and at unsigned count 17 clears it, queues cue 0x201 through 0x8015DF18 and advances work byte +0x02; always draws through 0x801F4430.'
   - - 4616
     - c
@@ -145,8 +145,8 @@ segments:
     - '@behavior: overlay per-frame handler, entry index 5 of the eight-pointer byte-2 handler table at 0x801F576C; seeds the scratch translation halfword 0x1F800018 with 0x3A0 and the leading rotation pair 0x1F80001C/0x1F80001E with 0x400 and 0, then walks the four corners of the layout in a bottom-tested loop, writing each corner translation X/Y from the signed bytes of 0x801F5764/0x801F5765 (corner * 3 << 16 plus a fixed bias, shifted right by nine and rebased by -0x4000), element 2 of the scratch rotation matrix from the shared frame counter 0x80143E6C shifted left by five plus the pass offset, and drawing one quad band through 0x801F46C8 from the work record byte +0x09 less eight shifted left by two up to row 0x1E with the pass offset and the per-row scale 0x10; it then draws through the work-record helper at 0x801F4430, advances the record +0x09 byte and, once that unsigned counter reaches 0x10, advances the shared scenario progress byte at 0x80146864, clears +0x09 and advances the record +0x02 dispatch byte by one; takes no arguments and returns nothing.'
   - - 5520
     - c
-    - advanceWorkWord14SweepHalfword32RandomizeOffsetsAndDrawWorld02Area08213_801F4190
-    - '@source: src/bof3/world/advanceWorkWord14SweepHalfword32RandomizeOffsetsAndDrawWorld02Area08213_801F4190.c'
+    - stateSweepRandomizeOffsets
+    - '@source: src/bof3/world/stateSweepRandomizeOffsets.c'
     - '@behavior: work-byte-2 handler 6; advances signed word +0x14 by q*(q-10) for q = word/10000, sweeps halfword +0x32 with mask 0xFFD, queues a cue index on bit-0x800 crossings, randomizes offsets in word-dependent bands, advances scenario progress 6 to 7 and work byte 2 at their thresholds, then draws through 0x801F4430.'
   - - 5940
     - asm
@@ -159,7 +159,7 @@ segments:
     - func_801F46C8
   - - 7636
     - c
-    - dispatchStateByte2Table57d0World02Area08213_801F49D4
+    - callStateTable57World02
     - '@source: src/bof3/world/area08213DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the record dispatch byte at offset 0x02 as the index and calls the handler at that index of the overlay-local handler table based at 0x801F57D0 (sixteen shipped entries, 0x801F4A18 through 0x801F52D8, ending where the following byte data begins at 0x801F5810); takes no arguments and forwards none.'
   - - 7704
@@ -169,48 +169,48 @@ segments:
     - '@behavior: initializes scratch work fields, transforms saved words +0x0C/+0x10 into +0x34/+0x38 and advances byte +0x02; takes no arguments and returns nothing.'
   - - 7824
     - c
-    - scalePaletteHalfFillScreenWhiteClearWorkByte9AdvanceWorkByte2AtScenarioProgress26World02Area08213_801F4A90
-    - '@source: src/bof3/world/scalePaletteHalfFillScreenWhiteClearWorkByte9AdvanceWorkByte2AtScenarioProgress26World02Area08213_801F4A90.c'
+    - mathHalfFillWhite
+    - '@source: src/bof3/world/mathHalfFillWhite.c'
     - '@behavior: scales the 0x100-entry palette window by 0x40, clears the shared palette-stage byte at 0x8014933A, fills the whole screen with the solid white colour word -1 through the gradient fill helper at 0x801F5428, clears scratch work byte +0x09 and advances work byte +0x02; only runs when the shared scenario progress byte at 0x80146864 is 0x26, takes no arguments and returns nothing.'
   - - 7932
     - c
-    - applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC
-    - '@source: src/bof3/world/applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC.c'
+    - statePaletteScaleIncrement
+    - '@source: src/bof3/world/statePaletteScaleIncrement.c'
     - '@behavior: applies the palette-scale helper at 0x801F5388 to the 0x100-entry palette window with the scale 0x80 (unity), stores 1 into the shared byte at 0x8014933A and then advances the scratch work record +0x02 byte by one.'
   - - 7996
     - c
-    - fillScreenRampDownColorIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4B3C
-    - '@source: src/bof3/world/fillScreenRampDownColorIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4B3C.c'
+    - renderRampDownColor
+    - '@source: src/bof3/world/renderRampDownColor.c'
     - '@behavior: overlay step handler, entry index 3 of the sixteen-pointer step table based at 0x801F57D0; reads the scratchpad work record published through 0x1F800044 and fills the whole 0x140 x 0xF0 screen through the gradient fill helper at 0x801F5428 with a colour packed from record byte +0x09 (blue = 0x1F - level*27/100, green = 0x19 - level*27/100, red = level/17, bit 28 set) after clearing the shared palette-stage byte at 0x8014933A, then advances that byte +0x09, and, once a fresh cell read shows it has reached 0x5B, clears byte +0x09 and advances the record dispatch byte +0x02 by one.'
   - - 8244
     - c
-    - fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34
-    - '@source: src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34.c'
+    - renderScreenGradientScenario
+    - '@source: src/bof3/world/renderScreenGradientScenario.c'
     - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, and, only when the shared scenario progress byte at 0x80146864 is 0x29, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record byte +0x02 by one.'
   - - 8336
     - c
-    - fillScreenRampColorIncrementWorkByte9Set8014933AAdvanceWorkByte2At79World02Area08213_801F4C90
-    - '@source: src/bof3/world/fillScreenRampColorIncrementWorkByte9Set8014933AAdvanceWorkByte2At79World02Area08213_801F4C90.c'
+    - renderScreenRampColor
+    - '@source: src/bof3/world/renderScreenRampColor.c'
     - '@behavior: re-reads the scratchpad work pointer cell 0x1F800044, packs a 15-bit colour word from that record byte +0x09 (green = level / 5, blue = green + 6, red = 5 - level / 24, bit 28 set), clears the shared palette-stage byte at 0x8014933A, fills the whole 0x140 x 0xF0 screen through the gradient fill helper at 0x801F5428, advances the work byte +0x09, and, once a fresh cell read shows that byte has reached 0x79, stores 1 into 0x8014933A and advances the record dispatch byte +0x02 by one.'
   - - 8556
     - c
-    - queueCue208ResetWorkByte9AdvanceWorkByte2AtScenarioProgress32World02Area08213_801F4D6C
-    - '@source: src/bof3/world/queueCue208ResetWorkByte9AdvanceWorkByte2AtScenarioProgress32World02Area08213_801F4D6C.c'
+    - queueResetAdvanceScenario
+    - '@source: src/bof3/world/queueResetAdvanceScenario.c'
     - '@behavior: overlay step handler called with no arguments; only when the shared scenario progress byte at 0x80146864 is 0x32 does it queue main-exe sound cue 0x208 through the cue dispatcher at 0x8015DF18, re-read the scratchpad work pointer cell 0x1F800044 and clear that work record byte at +0x09, then read the cell a second time and advance the record dispatch byte at +0x02 by one; every other progress value leaves the record untouched.'
   - - 8648
     - c
-    - fillScreenRampDownColorDimPaletteSetChannelBiasIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4DC8
-    - '@source: src/bof3/world/fillScreenRampDownColorDimPaletteSetChannelBiasIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4DC8.c'
+    - renderRampDimBias
+    - '@source: src/bof3/world/renderRampDimBias.c'
     - '@behavior: overlay step handler, entry index 7 of the sixteen-pointer step table based at 0x801F57D0; reads the scratchpad work record published through 0x1F800044 and fills the whole 0x140 x 0xF0 screen through the gradient fill helper at 0x801F5428 with a colour packed from record byte +0x09 (blue = 0x1F - level*27/100, green = 0x19 - level*27/100, red = level/17, bit 28 set) after clearing the shared palette-stage byte at 0x8014933A, re-reads the cell and rescales the palette window through 0x801F5388 with the unity scale 0x80 minus the level/3, reads the cell a third time and stores the negated signed level/3 into the shared bytes 0x80145EEF, 0x80145EEE and 0x80145EED, advances that record byte +0x09, and, once a fresh cell read shows it has reached 0x5B, clears byte +0x09 and advances the record dispatch byte +0x02 by one.'
   - - 9000
     - c
-    - fillScreenGradientAdvanceWorkByte2QueueCue201AtScenarioProgress35World02Area08213_801F4F28
-    - '@source: src/bof3/world/fillScreenGradientAdvanceWorkByte2QueueCue201AtScenarioProgress35World02Area08213_801F4F28.c'
+    - renderScreenGradientQueue
+    - '@source: src/bof3/world/renderScreenGradientQueue.c'
     - '@behavior: clears palette-stage byte 0x8014933A and fills the screen with gradient color 0x10001805; at scenario progress 0x35, advances scratchpad work record byte +0x02 then queues sound cue 0x201.'
   - - 9096
     - c
-    - setScratchVectorsDrawQuadBandFillScreenGradientIncrementWorkByte9At8World02Area08213_801F4F88
-    - '@source: src/bof3/world/setScratchVectorsDrawQuadBandFillScreenGradientIncrementWorkByte9At8World02Area08213_801F4F88.c'
+    - stateVectorsFillGradient
+    - '@source: src/bof3/world/stateVectorsFillGradient.c'
     - '@behavior: overlay step handler, entry index 9 of the sixteen-pointer step table at 0x801F57D0; seeds the scratch translation vector at 0x1F800014/16/18 with -0x2E40/-0x3240/-0x3E0, clears 0x1F80001C/1E and stores the shared frame counter 0x80143E6C shifted left by five at 0x1F800020, draws one translucent quad band from row 4 x work byte +0x09 up to 0x1F through the drawer at 0x801F46C8 with the matrix seed 0 and the per-row offset scale 0x18, clears the palette-stage byte 0x8014933A and fills the whole 0x140 x 0xF0 screen with the colour word 0x10001805 through the gradient fill helper at 0x801F5428, increments work byte +0x09 and advances work byte +0x02 once that counter reaches 8.'
   - - 9320
     - c
@@ -219,13 +219,13 @@ segments:
     - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, and, only when the shared scenario progress byte at 0x80146864 is 0x37, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record byte +0x02 by one.'
   - - 9412
     - c
-    - fillScreenWhiteQueueCues202And200ClearWorkByte9AdvanceWorkByte2World02Area08213_801F50C4
-    - '@source: src/bof3/world/fillScreenWhiteQueueCues202And200ClearWorkByte9AdvanceWorkByte2World02Area08213_801F50C4.c'
+    - renderScreenWhiteQueue
+    - '@source: src/bof3/world/renderScreenWhiteQueue.c'
     - '@behavior: clears palette-stage byte 0x8014933A, fills the screen with packed white -1, queues cues 0x202 and 0x200, clears scratch work byte +0x09, then re-reads the work pointer and increments byte +0x02.'
   - - 9508
     - c
-    - fillScreenGradientAdjustWorkHalfword32AdvanceWorkByte2AtScenarioProgress3aWorld02Area08213_801F5124
-    - '@source: src/bof3/world/fillScreenGradientAdjustWorkHalfword32AdvanceWorkByte2AtScenarioProgress3aWorld02Area08213_801F5124.c'
+    - renderScreenGradientAdjust
+    - '@source: src/bof3/world/renderScreenGradientAdjust.c'
     - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, reduces the halfword +0x32 of the scratch work record published through 0x1F800044 by the signed quotient of the record word +0x14 divided by 10000 and masks that difference with 0xFFD, draws through the helper at 0x801F4430, and, only when the shared scenario progress byte at 0x80146864 is 0x3A, re-reads the work cell and advances that work record byte +0x02 by one.'
   - - 9660
     - asm
@@ -237,8 +237,8 @@ segments:
     - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, and, only when the shared scenario progress byte at 0x80146864 is 0x3B, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record byte +0x02 by one.'
   - - 9944
     - c
-    - fillScreenWhiteQueueCue202RestorePaletteClearChannelBiasAndWorkFlagsWorld02Area08213_801F52D8
-    - '@source: src/bof3/world/fillScreenWhiteQueueCue202RestorePaletteClearChannelBiasAndWorkFlagsWorld02Area08213_801F52D8.c'
+    - renderWhiteRestoreBias
+    - '@source: src/bof3/world/renderWhiteRestoreBias.c'
     - '@behavior: draws a white full-screen flat quad, queues cue 0x202, sets byte 0x8014933A, restores palette scale 0x80, clears the three shared channel-bias bytes and clears scratch work-header flags through 0x80196070.'
   - - 10120
     - c
@@ -265,8 +265,8 @@ segments:
     - '@behavior: four independent gates re-read the +0x79 mode byte of the work record published through the global pointer cell 0x80146250 and advance the halfword at offset 0x0A of the record published through 0x80148210 by the step that mode selects - 3 for mode 5, 6 for mode 4 and 9 for mode 6, while mode 8 rewrites the halfword with the value it already holds.'
   - - 10988
     - c
-    - startAction8Or3BySharedFlag4SetFrontendMode2World02Area08213_801F56EC
-    - '@source: src/bof3/world/startAction8Or3BySharedFlag4SetFrontendMode2World02Area08213_801F56EC.c'
+    - audioSharedSetFrontend
+    - '@source: src/bof3/world/audioSharedSetFrontend.c'
     - '@behavior: tests shared flag 4 using the bank word at 0x8014686C, requests action 8 when set or action 3 when clear through 0x80150224, then sets frontend mode byte 0x80143BB0 to 2.'
   - - 11060
     - textbin

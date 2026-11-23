@@ -1,7 +1,7 @@
 #include "bof3/ui/game00_internal.h"
 
 /*
- * @behavior Calls handler 1 of the world-slot record that findCurrentWorldSlotIndex
+ * @behavior Calls handler 1 of the world-slot record that queryCurrentWorldIndex
  * selects by the current world state ID from the eleven 0x1C-byte records at
  * 0x801C7F5C.
  * @source 0x8019A258
@@ -11,5 +11,5 @@
  */
 void dispatchWorldSlotHandler1(void)
 {
-    D_801C7F5C[findCurrentWorldSlotIndex()].handlers[1]();
+    D_801C7F5C[queryCurrentWorldIndex()].handlers[1]();
 }

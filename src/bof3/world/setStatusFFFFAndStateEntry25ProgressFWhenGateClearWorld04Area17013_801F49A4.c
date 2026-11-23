@@ -36,7 +36,7 @@ void func_8015C088(void);
  * names the same stored value).
  *
  * Shape evidence: the same-target sibling
- * setStatusFFFFAndStateEntry25Progress5WhenGateClearWorld04Area17013_801F4950
+ * stateStatusGateClear
  * is exact and its 0x54-byte span equals this one word for word except for the
  * `addiu` that materialises the second stored constant (5 there, 0xF here), so
  * its statement order, operand forms, offset spelling and declaration style are

@@ -75,7 +75,7 @@ extern void func_80166C48(u8* row, s32 mode);
  *           payload, as the word 0x801CEA04 at 0x801D0580, entry 7 of the
  *           thirty-word code-pointer run based at 0x801D0564, which this
  *           overlay places as its textbin row at that base, and the byte-2
- *           dispatcher dispatchWorkByte2Table0564PlcharPlp67800_801CE404
+ *           dispatcher callWorkTable0564Plchar
  *           indexes that run with work-record byte 2 scaled by four before its
  *           indirect call, so the body runs while that byte reads 7 and no jal
  *           or j word of the payload names it. It takes no arguments and any

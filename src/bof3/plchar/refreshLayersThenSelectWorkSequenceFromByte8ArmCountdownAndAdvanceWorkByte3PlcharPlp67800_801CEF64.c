@@ -8,7 +8,7 @@
 extern u8* D_1F800044;
 
 /* Layer-position refresh of this payload, lifted as
- * claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348;
+ * claimLayerPositionsLayer;
  * its bytes at 0x801CF348 claim work byte 0x2B, draw the work reference
  * positions and clear the claim again when a probe reads above 64, which is the
  * body the exact sibling lifts of this function's own body describe for their
@@ -16,7 +16,7 @@ extern u8* D_1F800044;
  * nothing set up in the argument registers, so it takes no arguments, and this
  * caller reads no result from $v0.
  */
-void claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348(
+void claimLayerPositionsLayer(
     void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. Splat
@@ -52,7 +52,7 @@ u32 func_8014D8D4(u8 arg0);
  */
 void refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp67800_801CEF64(
     void) {
-  claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348();
+  claimLayerPositionsLayer();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xA] = 0xB;
   D_1F800044[3] = 1;

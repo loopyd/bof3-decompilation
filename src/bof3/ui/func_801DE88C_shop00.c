@@ -6,7 +6,7 @@
  *           global gate halfword D_80143C40 is clear it appends the fullscreen
  *           dim tile, re-arms phaseTimer with 2 and advances the UI sub-step
  *           byte D_80148652 by one; when the gate is set it calls
- *           drawShopSlotListWithSelectionCursors instead and leaves phaseTimer
+ *           renderShopListCursors instead and leaves phaseTimer
  *           and D_80148652 untouched.
  * @status exact
  * @match 100.00
@@ -19,11 +19,11 @@ void func_801DE88C(void) {
     appendFullscreenDimTileB();
     /* The original reads the sub-step byte before the phaseTimer store and
      * writes it back incremented afterwards (sibling shape:
-     * advanceUiPhaseOrSelectSavedStatePhase). */
+     * statePhaseSavedPhase). */
     previous = D_80148652;
     phaseTimer = 2;
     D_80148652 = previous + 1;
   } else {
-    drawShopSlotListWithSelectionCursors();
+    renderShopListCursors();
   }
 }

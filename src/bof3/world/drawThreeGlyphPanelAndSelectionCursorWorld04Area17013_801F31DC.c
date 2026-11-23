@@ -15,7 +15,7 @@ extern void drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698(
     s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2, u8 r, u8 g, u8 b, u8 semi);
 extern void drawSemiTransFlatLinePrimWorld04Area17013_801F3774(
     s16 x0, s16 y0, s16 x1, s16 y1, u8 r, u8 g, u8 b, u8 semi);
-extern void drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0(s16 x, s16 y,
+extern void renderGlyphGridMarkers(s16 x, s16 y,
                                                                 s8* glyphs,
                                                                 u8 phase);
 
@@ -85,14 +85,14 @@ void drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC(s32 x,
       (s16)(x + 0x131), (s16)(y + 0x5A), (s16)(x + 0x136), (s16)(y + 0x55), 0x00,
       0x80, 0x00, 0x01);
 
-  drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0((s16)(x + 0x09),
+  renderGlyphGridMarkers((s16)(x + 0x09),
                                                       (s16)(y + 0x0A),
                                                       D_801F58D0, D_801F5990);
-  drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0((s16)(x + 0x6D),
+  renderGlyphGridMarkers((s16)(x + 0x6D),
                                                       (s16)(y + 0x0A),
                                                       D_801F58D0 + 0x3F,
                                                       D_801F5991);
-  drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0((s16)(x + 0xD1),
+  renderGlyphGridMarkers((s16)(x + 0xD1),
                                                       (s16)(y + 0x0A),
                                                       D_801F58D0 + 0x7E,
                                                       D_801F5992);

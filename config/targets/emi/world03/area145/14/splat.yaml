@@ -30,32 +30,32 @@ segments:
   subsegments:
   - - 144
     - c
-    - dispatchStateByte1Table5434World03Area14514_801F2C90
+    - callStateTable5434World03
     - '@source: src/bof3/world/area14514DispatchTables.c'
   - - 212
     - asm
     - func_801F2CD4
   - - 324
     - c
-    - drawWorkPointPairsFromFourRowTableThenDispatchSubstateByte2World03Area14514_801F2D44
-    - '@source: src/bof3/world/drawWorkPointPairsFromFourRowTableThenDispatchSubstateByte2World03Area14514_801F2D44.c'
+    - renderPointPairsFour
+    - '@source: src/bof3/world/renderPointPairsFour.c'
     - '@behavior: Overlay state handler 1 of the local work-byte-1 dispatch table based at 0x801F5434, drawing four stages and then dispatching. It walks the four four-byte rows that follow that table''s two entry words, each row holding the two coordinate pairs (x0, y0, x1, y1) of one stage, and for each row stores both pairs into the work record published at the scratchpad pointer cell 0x1F800044: words +0x0C and +0x10 take the row''s first pair and words +0x18 and +0x1C its second, each coordinate widened to 16.16 and offset by half a unit through the low bit 0x8000. It then calls the payload drawing helper at 0x801F2F30 with the addresses of those two pairs, which projects both and draws between them. After the fourth row it re-reads the pointer cell, takes the record sub-state byte at +0x02 and calls that entry of the local handler table based at 0x801F544C. The loop counter is an unsigned byte, so it is masked by 0xFF both when scaled by four for the row index and when compared with the row count.'
   - - 556
     - c
-    - setScratchWorkByte2WhenFrontEndModeNot5World03Area14514_801F2E2C
-    - '@source: src/bof3/world/setScratchWorkByte2WhenFrontEndModeNot5World03Area14514_801F2E2C.c'
+    - stateScratchFrontEnd
+    - '@source: src/bof3/world/stateScratchFrontEnd.c'
     - '@behavior: Overlay mode gate reading the shared front-end mode byte D_80143BB0 and, unless it reads 5, storing 1 into byte 0x02 of the work object published at scratchpad cell 0x1F800044.'
   - - 600
     - asm
     - func_801F2E58
   - - 648
     - c
-    - dispatchStateByte1Table5454World03Area14514_801F2E88
+    - callStateTable5454World03
     - '@source: src/bof3/world/area14514DispatchTables.c'
   - - 716
     - c
-    - drawWorkVectorPairAndAdvanceStateByte1World03Area14514_801F2ECC
-    - '@source: src/bof3/world/drawWorkVectorPairAndAdvanceStateByte1World03Area14514_801F2ECC.c'
+    - renderVectorPairAdvance
+    - '@source: src/bof3/world/renderVectorPairAdvance.c'
     - '@behavior: Overlay per-frame step handler passing the work-object fields at +0x0C and +0x18 to the drawing helper at 0x801F332C and then incrementing the work byte at +0x01, the dispatch byte of this overlay''s handler table at 0x801F5454.'
   - - 784
     - c
@@ -69,8 +69,8 @@ segments:
     - func_801F311C
   - - 1836
     - c
-    - drawProjectedBeamWithRotatedEndQuadsAndGouraudBodyWorld03Area14514_801F332C
-    - '@source: src/bof3/world/drawProjectedBeamWithRotatedEndQuadsAndGouraudBodyWorld03Area14514_801F332C.c'
+    - renderBeamRotatedBody
+    - '@source: src/bof3/world/renderBeamRotatedBody.c'
     - '@behavior: Overlay drawing helper projecting the work record''s two three-word position vectors, drawing a rotated translucent end quad at each projected point at extents converted from the shared {0x10, 0} size pair and phases 0x400 and 0xC00 apart, then the gouraud body quad between the two projected points.'
   - - 2248
     - asm
@@ -80,20 +80,20 @@ segments:
     - func_801F3618
   - - 3228
     - c
-    - dispatchStateByte1Table545cWorld03Area14514_801F389C
+    - callStateTable545World03
     - '@source: src/bof3/world/area14514DispatchTables.c'
   - - 3296
     - c
-    - seedWorkCursorTripleAndAdvanceStateByte1World03Area14514_801F38E0
-    - '@source: src/bof3/world/seedWorkCursorTripleAndAdvanceStateByte1World03Area14514_801F38E0.c'
+    - stateCursorTripleAdvance
+    - '@source: src/bof3/world/stateCursorTripleAdvance.c'
   - - 3384
     - c
     - drawWorkCursorQuadWorld03Area14514_801F3938
     - '@source: src/bof3/world/drawWorkCursorQuadWorld03Area14514_801F3938.c'
   - - 3456
     - c
-    - drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980
-    - '@source: src/bof3/world/drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980.c'
+    - renderSixteenQuadsAround
+    - '@source: src/bof3/world/renderSixteenQuadsAround.c'
     - '@behavior: Draws the overlay cursor band, a closed translucent gouraud ring of sixteen quads around the three-word work-cursor position handed as arg0: it offsets that position in x and y by the cosine and sine of a 0x100-stepped 12-bit phase scaled by 0x200 and shifted right four, projects each step at the position depth word and at that depth plus 0x08000000, fills one semi-transparent POLY_G4 per step from the previous and current projected pairs, and ramps the shared grey level from 0x20 biased by the low bit of D_80143E6C down by four over quads 4 to 0x0B and up by four outside that window.'
   - - 4240
     - c
@@ -105,16 +105,16 @@ segments:
     - func_801F3CE4
   - - 4556
     - c
-    - dispatchStateByte4Table5c94World03Area14514_801F3DCC
-    - '@source: src/bof3/world/dispatchStateByte4Table5c94World03Area14514_801F3DCC.c'
+    - callStateByte4Table5
+    - '@source: src/bof3/world/callStateByte4Table5.c'
     - '@behavior: Overlay per-frame work dispatcher reading the work record''s state byte at +4 through the scratchpad pointer cell 0x1F800044 and calling the handler pointer at that index of the overlay handler table based at 0x801F5C94, whose two entries are the routines at 0x801F3E10 and 0x801F3F18. It reads no other record field and writes none; the 0x18-byte frame only keeps $ra across the indirect call, and the pointer-cell load precedes frame creation. No jal in the payload targets it, while the overlay code-pointer run at 0x801F5C20 holds this address at the word 0x801F5C28, so the overlay reaches it from outside its payload.'
   - - 4624
     - asm
     - func_801F3E10
   - - 4888
     - c
-    - advanceWorkMotionAndReleaseRecordPast3eElseConsumeSharedBy2World03Area14514_801F3F18
-    - '@source: src/bof3/world/advanceWorkMotionAndReleaseRecordPast3eElseConsumeSharedBy2World03Area14514_801F3F18.c'
+    - stateMotionReleaseConsume
+    - '@source: src/bof3/world/stateMotionReleaseConsume.c'
     - '@behavior: Overlay per-frame step of the scratch work record published through the scratchpad pointer cell 0x1F800044: it adds the record 0x20 step word to its 0x14 motion word and runs the shared mover func_801B0DFC, then queries the shared distance routine func_80154F28 with the record 0x34/0x38 coordinate pair and, when the record signed halfword at 0x3E is below the narrowed distance, stores the raw result into that halfword, zeroes the 0x14 and 0x20 words, writes 2 into the handler byte at 0x04, requests resource 0x39 through func_8014D6B8 and sets byte 0x01 of the shared record at 0x80148210 to 4; otherwise it consumes two units of that shared record halfword at 0x0A.'
   - - 5080
     - c
@@ -142,8 +142,8 @@ segments:
     - func_801F4288
   - - 5892
     - c
-    - advancePublishedHalfword0aBy3WhenSharedSelector0BIsSetWorld03Area14514_801F4304
-    - '@source: src/bof3/world/advancePublishedHalfword0aBy3WhenSharedSelector0BIsSetWorld03Area14514_801F4304.c'
+    - statePublishedSharedIs
+    - '@source: src/bof3/world/statePublishedSharedIs.c'
     - '@behavior: Queries the shared byte-result selector func_80166140 with the constant 0xB and, when the byte-extended result is nonzero, advances the halfword at offset 0x0A of the work record published through the main-RAM pointer cell 0x80148210 by 3.'
   - - 5964
     - c
@@ -189,8 +189,8 @@ segments:
     - '@behavior: Chained overlay effect stage drawing the shared work record position advanced by the route step times the elapsed value clamped to the stage length, then answering 1 until that length is reached and the next stage code afterwards.'
   - - 9616
     - c
-    - claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190
-    - '@source: src/bof3/world/claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190.c'
+    - claimEndPointPair
+    - '@source: src/bof3/world/claimEndPointPair.c'
     - '@behavior: Claims the next free 0x74-byte front-end record row of the shared table at 0x80143FC8 through the allocator func_8019601C, publishes the returned index in scratchpad byte 0x1F800000 and, unless that index is 0xFF, seeds the claimed row: byte +0 takes the occupancy flag 1, byte +5 the handler selector 0x3F, the words at +0x0C and +0x10 the first 16.16 point it is given, +0x18 and +0x1C the second, and both depth words +0x14 and +0x20 the fixed 0x500000. It answers 1 when the table is full and 0 once the row is seeded; its one in-image caller is the stage walker at 0x801F504C.'
   - - 10020
     - c

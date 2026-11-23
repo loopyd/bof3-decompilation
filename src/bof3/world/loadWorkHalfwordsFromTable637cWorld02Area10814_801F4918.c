@@ -13,7 +13,7 @@ typedef struct World02Area10814Row637c {
 } World02Area10814Row637c;
 
 /* @source 0x801F637C @kind table */
-extern World02Area10814Row637c workRowTable637cWorld02Area10814[];
+extern World02Area10814Row637c workRowTable637World02[];
 
 /* @source 0x801F4918
  * @behavior Copies the row selected by the 1-based byte at 0x80147B67 out of
@@ -31,10 +31,10 @@ void loadWorkHalfwordsFromTable637cWorld02Area10814_801F4918(void) {
 
   index = (u8)(D_80147B67 - 1);
   work = SPAD_PTR_SLOT(u8, 0x44);
-  *(u16*)(work + 0x36) = workRowTable637cWorld02Area10814[index].field_00;
+  *(u16*)(work + 0x36) = workRowTable637World02[index].field_00;
   *(u16*)(work + 0x34) =
-      (u16)((workRowTable637cWorld02Area10814[index].field_01 != 0) << 15);
-  *(u16*)(work + 0x3A) = workRowTable637cWorld02Area10814[index].field_02;
+      (u16)((workRowTable637World02[index].field_01 != 0) << 15);
+  *(u16*)(work + 0x3A) = workRowTable637World02[index].field_02;
   *(u16*)(work + 0x38) =
-      (u16)((workRowTable637cWorld02Area10814[index].field_03 != 0) << 15);
+      (u16)((workRowTable637World02[index].field_03 != 0) << 15);
 }

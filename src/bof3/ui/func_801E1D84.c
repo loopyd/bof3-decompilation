@@ -3,7 +3,7 @@
 /* @source 0x801E1D84
  * @behavior orders the main-RAM 128-slot skill-notes bank D_8014546C by
  *           ability cost after normalizing it; it is the mirror twin of the
- *           sibling sortSkillNotesByCostDescending with the cost comparison
+ *           sibling sortSkillNotesCost with the cost comparison
  *           reversed. It first runs the scanner func_801E1BCC over the bank,
  *           then for every outer pass i in 0..0x7E re-seeds the byte cursor p
  *           at the bank start and walks j from 0 while j is below the signed

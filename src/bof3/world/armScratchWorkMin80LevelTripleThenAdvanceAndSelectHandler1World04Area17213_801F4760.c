@@ -2,7 +2,7 @@
 
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0(
+void stateLevelAccumulatorsMarker(
     void);
 
 /* @source 0x801F4760
@@ -12,7 +12,7 @@ void advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_8
  * record byte 0, then clears flag bit 0x40, writes 1 into the 0x5C marker byte,
  * and writes -0x80 into the signed level bytes 0x5F, 0x5E and 0x5D in that
  * order through one load of the cell. It then advances the same record through
- * advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0
+ * stateLevelAccumulatorsMarker
  * and, after a fresh cell load, writes 1 into the handler byte at offset 0x04
  * that the local dispatcher indexes its handler table with, so the following
  * frame steps the record through the advance handler instead of this arming
@@ -35,6 +35,6 @@ void armScratchWorkMin80LevelTripleThenAdvanceAndSelectHandler1World04Area17213_
   *(s8*)(levels + 0x5f) = -0x80;
   *(s8*)(levels + 0x5e) = -0x80;
   *(s8*)(levels + 0x5d) = -0x80;
-  advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0();
+  stateLevelAccumulatorsMarker();
   D_1F800044[4] = 1;
 }

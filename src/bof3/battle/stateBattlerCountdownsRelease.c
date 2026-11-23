@@ -69,7 +69,7 @@ void stateBattlerCountdownsRelease(void) {
     if (BATTLE_GLOBAL_BYTE_63CE_NV == 0u) {
       index = 0u;
       do {
-        if (isBattlerInactiveOrFlag4000(index) == 0u) {
+        if (checkBattlerInactiveFlag4000(index) == 0u) {
           D_80145E90[index].unk_128 &= 0xffffffefu;
         }
         index += 1u;
@@ -77,7 +77,7 @@ void stateBattlerCountdownsRelease(void) {
 
       index = 3u;
       do {
-        if (isBattlerInactiveOrFlag4000(index) == 0u) {
+        if (checkBattlerInactiveFlag4000(index) == 0u) {
           D_801EB630[index - 3u].unk_104 &= 0xffffffefu;
         }
         index += 1u;

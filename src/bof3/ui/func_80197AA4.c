@@ -23,7 +23,7 @@ void func_80197AA4(void) {
   u32 value;
   u32 base;
 
-  ready = advanceWorkRoutesOrInitializeTint();
+  ready = stateRoutesInitializeTint();
   func_801A06D8();
   runFrameFinalizationServices();
   if (ready) {

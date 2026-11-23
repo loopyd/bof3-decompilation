@@ -3,11 +3,11 @@
 /* @source 0x801D7D48
  * @behavior shop panel phase step sharing the entry sequence of the sibling
  *           steps func_801D7B74 and func_801D7CC8: calls
- *           drawShopSlotPriceList with the work-block index byte
+ *           renderShopPriceList with the work-block index byte
  *           D_80148656[0], 0x98, 0x3F, 0 and 0xFF, then buildSlotList with 0,
  *           then forwards the same work-block index
  *           byte (read signed) to the shop panel helper
- *           emitFlatLineRectangleBorder as the even value
+ *           emitLineRectangleBorder as the even value
  *           (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 1 and 6;
  *           finally tests the byte counter
  *           tickPhaseTimerThenAdvanceWorkCounter(&D_80148656[5],
@@ -21,9 +21,9 @@ void func_801D7D48(void) {
   u8* work;
 
   work = D_80148656;
-  drawShopSlotPriceList(work[0], 0x98, 0x3F, 0, 0xFF);
+  renderShopPriceList(work[0], 0x98, 0x3F, 0, 0xFF);
   buildSlotList(0);
-  emitFlatLineRectangleBorder(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80,
+  emitLineRectangleBorder(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80,
                               0x34, 1, 6);
   if ((u8)tickPhaseTimerThenAdvanceWorkCounter(work + 5, D_8014865F)) {
     D_80148651 -= 6;

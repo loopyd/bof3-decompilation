@@ -22,7 +22,7 @@ extern Boss03316Handler D_800C27A0[]; /* @source 0x800C27A0 @kind data */
  * reads no other state and writes none; the 0x18-byte frame only keeps $ra at
  * 0x10 across the indirect call. No jal in this payload names 0x800C1CA4, but the
  * installer
- * publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03316_800C1848 takes its
+ * publishStepDataBoss takes its
  * address and stores it into byte offset 0xE4 of the
  * enemy work record published at 0x801EB4E8, so the main program reaches it
  * through that stored pointer. Same C shape as the indexed dispatchers at

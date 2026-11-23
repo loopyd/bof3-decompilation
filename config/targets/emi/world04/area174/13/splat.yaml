@@ -27,12 +27,12 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table4facWorld04Area17413_801F2C04
+    - callStateTable4World04
     - '@source: src/bof3/world/area17413DispatchTables.c'
   - - 72
     - c
-    - clearWorkTableByte3WhenWorkByte6SetThenClearWorkByte9AndAdvanceWorkByte1World04Area17413_801F2C48
-    - '@source: src/bof3/world/clearWorkTableByte3WhenWorkByte6SetThenClearWorkByte9AndAdvanceWorkByte1World04Area17413_801F2C48.c'
+    - stateTableSetClear
+    - '@source: src/bof3/world/stateTableSetClear.c'
     - '@behavior: Run initialiser of this overlay work-byte-1 state machine: entry 0 of the handler table based at 0x801F4FAC, which this target exact dispatcher at 0x801F2C04 indexes with the work record state byte at +1, so only that table word names the span and no jal in the payload reaches it. While work byte +6 of the record published through the scratchpad pointer cell 0x1F800044 reads nonzero it calls the helper at 0x801F2E5C, which clears the occupancy byte +3 of the 0x20 records of the 0x2C-byte-stride table at 0x800E4800; it then re-reads that cell to clear the substate counter byte +9 and re-reads it once more to advance the state byte +1 by one, so the next frame dispatches entry 1 at 0x801F2CA8. Takes no arguments and returns nothing; its 0x18-byte frame only holds $ra at 0x10 across the helper call.'
   - - 168
     - c
@@ -46,8 +46,8 @@ segments:
     - '@behavior: Entry 2 of this overlay work-byte-1 state machine: entry 2 of the eight-word handler run based at 0x801F4FAC, which this target exact dispatcher at 0x801F2C04 indexes with the work record state byte at +1, so only that table word names the span and no jal in the payload reaches it; entry 0 at 0x801F2C48 clears the substate counter, and entry 1 at 0x801F2CA8 advances the state byte when the resident position reaches 0x3C8000, selecting this entry. While the low three bits of the record substate counter byte +9 read zero it runs the claim scan at 0x801F2E88 over the 0x20 records of the 0x2C-byte-stride table at 0x800E4800 and passes a nonzero answer to the seeder at 0x801F3378; it then advances byte +9 by one, and while the record mode byte +6 reads nonzero it runs the record stepper at 0x801F2EC4. When the resident position word 0x80147A8C equals the fixed coordinate 0x408000 it advances the state byte +1 by one, so the next frame dispatches entry 3 at 0x801F2E28. Takes no arguments and returns nothing; its 0x18-byte frame only holds $ra at 0x10 across the three calls.'
   - - 552
     - c
-    - stepWorkRecordsAndResetWorkAreaWhenNoRecordActiveWorld04Area17413_801F2E28
-    - '@source: src/bof3/world/stepWorkRecordsAndResetWorkAreaWhenNoRecordActiveWorld04Area17413_801F2E28.c'
+    - stepAreaNoActive
+    - '@source: src/bof3/world/stepAreaNoActive.c'
     - '@behavior: Entry 3 of this overlay work-byte-1 state machine: entry 3 of the eight-word handler run based at 0x801F4FAC, which this target exact dispatcher at 0x801F2C04 indexes with the work record state byte at +1, so only that table word names the span and no jal in the payload reaches it; entry 2 at 0x801F2D68 advances the state byte once the resident position word reaches 0x408000, selecting this entry. It runs the in-payload record stepper at 0x801F2EC4, which walks the 0x20 records of the 0x2C-byte-stride table at 0x800E4800, integrates the position triple of every claimed record from its step triple, reseeds the heading, retires the records whose countdown at +5 reached zero or whose first position word fell behind the resident position, and answers 1 when any record of the table read claimed during the pass and 0 when the whole table read unclaimed. Only when the low byte of that answer reads zero does it call the resident reset helper at 0x80196070, the main-executable body bound as clearWorkFlags in the target that owns it, which zeroes the work object bytes 0x00 through 0x04, so the state byte at +1 that selects this entry clears as well and the machine restarts at entry 0. The state byte stays at 3 while any record remains, so this entry repeats every frame. Takes no arguments and returns nothing; its 0x18-byte frame only holds $ra at 0x10 across the two calls, both join on one epilogue, and the word answer of the stepper is reduced to its low byte before the test.'
   - - 604
     - c
@@ -68,8 +68,8 @@ segments:
     - func_801F3320
   - - 1912
     - c
-    - claimWorkRecordAndSeedPositionStepSizeAndHeadingFromWorkObjectWorld04Area17413_801F3378
-    - '@source: src/bof3/world/claimWorkRecordAndSeedPositionStepSizeAndHeadingFromWorkObjectWorld04Area17413_801F3378.c'
+    - claimSizeHeadingObject
+    - '@source: src/bof3/world/claimSizeHeadingObject.c'
     - '@behavior: Claims one record of the 0x20-entry, 0x2C-byte-stride work table at 0x800E4800 - the record the callers obtained from the claim scan at 0x801F2E88 - by writing 1 to its occupancy byte at offset 3 and clearing its byte at offset 4, then seeds it from the scratch work object published through the pointer cell at 0x1F800044: position words 0x0C, 0x10 and 0x14 take the work words 0x34, 0x38 and 0x3C unchanged, step words 0x1C, 0x20 and 0x24 take the difference to that position triple from the work object other triple at 0x0C, 0x10 and 0x14 arithmetic-shifted right by five, halfword 0x08 takes 0x40 and halfword 0x0A takes 0x20 as the size pair, byte 5 takes 0x20 as the countdown the stepper at 0x801F2EC4 decrements before it frees the record, and the scratch work pointer is read a second time so that the overlay helper 0x801F3320 can project the two three-word points and supply halfword 0x06 with the heading between their projections. Both callers in this payload - func_801F2CA8 and func_801F2D68 - discard a zero answer from the claim scan and otherwise pass the returned record here in $a0; the body returns nothing and its 0x18-byte frame saves $ra and $s0.'
   - - 2124
     - c
@@ -77,16 +77,16 @@ segments:
     - '@source: src/bof3/world/area17413DispatchTables.c'
   - - 2192
     - c
-    - seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld04Area17413_801F3490
-    - '@source: src/bof3/world/seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld04Area17413_801F3490.c'
+    - stateTablesStampInside
+    - '@source: src/bof3/world/stateTablesStampInside.c'
     - '@behavior: Byte-2 state handler at entry 0 of the five-word handler table based at 0x801F4FBC, which the target dispatcher at 0x801F344C indexes with the work record state byte at +2, so only that table word names the span and no jal in the payload reaches it. Records whether the record halfword at 0x3A was zero into byte 0x08, then seeds the record published at the scratchpad pointer cell 0x1F800044 from this overlay own per-index tables: the bytes at 0x801F4FE0 and 0x801F4FE1 at twice the signed halfword at 0x36 into record halfwords 0x36 and 0x3A, the halfwords at 0x801F4FD0 and 0x801F4FD4 at that index into halfwords 0x3E and 0x2E, and the word at 0x801F4FD8 at that index into word 0x20. It clears halfword 0x30, increments the state byte at 0x02, then runs the shared camera window test against 0x80145EC4 and 0x80145EC8 selected by that same byte 0x08 and stamps 0x80 into halfword 0x30 with state 3 when the record stays inside it, finishing with the record renderer 0x801F3958 on every path. Takes no arguments and returns nothing.'
   - - 2620
     - asm
     - func_801F363C
   - - 2940
     - c
-    - advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3958World04Area17413_801F377C
-    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3958World04Area17413_801F377C.c'
+    - stateAdvanceWorkCall3958
+    - '@source: src/bof3/world/stateAdvanceWorkCall3958.c'
     - '@behavior: Advances the scratch work record published through the pointer cell at 0x1F800044: adds 0x10 to its halfword at 0x30 and stores the sum back, then, once the signed value of that updated halfword has reached 0x80, increments work byte 0x2, the state selector the work-byte-2 dispatcher 0x801F344C indexes the local handler table 0x801F4FBC with, and finally calls the record renderer func_801F3958. Takes no arguments and returns nothing.'
   - - 3032
     - c
@@ -101,13 +101,13 @@ segments:
     - func_801F3958
   - - 4236
     - c
-    - allocateWorkPaletteSlotFromPayloadTableSetWorkByte2aAndRequestResource9World04Area17413_801F3C8C
-    - '@source: src/bof3/world/allocateWorkPaletteSlotFromPayloadTableSetWorkByte2aAndRequestResource9World04Area17413_801F3C8C.c'
+    - allocatePaletteSlotPayload
+    - '@source: src/bof3/world/allocatePaletteSlotPayload.c'
     - '@behavior: State handler of this overlay, reached through the word 0x801F6610, entry 0 of the dispatch table that publishes the handlers of this payload; no jal in the payload names it. It reads the work record published through the scratchpad cell 0x1F800044, passes that record to the main-executable helper 0x8014E4BC, allocates one palette slot with the record as its owner and the payload pointer run 0x801F66D4 as its source table, stores 1 into work byte 0x2A, and requests resource 9 through the shared helper 0x8014D6B8. Takes no arguments and returns nothing.'
   - - 4324
     - c
-    - invokeHelperWithWorkWhenSharedFrontEndPhaseByte5ElseLowerRecordHalfword0aWorld04Area17413_801F3CE4
-    - '@source: src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5ElseLowerRecordHalfword0aWorld04Area17413_801F3CE4.c'
+    - callEndPhaseLower
+    - '@source: src/bof3/world/callEndPhaseLower.c'
     - '@behavior: Handler entry 1 of the code-pointer run at 0x801F6610 inside the textbin blob of this overlay, so no jal in the payload names it. When the shared front-end phase byte at 0x80143BB0 reads 5 it passes the work record held by the scratchpad pointer cell 0x1F800044 to the main-executable helper 0x8014E4BC as its only argument and then jumps to the shared epilogue; any other value takes the fall-through arm, which loads the global pointer cell 0x80148210 once and lowers the halfword at its +0x0A offset by 2. Takes no arguments and returns nothing.'
   - - 4416
     - c
@@ -124,8 +124,8 @@ segments:
     - '@behavior: Claims one free row through the shared allocator func_8019601C and, for an index other than 0xFF, seeds the 0x74-byte row it selects at 0x80143FC8 with occupancy 1 at byte 0x00, handler selector 0x9D at byte 0x05, 1 at byte 0x06, 0xA5 at halfword 0x30, the slot of the 0x98-byte work record published at 0x80146884 at byte 0x0B and 0x18 times that slot plus 0xC at halfword 0x2E.'
   - - 4940
     - c
-    - seedFrontEndRecordState3AndBytes5D70And5E30World04Area17413_801F3F4C
-    - '@source: src/bof3/world/seedFrontEndRecordState3AndBytes5D70And5E30World04Area17413_801F3F4C.c'
+    - stateFrontEndRecord
+    - '@source: src/bof3/world/stateFrontEndRecord.c'
     - '@behavior: Seeds the 0x74-byte front-end record row selected by work byte 0x0B of the object published at scratchpad 0x1F800044: record byte 0x01 = 3, byte 0x5D = 0x70, byte 0x5E = 0x30.'
   - - 5116
     - c
@@ -171,36 +171,36 @@ segments:
     - '@behavior: State handler of this overlay, reached only through the code pointer word at 0x801F664C of the pointer run inside the payload textbin blob; no jal in the payload names it. It indexes the world record table 0x8017F974 with the shared world/state id 0x80143F00, takes that record word at offset 0x10 as a table of pointers, picks the entry with byte 0x03 of the front record published through the pointer cell 0x80148210, and adds that record halfword 0x0A as a byte offset, so the result addresses one two-byte command of a per-state byte script. The command first byte at offset 0x02 selects one of the three pair tables of the pointer table 0x801F6748, and the first byte of the shared record base 0x80145E98 with bit 0x04 flipped is the step index into the eight two-byte records of that pair table: the resident helper 0x801F4A5C stores the index into work byte 0x08, requests the record first byte through func_8014D6B8 and copies the record second byte into work byte 0x2A. The handler then advances the front record halfword 0x0A by one and re-reads the pointer cell for that store, so the halfword it advances is the one the helper left behind. It never compares work byte 0x08 with the command byte, so it has no test and no branch. Takes no arguments and returns nothing.'
   - - 7772
     - c
-    - playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C
-    - '@source: src/bof3/world/playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C.c'
+    - audioStoreFirstSecond
+    - '@source: src/bof3/world/audioStoreFirstSecond.c'
     - '@behavior: Resident step player of this overlay, called by the three pair-table state handlers of this payload at 0x801F4810, 0x801F48EC and 0x801F49C8 and named by no pointer word. It takes the base of one of the three pair tables of 0x801F6748 and a step index, stores that index into work byte 0x08 of the work record published through the scratchpad pointer cell 0x1F800044, indexes the table by twice the index masked to a byte, requests the first byte of the selected two-byte record through the shared main-executable helper func_8014D6B8, then re-reads the scratchpad cell and copies the record second byte into work byte 0x2A. The step index therefore reaches the work record before the record byte is consumed, and both stored bytes come from the selected record. Takes two arguments and returns nothing; the 0x18-byte frame keeps $ra at 0x14 and $s0 at 0x10, the saved register holding the record address across the call.'
   - - 7860
     - c
-    - dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4
+    - callWorkLocalHandlers
   - - 7948
     - c
-    - advanceWorkCounterTripleBy2OrArmScratchWorkMin40LevelTripleWorld04Area17413_801F4B0C
-    - '@source: src/bof3/world/advanceWorkCounterTripleBy2OrArmScratchWorkMin40LevelTripleWorld04Area17413_801F4B0C.c'
+    - stateTripleLevelTriple
+    - '@source: src/bof3/world/stateTripleLevelTriple.c'
     - '@behavior: Steps the scratch work record published at 0x1F800044 one more frame: halfword 0x3E += 8, then either adds 2 to each of the three counter bytes 0x0/0x1/0x2 of the 12-byte record selected by work byte 0x93 (each through its own reload of 0x80146884), or, once signed counter byte 0x0 has reached 0x1E, sets flag bit 0x20 of byte 0 and arms work byte 0x5C = 1, level bytes 0x5D/0x5E/0x5F = -0x40 and work byte 4 = 1; both arms then consume two units of halfword 0x0A of 0x80148210.'
   - - 8296
     - c
-    - decrementScratchWorkLevelTripleBy4OrSetFlag40World04Area17413_801F4C68
-    - '@source: src/bof3/world/decrementScratchWorkLevelTripleBy4OrSetFlag40World04Area17413_801F4C68.c'
+    - decrementScratchLevelTriple
+    - '@source: src/bof3/world/decrementScratchLevelTriple.c'
     - '@behavior: Steps the scratch work record published at 0x1F800044 one more frame: halfword 0x3E += 8, then either level bytes 0x5D/0x5E/0x5F -= 4 plus halfword 0x0A of 0x80148210 -= 2, or, at level byte 0x5D == -0x80, flag bit 0x40 of byte 0 and work byte 4 = 0.'
   - - 8476
     - c
-    - invokeHelperWithWorkWhenSharedFrontEndPhaseByte5World04Area17413_801F4D1C
-    - '@source: src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5World04Area17413_801F4D1C.c'
+    - callFrontEndPhase
+    - '@source: src/bof3/world/callFrontEndPhase.c'
     - '@behavior: State handler of this overlay, reached only through the code pointer word 0x801F6654, entry 17 of the dispatch table this overlay places at 0x801F6610 inside its textbin blob, so no jal in the payload names it. When the shared front-end phase byte at 0x80143BB0 reads 5 it passes the work record the scratchpad pointer cell 0x1F800044 holds to the main-executable helper 0x8014E4BC as its only argument; any other value leaves the record untouched. The guard is the body''s only test and the call its only effect, and the 0x18-byte frame only keeps $ra at 0x10 across that call. Takes no arguments and returns nothing.'
   - - 8532
     - c
-    - passPaletteRowSelectedByWorkByte5ToPaletteBlockHelperFlag1World04Area17413_801F4D54
-    - '@source: src/bof3/world/passPaletteRowSelectedByWorkByte5ToPaletteBlockHelperFlag1World04Area17413_801F4D54.c'
+    - passPalettePaletteBlock
+    - '@source: src/bof3/world/passPalettePaletteBlock.c'
     - '@behavior: Loads the scratch work record once through the pointer cell 0x1F800044, reads work byte 0x05, scales it by 0x40 with a left shift of six, adds that offset to the fixed palette block base 0x80035600 and passes the resulting row to the main-executable palette block helper func_80166C48 together with the second argument 1. It has no test and no branch, the 0x18-byte frame only keeps $ra at 0x10 across the call, and it takes no arguments and returns nothing. No jal in the payload names it; its only in-image reference is the code-pointer word 0x801F6658, entry 18 of the overlay dispatch table at 0x801F6610.'
   - - 8592
     - c
-    - claimFrontEndRecordHandlerA3SeedByte6Byte7WorkSlotAndWorkPointerElseConsumeHalfword0aBy2World04Area17413_801F4D90
-    - '@source: src/bof3/world/claimFrontEndRecordHandlerA3SeedByte6Byte7WorkSlotAndWorkPointerElseConsumeHalfword0aBy2World04Area17413_801F4D90.c'
+    - claimSlotPointerConsume
+    - '@source: src/bof3/world/claimSlotPointerConsume.c'
     - '@behavior: Claims one free front-end record through the shared allocator func_8019601C and publishes that answer as work byte 0x0B of the work object the scratchpad cell 0x1F800044 points at, then seeds the row that byte selects at 0x80143FC8 with occupancy 1 at row byte 0x00, handler selector 0xA3 at row byte 0x05, 1 at row byte 0x06, 0 at row byte 0x07, 1 at row byte 0x0B and the work object address at row word 0x4C. A table-full answer of 0xFF leaves the table untouched and instead consumes two units of the halfword at 0x0A of the record published through 0x80148210. Takes no arguments and returns nothing.'
   - - 9000
     - c

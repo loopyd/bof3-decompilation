@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0(
+void renderAxisSplitScaled(
     void);
 
 /* @source 0x801F3F28
@@ -46,5 +46,5 @@ void advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28(
   if (*half >= 0xC0) {
     record[2]++;
   }
-  drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0();
+  renderAxisSplitScaled();
 }

@@ -10,7 +10,7 @@ typedef struct Commu0107SlotOffset {
 /* The per-slot offsets of the entry grid, in slot order. */
 extern Commu0107SlotOffset D_801D4DDC[]; /* @source 0x801D4DDC @kind data */
 
-extern u8 countActiveRecordsByKind(s32 kind);
+extern u8 checkActiveRecordsKind(s32 kind);
 
 /* @source 0x801D4694
  * @behavior Computes the screen origin of one record slot of the commu01/07
@@ -20,7 +20,7 @@ extern u8 countActiveRecordsByKind(s32 kind);
  * y 0x6B. An ordinal of zero takes the cell origin with a fixed 0xA inset on x.
  * Any other ordinal starts at slot 2 when the kind has two live records, at
  * slot 1 when it has three and at slot 0 otherwise, and adds the offset of
- * table entry 0x801D4DDC at that slot advanced by ordinal - 1. drawCommuEntryListScreen
+ * table entry 0x801D4DDC at that slot advanced by ordinal - 1. renderCommuListScreen
  * walks ordinals 1 through the live record count of each kind 1 through 8 and
  * draws a piece at every result, func_801D1364 and func_801D1630 pass the
  * overlay byte 0x801D4E24 as the ordinal, and func_801D1778, func_801D1A94,
@@ -46,7 +46,7 @@ void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal) {
   x = base % 4 * 52 + 0x20;
   row = base >> 2;
   y = row * 61 + 0x6B;
-  slots = countActiveRecordsByKind(kind);
+  slots = checkActiveRecordsKind(kind);
   switch (slots) {
   case 2:
     slot = 2;

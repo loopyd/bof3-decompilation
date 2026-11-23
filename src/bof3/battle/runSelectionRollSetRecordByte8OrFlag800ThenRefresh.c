@@ -23,7 +23,7 @@ void runSelectionRollSetRecordByte8OrFlag800ThenRefresh(void)
   if ((u8)func_800A3A10(D_80146374, D_80146394) == 0) {
     /* Non-volatile view: the roll call above already read the cell and
      * widening the volatile u8 costs an extra `andi` on the load, the same
-     * remedy runSelectionRollSetRecordByte8OrFlag2000ThenRefresh uses. */
+     * remedy runSelectionRollRefresh uses. */
     index = *(u8 *)&D_80146394;
     if (index < 3) {
       D_80145FB8[index].flags_00 |= 0x800;

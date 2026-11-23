@@ -11,7 +11,7 @@ extern u8* D_1F800044;
 /* Record published through the global pointer cell at 0x80148210. The body
  * lowers its halfword +0x0A by 2 when the front-end record table is full; the
  * same declaration and access spelling is exact in this target's sibling
- * advanceHalfword0aBy17WhenWorkByte79NonzeroWorld02Area10313_801F5738.
+ * stateBy17WorkNonzero.
  * @source 0x80148210 @kind unknown
  */
 extern u16* D_80148210;

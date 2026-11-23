@@ -16,7 +16,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * same pool reserveFirstFreeRecordBmagicMagic02103_801EFD4C claims from. Byte 0
  * bit 0 is the in-use flag this sweep tests, and the word at 0x74 holds the work
  * pointer stored when the record was claimed, as
- * invokeHelperThenCountDownWorkByte9AndQueueTwelveRecordsWithPairedStepAndWorkPointerBmagicMagic02103_801EF104
+ * callDownTwelvePaired
  * writes it. The flags read re-materialises this base, so the array keeps the
  * pool name. */
 extern u8 magic02103RecordFlags[]; /* @source 0x801EFE14 @kind data */

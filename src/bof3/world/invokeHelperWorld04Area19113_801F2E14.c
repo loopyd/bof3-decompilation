@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void drawFullscreenWorkColorFadeTileWorld04Area19113_801F2E34(void);
+void renderFullscreenColorTile(void);
 
 /* @source 0x801F2E14
  * @behavior Thin overlay wrapper: calls the helper at 0x801F2E34 and returns.
@@ -9,5 +9,5 @@ void drawFullscreenWorkColorFadeTileWorld04Area19113_801F2E34(void);
  * @residual none
  */
 void invokeHelperWorld04Area19113_801F2E14(void) {
-  drawFullscreenWorkColorFadeTileWorld04Area19113_801F2E34();
+  renderFullscreenColorTile();
 }

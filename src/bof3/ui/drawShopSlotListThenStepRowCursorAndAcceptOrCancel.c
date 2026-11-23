@@ -7,9 +7,9 @@
  *           buildSlotList(0), submits the texture row 0x1C at row 0x15 through
  *           func_8014F800 with the halfword handle
  *           func_801502D0((s8)D_8014865D + 0x65) as its fifth argument, draws
- *           the slot price list through drawShopSlotPriceList with the
+ *           the slot price list through renderShopPriceList with the
  *           work-block index byte D_80148656[0], 0x98, 0x3F, 0 and the 0xFF
- *           no-row mask, draws the panel through emitFlatLineRectangleBorder
+ *           no-row mask, draws the panel through emitLineRectangleBorder
  *           with the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11,
  *           0x80, 0x34, 0 and 6, and marks the row D_8014865D through
  *           func_801647C4 at the fixed column 0x9B, the halfword row offset
@@ -65,8 +65,8 @@ void drawShopSlotListThenStepRowCursorAndAcceptOrCancel(void) {
   row = &D_8014865D;
   func_8014F800(0x1C, 0x15, 0, 0xFF,
                 func_801502D0((u16)((s8)*row + 0x65)));
-  drawShopSlotPriceList(*(&D_80148655 + 1), 0x98, 0x3F, 0, 0xFF);
-  emitFlatLineRectangleBorder(0x11, ((s8)D_80148656[0] * 54 + 0x3E) & 0xFFFE,
+  renderShopPriceList(*(&D_80148655 + 1), 0x98, 0x3F, 0, 0xFF);
+  emitLineRectangleBorder(0x11, ((s8)D_80148656[0] * 54 + 0x3E) & 0xFFFE,
                               0x80, 0x34, 0, 6);
   func_801647C4(0x9B, (u16)((s8)*row * 13 + 0x44), 0);
 

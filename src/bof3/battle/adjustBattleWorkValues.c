@@ -26,7 +26,7 @@ void adjustBattleWorkValues(void) {
 
     battlerSlot = 0u;
     while (battlerSlot < localBattlerCount) {
-      if (isBattlerInactiveOrFlag4000(battlerSlot) == 0u) {
+      if (checkBattlerInactiveFlag4000(battlerSlot) == 0u) {
         volatile u16* recordBase;
 
         recordOffset = (u32)battlerSlot * 0x140u;
@@ -44,7 +44,7 @@ void adjustBattleWorkValues(void) {
 
     battlerSlot = 0u;
     while (battlerSlot < localBattlerCount) {
-      if (isBattlerInactiveOrFlag4000(battlerSlot) == 0u) {
+      if (checkBattlerInactiveFlag4000(battlerSlot) == 0u) {
         u32 halfValue;
         volatile u16 *valueAddress;
         s32 addressOrDelta;

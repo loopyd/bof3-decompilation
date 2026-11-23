@@ -17,7 +17,7 @@ u8 pickRandomUnblockedId(u8 excludedId) {
   count = 0u;
   slot = 3u;
   do {
-    if ((isBattlerInactiveOrFlag4000(slot) == 0u) && (excludedId != slot)) {
+    if ((checkBattlerInactiveFlag4000(slot) == 0u) && (excludedId != slot)) {
       choices[count] = slot;
       count += 1u;
     }

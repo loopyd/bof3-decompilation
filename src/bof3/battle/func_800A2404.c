@@ -3,7 +3,7 @@
 /* @source 0x800A2404
  * @behavior Stores 4 into battle state byte D_80146375 and 0x6A into battle
  * state halfword D_801463C0, then runs the 0x6A action selection
- * storeSelectedValueSetRecordByte8To1WhenRollRejected.
+ * stateValueRollRejected.
  * @status exact
  * @match 100.00
  * @residual none
@@ -11,5 +11,5 @@
 void func_800A2404(void) {
   D_80146375 = 4;
   D_801463C0 = 0x6A;
-  storeSelectedValueSetRecordByte8To1WhenRollRejected();
+  stateValueRollRejected();
 }

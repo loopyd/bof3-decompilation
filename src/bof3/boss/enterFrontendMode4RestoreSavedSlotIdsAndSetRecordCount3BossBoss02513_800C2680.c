@@ -28,7 +28,7 @@ extern u8 D_801FE4EC[]; /* @source 0x801FE4EC @kind unknown */
 
 /* @source 0x800C2680
  * @behavior Second of the three handlers this overlay's installer
- * publishBattleHooksSaveRecordHalfwordsAndSetActorPhase3BossBoss02513_800C2184
+ * publishSaveHalfwordsActor
  * (0x800C2184) publishes into the shared battle hook slots 0x801463A4,
  * 0x801463A8 and 0x801463AC, so the battle step reaches it through slot
  * 0x801463A8 and no in-payload `jal` targets it. It first raises bit 0x2 of the

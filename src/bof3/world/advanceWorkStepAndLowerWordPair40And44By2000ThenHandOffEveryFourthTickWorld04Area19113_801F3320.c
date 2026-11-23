@@ -19,7 +19,7 @@ extern u16* D_80148210;
  *           the countdown is a multiple of four it stores 1 into work byte 4,
  *           the table index of the rise step at 0x801F3278 in the handler
  *           table at 0x801F41DC that
- *           dispatchWorkByte4Table41dcWorld04Area19113_801F31A0 indexes; that
+ *           callWorkByte4Table41 indexes; that
  *           rise step repeats this body with +0x2000 and selects 2 again, so
  *           the two alternate every fourth tick and the words at 0x40 and 0x44
  *           fall and rise together. Once the countdown reaches zero it instead

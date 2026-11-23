@@ -8,31 +8,31 @@ splat = "config/targets/emi/world04/area191/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19113_801F2F94.c",
-    "src/bof3/world/armWorkRiseStepSeedWordPair40And44CountdownFFAndTintThenSelectRiseHandlerWorld04Area19113_801F31E4.c",
-    "src/bof3/world/setStatusFFFFAndProgress2Or10Or20ByGateWorld04Area19113_801F3014.c",
-    "src/bof3/world/advanceSubstateAndWorkByte1WhileSharedPhaseNotTwoThenDrawFadeTileWorld04Area19113_801F2DBC.c",
-    "src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EAndRequestPrimaryState2Substate19World04Area19113_801F3130.c",
-    "src/bof3/world/setStatusFFFFAndRequestPrimaryState1Substate14WhenGateClearWorld04Area19113_801F2F40.c",
+    "src/bof3/world/stateStatusGateRow.c",
+    "src/bof3/world/armRiseTintRise.c",
+    "src/bof3/world/stateStatusOr10Gate.c",
+    "src/bof3/world/stateWhileNotTile.c",
+    "src/bof3/world/runStartupAnimPrimary.c",
+    "src/bof3/world/stateStatusPrimaryGate.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area19113_801F2E14.c",
-    "src/bof3/world/drawFullscreenWorkColorFadeTileWorld04Area19113_801F2E34.c",
-    "src/bof3/world/dispatchWorkByte4Table41dcWorld04Area19113_801F31A0.c",
+    "src/bof3/world/renderFullscreenColorTile.c",
+    "src/bof3/world/callWorkByte4Table41.c",
     "src/bof3/world/area19113DispatchTables.c",
     "src/bof3/support/area191_13_psyq.c",
-    "src/bof3/world/setStatusFFFFIfGateElse68World04Area19113_801F2F18.c",
-    "src/bof3/world/setStatusFFFFIfGateElse6CWorld04Area19113_801F2FEC.c",
-    "src/bof3/world/lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924.c",
-    "src/bof3/world/advanceWorkStepAndRaiseWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3278.c",
+    "src/bof3/world/stateStatusGateElse68.c",
+    "src/bof3/world/stateStatusGateElse6.c",
+    "src/bof3/world/queryTable4260ByteOffset.c",
+    "src/bof3/world/stateHandOffFourth.c",
     "src/bof3/world/advanceWorkStepAndLowerWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3320.c",
-    "src/bof3/world/resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0.c",
-    "src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19113_801F30DC.c",
-    "src/bof3/world/activateRecordsUnlessScenarioIs0EAndWait5PendingWorld04Area19113_801F3964.c",
+    "src/bof3/world/stateFieldFillRecords.c",
+    "src/bof3/world/runStartupAnimIncrement.c",
+    "src/bof3/world/activateRecordsUnlessPending.c",
     "src/bof3/world/clearFrontStateSetScenarioBit0AndResetWorkAreaWhenFlag77SetWorld04Area19113_801F3BE0.c",
-    "src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19113_801F37AC.c",
+    "src/bof3/world/queryRowCodeCounter.c",
     "src/bof3/world/dispatchSharedModeByteTable2C04World04Area19113_801F33C8.c",
-    "src/bof3/world/clearWorkColorTripletArmCountdown3CAndAdvanceWorkByte1World04Area19113_801F2CC4.c",
+    "src/bof3/world/stateColorTripletArm.c",
 ]
 psyq_source = "src/bof3/support/area191_13_psyq.c"
 

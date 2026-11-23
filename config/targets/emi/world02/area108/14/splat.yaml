@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 68
     - c
-    - dispatchStateByte1Table56e8World02Area10814_801F2C44
+    - callStateTable56World02
     - '@source: src/bof3/world/area10814DispatchTables.c'
   - - 136
     - asm
@@ -51,26 +51,26 @@ segments:
     - func_801F2F1C
   - - 968
     - c
-    - seedSixteenWorkRecordsWorld02Area10814_801F2FC8
-    - '@source: src/bof3/world/seedSixteenWorkRecordsWorld02Area10814_801F2FC8.c'
+    - stateSixteenWorkRecords
+    - '@source: src/bof3/world/stateSixteenWorkRecords.c'
     - '@behavior: publishes the main-RAM work-table base 0x800E4800 into the record cursor cell at 0x801F63EC and seeds the table by calling the per-record initialiser at 0x801F2F1C for each of its 16 records of 0x28-byte stride, advancing the published cursor by one stride after every call.'
   - - 1076
     - asm
     - func_801F3034
   - - 1276
     - c
-    - advanceWorkStateWithDoubleVelocityWorld02Area10814_801F30FC
-    - '@source: src/bof3/world/advanceWorkStateWithDoubleVelocityWorld02Area10814_801F30FC.c'
+    - stateWorkDoubleVelocity
+    - '@source: src/bof3/world/stateWorkDoubleVelocity.c'
     - '@behavior: reads the work-record cursor cell at 0x801F63EC and advances the current record position words +0x04, +0x08 and +0x0C by twice its velocity words at +0x14, +0x18 and +0x1C, decrements its +0x02 byte timer and advances its +0x24 halfword phase by 0x80, then when that timer reaches zero reseeds it with 0x40 and advances the record dispatch byte at +0x01, moving the record to the next state.'
   - - 1432
     - c
-    - addWorkDeltasAndExpireCountdownWorld02Area10814_801F3198
-    - '@source: src/bof3/world/addWorkDeltasAndExpireCountdownWorld02Area10814_801F3198.c'
+    - workDeltasExpireCountdown
+    - '@source: src/bof3/world/workDeltasExpireCountdown.c'
     - '@behavior: adds the delta words at +0x14, +0x18 and +0x1C of the work record published at pointer cell 0x801F63EC into its position words at +0x04, +0x08 and +0x0C, decrements its countdown bytes at +0x03 and +0x02, and clears the record active byte at +0x00 when the +0x02 countdown reaches zero.'
   - - 1564
     - c
-    - initializeFiftyFiveQuadMotionRecordsWorld02Area10814_801F321C
-    - '@source: src/bof3/world/initializeFiftyFiveQuadMotionRecordsWorld02Area10814_801F321C.c'
+    - initializeFiftyFiveMotion
+    - '@source: src/bof3/world/initializeFiftyFiveMotion.c'
     - '@behavior: Copies 55 quad records, derives their centers and velocities, clears rotation halfwords and recenters their four corners.'
   - - 2232
     - asm
@@ -90,8 +90,8 @@ segments:
     - func_801F376C
   - - 3148
     - c
-    - drawWhiteCircleSeedTintTripletAndAdvanceWorkByte1WhenCountdownExpiresWorld02Area10814_801F384C
-    - '@source: src/bof3/world/drawWhiteCircleSeedTintTripletAndAdvanceWorkByte1WhenCountdownExpiresWorld02Area10814_801F384C.c'
+    - renderWhiteCircleExpires
+    - '@source: src/bof3/world/renderWhiteCircleExpires.c'
     - '@behavior: Overlay step handler, entry 2 of the state-byte-1 handler table at 0x801F56FC: projects the work record cursor words at +0x34/+0x38/+0x3C through the shared projector 0x801AFF04 into the scratchpad screen pair at 0x1F800034/0x1F800036, copies that pair into the record halfwords +0x2E and +0x30, paints a white circle of radius halfword +0x18 around that point through the circle helper 0x801F3D90 with 0xFF as both colours, then decrements the frame countdown byte +0x09 and, when it reaches zero, seeds the white tint triplet at +0x5F/+0x5E/+0x5D with 0x60 and advances the state byte +0x01 by one.'
   - - 3360
     - asm
@@ -101,8 +101,8 @@ segments:
     - func_801F3A14
   - - 3692
     - c
-    - fadeWorkTintTripletBy6AndAdvanceWorkByte1To6WhenCountdownExpiresWorld02Area10814_801F3A6C
-    - '@source: src/bof3/world/fadeWorkTintTripletBy6AndAdvanceWorkByte1To6WhenCountdownExpiresWorld02Area10814_801F3A6C.c'
+    - workTintTripletExpires
+    - '@source: src/bof3/world/workTintTripletExpires.c'
     - '@behavior: flash-fade step of the work record published at scratchpad pointer cell 0x1F800044: decrements its frame countdown byte +0x09, and while that stays non-zero subtracts 6 from its tint triplet at +0x5D, +0x5E and +0x5F with a fresh pointer load per channel group, otherwise stores 6 into its state byte +0x01; then calls the tile builder 0x801F3BA0 and the record walker 0x801F3C84.'
   - - 3864
     - asm
@@ -112,8 +112,8 @@ segments:
     - func_801F3BA0
   - - 4228
     - c
-    - setWorkByte29To5OnActiveWorkRecordsThenOnEveryLiveLocalRecordWorld02Area10814_801F3C84
-    - '@source: src/bof3/world/setWorkByte29To5OnActiveWorkRecordsThenOnEveryLiveLocalRecordWorld02Area10814_801F3C84.c'
+    - stateEveryLiveLocal
+    - '@source: src/bof3/world/stateEveryLiveLocal.c'
     - '@behavior: Overlay work-record sweep run by the byte-1 steps 0x801F3920, 0x801F3A14 and 0x801F3A6C with no arguments: it reads the scratchpad pointer cell 0x1F800044 once and keeps the incoming value, walks the 30 shared 0x98-byte work records based at 0x80146888 publishing each through the cell and, for a record whose byte 0 has bit 0 set, storing 5 into its state byte 0x29 and running the shared service 0x8014D290 with no argument set, then walks the live local records counted by the shared byte 0x80146254 with a 0x140-byte stride from the base 0x80145E90 and publishes, marks and submits every one of them the same way, and finally restores the incoming cell value.'
   - - 4496
     - asm
@@ -123,33 +123,33 @@ segments:
     - func_801F3F34
   - - 5112
     - c
-    - dispatchStateByte2Table5718World02Area10814_801F3FF8
+    - callStateTable5718World02
     - '@source: src/bof3/world/area10814DispatchTables.c'
   - - 5180
     - c
     - incrementWorkByte2World02Area10814_801F403C
   - - 5212
     - c
-    - drawWorkQuadAdvanceWorkByte9At6dSetSharedByte1AdvanceScenarioProgressToFAndWorkByte2World02Area10814_801F405C
-    - '@source: src/bof3/world/drawWorkQuadAdvanceWorkByte9At6dSetSharedByte1AdvanceScenarioProgressToFAndWorkByte2World02Area10814_801F405C.c'
+    - renderQuadSharedProgress
+    - '@source: src/bof3/world/renderQuadSharedProgress.c'
     - '@behavior: runs only while the shared scenario progress byte at 0x80146864 reads 0x0E; passes work byte +0x09 of the record published through scratchpad pointer cell 0x1F800044 twice to the overlay quad helper at 0x801F4160, advances that byte by one, and once it reaches 0x6D stores 1 into the shared overlay state byte 0x8014933B, advances the progress byte to 0x0F and increments the record dispatch byte +0x02.'
   - - 5384
     - c
     - incrementWorkByte2World02Area10814_801F4108
   - - 5416
     - c
-    - clearSharedStateByteThenClearWorkFlagsAtProgress1cWorld02Area10814_801F4128
-    - '@source: src/bof3/world/clearSharedStateByteThenClearWorkFlagsAtProgress1cWorld02Area10814_801F4128.c'
+    - stateSharedClearFlags
+    - '@source: src/bof3/world/stateSharedClearFlags.c'
     - '@behavior: Entry 3 of the four-pointer handler table at 0x801F5718 that the byte-+0x02 dispatcher 0x801F3FF8 indexes: while the shared scenario progress byte at 0x80146864 reads 0x1C it clears the shared overlay state byte at 0x8014933B that the preceding handler 0x801F405C raises, then clears the shared work flags through the 0x80196070 helper (clearWorkFlags in emi/etc/game/00); every other progress value leaves both untouched.'
   - - 5472
     - c
-    - drawSizedTexturedQuadAtFixedCenterWithPageFieldWorld02Area10814_801F4160
-    - '@source: src/bof3/world/drawSizedTexturedQuadAtFixedCenterWithPageFieldWorld02Area10814_801F4160.c'
+    - renderSizedCenterPage
+    - '@source: src/bof3/world/renderSizedCenterPage.c'
     - '@behavior: draws one textured quad from the shared primitive cursor: seeds it through SetPolyFT4 with its shade texture cleared, fills the four scratchpad vectors at 0x1F800014 with a square centred on (-0x3500, -0x1F00, -0x80) whose half-extent is the first argument shifted left by two, projects them into the packet through RotTransPers4, fills the texture state with 0x25100100 plus the second argument''s 5-bit page field shifted left by sixteen, and links the 0x28-byte packet into output slot 5.'
   - - 5784
     - c
-    - setStatusFFFFAndStateEntry3Or2SetFlagBit1EOr1FAndFrontendState5ByGateWorld02Area10814_801F4298
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntry3Or2SetFlagBit1EOr1FAndFrontendState5ByGateWorld02Area10814_801F4298.c'
+    - stateStatusFlagFrontend
+    - '@source: src/bof3/world/stateStatusFlagFrontend.c'
     - '@behavior: Overlay state setter, entry 0 of the in-image code-pointer run based at 0x801F62DC: reads the shared gate byte at 0x801490C7 signed and stores 0xFFFF into the shared status halfword at 0x801490A8 on every path; gate 0 or 1 then writes 3 or 2 into the shared state-entry byte at 0x801448ED, sets flag bit 0x1E or 0x1F of the shared flag block at 0x80144F28 through the shared bit-set helper 0x8015B580 using that byte''s own address advanced by 0x63B, and both handled arms reach the closing store of 5 into the shared frontend state byte at 0x801448EB, the front-end selector that the front-end dispatcher 0x801A7CAC indexes its handler table with; any other gate value returns before it.'
   - - 5920
     - c
@@ -190,39 +190,39 @@ segments:
     - func_801F4A18
   - - 7832
     - c
-    - clearGlobalWorkFlagBit0AndResetScratchModeWhenMappedState5World02Area10814_801F4A98
-    - '@source: src/bof3/world/clearGlobalWorkFlagBit0AndResetScratchModeWhenMappedState5World02Area10814_801F4A98.c'
+    - stateFlagScratchMapped
+    - '@source: src/bof3/world/stateFlagScratchMapped.c'
     - '@behavior: clears global work byte +0x74 bit 0; when table 0x80181B10 indexed by byte 0x80145F09 yields 5, sets shared flag bit 0x30, calls helper 0x8015507C with (1, 0x0B) and clears scratch work byte 0.'
   - - 7956
     - c
-    - dispatchWorkByte4Table63c4World02Area10814_801F4B14
-    - '@source: src/bof3/world/dispatchWorkByte4Table63c4World02Area10814_801F4B14.c'
+    - callWorkByte4Table63
+    - '@source: src/bof3/world/callWorkByte4Table63.c'
   - - 8024
     - c
-    - initializeWorkModeWithTintMinus128Consume2CountdownWorld02Area10814_801F4B58
-    - '@source: src/bof3/world/initializeWorkModeWithTintMinus128Consume2CountdownWorld02Area10814_801F4B58.c'
+    - initializeModeTintCountdown
+    - '@source: src/bof3/world/initializeModeTintCountdown.c'
     - '@behavior: Entry 0 of the work-byte-4 handler table at 0x801F63C4, dispatched by the byte-4 selector step at 0x801F4B14. Boots the work record published at scratchpad pointer cell 0x1F800044: submits it through the shared helper 0x8019651C with three zero offsets and mode 1, stores the returned effect byte at +0x93 of the record published by the pointer cell 0x80146884, sets flag bit 0x20, clears flag bit 0x40, writes 1 into the 0x5C byte and the handler byte +0x04, writes -0x80 into the tint triplet at 0x5D, 0x5E and 0x5F, and consumes two units of the 0x80146884 countdown halfword at +0x7E. Re-reads the 0x1F800044 cell per access group and keeps a 0x20-byte frame holding only $ra.'
   - - 8232
     - c
-    - raiseWorkTintTripletToMinus48AndResetModeOrConsumeCountdownWorld02Area10814_801F4C28
-    - '@source: src/bof3/world/raiseWorkTintTripletToMinus48AndResetModeOrConsumeCountdownWorld02Area10814_801F4C28.c'
+    - raiseTintTripletConsume
+    - '@source: src/bof3/world/raiseTintTripletConsume.c'
     - '@behavior: Raises signed work tint bytes 0x5D through 0x5F by 1 while below -48. At masked colour 0xD0D0D000 calls shared helper 0x80196670 with the global effect byte, clears flag bit 0x20, mode, tint and handler byte 4; otherwise consumes 2 from the global countdown halfword at 0x7E.'
   - - 8544
     - c
-    - publishFrontEndRecordIndexToWorkByteBAndDecrementRecordHalfword0aBy2WhenTableFullWorld02Area10814_801F4D60
-    - '@source: src/bof3/world/publishFrontEndRecordIndexToWorkByteBAndDecrementRecordHalfword0aBy2WhenTableFullWorld02Area10814_801F4D60.c'
+    - publishEndIndexFull
+    - '@source: src/bof3/world/publishEndIndexFull.c'
     - '@behavior: stores the front-end record index returned by the shared allocator 0x8019601C into work byte +0x0B of the record published at scratchpad pointer cell 0x1F800044 and, only when that byte re-reads as 0xFF (the allocator table-full result), subtracts 2 from the halfword at +0x0A of the record published through the global pointer cell 0x80148210.'
   - - 8648
     - asm
     - func_801F4DC8
   - - 8860
     - c
-    - setWorkByte24Bit4World02Area10814_801F4E9C
-    - '@source: src/bof3/world/setWorkByte24Bit4World02Area10814_801F4E9C.c'
+    - stateWorkByte24Bit4
+    - '@source: src/bof3/world/stateWorkByte24Bit4.c'
   - - 8892
     - c
-    - invokeHelperByteArgWorld02Area10814_801F4EBC
-    - '@source: src/bof3/world/invokeHelperByteArgWorld02Area10814_801F4EBC.c'
+    - callHelperByteArg
+    - '@source: src/bof3/world/callHelperByteArg.c'
     - '@behavior: Thin overlay wrapper: reads the shared main-RAM byte 0x80145029 unsigned and passes it as the single argument of the shared helper at 0x80161D20, which it calls once and whose result it discards; the byte load is materialised ahead of the 0x18-byte frame because the argument is its only consumer.'
   - - 8932
     - c
@@ -231,8 +231,8 @@ segments:
     - '@behavior: Thin overlay wrapper: reads the shared main-RAM byte 0x80145029 unsigned and passes it as the single argument of the shared helper at 0x80161D74, which it calls once and whose result it discards; the byte load is materialised ahead of the 0x18-byte frame because the argument is its only consumer.'
   - - 8972
     - c
-    - decrementRecordHalfword0aUnlessMode5World02Area10814_801F4F0C
-    - '@source: src/bof3/world/decrementRecordHalfword0aUnlessMode5World02Area10814_801F4F0C.c'
+    - decrementRecordUnlessMode5
+    - '@source: src/bof3/world/decrementRecordUnlessMode5.c'
   - - 9056
     - asm
     - func_801F4F60

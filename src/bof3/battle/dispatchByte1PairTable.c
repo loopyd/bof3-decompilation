@@ -11,6 +11,6 @@ void dispatchByte1PairTable(void)
 {
     Battle03Handler handlers[2];
 
-    handlers[0] = copyQueuedWorkToScratchAndRun;
+    handlers[0] = copyQueuedScratchRun;
     handlers[battleWork[1]]();
 }

@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte2Table078cPlcharPlp56700_801CE404
-    - '@source: src/bof3/plchar/dispatchWorkByte2Table078cPlcharPlp56700_801CE404.c'
+    - callWorkTable078Plchar
+    - '@source: src/bof3/plchar/callWorkTable078Plchar.c'
     - '@behavior: Calls the handler indexed by work-record byte 2 from the twenty-four-word handler run at 0x801D078C.'
   - - 72
     - c
@@ -37,18 +37,18 @@ segments:
     - '@behavior: Picks the nearer of route indices 3 and 5 to work byte 8, asks the shared helper 0x801B2D00 for that route''s step sign, stores the sign in work byte 0xB and the chosen route in byte 3, then sets countdown byte 9 to 2 and advances work byte 2.'
   - - 276
     - c
-    - selectArrivalWorkSequenceAndAdvanceWorkByte2WhenRouteReachedElseStepRouteOnCountdownExpiryPlcharPlp56700_801CE514
-    - '@source: src/bof3/plchar/selectArrivalWorkSequenceAndAdvanceWorkByte2WhenRouteReachedElseStepRouteOnCountdownExpiryPlcharPlp56700_801CE514.c'
+    - selectArrivalReachedExpiry
+    - '@source: src/bof3/plchar/selectArrivalReachedExpiry.c'
     - '@behavior: Work byte 2 == 1 step of this overlay handler run: entry 1 of the twenty-four-word run at 0x801D078C that func_801CE404 indexes by work byte 2. Compares the work route byte 0x08 with the stored route byte 0x03; when they agree it selects the shared work sequence through func_8014D8D4 with 0x40 for route 3 and 0x41 for route 5, calls the selector on no other route value and increments the step counter byte 0x02, otherwise it decrements the countdown byte 0x09 and, only when that reloaded byte reaches zero, stores 2 back into the countdown, adds the step sign byte 0x0B into the route index byte 0x08, masks the route index to the low three bits and selects the sequence named by the new index.'
   - - 528
     - c
-    - dispatchStateByte2Table0798PlcharPlp56700_801CE610
-    - '@source: src/bof3/plchar/dispatchStateByte2Table0798PlcharPlp56700_801CE610.c'
+    - callStateTable0798Plchar
+    - '@source: src/bof3/plchar/callStateTable0798Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D0798.'
   - - 596
     - c
-    - adjustEvenWorkByte8ClaimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferenceSelectSequence42AndAdvanceStepPlcharPlp56700_801CE654
-    - '@source: src/bof3/plchar/adjustEvenWorkByte8ClaimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferenceSelectSequence42AndAdvanceStepPlcharPlp56700_801CE654.c'
+    - adjustItBeyondReference
+    - '@source: src/bof3/plchar/adjustItBeyondReference.c'
     - '@behavior: Entry 0 of the handler run based at 0x801D0798 that the byte-2 dispatcher 0x801CE610 indexes, so it runs while work byte 2 reads 0. It rewinds the work-object step byte 0x08 by one modulo 8 while bit 0 of that byte is clear, sets claim byte 0x2B to 1, then probes the shared layer offsets 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5: for each it projects the work words 0x34 and 0x38 by that offset pair, samples the point through func_80154F78 and, while gate byte 0x1F800000 reads nonzero and the sample narrowed to 16 bits is at least 0x41, clears the claim byte when the work reference halfword 0x3E is below the answer of func_80154F28. It then selects work sequence (step byte 0x08 >> 1) + 0x42 through func_8014D8D4 and advances work state byte 0x02.'
   - - 1056
     - c
@@ -62,8 +62,8 @@ segments:
     - '@behavior: Overlay step reached from entry 5 of the pointer run at 0x801D078C, which this payload''s byte-2 dispatcher 0x801CE404 indexes by work byte 2, and from index 2 of the run at 0x801D0798, which the byte-2 dispatcher 0x801CE610 indexes. While the work-object byte 0x07 read through the scratchpad pointer cell 0x1F800044 is nonzero it runs the shared readiness helper func_8014DAEC, returns while the helper reports not-ready and otherwise hands work route byte 0x08 to the shared arrival-sequence selector func_8014D8D4 and clears the flag. While that flag reads zero it runs the same helper, and once ready, while the 0x74-byte row at 0x80143FC8 that work byte 0x0B selects still has its occupancy byte 0 clear, it clears work byte 0x2B and the state byte 0x12B of the front-end record published at 0x80146250.'
   - - 1536
     - c
-    - dispatchStateByte2Table07a4PlcharPlp56700_801CEA00
-    - '@source: src/bof3/plchar/dispatchStateByte2Table07a4PlcharPlp56700_801CEA00.c'
+    - callStateTable07Plchar
+    - '@source: src/bof3/plchar/callStateTable07Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07A4.'
   - - 1604
     - c
@@ -88,18 +88,18 @@ segments:
     - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D07B8.'
   - - 2228
     - c
-    - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp56700_801CECB4
-    - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp56700_801CECB4.c'
+    - adjustEvenNeighbourReads
+    - '@source: src/bof3/plchar/adjustEvenNeighbourReads.c'
     - '@behavior: Work byte 3 == 0 step of the second byte-3 dispatch group of this overlay: entry 0 of the handler run that the byte-3 dispatcher D_801D07B8 indexes, the word at 0x801D07B8 of the in-image pointer run at 0x801D078C. When work byte 8 is even it stores the decremented direction ((byte 8 - 1) and 7), calls the payload step test at 0x801CF7A0 and, only while that call reads zero, stores ((byte 8 + 2) and 7) and calls the same test again; if that call reads zero too the byte returns to the decremented direction. Both paths then run the payload refresh at 0x801CF944, select the shared work sequence through func_8014D8D4 with ((byte 8 - 1) divided by 2 plus 0x42) truncated to a byte, clear work byte 0xB, write 0xB into work byte 0xA and 1 into work byte 3, which advances the dispatch to the handler at 0x801CEDB4. The original re-loads the pointer cell before every byte-8 read and before each of the three stores; the subtraction leaves the division signed, so byte 8 == 0 still selects sequence 0x42.'
   - - 2484
     - c
-    - queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp56700_801CEDB4
-    - '@source: src/bof3/plchar/queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp56700_801CEDB4.c'
+    - queueFoundSearchCell
+    - '@source: src/bof3/plchar/queueFoundSearchCell.c'
     - '@behavior: Work byte 3 == 1 step of the second byte-3 dispatch group of this overlay: entry 1 of the handler run that the byte-3 dispatcher D_801D07B8 indexes, the word 0x801CEDB4 at 0x801D07BC of the in-image pointer run based at 0x801D078C. The preceding step at 0x801CECB4 writes 1 into work byte 3 to advance to it. It decrements the work countdown byte 0x0A, armed with 0xB by that preceding step, and does nothing else while the byte stays nonzero. When the countdown reaches zero it queues the cue built from the work record''s unsigned halfword 0x2C plus 0x100 through the shared cue dispatcher func_8015DF18 and asks the no-argument slot search func_801B5AE4 for a front-end row. When that search answers a slot rather than -1 it writes 1 into row field 0x0A and the work route byte 0x08 into row field 0x08 of that row, whose stride is 0x74, queues cue 0x10B, copies the answered byte into work byte 0x06 through the pointer cell and advances work byte 3. Otherwise it projects the work position by adding the doubled movement offsets of 0x80181B94/0x80181B98 selected by route byte 0x08 to the work words 0x34 and 0x38, hands that pair at range 0 to the shared slot search func_801BDE14 and, unless that search answers -1, raises bit 0 of the animation byte 0x74 of the found work record through the column base 0x801468FC and queues the literal cue 0x10B. It then claims a front-end row at the projected point through the 0x801CF224 map cell claim of this payload, passing the high half of each projected word: when that claim fails and the first word has a nonzero low half it retries one unit further on that axis, and when the retry also fails and the second word has a nonzero low half it retries one unit further on the second axis. Every path then increments the step counter byte 0x03, so the accepted-row arm advances it twice, and the body closes by running the shared readiness helper func_8014DAEC.'
   - - 3072
     - c
-    - passWorkByte5PaletteRowThenStepWorkByteBThroughResourceRequestAndClearWorkByte2BWithRecordState12BWhenDonePlcharPlp56700_801CF000
-    - '@source: src/bof3/plchar/passWorkByte5PaletteRowThenStepWorkByteBThroughResourceRequestAndClearWorkByte2BWithRecordState12BWhenDonePlcharPlp56700_801CF000.c'
+    - passThroughResourceDone
+    - '@source: src/bof3/plchar/passThroughResourceDone.c'
     - '@behavior: Overlay step reached through the code-pointer word 0x801CF000 at 0x801D07C0, entry 13 of this overlay twenty-four-word handler run at 0x801D078C that func_801CE404 indexes with work-record byte 2 scaled by four before its indirect call, so the body runs while that byte reads 13; no jal in this payload names the span and the run word is its only in-image reference. When work byte 0x0B reads 1 the body first passes the 0x40-byte palette row at 0x80035600 selected by work byte 5 to the shared palette helper func_80166C48 with mode 0 and writes 2 into work byte 0x0B. It then re-reads the pointer cell and dispatches on byte 0x0B again: a zero byte polls the shared readiness helper func_8014DAEC and reports done as soon as that helper answers nonzero, while a nonzero byte takes one of two arms and both of them then report done whenever the front-end phase byte 0x80143BB0 reads zero. Byte 2 polls the same helper and, once it answers nonzero, passes work byte 8 to the shared resource request helper func_8014D6B8 and writes 3 into work byte 0x0B, and every other value runs the shared no-argument update helper func_8014D978. When the done flag is set the body clears work byte 0x2B and then byte 0x12B of the record published at 0x80146250, re-reading the pointer cell before the first store. It takes no arguments and returns nothing; the 0x18-byte frame only keeps $ra at 0x14 and the done flag at 0x10 across the calls, the pointer cell is read ahead of frame creation, and every arm joins on one epilogue. The roles of work bytes 0x0B, 0x05, 0x08 and 0x2B and of the record byte 0x12B stay address-anchored.'
   - - 3376
     - c
@@ -126,7 +126,7 @@ segments:
     - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D07CC.'
   - - 4448
     - c
-    - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp56700_801CF560
+    - refreshLayersSelectSequence
   - - 4556
     - c
     - selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp56700_801CF5CC
@@ -154,8 +154,8 @@ segments:
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07D8.'
   - - 5868
     - c
-    - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC
-    - '@source: src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC.c'
+    - statePickNearerRearm
+    - '@source: src/bof3/plchar/statePickNearerRearm.c'
     - '@behavior: Overlay step reached through the code-pointer word 0x801CFAEC at 0x801D07D8, entry 0 of this overlay handler run at 0x801D078C that the byte-2 dispatcher 0x801CFAA8 indexes. It reads the signed scenario byte 0x80146870 and, while that byte is 0xF, only clears byte 0x12B of the front-end record at 0x80146250. Every other scenario re-arms the work object read through the scratchpad pointer cell 0x1F800044: it compares the distance of route byte 0x08 from the candidate route indices 3 and 5, stores the step sign from 0x801B2D00 towards the nearer one in byte 0x0B and the chosen index in byte 0x03, then sets countdown byte 0x09 to 2 and increments step counter byte 0x02.'
   - - 6112
     - c
@@ -169,8 +169,8 @@ segments:
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07E4.'
   - - 6432
     - c
-    - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp56700_801CFD20
-    - '@source: src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp56700_801CFD20.c'
+    - adjustEvenSampleProbe
+    - '@source: src/bof3/plchar/adjustEvenSampleProbe.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 0 of the three-word handler run at 0x801D07E4 that the byte-2 dispatcher 0x801CFCDC indexes, and no jal in this payload names it. When the route byte 0x08 is even it stores the decremented route, runs the step test 0x801D05D0 and, while that answer reads zero, stores the neighbour two steps the other way and runs the same test again, putting the byte back when that answer also reads zero. It then projects the work position by the route-selected movement offsets of 0x80181B94/0x80181B98, keeps the func_80154F28 sample of that point less the reference halfword 0x3E and queries func_80154F78 with the route byte. While the gate byte 0x1F800000 reads nonzero and that difference is at least 0x41 it selects work sequence (byte 8 - 1) / 2 + 0x46 and counts the step twice. Every other case claims work byte 0x2B, probes the layers 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5, clearing the claim byte wherever the reference halfword 0x3E stays below the layer sample, then requests the cue halfword 0x2C + 0x100, selects sequence (byte 8 - 1) / 2 + 0x42 and arms countdown byte 0x0A with 5. A shared tail clears step sign byte 0x0B and increments step counter byte 0x02.'
   - - 7276
     - c

@@ -10,7 +10,7 @@ void func_80196718(void* arg0);
 
 /* Shared helper at 0x800AF814, invoked with the shared battle byte at
  * 0x80146384 that the exact target sibling
- * forwardBattleByteThenRaiseFlag4AndInvokeHelperBmagicMagic01000_801EEF58 also
+ * forwardBattleRaiseHelper also
  * reads. No include/ header declares it and its role is not proven, so the name
  * stays address-anchored and the declaration keeps the single zero-extended
  * byte argument the original encodes (lbu $a0 before the jal). */

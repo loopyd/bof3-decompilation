@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table6250World02Area07714_801F2C04
+    - callStateTable6250World02
     - '@source: src/bof3/world/area07714DispatchTables.c'
   - - 72
     - asm
@@ -58,8 +58,8 @@ segments:
     - func_801F36E8
   - - 2936
     - c
-    - drawFadingScreenTrailInXRangeWorld02Area07714_801F3778
-    - '@source: src/bof3/world/drawFadingScreenTrailInXRangeWorld02Area07714_801F3778.c'
+    - renderFadingTrailRange
+    - '@source: src/bof3/world/renderFadingTrailRange.c'
     - '@behavior: walks consecutive 4-byte screen pairs and keeps the pairs whose x lies in the window rect x extent [rect->x, rect->x + rect->w), drawing each kept pair as one shaded point primitive when the previous pair x is not below it and otherwise drawing the shaded line between the two packed pairs; the byte shade starts at 0x40 and drops by 2 per iteration until zero.'
   - - 3224
     - asm
@@ -72,19 +72,19 @@ segments:
     - func_801F3BC4
   - - 4212
     - c
-    - dispatchStateByte1Table6260World02Area07714_801F3C74
+    - callStateTable6260World02
     - '@source: src/bof3/world/area07714DispatchTables.c'
   - - 4280
     - c
-    - seedWorkTable64AndAdvanceStepWorld02Area07714_801F3CB8
-    - '@source: src/bof3/world/seedWorkTable64AndAdvanceStepWorld02Area07714_801F3CB8.c'
+    - stateWorkAdvanceStep
+    - '@source: src/bof3/world/stateWorkAdvanceStep.c'
     - '@behavior: copies three shared seed words into the scratch work record, sets word +0x0C to 180, seeds 64 table records and advances dispatch byte +1.'
   - - 4388
     - asm
     - func_801F3D24
   - - 4612
     - c
-    - dispatchStateByte1Table6268World02Area07714_801F3E04
+    - callStateTable6268World02
     - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044 and calls the handler at the record byte +0x01 index of the local handler table based at 0x801F6268.'
   - - 4680
@@ -92,23 +92,23 @@ segments:
     - func_801F3E48
   - - 4872
     - c
-    - drawEffectEntriesThenAdvanceAngleAndStepShadeThenClearWorkFlagsAtFrame185World02Area07714_801F3F08
-    - '@source: src/bof3/world/drawEffectEntriesThenAdvanceAngleAndStepShadeThenClearWorkFlagsAtFrame185World02Area07714_801F3F08.c'
+    - renderEntriesAngleShade
+    - '@source: src/bof3/world/renderEntriesAngleShade.c'
     - '@behavior: entry 1 of the local handler table at 0x801F6268 draws the 32 entries of the 0x2C-byte-stride effect table at 0x800E5504 between a PushMatrix/PopMatrix pair, advancing each entry''s spin angle halfword +0x24 by 0x10 and raising its halfword +0x2A by 0x20 while work byte +0x09 is below 4 and lowering it by 2 otherwise, then increments the work frame counter word +0x0C and calls the shared work reset 0x80196070 once it reaches 185.'
   - - 5172
     - c
-    - dispatchStateByte1Table6270World02Area07714_801F4034
+    - callStateTable6270World02
     - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044 and calls the handler at the record byte +0x01 index of the local handler table based at 0x801F6270.'
   - - 5240
     - c
-    - seedWorkDistancePairArmCountdownAndAdvanceStepWorld02Area07714_801F4078
-    - '@source: src/bof3/world/seedWorkDistancePairArmCountdownAndAdvanceStepWorld02Area07714_801F4078.c'
+    - stateDistancePairArm
+    - '@source: src/bof3/world/stateDistancePairArm.c'
     - '@behavior: reads the work pointer from the non-volatile scratchpad cell 0x1F800044, stores the position pair 0x740000/0x60000 in work words +0x34/+0x38, publishes the func_8015477C distance of that pair scaled by 0x10000 in work word +0x3C, arms the countdown word +0x0C with 300 and advances the dispatch byte +0x01.'
   - - 5332
     - c
-    - stepCountdownQueueCue20BAndDrawEffectWorld02Area07714_801F40D4
-    - '@source: src/bof3/world/stepCountdownQueueCue20BAndDrawEffectWorld02Area07714_801F40D4.c'
+    - stepCountdownQueueEffect
+    - '@source: src/bof3/world/stepCountdownQueueEffect.c'
     - '@behavior: reads the work pointer from the non-volatile scratchpad cell 0x1F800044 and, whenever the signed countdown word at offset 0x0C is a multiple of 30, dispatches the front-end cue 0x20B through func_8015DF18; reloads the work pointer and, while that countdown modulo 30 stays below 15, runs the overlay draw helper at 0x801F4B80; reloads the work pointer once more, decrements the countdown and calls func_80196070 to reset the scratchpad work area when it reaches zero.'
   - - 5556
     - c
@@ -117,8 +117,8 @@ segments:
     - '@behavior: clears the shared halfword at 0x800E5500 and byte at 0x800E5502, then seeds 64 records of stride 0x34 at 0x800E4800 with scratch work words +0x34/+0x38/+0x3C and clears each record halfword +0x30.'
   - - 5664
     - c
-    - shiftWorkTable64AndBuildRotatedVertexPairsWorld02Area07714_801F4220
-    - '@source: src/bof3/world/shiftWorkTable64AndBuildRotatedVertexPairsWorld02Area07714_801F4220.c'
+    - mathBuildVertexPairs
+    - '@source: src/bof3/world/mathBuildVertexPairs.c'
     - '@behavior: ages the 64-entry work table at 0x800E4800 by one entry by copying entries 0..62 into entries 1..63, seeds entry 0 position words and twist halfword from the scratch work record and the shared frame counter, advances the twist halfword by 0x40 while its gate byte is set, then rewrites both vertex triples of all 64 entries from each entry position and twist angle.'
   - - 6088
     - asm
@@ -146,7 +146,7 @@ segments:
     - func_801F4B80
   - - 8412
     - c
-    - dispatchStateByte2Table6284World02Area07714_801F4CDC
+    - callStateTable6284World02
     - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F6284.'
   - - 8480
@@ -166,13 +166,13 @@ segments:
     - '@behavior: splits work byte +9 into five-tick phases and copies palette block 8 minus the quotient to block 0 of the table-0x801F627D row on a zero remainder, increments byte +9, copies block byte +10 plus one while byte +10 is below nine, increments byte +10, and clears bytes +9/+10 and increments byte +2 once byte +9 reaches 0x1F.'
   - - 9212
     - c
-    - stepPaletteSequenceOnTickCadenceAndResetOnFlagMismatchWorld02Area07714_801F4FFC
-    - '@source: src/bof3/world/stepPaletteSequenceOnTickCadenceAndResetOnFlagMismatchWorld02Area07714_801F4FFC.c'
+    - stepPaletteCadenceMismatch
+    - '@source: src/bof3/world/stepPaletteCadenceMismatch.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, copies palette block paletteSourceBlocks801F6298[(byte +9 >> 2) % 6] to block 0 of the table-0x801F627D row when work byte +9 is a multiple of four, copies block 9 to block 0 of the table-0x801F6278 row, and clears bytes +9/+10 and increments byte +2 when shared word 0x80144F28 shifted right four and nibble-masked by work halfword +0x3A differs from its low nibble while that phase quotient remainder is zero, then increments byte +9.'
   - - 9564
     - c
-    - stepRampedAndTableSelectedPaletteBlocksOnTickCadenceWorld02Area07714_801F515C
-    - '@source: src/bof3/world/stepRampedAndTableSelectedPaletteBlocksOnTickCadenceWorld02Area07714_801F515C.c'
+    - stepRampedBlocksCadence
+    - '@source: src/bof3/world/stepRampedBlocksCadence.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, copies palette block (byte +9 / 5) + 2 to block 0 of the table-0x801F627D row on a zero five-tick remainder, increments byte +9, copies the block list 0x801F62A0 entry at byte +10 halved to block 0 of the table-0x801F6278 row while byte +10 is even and below nine, increments byte +10, then clears bytes +9/+10 and sets byte +2 to 1 once byte +9 reaches 0x1F.'
   - - 9884
     - c
@@ -181,36 +181,36 @@ segments:
     - '@behavior: copies eight words forward within palette staging RAM at 0x80037800 using source and destination row/block coordinates with 0x200/0x20 byte strides, then sets the shared palette-stage byte at 0x80145988 to 1.'
   - - 9976
     - c
-    - dispatchStateByte2Table62a8World02Area07714_801F52F8
+    - callStateTable62World02
     - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F62A8.'
   - - 10044
     - c
-    - setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C
-    - '@source: src/bof3/world/setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C.c'
+    - stateWorkIncrementWork
+    - '@source: src/bof3/world/stateWorkIncrementWork.c'
     - '@behavior: loads the scratch work-record cursor from the scratchpad pointer cell 0x1F800044, writes the halfword 0x320 to the record +0x3E field, increments the record +0x02 step byte, then runs the local panel update at 0x801F54B8.'
   - - 10100
     - c
-    - incrementWorkStepIfStateNonzeroWorld02Area07714_801F5374
-    - '@source: src/bof3/world/incrementWorkStepIfStateNonzeroWorld02Area07714_801F5374.c'
+    - incrementStepStateNonzero
+    - '@source: src/bof3/world/incrementStepStateNonzero.c'
     - '@behavior: increments work byte +2 when state byte 0x8014933B is nonzero, then always calls the local panel update at 0x801F54B8.'
   - - 10172
     - c
-    - incrementWorkFieldsAndAdvanceStepAt350000World02Area07714_801F53BC
-    - '@source: src/bof3/world/incrementWorkFieldsAndAdvanceStepAt350000World02Area07714_801F53BC.c'
+    - incrementFieldsAdvanceStep
+    - '@source: src/bof3/world/incrementFieldsAdvanceStep.c'
     - '@behavior: adds 0x2000 to work word +0x38 and 0x10 to halfword +0x3E; increments byte +2 when word +0x38 reaches 0x350000, then calls the local helper at 0x801F54B8.'
   - - 10268
     - c
-    - incrementWorkStepIfStateZeroWorld02Area07714_801F541C
+    - incrementStepStateZero
   - - 10340
     - c
-    - decrementWorkFieldsAndResetStepWorld02Area07714_801F5464
-    - '@source: src/bof3/world/decrementWorkFieldsAndResetStepWorld02Area07714_801F5464.c'
+    - decrementFieldsResetStep
+    - '@source: src/bof3/world/decrementFieldsResetStep.c'
     - '@behavior: subtracts 0x2000 from work word +0x38 and 0x10 from halfword +0x3E; sets byte +2 to 1 when word +0x38 reaches 0x340000, then calls the local helper at 0x801F54B8.'
   - - 10424
     - c
-    - drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8
-    - '@source: src/bof3/world/drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8.c'
+    - renderTexturedLinkedGrid
+    - '@source: src/bof3/world/renderTexturedLinkedGrid.c'
     - '@behavior: reads the scratchpad work-record pointer cell 0x1F800044, shifts its word 0x34 and word 0x38 right by nine bits as the quad centre and takes its unsigned halfword 0x3E as the depth centre; stamps the shared cursor g_PrimCursor as a POLY_FT4 with the shade texture off, fills the four scratchpad vectors at 0x1F800014 with the corners (x lane word 0x34 less 0x4040 for the first and third vectors and less 0x3F40 for the second and fourth, y lane word 0x38 less 0x4030 and less 0x3FD0, z lane halfword 0x3E less 0x30 and plus 0x30), projects them with RotTransPers4 into the primitive vertex words at +0x08, +0x10, +0x18 and +0x20, then passes the packed texture state 0x21800133 through 0x80155560 with mode 1 and queues the primitive through 0x80155A08 at the fixed grid cell 0x5D by 0x34 with mode 0 and size 0x28.'
   - - 10760
     - c
@@ -221,23 +221,23 @@ segments:
     - func_801F564C
   - - 10948
     - c
-    - incrementWorkStepIfSharedFlag7SetWorld02Area07714_801F56C4
-    - '@source: src/bof3/world/incrementWorkStepIfSharedFlag7SetWorld02Area07714_801F56C4.c'
+    - incrementStepSharedSet
+    - '@source: src/bof3/world/incrementStepSharedSet.c'
     - '@behavior: tests flag 7 of the main-RAM flag bank 0x80144F28 through the shared flag tester func_8015B5D4 and, when it reports the flag set, increments work byte +2 through the scratchpad work pointer cell 0x1F800044.'
   - - 11024
     - c
-    - cycleTwoPaletteBlocksAndAdvanceStepWorld02Area07714_801F5710
-    - '@source: src/bof3/world/cycleTwoPaletteBlocksAndAdvanceStepWorld02Area07714_801F5710.c'
+    - cycleTwoPaletteBlocks
+    - '@source: src/bof3/world/cycleTwoPaletteBlocks.c'
     - '@behavior: copies two palette blocks selected by half of work byte +9, increments that byte and advances byte +2 when the updated byte is at least 6.'
   - - 11196
     - c
-    - cycleThreePaletteBlocksWorld02Area07714_801F57BC
-    - '@source: src/bof3/world/cycleThreePaletteBlocksWorld02Area07714_801F57BC.c'
+    - cycleThreePaletteBlocks
+    - '@source: src/bof3/world/cycleThreePaletteBlocks.c'
     - '@behavior: copies three palette blocks selected by work byte +9 modulo four, then increments that byte.'
   - - 11392
     - c
-    - setMatchedTriggerRecordFlagAndQueueCue201WhenSharedFlag2cClearWorld02Area07714_801F5880
-    - '@source: src/bof3/world/setMatchedTriggerRecordFlagAndQueueCue201WhenSharedFlag2cClearWorld02Area07714_801F5880.c'
+    - stateMatchedTriggerFlag
+    - '@source: src/bof3/world/stateMatchedTriggerFlag.c'
     - '@behavior: gates on bit 0x2C of the shared main-RAM flag bank 0x80144EB8 through the shared tester 0x8015B5D4, matches the two byte arguments and the game-mode byte 0x80145E98 against the two 4-byte trigger records of the payload table at 0x801F6B14, and on the accepted record whose flag bit 0x1C of the bank 0x80144F28 is still clear sets that record''s fourth byte as the bank bit, queues sound cue 0x201 through 0x8015DF18 and calls 0x8019ABB0 with 0xF before returning 1.'
   - - 11676
     - c
@@ -249,8 +249,8 @@ segments:
     - publishModeStatusWorld02Area07714_801F59DC
   - - 11784
     - c
-    - resetStatusAndMapScenarioProgressWorld02Area07714_801F5A08
-    - '@source: src/bof3/world/resetStatusAndMapScenarioProgressWorld02Area07714_801F5A08.c'
+    - stateStatusMapProgress
+    - '@source: src/bof3/world/stateStatusMapProgress.c'
     - '@behavior: resets the shared status halfword to 0xFFFF and maps shared mode 0/1 to scenario progress 1/0, leaving progress unchanged for other modes.'
   - - 11864
     - c
@@ -275,7 +275,7 @@ segments:
     - '@behavior: asks the same-binary helper at 0x801665A0 for one unit of the shared countdown entry with identifier 71 (0x47) in slot 1, passing (1, 71, 1, 0) and discarding its status byte.'
   - - 12248
     - c
-    - setSharedFlagBit4World02Area07714_801F5BD8
+    - stateSharedFlagBit4
   - - 12288
     - c
     - publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area07714_801F5C00
@@ -293,8 +293,8 @@ segments:
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F6B48 (indexed by the third shared party-id byte D_80144F5C) and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 12672
     - c
-    - retreatCounterAndQueueCue200World02Area07714_801F5D80
-    - '@source: src/bof3/world/retreatCounterAndQueueCue200World02Area07714_801F5D80.c'
+    - retreatCounterQueueCue200
+    - '@source: src/bof3/world/retreatCounterQueueCue200.c'
     - '@behavior: reads the shared halfword counter at 0x8014932A, sets the shared area status byte at 0x80149333 to 2, retreats that counter by 0x14 and then queues the fixed cue 0x200 through the main-exe cue dispatcher at 0x8015DF18.'
   - - 12736
     - c
@@ -315,8 +315,8 @@ segments:
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the third party-id-indexed byte of the mode table at 0x801F62EC and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 13060
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind4FromCommonModeTableWorld02Area07714_801F5F04
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromCommonModeTableWorld02Area07714_801F5F04.c'
+    - publishBaseEndCommon
+    - '@source: src/bof3/world/publishBaseEndCommon.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the first party-id-indexed byte of the mode table at 0x801F62EC and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 13188
     - c
@@ -336,8 +336,8 @@ segments:
     - invokeHelperArgWorld02Area07714_801F60A4
   - - 13508
     - c
-    - dispatchSelectedOffsetPairThenStepHalfword0aAndStoreDistanceAtEntry4World02Area07714_801F60C4
-    - '@source: src/bof3/world/dispatchSelectedOffsetPairThenStepHalfword0aAndStoreDistanceAtEntry4World02Area07714_801F60C4.c'
+    - callSelectedOffsetDistance
+    - '@source: src/bof3/world/callSelectedOffsetDistance.c'
     - '@behavior: state handler reached only through the code pointer word at 0x801F6AC8 of the payload textbin run; selects the world record table entry 0x8017F974[0x80143F00], indexes that record''s offset-0x10 pointer table with work byte 0x03 of the record published at pointer cell 0x80148210, offsets by that record''s halfword 0x0A, reads the byte at plus 0x02 as an index into the twelve signed-byte offset pairs at 0x801F6B60, dispatches the pair with attribute 0x40 and fixed arguments (-0x400, 4, 0) through the resident dispatcher 0x801FD34C, and then steps the halfword 0x0A back by two on a nonzero answer or forward by one otherwise, storing the func_8015477C distance between the scratch work position words at 0x34/0x38 into halfword 0x3E and queueing id 0 through func_8014D6B8 when the selected entry index is 4.'
   - - 13788
     - c

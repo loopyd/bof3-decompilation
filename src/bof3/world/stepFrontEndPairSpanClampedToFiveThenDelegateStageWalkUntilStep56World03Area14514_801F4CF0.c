@@ -1,9 +1,9 @@
 #include "bof3/bof3.h"
 
 /* Draw request of this payload at 0x801F5190, lifted in
- * claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190.c:
+ * claimEndPointPair.c:
  * it takes two 16.16 points and queues the record pair that spans them. */
-s32 claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
+s32 claimEndPointPair(
     s32 x0, s32 y0, s32 x1, s32 y1);
 
 /* Stage drawer of this payload at 0x801F4DA4, lifted in
@@ -42,7 +42,7 @@ void func_8015DF18(u16 arg0);
  * @residual none
  *
  * Name evidence: the queued pair is the same draw request the exact lifts
- * claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190
+ * claimEndPointPair
  * and drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C
  * already document, and 0x428000/0x638000/0x3D8000 are 16.16 coordinates of the
  * same fixed window the other world overlays read as camera coordinates
@@ -75,7 +75,7 @@ u8 stepFrontEndPairSpanClampedToFiveThenDelegateStageWalkUntilStep56World03Area1
   } else {
     y = 0x3D8000;
   }
-  claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
+  claimEndPointPair(
       0x428000, 0x638000, y, 0x638000);
   if ((arg0 & 0xFFFFu) == 5u) {
     func_8015DF18(0x206);

@@ -9,6 +9,6 @@
  * @residual none
  */
 void func_801B32A4(void) {
-  selectWorkSequenceForRoute7();
+  selectWorkSequenceRoute7();
   g_game_work->flags_02 = 2;
 }

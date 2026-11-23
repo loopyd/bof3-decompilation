@@ -9,41 +9,41 @@ load_address = 0x801D0C00
 
 sources = [
     "src/bof3/ui/drawMastersCommandPanelShisu00_801D3320.c",
-    "src/bof3/ui/drawPartyMemberStatusBoxShisu00_801D376C.c",
+    "src/bof3/ui/renderPartyMemberBox.c",
     "src/bof3/ui/emitFlatLineRectangleBorderShisu00_801D432C.c",
-    "src/bof3/ui/mapByte80144FF9ToCodeShisu00_801D1E60.c",
+    "src/bof3/ui/mapByte80144Code.c",
     "src/bof3/ui/runShisuUiStepUpdateShisu00_801D2D88.c",
     "src/bof3/ui/sumLevelExpShisu00_801D5F78.c",
     "src/bof3/ui/advanceShisuUiWordThenStepUpdateShisu00_801D2C50.c",
     "src/bof3/ui/alignShisuUiWordToBoundaryAndSetByteThenStepUpdateShisu00_801D2C84.c",
-    "src/bof3/ui/drawSpriteWithScenarioKindSubstitutionShisu00_801D460C.c",
-    "src/bof3/ui/rampShisuWorkRecordChannelsThenDrawShisu00_801D2ADC.c",
-    "src/bof3/ui/initializeShisuUiWorkRecordsShisu00_801D27BC.c",
+    "src/bof3/ui/renderSpriteKindSubstitution.c",
+    "src/bof3/ui/rampShisuChannelsDraw.c",
+    "src/bof3/ui/initializeShisuUiRecords.c",
     "src/bof3/ui/advanceShisuUiDistanceRampClampAndSetByteThenStepUpdateShisu00_801D2CE4.c",
     "src/bof3/ui/emitPanelIconPrimShisu00_801D5620.c",
-    "src/bof3/ui/initializeShisuUiWorkBlockHeadShisu00_801D1CA4.c",
+    "src/bof3/ui/initializeShisuBlockHead.c",
     "src/bof3/ui/drawSpritePrimTpageFromAbrShisu00_801D4660.c",
     "src/bof3/ui/drawMenuCommandRowShisu00_801D5C7C.c",
     "src/bof3/ui/readKindRecordValueShisu00_801D5EC4.c",
     "src/bof3/ui/drawSpritePrimTpageFromGraphTypeShisu00_801D550C.c",
-    "src/bof3/ui/drawTwoRowNumberedPanelShisu00_801D94B0.c",
+    "src/bof3/ui/renderTwoRowNumbered.c",
     "src/bof3/ui/drawBackgroundTilesFromKindShisu00_801D7224.c",
     "src/bof3/ui/drawTexturedFrameShisu00_801D6090.c",
     "src/bof3/ui/drawPanelFrameShisu00_801D8850.c",
     "src/bof3/ui/drawEquipSlotRowsShisu00_801D4AF4.c",
-    "src/bof3/ui/drawThreeIconStatusRowPanelShisu00_801D91B0.c",
+    "src/bof3/ui/renderThreeIconRow.c",
     "src/bof3/ui/drawEquipPanelShisu00_801D3F0C.c",
     "src/bof3/ui/drawExpRowPanelShisu00_801D4158.c",
-    "src/bof3/ui/drawRotatingIconSlotPanelShisu00_801D4DC0.c",
-    "src/bof3/ui/drawPartyMemberAttributesAndExpPanelShisu00_801D4754.c",
-    "src/bof3/ui/drawPartyMemberParameterPanelShisu00_801D3BD4.c",
+    "src/bof3/ui/renderRotatingIconSlot.c",
+    "src/bof3/ui/renderMemberAttributesExp.c",
+    "src/bof3/ui/renderPartyMemberParameter.c",
     "src/bof3/ui/drawAbilityListPanelShisu00_801D835C.c",
-    "src/bof3/ui/drawEquipCategoryListPanelShisu00_801D8A78.c",
+    "src/bof3/ui/renderEquipCategoryList.c",
     "src/bof3/ui/drawEquipCategoryAvailabilityListPanelShisu00_801D7BFC.c",
     "src/bof3/ui/drawTexturedWindowFrameShisu00_801D76F4.c",
 ]
 support_sources = [
-    "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",
+    "src/bof3/ui/stateSetThreeBytes.c",
     "src/bof3/ui/dispatchStateByteTable9720EtcShisu00_801D2C0C.c",
     "src/bof3/ui/dispatchStateByteTable9734EtcShisu00_801D2DA8.c",
     "src/bof3/ui/initializeShisuUiState.c",
@@ -51,7 +51,7 @@ support_sources = [
 ]
 psyq_source = "src/bof3/support/shisu_00_psyq.c"
 
-# drawEquipCategoryListPanelShisu00_801D8A78 dispatches on the task state byte
+# renderEquipCategoryList dispatches on the task state byte
 # through a six-entry `.rodata` jump table the compiler emits, and the original
 # overlay keeps that table at 0x801D0D4C inside the payload's leading data blob
 # (offset 0x14C, the words 0x801D8ACC, 0x801D8AD4 three times and 0x801D8ADC

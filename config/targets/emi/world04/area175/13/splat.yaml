@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 24
     - c
-    - dispatchStateByte1Table45ecWorld04Area17513_801F2C18
+    - callStateTable45World04
     - '@source: src/bof3/world/area17513DispatchTables.c'
   - - 92
     - asm
@@ -50,13 +50,13 @@ segments:
     - func_801F30CC
   - - 1508
     - c
-    - dispatchWorkByte1HandlerWorld04Area17513_801F31E4
+    - callWorkHandlerWorld04
     - '@source: src/bof3/world/area17513DispatchTables.c'
     - '@behavior: Reads the non-volatile scratchpad work-object pointer cell at 0x1F800044, indexes the five-entry handler table D_801F45F8 at 0x801F45F8 with the byte at offset 0x01 of that object (scaled by four) and calls the selected handler; it takes no arguments, returns nothing and touches no other work byte.'
   - - 1576
     - c
-    - setWorkByte9AndClearTintWorld04Area17513_801F3228
-    - '@source: src/bof3/world/setWorkByte9AndClearTintWorld04Area17513_801F3228.c'
+    - stateWorkClearTint
+    - '@source: src/bof3/world/stateWorkClearTint.c'
     - '@behavior: Stores 0x10 into the byte at offset 0x09 and 1 into the byte at offset 0x01 of the scratchpad work object published through the non-volatile pointer cell at 0x1F800044, then zeroes the three tint channel bytes at offsets 0x5F, 0x5E and 0x5D of that object.'
   - - 1636
     - asm
@@ -76,21 +76,21 @@ segments:
     - func_801F3438
   - - 2348
     - c
-    - dispatchWorkByte1Table460cWorld04Area17513_801F352C
+    - callWorkTable460World04
     - '@source: src/bof3/world/area17513DispatchTables.c'
     - '@behavior: Reads the non-volatile scratchpad work-object pointer cell at 0x1F800044 and calls the handler pointer selected by the dispatch byte at offset 0x01 of that object in the four-entry handler table D_801F460C at 0x801F460C; takes no arguments, returns nothing and reads or writes no other work-object byte.'
   - - 2416
     - c
-    - clearWorkByte9AdvanceWorkByte1ThenQueueCue20EWorld04Area17513_801F3570
-    - '@source: src/bof3/world/clearWorkByte9AdvanceWorkByte1ThenQueueCue20EWorld04Area17513_801F3570.c'
+    - stateWorkAdvanceQueue
+    - '@source: src/bof3/world/stateWorkAdvanceQueue.c'
     - '@behavior: Clears the byte at offset 0x09 of the scratchpad work object published through the pointer cell at 0x1F800044, advances the dispatch byte at offset 0x01 of that object by one and then queues the front-end cue 0x20E through func_8015DF18.'
   - - 2484
     - asm
     - func_801F35B4
   - - 2628
     - c
-    - drawWorkFanScaledByByte9AndAdvanceWorkByte1WhenCountdownExpiresWorld04Area17513_801F3644
-    - '@source: src/bof3/world/drawWorkFanScaledByByte9AndAdvanceWorkByte1WhenCountdownExpiresWorld04Area17513_801F3644.c'
+    - renderFanScaledExpires
+    - '@source: src/bof3/world/renderFanScaledExpires.c'
     - '@behavior: Overlay step handler, entry 2 of the local state-byte-1 handler table D_801F460C at 0x801F460C. Reads the work record published at the scratchpad pointer cell 0x1F800044 and calls the fan helper at 0x801F36DC with the record signed halfwords +0x2E and +0x30 as the fan center and its byte +0x09 as the radius scale, then decrements byte +0x09 and, when it reaches zero, re-reads the cell and advances the record state byte +0x01 by one.'
   - - 2748
     - c
@@ -101,27 +101,27 @@ segments:
     - func_801F36DC
   - - 3180
     - c
-    - setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C
-    - '@source: src/bof3/world/setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C.c'
+    - stateStatusGateElse3
+    - '@source: src/bof3/world/stateStatusGateElse3.c'
     - '@behavior: Loads the shared gate byte D_801490C7, clears the shared status halfword D_801490A8 to 0xFFFF, and then stores 2 into the shared sub-state byte D_80146875 while the gate byte is nonzero, and 3 when the gate byte is zero.'
   - - 3228
     - c
-    - setStatusFFFFProgress32Substate19IfGateElseProgress28Substate15World04Area17513_801F389C
-    - '@source: src/bof3/world/setStatusFFFFProgress32Substate19IfGateElseProgress28Substate15World04Area17513_801F389C.c'
+    - stateStatusGateProgress28
+    - '@source: src/bof3/world/stateStatusGateProgress28.c'
     - '@behavior: Loads the shared gate byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x28 into the shared scenario progress byte g_ScenarioProgress and 0x15 into the shared substate byte D_80146875 while the gate byte is zero, and 0x32 with 0x19 while it is nonzero.'
   - - 3304
     - c
-    - setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8
-    - '@source: src/bof3/world/setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8.c'
+    - stateStatus5PtrGate
+    - '@source: src/bof3/world/stateStatus5PtrGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while it equals 1, stores 0x5A into the shared status halfword D_801490A8 and 0xFF into the byte at offset 0x7A of the pointer held at 0x80148208; when the gate byte differs from 1 it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 3372
     - c
-    - setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C
-    - '@source: src/bof3/world/setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C.c'
+    - stateStatus5Byte801448Gate
+    - '@source: src/bof3/world/stateStatus5Byte801448Gate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while it equals 1, stores 0x5F into the shared status halfword D_801490A8 and 1 into the shared byte at 0x801448EC; when the gate byte differs from 1 it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 3440
     - c
-    - setStatus63IfGateElse62World04Area17513_801F3970
+    - stateStatus63GateElse62
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3480
     - c
@@ -135,7 +135,7 @@ segments:
     - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0x7A into the shared status halfword D_801490A8. Otherwise stores 0x6E into that halfword and 0xFF into byte 0x7A of the pointer held at D_80148208.'
   - - 3636
     - c
-    - setStatus70IfGateElseFFFFWorld04Area17513_801F3A34
+    - stateStatus70GateWorld04
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3676
     - c
@@ -153,7 +153,7 @@ segments:
     - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0x6F into the shared status halfword D_801490A8 and clears the shared byte D_801448ED. Otherwise it compares the shared word D_80144F50 with an unsigned bound of 0x1F4: below the bound it stores 0x7C into D_801490A8 and 0xFF into byte 0x7A of the pointer held at D_80148208, and at or above the bound it stores 0x7D into D_801490A8 and 1 into D_801448ED.'
   - - 3916
     - c
-    - setStatus7EIfGateElseFFFFWorld04Area17513_801F3B4C
+    - stateStatus7GateWorld04
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3956
     - c
@@ -168,12 +168,12 @@ segments:
     - func_801F3BA4
   - - 4104
     - c
-    - setStatus88AndByte801F294C2IfGateElse89World04Area17513_801F3C08
-    - '@source: src/bof3/world/setStatus88AndByte801F294C2IfGateElse89World04Area17513_801F3C08.c'
+    - stateStatus88GateElse89
+    - '@source: src/bof3/world/stateStatus88GateElse89.c'
     - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0x89 into the shared status halfword D_801490A8. Otherwise stores 0x88 into that halfword and 2 into the byte at 0x801F294C.'
   - - 4172
     - c
-    - setStatus8AIfGateElseFFFFWorld04Area17513_801F3C4C
+    - stateStatus8GateWorld04
     - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x8A into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 4212
@@ -186,32 +186,32 @@ segments:
     - noopHandlerWorld04Area17513_801F3C9C
   - - 4260
     - c
-    - setStatusA0IfGateElse9FWorld04Area17513_801F3CA4
+    - stateStatusGateElse9
     - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xA0 into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0x9F when the gate byte is zero.'
   - - 4300
     - c
-    - setStatus72AndStepByte1CIfGateElse78AndStepByte1BWorld04Area17513_801F3CCC
-    - '@source: src/bof3/world/setStatus72AndStepByte1CIfGateElse78AndStepByte1BWorld04Area17513_801F3CCC.c'
+    - stateStepGateStep
+    - '@source: src/bof3/world/stateStepGateStep.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while the gate byte is nonzero, stores 0x72 into the shared status halfword D_801490A8 and 0x0C into byte 1 of the overlay-wide step cell group at 0x801F294D; when the gate byte is zero it stores 0x78 and 0x0B there instead. Either way it then clears step byte 2 at 0x801F294E.'
   - - 4376
     - asm
     - func_801F3D18
   - - 4448
     - c
-    - setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60
-    - '@source: src/bof3/world/setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60.c'
+    - stateStatusGateElse1
+    - '@source: src/bof3/world/stateStatusGateElse1.c'
     - '@behavior: Loads the shared gate byte D_801490C7, stores 2 into the byte at 0x801F294C while the gate byte is nonzero and 1 when the gate byte is zero, then stores 0xEF into the shared status halfword D_801490A8.'
   - - 4500
     - c
-    - publishGateByteSlot0World04Area17513_801F3D94
+    - publishGateByteSlot0
   - - 4536
     - c
-    - publishGateByteSlot1World04Area17513_801F3DB8
+    - publishGateByteSlot1
   - - 4572
     - c
-    - setStatusF7AndByte801F294C4IfGateElseFFFFAndByte0World04Area17513_801F3DDC
-    - '@source: src/bof3/world/setStatusF7AndByte801F294C4IfGateElseFFFFAndByte0World04Area17513_801F3DDC.c'
+    - stateStatusByte801Gate
+    - '@source: src/bof3/world/stateStatusByte801Gate.c'
     - '@behavior: Reads the shared gate byte D_801490C7. When zero, stores 0xFFFF into D_801490A8 and clears D_801F294C. Otherwise stores 0xF7 into D_801490A8 and 4 into D_801F294C.'
   - - 4648
     - c
@@ -226,16 +226,16 @@ segments:
     - func_801F3EB4
   - - 4908
     - c
-    - requestFrontSelectorContextOnceOnWorldZoneEntryWorld04Area17513_801F3F2C
-    - '@source: src/bof3/world/requestFrontSelectorContextOnceOnWorldZoneEntryWorld04Area17513_801F3F2C.c'
+    - requestContextOnceZone
+    - '@source: src/bof3/world/requestContextOnceZone.c'
     - '@behavior: Compares the integer halves of two 16.16 position arguments against one tile rectangle (first half in 0x41..0x44, second half in 0x14..0x17); outside it stores 1 into the latch byte 0x801455C7, and inside it acts only while that latch is nonzero, clearing the latch, queueing front-end cue 0x20C through func_8015DF18 and requesting the front selector context from the shared halfword 0x80145048 with 0x80145040 and 0x80145044 as kind 4 through func_8019FA28; returns 0 on every path.'
   - - 5052
     - c
     - invokeHelperArgWorld04Area17513_801F3FBC
   - - 5084
     - c
-    - copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC
-    - '@source: src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC.c'
+    - copyXXRange
+    - '@source: src/bof3/world/copyXXRange.c'
     - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 5132
     - c

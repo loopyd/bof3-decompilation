@@ -11,7 +11,7 @@
  *           state byte with no arguments (framed jalr), then forwards the same
  *           panel task root to the shop panel step func_801DC6FC. The three
  *           pointer entries present in the shipped payload are panelNoop
- *           (0x801E2800), advancePanelXTo320B and retreatPanelXTo75.
+ *           (0x801E2800), statePanelXTo320 and retreatPanelXTo75.
  * @status exact
  * @match 100.00
  * @residual none

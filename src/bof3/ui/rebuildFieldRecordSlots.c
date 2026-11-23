@@ -3,7 +3,7 @@
 /* @source 0x801D68D0
  * @behavior field-record rebuild of the shop front end, called by the phase
  *           step func_801D6668 with the constant 0 and by the UI sub-step
- *           handler emitPanelStripThenRebuildShopStateOnClearGate with the
+ *           handler emitStripRebuildShop with the
  *           constant 1: it walks the eight 164-byte field records of the
  *           main-RAM table D_80144968 and, when its byte argument is nonzero,
  *           first clears the record byte at +0x1A, submits the field request

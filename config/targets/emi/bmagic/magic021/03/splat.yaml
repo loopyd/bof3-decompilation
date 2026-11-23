@@ -38,8 +38,8 @@ segments:
     - func_801EED30
   - - 824
     - c
-    - invokeHelperThenClearRecordFlag40WhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic02103_801EEF38
-    - '@source: src/bof3/bmagic/invokeHelperThenClearRecordFlag40WhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic02103_801EEF38.c'
+    - callHelperClearZero
+    - '@source: src/bof3/bmagic/callHelperClearZero.c'
     - '@behavior: Work byte 1 state 1 of this overlay: entry 1 of the three-word code-pointer run at 0x801EEC04, dispatched on work byte 1. When the scratchpad work object''s byte 0xB is zero it calls the shared helper at 0x800AEF98 with 4 and 0, clears bit 0x40 of byte 0 of the shared battle work record at 0x801EB4E0 and increments work byte 1.'
   - - 936
     - c
@@ -48,7 +48,7 @@ segments:
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the helper at 0x801E5988 with no arguments; the halfword store fills the call delay slot.'
   - - 988
     - c
-    - dispatchStateByte1Tablefe00BmagicMagic02103_801EEFDC
+    - callStateTablefe00Bmagic
     - '@source: src/bof3/bmagic/magic02103DispatchTables.c'
   - - 1056
     - asm
@@ -60,17 +60,17 @@ segments:
     - '@behavior: Calls the shared helper at 0x800AFF98 with no arguments, stores the returned byte in scratchpad work byte 9 through the pointer cell at 0x1F800044, then reloads that cell and increments work byte 2 at byte width, selecting the next entry of the six-word handler run at 0x801EEC10.'
   - - 1284
     - c
-    - invokeHelperThenCountDownWorkByte9AndQueueTwelveRecordsWithPairedStepAndWorkPointerBmagicMagic02103_801EF104
-    - '@source: src/bof3/bmagic/invokeHelperThenCountDownWorkByte9AndQueueTwelveRecordsWithPairedStepAndWorkPointerBmagicMagic02103_801EF104.c'
+    - callDownTwelvePaired
+    - '@source: src/bof3/bmagic/callDownTwelvePaired.c'
     - '@behavior: Calls helper and counts down work byte 9; on zero queues twelve pool records with paired step values and work pointers, then advances work byte 2.'
   - - 1544
     - c
-    - forwardBattleByteAndAdvanceWorkByte2WhenHelperReadyBmagicMagic02103_801EF208
-    - '@source: src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte2WhenHelperReadyBmagicMagic02103_801EF208.c'
+    - forwardBattleHelperReady
+    - '@source: src/bof3/bmagic/forwardBattleHelperReady.c'
     - '@behavior: When the readiness helper returns a nonzero byte, forwards the battle byte to a helper and increments work byte 2.'
   - - 1632
     - c
-    - invokeHelperAndAdd4ToWorkByte9Below12ElseAdvanceWorkByte2BmagicMagic02103_801EF260
+    - callHelperAdvanceBmagic
     # @source 0x801EF260
     # @behavior Calls helper and adds four to work byte 9 below 12; otherwise advances work byte 2.
   - - 1740
@@ -91,8 +91,8 @@ segments:
     - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler run based at 0x801EFE04 (four in-image code pointers, entry 0 = 0x801EF578 through entry 3 = 0x801EF7A0) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 2424
     - c
-    - dispatchWorkByte2AndCallHelpersIfWorkBytes0And2NonzeroBmagicMagic02103_801EF578
-    - '@source: src/bof3/bmagic/dispatchWorkByte2AndCallHelpersIfWorkBytes0And2NonzeroBmagicMagic02103_801EF578.c'
+    - callHelpersNonzeroBmagic
+    - '@source: src/bof3/bmagic/callHelpersNonzeroBmagic.c'
     - '@behavior: Dispatches work byte 2, then calls three helpers when work bytes 0 and 2 are nonzero.'
   - - 2560
     - asm
@@ -103,8 +103,8 @@ segments:
     - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750.c'
   - - 2976
     - c
-    - decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndClearWorkBytesAtZeroBmagicMagic02103_801EF7A0
-    - '@source: src/bof3/bmagic/decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndClearWorkBytesAtZeroBmagicMagic02103_801EF7A0.c'
+    - decrementTwoGlobalBytes
+    - '@source: src/bof3/bmagic/decrementTwoGlobalBytes.c'
     - '@behavior: Subtracts two from the scratchpad work object byte at offset 0xA and returns while the stored value, truncated to a byte, stays nonzero; at zero it decrements byte 0xB of the shared battle work record reached through 0x801EB4E0 and calls this overlay clear routine at 0x801EFDB0, with the 0x18-byte frame holding only $ra across that call.'
   - - 3068
     - asm

@@ -6,9 +6,9 @@ typedef void (*Boss02513Handler)(void);
  * party work records and then seeds the battle mode tuple, the second is the
  * battle-exit routine, and the third the mode dispatcher, which reads a byte
  * index in $a0, so it is stored through the void slot type. */
-void refreshActivePartyRecordsThenSetScenarioProgress4AndInitModeTuple530BossBoss02513_800C2984(
+void refreshActivePartyRecords(
     void);
-void raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C(void);
+void raiseFlagEnterFrontend(void);
 u32 accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760(u8 mode);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -30,12 +30,12 @@ extern u8 D_801FE4EF; /* @source 0x801FE4EF @kind unknown */
 /* @source 0x800C2710
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
  * the record-refresh hook
- * refreshActivePartyRecordsThenSetScenarioProgress4AndInitModeTuple530BossBoss02513_800C2984
+ * refreshActivePartyRecords
  * (refreshes the three 0x140-stride party work records at 0x80145E90, clears
  * each active battler's action flags through 0x801DD14C and starts that
  * record's 0x800F0800 region, then stores 4 into the scenario progress byte
  * and runs initModeTuple530) into 0x801463A4, the battle-exit routine
- * raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C (raises bit 0x2 of
+ * raiseFlagEnterFrontend (raises bit 0x2 of
  * D_801462E8 and requests frontend mode 4) into 0x801463A8, and the mode
  * dispatcher accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760
  * (six-entry jump table at 0x800C181C) into
@@ -58,8 +58,8 @@ extern u8 D_801FE4EF; /* @source 0x801FE4EF @kind unknown */
  */
 void publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710(void) {
   D_801463A4 =
-      refreshActivePartyRecordsThenSetScenarioProgress4AndInitModeTuple530BossBoss02513_800C2984;
-  D_801463A8 = raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C;
+      refreshActivePartyRecords;
+  D_801463A8 = raiseFlagEnterFrontend;
   D_801463AC = (Boss02513Handler)accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760;
   D_801FE4F0 = 0;
   D_801FE4E8 = 0;
