@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatus4AndModeIndex6IfGateElse3AndModeIndex6WhenMoneyBelow10000ElseSubtract10000FromMoneyAndSet2World03Area11613_801F2C04
-    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElse3AndModeIndex6WhenMoneyBelow10000ElseSubtract10000FromMoneyAndSet2World03Area11613_801F2C04.c'
+    - stateGateMoneyMoney
+    - '@source: src/bof3/world/stateGateMoneyMoney.c'
     - '@behavior: Loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 4 into the shared status halfword D_801490A8 and then 6 into the shared mode index byte D_801D4285. When the gate byte is zero and the main-RAM money word D_80144F50 is below 0x2710 it stores 3 into D_801490A8 and then 6 into D_801D4285; at or above that bound it subtracts 0x2710 from D_80144F50, stores 2 into D_801490A8 and leaves the mode byte untouched.'
   - - 108
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld03Area11613_801F2C6C
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld03Area11613_801F2C6C.c'
+    - stateStatusHandlerGate
+    - '@source: src/bof3/world/stateStatusHandlerGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 3 into the shared handler index byte D_801D4286; the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 156
     - c
@@ -42,8 +42,8 @@ segments:
     - '@behavior: Loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 5 into the shared handler index byte at 0x801D4286, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 204
     - c
-    - setStatus4AndModeIndex6IfGateElseFFFFWorld03Area11613_801F2CCC
-    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld03Area11613_801F2CCC.c'
+    - stateStatus4ModeGate
+    - '@source: src/bof3/world/stateStatus4ModeGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 4 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 272
     - c
@@ -52,36 +52,36 @@ segments:
     - '@behavior: Loads the shared signed gate byte D_801490C7; when nonzero stores status 4 and mode 6, otherwise stores status 0xFFFF without changing the mode.'
   - - 340
     - c
-    - requestFrontSelectorContextWorld03Area11613_801F2D54
-    - '@source: src/bof3/world/requestFrontSelectorContextWorld03Area11613_801F2D54.c'
+    - requestFrontSelectorContext
+    - '@source: src/bof3/world/requestFrontSelectorContext.c'
     - '@behavior: Requests the shared front selector context through func_8019FA28 with the fixed tuple 0x64, 0x460000, 0x340000 and 0x81. Nothing in the payload jumps here - no jal encodes the address and the word 0x801F2D54 occurs only as data at 0x801F3478, the ninth entry of the code-pointer run beginning at 0x801F3458 inside the tail blob - so the entry takes no arguments and returns nothing.'
   - - 384
     - c
-    - clearWorkByte48ThenSubmitRecordWorld03Area11613_801F2D80
-    - '@source: src/bof3/world/clearWorkByte48ThenSubmitRecordWorld03Area11613_801F2D80.c'
+    - stateWorkSubmitRecord
+    - '@source: src/bof3/world/stateWorkSubmitRecord.c'
     - '@behavior: Clears byte 0x48 of the work record published through the scratchpad pointer cell 0x1F800044, reloads that cell and passes the record to the shared main-executable submitter func_80196718. No jal encodes this address and the word 0x801F2D80 occurs only as data at 0x801F347C, the tenth entry of the code-pointer run beginning at 0x801F3458 in the tail blob, so the entry takes no arguments and returns nothing. The role of record byte 0x48 is unknown.'
   - - 436
     - asm
     - func_801F2DB4
   - - 616
     - c
-    - initFrontendStateSelector4AndSecondStateByte8World03Area11613_801F2E68
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte8World03Area11613_801F2E68.c'
+    - setupFrontendStateSecond
+    - '@source: src/bof3/world/setupFrontendStateSecond.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088 and then stores 4 into the shared front-end state selector D_801448EB and 8 into the shared byte D_801448ED, leaving the middle byte 0x801448EC untouched, and returns 0. No jal and no pointer word in this payload names 0x801F2E68, so the overlay reaches the handler from outside its payload.'
   - - 672
     - c
-    - dispatchStateByte1Table34e8World03Area11613_801F2EA0
+    - callStateTable34World03
     - '@source: src/bof3/world/area11613DispatchTables.c'
   - - 740
     - c
-    - storeWorkCursorDistanceAt3cAndAdvanceStateByte1World03Area11613_801F2EE4
-    - '@source: src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World03Area11613_801F2EE4.c'
-    - '@behavior: Entry 0 of the two-entry state-byte-1 step dispatch table based at 0x801F34E8, whose word 0 names this span and whose word 1 names drawWorkCursorQuadWorld03Area11613_801F2F30, and which dispatchStateByte1Table34e8World03Area11613_801F2EA0 indexes with byte +1 of the work record published at the scratchpad pointer cell 0x1F800044: it loads that work-record pointer, passes the record cursor words at +0x34 and +0x38 to the shared main-executable sampler func_8015477C, stores the answer shifted left 16 into the third cursor word at +0x3C, and then advances byte +1 by one, which hands the next dispatch to entry 1. The dispatcher sets up no argument register, so the entry takes no arguments and returns nothing.'
+    - stateCursorDistanceAdvance
+    - '@source: src/bof3/world/stateCursorDistanceAdvance.c'
+    - '@behavior: Entry 0 of the two-entry state-byte-1 step dispatch table based at 0x801F34E8, whose word 0 names this span and whose word 1 names renderWorkCursorQuad, and which callStateTable34World03 indexes with byte +1 of the work record published at the scratchpad pointer cell 0x1F800044: it loads that work-record pointer, passes the record cursor words at +0x34 and +0x38 to the shared main-executable sampler func_8015477C, stores the answer shifted left 16 into the third cursor word at +0x3C, and then advances byte +1 by one, which hands the next dispatch to entry 1. The dispatcher sets up no argument register, so the entry takes no arguments and returns nothing.'
   - - 816
     - c
-    - drawWorkCursorQuadWorld03Area11613_801F2F30
-    - '@source: src/bof3/world/drawWorkCursorQuadWorld03Area11613_801F2F30.c'
-    - '@behavior: Entry 1 of the two-entry step dispatch table based at 0x801F34E8, whose word 0 names 0x801F2EE4 and whose word 1 names this span and which dispatchStateByte1Table34e8World03Area11613_801F2EA0 indexes with byte +1 of the work record published at the scratchpad pointer cell 0x1F800044: it loads that work-record pointer and copies the record''s three cursor words at +0x34, +0x38 and +0x3C into a local twelve-byte point, then passes the address of that point to the overlay quad renderer at 0x801F2F78. It takes no arguments, returns nothing and reads no other state.'
+    - renderWorkCursorQuad
+    - '@source: src/bof3/world/renderWorkCursorQuad.c'
+    - '@behavior: Entry 1 of the two-entry step dispatch table based at 0x801F34E8, whose word 0 names 0x801F2EE4 and whose word 1 names this span and which callStateTable34World03 indexes with byte +1 of the work record published at the scratchpad pointer cell 0x1F800044: it loads that work-record pointer and copies the record''s three cursor words at +0x34, +0x38 and +0x3C into a local twelve-byte point, then passes the address of that point to the overlay quad renderer at 0x801F2F78. It takes no arguments, returns nothing and reads no other state.'
   - - 888
     - asm
     - func_801F2F78

@@ -8,8 +8,8 @@ splat = "config/targets/emi/world03/area118/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/resetWorkByte9AndSeedColourRampThenAdvanceWorkByte1World03Area11813_801F2E64.c",
-    "src/bof3/world/advanceStepCounterPhaseWithinFlagLimitAndAdvanceWorkByte1WhenCounterAt0fWorld03Area11813_801F2C6C.c",
+    "src/bof3/world/stateSeedColourRamp.c",
+    "src/bof3/world/stateCounterWithinLimit.c",
 ]
 support_sources = [
     "src/bof3/support/area118_13_psyq.c",
@@ -25,14 +25,14 @@ support_sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area11813_801F4B88.c",
     "src/bof3/world/stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawWorld03Area11813_801F3748.c",
     "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11813_801F36B4.c",
-    "src/bof3/world/setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4.c",
+    "src/bof3/world/stateCameraInsideWindow.c",
     "src/bof3/world/seedRecordCellPoseFromTablesStampMapColumnAdvanceStateAndClearSpriteOffsetWhenCameraInsideWorld03Area11813_801F3C54.c",
     "src/bof3/world/setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagClearThenDrawFlagIndexedScaledFrameWorld03Area11813_801F4278.c",
-    "src/bof3/world/routeRecordToNextCellStampMapCellsByAreaFlagThenSetStateFromCameraWindowWorld03Area11813_801F3058.c",
+    "src/bof3/world/routeNextCellsCamera.c",
     "src/bof3/world/setTriggerRecordFlagAndQueueCue203OnMatchedArgumentsWorld03Area11813_801F502C.c",
     "src/bof3/world/syncWorkRecordsAgainstBoundsTableAndMirrorActiveKindWorld03Area11813_801F4CD0.c",
     "src/bof3/world/drawRecordCellTexturedQuadWorld03Area11813_801F4634.c",
     "src/bof3/world/decrementWorkByte9AndSetWorkByte2To1AtZeroThenDrawFlagIndexedFrameWithDrawModeAndSemiTransFlatQuadWorld03Area11813_801F447C.c",
-    "src/bof3/world/resetStepCounterHalfwordAndAdvanceWorkByte1World03Area11813_801F2C48.c",
+    "src/bof3/world/stateStepCounterHalfword.c",
 ]
 psyq_source = "src/bof3/support/area118_13_psyq.c"

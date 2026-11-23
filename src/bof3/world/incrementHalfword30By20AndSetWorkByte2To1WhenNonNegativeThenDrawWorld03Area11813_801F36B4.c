@@ -3,7 +3,7 @@
 /* The overlay step routine this handler runs once the record halfword has
  * climbed back to zero; it is the lifted camera-window step of this same
  * overlay. */
-void setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4(
+void stateCameraInsideWindow(
     void);
 
 /* The overlay record draw routine every reaching path of this step finishes
@@ -58,7 +58,7 @@ void incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area
   half = *(u16*)(work + 0x30) + 0x20;
   *(u16*)(work + 0x30) = half;
   if ((s16)half >= 0) {
-    setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4(
+    stateCameraInsideWindow(
         );
     if (D_1F800044[2] == 2) {
       return;

@@ -22,7 +22,7 @@ extern u8 D_801D4286;
  *           world01/area050/13@0x801F2C90 and world00/area003/13@0x801F2C78 -
  *           which supply this body's statement order, operand forms and
  *           declaration style. The index-3 neighbour
- *           setStatusFFFFAndHandlerIndex3WhenGateWorld03Area11613_801F2C6C
+ *           stateStatusHandlerGate
  *           directly before this span is the same body differing in that one
  *           stored immediate word and nothing else (payload comparison: byte 17
  *           of the span only).

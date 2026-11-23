@@ -35,16 +35,16 @@ segments:
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 0xD to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED, returning 0. The first byte is the front-end state selector the callback table is indexed by, so this is the overlay state-entry tuple write.'
   - - 168
     - c
-    - setStateEntry3EProgress0AndArgHalfword7CTo5World03Area11413_801F2CA8
-    - '@source: src/bof3/world/setStateEntry3EProgress0AndArgHalfword7CTo5World03Area11413_801F2CA8.c'
+    - stateEntry3ArgTo5
+    - '@source: src/bof3/world/stateEntry3ArgTo5.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, writes 0x3E to the state-entry byte 0x801448EB and zero to the progress byte 0x801448EC, stores 5 into the halfword at 0x7C of the record passed in $a0 and returns 0.'
   - - 240
     - asm
     - func_801F2CF0
   - - 584
     - c
-    - startActionBySharedSelectorAndReturnNextStepWorld03Area11413_801F2E48
-    - '@source: src/bof3/world/startActionBySharedSelectorAndReturnNextStepWorld03Area11413_801F2E48.c'
+    - audioActionReturnNext
+    - '@source: src/bof3/world/audioActionReturnNext.c'
     - '@behavior: Reads the shared selector byte D_801454EC and switches on it. Selector 0 and any unhandled value start action 1 and report the next step as 1. Selectors 0xA, 0xB and 0xC read flag bits 0x96 and 0x97 of the main-RAM flag bank D_80144F28 through the shared flag tester func_8015B5D4: a bit that is already set starts action 5 and reports step 1, while a clear bit runs the func_801650B4 gate (message 0x2D with three options, or 0x33 with one), sets that bit through func_8015B580 and selects a per-selector action - 2 for 0xA at step 5, 6 for 0xB at step 5 or 3 once its second bit is clear too, and 8, 7 or 4 for 0xC after the func_80166140/func_80166180 pair on id 0xF opens that arm, at step 10. Every path then starts its action through func_80150224, latches the phase byte D_80143BB0 to 2 and returns the next step.'
   - - 1056
     - textbin

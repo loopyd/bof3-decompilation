@@ -52,7 +52,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  *
  * Shape notes from the original bytes: this 0x80-byte body is statement-for-
  * statement the exact sibling
- * publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area11713_801F3D70
+ * publishThirdBaseEnd
  * of this same payload, and a `cmp` of the two 0x80-byte spans measured exactly
  * two differing words: the record-kind literal at +0x2C (5 here, 3 there) and
  * the mode-table low half at +0x3C (0x466C here, 0x4660 there). The nearer span

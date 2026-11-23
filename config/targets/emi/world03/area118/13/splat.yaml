@@ -27,45 +27,45 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table5124WorldWorld03Area11813_801F2C04
+    - callStateTable5124World
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 72
     - c
-    - resetStepCounterHalfwordAndAdvanceWorkByte1World03Area11813_801F2C48
-    - '@source: src/bof3/world/resetStepCounterHalfwordAndAdvanceWorkByte1World03Area11813_801F2C48.c'
+    - stateStepCounterHalfword
+    - '@source: src/bof3/world/stateStepCounterHalfword.c'
     - '@behavior: Byte-1 state handler that the first byte-1 dispatch table of this overlay (0x801F5124, indexed by the dispatcher at 0x801F2C04) lists at entry 0. Reads the work record published at the scratchpad pointer cell 0x1F800044, stores zero into the target halfword at 0x801F59E4 and increments the record state byte at 0x01, so the next dispatch takes entry 1 of the same table (0x801F2C6C). The cleared halfword is the packed counter word the neighbouring entry 1 handler reads back as a flag bit 15, a seven-bit counter at bits 8 to 14 and an eight-bit counter at bits 0 to 7. Takes no arguments and returns nothing; the body is a leaf with no frame and the work pointer is loaded once and used by both record accesses.'
   - - 108
     - c
-    - advanceStepCounterPhaseWithinFlagLimitAndAdvanceWorkByte1WhenCounterAt0fWorld03Area11813_801F2C6C
-    - '@source: src/bof3/world/advanceStepCounterPhaseWithinFlagLimitAndAdvanceWorkByte1WhenCounterAt0fWorld03Area11813_801F2C6C.c'
+    - stateCounterWithinLimit
+    - '@source: src/bof3/world/stateCounterWithinLimit.c'
     - '@behavior: Entry 1 of the first byte-1 dispatch table of this overlay (0x801F5124, indexed by the dispatcher at 0x801F2C04), between the reset handler at entry 0 (0x801F2C48) and the shared exit tail at entry 2 (0x801F2D78). Returns untouched while the shared mode cells block world stepping: the front-end phase byte at 0x80143BB0 reads 2 or 1, the halfword at 0x80143B90 reads 4 or 3, the unsigned byte at 0x8014623B reads 2, or the halfwords 0x80145AA8 and 0x80145AB8 overlap. Otherwise it reads the overlay halfword at 0x801F59E4, whose bit 15 is the flag the entry 0 handler clears, whose bits 8 to 14 are the phase count it advances and whose bits 0 to 7 are the counter; it increments the phase count, resets it to zero and increments the counter once it reaches 0x28 with bit 15 set or 0x1E with bit 15 clear, repacks bit 15, the phase count and the counter into that halfword, and increments the work record state byte at offset 0x01 when the stored counter reads 0x0F or more so the next dispatch takes entry 2. Takes no arguments and returns nothing; the body is a leaf with no frame and the work pointer cell 0x1F800044 is loaded once, only on the last path.'
   - - 376
     - asm
     - func_801F2D78
   - - 544
     - c
-    - dispatchStateByte1Table5130WorldWorld03Area11813_801F2E20
+    - callStateTable5130World
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 612
     - c
-    - resetWorkByte9AndSeedColourRampThenAdvanceWorkByte1World03Area11813_801F2E64
-    - '@source: src/bof3/world/resetWorkByte9AndSeedColourRampThenAdvanceWorkByte1World03Area11813_801F2E64.c'
+    - stateSeedColourRamp
+    - '@source: src/bof3/world/stateSeedColourRamp.c'
     - '@behavior: Entry 0 of the second byte-1 dispatch table of this overlay (0x801F5130, indexed by the dispatcher at 0x801F2E20). Reads the work record published at the scratchpad pointer cell 0x1F800044, stores zero into the record byte at offset 0x09 and 1 into the record state byte at offset 0x01 so the next dispatch of that table takes entry 1 (0x801F2EA0), then seeds the two overlay cells that entry 1 works from: 0xF into the colour byte at 0x801F59EC and zero into the phase byte at 0x801F59E8, the index entry 1 keeps in the eight-byte ramp table 0x801F511C and advances modulo 8 before loading the indexed ramp byte into 0x801F59EC and stamping it as the RGB colour of the semi-transparent G4 it emits. Takes no arguments and returns nothing; the body is a leaf with no frame and the record pointer is reloaded for the second record access.'
   - - 672
     - asm
     - func_801F2EA0
   - - 1044
     - c
-    - dispatchStateByte2Table516cWorldWorld03Area11813_801F3014
+    - callStateTable516World
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 1112
     - c
-    - routeRecordToNextCellStampMapCellsByAreaFlagThenSetStateFromCameraWindowWorld03Area11813_801F3058
-    - '@source: src/bof3/world/routeRecordToNextCellStampMapCellsByAreaFlagThenSetStateFromCameraWindowWorld03Area11813_801F3058.c'
+    - routeNextCellsCamera
+    - '@source: src/bof3/world/routeNextCellsCamera.c'
   - - 1956
     - c
-    - setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4
-    - '@source: src/bof3/world/setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4.c'
+    - stateCameraInsideWindow
+    - '@source: src/bof3/world/stateCameraInsideWindow.c'
     - '@behavior: Byte-2 state handler that the first byte-2 dispatch table of this overlay (0x801F516C, indexed by the dispatcher at 0x801F3014) lists at entry 1; that dispatcher indexes the work record published at the scratchpad pointer cell 0x1F800044 by its state byte at offset 0x02. When the shared front-side byte 0x80143F03 reads zero and the record byte at offset 0x0A equals the shared state byte 0x8014933B, it queues sound cue 0x200 through the resident cue dispatcher 0x8015DF18 while the front-end phase byte 0x80143BB0 is zero and stores 2 into that state byte. The record route byte at offset 0x08 then selects the camera word 0x80145EC8 against the cell centre of the halfword at 0x3A, or 0x80145EC4 against the centre of the halfword at 0x36, where the centre is (((halfword + 1) << 16) | 0x8000); a distance above 0x8000 leaves the step at its draw call, otherwise the other axis halfword and its camera word feed the shared tail, which stores 2 into the state byte when the camera lies within 0x10000 of that halfword cell start (halfword << 16) or of the next cell start ((halfword + 1) << 16) and queues cue 0x200 under the same phase gate. Every path finishes with the overlay record draw routine 0x801F381C called with mode 1.'
   - - 2356
     - c
