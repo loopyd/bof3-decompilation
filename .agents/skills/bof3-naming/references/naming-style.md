@@ -1,11 +1,32 @@
 # Naming and origin rules
 
 Evidence first; raw `func_*`/`D_*` goes directly to reviewed semantic name, no
-compatibility aliases. Functions verb-led camelCase, role-first, target prefix
-only for collision. Never overlay-prefix raw name; choose different name or suffix
-such as `D_80146864_BYTE`. Data camelCase with role suffix `Table|Strings|State`.
-Locals/fields camelCase, types PascalCase, macros upper snake case. Exact C symbols
-and schema literals retain case even when reference filenames are lowercase.
+compatibility aliases. Never overlay-prefix raw name; choose a different name or a
+suffix such as `D_80146864_BYTE`. Data camelCase with role suffix
+`Table|Strings|State`. Locals/fields camelCase, types PascalCase, macros upper
+snake case. Exact C symbols and schema literals retain case even when reference
+filenames are lowercase.
+
+## Name schema
+
+A semantic name describes work in at most four camelCase tokens and 48
+characters, lowercase-initial so identifier and filename agree. Its first token
+names the functional category: `render`, `state`, `input`, `resource`, `audio`,
+`text`, `ai`, `menu`, `save`, `math`, `table` and `boot` are the recorded
+vocabulary; another word is legal when it names the work better. `func`,
+`helper`, `sub`, `temp`, `misc` and `unknown` are refused.
+
+Identity belongs to the address, the map row and the layout, so a name never
+carries the target's composed token (`BmagicMagic00100`, `World02Area10814`,
+`PlcharPlp46700`), another target's token, or a trailing `_801CE404`. A record
+offset or width belongs to the typed view, not to the name. A raw placeholder
+(`func_801CE404`, `D_801CE404`) is not a semantic name and stays as it is; an
+unevidenced role keeps that placeholder rather than an address-anchored spelling.
+
+One name per address, unique inside its target. A clash takes a more specific
+object word (`renderDrawQuadBand` / `renderDrawQuadRow`). An ordinal is the last
+resort, only for byte-identical twins with no evidence separating their roles.
+`bin/harness naming list/check` report and enforce these rules.
 
 Use `s8/u8/s16/u16/s32/u32/f32`, hex addresses/offsets/masks/encoded values, decimal
 human quantities, braces, assembly/Splat function order. Data needs `@source` and

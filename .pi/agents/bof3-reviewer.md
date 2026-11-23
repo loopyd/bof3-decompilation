@@ -31,6 +31,13 @@ escalation experiments. Require applicable companion, symbol/Splat and pipeline
 checks. Review identity approval/application separately and verify rollback
 and final bytes. Unchanged target debt is not a new mission failure.
 
+A macro-merge review accepts only when every affected selector re-gates at 100%
+with identical bytes, the parameter and cell mapping matches the definition and the
+original accesses, the metadata block survives above the invocation, and nothing
+outside the invocation changed. A renamed identity keeps its prior measurement:
+exact stays exact, a partial keeps its own score, and the name satisfies the
+schema in `bof3-naming/references/naming-style.md`.
+
 For project contracts, inspect routing, tool availability, boundaries, failure
 handling and existing checks; do not claim a domain byte check for Markdown.
 Return accepted/no-op/repair/blocked, scope and current-content evidence, actual

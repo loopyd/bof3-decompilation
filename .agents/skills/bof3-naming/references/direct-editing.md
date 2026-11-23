@@ -38,3 +38,22 @@ corrections follow the metadata owner after a successful live gate. On failure,
 follow [failure and continuation](../../bof3-re/references/editing-recovery.md#failure-and-continuation).
 Confirm writer termination, keep the batch applied and preserve evidence while
 fixing the cause. Recheck affected gates and report unresolved recovery.
+
+## Rename transaction
+
+A spelling-only rename of an already-authored row uses the harness transaction
+instead of hand edits: `bin/harness naming rename TARGET OLD NEW` plans, and
+`--apply` writes. The skill still supplies both spellings and their evidence; the
+transaction applies no semantic choice.
+
+The dry run is mandatory input: it lists the filename, identifier, target-owned
+callers and declarations, Splat label and `@source`, symbol row and target claim
+it would rewrite. A refusal names its cause and writes nothing: a new spelling
+that breaks the [name schema](naming-style.md), a composed-map collision, a
+`config/targets/shared/symbols.txt` claim, or a consumer outside the owning
+target. Fan-out is a parent decision, not a rename.
+
+`--apply` holds the writer lease and proves the rename by measuring the source
+before and after: an exact body stays exact, a partial keeps its own score. A
+refused proof restores the previous spelling and names the selector. A rejected
+rename is undone by running the same transaction with the two spellings swapped.

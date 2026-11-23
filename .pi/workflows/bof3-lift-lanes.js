@@ -270,7 +270,9 @@ const liftBrief = (lane) =>
     `   A relocation-different sibling is shape evidence, NOT clone eligibility. Otherwise verify ABI,`,
     `   constants and stores from original bytes and seed clean C directly. Do not run ineligible levers.`,
     `   Before editing an existing C candidate, obtain its live normal asm-diff and diagnose first=.`,
-    `3. Choose the evidenced semantic name/module before the first gate; keep unknown roles address-anchored.`,
+    `3. Choose the evidenced semantic name/module before the first gate: at most four lowercase`,
+    `   tokens, a leading category word, no target token and no address; an unknown role keeps its`,
+    `   raw func_<ADDRESS> placeholder.`,
     `   Write clean C89 with the metadata block (@source/@behavior/@status/@match/@residual) and the #include`,
     `   copied from a sibling lifted source. Wire the splat asm->c flip + block rename, the symbols.txt row,`,
     `   and the target.toml source claim (append to 'sources' when non-empty, else 'support_sources').`,
@@ -298,7 +300,8 @@ const liftBrief = (lane) =>
     `NAMING CHECK after gate PASS: confirm the evidenced name/module and filename, splat label, map row,`,
     `header declaration (if present) and manifest claim already agree. Do not rename an already-correct`,
     `first seed merely to enter naming mode. If naming needs an edit, update the whole owned surface and`,
-    `re-run the gate; any post-gate source/binding edit invalidates that gate. Unevidenced roles stay address-anchored.`,
+    `re-run the gate; any post-gate source/binding edit invalidates that gate. Unevidenced roles`,
+    `stay on their raw func_<ADDRESS> placeholder, never a semantic name with a suffix.`,
     `A 100% gate PASS needs no review.`,
     ``,
     `Use 'bin/harness lift sweep' for eligible clean-C alternatives without call or variant quotas.`,
@@ -460,7 +463,7 @@ const namingDebtBrief = (lane, model) =>
     `     spell the old name, and every other target whose map or source still carries it.`,
     `     The parent runs that as one transaction.`,
     `3. Prove the identity from original bytes, callers/consumers and exact siblings. An`,
-    `   unevidenced role keeps its address-anchored name; "no-change" is a valid outcome -`,
+    `   unevidenced role keeps its raw func_<ADDRESS> placeholder; "no-change" is a valid outcome -`,
     `   never invent a name to fill the stage.`,
     `4. Verify once, not per selector: ONE 'bin/harness naming check ${lane.target}' with all selectors`,
     `   --json' and, if you edited anything, ONE 'bin/harness lift gate' covering every`,
@@ -494,7 +497,8 @@ const namingBrief = (lane, liftText, liftModel) =>
     `1. 'bin/harness naming list ${lane.target} --json' — inspect the rows that cover the lifted`,
     `   selector only. Read the retained source and its metadata block.`,
     `2. Decide from evidence: current original bytes, callers/consumers, and same-target exact`,
-    `   siblings. An unevidenced role keeps its address-anchored name — "no-change" is a valid`,
+    `   siblings. A name holds at most four lowercase-initial tokens, leads with a category word and`,
+    `   carries no target token or address; an unevidenced role keeps its raw placeholder. "no-change" is a valid`,
     `   and expected outcome; never invent a semantic name to fill the stage.`,
     `3. If a rename is justified, update the whole owned surface together: function identifier,`,
     `   filename, Splat label, symbols.txt row, target-private header declaration if one exists,`,
@@ -521,6 +525,52 @@ const namingBrief = (lane, liftText, liftModel) =>
   ]
     .filter((line, position, all) => !(line === "" && all[position - 1] === ""))
     .join("\n");
+
+const macroBrief = (lane, liftText, liftModel) => [
+  `BOF3 macro handoff for lane '${lane.key}' — target '${lane.target}'.`,
+  ``,
+  `The body below passed its live gate on model '${liftModel}'. Decide ONE thing: does an existing`,
+  `macro already emit this body? Follow the bof3-macros skill and its selection and application`,
+  `references. You may edit only the invocation that replaces this body; nothing else moves.`,
+  ``,
+  `Steps:`,
+  `1. 'bin/harness macros list ${lane.target} --kind definitions' for the candidate set, then`,
+  `   '--kind uses' and '--kind byte-repeats' for an existing exact user to compare against.`,
+  `2. 'bin/harness macros check ${lane.target} <SELECTOR> --json' for definition diagnostics,`,
+  `   parameter shape and consumer identity. Read the definition and the compared body.`,
+  `3. A match requires equal emitted instructions, equal index width, equal cell identities and`,
+  `   equal statement order. A near miss is a no-match with the measured difference recorded.`,
+  `4. On a match, replace the body with the invocation, keep the metadata block above it, and`,
+  `   'bin/harness lift gate --target ${lane.target} <SELECTOR>' must PASS at 100% with identical`,
+  `   bytes. A regression means restoring the previous body, re-gating, and reporting blocked.`,
+  `5. Never create a macro, never edit a shared definition, never extract across targets, and never`,
+  `   rename anything — the naming stage runs after you on the merged body.`,
+  `6. A repeated shape with no macro owner is a candidate: report its members, measured shape and`,
+  `   targets. The harvest owns it; you do not apply it.`,
+  `7. Do not touch config/, include/ outside the invocation, caches or Git.`,
+  ``,
+  `Return one JSON object (plain or in one json fence):`,
+  `{workflow:"macro",lane:"${lane.key}",target:"${lane.target}",selector:"<ref>",`,
+  `macro:"applied|no-match|candidate|blocked",definition:"<macro id or empty>",`,
+  `selectors:["<ref>"],mapping:"<parameter and cell mapping in one sentence>",`,
+  `gate:{verdict:"PASS|FAIL"},restored:true|false,evidence:"<one sentence>",`,
+  `candidate:{members:["<ref>"],shape:"<measured shape>",targets:["<target>"]},`,
+  `harness_calls:{used:0}}.`,
+  ``,
+  `Exact lift to hand off:`,
+  String(liftText || ""),
+  lane.note ? "Parent note for this lane:" : "",
+  lane.note || "",
+].join("\n");
+
+const macroCandidateLines = (board) =>
+  board
+    .filter((row) => row && row.candidate)
+    .map(
+      (row) =>
+        `  - ${row.target} ${row.lane}: ${JSON.stringify(row.candidate).slice(0, 500)}`,
+    )
+    .join("\n") || "  (none)";
 
 const harvestBrief = (board) => {
   const exact = board.filter((row) => row.state === "complete" && isExactVerdict(row.verdict));
@@ -600,6 +650,31 @@ const reviewBrief = (lane, liftOutput) =>
     `Review never grants new experiment authority. A proposed lever outside the parent scope`,
     `must return workflow:"blocked" or a reviewed partial disposition, not workflow:"repair".`,
   ].join("\n");
+
+const macroReviewBrief = (lane, liftText, macroText) => [
+  `BOF3 macro-merge review for lane '${lane.key}' (target '${lane.target}'). You are READ-ONLY.`,
+  ``,
+  `A macro stage replaced this exact body with an existing macro's invocation. Accept it only when`,
+  `every condition below holds; otherwise return workflow:"blocked" with the missing fact.`,
+  ``,
+  `Check:`,
+  `- 'bin/harness lift gate --target ${lane.target} <SELECTOR>' passes at 100% with identical bytes;`,
+  `- every affected selector is named and re-gated, not just the first;`,
+  `- the parameter and cell mapping in the report matches the definition and the original accesses;`,
+  `- the metadata block, @source and @behavior facts survive above the invocation;`,
+  `- nothing outside the invocation changed: no naming, no shared definition, no new macro.`,
+  ``,
+  `Return one JSON object (plain or in one json fence):`,
+  `{workflow:"accepted"|"blocked",lane:"${lane.key}",target:"${lane.target}",`,
+  `selectors:["<ref>"],findings:[{"check":"<name>","state":"pass|fail","detail":"<one sentence>"}],`,
+  `evidence:"<one sentence>"}.`,
+  ``,
+  `Exact lift that was merged:`,
+  String(liftText || ""),
+  ``,
+  `Macro stage report:`,
+  String(macroText || ""),
+].join("\n");
 
 const repairBrief = (lane, reviewOutput, proposedText) =>
   [
@@ -777,6 +852,18 @@ const looseNaming = (text) => {
     gate: gate ? { verdict: gate[1] } : undefined,
     restored: restored ? restored[1] === "true" : false,
   };
+};
+
+const macroVerdict = (text) => {
+  const report = parseReport(text);
+  if (!report) return "invalid";
+  const macro = String(report.macro || "").trim();
+  if (!["applied", "no-match", "candidate", "blocked"].includes(macro)) return "invalid";
+  if (macro === "applied") {
+    const gate = report.gate && report.gate.verdict;
+    if (gate !== "PASS" && report.restored !== true) return "regressed";
+  }
+  return macro;
 };
 
 const namingVerdict = (text) => {
@@ -988,7 +1075,103 @@ const namingDebtStage = (lane) => {
   );
 };
 
-const namingStage = (lane, liftText, liftModel, liftRung) => {
+const macroStage = (lane, liftText, liftModel, liftRung) => {
+  const macroKey = `${lane.key}-macro`;
+  const model = laneModel(lane, 0);
+  return runStage(macroKey, {
+    label: `Macro handoff ${lane.key} (${lane.target}) on ${model}`,
+    agent: "bof3-macro",
+    model,
+    ...(lane.cwd ? { cwd: lane.cwd } : {}),
+    output: false,
+    task: macroBrief(lane, liftText, liftModel),
+  }).then(
+    (handed) => {
+      retainReport(lane, macroKey, handed);
+      const macroText = String((handed && handed.output) || "");
+      const verdict = macroVerdict(macroText);
+      const macroReport = parseReport(macroText) || {};
+      if (verdict === "blocked" || verdict === "regressed" || verdict === "invalid") {
+        return {
+          lane: lane.key,
+          target: lane.target,
+          state: "blocked",
+          verdict: `macro-${verdict}`,
+          kind: lane.kind,
+          model: liftModel,
+          rung: liftRung,
+        };
+      }
+      if (verdict === "applied") {
+        return macroReviewStage(
+          lane,
+          liftText,
+          liftModel,
+          liftRung,
+          String((handed && handed.output) || ""),
+        );
+      }
+      return namingStage(lane, liftText, liftModel, liftRung, {
+        macro: verdict,
+        key: macroKey,
+        definition: macroReport.definition || "",
+        mapping: macroReport.mapping || "",
+        candidate: macroReport.candidate || null,
+      });
+    },
+    (error) => ({
+      lane: lane.key,
+      target: lane.target,
+      state: "lane-error",
+      verdict: "macro-error",
+      error: String(error).slice(0, 300),
+      kind: lane.kind,
+      model: liftModel,
+      rung: liftRung,
+    }),
+  );
+};
+
+const macroReviewStage = (lane, liftText, liftModel, liftRung, macroText) => {
+  const key = `${lane.key}-macro-review`;
+  return runStage(key, {
+    label: `Review macro merge ${lane.key} (${lane.target})`,
+    agent: "bof3-reviewer",
+    model: laneLastModel(lane),
+    ...(lane.cwd ? { cwd: lane.cwd } : {}),
+    output: false,
+    task: macroReviewBrief(lane, liftText, macroText),
+  }).then(
+    (review) => {
+      retainReport(lane, key, review);
+      const verdict = verdictOf(String((review && review.output) || ""), lane);
+      if (verdict === "accepted") {
+        return namingStage(lane, liftText, liftModel, liftRung, { macro: "applied", key });
+      }
+      return {
+        lane: lane.key,
+        target: lane.target,
+        state: "blocked",
+        verdict: `macro-review-${verdict}`,
+        kind: lane.kind,
+        model: liftModel,
+        rung: liftRung,
+      };
+    },
+    (error) => ({
+      lane: lane.key,
+      target: lane.target,
+      state: "lane-error",
+      verdict: "macro-review-error",
+      error: String(error).slice(0, 300),
+      kind: lane.kind,
+      model: liftModel,
+      rung: liftRung,
+    }),
+  );
+};
+
+const namingStage = (lane, liftText, liftModel, liftRung, macro = {}) => {
   const nameKey = `${lane.key}-name`;
   return runStage(nameKey, {
     label: `Name ${lane.key} (${lane.target}) after exact lift`,
@@ -1015,6 +1198,8 @@ const namingStage = (lane, liftText, liftModel, liftRung) => {
         kind: lane.kind,
         model: liftModel,
         rung: liftRung,
+        ...(macro.macro ? { macro: macro.macro } : {}),
+        ...(macro.candidate ? { candidate: macro.candidate } : {}),
       };
     },
     (error) => ({
@@ -1132,7 +1317,7 @@ const finishAttempt = (lane, attempt) => {
     });
   }
   if (attempt.state === "exact") {
-    return namingStage(lane, attempt.text, attempt.model, attempt.rung);
+    return macroStage(lane, attempt.text, attempt.model, attempt.rung);
   }
   const improved =
     typeof attempt.percent === "number" &&
@@ -1218,5 +1403,10 @@ return {
   models: modelLadder,
   board,
   harvest,
+  macro_candidates: board.filter((row) => row && row.candidate).map((row) => ({
+    lane: row.lane,
+    target: row.target,
+    candidate: row.candidate,
+  })),
   reports,
 };

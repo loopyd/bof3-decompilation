@@ -33,9 +33,12 @@ A no-change result needs a reason; never invent a name to fill a stage.
 **`apply TARGET SELECTOR`** — one naming transaction for one already-exact lift.
 First repository command: `bin/harness naming list TARGET --json`. Read the retained
 source, its metadata block and the rows covering that selector. Decide from original
-bytes, callers/consumers and same-target exact siblings; an unevidenced role keeps its
-address-anchored name, and `no-change` is a valid outcome — never invent a name to
-fill the stage.
+bytes, callers/consumers and same-target exact siblings. Every new semantic name satisfies
+the schema in `references/naming-style.md`: at most four lowercase-initial tokens, a leading
+category word, no target token and no address. An unevidenced role keeps its raw
+`func_<ADDRESS>`/`D_<ADDRESS>` placeholder, and `no-change` is a valid outcome — never invent
+a name to fill the stage. Prefer `bin/harness naming rename TARGET OLD NEW` and read its dry
+run before `--apply`.
 
 Apply a justified rename across the whole owned surface together: identifier, filename,
 Splat label, `symbols.txt` row, target-private header declaration when one exists, and

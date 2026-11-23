@@ -79,7 +79,8 @@ line: the YAML is at fault, not the seed, so restore the break and re-gate. When
 4. Per referenced fixed address: target-local `extern` (`@source`/`@kind`) bound the way step 2's precedence selects rather than with a map row plus `WEAK_SYMBOL_AT`, and that target's map row when the name is not `D_<ADDRESS>` and no generated `undefined_syms_auto.txt` row covers the address because the asm spelled it as a literal; the omission fails the link naming the symbol, before any instruction measurement. Put that tag on the declaration itself (`extern T name; /* @source 0xADDR @kind data */`) or inside the comment block directly above it: the parser reads no tag from a bare `@source` line above an `extern`, so the body matches while the symbols check reports `untracked symbol`, the reverse of a function definition, where a bare tag line above it is that function's metadata block. Per referenced function: a target-local prototype, which keeps its `extern` keyword once it carries an `@source` tag, because the tag above a keyword-less prototype parses as that function's metadata block and the gate refuses at parse with `invalid_metadata: requires @behavior`, before any measurement.
 
 Before first gate: evidence-backed name/module, complete ownership and canonical
-metadata. Unknown roles stay address-anchored; `@status`/`@match`/`@residual` reflect
+metadata. Unknown roles stay on their raw `func_<ADDRESS>` placeholder, since a semantic
+name carries no target token or address; `@status`/`@match`/`@residual` reflect
 measurements. Placeholder tags (`@status partial`, `@match 0.00`) fail the gate on
 byte-identical code, so write the measured tags in the same edit as the source
 instead of spending a gate cycle on metadata alone. If the gate reports

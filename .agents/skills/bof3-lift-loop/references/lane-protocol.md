@@ -74,9 +74,12 @@ launch; the workflow cannot read files.
 Three lane kinds, one workflow. `kind: "naming"` is naming debt rather than lifting: the
 function already matches, only its identity is open, so the lane runs one namer on the
 lowest rung and no model rung is spent. Select those rows with
-`bin/harness naming list TARGET --json`; a naming lane reports `naming-applied`,
-`naming-no-change`, `naming-deferred` or `naming-blocked`, and an applied rename must keep
-the owning gate at 100% or be restored.
+`bin/harness naming list TARGET --json`, which reports each semantic name's token count,
+length and violations; the name must satisfy the schema in
+[naming style](../../bof3-naming/references/naming-style.md). A naming lane reports
+`naming-applied`, `naming-no-change`, `naming-deferred` or `naming-blocked`; it prefers
+`bin/harness naming rename TARGET OLD NEW` with its dry run read before `--apply`, and an
+applied rename keeps the owning measurement or is restored.
 
 Scope a naming lane to functions authored in its own target. A function whose body lives in
 another target is also named in a shared prototype or macro, so a single-target rename forks
@@ -98,9 +101,9 @@ lists and malformed entries fail before launch. Dispatch uses Pi Subagents'
 
 A fresh lane starts on the first rung. A lane marked `kind: "partial"` starts on the
 strongest rung because the cheap rung already produced its residual. Each later rung
-receives the previous rung's report and attacks the named residual. A 100% gate PASS ends the lane and goes to the
-naming transaction; the reviewer fires only when the whole ladder ended non-exact, and
-repair then runs on the strongest rung. Each rung returns a compact `ledger` of the
+receives the previous rung's report and attacks the named residual. A 100% gate PASS ends
+the lane and goes to the macro handoff, then to the naming transaction; the reviewer fires
+when the whole ladder ended non-exact, and repair then runs on the strongest rung. Each rung returns a compact `ledger` of the
 shapes it measured, and the next rung, review and repair all inherit it. The ledger is
 knowledge, not a spent budget: every shape on it is closed, and the receiving rung has
 its own attempt allowance for shapes that are not. That is what stops an elevated
@@ -154,7 +157,9 @@ promotion nobody proved, and leave the boundary for a lane that can close it.
    exact sibling: `lift clone`. Clean-C shape alternatives: bounded `lift sweep`.
    Revisit eligibility only on new evidence.
 2. Prepare evidenced name/module plus filename/Splat/map/header/manifest agreement
-   before first gate. Unknown roles stay address-anchored with missing evidence.
+   before first gate; the name must satisfy the schema in
+   [naming style](../../bof3-naming/references/naming-style.md). Unknown roles keep their raw
+   `func_<ADDRESS>` placeholder with missing evidence.
 3. Batch edited selectors in one `bin/harness lift gate --target TARGET SELECTOR [...]`.
    One native measurement per selector yields instruction and byte comparisons;
    symbols/Splat once per target, internal race retries. No repeated checks on
@@ -195,3 +200,18 @@ function compiles scoped and meets source-organization standard. Record `lift st
 coverage delta; reconcile naming-baseline rows for newly introduced raw spellings.
 Parent acceptance still requires domain evidence; batch counts never prove whole-game
 closure.
+
+## Macro handoff
+
+An exact body goes to a macro stage before it is named, because a merge changes the form
+the name is written in. The stage reads
+`bin/harness macros list TARGET --kind definitions|uses|byte-repeats` and
+`bin/harness macros check TARGET SELECTOR`, and applies an existing macro's invocation
+only when the emitted instructions, index width, cell identities and statement order
+match an exact user of that macro.
+
+Outcomes are `applied`, `no-match`, `candidate` and `blocked`. `applied` re-gates every
+affected selector at 100% and needs the reviewer's acceptance before naming runs; a
+`blocked` stage stops the lane. A repeated shape with no macro owner is a `candidate`:
+record its members, measured shape and targets and leave it to the parent. The stage never
+creates a macro, edits a shared definition or extracts across targets.

@@ -11,7 +11,7 @@ All paths below are relative to `tools/python/harness/`.
 
 | Package | Owns | Entry points |
 | --- | --- | --- |
-| `naming/` | spelling debt, source identifiers, map consistency and native consumers | `bin/harness naming list/check` |
+| `naming/` | name grammar, spelling debt, source identifiers, map consistency and native consumers | `bin/harness naming list/check/rename` |
 | `types/` | declarations, representation facts, uses, storage leads and checks | `bin/harness types list/check` |
 | `macros/` | definitions, uses, repetitions, original-byte leads and checks | `bin/harness macros list/check` |
 | `combiner/` | current source members, relationships, effective profiles and checks | `bin/harness combiner list/check` |
@@ -71,9 +71,16 @@ record. A cached result or authored status does not replace that live gate.
 
 ## Policy versus mechanism
 
-The naming, type, macro, combiner and metadata interfaces expose only `list` and
-`check`. They provide no prepare, apply, rank-account, promotion or rollback
-protocol. Their concern skills own selection, semantic decisions, direct edits,
+The type, macro, combiner and metadata interfaces expose only `list` and `check`.
+They provide no prepare, apply, rank-account, promotion or rollback protocol.
+Naming adds one mechanical transaction, `bin/harness naming rename TARGET OLD
+NEW [--apply]`: the skill supplies both spellings, the dry run prints every
+surface it would rewrite, and `--apply` rewrites the owned surface under the
+writer lease and proves each renamed selector against its prior measurement. It
+refuses a name that breaks the grammar in
+[naming style](../../.agents/skills/bof3-naming/references/naming-style.md), a
+composed-map collision, a shared-map claim and any consumer outside the owning
+target. Their concern skills own selection, semantic decisions, direct edits,
 independent review and restoration through the shared
 [editing and recovery contract](../../.agents/skills/bof3-re/references/editing-recovery.md).
 Keep frozen campaign scope, partial-result constraints and unfinished duties in

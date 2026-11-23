@@ -13,9 +13,13 @@ Resolve the explicit target and authorized scope. Read the
    `identifiers`, `references`, `files` or `all` as needed. Read
    [investigation](references/opportunities.md) before proposing a name.
 2. Prove function behavior or data ownership from current original bytes,
-   reviewed boundaries and callers/consumers. Read [naming style](references/naming-style.md).
-   Raw names and lexical references are leads; unresolved roles retain their names.
+   reviewed boundaries and callers/consumers. Read [naming style](references/naming-style.md)
+   for the name schema: at most four lowercase-initial tokens, a leading category
+   word, no target token and no address. Raw names and lexical references are
+   leads; an unresolved role keeps its raw `func_`/`D_` placeholder.
 3. For authorized edits, follow [direct editing](references/direct-editing.md).
+   Prefer `bin/harness naming rename TARGET OLD NEW` and read its dry run before
+   `--apply`; it rewrites the owned surface together and proves the measurement.
    Argument/local edits also use [source identifiers](references/source-identifiers.md);
    path changes use [source relocation](references/source-relocation.md).
    Retained-lift cosmetics use [byte-safe cosmetics](references/byte-safe-cosmetics.md).

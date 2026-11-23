@@ -18,3 +18,14 @@ counts alone do not prove variadic arguments. Keep unresolved interfaces unchang
 Bind a bounded consumer group, preserve owned PRE and follow the types protocol's
 checks and independent review. Report missing evidence and remaining work. A
 discovery lead or rejected edit does not qualify a source refinement.
+
+## Candidate intake
+
+A lift lane or macro handoff emits a candidate when the same body shape recurs
+across exact members without a macro owner. The record carries its members, the
+measured shape and the affected targets; the parent owns the decision.
+
+Check the candidate against `bin/harness macros list TARGET --kind repetitions` and
+`--kind byte-repeats` before proposing an extraction, and against the frozen
+campaign membership. Candidate emission grants no write authority, and a rejected
+candidate stays a recorded lead rather than disappearing.
