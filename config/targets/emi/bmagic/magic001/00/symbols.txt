@@ -1,7 +1,7 @@
 dispatchWorkByte1HandlerBmagicMagic00100_801EEC64 = 0x801EEC64;
 seedWorkFromRecordQueueSelectedBattlerSlot49PublishRecordBytesRaiseFlag40AndAdvanceWorkByte1BmagicMagic00100_801EECC4 = 0x801EECC4;
 func_801EEF34 = 0x801EEF34;
-func_801EEFA4 = 0x801EEFA4;
+raiseFlag4AndInvokeHelperBmagicMagic00100_801EEFA4 = 0x801EEFA4;
 dispatchStateByte1Table04b4BmagicMagic00100_801EEFD8 = 0x801EEFD8;
 func_801EF01C = 0x801EF01C;
 func_801EF0E8 = 0x801EF0E8;
@@ -18,7 +18,7 @@ addWorkColorTripletBy16ThenDecrementGlobalWorkByteBAndInvokeHelperWhenChannelIsC
 dispatchWorkByte1HandlerBmagicMagic00100_801EF72C = 0x801EF72C;
 func_801EF78C = 0x801EF78C;
 func_801EFA14 = 0x801EFA14;
-func_801EFA84 = 0x801EFA84;
+raiseFlag4AndInvokeHelperBmagicMagic00100_801EFA84 = 0x801EFA84;
 dispatchWorkByte1HandlerBmagicMagic00100_801EFAB8 = 0x801EFAB8;
 dispatchWorkByte2HandlerThenInvokeHelpersBelow5WhenActiveBmagicMagic00100_801EFAFC = 0x801EFAFC;
 seedWorkWordsAndCopyRecordByte27ClearByte9SetByteATo16ThenAdvanceWorkByte2BmagicMagic00100_801EFBEC = 0x801EFBEC;

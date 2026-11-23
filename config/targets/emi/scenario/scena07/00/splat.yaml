@@ -107,8 +107,10 @@ segments:
     - asm
     - func_801F7408
   - - 2176
-    - asm
-    - func_801F7480
+    - c
+    - claimStepCountWorkRecordsRampDrawBoundEverySixteenthCountdownStepTickWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7480
+    - '@source: src/bof3/scenario/claimStepCountWorkRecordsRampDrawBoundEverySixteenthCountdownStepTickWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7480.c'
+    - '@behavior: Entry 1 of the three-entry in-image code-pointer run based at 0x801FDD70 (0x801F7408 / this address / resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0), which dispatchWorkByte2HandlerScenarioScena0700_801F73C4 indexes with the scratchpad work object''s unsigned byte at offset 0x02; no in-image jal reaches the address. It loads the work-object pointer cell at 0x1F800044 ahead of the frame reservation, gates on the work object''s 32-bit countdown word at 0x0C masked by D_801FDD7C[byte 0x09] and, when that gate reads zero, adds the per-step record count D_801FDD84[byte 0x09] to the effect object''s unsigned halfword at +0x10 published by pointer cell 0x801FDFBC and claims D_801FDD84[byte 0x09] free records in a do/while loop through the 0x40x0x20 pool scan at 0x801F9DD4, seeding each with 0x801F9E10. It then advances byte 0x09 on the frames whose countdown word reads zero in its low nibble, calls the per-frame pass at 0x801F9EFC over the 0x800E515C work table, decrements the countdown word at 0x0C and, when it reaches zero, increments work byte 0x02 so the dispatcher advances the run. Takes no arguments and returns nothing; its 0x18-byte frame keeps $ra and $s0.'
   - - 2496
     - c
     - resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0

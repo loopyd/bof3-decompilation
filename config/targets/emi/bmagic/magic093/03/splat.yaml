@@ -54,8 +54,10 @@ segments:
     - '@source: src/bof3/bmagic/forwardWorkByte3SubmitSelectedRecordAndAdvanceWorkByte2WhenGlobalByteBBelow8BmagicMagic09303_801EF264.c'
     - '@behavior: Forward work byte 3, submit its selected record and advance work byte 2 when global record byte B is below eight.'
   - - 1956
-    - asm
-    - func_801EF3A4
+    - c
+    - decrementGlobalWorkByte9AndInvokeHelperBmagicMagic09303_801EF3A4
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByte9AndInvokeHelperBmagicMagic09303_801EF3A4.c'
+    - '@behavior: Decrement the shared battle work record byte 9 and invoke the shared helper, as one work byte 2 handler of this overlay.'
   - - 2008
     - c
     - dispatchStateByte1Table08acBmagicMagic09303_801EF3D8

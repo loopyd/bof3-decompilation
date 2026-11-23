@@ -126,8 +126,10 @@ segments:
     - asm
     - func_801F4380
   - - 6772
-    - asm
-    - func_801F4674
+    - c
+    - runFrontEndStartupAndSetProgress5World03Area14013_801F4674
+    - '@source: src/bof3/world/runFrontEndStartupAndSetProgress5World03Area14013_801F4674.c'
+    - '@behavior: Runs the shared front-end startup helper 0x8015C088 and then stores progress 5 into the shared progress byte 0x801448EC, unconditionally.'
   - - 6816
     - c
     - dispatchStateByte1Table4ac4World03Area14013_801F46A0

@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EEF34
   - - 932
-    - asm
-    - func_801EEFA4
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic00100_801EEFA4
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00100_801EEFA4.c'
+    - '@behavior: Overlay work handler, entry 2 of the leading 24-word code pointer run at 0x801EEC04. Raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword read-modify-write, then invokes the shared helper at 0x801E5988 unconditionally; the halfword store fills the call delay slot and the 0x18-byte frame only keeps $ra. No arguments, no return value, no other state.'
   - - 984
     - c
     - dispatchStateByte1Table04b4BmagicMagic00100_801EEFD8
@@ -110,8 +112,10 @@ segments:
     - asm
     - func_801EFA14
   - - 3716
-    - asm
-    - func_801EFA84
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic00100_801EFA84
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00100_801EFA84.c'
+    - '@behavior: Overlay work handler, word index 16 of the leading 24-word code pointer run at 0x801EEC04 and the third word of the three-word table at 0x801EEC3C that the dispatcher at 0x801EF72C copies and indexes by work-object byte 1. Raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword read-modify-write, then invokes helper 0x801E5988 with no arguments; the halfword store fills the call delay slot and the 0x18-byte frame only keeps $ra.'
   - - 3768
     - c
     - dispatchWorkByte1HandlerBmagicMagic00100_801EFAB8

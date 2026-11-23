@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte2Table3a90World04Area16913_801F2C04
     - '@source: src/bof3/world/area16913DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area16913_801F2C48
+    - '@source: src/bof3/world/loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area16913_801F2C48.c'
+    - '@behavior: State-0 handler of this overlay work-record step dispatch: store the route byte at +8 as the zero test of halfword 0x3A, load the record cell halfwords 0x36 and 0x3A and its depth halfword 0x3E from the local tables at 0x801F3AA4 and 0x801F3AA8 indexed by the doubled old halfword 0x36, advance state byte 2 to 1 with progress halfword 0x30 cleared, then jump to state 3 with progress 0xC0 when the shared camera words lie inside the record cell window, and draw.'
   - - 460
     - asm
     - func_801F2DCC

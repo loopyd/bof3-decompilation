@@ -10,6 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/accumulateWorkWordCByWord18StepDecrementByteAAndWord18OnGlobalBit0ThenDecrementGlobalWorkByteBAndClearWorkBytesWhenByteAReachesZeroBmagicMagic05803_801EF61C.c",
     "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic05803_801EEC28.c",
+    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05803_801EF338.c",
 ]
 support_sources = [
     "src/bof3/support/magic058_03_psyq.c",

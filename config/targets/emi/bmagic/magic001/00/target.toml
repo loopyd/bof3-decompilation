@@ -11,6 +11,8 @@ sources = [
     "src/bof3/bmagic/addWorkWord20ToWord14AccumulateIntoHalfword3EAndDecrementByteAThenAdvanceWorkByte2AtZeroBmagicMagic00100_801EF408.c",
     "src/bof3/bmagic/addWorkWord20ToWord14AccumulateWord14IntoHalfword3EThenWhenWord14IsZeroCopyRecordWordPairAdjustWord3CSetByte9To1FAndAdvanceWorkByte2BmagicMagic00100_801EF1CC.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy16AndDecrementByteABy2ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic00100_801EFFCC.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00100_801EEFA4.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00100_801EFA84.c",
 ]
 support_sources = [
     "src/bof3/bmagic/invokeHelpersThenDecrementWorkByte9AndRetreatOrAdvanceWorkByte2WhenReadyBmagicMagic00100_801EF468.c",

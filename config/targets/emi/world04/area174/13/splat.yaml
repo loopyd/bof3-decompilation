@@ -75,8 +75,10 @@ segments:
     - dispatchStateByte2Table4fbcWorld04Area17413_801F344C
     - '@source: src/bof3/world/area17413DispatchTables.c'
   - - 2192
-    - asm
-    - func_801F3490
+    - c
+    - seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld04Area17413_801F3490
+    - '@source: src/bof3/world/seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld04Area17413_801F3490.c'
+    - '@behavior: Byte-2 state handler at entry 0 of the five-word handler table based at 0x801F4FBC, which the target dispatcher at 0x801F344C indexes with the work record state byte at +2, so only that table word names the span and no jal in the payload reaches it. Records whether the record halfword at 0x3A was zero into byte 0x08, then seeds the record published at the scratchpad pointer cell 0x1F800044 from this overlay own per-index tables: the bytes at 0x801F4FE0 and 0x801F4FE1 at twice the signed halfword at 0x36 into record halfwords 0x36 and 0x3A, the halfwords at 0x801F4FD0 and 0x801F4FD4 at that index into halfwords 0x3E and 0x2E, and the word at 0x801F4FD8 at that index into word 0x20. It clears halfword 0x30, increments the state byte at 0x02, then runs the shared camera window test against 0x80145EC4 and 0x80145EC8 selected by that same byte 0x08 and stamps 0x80 into halfword 0x30 with state 3 when the record stays inside it, finishing with the record renderer 0x801F3958 on every path. Takes no arguments and returns nothing.'
   - - 2620
     - asm
     - func_801F363C

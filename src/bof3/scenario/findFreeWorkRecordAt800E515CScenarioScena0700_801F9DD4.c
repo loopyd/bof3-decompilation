@@ -12,7 +12,8 @@
  * slot, the exhausted path materializes zero in $v0, and a found entry leaves
  * the loop through the lead-byte branch with its copy in that branch's delay
  * slot. The lead byte is the claim flag the pool's seeder sets: the scan's
- * single in-image reference is the jal at 0x801F74FC inside func_801F7480,
+ * single in-image reference is the jal at 0x801F74FC inside
+ * claimStepCountWorkRecordsRampDrawBoundEverySixteenthCountdownStepTickWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7480,
  * which tests the returned pointer for zero and otherwise passes it in $a0 to
  * the seeding helper func_801F9E10 (that helper stores 1 in the entry's lead
  * byte, 0 in its byte at +0x01 and 0x10 in its countdown byte at +0x02, which

@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801F37A8
   - - 3312
-    - asm
-    - func_801F38F0
+    - c
+    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowUnlessSharedOverlayStateByteIs20World04Area16713_801F38F0
+    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowUnlessSharedOverlayStateByteIs20World04Area16713_801F38F0.c'
+    - '@behavior: Entry 3 of the state-byte-2 handler run based at 0x801F4AB0 of this payload, whose dispatcher is 0x801F3764. Skips the camera window test, and so never advances work byte +2, while the shared overlay state byte D_8014933B holds 0x20. On every other value it reads the scratchpad work record through the pointer cell 0x1F800044 once; the record halfword +0x36 against the shared camera word D_80145EC4, and then, only when that absolute difference stays within 0x20000, the halfword +0x3A against the shared camera word D_80145EC8, once from the cell start (halfword << 16) and once from the next cell start ((halfword + 1) << 16), decide whether work byte +2 is advanced. Calls the payload render helper 0x801F31BC on every path.'
   - - 3516
     - asm
     - func_801F39BC
@@ -105,8 +107,10 @@ segments:
     - c
     - setWorld04Area16713_801F3F14
   - - 4904
-    - asm
-    - func_801F3F28
+    - c
+    - clearSharedFlagBit46ThenClearOverlayStateByteWorld04Area16713_801F3F28
+    - '@source: src/bof3/world/clearSharedFlagBit46ThenClearOverlayStateByteWorld04Area16713_801F3F28.c'
+    - '@behavior: Entry 6 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 5 is the exact lift setWorld04Area16713_801F3F14 and whose word at 0x801F6848 publishes this span. Clears bit 0x46 of the shared main-RAM flag bank 0x80144F28 through the shared bit clear helper func_8015B5A8 and then stores zero into the shared overlay state byte 0x8014933B. Takes no arguments and returns nothing; the 0x18-byte frame holds only the return address, and no jal in this payload reaches the span.'
   - - 4952
     - c
     - setFrontEndByte3To5Or4AndHalfword0aToFFFEWhenFlag4CSetElseSeedWorkHalfword3eWorld04Area16713_801F3F58
