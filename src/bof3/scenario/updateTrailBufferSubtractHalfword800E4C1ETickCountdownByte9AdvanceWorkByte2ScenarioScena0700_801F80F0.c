@@ -7,7 +7,7 @@
  * loads, which is what keeps the countdown arm's reload a separate `lui`/`lw`
  * pair in the original bytes. */
 extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
-extern u16 scenarioScena0700Halfword800E4C1E; /* @source 0x800E4C1E @kind unknown */
+extern u16 scenarioHalfword800; /* @source 0x800E4C1E @kind unknown */
 
 /* Trail rebuild at 0x801F88B8, still an `asm` row when this lift was written:
  * it shifts the trail records and recomputes their projected points and
@@ -58,9 +58,9 @@ void updateTrailBufferSubtractHalfword800E4C1ETickCountdownByte9AdvanceWorkByte2
 
   func_801F88B8(PSX_PTR(u8, 0x800E48E0u));
   func_801F8BE8(PSX_PTR(u8, 0x800E48E0u));
-  value = scenarioScena0700Halfword800E4C1E;
+  value = scenarioHalfword800;
   work = scenarioScena0700Work;
-  scenarioScena0700Halfword800E4C1E = (u16)(value - 12);
+  scenarioHalfword800 = (u16)(value - 12);
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
   if (countdown == 0) {

@@ -47,8 +47,8 @@ segments:
     - func_801F7100
   - - 1404
     - c
-    - resetWorkStateWhenNoEntryClearedScenarioScena1500_801F717C
-    - '@source: src/bof3/scenario/resetWorkStateWhenNoEntryClearedScenarioScena1500_801F717C.c'
+    - stateNoEntryCleared
+    - '@source: src/bof3/scenario/stateNoEntryCleared.c'
     - '@behavior: Last handler of the per-frame work-state chain: calls the overlay-local work-table sweeper at 0x801F7748 (it walks the 0x80 0x14-byte-stride entries of the work table at 0x800E4800 and returns 1 once it has cleared an entry''s lead byte), masks the result to the low byte and calls the shared work-state reset helper at 0x80196070 only when that low byte is zero; takes no arguments, returns nothing and reads no state of its own, and the 0x18-byte frame only keeps $ra across the calls. It is entry 4 of the per-frame handler table at 0x801FE57C, and its 0x34 bytes are the same instruction shape as the exact siblings resetWorkStateWhenNoEntryClearedScenarioScena0100_801F7644 (0x801F7644), resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0 (0x801F73F0) and resetWorkFlagsOnZeroRefreshScenarioScena0800_801F7A9C (0x801F7A9C).'
   - - 1456
     - asm
@@ -273,8 +273,8 @@ segments:
     - func_801FDF9C
   - - 29676
     - c
-    - invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC
-    - '@source: src/bof3/scenario/invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC.c'
+    - callStartupIncrementRecord
+    - '@source: src/bof3/scenario/callStartupIncrementRecord.c'
     - '@behavior: Per-record callback: takes the record pointer in $a0, runs the shared helper at 0x8015C088 and then increments the record''s unsigned 16-bit field at offset 0x7E in place; it returns nothing, keeps only the record pointer (copied into $s0 in the call''s delay slot) and the 0x18-byte frame saves $ra and $s0. It is entry 11, the last of the twelve callback pointers of the per-record table at 0x801FE6EC.'
   - - 29732
     - asm
@@ -287,8 +287,8 @@ segments:
     - func_801FE3C8
   - - 30876
     - c
-    - invokeHelperTwiceThenHelperScenarioScena1500_801FE49C
-    - '@source: src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena1500_801FE49C.c'
+    - callHelperTwiceHelper
+    - '@source: src/bof3/scenario/callHelperTwiceHelper.c'
     - '@behavior: Thin overlay wrapper calling the helper at 0x801C187C with the constant argument 4, then the same helper with the constant argument 2, and finally the helper at 0x801C1630 with no arguments; it takes no arguments, returns nothing and touches no state of its own. The 0x18-byte frame only keeps $ra across the three calls.'
   - - 30924
     - asm

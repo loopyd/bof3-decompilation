@@ -21,7 +21,7 @@ void func_801C1630(void);
  * keeps $ra across the four calls, and each later constant is materialised by
  * its own instruction before or in the delay slot of its jal. Its 68 bytes are
  * byte-identical to the exact sibling
- * armEffectGroupThenInvokeThreeHelpersScenarioScena0600_801FE048 (0x801FE048,
+ * armGroupThreeHelpers (0x801FE048,
  * the immediately preceding word at 0x801FE490 of the same pointer run) except
  * for one byte, the immediate of the func_801C187C argument (1 here, 5 there),
  * so the address anchor keeps the name target-qualified.

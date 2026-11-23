@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_801F6FF8(void);
-void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
+void stateActiveRecordsSix(
     void);
 
 /* @source 0x801F6FD0
@@ -12,5 +12,5 @@ void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
  */
 void invokeTwoHelpersScenarioScena1300_801F6FD0(void) {
   func_801F6FF8();
-  setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC();
+  stateActiveRecordsSix();
 }

@@ -1,9 +1,9 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044;
-void buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC(
+void setupVerticesCentreAngles(
     u8 *work);
-void drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170(
+void renderTranslucentTrianglesFour(
     u8 *work);
 
 /* @source 0x801F7C50
@@ -20,9 +20,9 @@ void tickCountdownReload128AndAdvanceWorkByte1ScenarioScena0300_801F7C50(void) {
   u8 *work;
 
   work = D_1F800044 + 0x0C;
-  buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC(
+  setupVerticesCentreAngles(
       work);
-  drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170(
+  renderTranslucentTrianglesFour(
       work);
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 128;

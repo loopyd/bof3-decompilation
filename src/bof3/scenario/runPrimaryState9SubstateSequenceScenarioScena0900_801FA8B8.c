@@ -191,7 +191,7 @@ extern void func_801C7A54(s32 arg0);
  * (0x801F9F0C), whose record arm emits the same masked 0xFF test and the same
  * per-store scratchpad reload. The single closing tail after the switch,
  * reached by four break sites, comes from this target's exact sibling
- * armProgress0UnlessMode2ThenSetFlagBit13OrSeedFrontSelectorContext76AndClearStateScenarioScena0900_801FA08C
+ * armUnlessFlagSelector
  * (0x801FA08C). Both seeds matched at their first gate, so no losing spelling
  * is recorded.
  */

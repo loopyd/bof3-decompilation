@@ -4,7 +4,7 @@ typedef void (*ScenarioScena1300WorkStateHandler)(void);
 
 /* Overlay-local run of in-image code pointers based at 0x801FBEF0, twelve words
  * (0x801FBEF0..0x801FBF1C): entry 0 is 0x801F6EE8, the byte-1 handler
- * clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8, entry
+ * stateTintArmCountdown, entry
  * 1 is 0x801F6F24, the handler that source advances the work dispatch byte to,
  * and entry 11 is 0x801F7C24. The word at 0x801FBF20 (0x00A70200) begins the
  * non-pointer data that follows the run. The address is the Splat `textbin`

@@ -14,7 +14,7 @@ extern ScenarioScena1200WorkStateHandler D_801FD198[];
  * cell at 0x1F800044, takes that object's unsigned byte at offset 0x01, scales
  * it by four and invokes that entry of the in-image code-pointer run based at
  * 0x801FD198 with no arguments. Entry 0 of that run is 0x801F7BEC
- * (clearFieldAdvanceStateAndQueueCue215ScenarioScena1200_801F7BEC), which adds
+ * (stateFieldQueueScenario), which adds
  * one to exactly this byte and queues cue 0x215, and entry 1 is 0x801F7C24, so
  * that byte is the state index of the window this dispatcher reads. It reads no
  * other state and writes none; the pointer cell is loaded before the 0x18-byte

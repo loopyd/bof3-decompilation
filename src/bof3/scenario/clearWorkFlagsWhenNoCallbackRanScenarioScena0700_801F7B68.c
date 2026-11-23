@@ -14,7 +14,7 @@ void func_80196070(void);
  * callback ran), calls the shared 0x80196070 work-area reset that clears
  * work-object bytes 0x00-0x04, including the dispatch byte 0x02. Takes no
  * arguments and returns nothing. The 52-byte body is byte-identical to the
- * already-exact sibling clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F6F14.
+ * already-exact sibling stateNoCallbackRan.
  * @status exact
  * @match 100.00
  * @residual none

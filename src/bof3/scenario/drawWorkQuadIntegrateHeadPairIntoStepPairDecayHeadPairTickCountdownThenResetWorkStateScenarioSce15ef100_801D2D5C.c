@@ -41,7 +41,7 @@ void func_80196070(void);
  * come from the offsets the exact lifts of this overlay already own:
  * +0x0C/+0x10 are the first two words of the step triple and +0x18/+0x1C the
  * first two of the head point, as
- * clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8
+ * stateHeadXYWords
  * clears them and
  * drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C
  * integrates them; +0x34 is the point those siblings draw from, +0x9 the

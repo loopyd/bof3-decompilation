@@ -47,7 +47,7 @@ u8 func_8019601C(void);
  * word 0x0C = 0, word 0x10 = the byte T_801FE26C[D_80144F5A] and the halfwords
  * at 0x2E/0x30 copied from the work base at the same offsets. Nothing is
  * returned. The two callers pass 0x91
- * (runSubstateProgressFlagAndFrontEndRecordStepsThenReleaseScenarioScena0200_801FB6C4)
+ * (runSubstateStepsRelease)
  * and 0x99
  * (func_801FB868) and ignore the result.
  * @status exact

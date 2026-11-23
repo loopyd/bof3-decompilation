@@ -1,7 +1,7 @@
 #include "bof3/scenario/scena00_internal.h"
 
 /* @source 0x801F8D70
- * @behavior Runs the overlay's following beam entry drawLinkedRecordCursorBeam
+ * @behavior Runs the overlay's following beam entry renderLinkedCursorBeam
  * with the same no-argument image and returns: this 8-instruction wrapper
  * passes nothing to the callee, neither reads nor writes overlay state of its
  * own, and keeps a real jal (a frame saving the return address) instead of a
@@ -14,5 +14,5 @@
  * @residual none
  */
 void func_801F8D70(void) {
-  drawLinkedRecordCursorBeam();
+  renderLinkedCursorBeam();
 }

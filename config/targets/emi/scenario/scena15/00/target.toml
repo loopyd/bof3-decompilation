@@ -11,9 +11,9 @@ sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F6F38.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F77F8.c",
     "src/bof3/scenario/clearWorkTableAt800E4800ScenarioScena1500_801F75AC.c",
-    "src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena1500_801FE49C.c",
-    "src/bof3/scenario/resetWorkStateWhenNoEntryClearedScenarioScena1500_801F717C.c",
-    "src/bof3/scenario/invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC.c",
+    "src/bof3/scenario/callHelperTwiceHelper.c",
+    "src/bof3/scenario/stateNoEntryCleared.c",
+    "src/bof3/scenario/callStartupIncrementRecord.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F7AA8.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F8488.c",
 ]

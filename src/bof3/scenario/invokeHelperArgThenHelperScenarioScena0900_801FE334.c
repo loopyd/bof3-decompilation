@@ -12,7 +12,7 @@ void func_801C1630(void);
  * in-image jal targets it, so the overlay invokes it indirectly through that
  * table. The 40 bytes are byte-identical to the exact siblings
  * invokeHelperArgThenHelperScenarioScena0900_801FE35C (0x801FE35C, argument 7),
- * invokeHelperArgThenHelperScenarioScena0900_801FE12C (0x801FE12C, argument 4),
+ * callHelperArgHelper (0x801FE12C, argument 4),
  * invokeHelperArgThenHelperScenarioScena0900_801FE184 (0x801FE184, argument 2)
  * and invokeHelperArgThenHelperScenarioScena0900_801FE20C (0x801FE20C,
  * argument 8), which differ only in the constant argument.

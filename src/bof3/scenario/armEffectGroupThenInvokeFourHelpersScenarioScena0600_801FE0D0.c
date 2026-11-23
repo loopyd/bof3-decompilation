@@ -27,7 +27,7 @@ void func_801C1630(void);
  * keeps $ra across the five calls. The 76 bytes are not byte-identical to any
  * span of the 396 shipped payloads (unmasked scan, one hit: this span), so
  * there is no clone donor; they differ from the adjacent word-4 body
- * armEffectGroupThenInvokeFourHelpersScenarioScena0600_801FDFFC in exactly one
+ * armGroupFourHelpers in exactly one
  * word, the immediate of the first per-id func_801C187C argument (1 here, 0
  * there), and they are the adjacent word-6 body
  * armEffectGroupThenInvokeThreeHelpersScenarioScena0600_801FE08C with the extra

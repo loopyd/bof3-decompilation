@@ -47,15 +47,15 @@ segments:
     - adoptSelectedRecordWord
     - '@source: src/bof3/scenario/adoptSelectedRecordWord.c'
     - '@behavior: Adopts the word at offset 0x54 of the shared 152-byte work record selected by the scratch pad work object''s word at offset 0x18 into that same work object and marks the work object''s dispatch byte at offset 0x01 with 1.'
-- name: drawAdoptedRecordCursorBeam
+- name: renderAdoptedCursorBeam
   type: code
   start: 584
   vram: 2149543496
   subsegments:
   - - 584
     - c
-    - drawAdoptedRecordCursorBeam
-    - '@source: src/bof3/scenario/drawAdoptedRecordCursorBeam.c'
+    - renderAdoptedCursorBeam
+    - '@source: src/bof3/scenario/renderAdoptedCursorBeam.c'
     - '@behavior: Adopts the 152-byte work-area record named by the shared scratchpad work object (pointer published at 0x1F800044) and draws that record cursor beam: the work object word at 0x18 selects the record at 0x80147A58 + index * 152, the record cursor words at 0x34/0x38/0x3C are copied into the work object at the same offsets, and the record pointer replaces the work object at 0x1F800044. The work object cursor pair is then linked through the shared grid-cell primitive linker func_80155A08 with kind 0x11 and size class 0x0C; before that call an 8-byte (x, y, w, h) rect of (0, 240, 16, 16) is written at the primitive cursor g_PrimCursor, the cursor is advanced by 8, and the 12-byte texture-window packet that follows the rect is built from it by the LIBGPU texture-window setter func_8017C1A8. The record fixed-point origin is then resolved through func_801AC1DC(origin, work byte 0x1C) and turned into a position vector whose x and y are ((origin + record word 0x34/0x38) >> 9) - 0x4000 and whose z is -(origin z + record halfword 0x3E) / 2; RotTransPers projects it into the flat textured quad found at the primitive cursor, so x0 = projected x - 8 and x2 = projected x - 8 while x1 = x3 = projected x + 8, y0 and y1 are zeroed, y2 and y3 keep the projected y, clut comes from GetClut(176, 483), tpage from GetTPage(0, 0, 704, 256), u0 = u2 = 0 and u1 = u3 = 16, the four v coordinates are ((D_80143E6C >> 2) & 0x15), with v2/v3 additionally adding the quad low byte at 0x1A, r0/g0/b0 are 0x80, the shade texture is cleared, and the projection depth is stored in the work object word at 0x60. The published scratchpad object is restored to the work object, its cursor pair is linked again with size class 0x28, a second rect of (0, 0, 256, 256) reserves one more texture-window packet through func_8017C1A8, and a final 0x0C-class link closes the frame.'
 - name: dispatchWorkByte1Handler_801F70F0
   type: code
@@ -67,36 +67,36 @@ segments:
     - dispatchWorkByte1Handler_801F70F0
     - '@source: src/bof3/scenario/dispatchWorkByte1Handler_801F70F0.c'
     - '@behavior: Dispatches the overlay''s per-frame handler for the scratchpad work object''s later states: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects entry (state + 2) of the local handler table at 0x801FC980 whose 0x801FC988 word is the 0x801F7264 handler, and that entry is invoked; no other state is read or written. The 0x801F6DC0 dispatcher indexes the same table from its first entry.'
-- name: drawWorkObjectTintSprite
+- name: renderObjectTintSprite
   type: code
   start: 1332
   vram: 2149544244
   subsegments:
   - - 1332
     - c
-    - drawWorkObjectTintSprite
-    - '@source: src/bof3/scenario/drawWorkObjectTintSprite.c'
+    - renderObjectTintSprite
+    - '@source: src/bof3/scenario/renderObjectTintSprite.c'
     - '@behavior: Seeds the shared primitive cursor (g_PrimCursor) with one semi-transparent texture sprite: the drawing-mode tpage comes from the LIBGPU graph type (0x32D for graph types 1 and 2, 0xDD otherwise), SetDrawMode is issued on the cursor with zero dfe/dtd and a null tw, a 0x0C-byte primitive is appended, SetSprt lays the cursor out as an SPRT with x0/y0 = 32, u0 = 0, v0 = 32, w = 256, h = 1768 and clut = 0x7A80, its r0/g0/b0 come from bytes 0x5D/0x5E/0x5F of the scratchpad work object published at 0x1F800044, the shade texture is cleared, SetSemiTrans receives the low byte of the argument, and a 0x14-byte primitive is appended.'
-- name: clearWorkObjectTintArmCountdownAndAdvance
+- name: stateObjectTintArm
   type: code
   start: 1636
   vram: 2149544548
   subsegments:
   - - 1636
     - c
-    - clearWorkObjectTintArmCountdownAndAdvance
-    - '@source: src/bof3/scenario/clearWorkObjectTintArmCountdownAndAdvance.c'
+    - stateObjectTintArm
+    - '@source: src/bof3/scenario/stateObjectTintArm.c'
     - '@behavior: Handler for state 2 of the scratchpad work object per-frame dispatch (the object byte at offset 0x01 selects the entry of the handler table at 0x801FC980): it re-reads the work object pointer published at 0x1F800044, zeroes the three color channels at 0x5D/0x5E/0x5F of that object, stores 0xF0 in the object byte at 0x09 and moves the dispatch state byte at 0x01 to 1; no other state is read or written.'
-- name: brightenWorkObjectColorAndCommitProgress
+- name: brightenObjectColorCommit
   type: code
   start: 1696
   vram: 2149544608
   subsegments:
   - - 1696
     - c
-    - brightenWorkObjectColorAndCommitProgress
-    - '@source: src/bof3/scenario/brightenWorkObjectColorAndCommitProgress.c'
-    - '@behavior: Takes no arguments and returns nothing: seeds the scratchpad work object''s sprite through drawWorkObjectTintSprite(1), then brightens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each, and once the channel at 0x5D reads exactly 0x80 commits the fade: writes 0x14 into the scenario progress byte g_ScenarioProgress, sets the object''s state byte at 0x01 to 2 and its byte at 0x09 to 0xFF.'
+    - brightenObjectColorCommit
+    - '@source: src/bof3/scenario/brightenObjectColorCommit.c'
+    - '@behavior: Takes no arguments and returns nothing: seeds the scratchpad work object''s sprite through renderObjectTintSprite(1), then brightens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each, and once the channel at 0x5D reads exactly 0x80 commits the fade: writes 0x14 into the scenario progress byte g_ScenarioProgress, sets the object''s state byte at 0x01 to 2 and its byte at 0x09 to 0xFF.'
 - name: drawWorkObjectTintSpriteAndTickCountdown
   type: code
   start: 1872
@@ -106,7 +106,7 @@ segments:
     - c
     - drawWorkObjectTintSpriteAndTickCountdown
     - '@source: src/bof3/scenario/drawWorkObjectTintSpriteAndTickCountdown.c'
-    - '@behavior: Advances the per-frame work-object countdown after reseeding the scratchpad work object''s sprite through drawWorkObjectTintSprite(1): while the object''s byte at 0x09 is non-zero it is decremented by one, and when it reads zero the object''s state byte at 0x01 is incremented and byte 0x09 is re-armed to 0xFF so the same handler runs again. Takes no arguments and returns nothing.'
+    - '@behavior: Advances the per-frame work-object countdown after reseeding the scratchpad work object''s sprite through renderObjectTintSprite(1): while the object''s byte at 0x09 is non-zero it is decremented by one, and when it reads zero the object''s state byte at 0x01 is incremented and byte 0x09 is re-armed to 0xFF so the same handler runs again. Takes no arguments and returns nothing.'
 - name: func_801F73A8
   type: code
   start: 1960
@@ -116,7 +116,7 @@ segments:
     - c
     - func_801F73A8
     - '@source: src/bof3/scenario/func_801F73A8.c'
-    - '@behavior: Takes no arguments and returns nothing: reseeds the scratchpad work object''s sprite through drawWorkObjectTintSprite(1), then darkens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each; once the channel at 0x5D reads exactly zero it clears the object''s byte at 0x09 and resets the shared work flags through func_80196070.'
+    - '@behavior: Takes no arguments and returns nothing: reseeds the scratchpad work object''s sprite through renderObjectTintSprite(1), then darkens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each; once the channel at 0x5D reads exactly zero it clears the object''s byte at 0x09 and resets the shared work flags through func_80196070.'
 - name: func_801F7440
   type: code
   start: 2112
@@ -127,25 +127,25 @@ segments:
     - func_801F7440
     - '@source: src/bof3/scenario/func_801F7440.c'
     - '@behavior: Dispatches the overlay''s second-level per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044, takes its dispatch byte at offset 1 and invokes that index of the overlay-local second-level handler table at 0x801FC99C, whose entries 0 through 13 are the overlay''s own handlers 0x801F7484 through 0x801F82B4; it reads no other state and writes none. Takes no arguments and returns nothing.'
-- name: seedWorkObjectPositionAndAdvance
+- name: stateObjectPositionAdvance
   type: code
   start: 2180
   vram: 2149545092
   subsegments:
   - - 2180
     - c
-    - seedWorkObjectPositionAndAdvance
-    - '@source: src/bof3/scenario/seedWorkObjectPositionAndAdvance.c'
+    - stateObjectPositionAdvance
+    - '@source: src/bof3/scenario/stateObjectPositionAdvance.c'
     - '@behavior: Seeds the shared scratchpad work object for the scene fade: stores the fixed position pair 0xB0000/0xF8000 in the words at offsets 0x34 and 0x38, stores the func_8015477C distance of that pair in the halfword at offset 0x3E, sets the primitive index byte at offset 0x29 to 5 and advances the dispatch byte at offset 0x01 to 1. Takes no arguments and returns nothing.'
-- name: drawWorkObjectTrailToCell
+- name: renderObjectTrailCell
   type: code
   start: 2284
   vram: 2149545196
   subsegments:
   - - 2284
     - c
-    - drawWorkObjectTrailToCell
-    - '@source: src/bof3/scenario/drawWorkObjectTrailToCell.c'
+    - renderObjectTrailCell
+    - '@source: src/bof3/scenario/renderObjectTrailCell.c'
     - '@behavior: Stamps the scratch work object''s cursor trail toward the work-area cell named by that object''s cell index at byte 0x06: copies the object''s cursor (x, y and scale word), starts the interpolated cursor at the object''s x with its y advanced by 0x8000, and keeps looping while the target cell''s y is not yet within that step by replacing the interpolated cursor''s scale-word high halfword with the func_8015477C distance of (x, y + 0x8000); once the target cell''s y is reached it snaps that cursor''s y and scale word to the cell''s own cursor and stops one stamp later. Each iteration emits one tinted sprite through func_801F78EC(interpolated cursor, object cursor, tint), the tint being the three signed channels of g_WorkObjectTint, then advances the object cursor to the interpolated one; when the shared mode byte D_80146866 reads 0x32 the object''s state byte at 0x01 is set to 2. Takes no arguments and returns nothing.'
 - name: func_801F7670
   type: code
@@ -227,15 +227,15 @@ segments:
     - func_801F7C34
     - '@source: src/bof3/scenario/func_801F7C34.c'
     - '@behavior: Advances the scratch work object''s entry-effect handler: re-reads the published work-object pointer cell at 0x1F800044 and emits two func_801F85A8 draws, the first from that object''s word at offset 0x18 with (0x200, 0, 0) and the second from the word at offset 0x1C with (0x71, 0, 0x8E3), then a third draw from the object''s byte at offset 0x0B with (0x155, 0, 0x200); it then adds 0x10 to that byte at offset 0x0B and, once the byte reads 0x60, queues frontend cue 0x20E and sets the object''s dispatch byte at offset 0x01 to 4. Takes no arguments and returns nothing; the address is entry 14 of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
-- name: drawWorkObjectEntryEffectAndAdvance
+- name: renderObjectEntryEffect
   type: code
   start: 4336
   vram: 2149547248
   subsegments:
   - - 4336
     - c
-    - drawWorkObjectEntryEffectAndAdvance
-    - '@source: src/bof3/scenario/drawWorkObjectEntryEffectAndAdvance_801F7CF0.c'
+    - renderObjectEntryEffect
+    - '@source: src/bof3/scenario/renderObjectEntryEffect.c'
     - '@behavior: Emits the scratch work object''s staged entry-effect draws for the per-frame handler table at 0x801FC980 (entry 15, selected by the object''s dispatch byte at offset 0x01): re-reads the published work-object pointer cell at 0x1F800044 and passes four func_801F85A8 draws in order, the first from that object''s word at offset 0x18 with (0x200, 0, 0), the second from the word at offset 0x1C with (0x71, 0, 0x8E3), the third from the object''s byte at offset 0x0B with (0x155, 0, 0x200) and the fourth from the byte at offset 0x08 with (0xE3, 0, 0xE38); it then advances that byte at offset 0x08 by 8 and, once the byte reads exactly 0x60, queues frontend cue 0x20E and moves the object''s dispatch byte at offset 0x01 to 5. Takes no arguments and returns nothing.'
 - name: func_801F7DC8
   type: code
@@ -386,16 +386,16 @@ segments:
     - c
     - func_801F8D70
     - '@source: src/bof3/scenario/func_801F8D70.c'
-    - '@behavior: Runs the overlay''s following beam entry drawLinkedRecordCursorBeam with the same no-argument image and returns: this 8-instruction wrapper passes nothing to the callee and neither reads nor writes overlay state of its own, and it keeps a real jal (a frame saving the return address) instead of a sibling tail call, exactly as the original does. The address is also carried as a code pointer by the data of the concurrently loaded game/00 overlay, so it is an externally referenced entry rather than an internal label. Takes no arguments and returns nothing.'
-- name: drawLinkedRecordCursorBeam
+    - '@behavior: Runs the overlay''s following beam entry renderLinkedCursorBeam with the same no-argument image and returns: this 8-instruction wrapper passes nothing to the callee and neither reads nor writes overlay state of its own, and it keeps a real jal (a frame saving the return address) instead of a sibling tail call, exactly as the original does. The address is also carried as a code pointer by the data of the concurrently loaded game/00 overlay, so it is an externally referenced entry rather than an internal label. Takes no arguments and returns nothing.'
+- name: renderLinkedCursorBeam
   type: code
   start: 8592
   vram: 2149551504
   subsegments:
   - - 8592
     - c
-    - drawLinkedRecordCursorBeam
-    - '@source: src/bof3/scenario/drawLinkedRecordCursorBeam.c'
+    - renderLinkedCursorBeam
+    - '@source: src/bof3/scenario/renderLinkedCursorBeam.c'
     - '@behavior: Draws one textured cursor beam between the cursors of the two 152-byte work-area records this overlay keeps at 0x80147A58, both selected through the shared scratchpad work object published at 0x1F800044: the work object word at 0x0C indexes the first record, whose cursor words at 0x34/0x38/0x3C are copied into the work object at the same offsets, and the work object word at 0x18 indexes the second; the first record''s cursor pair is linked through the shared grid-cell primitive linker func_80155A08 with kind 0x11 and size class 0x0C after an 8-byte (x, y, w, h) rect of (0, 240, 16, 16) is written at the primitive cursor g_PrimCursor, the cursor advanced by 8 and the 12-byte texture-window packet that follows the rect built from it by func_8017C1A8; the current primitive is then seeded as a POLY_FT4 and each record''s fixed-point origin, resolved through func_801AC1DC(origin, work byte 0x10) for the first record and (origin, work byte 0x1C) for the second, is turned into a position vector whose x and y are ((origin + record cursor word 0x34/0x38) >> 9) - 0x4000 and whose z is -(origin z + record halfword 0x3E) / 2; RotTransPers projects the first record''s vector into the quad''s first vertex pair and the second record''s into its second pair, each projection depth replacing the work object word at 0x60, and the two pairs are widened by 8 screen units (x1 = x0 + 8, y1 = y0, x0 = x0 - 8, then x3 = x2 + 8, y3 = y2, x2 = x2 - 8). The work object is restored at 0x1F800044, the quad takes clut 176/483, tpage (0, 0, 704, 256), u0 = u2 = 0 and u1 = u3 = 16, all four v coordinates ((u32)D_80143E6C >> 2) & 0x15 with v2 and v3 each adding the absolute difference of the quad''s signed halfwords at 0x1A and 0x0A, r0 = g0 = b0 = 0x80 and a cleared shade texture; the work object cursor pair is then linked again with size class 0x28, a second (0, 0, 256, 256) rect reserves one more texture-window packet through func_8017C1A8, and a final 0x0C-class link closes the frame. Takes no arguments and returns nothing.'
 - name: func_801F913C
   type: code
@@ -549,8 +549,8 @@ segments:
     - '@behavior: Advances twelve fixed-point channels for each active scenario record and subtracts their per-channel offsets from a companion record.'
   - - 23504
     - c
-    - dispatchRecordCallbackByByte7A
-    - '@source: src/bof3/scenario/dispatchRecordCallbackByByte7A.c'
+    - callRecordCallbackByte7
+    - '@source: src/bof3/scenario/callRecordCallbackByte7.c'
     - '@behavior: Dispatches one record callback selected by byte 0x7a.'
   - - 23568
     - c
@@ -559,8 +559,8 @@ segments:
     - '@behavior: Empty body: returns to the caller immediately without reading or writing any state.'
   - - 23576
     - c
-    - seedPrimaryStateOnRecordCallback
-    - '@source: src/bof3/scenario/seedPrimaryStateOnRecordCallback_801FC818.c'
+    - statePrimaryRecordCallback
+    - '@source: src/bof3/scenario/statePrimaryRecordCallback.c'
     - '@behavior: When the route word D_80143F00 is two, the argument''s high half selects kind 0x2B and flag bit 6 of D_8014686C is set, requests primary state 7 by storing D_80146874 = 7 and clears the secondary sub-state D_80146875; when D_80143F00 is 0x18 with D_80143F03 clear, kind 0x14 and flag bit 7 of D_8014686C clear, runs func_8015C088, requests primary state 6 the same way and returns 1; otherwise returns 0.'
   - - 23796
     - c

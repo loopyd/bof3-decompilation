@@ -52,7 +52,7 @@ u8 func_8019601C(void);
  * @behavior Word 1 of the overlay progress handler run at 0x801FAEF0, the word
  * the dispatcher dispatchProgressHandlerScenarioScena1100_801F7288 (0x801F7288)
  * reads through the shared scenario state byte D_80146872 (word 0 is the
- * armEffectBankAndAdvanceStateScenarioScena1100_801F72C4 address that stores 1,
+ * armEffectBankScenario address that stores 1,
  * word 1 is this address, word 2 is dispatchSecondaryStateScenarioScena1100_801F7748),
  * so no jal or j inside the payload reaches 0x801F72E4. It reads the pending
  * world id halfword D_80143F00 (0x80143F00, `lhu`) once per arm and applies one

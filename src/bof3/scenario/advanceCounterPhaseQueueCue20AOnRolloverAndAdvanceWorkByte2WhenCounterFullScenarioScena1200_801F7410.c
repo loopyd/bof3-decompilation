@@ -9,9 +9,9 @@ extern u8 g_ScenarioProgress;
 extern u32 D_8014686C;
 
 /* Overlay-local counter readout halfword: bit 15 is the random sign
- * seedRandomSignAndAdvanceWorkByte2ScenarioScena1200_801F71FC seeds, bits 8..14
+ * stateRandomSignScenario seeds, bits 8..14
  * are the phase count this handler advances and bits 0..7 are the 0..0xC7
- * counter drawFramedThreeDigitCounterScenarioScena1200_801F75EC formats.
+ * counter renderFramedDigitCounter formats.
  * @source 0x801FD288 @kind data
  */
 extern u16 D_801FD288;
@@ -27,7 +27,7 @@ void func_80196070(void);
  * object's unsigned byte at offset 0x02 scaled by four, so in that window it
  * runs while that byte reads 0; the neighbours of the same run are entry 1,
  * requestPrimaryState5Substate19SetModeFlagBit8ThenResetWorkAreaUnlessFrontEndMode2OrCue4OrFlag2ESetScenarioScena1200_801F7518,
- * and entry 2, clearFieldAdvanceStateAndQueueCue215ScenarioScena1200_801F7BEC.
+ * and entry 2, stateFieldQueueScenario.
  * The word at 0x801FD190 is the only little-endian word of the overlay payload
  * that holds 0x801F7410, and it is also index 3 of the preceding run based at
  * 0x801FD184 that dispatchWorkByte2HandlerScenarioScena1200_801F71B8 selects,
@@ -35,9 +35,9 @@ void func_80196070(void);
  * It first returns after the shared work-area reset func_80196070 when the
  * shared scenario progress byte g_ScenarioProgress reads 1. Otherwise it reads
  * the overlay-local halfword D_801FD288, whose low byte is the 0..0xC7 counter
- * that drawFramedThreeDigitCounterScenarioScena1200_801F75EC formats and whose
+ * that renderFramedDigitCounter formats and whose
  * bit 15 is the random sign
- * seedRandomSignAndAdvanceWorkByte2ScenarioScena1200_801F71FC seeds: when that
+ * stateRandomSignScenario seeds: when that
  * low byte already reads 0xC8 or more it only advances the work object's
  * unsigned byte at offset 0x02, which moves the state index of the window this
  * run is selected by, and leaves the halfword alone. With a spare counter step
@@ -55,7 +55,7 @@ void func_80196070(void);
  * exit labels, each of them shifted by exactly the 0x1D0 address delta between
  * the two spans, while every other word, relative branches included, was equal;
  * that twin had been lifted exact as
- * advanceCounterPhaseQueueCue20AOnRolloverAndAdvanceWorkByte2WhenCounterFullScenarioScena1200_801F7240,
+ * stateCounterRolloverFull,
  * so this body transcribes its statement order while keeping the dispatch role
  * recorded for this span, and the name records the proven behavior with the
  * address anchor that keeps it target-qualified.

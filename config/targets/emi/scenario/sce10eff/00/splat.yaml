@@ -30,16 +30,16 @@ segments:
     - c
     - dispatchWorkByte1HandlerScenarioSce10eff00_801D0C10
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce10eff00_801D0C10.c'
-    - '@behavior: Dispatches the scratchpad work byte at offset 1 through the three-entry local handler table published at 0x801D0C04 (seedFrontEndRecordsAdvanceStateAndQueueCue203, clearWorkFlagsWhenWorkByte11Is9, func_801D0E9C).'
+    - '@behavior: Dispatches the scratchpad work byte at offset 1 through the three-entry local handler table published at 0x801D0C04 (stateEndRecordsQueue, stateWorkFlagsWork, func_801D0E9C).'
   - - 112
     - c
-    - seedFrontEndRecordsAdvanceStateAndQueueCue203
-    - '@source: src/bof3/scenario/seedFrontEndRecordsAdvanceStateAndQueueCue203.c'
+    - stateEndRecordsQueue
+    - '@source: src/bof3/scenario/stateEndRecordsQueue.c'
     - '@behavior: Seeds nine slots of the 0x74-byte front-end record table at 0x80143FC8 after caching the scratchpad work pointer at 0x1F800044 into 0x801D2744: one record for slot 0, then four records for slot 1 and four more for slot 2, claiming one record per iteration from func_8019601C and storing the 0..3 iteration counter in record byte 0x04 and the slot number in record byte 0x02, then clears work byte 0x0B, increments work byte 0x01 and queues cue 0x203 through func_8015DF18.'
   - - 612
     - c
-    - clearWorkFlagsWhenWorkByte11Is9
-    - '@source: src/bof3/scenario/clearWorkFlagsWhenWorkByte11Is9.c'
+    - stateWorkFlagsWork
+    - '@source: src/bof3/scenario/stateWorkFlagsWork.c'
     - '@behavior: Clears the shared scratchpad work-area header when byte 11 of the scratchpad-resident state object equals 9.'
   - - 668
     - c
@@ -68,8 +68,8 @@ segments:
     - '@behavior: Advances scratch byte 11, then advances byte 10 by two while it is below 18; otherwise resets byte 9 to 60 and advances byte 3.'
   - - 1336
     - c
-    - tickScratchCountdownAndAdvanceState
-    - '@source: src/bof3/scenario/tickScratchCountdownAndAdvanceState.c'
+    - tickScratchCountdownAdvance
+    - '@source: src/bof3/scenario/tickScratchCountdownAdvance.c'
     - '@behavior: Advances byte 11 and counts down byte 9 of scratchpad work, advancing byte 3 when the countdown reaches zero.'
   - - 1440
     - c

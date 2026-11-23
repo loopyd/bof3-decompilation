@@ -22,7 +22,7 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
  * is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
+void renderEffectRecordsScenario(void);
 /* Overlay beam draw helper at 0x801D1678: draws the translucent quad pair
  * between the head point at +0x18 and the point at +0x34 of the work object and
  * then its stepped trail, shading both with the intensity byte it is handed. */
@@ -62,7 +62,7 @@ void swapWords(u32* arg0, u32* arg1);
  * calls, offsets and literals: +0x6 is the frame byte the exact sibling entries
  * 5 and 6 advance with the same modulo-four claim cadence, +0x1, +0x3 and +0x9
  * are the work, intensity and countdown bytes the exact siblings
- * drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C
+ * renderBeamDecayIntensity
  * and
  * decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateWhenCountdown9ExpiresScenarioSce15ef100_801D13F4
  * read and write, the +0x18/+0x34 point pair is the pair those siblings draw
@@ -73,7 +73,7 @@ void swapWords(u32* arg0, u32* arg1);
  * Shape evidence: the two claims with the three-word exchange between and after
  * them, and the per-cell `x = D_1F800044; x[...] = ...` reload spelling on both
  * sides, are the exact shapes of
- * drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C
+ * renderBeamDecayIntensity
  * in this overlay; this body differs by exchanging unconditionally on the claim
  * cadence instead of on countdown expiry, by drawing before the progress test
  * rather than after integration, and by re-arming intensity, countdown and work
@@ -110,7 +110,7 @@ void claimRecordExchangeHeadStepPairTwiceDrawBeamThenOnProgress23ArmIntensity128
     swapWords((u32*)(point + 0x3C), (u32*)(point + 0x20));
   }
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
-  drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088();
+  renderEffectRecordsScenario();
   point = D_1F800044;
   drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
       point + 0x18, point + 0x34, 0x40);

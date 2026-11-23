@@ -29,7 +29,7 @@ void func_801C1630(void);
  * (0x801FBD2C), whose bytes are this body's first 0x4C bytes with the second
  * and third teardown ids exchanged and this body's func_801C1630 tail absent,
  * and the tail from the exact neighbour
- * armEffectGroupThenClearWorkRecordsAndResetEffectSlotScenarioScena1400_801FC1E8
+ * armGroupRecordsSlot
  * (0x801FC1E8). The 0x54-byte span is byte-identical (one payload cmp) to the
  * still-unlifted func_801FE520 in the scena15/00 payload at file offset 0x7920.
  * @status exact

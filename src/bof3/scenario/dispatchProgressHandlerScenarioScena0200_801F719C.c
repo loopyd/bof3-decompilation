@@ -9,11 +9,11 @@ extern u32 D_801FE288[];
  * scales it by four and loads the selected word from the overlay-local
  * code-pointer run at 0x801FE288, then invokes that word with `jalr` and no
  * arguments. The run holds 31 words (0x801FE288 through 0x801FE300) and its
- * entry 0 is clearSharedByteAndProgressThenAdvanceStateScenarioScena0200_801F71D8
+ * entry 0 is stateSharedByteProgress
  * (0x801F71D8, this overlay, exact), which writes 1 to D_80146872 itself, so the
  * byte walks the chain forward one entry at a time; entry 30 is the front-end
  * completion stepper
- * queueFrontEndMode6FAndRunCompletionSubstatesPublishingFrontEndRecordThenReleaseScenarioScena0200_801FBC6C
+ * queueCompletionSubstatesPublishing
  * (0x801FBC6C, this overlay, exact) and the run ends immediately before the overlay
  * callback table at 0x801FE304 that func_801FD084 (0x801FD084) indexes with byte
  * 0x7A of its record argument. It takes no arguments and returns nothing of its

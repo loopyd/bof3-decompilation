@@ -27,28 +27,28 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1HandlerThenDrawWorkRecordWhenActiveScenarioSce15ef200_801D0C04
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerThenDrawWorkRecordWhenActiveScenarioSce15ef200_801D0C04.c'
-    - '@behavior: The overlay entry step, which the loader outside the payload enters. It loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its 0x18-byte frame, takes that object unsigned byte at offset +0x1 and scales it by four to call that entry of the fourteen-word in-image handler run at 0x801D1B1C (entries 0 through 13, 0x801D0C70 through 0x801D11A4) with no arguments, discarding any result and without bounding the index. It then reloads the same pointer cell into a second local, because the indirect call may republish that cell, and gates on the same work byte: while that byte is non-zero it hands drawOpaqueSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef200_801D1218 the work object record at +0x34, the signed halfword at +0xC and the literal 7. It takes no arguments, returns nothing and the frame only keeps $ra at 0x10 across the two calls.'
+    - callDrawRecordActive
+    - '@source: src/bof3/scenario/callDrawRecordActive.c'
+    - '@behavior: The overlay entry step, which the loader outside the payload enters. It loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its 0x18-byte frame, takes that object unsigned byte at offset +0x1 and scales it by four to call that entry of the fourteen-word in-image handler run at 0x801D1B1C (entries 0 through 13, 0x801D0C70 through 0x801D11A4) with no arguments, discarding any result and without bounding the index. It then reloads the same pointer cell into a second local, because the indirect call may republish that cell, and gates on the same work byte: while that byte is non-zero it hands renderOpaqueSectorConverted the work object record at +0x34, the signed halfword at +0xC and the literal 7. It takes no arguments, returns nothing and the frame only keeps $ra at 0x10 across the two calls.'
   - - 112
     - c
-    - resetWorkWordCAndArmCountdown16ThenAdvanceWorkByte1ScenarioSce15ef200_801D0C70
-    - '@source: src/bof3/scenario/resetWorkWordCAndArmCountdown16ThenAdvanceWorkByte1ScenarioSce15ef200_801D0C70.c'
+    - stateWordArmScenario
+    - '@source: src/bof3/scenario/stateWordArmScenario.c'
     - '@behavior: Entry 0 of the overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it re-arms that object countdown byte at +0x9 with 0x10, zeroes the work accumulator word at +0xC through the same loaded pointer, and then advances that same work byte at +0x1 by one through a reloaded pointer cell, so the next frame of that run dispatches entry 1. It takes no arguments, returns nothing and keeps no frame.'
   - - 160
     - c
-    - add16ToWorkWordCAndTickCountdownReload32AdvanceWorkByte1ScenarioSce15ef200_801D0CA0
-    - '@source: src/bof3/scenario/add16ToWorkWordCAndTickCountdownReload32AdvanceWorkByte1ScenarioSce15ef200_801D0CA0.c'
+    - workWordTickCountdown
+    - '@source: src/bof3/scenario/workWordTickCountdown.c'
     - '@behavior: Entry 1 of the overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it advances that object word at +0xC by 0x10 and ticks its countdown byte at +0x9 down by one through the one loaded pointer, the word store filling the guard branch delay slot; when the decremented byte reaches zero it re-arms that byte with 0x20 and advances the same work byte at +0x1 by one, so the next frame of that run dispatches entry 2. It takes no arguments, returns nothing and keeps no frame.'
   - - 256
     - c
-    - tickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D0D00
-    - '@source: src/bof3/scenario/tickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D0D00.c'
+    - tickCountdownAdvanceScenario
+    - '@source: src/bof3/scenario/tickCountdownAdvanceScenario.c'
     - '@behavior: Entry 2 of this overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it ticks that object countdown byte at +0x9 down by one and, when the decremented byte reaches zero, re-arms it with 0x10 and advances the same work byte at +0x1 by one, so the next frame dispatches entry 3. It takes no arguments, returns nothing and keeps no frame; all three scratchpad accesses are separate loads of the 0x1F800044 cell because the byte store through the loaded pointer may alias the cell.'
   - - 348
     - c
-    - subtract16FromWorkWordCAndTickCountdownThenResetWorkStateWhenExpiredScenarioSce15ef200_801D0D5C
-    - '@source: src/bof3/scenario/subtract16FromWorkWordCAndTickCountdownThenResetWorkStateWhenExpiredScenarioSce15ef200_801D0D5C.c'
+    - subtract16WordTickExpired
+    - '@source: src/bof3/scenario/subtract16WordTickExpired.c'
     - '@behavior: Entry 3 of this overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it subtracts 0x10 from that object word at +0xC and ticks its countdown byte at +0x9 down by one through the one loaded pointer, and when the decremented byte reaches zero it calls the resident reset helper func_80196070, which clears the work-area header bytes 0x00 through 0x04 so the run restarts at entry 0.'
   - - 420
     - c
@@ -57,43 +57,43 @@ segments:
     - '@behavior: Overlay step dispatch on work-record byte 1 of this payload: loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that object unsigned byte at +0x1 and calls that entry of the handler run based at 0x801D1B2C (entry 4 of the run at 0x801D1B1C) with no arguments, without bounding the index; the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the index and table load delay slots stay nops.'
   - - 488
     - c
-    - armWorkHalfword2E300ClearCountdownAndWorkTableThenAdvanceWorkByte1ScenarioSce15ef200_801D0DE8
-    - '@source: src/bof3/scenario/armWorkHalfword2E300ClearCountdownAndWorkTableThenAdvanceWorkByte1ScenarioSce15ef200_801D0DE8.c'
+    - armClearCountdownTable
+    - '@source: src/bof3/scenario/armClearCountdownTable.c'
     - '@behavior: Entry 0 of this overlay step handler run at 0x801D1B2C, which is word 4 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it stores 0x12C in that object halfword at +0x2E, zeroes its countdown byte at +0x9, runs the helper that clears the lead byte of every 6-byte entry of the 0x800E4800 work table, and then advances the same work byte at +0x1. It takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra at 0x10.'
   - - 560
     - c
-    - claimEntryOnCountdownExpiryReloadRandomThenStepWorkTableAndAdvanceWorkByteAtProgress14ScenarioSce15ef200_801D0E30
-    - '@source: src/bof3/scenario/claimEntryOnCountdownExpiryReloadRandomThenStepWorkTableAndAdvanceWorkByteAtProgress14ScenarioSce15ef200_801D0E30.c'
-    - '@behavior: Entry 1 of this overlay step handler run at 0x801D1B2C, which is word 5 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it reads that object countdown byte at +0x9 and, when the byte reads zero, claims a work-table entry through claimFreeWorkTableEntryAt800E4800ScenarioSce15ef200_801D15DC and re-arms the countdown with the low nibble of rand() plus 0x18, while a non-zero countdown only ticks down by one; both arms end in one store of that byte after the join. It then runs the work-table stepper stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624 with the literal 0xF0 and, when the shared scenario progress byte at 0x80146864 reads 14, advances the work byte at +0x1. It takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra at 0x10.'
+    - claimExpiryReloadRandom
+    - '@source: src/bof3/scenario/claimExpiryReloadRandom.c'
+    - '@behavior: Entry 1 of this overlay step handler run at 0x801D1B2C, which is word 5 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it reads that object countdown byte at +0x9 and, when the byte reads zero, claims a work-table entry through claimFreeTableEntry and re-arms the countdown with the low nibble of rand() plus 0x18, while a non-zero countdown only ticks down by one; both arms end in one store of that byte after the join. It then runs the work-table stepper stepEntriesDecayActive with the literal 0xF0 and, when the shared scenario progress byte at 0x80146864 reads 14, advances the work byte at +0x1. It takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra at 0x10.'
   - - 708
     - c
-    - stepWorkTableValueF0AndResetWorkStateWhenNoRecordActiveScenarioSce15ef200_801D0EC4
-    - '@source: src/bof3/scenario/stepWorkTableValueF0AndResetWorkStateWhenNoRecordActiveScenarioSce15ef200_801D0EC4.c'
-    - '@behavior: Entry 2 of this overlay step handler run at 0x801D1B2C, which is word 6 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it runs the work-table stepper stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624 with the literal 0xF0, the value that stepper stores as the halfword at +0x4 of every entry it claims in this frame, and when that stepper masked to a byte reports zero - that is, when no entry of the 0x800E4800 work table had a non-zero lead byte - it resets the shared work-area block through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte. It takes no arguments, returns nothing, reads and writes no other state, and the 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
+    - stepValueNoActive
+    - '@source: src/bof3/scenario/stepValueNoActive.c'
+    - '@behavior: Entry 2 of this overlay step handler run at 0x801D1B2C, which is word 6 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it runs the work-table stepper stepEntriesDecayActive with the literal 0xF0, the value that stepper stores as the halfword at +0x4 of every entry it claims in this frame, and when that stepper masked to a byte reports zero - that is, when no entry of the 0x800E4800 work table had a non-zero lead byte - it resets the shared work-area block through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte. It takes no arguments, returns nothing, reads and writes no other state, and the 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
   - - 760
     - c
-    - dispatchWorkByte1HandlerThenDrawScreenPairScenarioSce15ef200_801D0EF8
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerThenDrawScreenPairScenarioSce15ef200_801D0EF8.c'
+    - callDrawScreenPair
+    - '@source: src/bof3/scenario/callDrawScreenPair.c'
     - '@behavior: Overlay step dispatch on work-record byte 1 of this payload followed by the reported screen pair. It loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that object unsigned byte at offset +0x1, scales it by four and calls that entry of the handler run based at 0x801D1B38 with no arguments, discarding any result. That base is word 7 of the run whose word 4 the sibling dispatcher dispatches through. It then reloads the same pointer cell into a second local because the indirect call may republish it, and while the work byte at +0x1 is still non-zero it hands the draw helper func_801D17A0 the signed halfwords at +0x2E and +0x30 and the literal 0x80. It takes no arguments, returns nothing and keeps only $ra at 0x10 of its 0x18-byte frame across the two calls.'
   - - 872
     - c
-    - armCountdown10ClearScreenPairAndAdvanceWorkByteScenarioSce15ef200_801D0F68
-    - '@source: src/bof3/scenario/armCountdown10ClearScreenPairAndAdvanceWorkByteScenarioSce15ef200_801D0F68.c'
+    - armClearScreenPair
+    - '@source: src/bof3/scenario/armClearScreenPair.c'
     - '@behavior: Entry 7 of the overlay code-pointer run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object at pointer slot 0x1F800044 and calls with no arguments: arms that object countdown byte at +0x9 with 0xA, clears the projected screen-pair halfwords at +0x2E and +0x30, then advances the same work byte at +0x1 by one.'
   - - 924
     - c
-    - tickCountdownMoveScreenPairReload90AndAdvanceWorkByteScenarioSce15ef200_801D0F9C
-    - '@source: src/bof3/scenario/tickCountdownMoveScreenPairReload90AndAdvanceWorkByteScenarioSce15ef200_801D0F9C.c'
+    - tickMoveScreenPair
+    - '@source: src/bof3/scenario/tickMoveScreenPair.c'
     - '@behavior: Entry 8 of the overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it moves that object projected screen-pair halfwords at +0x2E and +0x30 by +0x15 and +9 through one loaded pointer, ticks its countdown byte at +0x9 down by one, and leaves the +0x30 store for the guard branch delay slot; when the decremented byte reaches zero it re-arms that byte with 0x5A and advances the same work byte at +0x1 by one, and both zero-branch accesses reload the pointer cell because the byte stores through the loaded pointer may alias it.'
   - - 1032
     - c
-    - armCountdown30AndAdvanceWorkByteAtProgress9ScenarioSce15ef200_801D1008
-    - '@source: src/bof3/scenario/armCountdown30AndAdvanceWorkByteAtProgress9ScenarioSce15ef200_801D1008.c'
+    - armAdvanceByteScenario
+    - '@source: src/bof3/scenario/armAdvanceByteScenario.c'
     - '@behavior: Entry 9 of the overlay''s fourteen-word code-pointer run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: only while the shared scenario progress byte g_ScenarioProgress at 0x80146864 reads 9 does it re-arm that object''s countdown byte at +0x9 with 0x1E and then advance the same work byte at +0x1 by one, so the next frame dispatches entry 10 (0x801D1050). Both accesses reload the pointer cell because the byte store through the loaded pointer may alias it. It takes no arguments, returns nothing and keeps no frame.'
   - - 1104
     - c
-    - tickCountdownLowerScreenPairBy7And3ThenResetWorkAreaWhenExpiredScenarioSce15ef200_801D1050
-    - '@source: src/bof3/scenario/tickCountdownLowerScreenPairBy7And3ThenResetWorkAreaWhenExpiredScenarioSce15ef200_801D1050.c'
+    - tickLowerScreenExpired
+    - '@source: src/bof3/scenario/tickLowerScreenExpired.c'
     - '@behavior: Entry 10 of the overlay code-pointer run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: through the one loaded pointer it lowers that object projected screen-pair halfwords at +0x2E and +0x30 by 7 and 3, ticks its countdown byte at +0x9 down by one, and leaves the +0x30 store for the guard branch delay slot; when the decremented byte reaches zero it resets the shared work area through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte, so the overlay drops back to work state 0.'
   - - 1188
     - c
@@ -107,23 +107,23 @@ segments:
     - '@behavior: Entry 0 of the overlay handler table at 0x801D1B48 dispatched by func_801D10A4 with the work object byte at +0x1: arms the countdown byte at +0x9 with 0x10 and advances the work byte at +0x1.'
   - - 1304
     - c
-    - drawRedTintFromNegatedCountdownThenTickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D1118
-    - '@source: src/bof3/scenario/drawRedTintFromNegatedCountdownThenTickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D1118.c'
+    - renderRedTintNegated
+    - '@source: src/bof3/scenario/renderRedTintNegated.c'
     - '@behavior: Entry 1 of this overlay handler run at 0x801D1B48 (0x801D10E8, 0x801D1118, 0x801D11A4), which the dispatcher func_801D10A4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it scales that object countdown byte at +0x9 by 16, negates the product, passes the low byte to the in-payload draw helper drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8 that fills the red component of two full-screen quads with it, then ticks the countdown down by one; when the decremented byte reaches zero it re-arms it with 0x10 and advances the work byte at +0x1 by one, so the next frame dispatches entry 2. It takes no arguments, returns nothing and its frame only keeps $ra across the helper call.'
   - - 1444
     - c
-    - drawRedTintFromCountdownThenTickCountdownAndResetWorkAreaWhenExpiredScenarioSce15ef200_801D11A4
-    - '@source: src/bof3/scenario/drawRedTintFromCountdownThenTickCountdownAndResetWorkAreaWhenExpiredScenarioSce15ef200_801D11A4.c'
+    - renderRedTintExpired
+    - '@source: src/bof3/scenario/renderRedTintExpired.c'
     - '@behavior: Entry 1 of the overlay code-pointer table based at 0x801D1B48, which the dispatcher 0x801D10A4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it derives a red shade from that object countdown byte at +0x9 - the full byte 0xFF while the countdown still reads its re-arm value 0x10, otherwise the countdown scaled by 16 and masked to its high nibble - and passes it to the in-payload draw helper drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8, which writes it into the red component of two full-screen quads; it then ticks the same countdown down by one and, when the decremented byte reaches zero, resets the shared work area through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte, so the overlay drops back to work state 0 instead of re-arming. It takes no arguments, returns nothing and its 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
   - - 1560
     - c
-    - drawOpaqueSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef200_801D1218
-    - '@source: src/bof3/scenario/drawOpaqueSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef200_801D1218.c'
+    - renderOpaqueSectorConverted
+    - '@source: src/bof3/scenario/renderOpaqueSectorConverted.c'
     - '@behavior: Draws this overlay fan of thirty-two opaque POLY_G3 sectors around a projected point, the only payload span the overlay entry func_801D0C04 draws through its guarded tail. It arms the primitive list with GetTPage(0, 1, 0x2C0, 0x100), SetDrawMode on the cursor cell 0x8014598C with dfe 0 and dtd 1, a 0xC-byte DR_MODE queued under OT slot 7 by func_8014E5A0 and the 0x20-byte sort scratch that func_801AFE18 fills at sp+0x38. It projects the caller origin point through func_801AFF04 into the first of four 8-byte screen entries, hands the caller signed halfword as both halves of the third entry to the size-pair converter func_801AFFD8 and takes the converted extent at the point own depth as its radius, adding the low bit of the shared frame counter 0x80143E6C so the fan breathes one sub-pixel unit on alternating frames; the second entry is seeded with the phase-zero arc point, the projected x plus the whole radius and the projected y unchanged. Each of the thirty-two unsigned-byte passes stamps the cursor primitive with func_8017A97C, clears its semi-transparency bit through SetSemiTrans with zero, keeps vertex 0 on the projected point and vertex 1 on the seeded phase-zero arc point, then rebuilds vertex 2 as the projected point plus the radius rotated by the pass phase through func_801783C8 for x and func_801782FC for y with both products shifted down by twelve, the phase advancing 0x80 per pass so the fan closes one 0x1000 turn at the last triangle. The first colour triplet takes 0x80 in a channel for each low bit of the caller mask, red for bit 2, green for bit 1 and blue for bit 0, so the literal 7 the entry passes lights the shared centre white while the two arc vertices stay black, and each 0x1C-byte packet is appended under OT slot 7. It takes the origin point, the signed halfword extent and the channel mask, returns nothing and its 0x78-byte frame keeps $ra with $s0-$s6, the outgoing fifth argument of SetDrawMode at +0x10, the four screen entries at +0x18 to +0x37 and the sort scratch at +0x38 to +0x57.'
   - - 2068
     - c
-    - drawRedGradientBandCenteredOnWorkEntryHalfwordWithFrameParityHalfHeightScenarioSce15ef200_801D1414
-    - '@source: src/bof3/scenario/drawRedGradientBandCenteredOnWorkEntryHalfwordWithFrameParityHalfHeightScenarioSce15ef200_801D1414.c'
+    - renderRedCenteredHeight
+    - '@source: src/bof3/scenario/renderRedCenteredHeight.c'
     - '@behavior: Draws the red gradient band of one work-table entry. It takes the 0x24-byte POLY_G4 published at the primitive cursor cell 0x8014598C, stamps it with SetPolyG4, clears its semi-transparency bit through SetSemiTrans with zero and fills the first quad as the full-width 0x140 slab that ends on the entry halfword at +0x4: both top vertices sit at that halfword minus the entry byte at +0x3 minus the low bit of the shared per-frame counter at 0x80143E6C, both bottom vertices sit on the halfword, the top pair stays black and the bottom pair carries red 0x80 with green and blue cleared, and func_8014E5A0 then appends the quad under OT slot 7. It reloads the cursor cell and repeats with the mirrored second quad, whose top pair carries red 0x80 and whose bottom pair sits at the halfword plus that same entry byte plus the counter bit over black, so the pair is one vertically symmetric red-to-black band centred on the entry halfword with a half height of the entry byte plus the frame parity. The halfword and the byte are reloaded for every vertex because the stores through the loaded cursor may alias the entry, which the caller passes in $a0 from the jal at 0x801D1754. It returns nothing and its 0x38-byte frame only keeps $ra and $s0-$s4 of the two quads.'
   - - 2480
     - c
@@ -132,18 +132,18 @@ segments:
     - '@behavior: Clears the lead byte of each of the 0x10 entries of the 6-byte-stride record table at 0x800E4800 in a bottom-tested unsigned-byte loop; takes no arguments and returns nothing.'
   - - 2524
     - c
-    - claimFreeWorkTableEntryAt800E4800ScenarioSce15ef200_801D15DC
-    - '@source: src/bof3/scenario/claimFreeWorkTableEntryAt800E4800ScenarioSce15ef200_801D15DC.c'
+    - claimFreeTableEntry
+    - '@source: src/bof3/scenario/claimFreeTableEntry.c'
     - '@behavior: Entry 5 of the overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it walks the 0x10 entries of the 6-byte-stride record table at 0x800E4800 and claims the first entry whose lead byte reads zero by storing 1 to that lead byte and zeroing the entry byte at +0x2, then leaves the loop; when every entry is claimed it returns having written nothing. It reads only each entry lead byte, makes no call, keeps no frame, takes no arguments and returns nothing. The only in-payload caller is the step handler func_801D0E30 (jal at 0x801D0E50), entry 5 of that same run, which calls it when the work object countdown byte at +0x9 reads zero and then re-arms that byte with rand masked to 0xF plus 0x18.'
   - - 2596
     - c
-    - stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624
-    - '@source: src/bof3/scenario/stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624.c'
-    - '@behavior: Per-frame step of the 0x10-entry work table at 0x800E4800, the six-byte-stride record table the scenario, world and battle overlays share: it arms the sprite draw mode for the table through GetTPage(0, 1, 0x380, 0x100), SetDrawMode on the primitive published at g_PrimCursor and func_8014E5A0(7, 0xC), fills the 0x20-byte projection scratch through func_801AFE18, then walks the 0x10 entries with an unsigned byte counter over an entry base pointer and an entry state pointer at the same stride. For every entry whose lead byte reads non-zero it advances the state byte at +0x2: state 0 claims the entry by writing 4 to the bytes at +0x1 and +0x3, its argument to the halfword at +0x4 and one more than the state byte back to it, state 1 increments the state byte, and state 2 subtracts 8 from that halfword and clears the lead byte once it reads negative. It then draws every entry whose state byte is non-zero through drawRedGradientBandCenteredOnWorkEntryHalfwordWithFrameParityHalfHeightScenarioSce15ef200_801D1414 (0x801D1414) and returns non-zero in the frames where any entry lead byte read non-zero; both in-payload callers, the run entries at 0x801D0E30 and 0x801D0EC4, pass the literal 0xF0.'
+    - stepEntriesDecayActive
+    - '@source: src/bof3/scenario/stepEntriesDecayActive.c'
+    - '@behavior: Per-frame step of the 0x10-entry work table at 0x800E4800, the six-byte-stride record table the scenario, world and battle overlays share: it arms the sprite draw mode for the table through GetTPage(0, 1, 0x380, 0x100), SetDrawMode on the primitive published at g_PrimCursor and func_8014E5A0(7, 0xC), fills the 0x20-byte projection scratch through func_801AFE18, then walks the 0x10 entries with an unsigned byte counter over an entry base pointer and an entry state pointer at the same stride. For every entry whose lead byte reads non-zero it advances the state byte at +0x2: state 0 claims the entry by writing 4 to the bytes at +0x1 and +0x3, its argument to the halfword at +0x4 and one more than the state byte back to it, state 1 increments the state byte, and state 2 subtracts 8 from that halfword and clears the lead byte once it reads negative. It then draws every entry whose state byte is non-zero through renderRedCenteredHeight (0x801D1414) and returns non-zero in the frames where any entry lead byte read non-zero; both in-payload callers, the run entries at 0x801D0E30 and 0x801D0EC4, pass the literal 0xF0.'
   - - 2976
     - c
-    - drawTranslucentFanOfThirtyTwoGouraudTrianglesAroundScreenBottomCenterScenarioSce15ef200_801D17A0
-    - '@source: src/bof3/scenario/drawTranslucentFanOfThirtyTwoGouraudTrianglesAroundScreenBottomCenterScenarioSce15ef200_801D17A0.c'
+    - renderThirtyBottomCenter
+    - '@source: src/bof3/scenario/renderThirtyBottomCenter.c'
     - '@behavior: Draws this overlay translucent radial fade: arms the draw mode of the work-table step with GetTPage(0, 1, 0x380, 0x100), SetDrawMode on the primitive published at g_PrimCursor and the 0x0C-byte DR_MODE queued through func_8014E5A0, then stamps a fan of thirty-two Gouraud triangles into that cursor and appends each under OT slot 7 as a 0x1C-byte packet. Every triangle keeps its first vertex on the screen bottom centre (0xA0, 0xF0) carrying the shade byte as red with green and blue at a quarter of it, while its two arc vertices carry black. The fan phase starts at 0x800 and advances by 0x40 per triangle through an unsigned byte counter, the previous sample filling the first arc vertex and the freshly taken sample the second, so neighbours meet at the shared sample; each sample offsets the bottom centre by the two signed halfword arguments (the reported pair at work +0x2E and +0x30) scaled through the local rotation helpers func_801783C8 for x and func_801782FC for y, the fixed-point half extents the sibling radial emitters shift down by twelve. Both arc offsets also carry the parity offset (D_80143E6C & 1) << 2, which moves the arc four pixels down and right on every other frame while the bottom centre stays put. It takes the two signed half extents and the shade, returns nothing and its 0x50-byte frame keeps $ra with $s0-$s7 and $fp.'
   - - 3496
     - c

@@ -65,7 +65,7 @@ void func_8015DF18(u16 arg0);
  * D_80146874. A bounded comparison of this span against every shipped EMI
  * payload under out/binaries/emi found no byte-identical copy, so the
  * gate-and-clear-and-request shape it shares with
- * clearProgressAndSharedStateBytesThenRequestPrimaryState5Substate5Or0IfPartyByte5ScenarioScena1200_801FCCBC
+ * stateProgressBytesParty
  * (0x801FCCBC of this overlay) is shape evidence and not clone proof.
  * @status exact
  * @match 100.00

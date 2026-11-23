@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_801F7484(void);
-void setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568(
+void stateIndexedBaseService(
     void);
 
 /* @source 0x801F72A0
@@ -26,7 +26,7 @@ void setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceSce
  * of D_801FBEF0 (0x801F71DC, the step that re-clears the triplet, latches the
  * shared front-end phase byte and moves byte 0x01 to 1). Both arms rejoin at the
  * two overlay helper calls func_801F7484 and
- * setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568,
+ * stateIndexedBaseService,
  * made in that order with no arguments and with any result discarded, so the
  * pair runs on every call and their `jal` delay slots stay nops. The 0x18-byte
  * frame keeps only $ra at 0x10 across them.
@@ -73,5 +73,5 @@ void decrementWorkCountdownAndRampTintTripletBy2OrReload30AndAdvanceWorkByte3The
     work[1] = 3;
   }
   func_801F7484();
-  setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568();
+  stateIndexedBaseService();
 }

@@ -173,7 +173,7 @@ extern void func_801A4BC0(s16 x, s16 y, u32 size);
  * every payload under out/binaries matched no second file, so the body was
  * written from this span's own bytes with the statement order, operand forms and
  * declaration style of the same-target sibling
- * stepSubstatesThroughFrontEndContextsAndFieldRecordSlotsThenReleaseStateScenarioScena1200_801F9F0C
+ * stepSubstatesThroughContexts
  * (0x801F9F0C), which measured exact when this seed was written and carries the
  * same switch on D_80146875 and the same request and progress-arm shapes. The
  * original shares one armed tail between sub-states 0x0E and 0x10 and one bit

@@ -20,7 +20,7 @@ void func_801C187C(s32 arg0);
  * arguments of its own, returns nothing, reads no memory and writes none; the
  * 0x18-byte frame only keeps $ra across the four calls. Its first 44 bytes are
  * byte-identical to the exact sibling
- * armEffectGroupThenInvokeTwoHelpersScenarioScena0600_801FE15C (0x801FE15C),
+ * armEffectGroupHelpers (0x801FE15C),
  * which runs the same arm call and the same two helper calls and then returns;
  * the address anchor keeps the name target-qualified.
  * @status exact

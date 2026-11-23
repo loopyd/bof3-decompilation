@@ -137,7 +137,7 @@ void func_801BFE34(u32 arg0, u32 arg1, s32 arg2);
 void func_801C7A54(s32 arg0);
 u8 func_8019601C(void);
 u8 func_801650B4(u8 arg0, u8 arg1, u8 arg2, u8 arg3);
-void addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
+void signedTableStepScaled(
     u8 amount);
 
 /* @source 0x801F7FB8
@@ -166,7 +166,7 @@ void addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
  *           queue cue 0x200, seed 0xD2 and advance to 7. Sub-states 3 and 5 are
  *           the countdown ends of those steps: while the tick halfword still
  *           reads nonzero they tick it and run the overlay step handler
- *           addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800
+ *           signedTableStepScaled
  *           with the per-tick scale 4, and at zero the 3 arm advances to 4 and
  *           increments the progress byte while the 5 arm publishes 2 in
  *           D_8014933B, advances to 6 and increments the progress byte.
@@ -226,7 +226,7 @@ void addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
  * table at 0x801FC424, it switches on the shared secondary sub-state byte
  * D_80146875 exactly as the three other handlers of this overlay do, and
  * 0x801F6C6C is the table-data base it dispatches through, so the family form
- * of dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0 names this body
+ * of callSubByteScenario names this body
  * dispatchSubStateByteTable6C6CScenarioScena1400.
  *
  * Shape: the payload holds no byte-identical copy of this 0x848-byte span - a
@@ -302,7 +302,7 @@ void dispatchSubStateByteTable6C6CScenarioScena1400_801F7FB8(void) {
 
     if (*counter != 0) {
       *counter = *counter - 1;
-      addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
+      signedTableStepScaled(
           4);
       return;
     }
@@ -325,7 +325,7 @@ void dispatchSubStateByteTable6C6CScenarioScena1400_801F7FB8(void) {
 
     if (*counter != 0) {
       *counter = *counter - 1;
-      addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
+      signedTableStepScaled(
           4);
       return;
     }
@@ -350,7 +350,7 @@ void dispatchSubStateByteTable6C6CScenarioScena1400_801F7FB8(void) {
 
     if (*counter != 0) {
       (*counter)--;
-      addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
+      signedTableStepScaled(
           4);
       if (*counter != 0xB4 && *counter < 0xB4) {
         D_8014932C = *counter * 1900 / 180;

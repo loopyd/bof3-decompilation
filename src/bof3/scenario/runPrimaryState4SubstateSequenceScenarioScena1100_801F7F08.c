@@ -62,7 +62,7 @@ extern u8 *D_1F800044;
 /* Sixteen-byte roll table of this target at 0x801FAECC, inside the leading
  * table data run that starts at 0x801FAEC0. Indexing it with the low four bits
  * of a random roll answers the handler id the claim arm stores in the record
- * byte 1 that dispatchWorkByte1HandlerThenPublishMode2ScenarioScena1100_801F70B4
+ * byte 1 that callHandlerPublishScenario
  * later reads, so the table maps a roll onto one of the ids 0, 2, 4 and 5. */
 extern u8 D_801FAECC[]; /* @source 0x801FAECC @kind data */
 
@@ -110,7 +110,7 @@ extern void func_8015C058(void);
  * 0x801F82D8: it takes the work index scratchpad byte 0 holds, publishes that
  * record as the work record and resets it. */
 extern void
-claimFrontEndRecordPublishWorkPointerAndResetStateScenarioScena1100_801F82D8(
+claimEndPointerReset(
     u8 index);
 
 /* @source 0x801F7F08
@@ -223,7 +223,7 @@ void runPrimaryState4SubstateSequenceScenarioScena1100_801F7F08(void) {
       D_80146875 = 0x32u;
       break;
     case 5:
-      claimFrontEndRecordPublishWorkPointerAndResetStateScenarioScena1100_801F82D8(
+      claimEndPointerReset(
           slot[0]);
       D_80146875 = 5u;
       break;

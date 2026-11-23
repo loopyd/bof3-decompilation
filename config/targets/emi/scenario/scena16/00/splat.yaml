@@ -35,8 +35,8 @@ segments:
     - '@source: src/bof3/scenario/bootPrimaryState_scena16.c'
   - - 400
     - c
-    - selectRouteForPendingWorld
-    - '@source: src/bof3/scenario/selectRouteForPendingWorld.c'
+    - selectRoutePendingWorld
+    - '@source: src/bof3/scenario/selectRoutePendingWorld.c'
     - '@behavior: Routes the primary SCENA16 area path from the pending world id D_80143F00: world 2 runs stageRoutePath2Setup and world 4 runs seedRouteEnterState2, both leaving D_80143C30 = 1, while world 0x1F runs seedRouteEnterState3 and leaves D_80143C30 = 0; every other world id keeps D_80143C30 unchanged. All paths then store 2 in the secondary route byte D_80146872.'
   - - 560
     - c

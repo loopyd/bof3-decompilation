@@ -203,7 +203,7 @@ extern void func_80161C20(u8 selection_id, s32 cue_level, s32 cue_shape);
  * (0x801F72E4 of emi/scenario/scena11/00), which holds the same 0x65 to 0x88
  * world chain and the same clearing tail but no 0x85, 0x86, 0x87 or 0xBC arm,
  * and its record-seeding arms keep the same shape as the exact same-target
- * sibling stepSubstatesThroughFrontEndContextsAndFieldRecordSlotsThenReleaseStateScenarioScena1200_801F9F0C
+ * sibling stepSubstatesThroughContexts
  * (0x801F9F0C). The 0x8F4 bytes of this span have no byte-identical copy in any
  * shipped payload under out/binaries, so no clone applied.
  *

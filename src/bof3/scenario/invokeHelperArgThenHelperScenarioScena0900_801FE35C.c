@@ -13,7 +13,7 @@ void func_801C1630(void);
  * indirectly through that table. The 40 bytes are byte-identical to the exact
  * sibling invokeHelperArgThenHelperScenarioScena0900_801FE334 (0x801FE334,
  * argument 6) and, transitively, to
- * invokeHelperArgThenHelperScenarioScena0900_801FE12C (0x801FE12C, argument 4),
+ * callHelperArgHelper (0x801FE12C, argument 4),
  * invokeHelperArgThenHelperScenarioScena0900_801FE184 (0x801FE184, argument 2)
  * and invokeHelperArgThenHelperScenarioScena0900_801FE20C (0x801FE20C,
  * argument 8), which differ only in the constant argument.

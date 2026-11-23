@@ -13,7 +13,7 @@ extern u32 D_801FAEF0[];
  * to keep $ra across the indirect call. The address is word 0 of the
  * code-pointer run at 0x801FAEDC (0x801FAEDC holds 0x801F7288), so the overlay
  * reaches it indirectly and no in-image jal targets it. Entry 0 of its table
- * (armEffectBankAndAdvanceStateScenarioScena1100_801F72C4, 0x801F72C4) stores 1
+ * (armEffectBankScenario, 0x801F72C4) stores 1
  * into D_80146872 and entry 1
  * (applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1100_801F72E4,
  * 0x801F72E4) ends by storing 2

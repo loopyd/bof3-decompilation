@@ -5,14 +5,14 @@ typedef void (*ScenarioScena0500WorkByte1Handler)(void);
 
 /* Overlay-local work-byte-1 handler table at 0x801FD5A8, indexed by the work
  * object's unsigned byte at offset 1: its six code-pointer words run from
- * incrementWorkByte1ClearCounterScenarioScena0500_801F743C (0x801F743C, word 0)
+ * incrementClearCounterScenario (0x801F743C, word 0)
  * through invokeHelperScenarioScena0500_801F7640 (0x801F7640, word 5), and the
  * first non-pointer word, 0x1C301C1C, sits immediately after them at 0x801FD5C0,
  * so the table ends there. Word 1 is
- * drawWorkCursorThenTickProgressBy16AndAdvanceWorkByte1At501ScenarioScena0500_801F745C
+ * renderCursorTickProgress
  * (0x801F745C), word 2
  * invokeHelperScenarioScena0500_801F74CC (0x801F74CC), word 3
- * incrementWorkByte1SetCounterScenarioScena0500_801F7530 (0x801F7530) and word 4
+ * incrementSetCounterScenario (0x801F7530) and word 4
  * func_801F7554 (0x801F7554). Every word is an overlay handler address reached
  * only through this dispatcher; the two non-pointer words are followed by the
  * five-word code-pointer run 0x801FD5C8..0x801FD5D8 and the three-word

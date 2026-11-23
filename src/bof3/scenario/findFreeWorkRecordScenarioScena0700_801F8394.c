@@ -15,10 +15,10 @@
  * the claim flag: both callers in this payload test the returned pointer for
  * zero and otherwise pass it in $a0 to an overlay record-seeding helper - jal
  * 0x801F8394 at 0x801F6EB4 inside
- * claimFreeWorkRecordEveryEighthCountdownStepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F6E90
+ * claimFreeEveryEighth
  * followed by func_801F83D0, and
  * jal 0x801F8394 at 0x801F7AE8 inside
- * claimFreeWorkRecordEveryFourthFrameWhileCountdownAtLeast9StepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7AB0
+ * claimEveryFourthWhile
  * followed by func_801F8478.
  * Its 0x3C bytes are instruction-for-instruction identical (branch
  * displacements included) to findFreeWorkRecordScenarioScena0800_801F8B14 at

@@ -29,7 +29,7 @@ void func_801C1630(void);
  * differing words, the second and third arm immediates and the second and third
  * teardown ids, so this body is that one's shape carrying its own 2 and 6 where
  * the neighbour carries 8 and 4. The arm ids 7/2/6 are the same row its
- * neighbour armEffectGroupThenClearWorkRecordsAndResetEffectSlotScenarioScena1400_801FC1E8
+ * neighbour armGroupRecordsSlot
  * (0x801FC1E8) arms before a single teardown.
  * @status exact
  * @match 100.00

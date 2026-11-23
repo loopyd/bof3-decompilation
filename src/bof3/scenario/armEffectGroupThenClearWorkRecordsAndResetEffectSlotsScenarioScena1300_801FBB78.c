@@ -26,7 +26,7 @@ void func_801C187C(s32 arg0);
  * sibling armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBDC4
  * (0x801FBDC4), whose last two teardown ids are 5 and 6 where this span has 6
  * and 5, and as this target's neighbour
- * armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88
+ * armEffectGroupRecords
  * (0x801FBC88), which tears down the single id 7.
  * @status exact
  * @match 100.00

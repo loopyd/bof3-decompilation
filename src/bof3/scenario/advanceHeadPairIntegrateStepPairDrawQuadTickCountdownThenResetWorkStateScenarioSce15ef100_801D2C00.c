@@ -39,7 +39,7 @@ void func_80196070(void);
  * 0x801D2B44, 0x801D2BA8, 0x801D2C00, 0x801D2C94, 0x801D2D5C) that the
  * dispatcher 0x801D2170 indexes with work byte +0x1 shifted left by two, so
  * this body is that run's entry 7 and no other site names it. The preceding
- * entry 6, clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8,
+ * entry 6, stateHeadXYWords,
  * clears the same +0x0C/+0x10 and +0x18/+0x1C pairs before advancing the work
  * byte to select this body, which is the step-then-head order the name follows.
  * The pair roles come from the offsets the exact lifts of this overlay already

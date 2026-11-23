@@ -2,7 +2,7 @@
 
 /* This overlay's work-state handler run based at 0x801D27CC: nineteen in-image
  * code-pointer words, entry 0 = 0x801D0D7C (the countdown arming handler
- * armCountdownAndAdvanceWorkByte1ScenarioSce15ef300_801D0D7C, which advances the
+ * armCountdownAdvanceScenario, which advances the
  * very work byte this dispatcher reads) through entry 18 = 0x801D16BC at
  * 0x801D2814, the last word before the payload ends at 0x801D2818. It starts
  * immediately after the separate three-word run at 0x801D27C0

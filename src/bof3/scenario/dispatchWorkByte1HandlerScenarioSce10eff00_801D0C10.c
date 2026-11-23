@@ -4,7 +4,7 @@
 
 /* @behavior Dispatches the scratchpad work byte at offset 1 through the
  * three-entry local handler table published at 0x801D0C04
- * (seedFrontEndRecordsAdvanceStateAndQueueCue203, clearWorkFlagsWhenWorkByte11Is9,
+ * (stateEndRecordsQueue, stateWorkFlagsWork,
  * func_801D0E9C).
  * @source 0x801D0C10
  * @status exact
@@ -12,8 +12,8 @@
  * @residual none
  */
 void NO_SIBLING_CALLS dispatchWorkByte1HandlerScenarioSce10eff00_801D0C10(void) {
-  void (*handlers[3])(void) = {seedFrontEndRecordsAdvanceStateAndQueueCue203,
-                              clearWorkFlagsWhenWorkByte11Is9, func_801D0E9C};
+  void (*handlers[3])(void) = {stateEndRecordsQueue,
+                              stateWorkFlagsWork, func_801D0E9C};
   u8* work;
 
   work = SPAD_PTR_SLOT(u8, 0x44u);

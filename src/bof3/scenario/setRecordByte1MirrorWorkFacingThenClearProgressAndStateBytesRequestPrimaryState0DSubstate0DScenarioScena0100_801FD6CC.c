@@ -23,7 +23,7 @@ void func_8015C088(void);
 /* @source 0x801FD6CC
  * @behavior Entry 7 of this overlay's 18-entry record callback table at
  * 0x801FE308, whose pointer word sits at 0x801FE324; the overlay dispatcher
- * dispatchRecordCallbackByByte7AScenarioScena0100_801FD444 (0x801FD444)
+ * callRecordCallbackScenario (0x801FD444)
  * selects it with unsigned byte 0x7A of a record, handing that record in $a0
  * and the address of D_80144E90 in $a1, so the overlay reaches this handler
  * only indirectly and only the record argument is read. It runs the shared
@@ -44,7 +44,7 @@ void func_8015C088(void);
  * established. Takes the record pointer and returns nothing; the 0x18-byte
  * frame keeps $s0 for the record across the two calls. Its 0xBC bytes are the
  * shape of this target's own
- * setRecordByte1MirrorWorkFacingThenRequestPrimaryState0DSubstate10ScenarioScena0100_801FD84C
+ * stateMirrorFacingPrimary
  * (0x801FD84C, table entry 9), which also clears the record halfword at 0x7E
  * and stores 0x0B, 0x10 and a single shared state byte, so those sites are
  * written from this span's own bytes; the shared state-byte clear run comes

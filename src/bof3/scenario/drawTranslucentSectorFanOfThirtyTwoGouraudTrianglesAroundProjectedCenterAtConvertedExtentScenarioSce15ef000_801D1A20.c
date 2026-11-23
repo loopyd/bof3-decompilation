@@ -71,7 +71,7 @@ typedef struct ScenarioSce15ef000ScreenPoint {
  * packet the exact siblings emitRadialTranslucentQuads and
  * drawTranslucentFanOfThirtyTwoGouraudTrianglesAroundScreenBottomCenterScenarioSce15ef200_801D17A0
  * emit, and the draw-mode arming is the prologue the exact sibling
- * drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540
+ * renderAroundScaleAngle
  * of this target shares.
  *
  * Frame: the original 0x78-byte frame carries the outgoing stack argument of

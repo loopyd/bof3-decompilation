@@ -9,23 +9,23 @@ load_address = 0x801D0C00
 
 sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04.c",
-    "src/bof3/scenario/seedWorkDistancePairAndOriginTripleClearAngleTintArmCountdown8AdvanceWorkByte1ScenarioSce15ef000_801D0C48.c",
+    "src/bof3/scenario/stateOriginTripleAngle.c",
 ]
 support_sources = [
-    "src/bof3/scenario/brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownReload4AndAdvanceWorkByte1ScenarioSce15ef000_801D0E5C.c",
+    "src/bof3/scenario/brightenGreenWrapPrimitives.c",
     "src/bof3/support/sce15ef0_00_psyq.c",
-    "src/bof3/scenario/drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914.c",
-    "src/bof3/scenario/drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0.c",
-    "src/bof3/scenario/dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44.c",
-    "src/bof3/scenario/decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4.c",
-    "src/bof3/scenario/decayAngleBy4DrawZigzagTickCountdownAndClearWorkFlagsOnZeroScenarioSce15ef000_801D11B4.c",
-    "src/bof3/scenario/drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C.c",
-    "src/bof3/scenario/raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue20DAndAdvanceWorkByte1ScenarioSce15ef000_801D0CEC.c",
-    "src/bof3/scenario/drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220.c",
-    "src/bof3/scenario/drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540.c",
+    "src/bof3/scenario/renderZigzagFiveSegments.c",
+    "src/bof3/scenario/renderOriginPrimitivesGreen.c",
+    "src/bof3/scenario/dimGreenPrimitivesZigzag.c",
+    "src/bof3/scenario/decayBandsPrimitivesZigzag.c",
+    "src/bof3/scenario/decayAngleZigzagFlags.c",
+    "src/bof3/scenario/renderBandsPrimitivesZigzag.c",
+    "src/bof3/scenario/raiseAngleBandsPrimitives.c",
+    "src/bof3/scenario/renderFlatGreyFill.c",
+    "src/bof3/scenario/renderAroundScaleAngle.c",
     "src/bof3/scenario/drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20.c",
-    "src/bof3/scenario/drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370.c",
-    "src/bof3/scenario/drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15ef000_801D1690.c",
-    "src/bof3/scenario/drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C.c",
+    "src/bof3/scenario/renderSegmentCoreFans.c",
+    "src/bof3/scenario/renderBodyPointsWidths.c",
+    "src/bof3/scenario/renderSliversSteppedSegments.c",
 ]
 psyq_source = "src/bof3/support/sce15ef0_00_psyq.c"

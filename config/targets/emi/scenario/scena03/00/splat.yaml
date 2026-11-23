@@ -35,23 +35,23 @@ segments:
     - '@behavior: Dispatches the SCENA03 per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044 before the frame is created, takes its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local three-entry handler table at 0x801FCF24 (entries 0x801F6EB4, 0x801F7260, 0x801F7334). It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call and the callee returns nothing of its own.'
   - - 692
     - c
-    - claimTwoWorkRecordsActivateBothWithSharedTemplateRequestResource61AndSubmitScenarioScena0300_801F6EB4
-    - '@source: src/bof3/scenario/claimTwoWorkRecordsActivateBothWithSharedTemplateRequestResource61AndSubmitScenarioScena0300_801F6EB4.c'
+    - claimActivateBothTemplate
+    - '@source: src/bof3/scenario/claimActivateBothTemplate.c'
     - '@behavior: Entry 0 of the per-frame handler table at 0x801FCF24; claims two 0x98-byte work records through func_8015CA48 identifiers stored at cursor bytes 3 and 4 of the scratchpad work object at 0x1F800044, releases the first record when the second identifier is 0xFF, activates both through func_801A65A0 with the shared 16-byte entry at 0x801FCF30 while publishing each identifier as the halfword at 0x1F800000 and requesting resource 0x61 with mode 0xC, spreads the two records apart by adding 0x1000 to the first 0x34 word and subtracting 0x1000 from its 0x38 word while giving the second record the mirrored steps, sets their 0x20 flag bit, clears their 0x5C byte, submits both through func_8019651C with the 0xF mask and mode 1, and finally sets cursor byte 9 to 4 and cursor byte 1 to 1.'
   - - 1632
     - c
-    - tickCountdownAndClearTwoRecordBytesScenarioScena0300_801F7260
-    - '@source: src/bof3/scenario/tickCountdownAndClearTwoRecordBytesScenarioScena0300_801F7260.c'
+    - tickCountdownTwoBytes
+    - '@source: src/bof3/scenario/tickCountdownTwoBytes.c'
     - '@behavior: Ticks work byte 9 with flag bit 0x40 set; at zero clears that bit and two selected record lead bytes, then sets work byte 1 to 2.'
   - - 1844
     - c
-    - submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7334
-    - '@source: src/bof3/scenario/submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7334.c'
+    - submitSelectedRecordsArea
+    - '@source: src/bof3/scenario/submitSelectedRecordsArea.c'
     - '@behavior: Submits the 0x98-byte work records at 0x80146888 selected by work bytes 3 and 4 through func_80196718, then clears the scratchpad work-area header through func_80196070.'
   - - 1980
     - c
-    - tickCountdownThenDrawIndexedRectAndAdvanceWorkByte1ScenarioScena0300_801F73BC
-    - '@source: src/bof3/scenario/tickCountdownThenDrawIndexedRectAndAdvanceWorkByte1ScenarioScena0300_801F73BC.c'
+    - tickCountdownIndexedRect
+    - '@source: src/bof3/scenario/tickCountdownIndexedRect.c'
     - '@behavior: Ticks work byte 9; at zero draws a 16 by 40 draw-area move rect from the overlay record run at 0x801FCF40 selected by work byte 1, advances work byte 1, clears byte 0x29, reloads the countdown from it and clears the work-area header at step 4.'
   - - 2312
     - c
@@ -60,13 +60,13 @@ segments:
     - '@behavior: Dispatches the overlay-local handler table at 0x801FCF50 using unsigned work-object byte 1 from scratchpad pointer cell 0x1F800044.'
   - - 2380
     - c
-    - claimTwoWorkRecordsActivateBothWithScriptSpreadAccumulatorsAndSubmitScenarioScena0300_801F754C
-    - '@source: src/bof3/scenario/claimTwoWorkRecordsActivateBothWithScriptSpreadAccumulatorsAndSubmitScenarioScena0300_801F754C.c'
+    - claimBothSpreadAccumulators
+    - '@source: src/bof3/scenario/claimBothSpreadAccumulators.c'
     - '@behavior: Entry 0 of the work-byte-1 handler table at 0x801FCF50; claims two 0x98-byte work records through func_8015CA48 identifiers stored at cursor bytes 3 and 4 of the scratchpad work object at 0x1F800044, releases the first record when the second identifier is 0xFF, activates both through func_801A4D54 with the local template at 0x801FCF5C while publishing each identifier as the halfword at 0x1F800000, spreads the two records 0x34 and 0x38 accumulators by -0x1000/+0x1000, sets their 0x20 flag bit, clears their 0x5C byte, submits both through func_8019651C with the 0xF mask and mode 1, and finally sets cursor byte 9 to 4 and cursor byte 1 to 1.'
   - - 3296
     - c
-    - tickCountdownAndClearSelectedRecordBytesScenarioScena0300_801F78E0
-    - '@source: src/bof3/scenario/tickCountdownAndClearSelectedRecordBytesScenarioScena0300_801F78E0.c'
+    - tickCountdownSelectedBytes
+    - '@source: src/bof3/scenario/tickCountdownSelectedBytes.c'
     - '@behavior: Ticks work byte 9 while setting selected record bit 0x40; at zero clears that bit and two selected record lead bytes, then sets work byte 1 to 2.'
   - - 3604
     - c
@@ -83,8 +83,8 @@ segments:
     - armCountdownAndAdvanceWorkByte1ScenarioScena0300_801F7AE0
   - - 3856
     - c
-    - tickCountdownReload8IncrementWorkHalfword5EAndAdvanceWorkByte1ScenarioScena0300_801F7B10
-    - '@source: src/bof3/scenario/tickCountdownReload8IncrementWorkHalfword5EAndAdvanceWorkByte1ScenarioScena0300_801F7B10.c'
+    - tickCountdownIncrementScenario
+    - '@source: src/bof3/scenario/tickCountdownIncrementScenario.c'
     - '@behavior: Calls two local helpers, increments captured work halfword 0x5E, and ticks byte 9; at zero reloads 8 and advances work byte 1.'
   - - 4016
     - c
@@ -98,44 +98,44 @@ segments:
     - '@behavior: Calls two local helpers with work plus 0x0C, decrements work byte 9, and reloads 128 and advances work byte 1 at zero.'
   - - 4320
     - c
-    - tickCountdownSubtract8And64FromWorkHalfwordsAndAdvanceWorkByte1ScenarioScena0300_801F7CE0
-    - '@source: src/bof3/scenario/tickCountdownSubtract8And64FromWorkHalfwordsAndAdvanceWorkByte1ScenarioScena0300_801F7CE0.c'
+    - tickCountdownHalfwordsScenario
+    - '@source: src/bof3/scenario/tickCountdownHalfwordsScenario.c'
     - '@behavior: Calls two local helpers, subtracts 8 and 64 from captured work halfwords 0x5A and 0x5C, and ticks byte 9; at zero advances work byte 1.'
   - - 4480
     - c
-    - subtract8FromWorkHalfword58AndResetWorkStateWhenNegativeScenarioScena0300_801F7D80
-    - '@source: src/bof3/scenario/subtract8FromWorkHalfword58AndResetWorkStateWhenNegativeScenarioScena0300_801F7D80.c'
+    - subtract8ResetNegativeScenario
+    - '@source: src/bof3/scenario/subtract8ResetNegativeScenario.c'
     - '@behavior: Calls the local helpers 0x801F7FFC and 0x801F8170 with the captured work pointer plus 0x0C, then subtracts 8 from that work object halfword at 0x58; when the stored halfword reads negative it reloads the work pointer cell 0x1F800044, writes 1 to the object transition byte 0x06 and resets the work state through func_80196070.'
   - - 4592
     - c
     - dispatchWorkByte1HandlerScenarioScena0300_801F7DF0
   - - 4660
     - c
-    - queueCue209AndAdvanceWorkByte1ScenarioScena0300_801F7E34
+    - queueAdvanceWorkScenario
   - - 4716
     - c
-    - claimFiveFrontEndRecordsAndAdvanceWorkByte1ScenarioScena0300_801F7E6C
-    - '@source: src/bof3/scenario/claimFiveFrontEndRecordsAndAdvanceWorkByte1ScenarioScena0300_801F7E6C.c'
+    - claimFiveEndRecords
+    - '@source: src/bof3/scenario/claimFiveEndRecords.c'
     - '@behavior: Claims five front-end records into the five record-pointer slots at offset 0x0C of the work object published at scratchpad cell 0x1F800044, one record index per iteration from func_8019601C with 0xFF skipping the slot, seeds each claimed row of the 0x74-byte front-end record table at 0x80143FC8 and then advances work byte 0x01.'
   - - 4996
     - c
-    - advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84
-    - '@source: src/bof3/scenario/advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84.c'
+    - stateProgressAllNon
+    - '@source: src/bof3/scenario/stateProgressAllNon.c'
     - '@behavior: Waits until none of the five record-pointer slots at work object + 0x0C reads zero at record byte 0x06, then increments the shared scenario progress byte g_ScenarioProgress and resets the work area through func_80196070.'
   - - 5116
     - c
-    - buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC
-    - '@source: src/bof3/scenario/buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC.c'
+    - setupVerticesCentreAngles
+    - '@source: src/bof3/scenario/setupVerticesCentreAngles.c'
     - '@behavior: Publishes the four 16-byte corner vertex records the following emitter fans two translucent Gouraud triangles over: it arms one scratch rotation matrix from work halfwords 0x5A and 0x5C, walks the corner offsets (0, 0), (x, y), (x, 0) and (x, -y) built from the cosine and sine samples of work halfword 0x58 scaled by work halfword 0x5E and shifted up by 4, transforms each through that matrix and adds it to the work position triple at 0x0C/0x10/0x14, storing the x and y sums as plain words and the transformed z shifted up by 8.'
   - - 5488
     - c
-    - drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170
-    - '@source: src/bof3/scenario/drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170.c'
+    - renderTranslucentTrianglesFour
+    - '@source: src/bof3/scenario/renderTranslucentTrianglesFour.c'
     - '@behavior: Arms the overlay emitter with GetTPage(0, 1, 0x3C0, 0), SetDrawMode on the g_PrimCursor packet with dfe 0 and dtd 1, a 0xC-byte DR_MODE queued under OT slot 1 through func_8014E5A0 and the 0x20-byte sort scratch filled by func_801AFE18, then draws the work object Gouraud quad as two 0x1C-byte POLY_G3 triangles through 0x801F8200 over the records indexed 0, 1, 2 and 0, 3, 2 with vertex colours 0x40, 0, 0x80.'
   - - 5632
     - c
-    - drawTranslucentGouraudTriangleFromThreeIndexedRecordsScenarioScena0300_801F8200
-    - '@source: src/bof3/scenario/drawTranslucentGouraudTriangleFromThreeIndexedRecordsScenarioScena0300_801F8200.c'
+    - renderTranslucentGouraudTriangle
+    - '@source: src/bof3/scenario/renderTranslucentGouraudTriangle.c'
     - '@behavior: Draws one translucent 0x1C-byte POLY_G3 from three entries of the 16-byte vertex array that starts at the received work pointer plus 0x0C, projecting each selected entry point through func_801AFF04 into the packet pairs at 0x08, 0x10 and 0x18 of the g_PrimCursor packet, stamps it through func_8017A97C, marks it semi-transparent, writes the colour triplets 0x40, 0 and 0x80 and links it through func_8014E5A0 with class 1.'
   - - 5860
     - c
@@ -144,13 +144,13 @@ segments:
     - '@behavior: Dispatches the overlay-local handler table at 0x801FCF94 using unsigned work-object byte 1 from scratchpad pointer cell 0x1F800044.'
   - - 5928
     - c
-    - armCountdownAdvanceWorkByte1ThenQueueCue204ScenarioScena0300_801F8328
-    - '@source: src/bof3/scenario/armCountdownAdvanceWorkByte1ThenQueueCue204ScenarioScena0300_801F8328.c'
+    - armCountdownQueueScenario
+    - '@source: src/bof3/scenario/armCountdownQueueScenario.c'
     - '@behavior: Arms work-object countdown byte 9 with 0x60, advances work byte 1 and queues main-exe sound cue 0x204 through func_8015DF18.'
   - - 6000
     - c
-    - claimFlaggedFrontEndRecordSetByte5To24TickCountdownAdvanceWorkByte1ScenarioScena0300_801F8370
-    - '@source: src/bof3/scenario/claimFlaggedFrontEndRecordSetByte5To24TickCountdownAdvanceWorkByte1ScenarioScena0300_801F8370.c'
+    - claimFlaggedEndTick
+    - '@source: src/bof3/scenario/claimFlaggedEndTick.c'
     - '@behavior: Entry 1 of the overlay work-object handler table at 0x801FCF94: while work byte 9 from scratchpad pointer cell 0x1F800044 has bit 2 set, takes one index from func_8019601C and, unless it reads 0xFF, sets byte 0 of row index * 0x74 of the front-end record table at 0x80143FC8 to 1 and byte 5 to 0x24; then decrements that byte, and at zero advances work byte 1.'
   - - 6188
     - c
@@ -160,13 +160,13 @@ segments:
     - dispatchWorkByte1HandlerScenarioScena0300_801F844C
   - - 6288
     - c
-    - seedEffectRectWithRandomOffsetsAndAdvanceWorkByte1ScenarioScena0300_801F8490
-    - '@source: src/bof3/scenario/seedEffectRectWithRandomOffsetsAndAdvanceWorkByte1ScenarioScena0300_801F8490.c'
+    - stateRectRandomOffsets
+    - '@source: src/bof3/scenario/stateRectRandomOffsets.c'
     - '@behavior: Seeds the effect-rectangle record at work plus 0x0C (intensity 0x600, width and height 0x100, random halfwords 0x0E and 0x10, white colour bytes) then advances work byte 1.'
   - - 6460
     - c
-    - drawAndShrinkWorkHalfwordsThenAdvanceScenarioScena0300_801F853C
-    - '@source: src/bof3/scenario/drawAndShrinkWorkHalfwordsThenAdvanceScenarioScena0300_801F853C.c'
+    - renderShrinkHalfwordsScenario
+    - '@source: src/bof3/scenario/renderShrinkHalfwordsScenario.c'
     - '@behavior: Draws work then shrinks halfwords 0x12 and 0x14 and advances byte 1 when halfword 0x14 is negative.'
   - - 6620
     - c
@@ -178,23 +178,23 @@ segments:
     - '@behavior: Dispatches the overlay-local handler table at 0x801FCFAC using unsigned work-object byte 1 from scratchpad pointer cell 0x1F800044.'
   - - 6720
     - c
-    - projectSharedCoordinatesIntoWorkRecordThenAdvanceScenarioScena0300_801F8640
-    - '@source: src/bof3/scenario/projectSharedCoordinatesIntoWorkRecordThenAdvanceScenarioScena0300_801F8640.c'
+    - projectSharedCoordinatesInto
+    - '@source: src/bof3/scenario/projectSharedCoordinatesInto.c'
     - '@behavior: Projects the shared camera position and azimuth words at 0x80145EC4, 0x80145EC8 and 0x80145ECE into the scratchpad vertex at 0x1F800014, passes it with the scratchpad screen pair at 0x1F800034 to RotTransPers, then stores the projected depth in work word 0x60 and the screen pair in work halfwords 0x2E and 0x30, clears work byte 9 and advances work byte 1.'
   - - 6928
     - c
-    - drawAndGrowWorkByte9ThenAdvanceScenarioScena0300_801F8710
-    - '@source: src/bof3/scenario/drawAndGrowWorkByte9ThenAdvanceScenarioScena0300_801F8710.c'
+    - renderGrowAdvanceScenario
+    - '@source: src/bof3/scenario/renderGrowAdvanceScenario.c'
     - '@behavior: Draws using work byte 9, adds 15 with byte wrapping, then sets values above 60 to 255 and advances work byte 1.'
   - - 7076
     - c
-    - drawTickWorkByte9QueueCue208WhenByte9Is215Reload60AndAdvanceScenarioScena0300_801F87A4
-    - '@source: src/bof3/scenario/drawTickWorkByte9QueueCue208WhenByte9Is215Reload60AndAdvanceScenarioScena0300_801F87A4.c'
+    - renderTickQueueScenario
+    - '@source: src/bof3/scenario/renderTickQueueScenario.c'
     - '@behavior: Draws with the local helper using a radius of 0x3C carrying bit 0 of work byte 9, queues main-exe sound cue 0x208 when the reloaded work byte 9 is 0xD7, then decrements work byte 9 and re-arms it with 0x3C while advancing work byte 1 when the stored countdown reaches zero.'
   - - 7260
     - c
-    - drawAndTickWorkByte9ScenarioScena0300_801F885C
-    - '@source: src/bof3/scenario/drawAndTickWorkByte9ScenarioScena0300_801F885C.c'
+    - renderTickWorkScenario
+    - '@source: src/bof3/scenario/renderTickWorkScenario.c'
     - '@behavior: Calls the local drawing helper, decrements work byte 9 and advances work byte 1 when the reloaded signed countdown is negative.'
   - - 7388
     - c
@@ -204,8 +204,8 @@ segments:
     - func_801F88FC
   - - 8196
     - c
-    - drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04
-    - '@source: src/bof3/scenario/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04.c'
+    - renderThirtyCenterRim
+    - '@source: src/bof3/scenario/renderThirtyCenterRim.c'
     - '@behavior: Emits 32 semi-transparent Gouraud triangles as one closed radial fan around the caller screen pair, arming the emitter with GetTPage(0, 1, 0x3C0, 0) and SetDrawMode, stamping each 0x1C-byte POLY_G3 with func_8017A97C and SetSemiTrans and linking it under OT slot 1, with the center vertex in the fourth argument colour and the two radius samples, 0x80 apart over a 0x1000 turn, in the fifth.'
   - - 8616
     - c
@@ -227,8 +227,8 @@ segments:
     - func_801F9338
   - - 11256
     - c
-    - armProgress10ThenWaitProgress40AndRequestPrimaryState1ScenarioScena0300_801F97F8
-    - '@source: src/bof3/scenario/armProgress10ThenWaitProgress40AndRequestPrimaryState1ScenarioScena0300_801F97F8.c'
+    - armWaitRequestPrimary
+    - '@source: src/bof3/scenario/armWaitRequestPrimary.c'
     - '@behavior: Slot 2 of the overlay primary-state handler table at 0x801FCFE0 (word 25 of the 32-word code-pointer run at 0x801FCF84): switches on the shared sub-state byte D_80146875; sub-state 0 runs the main-exe helper func_801BE1B0(1), stores 10 in g_ScenarioProgress and advances the sub-state to 1; sub-state 1 waits for that progress byte to read 0x28 and then requests primary state 1 by storing 1 in D_80146874, holding the sub-state at 1; any other value returns without a store. Reads nothing else and writes no other state; the 0x18-byte frame only keeps $ra and the one sub-state base register.'
   - - 11392
     - asm
@@ -254,13 +254,13 @@ segments:
     - func_801FB8A4
   - - 21968
     - c
-    - claimWorkSlotFromIndexedWorkRecordPositionScenarioScena0300_801FC1D0
-    - '@source: src/bof3/scenario/claimWorkSlotFromIndexedWorkRecordPositionScenarioScena0300_801FC1D0.c'
+    - claimSlotIndexedPosition
+    - '@source: src/bof3/scenario/claimSlotIndexedPosition.c'
     - '@behavior: Spawns the overlay object into a free work slot, placed at the position of the shared work record the argument selects. It asks the shared slot allocator func_8015CA48 for a free slot index and returns 0 when that index is 0xFF. Otherwise it resolves the 0x98-byte slot of 0x80146888 that the index scales, publishes that slot pointer both at the scratchpad cursor 0x1F800044 and at the shared copy 0x80146884, resets the slot through func_801A4AA8, requests entry 0x67 through func_8014DD3C and sets slot flag byte 0. The low byte of the argument then selects a 0x140-byte record of the shared work-record array, and only the two leading words of that record are consumed: the 0x34 word, biased by 0x8000, becomes slot word 0x34 and the 0x38 word becomes slot word 0x38, both mirrored into the slot words 0x80 and 0x84 while 0x88 is cleared. Slot halfword 0x3E receives the distance the shared helper func_8015477C computes from those two coordinates, slot byte 1 is set to state 4, bytes 2, 6 and 8 are cleared, slot halfword 0x8E is cleared, slot bytes 0x77 and 0x78 are set to 2 and slot halfwords 0x7C and 0x8C are cleared. It then hands a one-byte descriptor holding 0x88 to func_801A4990, raises flag bit 0x20 of the slot flag byte, clears the three signed tint channels 0x5D, 0x5E and 0x5F, sets the slot flags_5C byte to 1, calls func_801A4914 and returns 1.'
   - - 22452
     - c
-    - addSignedTableStepToTwoHalfwordsScenarioScena0300_801FC3B4
-    - '@source: src/bof3/scenario/addSignedTableStepToTwoHalfwordsScenarioScena0300_801FC3B4.c'
+    - signedTableTwoHalfwords
+    - '@source: src/bof3/scenario/signedTableTwoHalfwords.c'
     - '@behavior: Adds sixteen times a signed table step indexed by D_80146876 & 3 to halfwords at 0x80145ECE and 0x8014600E, rereading the table between wrapping stores.'
   - - 22544
     - c
@@ -272,12 +272,12 @@ segments:
     - dispatchRecordCallbackScenarioScena0300_801FC46C
   - - 22700
     - c
-    - setScenarioFlagBit14ThenRequestPrimaryState4Substate0ScenarioScena0300_801FC4AC
-    - '@source: src/bof3/scenario/setScenarioFlagBit14ThenRequestPrimaryState4Substate0ScenarioScena0300_801FC4AC.c'
+    - stateFlagRequestPrimary
+    - '@source: src/bof3/scenario/stateFlagRequestPrimary.c'
     - '@behavior: Record-callback table slot 0; runs the shared front-end startup helper func_8015C088, sets scenario flag bit index 0x14 of the incoming flag word through func_8015B580, then requests primary scene state 4 with a cleared sub-state (D_80146874 = 4, D_80146875 = 0).'
   - - 22772
     - c
-    - setScenarioFlagBit10ThenInvokeHelperScenarioScena0300_801FC4F4
+    - stateFlagInvokeHelper
   - - 22816
     - c
     - setScenarioFlagBit11ThenInvokeHelperScenarioScena0300_801FC520
@@ -289,12 +289,12 @@ segments:
     - setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578
   - - 22948
     - c
-    - requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4
-    - '@source: src/bof3/scenario/requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4.c'
+    - requestSubArmNibble
+    - '@source: src/bof3/scenario/requestSubArmNibble.c'
   - - 23036
     - c
-    - queueFrontEndMode2FAndWaitForTransitionScenarioScena0300_801FC5FC
-    - '@source: src/bof3/scenario/queueFrontEndMode2FAndWaitForTransitionScenarioScena0300_801FC5FC.c'
+    - queueEndWaitTransition
+    - '@source: src/bof3/scenario/queueEndWaitTransition.c'
     - '@behavior: Record-callback slot 5 at 0x801FD00C: marks shared selector id 1 through 0x80166180, queues front-end mode 0x2F through 0x80150224, latches the shared phase byte 0x80143BB0 to 2, hands the selection index byte 0x80145029 to 0x80161D20 and queues effect group 2 through 0x801636A0, then polls the main-EXE frontend-transition predicate 0x80163EA0, running 0x801992B8 and yielding one scheduler count through 0x8014B87C per zero pass, and finally hands 0x80145029 to 0x80161D74.'
   - - 23176
     - c
@@ -306,13 +306,13 @@ segments:
     - '@behavior: Slot 7 of the overlay nine-pointer handler table at 0x801FD00C selected by record byte 0x7A in the record dispatcher func_801FC46C; runs the shared front-end startup helper func_8015C088, then requests primary scene state 6 with a cleared sub-state (D_80146874 = 6, D_80146875 = 0) and returns 0.'
   - - 23236
     - c
-    - requestPrimaryState7AndArmCountdown30ScenarioScena0300_801FC6C4
-    - '@source: src/bof3/scenario/requestPrimaryState7AndArmCountdown30ScenarioScena0300_801FC6C4.c'
+    - requestPrimaryArmScenario
+    - '@source: src/bof3/scenario/requestPrimaryArmScenario.c'
   - - 23300
     - c
     - dispatchRouteHandlerScenarioScena0300_801FC704
     - '@source: src/bof3/scenario/dispatchRouteHandlerScenarioScena0300_801FC704.c'
-    - '@behavior: Route dispatcher of this overlay: reads the shared unsigned route word D_80143F00 and, for routes 0x25/0x29/0x32/0x33/0x45/0x63, runs the matching overlay route handler (requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944, requestPrimaryState3Substate0AOnPackedRecordMatchScenarioScena0300_801FC8AC, requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8, requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC, requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC, requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C) with both incoming packed record words forwarded unchanged and returns that handler result sign-extended from its low byte (sll/sra 24); any other route value returns 0. The 0x18-byte frame only keeps $ra across the selected call, and the address is word 17 of the overlay 32-word code-pointer run at 0x801FCF84.'
+    - '@behavior: Route dispatcher of this overlay: reads the shared unsigned route word D_80143F00 and, for routes 0x25/0x29/0x32/0x33/0x45/0x63, runs the matching overlay route handler (requestPrimaryQueueEnd, requestPrimaryState3Substate0AOnPackedRecordMatchScenarioScena0300_801FC8AC, requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8, requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC, requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC, requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C) with both incoming packed record words forwarded unchanged and returns that handler result sign-extended from its low byte (sll/sra 24); any other route value returns 0. The 0x18-byte frame only keeps $ra across the selected call, and the address is word 17 of the overlay 32-word code-pointer run at 0x801FCF84.'
   - - 23532
     - c
     - requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC
@@ -325,8 +325,8 @@ segments:
     - '@behavior: Route 0x29 handler of this overlay, reached from the route dispatcher at 0x801FC704 through the jal at 0x801FC78C with both packed record words forwarded unchanged: it queries the shared scenario bank D_8014686C through func_8015B5D4(D_8014686C, 7) and returns 0 when that reports nonzero, then requires the second word high half in 7..8 and the first word equal to 0x5C0000; on that match it sets flag 7 of the same bank through func_8015B580(D_8014686C, 7), requests primary scene state 3 with sub-state 0xA (D_80146874 = 3, D_80146875 = 0xA) and returns 1 rather than queueing a front-end mode. No image word of this target holds 0x801FC8AC, so the dispatcher jal is its only reference.'
   - - 23876
     - c
-    - requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944
-    - '@source: src/bof3/scenario/requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944.c'
+    - requestPrimaryQueueEnd
+    - '@source: src/bof3/scenario/requestPrimaryQueueEnd.c'
     - '@behavior: Route 0x25 handler of this overlay, reached from the dispatcher at 0x801FC704 through the jal at 0x801FC77C with both packed record words forwarded unchanged: after the shared wait func_8015B5D4(D_8014686C, 0x15) reports nonzero it returns 0, then it requires the second word to equal 0x418000 and the first word high half to fall in 0x20..0x23, otherwise it returns 0; on that path it requests primary scene state 4 with sub-state 5 (D_80146874 = 4, D_80146875 = 5), queues front-end mode 0x33 through the overlay tail at 0x801FCC9C and returns that tail result sign-extended from its low byte. No image word of this target holds 0x801FC944, so the dispatcher jal is its only reference.'
   - - 24028
     - c
@@ -345,16 +345,16 @@ segments:
     - '@behavior: Route 0x63 handler of this overlay, reached from the dispatcher at 0x801FC704 with both packed record words forwarded unchanged: it first waits through func_8015B5D4(D_8014686C, 0x1B); a zero answer requires the front-side byte D_80143F03 to read 2, the first word to equal 0xA8000 and the second word high half 0x24..0x25, then sets the shared progress byte D_80146865 to 1 and requests primary state 6 with sub-state 5 while queuing front-end mode 0x0C; a nonzero answer requires D_80143F03 to read 3, the second word to equal 0xB8000 and the first word high half 5..6, then a second wait func_8015B5D4(D_8014686C, 0x1C) chooses state 6 with sub-state 0x0D and queued mode 0x11 or, when zero, the front-end startup helper func_8015C088, state 6 with sub-state 0x0F and the return value 1. Both queued paths share one call to the overlay tail at 0x801FCC9C and return its result sign-extended from the low byte (sll/sra 24); every failed record or byte test returns 0.'
   - - 24732
     - c
-    - queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0300_801FCC9C
+    - queueFrontEndPrimary
   - - 24796
     - c
     - forwardRoute47RecordScenarioScena0300_801FCCDC
     - '@source: src/bof3/scenario/forwardRoute47RecordScenarioScena0300_801FCCDC.c'
-    - '@behavior: Route-0x47 gate in front of the overlay packed-record handler requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C: when the shared route word D_80143F00 reads 0x47 it forwards its two incoming packed record words unchanged and returns the sign-extended low byte of that handler result, otherwise it returns 0 without reading or writing any other state; the 0x18-byte frame only keeps $ra across the call.'
+    - '@behavior: Route-0x47 gate in front of the overlay packed-record handler requestArmPackedMatch: when the shared route word D_80143F00 reads 0x47 it forwards its two incoming packed record words unchanged and returns the sign-extended low byte of that handler result, otherwise it returns 0 without reading or writing any other state; the 0x18-byte frame only keeps $ra across the call.'
   - - 24860
     - c
-    - requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C
-    - '@source: src/bof3/scenario/requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C.c'
+    - requestArmPackedMatch
+    - '@source: src/bof3/scenario/requestArmPackedMatch.c'
     - '@behavior: Route-0x47 packed-record handler of this overlay, reached from the gate at 0x801FCCDC through the jal at 0x801FCCFC with both incoming packed record words forwarded unchanged: after the shared wait func_8015B5D4(D_8014686C, 0x1E) reports nonzero it returns 0, then it requires the second word to equal 0x490000 and the first word high half to fall in 0x0E..0x11, otherwise it returns 0; on that path it calls the shared no-argument helper func_8015C088, requests primary scene state 8 with sub-state 2 (D_80146874 = 8, D_80146875 = 2), arms the shared frame countdown D_80146876 with 0x1E and answers 1. The 0x20-byte frame only keeps $s0, $s1 and $ra across the two calls, and no image word of this target holds 0x801FCD1C, so that jal is its only reference.'
   - - 25012
     - c
@@ -363,8 +363,8 @@ segments:
     - '@behavior: Word 19 of the overlay 32-word code-pointer run at 0x801FCF84 forwards its two unsigned halfword coordinates with the single five-byte lookup record at 0x801FD030 (route key 0x63, coordinates 0x23 and 0x4F, flags 0x01, span count 1) and the length 1 to the resident helper func_801A7AD8, which matches that record against the shared route word D_80143F00 and the coordinate pair; a negative signed-byte answer returns -1 without touching any other state, otherwise it calls the indexed no-argument handler of the run at 0x801FD038 (0x801FCE18, 0x801FCE6C, 0x801FCEDC, 0x801FCEFC, of which only entry 0 is reachable with a single record) and answers the constant 1, discarding the handler result. It performs no stores of its own and its 0x18-byte frame only keeps $ra across the two calls.'
   - - 25112
     - c
-    - startAction19LatchPhaseByteTwoAndRequestPrimaryState7ArmCountdown30ScenarioScena0300_801FCE18
-    - '@source: src/bof3/scenario/startAction19LatchPhaseByteTwoAndRequestPrimaryState7ArmCountdown30ScenarioScena0300_801FCE18.c'
+    - audioLatchPhaseTwo
+    - '@source: src/bof3/scenario/audioLatchPhaseTwo.c'
     - '@behavior: Word 0 of the overlay four-word no-argument handler run at 0x801FD038 ({0x801FCE18, 0x801FCE6C, 0x801FCEDC, 0x801FCEFC}), which dispatchRoute63CoordinateLookupHandlerScenarioScena0300_801FCDB4 (0x801FCDB4) indexes with the signed-byte answer of the resident route lookup func_801A7AD8 and calls after its gate, discarding the handler answer; that pointer word is its only in-image reference and no jal or j word of the payload targets it, so it takes no arguments. It starts front-end action 0x19 through the shared action helper func_80150224, latches the shared front-end phase byte D_80143BB0 to 2, runs the shared front-end startup helper func_8015C088, then requests primary scene state 7 by storing 7 in the shared state byte D_80146874, clears the shared sub-state byte D_80146875 and arms the shared countdown D_80146876 with 0x1E (30), in the original store order 0x1E, then 7, then 0. It answers nothing: the body ends on jr $ra with no value setup, and the value 7 that remains in $v0 afterwards is the constant of that final store. The 84 bytes use a 0x18-byte frame that keeps only $ra across the two calls, every shared store re-materialises the 0x8014 page in $at on its own, and the zero store writes $zero directly, so all four stored values are literals.'
   - - 25196
     - c

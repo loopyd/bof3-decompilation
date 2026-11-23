@@ -134,7 +134,7 @@ void func_801C187C(s32 arg0);
 
 void dispatchPrimaryState(void);
 void bootPrimaryState(void);
-void selectRouteForPendingWorld(void);
+void selectRoutePendingWorld(void);
 void seedRouteEnterState3(void);
 void seedRouteEnterState2(void);
 void stageRoutePath2Setup(void);

@@ -42,11 +42,11 @@ void func_80196070(void);
  * and indexes that base), so this body is entry 8 of the run and no other site
  * names it. The decay, draw and reset roles come from this body's own literals
  * and offsets: +0x2E is the unsigned work halfword the exact siblings
- * advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0
+ * stateOriginTickCountdown
  * and
- * advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenResetRecordTableScenarioSce15ef100_801D0DD8
+ * stateOriginZOrigin
  * advance, +0x3 is the intensity byte the exact sibling
- * drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C
+ * renderBeamDecayIntensity
  * decays by 4 and +0x9 its countdown byte, the +0x18/+0x34 point pair is the
  * pair that sibling draws between, and 0x80196070 is the resident reset helper
  * the exact lifts in the neighbouring scenario overlays call to clear work
@@ -55,7 +55,7 @@ void func_80196070(void);
  * Shape evidence: the one-cell-load spelling of the two decrements, the
  * post-call cell re-read that feeds the draw call, and the
  * `if (--D_1F800044[9] == 0)` countdown tail are the exact shapes of
- * drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C
+ * renderBeamDecayIntensity
  * in this overlay; this body differs by passing the decayed +0x3 byte instead
  * of the constant 0x40 and by calling the reset helper instead of re-arming.
  * @status exact

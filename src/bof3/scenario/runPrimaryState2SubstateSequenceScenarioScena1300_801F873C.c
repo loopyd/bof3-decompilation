@@ -95,7 +95,7 @@ void func_801C16B8(void);
  *
  * Shape: statement order, operand forms, offset spellings and declaration style
  * come from the exact lift
- * claimFrontEndRecordWaitProgress8ArmFrontEndPhase6SeedSelectorContextArmEffectBankAndResetHandlerScenarioScena1300_801F84B8
+ * claimSelectorContextBank
  * (0x801F84B8, this target, the neighbouring entry of the same table), whose
  * claim arm measured the same `sb` of the call result, the same `andi`-then-
  * compare against 0xFF and the same reload of D_801FBFEC for the second record

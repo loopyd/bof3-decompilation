@@ -41,7 +41,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
  * 0x8014 page in $at on its own. The following table word func_801FDEA4
  * (0x801FDEA4) keeps the same flag-0x27 probe and clear run but arms sub-state
  * 0x0F and adds the D_80144F28 flag-0x05/0x06 legs, and the per-record callback
- * word waitFlag5ThenSetSubstate0AClearProgressAndSharedStateBytesAndRequestPrimaryState2ScenarioScena0600_801FCEC0
+ * word waitProgressBytesPrimary
  * (0x801FCEC0) keeps the same wait-then-clear-then-request shape for flag 0x05
  * and primary state 0x02, so those neighbours are shape evidence and not clone
  * proof; no other payload in the tree carries these 0x70 bytes.

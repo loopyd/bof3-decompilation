@@ -40,7 +40,7 @@ void func_8015C058(void);
  * spans, so this was a relocation-different twin and not a clone. The same three
  * differences hold against startAction26LatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801F8C1C
  * (0x801F8C1C, delta -0x3B5C) and
- * startActionZeroLatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801F92EC
+ * audioActionLatchRelease
  * (0x801F92EC, delta -0x348C).
  * @status exact
  * @match 100.00

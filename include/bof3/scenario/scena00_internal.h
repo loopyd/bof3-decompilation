@@ -5,7 +5,7 @@
 
 typedef void (*Scena00RecordCallback)(void* record, u32 arg1);
 
-/* Scenario record passed to dispatchRecordCallbackByByte7A; only the callback
+/* Scenario record passed to callRecordCallbackByte7; only the callback
  * selector byte at 0x7A is proven. */
 typedef struct Scena00RecordDispatch {
   u8 pad_00[0x7A];
@@ -490,7 +490,7 @@ void func_8017A97C(void* arg0);
 void func_801BE1B0(u32 arg0);
 void func_801C187C(s32 arg0);
 
-void drawWorkObjectTintSprite(s32 semi_transparent);
+void renderObjectTintSprite(s32 semi_transparent);
 /* Sprite emitter shared with the cursor-trail handlers: projects both cursor
  * points and tints the primitive. The two 12-byte cursors plus the 3-byte tint
  * are proved by this overlay's callers (argument image) and by the callee's own
@@ -538,7 +538,7 @@ void func_801F9868(void);
  * prototype is proven by that call site.
  * @source 0x801F8D90
  */
-void drawLinkedRecordCursorBeam(void);
+void renderLinkedCursorBeam(void);
 s32  returnZero(void);
 void resetEffectBank(void);
 

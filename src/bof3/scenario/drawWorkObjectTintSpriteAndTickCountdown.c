@@ -2,7 +2,7 @@
 
 /* @source 0x801F7350
  * @behavior Advances the per-frame work-object countdown after reseeding the
- * scratchpad work object's sprite through drawWorkObjectTintSprite(1): while
+ * scratchpad work object's sprite through renderObjectTintSprite(1): while
  * the object's byte at 0x09 is non-zero it is decremented by one, and when it
  * reads zero the object's state byte at 0x01 is incremented and byte 0x09 is
  * re-armed to 0xFF so the same handler runs again. Takes no arguments and
@@ -12,7 +12,7 @@
  * @residual none
  */
 void drawWorkObjectTintSpriteAndTickCountdown(void) {
-  drawWorkObjectTintSprite(1);
+  renderObjectTintSprite(1);
 
   if (D_1F800044[9] != 0) {
     D_1F800044[9]--;

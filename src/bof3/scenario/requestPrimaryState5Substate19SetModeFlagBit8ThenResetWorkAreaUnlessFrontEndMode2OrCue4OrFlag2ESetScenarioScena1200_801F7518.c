@@ -46,7 +46,7 @@ void func_80196070(void);
  * handler for that byte reading 1; the neighbours in the same run are entry 0,
  * advanceCounterPhaseQueueCue20AOnRolloverAndAdvanceWorkByte2WhenCounterFullScenarioScena1200_801F7410
  * (0x801F7410), and
- * clearFieldAdvanceStateAndQueueCue215ScenarioScena1200_801F7BEC (0x801F7BEC,
+ * stateFieldQueueScenario (0x801F7BEC,
  * entry 2). That pointer word is the only little-endian word of the overlay
  * payload that holds 0x801F7518, so this span is reached from that table alone.
  * It requests primary scene state 5 with secondary sub-state 0x19, raises bit 8
@@ -65,7 +65,7 @@ void func_80196070(void);
  * overlay handler at 0x801F7348 and were equal, because that twin sits at the
  * same offset inside its own dispatch run and its relative branches therefore
  * encode identically; the twin had been lifted exact as
- * requestPrimaryState5Substate19SetModeFlagBit8ThenResetWorkAreaUnlessFrontEndMode2OrCue4OrFlag2ESetScenarioScena1200_801F7348,
+ * requestFlagAreaUnless,
  * so this body transcribes that statement order while keeping the dispatch
  * role recorded for this span.
  * @status exact

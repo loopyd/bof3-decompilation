@@ -43,7 +43,7 @@ void func_801A65A0(u8 *entry);
  * holding 0xFF for both comparisons before it becomes the entry base.
  *
  * Shape and statement order come from the same target's near-identical sibling
- * claimTwoWorkRecordsThenActivateBothWithOverlayActivationEntriesScenarioScena1300_801F8C1C
+ * claimActivateBothActivation
  * (0x801F8C1C), whose 240 bytes run the same allocator pair, the same 0x80146888
  * flag stores and the same two func_801A65A0 activations over entries 0x10 bytes
  * apart. That span and this one differ in exactly two words: its internal

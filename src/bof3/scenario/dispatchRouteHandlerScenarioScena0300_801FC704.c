@@ -4,7 +4,7 @@ extern u16 D_80143F00;
 
 s32 requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC(s32 arg0, s32 arg1);
 s32 requestPrimaryState3Substate0AOnPackedRecordMatchScenarioScena0300_801FC8AC(s32 arg0, s32 arg1);
-s32 requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944(s32 arg0, s32 arg1);
+s32 requestPrimaryQueueEnd(s32 arg0, s32 arg1);
 s32 requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(s32 arg0, s32 arg1);
 s32 requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C(s32 arg0, s32 arg1);
 s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8(s32 arg0, s32 arg1);
@@ -13,7 +13,7 @@ s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCA
  * @behavior Route dispatcher of this overlay: it reads the shared unsigned
  * route word D_80143F00 and, for the six route values 0x25, 0x29, 0x32, 0x33,
  * 0x45 and 0x63, runs the matching overlay route handler — 0x25 runs
- * requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944, 0x29 runs
+ * requestPrimaryQueueEnd, 0x29 runs
  * requestPrimaryState3Substate0AOnPackedRecordMatchScenarioScena0300_801FC8AC, 0x32 runs
  * requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8,
  * 0x33 runs
@@ -26,7 +26,7 @@ s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCA
  * save them into $s0/$s1 before testing that pair against their own literals.
  * Routes 0x25, 0x32, 0x45 and 0x63 write the shared state byte D_80146874 and
  * sub-state byte D_80146875 and return the front-end mode id that
- * queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0300_801FCC9C consumes; 0x29 writes the
+ * queueFrontEndPrimary consumes; 0x29 writes the
  * same two bytes as state 3 / sub-state 0xA and returns 1, and 0x33 writes
  * only the state byte and returns 0. The route word is compared as a signed int after its zero-extended
  * halfword load, so the dispatch tree is the compiler's balanced equality
@@ -41,7 +41,7 @@ s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCA
 s32 dispatchRouteHandlerScenarioScena0300_801FC704(s32 arg0, s32 arg1) {
   switch (D_80143F00) {
   case 0x25:
-    return (s8)requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944(arg0, arg1);
+    return (s8)requestPrimaryQueueEnd(arg0, arg1);
 
   case 0x29:
     return (s8)requestPrimaryState3Substate0AOnPackedRecordMatchScenarioScena0300_801FC8AC(arg0, arg1);

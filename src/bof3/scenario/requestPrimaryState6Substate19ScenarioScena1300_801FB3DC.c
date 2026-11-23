@@ -16,7 +16,7 @@ void func_8015C088(void);
  * shared-byte stores. No in-image jal targets the address: its only image word
  * is 0x801FBFC0, entry 2 of the thirteen-entry null-terminated pointer run at
  * 0x801FBFB8 (0x801FBFB8 through 0x801FBFE8), the same table whose entry 0 is
- * the exact sibling incrementWorkHalfword7EScenarioScena1300_801FB390
+ * the exact sibling incrementWorkHalfword7Scenario
  * (0x801FB390) and whose entry 1 is
  * requestPrimaryState3Substate5ScenarioScena1300_801FB3A4 (0x801FB3A4) in this
  * overlay. The 0x38 bytes repeat the exact call-then-two-store shape of the

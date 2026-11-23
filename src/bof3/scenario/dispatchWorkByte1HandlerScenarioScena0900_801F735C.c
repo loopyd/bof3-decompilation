@@ -5,7 +5,7 @@ typedef void (*ScenarioScena0900WorkStateHandler)(void);
 /* Overlay-local two-word work-object handler table at 0x801FE384, selected by
  * the scratchpad work object's unsigned byte 1: entry 0 is func_801F73A0
  * (0x801F73A0) and entry 1 is
- * resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0 (0x801F73F0, the
+ * stateNoRecordActive (0x801F73F0, the
  * reset handler this target already lifts); the first non-pointer word,
  * 0x0003FFFE, sits immediately after them at 0x801FE38C. Both words are
  * overlay handler addresses reached only through this dispatcher, and the
@@ -21,7 +21,7 @@ extern ScenarioScena0900WorkStateHandler func_801FE384[];
  * offset 1, scales it by four and invokes that entry of the overlay-local
  * two-word handler table at 0x801FE384 with no arguments - entry 0 =
  * func_801F73A0 (0x801F73A0) and entry 1 =
- * resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0 (0x801F73F0), as
+ * stateNoRecordActive (0x801F73F0), as
  * this target's already-lifted sibling records. It reads no other state and
  * writes none; the 0x18-byte frame only keeps $ra across the indirect call, and
  * the pointer-cell load precedes frame creation, so the original bytes read

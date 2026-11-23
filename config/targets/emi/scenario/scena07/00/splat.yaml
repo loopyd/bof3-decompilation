@@ -40,17 +40,17 @@ segments:
     - '@behavior: Overlay handler dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local three-entry in-image code-pointer run based at 0x801FDD3C with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call.'
   - - 596
     - c
-    - clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54
-    - '@source: src/bof3/scenario/clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54.c'
+    - stateTableIncrementCountdown
+    - '@source: src/bof3/scenario/stateTableIncrementCountdown.c'
     - '@behavior: Overlay work-state handler for scratch work-object byte 2 = 0: calls the table-clearing helper at 0x801F8358 (zeroes the lead byte of each of the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800, then the two payload flag bytes at 0x801FDFC4 and 0x801FDFC8), then reloads the scratch work object at pointer slot 0x1F800044 + 0x44, stores 0x40 into its word at 0x0C and increments its byte at 0x02 so the run moves to the next handler; takes no arguments and returns nothing.'
   - - 656
     - c
-    - claimFreeWorkRecordEveryEighthCountdownStepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F6E90
-    - '@source: src/bof3/scenario/claimFreeWorkRecordEveryEighthCountdownStepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F6E90.c'
+    - claimFreeEveryEighth
+    - '@source: src/bof3/scenario/claimFreeEveryEighth.c'
     - '@behavior: Overlay work-state handler for scratch work-object byte 2 = 1, the middle entry of the three-entry handler run at 0x801FDD3C: it reads the scratchpad work object at pointer cell 0x1F800044 and, when that object''s 32-bit word at offset 0x0C reads zero in its low three bits, claims one work record through the scan at 0x801F8394 and passes a non-zero result in $a0 to the record seeder at 0x801F83D0; it then calls the work-table stepper at 0x801F85D8, re-reads the pointer cell, decrements the object''s word at 0x0C in place and, when the decremented count reads zero, increments its byte at 0x02 so the dispatcher at 0x801F6E10 moves the run to its next entry. Both written fields are the ones entry 0 (0x801F6E54) sets: 0x40 into word 0x0C and the byte 0x02 increment. It takes no arguments, returns nothing and its 0x18-byte frame keeps only $ra.'
   - - 788
     - c
-    - clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F6F14
+    - stateNoCallbackRan
   - - 840
     - c
     - dispatchWorkByte2HandlerScenarioScena0700_801F6F48
@@ -72,16 +72,16 @@ segments:
     - func_801F7050
   - - 1272
     - c
-    - updateTrailBufferSubtractWork34AddWork14To3CAccelerate14SetCountdownByte9AtTargetAdvanceWorkByte2ScenarioScena0700_801F70F8
-    - '@source: src/bof3/scenario/updateTrailBufferSubtractWork34AddWork14To3CAccelerate14SetCountdownByte9AtTargetAdvanceWorkByte2ScenarioScena0700_801F70F8.c'
+    - stateTrailBufferSubtract
+    - '@source: src/bof3/scenario/stateTrailBufferSubtract.c'
     - '@behavior: Overlay per-frame handler, entry 1 of the eight-word in-image code-pointer run labelled D_801FDD50 at 0x801FDD50 that the state handler at 0x801F700C indexes with the work object''s unsigned byte at +0x02, so it runs while that byte reads 1. It runs the trail rebuild at 0x801F88B8 on the trail buffer base 0x800E48E0 and then the trail draw pass at 0x801F8BE8 on that same base, discarding both results. It then loads the scratchpad work pointer from slot 0x1F800044 and, through that saved pointer, subtracts 0x10000 from the work word at +0x34, stores the work word at +0x38 back with the value just loaded from it, and adds the work word at +0x14 into the work word at +0x3C; that word at +0x14 is read again and gains 0x800000 when it reads non-zero. When the re-read work word at +0x34 equals the work word at +0x0C and the work word at +0x38 equals the work word at +0x10 it stores 0x2F into the work object''s byte at +0x09 and increments its byte at +0x02 through a third read of the pointer slot, so the run moves to entry 2. Takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the two calls; no in-image jal reaches the address, whose only reference is the run word at 0x801FDD54.'
   - - 1472
     - asm
     - func_801F71C0
   - - 1612
     - c
-    - updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F724C
-    - '@source: src/bof3/scenario/updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F724C.c'
+    - stateTrailBufferReload
+    - '@source: src/bof3/scenario/stateTrailBufferReload.c'
     - '@behavior: Overlay per-frame handler, entry 3 of the eight-word byte-2 code-pointer run at 0x801FDD50 that the state handler at 0x801F700C indexes with the work object''s unsigned byte at +0x02: it runs the trail rebuild at 0x801F88B8 on the trail buffer base 0x800E48E0 and then the trail draw pass at 0x801F8BE8 on that same base, discarding both results, reads the shared unsigned halfword at 0x800E4C1E, loads the scratchpad work pointer from slot 0x1F800044 while that value is still live, stores the halfword back plus 6 modulo 65536, decrements the work object''s countdown byte at +0x09 modulo 256, and when the decremented count reaches zero reads the scratchpad pointer slot again and reloads that countdown byte with 0x20 before reading the slot a third time and incrementing the work object''s byte at +0x02, the state machine handler index, so that increment advances the run. Takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the two calls; no in-image jal reaches the address, whose only reference is the run word at 0x801FDD5C.'
   - - 1760
     - c
@@ -101,32 +101,32 @@ segments:
     - c
     - dispatchWorkByte2HandlerScenarioScena0700_801F73C4
     - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F73C4.c'
-    - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local three-entry in-image code-pointer run labelled D_801FDD70 at 0x801FDD70 (0x801F7408 / 0x801F7480 / resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 3 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 3.'
+    - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local three-entry in-image code-pointer run labelled D_801FDD70 at 0x801FDD70 (0x801F7408 / 0x801F7480 / stateTableIdleScenario) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 3 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 3.'
   - - 2056
     - asm
     - func_801F7408
   - - 2176
     - c
-    - claimStepCountWorkRecordsRampDrawBoundEverySixteenthCountdownStepTickWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7480
-    - '@source: src/bof3/scenario/claimStepCountWorkRecordsRampDrawBoundEverySixteenthCountdownStepTickWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7480.c'
-    - '@behavior: Entry 1 of the three-entry in-image code-pointer run based at 0x801FDD70 (0x801F7408 / this address / resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0), which dispatchWorkByte2HandlerScenarioScena0700_801F73C4 indexes with the scratchpad work object''s unsigned byte at offset 0x02; no in-image jal reaches the address. It loads the work-object pointer cell at 0x1F800044 ahead of the frame reservation, gates on the work object''s 32-bit countdown word at 0x0C masked by D_801FDD7C[byte 0x09] and, when that gate reads zero, adds the per-step record count D_801FDD84[byte 0x09] to the effect object''s unsigned halfword at +0x10 published by pointer cell 0x801FDFBC and claims D_801FDD84[byte 0x09] free records in a do/while loop through the 0x40x0x20 pool scan at 0x801F9DD4, seeding each with 0x801F9E10. It then advances byte 0x09 on the frames whose countdown word reads zero in its low nibble, calls the per-frame pass at 0x801F9EFC over the 0x800E515C work table, decrements the countdown word at 0x0C and, when it reaches zero, increments work byte 0x02 so the dispatcher advances the run. Takes no arguments and returns nothing; its 0x18-byte frame keeps $ra and $s0.'
+    - claimRampBoundSixteenth
+    - '@source: src/bof3/scenario/claimRampBoundSixteenth.c'
+    - '@behavior: Entry 1 of the three-entry in-image code-pointer run based at 0x801FDD70 (0x801F7408 / this address / stateTableIdleScenario), which dispatchWorkByte2HandlerScenarioScena0700_801F73C4 indexes with the scratchpad work object''s unsigned byte at offset 0x02; no in-image jal reaches the address. It loads the work-object pointer cell at 0x1F800044 ahead of the frame reservation, gates on the work object''s 32-bit countdown word at 0x0C masked by D_801FDD7C[byte 0x09] and, when that gate reads zero, adds the per-step record count D_801FDD84[byte 0x09] to the effect object''s unsigned halfword at +0x10 published by pointer cell 0x801FDFBC and claims D_801FDD84[byte 0x09] free records in a do/while loop through the 0x40x0x20 pool scan at 0x801F9DD4, seeding each with 0x801F9E10. It then advances byte 0x09 on the frames whose countdown word reads zero in its low nibble, calls the per-frame pass at 0x801F9EFC over the 0x800E515C work table, decrements the countdown word at 0x0C and, when it reaches zero, increments work byte 0x02 so the dispatcher advances the run. Takes no arguments and returns nothing; its 0x18-byte frame keeps $ra and $s0.'
   - - 2496
     - c
-    - resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0
+    - stateTableIdleScenario
   - - 2548
     - c
     - dispatchWorkByte2HandlerScenarioScena0700_801F75F4
     - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F75F4.c'
-    - '@behavior: Overlay state dispatcher for the work object''s byte at offset 0x02: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 0x02, scales it by four and invokes that entry of the overlay-local four-word in-image code-pointer run labelled D_801FDD8C at 0x801FDD8C (0x801F7638 / 0x801F76D0 / 0x801F77AC / 0x801F7810, closed by the data label D_801FDD9C, a byte table tickObjectRampByStepTableDrawQuadArmCountdownAndAdvanceHandlerScenarioScena0700_801F76D0 reads) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is entry 4 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 4; it is instruction-for-instruction identical to the byte-2 dispatchers 0x801F6E10, 0x801F700C, 0x801F73C4 and 0x801F786C, differing only in instruction 9, the table-address immediate word.'
+    - '@behavior: Overlay state dispatcher for the work object''s byte at offset 0x02: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 0x02, scales it by four and invokes that entry of the overlay-local four-word in-image code-pointer run labelled D_801FDD8C at 0x801FDD8C (0x801F7638 / 0x801F76D0 / 0x801F77AC / 0x801F7810, closed by the data label D_801FDD9C, a byte table tickObjectRampQuad reads) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is entry 4 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 4; it is instruction-for-instruction identical to the byte-2 dispatchers 0x801F6E10, 0x801F700C, 0x801F73C4 and 0x801F786C, differing only in instruction 9, the table-address immediate word.'
   - - 2616
     - c
-    - seedSharedEffectObjectFromWorkPositionAndDistancePublishClearByte9ArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7638
-    - '@source: src/bof3/scenario/seedSharedEffectObjectFromWorkPositionAndDistancePublishClearByte9ArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7638.c'
+    - stateEffectObjectDistance
+    - '@source: src/bof3/scenario/stateEffectObjectDistance.c'
     - '@behavior: Overlay handler and word 0 of the four-word in-image code-pointer run labelled D_801FDD8C at 0x801FDD8C, which dispatchWorkByte2HandlerScenarioScena0700_801F75F4 indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads zero. It loads the work-object pointer cell at 0x1F800044 before it creates its frame, passes that object''s signed words at 0x34 and 0x38 to the shared main-executable distance helper at 0x8015477C as a 16.16 coordinate pair, and through a second read of the pointer cell stores the helper''s answer shifted left by 16 into the object''s word at 0x3C. It then copies that pair and distance into the shared main-RAM effect object: word 0x800E5148 takes the object''s 0x34 word, 0x800E514C its 0x38 word and 0x800E5150 its re-read 0x3C distance, the halfword at 0x800E5158 (the ramp counter the quad helper at 0x801F97E0 walks) is zeroed, and the address 0x800E5148 is materialised once and both published into the effect-object pointer cell at 0x801FDFBC and used as the base of the first copy, so the sibling run member at 0x801F77AC ticks that object afterwards. Through a third read of the pointer cell it clears the work object''s byte at 0x09, arms its countdown word at 0x0C with 0x5F and increments its byte at 0x02, the handler index that advances this run. It takes no arguments, returns nothing, and its 0x28-byte frame keeps only $ra at 0x20.'
   - - 2768
     - c
-    - tickObjectRampByStepTableDrawQuadArmCountdownAndAdvanceHandlerScenarioScena0700_801F76D0
-    - '@source: src/bof3/scenario/tickObjectRampByStepTableDrawQuadArmCountdownAndAdvanceHandlerScenarioScena0700_801F76D0.c'
+    - tickObjectRampQuad
+    - '@source: src/bof3/scenario/tickObjectRampQuad.c'
     - '@behavior: Per-frame tick of the shared effect object published at 0x801FDFBC and word 1 of the four-word in-image code-pointer run labelled D_801FDD8C at 0x801FDD8C, which dispatchWorkByte2HandlerScenarioScena0700_801F75F4 indexes with the work object unsigned byte at +0x02, so it runs while that byte reads one. It loads the work-object pointer cell at 0x1F800044 before it creates its frame, masks that object countdown word at +0x0C with the byte its ramp step index at +0x09 selects from the overlay-local mask table at 0x801FDD9C and, while the mask result is zero, adds the amount the same step selects from the overlay-local amount table at 0x801FDDA4 to the published object unsigned halfword at +0x10, which raises the ramp the quad helper at 0x801F97E0 walks. Through a second read of the pointer cell it advances the step index once every sixteenth countdown tick, then calls the quad helper with a fresh read of the published object pointer as its only argument, so the object is drawn once per tick. Through a third read of the pointer cell it decrements that object countdown word and, when the decremented value reaches zero, reloads it with 0x10 and increments the work object unsigned byte at +0x02, the handler index of the byte-2 state machine, so the expired countdown advances the run to 0x801F77AC. It takes no arguments, returns nothing, and its 0x18-byte frame keeps only $ra across the one call. The address is entry 1 of the four-word run, whose word at 0x801FDD90 is the only image reference to it; the 0xDC bytes are not identical to the sibling run member at 0x801F77AC, which supplies the shape of the shared draw and advance tail only.'
   - - 2988
     - c
@@ -135,8 +135,8 @@ segments:
     - '@behavior: Per-frame tick of the effect object published in the overlay-local pointer cell at 0x801FDFBC: adds four to that object at offset 0x10 as an unsigned halfword and stores it back in the delay slot of the call, then calls the quad helper at 0x801F97E0 with the object pointer as its only argument, whose loop bound is the halfword this function advances (clamped to 0xFF), so the increment moves the drawn effect one step each call. The call clobbers the registers, so the scratchpad pointer slot at 0x1F800044 is read again afterwards; the function then decrements the work object word at offset 0x0C and, when the decremented countdown reads zero, increments the work object unsigned byte at offset 0x02, which is the handler index of the byte-2 state machine, so that increment advances the run. It takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the one call. The address is entry 2 of the four-word in-image code-pointer run labelled D_801FDD8C at 0x801FDD8C (0x801F7638 / 0x801F76D0 / this function / 0x801F7810), which dispatchWorkByte2HandlerScenarioScena0700_801F75F4 indexes with the work object byte at offset 0x02, and that run word at 0x801FDD90 is the only image reference to the address.'
   - - 3088
     - c
-    - expandObjectDistanceDrawQuadAndResetWorkAreaPastMaxDistanceScenarioScena0700_801F7810
-    - '@source: src/bof3/scenario/expandObjectDistanceDrawQuadAndResetWorkAreaPastMaxDistanceScenarioScena0700_801F7810.c'
+    - expandObjectPastMax
+    - '@source: src/bof3/scenario/expandObjectPastMax.c'
     - '@behavior: Entry 3, the last word of the four-word in-image code-pointer run labelled D_801FDD8C at 0x801FDD8C (0x801F7638 / 0x801F76D0 / 0x801F77AC / this function), which dispatchWorkByte2HandlerScenarioScena0700_801F75F4 indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads three. It loads the effect-object pointer cell at 0x801FDFBC before it creates its frame, adds 0x01000000 to that object''s signed word at offset 0x08 - the word the run entry at 0x801F7638 seeds with the work object''s 16.16 distance, so this add moves the ramp by 256.0 of that scale - and stores the sum back in the delay slot of the call that follows. It then calls the quad helper at 0x801F97E0 with the object pointer as its only argument, so the object is drawn once per tick. Because the call clobbers the registers, the pointer cell at 0x801FDFBC is read a second time afterwards; through that read the function reloads the object''s word at 0x08 and, when it reads greater than 0x0FFFFFFF, calls the shared main-executable work-area reset at 0x80196070. It never touches the work object''s handler byte at 0x02, so that reset is this run member''s only way out. It takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra at 0x10.'
   - - 3180
     - c
@@ -156,13 +156,13 @@ segments:
     - '@behavior: Overlay handler dispatcher for the scratchpad work object''s byte at offset 0x02: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 0x02, scales it by four and invokes that slot of the overlay-local three-word in-image code-pointer run based at 0x801FDDB4 (0x801F7A30 / 0x801F7AB0 / clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68, closed by the separate label D_801FDDC0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is entry 6 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 6; it is instruction-for-instruction identical to the byte-2 dispatchers 0x801F6E10, 0x801F700C, 0x801F73C4, 0x801F75F4, 0x801F786C and 0x801F7B9C, differing only in instruction 9, the table-address immediate word.'
   - - 3632
     - c
-    - seedWorkPositionPairAndDistanceClearWorkTableSetTransitionByteArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7A30
-    - '@source: src/bof3/scenario/seedWorkPositionPairAndDistanceClearWorkTableSetTransitionByteArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7A30.c'
+    - stateDistanceTransitionArm
+    - '@source: src/bof3/scenario/stateDistanceTransitionArm.c'
     - '@behavior: One-shot overlay handler, word 0 of the three-word in-image code-pointer run labelled T_801FDDB4 at 0x801FDDB4 (0x801F7A30 / 0x801F7AB0 / clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68) that dispatchWorkByte2HandlerScenarioScena0700_801F79EC indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads 0; no in-image jal reaches the address. It loads the work-object pointer cell at 0x1F800044 before it creates its frame, seeds that object''s word at 0x34 from the shared coordinate word D_80145EC4 and its word at 0x38 from D_80145EC8, and stores into the object''s word at 0x3C the distance the shared main-executable helper func_8015477C computes from that pair, shifted left by 16. It then calls the overlay''s table-clearing helper at 0x801F8358 with no arguments and, through further reads of the pointer cell, writes 1 to the work object''s transition byte at offset 0x06, arms its countdown word at 0x0C with 0x28 and increments its byte at 0x02, the handler index that advances the run to word 1 at 0x801F7AB0. Takes no arguments, returns nothing, and its 0x28-byte frame keeps only $ra at 0x20.'
   - - 3760
     - c
-    - claimFreeWorkRecordEveryFourthFrameWhileCountdownAtLeast9StepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7AB0
-    - '@source: src/bof3/scenario/claimFreeWorkRecordEveryFourthFrameWhileCountdownAtLeast9StepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7AB0.c'
+    - claimEveryFourthWhile
+    - '@source: src/bof3/scenario/claimEveryFourthWhile.c'
     - '@behavior: Entry 1, the middle entry of the three-entry work-state handler run at 0x801FDDB4 (0x801F7A30 / 0x801F7AB0 / clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68) that dispatchWorkByte2HandlerScenarioScena0700_801F79EC indexes with the scratchpad work object''s byte at offset 0x02: it passes the overlay pointer cell 0x801FDFC0 to the worker at 0x801F9330, then, while the work object''s word at 0x0C still reads at least 9, claims a free record through the scan at 0x801F8394 and, on the frames whose 0x0C word reads zero in its low two bits, seeds that record through func_801F8478; it then calls the work-table stepper at 0x801F85D8, decrements the same 0x0C word in place and, only when the decremented count reads zero, increments byte 0x02 to advance the run. It takes no arguments, returns nothing, and its 0x18-byte frame keeps only $ra.'
   - - 3944
     - c
@@ -174,8 +174,8 @@ segments:
     - '@behavior: Overlay handler dispatcher for the scratchpad work object''s byte at offset 0x02: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 0x02, scales it by four and invokes that slot of the overlay-local in-image code-pointer run based at 0x801FDDC0 (0x801F7BE0 / 0x801F7C9C / 0x801F7D6C / 0x801F7DDC / 0x801F7E68 / 0x801F7EF8 / 0x801F7FA4 / 0x801F805C / 0x801F80F0 / incrementWorkByte2ScenarioScena0700_801F8174 / incrementWorkByte2ScenarioScena0700_801F8194 / invokeHelperScenarioScena0700_801F81B4, closed by the separate work-table callback row label D_801FDDF0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is entry 7 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 7; it is instruction-for-instruction identical to the byte-2 dispatchers 0x801F6E10, 0x801F700C, 0x801F73C4, 0x801F75F4, 0x801F786C and 0x801F79EC, differing only in instruction 9, the table-address immediate word.'
   - - 4064
     - c
-    - seedWorkPositionPairAndDistancePublishBlockAt800E4C24SetHalfword800E5134ArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7BE0
-    - '@source: src/bof3/scenario/seedWorkPositionPairAndDistancePublishBlockAt800E4C24SetHalfword800E5134ArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7BE0.c'
+    - stateDistanceBlockArm
+    - '@source: src/bof3/scenario/stateDistanceBlockArm.c'
     - '@behavior: One-shot overlay handler, word 0 of the twelve-word in-image code-pointer run based at 0x801FDDC0, which dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads 0; that run word is the only image word naming the address and no in-image jal reaches it. It loads the work-object pointer cell at 0x1F800044 before it creates its frame, seeds that object''s word at 0x34 from the shared coordinate word D_80145EC4 and its word at 0x38 from D_80145EC8, and stores into the object''s word at 0x3C the distance the shared main-executable helper func_8015477C computes from that pair, shifted left by 16, through a second read of the pointer cell. It publishes that pair and distance into the shared main-RAM block at 0x800E4C24 - word 0x800E4C24 takes the object''s 0x34 word, 0x800E4C28 its 0x38 word and 0x800E4C2C its re-read 0x3C distance plus 0x2000000, while the halfword at 0x800E5134 takes 0x800 - and stores the block''s base into this overlay''s pointer cell at 0x801FDFC0. It then calls the overlay''s block setup pass at 0x801F90F4 with that base and, through a third read of the pointer cell, arms the object''s countdown word at 0x0C with 0x28 and increments the object''s byte at 0x02, the handler index that advances this run. Takes no arguments and returns nothing; its 0x28-byte frame keeps only $ra at 0x20.'
   - - 4252
     - asm
@@ -187,14 +187,14 @@ segments:
     - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local ten-word in-image code-pointer run based at 0x801FDDC8 (the D_801FDDC0 run''s suffix from its third word, closed by the data label D_801FDDF0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 8 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 8.'
   - - 4460
     - c
-    - seedWorkPositionPairAndDistanceArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7D6C
-    - '@source: src/bof3/scenario/seedWorkPositionPairAndDistanceArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7D6C.c'
+    - statePairDistanceArm
+    - '@source: src/bof3/scenario/statePairDistanceArm.c'
     - '@behavior: One-shot overlay handler, word 0 of the ten-word in-image code-pointer run based at 0x801FDDC8 (the word at 0x801FDDC8) that dispatchWorkByte2HandlerScenarioScena0700_801F7D28 indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads 0; the address is also word 2 of the twelve-word run based at 0x801FDDC0 that dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes, and those two run words are the only image words naming it. It loads the work-object pointer cell at 0x1F800044 before it creates its frame, seeds that object''s word at 0x34 from the shared coordinate word D_80145EC4 and its word at 0x38 from D_80145EC8, and stores into the object''s word at 0x3C the distance the shared main-executable helper func_8015477C computes from that pair, shifted left by 16, through a second read of the pointer cell. It then calls the overlay setup pass at 0x801FA01C with no arguments, and finally reads the pointer cell a third time, arms the object''s countdown word at 0x0C with 0x78 and increments the object''s byte at 0x02, the handler index that advances the run. Takes no arguments and returns nothing; its 0x28-byte frame only keeps $ra at 0x20.'
   - - 4572
     - c
-    - drawSemiTransparentQuadsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0700_801F7DDC
-    - '@source: src/bof3/scenario/drawSemiTransparentQuadsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0700_801F7DDC.c'
-    - '@behavior: Overlay per-frame handler, word 3 of the twelve-word in-image code-pointer run based at 0x801FDDC0 (the word at 0x801FDDCC) that dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads 3; the same word is word 1 of the ten-word run based at 0x801FDDC8, so dispatchWorkByte2HandlerScenarioScena0700_801F7D28 also selects it when that byte reads 1, and those two run words are the only image words naming the address, no in-image jal reaching it. It runs this overlay''s effect draw pass at 0x801FA38C with no arguments - that pass transforms 0x1E2 effect-table entries around the work object''s position words at 0x34, 0x38 and 0x3C and submits 0x200 semi-transparent four-vertex polygons through the primitive cursor - then re-reads the work pointer cell at 0x1F800044, decrements the work object''s word at 0x0C, stores it in the branch delay slot so both arms write, and calls the shared work-area reset helper at 0x80196070 when the stored value reaches zero. That word is the countdown armed with 0x78 by the previous word of both runs, seedWorkPositionPairAndDistanceArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7D6C. Takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the two calls.'
+    - renderSemiTransparentQuads
+    - '@source: src/bof3/scenario/renderSemiTransparentQuads.c'
+    - '@behavior: Overlay per-frame handler, word 3 of the twelve-word in-image code-pointer run based at 0x801FDDC0 (the word at 0x801FDDCC) that dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads 3; the same word is word 1 of the ten-word run based at 0x801FDDC8, so dispatchWorkByte2HandlerScenarioScena0700_801F7D28 also selects it when that byte reads 1, and those two run words are the only image words naming the address, no in-image jal reaching it. It runs this overlay''s effect draw pass at 0x801FA38C with no arguments - that pass transforms 0x1E2 effect-table entries around the work object''s position words at 0x34, 0x38 and 0x3C and submits 0x200 semi-transparent four-vertex polygons through the primitive cursor - then re-reads the work pointer cell at 0x1F800044, decrements the work object''s word at 0x0C, stores it in the branch delay slot so both arms write, and calls the shared work-area reset helper at 0x80196070 when the stored value reaches zero. That word is the countdown armed with 0x78 by the previous word of both runs, statePairDistanceArm. Takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the two calls.'
   - - 4644
     - c
     - dispatchWorkByte2HandlerScenarioScena0700_801F7E24
@@ -205,8 +205,8 @@ segments:
     - func_801F7E68
   - - 4856
     - c
-    - updateTrailBufferAddWordsCAnd10And14ToWords34And38And3CSetCountdownByte9AtTargetAdvanceWorkByte2ScenarioScena0700_801F7EF8
-    - '@source: src/bof3/scenario/updateTrailBufferAddWordsCAnd10And14ToWords34And38And3CSetCountdownByte9AtTargetAdvanceWorkByte2ScenarioScena0700_801F7EF8.c'
+    - stateTrailBufferTarget
+    - '@source: src/bof3/scenario/stateTrailBufferTarget.c'
     - '@behavior: Overlay per-frame handler: entry 5 of the twelve-word in-image code-pointer run based at 0x801FDDC0 (the word at 0x801FDDD4), which dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad work object''s unsigned byte at offset 0x02, so this handler runs while that byte reads 5. It runs the trail rebuild at 0x801F88B8 on the trail buffer base 0x800E48E0, then the trail draw pass at 0x801F8BE8 on that same base, discarding both results; then loads the work-object pointer cell at 0x1F800044 once and, through that saved pointer, adds the work object''s word at 0x0C into its word at 0x34, its word at 0x10 into its word at 0x38 and its word at 0x14 into its word at 0x3C. When the updated word at 0x34 again reads equal to the target word at 0x18 and the updated word at 0x38 again reads equal to the target word at 0x1C, it stores 0x2F into the work object''s byte at offset 0x09 through that same saved pointer, then re-reads the pointer cell and increments the work object''s byte at offset 0x02, the state machine''s handler index, through the re-read pointer. Both comparisons re-read the words they just stored, and the 0x2F is materialised in the branch delay slot of the second comparison. Takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the two calls. No in-image jal reaches the address: the run word at 0x801FDDD4 is the only image word naming it.'
   - - 5028
     - asm
@@ -235,8 +235,8 @@ segments:
     - func_801F81D4
   - - 5976
     - c
-    - clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358
-    - '@source: src/bof3/scenario/clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358.c'
+    - stateTableFlagBytes
+    - '@source: src/bof3/scenario/stateTableFlagBytes.c'
     - '@behavior: Overlay table-clearing helper, a leaf with no frame: zeroes the lead byte of each of the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800 in a bottom-tested walk whose record-pointer advance sits in the back edge delay slot, then zeroes the two payload flag bytes at 0x801FDFC4 and 0x801FDFC8; the lead byte is the claim flag the same-table scan at 0x801F8394 tests. Two in-payload calls name it, jal 0x801F8358 at 0x801F6E5C and 0x801F7A6C, and no image word holds its address.'
   - - 6036
     - c
@@ -257,8 +257,8 @@ segments:
     - func_801F86BC
   - - 6960
     - c
-    - countdownReload32ThenAdvanceHandlerScenarioScena0700_801F8730
-    - '@source: src/bof3/scenario/countdownReload32ThenAdvanceHandlerScenarioScena0700_801F8730.c'
+    - countdownAdvanceHandlerScenario
+    - '@source: src/bof3/scenario/countdownAdvanceHandlerScenario.c'
     - '@behavior: Frame-countdown handler for one work-table entry: it decrements the entry byte at +0x02, returns while that unsigned count is nonzero, and when it reaches zero reloads the byte with the constant 0x20 and increments the handler-index byte at +0x01 so the entry moves to the next callback of its row. The entry pointer is the only argument and it returns nothing; the entry is one of the eight 0x1C-byte records of the 0x800E4800 work table walked by func_801F85D8, which indexes the overlay row at 0x801FDDF0 with the record byte +0x01, and this function is that row''s entry 1 (0x801F86BC / 0x801F8730 / 0x801F8764 / ...).'
   - - 7012
     - asm
@@ -297,7 +297,7 @@ segments:
     - func_801F9BDC
   - - 12712
     - c
-    - clearWorkTableAt800E515CScenarioScena0700_801F9DA8
+    - stateWorkTableScenario
   - - 12756
     - c
     - findFreeWorkRecordAt800E515CScenarioScena0700_801F9DD4
@@ -318,7 +318,7 @@ segments:
     - dispatchScenarioStateHandlerScenarioScena0700_801FA65C
   - - 15000
     - c
-    - clearSharedByteAndAdvanceStateScenarioScena0700_801FA698
+    - stateSharedByteScenario
   - - 15028
     - asm
     - func_801FA6B4
@@ -353,8 +353,8 @@ segments:
     - func_801FC2D0
   - - 25524
     - c
-    - addFourTimesSignedTableStepToHalfword8014932AScenarioScena0700_801FCFB4
-    - '@source: src/bof3/scenario/addFourTimesSignedTableStepToHalfword8014932AScenarioScena0700_801FCFB4.c'
+    - fourTimesSignedTable
+    - '@source: src/bof3/scenario/fourTimesSignedTable.c'
     - '@behavior: Leaf step handler of this overlay: it takes the low two bits of the shared per-frame counter D_80143E6C as an index into the four-entry signed step row at 0x801FDE88 (0x801FDE88 through 0x801FDE8B = 0, 1, 0, -1), publishes mode 2 in the shared status byte D_80149333, then adds four times that signed step to the shared halfword counter D_8014932A, wrapping modulo 65536. It reads only D_80143E6C and the step row, writes D_80149333 and D_8014932A, takes no arguments, returns nothing, and keeps no stack frame and no saved register. Two in-image jal sites reach it, 0x801FCF74 and 0x801FCF90 inside func_801FC2D0, each taken once the shared sub-state byte D_80146875 has grown to 0x20 and then to 0x27, and no image word anywhere in the payload holds the address. The 0x4C bytes are instruction-for-instruction identical to the exact sibling addSignedTableStepToHalfword8014932AScenarioScena0900_801FC590 at 0x801FC590 except for the counter read, a halfword at 0x80146876 there and the word at 0x80143E6C here, and for the step-row immediate; the scena14/00 sibling at 0x801F8800 walks the same counter and row but scales by a byte argument instead of this body''s literal four, so it supplied only the shape.'
   - - 25600
     - asm
@@ -387,8 +387,8 @@ segments:
     - func_801FD5A0
   - - 27152
     - c
-    - claimFrontEndRecordHandler49SeedEntryStateAndReturnRowScenarioScena0700_801FD610
-    - '@source: src/bof3/scenario/claimFrontEndRecordHandler49SeedEntryStateAndReturnRowScenarioScena0700_801FD610.c'
+    - claimEntryReturnRow
+    - '@source: src/bof3/scenario/claimEntryReturnRow.c'
     - '@behavior: Claims one free front-end record for handler selector 0x49 and hands back its row pointer: asks the shared main-executable allocator func_8019601C for a row index, zero-extends that answer to a byte, forms the row address at 0x80143FC8 plus the index scaled by the 0x74-byte row stride before it tests anything, and unless the index is 0xFF writes row byte 0 with 1, row byte 5 with the handler selector 0x49 of the table at 0x801C7C70 and row byte 1 with the caller''s byte state code; the pointer is returned on both paths, so a full table leaves every row untouched and still answers the base plus 0xFF scaled by the stride. Twelve jal call sites inside func_801FC2D0 of this payload pass 0, 1, 0, 2, 9, 9, 3, 4, 5, 8, 6 and 7 as the only argument and never test the 0xFF answer; no word of this payload holds 0x801FD610.'
   - - 27260
     - asm
@@ -398,8 +398,8 @@ segments:
     - func_801FD960
   - - 28212
     - c
-    - scanWorkRecordsForPartyByte2ScenarioScena0700_801FDA34
-    - '@source: src/bof3/scenario/scanWorkRecordsForPartyByte2ScenarioScena0700_801FDA34.c'
+    - queryRecordsPartyScenario
+    - '@source: src/bof3/scenario/queryRecordsPartyScenario.c'
     - '@behavior: Scans the live 0x140-byte-stride local work records based at 0x80145E90 for one whose party byte at +0x79 equals 2, returning 1 at the first match and 0 when the scan exhausts the D_80146254 live rows. It starts at row 0, reads only that one byte per row, writes nothing, takes no arguments and has no stack frame, so both returns share the single jr $ra epilogue at 0x801FDA90.'
   - - 28312
     - c
@@ -419,7 +419,7 @@ segments:
     - func_801FDB80
   - - 28620
     - c
-    - invokeHelperByteArgScenarioScena0700_801FDBCC
+    - callHelperByteArg
   - - 28660
     - c
     - invokeHelperArgThenClearFourIndexedRecordFlagBitsScenarioScena0700_801FDBF4

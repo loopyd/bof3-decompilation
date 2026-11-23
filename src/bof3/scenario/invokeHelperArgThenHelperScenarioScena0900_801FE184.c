@@ -12,7 +12,7 @@ void func_801C1630(void);
  * that is terminated by a null word at 0x801FE554, so the overlay invokes it
  * indirectly and no in-image jal targets it. The 40 bytes are byte-identical to
  * the exact sibling
- * invokeHelperArgThenHelperScenarioScena0900_801FE12C (0x801FE12C, argument 4)
+ * callHelperArgHelper (0x801FE12C, argument 4)
  * and differ from it only in the constant argument.
  * @status exact
  * @match 100.00

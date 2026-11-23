@@ -39,13 +39,13 @@ segments:
     - dispatchWorkByte1HandlerScenarioScena0100_801F73B8
   - - 2044
     - c
-    - seedWorkObjectAndClearWorkTableThenAdvanceStateScenarioScena0100_801F73FC
+    - stateObjectClearTable
   - - 2176
     - c
-    - incrementWorkByte9Reload32AndAdvanceStateScenarioScena0100_801F7480
+    - incrementAdvanceStateScenario
   - - 2348
     - c
-    - decrementWorkByte9Reload252AndAdvanceStateScenarioScena0100_801F752C
+    - decrementAdvanceStateScenario
   - - 2504
     - c
     - decrementWorkByte9AndAdvanceStateScenarioScena0100_801F75C8
@@ -66,10 +66,10 @@ segments:
     - func_801F7AE4
   - - 4180
     - c
-    - updateWorkTableAndReportActiveScenarioScena0100_801F7C54
+    - stateTableReportActive
   - - 4356
     - c
-    - updateWorkHalfword2EAndDrawScenarioScena0100_801F7D04
+    - stateWorkDrawScenario
   - - 4556
     - asm
     - func_801F7DCC
@@ -153,7 +153,7 @@ segments:
     - func_801FCCFC
   - - 24988
     - c
-    - startAction34LatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState6ScenarioScena0100_801FCD9C
+    - audioLatchPhaseRelease
   - - 25136
     - c
     - startAction34LatchPhaseByteTwoThenReleaseFrontEndAndClearPrimaryStateScenarioScena0100_801FCE30
@@ -162,10 +162,10 @@ segments:
     - func_801FCEC0
   - - 26252
     - c
-    - publishWorkBaseAndSeedFrontEndRecordScenarioScena0100_801FD28C
+    - publishBaseSeedEnd
   - - 26692
     - c
-    - dispatchRecordCallbackByByte7AScenarioScena0100_801FD444
+    - callRecordCallbackScenario
   - - 26756
     - c
     - noopHandlerScenarioScena0100_801FD484
@@ -174,7 +174,7 @@ segments:
     - func_801FD48C
   - - 26864
     - c
-    - clearTwoStateBytesThenRequestPrimaryState17ScenarioScena0100_801FD4F0
+    - stateTwoBytesPrimary
   - - 26932
     - c
     - clearTwoStateBytesThenRequestPrimaryState17Substate5ScenarioScena0100_801FD534
@@ -186,7 +186,7 @@ segments:
     - clearTwoStateBytesThenRequestPrimaryState11Substate2ScenarioScena0100_801FD5C4
   - - 27148
     - c
-    - setRecordByte1MirrorWorkFacingThenSetProgressAndClearStateBytesRequestPrimaryState0DSubstate0AScenarioScena0100_801FD60C
+    - stateMirrorFacingProgress
   - - 27340
     - c
     - setRecordByte1MirrorWorkFacingThenClearProgressAndStateBytesRequestPrimaryState0DSubstate0DScenarioScena0100_801FD6CC
@@ -195,7 +195,7 @@ segments:
     - setRecordByte1MirrorWorkFacingThenClearProgressAndStateBytesRequestPrimaryState0DSubstate10ScenarioScena0100_801FD788
   - - 27724
     - c
-    - setRecordByte1MirrorWorkFacingThenRequestPrimaryState0DSubstate10ScenarioScena0100_801FD84C
+    - stateMirrorFacingPrimary
   - - 27896
     - c
     - setScenarioScena0100_801FD8F8
@@ -219,7 +219,7 @@ segments:
     - clearTwoStateBytesThenRequestPrimaryState11Substate5ScenarioScena0100_801FD9E4
   - - 28204
     - c
-    - requestPrimaryState0BSubstate0FScenarioScena0100_801FDA2C
+    - requestPrimarySubstate0Scenario
   - - 28260
     - c
     - zeroResultScenarioScena0100_801FDA64
@@ -234,7 +234,7 @@ segments:
     - func_801FE0A4
   - - 29964
     - c
-    - clearIndexedRecordFlagArmEffectGroupThenSetRecordByte5AndResetEffect9ScenarioScena0100_801FE10C
+    - stateIndexedEffectGroup
   - - 30128
     - asm
     - func_801FE1B0

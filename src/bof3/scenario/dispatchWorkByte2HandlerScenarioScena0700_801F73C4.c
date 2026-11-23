@@ -5,7 +5,7 @@ typedef void (*ScenarioScena0700WorkSubStateHandler)(void);
 /* Overlay-local three-entry run of in-image code pointers based at 0x801FDD70,
  * selected by the work object's byte at offset 0x02: entry 0 is 0x801F7408,
  * entry 1 is 0x801F7480 and entry 2 is the exact sibling
- * resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0, whose metadata
+ * stateTableIdleScenario, whose metadata
  * records this run and this dispatcher. The next label D_801FDD7C is the
  * non-pointer data 0x00000103, closing the run. The overlay's final Splat asm
  * block (the code-shaped boundary func_801FDD14) defines the label D_801FDD70;
@@ -32,7 +32,7 @@ extern ScenarioScena0700WorkSubStateHandler D_801FDD70[];
  * dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when the work
  * object's byte 1 is 3. The run it dispatches is independently recorded by the
  * exact sibling entry 2 of that table,
- * resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0, which states that
+ * stateTableIdleScenario, which states that
  * this address indexes 0x801FDD70 with the work-object byte at scratchpad
  * pointer slot 0x1F800044 + 0x02. The 68 bytes are instruction-for-instruction
  * identical to the byte-2 dispatchers at 0x801F700C (above), 0x801F6E10 (this

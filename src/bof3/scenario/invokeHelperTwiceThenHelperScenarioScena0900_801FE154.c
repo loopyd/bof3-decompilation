@@ -13,7 +13,7 @@ void func_801C1630(void);
  * 0x801FE4BC that is terminated by a null word at 0x801FE554, so the overlay
  * invokes it indirectly through func_801FD280 and no in-image jal targets it.
  * The 48 bytes are the same three-call shape as the adjacent exact entry 28
- * invokeHelperArgThenHelperScenarioScena0900_801FE12C (0x801FE12C), which calls
+ * callHelperArgHelper (0x801FE12C), which calls
  * 0x801C1ABC with 4 and then 0x801C1630, and as the exact scena15 sibling
  * invokeHelperTwiceThenHelperScenarioScena1500_801FE49C (0x801FE49C); it
  * differs from the first only by the extra 0x801C1ABC(2) call.

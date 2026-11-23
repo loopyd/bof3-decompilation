@@ -6,7 +6,7 @@ extern s8 D_80146874;
  * indexed by the signed shared primary state byte D_80146874: its seventeen code
  * words run from the inert entry noopHandlerScenarioScena0900_801F8414
  * (0x801F8414, word 0) to
- * waitProgress3ThenSetFlagBit24AndRequestPrimaryState0ScenarioScena0900_801FBC78
+ * waitFlagRequestPrimary
  * (0x801FBC78, word 16), so the byte
  * selects which of the overlay's scenario handlers runs this frame. It begins
  * three words into the twenty-word state-handler table at 0x801FE3E0 and ends

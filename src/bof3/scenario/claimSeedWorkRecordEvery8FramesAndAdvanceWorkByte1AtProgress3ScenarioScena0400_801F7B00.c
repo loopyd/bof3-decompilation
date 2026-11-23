@@ -15,7 +15,7 @@ void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena040
  *           0x801FA1E4 ({0x801F7AC8, 0x801F7B00, 0x801F7BC0, 0x801F8124,
  *           0x801F9D48, 0x801F9DB4, 0x801F9DAC, 0x801FA010}), reached only
  *           through the indirect call in
- *           dispatchWorkObjectHandlerScenarioScena0400_801F7A84 (0x801F7A84),
+ *           callObjectHandlerScenario (0x801F7A84),
  *           which indexes that run with byte 0x1 of the scratch work object
  *           published at pointer slot 0x1F800044.
  *           On frames whose shared frame counter D_80143E6C reads zero in its
@@ -43,7 +43,7 @@ void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena040
  *           words, the every-eight-frames gate from the D_80143E6C mask, and
  *           the work-byte advance from the byte this body increments, which is
  *           the same cell the exact entry 0
- *           (clearWorkTableByte25AndAdvanceWorkByte1ScenarioScena0400_801F7AC8)
+ *           (stateTableAdvanceScenario)
  *           increments on its way to this entry.
  *
  * Shape evidence: statement order, operand forms and the `*(s32*)(record + N)`

@@ -27,7 +27,7 @@ void func_80196070(void);
  *           body.
  *           The countdown's arming writer inside this overlay is the seeding
  *           handler
- *           claimUpTo16FreeWorkRecordsSeedSavedPositionAndDirectionArmCountdown64ThenStepActiveWorkRecordsScenarioScena0400_801F7BC0,
+ *           claimUpSavedDirection,
  *           which calls the same stepper and then stores
  *           0x40 into that word; the word is shared scratchpad space and the
  *           overlay's earlier step-run phase stores a primitive field there
@@ -50,7 +50,7 @@ void func_80196070(void);
  *           it a relocation-different sibling rather than a byte-identical one,
  *           and that sibling's own row is still `asm`, so no lifted body exists
  *           to clone. The in-target spelling follows the exact sibling
- *           claimSeedWorkRecordEvery8FramesAndAdvanceWorkByte1AtProgress3ScenarioScena0400_801F7B00,
+ *           claimSeedRecordFrames,
  *           which calls the same stepper and reads the same cell.
  * @status exact
  * @match 100.00

@@ -32,65 +32,65 @@ segments:
     - '@behavior: Overlay step dispatch on work-record byte 1: it calls the entry of the handler run labelled T_801D1F88 that the unsigned byte at offset 1 of the scratchpad work object published at 0x1F800044 selects, passing no arguments and touching no other state.'
   - - 72
     - c
-    - seedWorkDistancePairAndOriginTripleClearAngleTintArmCountdown8AdvanceWorkByte1ScenarioSce15ef000_801D0C48
-    - '@source: src/bof3/scenario/seedWorkDistancePairAndOriginTripleClearAngleTintArmCountdown8AdvanceWorkByte1ScenarioSce15ef000_801D0C48.c'
+    - stateOriginTripleAngle
+    - '@source: src/bof3/scenario/stateOriginTripleAngle.c'
     - '@behavior: Entry 0 of the overlay step-handler run at 0x801D1F88: it seeds the scratchpad work object position pair at +0x34/+0x38 with 0x308000/0x740000, publishes the func_8015477C distance of that pair scaled by 0x10000 at +0x3C, seeds the triple at +0x0C/+0x10/+0x14 with 0x308000/0x718000/0xFEC00000, clears the angle halfword at +0x2E and the tint byte at +0x5D, arms the countdown byte at +0x9 with 8 and advances the work byte at +0x1.'
   - - 236
     - c
-    - raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue20DAndAdvanceWorkByte1ScenarioSce15ef000_801D0CEC
-    - '@source: src/bof3/scenario/raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue20DAndAdvanceWorkByte1ScenarioSce15ef000_801D0CEC.c'
+    - raiseAngleBandsPrimitives
+    - '@source: src/bof3/scenario/raiseAngleBandsPrimitives.c'
   - - 432
     - c
-    - drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0
-    - '@source: src/bof3/scenario/drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0.c'
+    - renderOriginPrimitivesGreen
+    - '@source: src/bof3/scenario/renderOriginPrimitivesGreen.c'
   - - 604
     - c
-    - brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownReload4AndAdvanceWorkByte1ScenarioSce15ef000_801D0E5C
-    - '@source: src/bof3/scenario/brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownReload4AndAdvanceWorkByte1ScenarioSce15ef000_801D0E5C.c'
+    - brightenGreenWrapPrimitives
+    - '@source: src/bof3/scenario/brightenGreenWrapPrimitives.c'
   - - 836
     - c
-    - dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44
-    - '@source: src/bof3/scenario/dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44.c'
+    - dimGreenPrimitivesZigzag
+    - '@source: src/bof3/scenario/dimGreenPrimitivesZigzag.c'
   - - 1052
     - c
-    - drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C
-    - '@source: src/bof3/scenario/drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C.c'
+    - renderBandsPrimitivesZigzag
+    - '@source: src/bof3/scenario/renderBandsPrimitivesZigzag.c'
   - - 1220
     - c
-    - decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4
-    - '@source: src/bof3/scenario/decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4.c'
+    - decayBandsPrimitivesZigzag
+    - '@source: src/bof3/scenario/decayBandsPrimitivesZigzag.c'
   - - 1460
     - c
-    - decayAngleBy4DrawZigzagTickCountdownAndClearWorkFlagsOnZeroScenarioSce15ef000_801D11B4
-    - '@source: src/bof3/scenario/decayAngleBy4DrawZigzagTickCountdownAndClearWorkFlagsOnZeroScenarioSce15ef000_801D11B4.c'
+    - decayAngleZigzagFlags
+    - '@source: src/bof3/scenario/decayAngleZigzagFlags.c'
   - - 1568
     - c
-    - drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220
-    - '@source: src/bof3/scenario/drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220.c'
+    - renderFlatGreyFill
+    - '@source: src/bof3/scenario/renderFlatGreyFill.c'
   - - 1904
     - c
-    - drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370
-    - '@source: src/bof3/scenario/drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370.c'
+    - renderSegmentCoreFans
+    - '@source: src/bof3/scenario/renderSegmentCoreFans.c'
   - - 2368
     - c
-    - drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540
-    - '@source: src/bof3/scenario/drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540.c'
+    - renderAroundScaleAngle
+    - '@source: src/bof3/scenario/renderAroundScaleAngle.c'
   - - 2704
     - c
-    - drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15ef000_801D1690
-    - '@source: src/bof3/scenario/drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15ef000_801D1690.c'
+    - renderBodyPointsWidths
+    - '@source: src/bof3/scenario/renderBodyPointsWidths.c'
   - - 3348
     - c
-    - drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914
-    - '@source: src/bof3/scenario/drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914.c'
+    - renderZigzagFiveSegments
+    - '@source: src/bof3/scenario/renderZigzagFiveSegments.c'
   - - 3616
     - c
     - drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20
     - '@source: src/bof3/scenario/drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20.c'
   - - 4124
     - c
-    - drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C
-    - '@source: src/bof3/scenario/drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C.c'
+    - renderSliversSteppedSegments
+    - '@source: src/bof3/scenario/renderSliversSteppedSegments.c'
   - - 5000
     - textbin
     - T_801D1F88

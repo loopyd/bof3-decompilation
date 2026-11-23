@@ -15,7 +15,7 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
  * is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
+void renderEffectRecordsScenario(void);
 
 /* @source 0x801D0F10
  * @behavior Entry 4 of the overlay's step-handler code-pointer run at
@@ -57,7 +57,7 @@ void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D208
  * resets to exactly 0x2F8000, 0x278000 and 0x0F000000 when its first word rises
  * above 0x2F7FFF, so the three re-arm constants written here are that same
  * reset triple reflected around the current value. The exact lift
- * advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0
+ * stateOriginTickCountdown
  * hands +0x64 to the overlay helper 0x801D147C as the object's origin block,
  * and func_801D13F4 swaps +0x18, +0x1C and +0x20 with +0x34, +0x38 and +0x3C
  * around its second claim call, which is what pins the copy direction here to
@@ -101,7 +101,7 @@ void advanceWorkByte6ClaimRecordInvokeTwoHelpersAndOnProgress20RestoreMotionStat
   if ((frame & 3) == 0) {
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
-  drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088();
+  renderEffectRecordsScenario();
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   if (g_ScenarioProgress == 0x14) {
     motion = D_1F800044;

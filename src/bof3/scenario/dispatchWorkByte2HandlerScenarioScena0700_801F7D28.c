@@ -9,7 +9,7 @@ typedef void (*ScenarioScena0700WorkSubStateHandler)(void);
  * incrementWorkByte2ScenarioScena0700_801F8194 and
  * invokeHelperScenarioScena0700_801F81B4 (the word at 0x801FDDEC), and the
  * separate label D_801FDDF0 at 0x801FDDF0 - the work-table callback row the
- * exact countdownReload32ThenAdvanceHandlerScenarioScena0700_801F8730 belongs
+ * exact countdownAdvanceHandlerScenario belongs
  * to - closes it. The address is word 2 of the twelve-word code-pointer run
  * based at 0x801FDDC0 that the exact sibling
  * dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes, so this table is

@@ -34,7 +34,7 @@ extern u8 D_80146254;
  *           (0x801FBB78), which passes the arm ids 7, 5 and 6 and tears down
  *           7, 6 and 5 without a trailing helper, and its arm ids 7, 5 and 8
  *           are those of the exact neighbour
- *           armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88
+ *           armEffectGroupRecords
  *           (0x801FBC88), which tears down only id 7; the func_801C1630 tail
  *           is the call invokeHelperArgThenHelperScenarioScena1300_801FBE98
  *           (0x801FBE98) finishes with.

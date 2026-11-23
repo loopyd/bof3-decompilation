@@ -40,7 +40,7 @@ void func_8015C058(void);
  * absolute encodings of the two `j` words. The switch-on-sub-state form, the
  * saved sub-state pointer, the delay-slot constants and the phase-byte gate
  * repeat the shape of the in-target sibling
- * startActionZeroLatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801F92EC
+ * audioActionLatchRelease
  * (0x801F92EC) and of the scena01 lift
  * startAction34LatchPhaseByteTwoThenReleaseFrontEndAndClearPrimaryStateScenarioScena0100_801FCE30
  * (0x801FCE30), both of which had measured exact.

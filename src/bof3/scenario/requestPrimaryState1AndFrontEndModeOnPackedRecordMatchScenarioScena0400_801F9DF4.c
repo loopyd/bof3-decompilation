@@ -6,7 +6,7 @@
  * @source 0x8014686C @kind unknown */
 extern u32 D_8014686C;
 /* Shared primary state byte of the main executable: this overlay's primary
- * state dispatcher dispatchPrimaryStateHandlerScenarioScena0400_801F863C
+ * state dispatcher callPrimaryHandlerScenario
  * indexes its handler table at 0x801FA210 with it, so the 1 stored here selects
  * primary state 1. Stored with one `sb`.
  * @source 0x80146874 @kind unknown */
@@ -72,7 +72,7 @@ s32 queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0400_801F9FD0(s32 arg0);
  *   at 0x801F9F28, 3 at 0x801F9F48, 0x26 at 0x801F9F88).
  *
  * Name evidence: D_80146874 is the shared primary state byte that this overlay's
- *   dispatchPrimaryStateHandlerScenarioScena0400_801F863C indexes its handler
+ *   callPrimaryHandlerScenario indexes its handler
  *   table with, and D_80146875 is the sub-state byte of the same tuple in this
  *   target's queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0400_801F9FD0
  *   (0x801F9FD0), so the three queued arms request primary state 1 with a

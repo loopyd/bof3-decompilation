@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_8015B580(u32 arg0, s32 arg1);
-void requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4(void);
+void requestSubArmNibble(void);
 
 /* @source 0x801FC578
  * @behavior Handler slot 4 of the overlay's nine-pointer handler table at
@@ -15,7 +15,7 @@ void requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801F
  * is overwritten by that flag word and never read, and both helper results are
  * discarded. It takes two arguments and returns nothing. Instruction for
  * instruction it is the slot 1 twin
- * setScenarioFlagBit10ThenInvokeHelperScenarioScena0300_801FC4F4 with only the
+ * stateFlagInvokeHelper with only the
  * bit constant (0x13 instead of 0x10) in the delay slot of the first call
  * differing.
  * @status exact
@@ -24,5 +24,5 @@ void requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801F
  */
 void setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578(s32 arg0, s32 arg1) {
   func_8015B580(arg1, 0x13);
-  requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4();
+  requestSubArmNibble();
 }

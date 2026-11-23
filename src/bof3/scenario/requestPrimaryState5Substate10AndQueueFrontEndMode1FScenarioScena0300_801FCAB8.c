@@ -5,7 +5,7 @@ extern u8 D_80146874;
 extern u8 D_80146875;
 
 s32 func_8015B5D4(u32 arg0, s32 arg1);
-s32 queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0300_801FCC9C(s32 arg0);
+s32 queueFrontEndPrimary(s32 arg0);
 
 /* @source 0x801FCAB8
  * @behavior Route 0x32 handler of this overlay: the dispatcher at 0x801FC704
@@ -45,5 +45,5 @@ s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCA
 
   D_80146874 = 5;
   D_80146875 = 0x10;
-  return (s8)queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0300_801FCC9C(0x1F);
+  return (s8)queueFrontEndPrimary(0x1F);
 }

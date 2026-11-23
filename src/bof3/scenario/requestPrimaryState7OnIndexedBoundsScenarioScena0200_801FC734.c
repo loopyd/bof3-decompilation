@@ -10,7 +10,7 @@ extern s32 D_801468C0[];
 extern s32 D_80145EC4;
 /* @source 0x80145EC8 @kind unknown */
 extern s32 D_80145EC8;
-extern void setProgress1FAndRequestPrimaryState7ScenarioScena0200_801FCB54(void);
+extern void stateRequestPrimaryScenario(void);
 
 /* @source 0x801FC734
  * @behavior When D_80143F03 is zero, test the shared signed word pair against
@@ -44,5 +44,5 @@ void requestPrimaryState7OnIndexedBoundsScenarioScena0200_801FC734(u8 index) {
     if (second_current < second_bound || second_bound + 0x40000 < second_current) {
         return;
     }
-    setProgress1FAndRequestPrimaryState7ScenarioScena0200_801FCB54();
+    stateRequestPrimaryScenario();
 }

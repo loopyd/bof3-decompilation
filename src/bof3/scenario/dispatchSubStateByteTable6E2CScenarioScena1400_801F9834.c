@@ -152,7 +152,7 @@ extern u8 D_80181EBB[];
  */
 extern u8 D_1F800000[];
 
-u16 startActionForFirstPresentPartyCandidateScenarioScena1400_801FA904(
+u16 audioActionPresentCandidate(
     u8* candidates, s16* actions);
 u8 func_801F7A18(u32 arg0, s16 arg1, s16 arg2, s32 arg3, u8 arg4, u32 arg5);
 u8 func_8019601C(void);
@@ -236,7 +236,7 @@ void dispatchSubStateByteTable6E2CScenarioScena1400_801F9834(void) {
     if ((D_80143FC8[(u32)D_801FC4C0 * 0x74u] & 1u) != 0) {
       return;
     }
-    startActionForFirstPresentPartyCandidateScenarioScena1400_801FA904(
+    audioActionPresentCandidate(
         D_801FC450, D_801FC458);
     D_80146875 = 3;
     return;
@@ -264,7 +264,7 @@ void dispatchSubStateByteTable6E2CScenarioScena1400_801F9834(void) {
     }
     progress = &g_ScenarioProgress;
     *progress = *progress + 1;
-    startActionForFirstPresentPartyCandidateScenarioScena1400_801FA904(
+    audioActionPresentCandidate(
         D_801FC454, D_801FC460);
     D_80146875 = 6;
     return;

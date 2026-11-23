@@ -1,9 +1,9 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044;
-void buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC(
+void setupVerticesCentreAngles(
     u8 *work);
-void drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170(
+void renderTranslucentTrianglesFour(
     u8 *work);
 
 /* @source 0x801F7BB0
@@ -26,9 +26,9 @@ void tickCountdownReload8Add4ToWorkHalfword58AndAdvanceWorkByte1ScenarioScena030
 
   work = D_1F800044;
   helper_work = work + 0x0C;
-  buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC(
+  setupVerticesCentreAngles(
       helper_work);
-  drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170(
+  renderTranslucentTrianglesFour(
       helper_work);
   halfword = *(u16 *)(work + 0x58);
   countdown_work = D_1F800044;

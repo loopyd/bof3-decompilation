@@ -6,7 +6,7 @@ extern u32 D_8014686C;
 
 /* Overlay-local record-callback table at 0x801FA224, indexed by a record's
  * unsigned byte 0x7A: one code-pointer word, 0x801F9D88
- * (setFlagBit0RecordCallbackScenarioScena0400_801F9D88), then the non-pointer
+ * (stateFlagRecordCallback), then the non-pointer
  * word 0x05068330 at 0x801FA228, so index 0 is its only in-image entry.
  * @source 0x801FA224 @kind table
  */
@@ -17,7 +17,7 @@ extern ScenarioScena0400RecordCallback D_801FA224[];
  * record's unsigned byte field at offset 0x7A: that byte is loaded with `lbu`,
  * scaled by four and selects a word of the overlay-local callback-pointer table
  * at 0x801FA224, whose only code word is
- * setFlagBit0RecordCallbackScenarioScena0400_801F9D88 (0x801F9D88). The selected
+ * stateFlagRecordCallback (0x801F9D88). The selected
  * callback is called with the record pointer unchanged as the first argument and
  * the word held in the shared main-RAM scenario flag cell D_8014686C as the
  * second, which is the pair that callback documents receiving. It reads no other

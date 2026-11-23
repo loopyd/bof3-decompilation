@@ -12,7 +12,7 @@ void func_8015C088(void);
 /* @source 0x801FD948
  * @behavior Entry 14 of this overlay's record callback table at 0x801FE308,
  * whose pointer word sits at 0x801FE340; the overlay dispatcher
- * dispatchRecordCallbackByByte7AScenarioScena0100_801FD444 (0x801FD444)
+ * callRecordCallbackScenario (0x801FD444)
  * selects it with unsigned byte 0x7A of a record, handing that record in $a0
  * and the address of D_80144E90 in $a1, so the overlay reaches this handler
  * only indirectly and it reads neither argument. It runs the shared front-end

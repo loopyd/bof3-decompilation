@@ -24,7 +24,7 @@ extern void (*D_801FE3E4[])(void);
  * the frame setup. No in-image jal targets the address: its only image word is
  * 0x801F7A00 itself, word 2 of the three-word label D_801FE3D8, so the overlay
  * reaches it only indirectly, through the D_80146872 dispatcher
- * dispatchScenarioStateHandlerScenarioScena0600_801F7298 (0x801F7298). Its 60
+ * callScenarioHandlerScenario (0x801F7298). Its 60
  * bytes are instruction-for-instruction identical to that dispatcher and to the
  * exact sibling dispatchPrimaryStateHandlerScenarioScena0700_801FAA2C
  * (0x801FAA2C), which dispatches the same D_80146874 byte through its own table

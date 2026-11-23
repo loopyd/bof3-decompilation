@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
-void drawTranslucentGouraudLineBetweenWorkPoints34And0CScenarioScena0800_801FA19C(
+void renderTranslucentLineBetween(
     void* first, void* second);
 
 /* @source 0x801F9EC4
@@ -20,7 +20,7 @@ void subtractWorkWord0CAndAdvanceStateAt98000ScenarioScena0800_801F9EC4(void) {
 
   work = scenarioScena0800Work;
   *(u32*)(work + 0x0C) -= 0x20000u;
-  drawTranslucentGouraudLineBetweenWorkPoints34And0CScenarioScena0800_801FA19C(
+  renderTranslucentLineBetween(
       work + 0x34, work + 0x0C);
   nextWork = scenarioScena0800Work;
   if (*(u32*)(nextWork + 0x0C) == 0x98000u) {

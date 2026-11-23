@@ -21,7 +21,7 @@ extern u32 D_801FE294[];
  * the two families are the same dispatcher over different index bytes and
  * tables. The table is in-image code-pointer data: its entry 0x00 reads
  * 0x801F7A9C and its entry 0x17 reads 0x801FB300, so the 0x17 that
- * requestPrimaryState17AndClearSubstateScenarioScena0200_801FD574 stores into
+ * requestPrimaryClearSubstate stores into
  * D_80146874 selects that entry. This address is itself the word at 0x801FE290,
  * the third word of the run that begins at 0x801FE288, so the chain dispatcher
  * reaches it when the signed chain byte D_80146872 reads 2.

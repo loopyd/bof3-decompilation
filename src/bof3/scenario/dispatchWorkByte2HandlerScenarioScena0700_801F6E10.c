@@ -4,10 +4,10 @@ typedef void (*ScenarioScena0700WorkSubStateHandler)(void);
 
 /* Overlay-local three-entry run of in-image code pointers based at 0x801FDD3C,
  * selected by the work object's byte at offset 2: entry 0 is 0x801F6E54
- * (clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54, the
+ * (stateTableIncrementCountdown, the
  * exact sibling whose metadata records this run as that function's table),
  * entry 1 is 0x801F6E90 and entry 2 is
- * clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F6F14. The address sits
+ * stateNoCallbackRan. The address sits
  * inside the overlay's final Splat asm block (the code-shaped boundary
  * func_801FDD14), which defines the label; the target map does not own it. */
 extern ScenarioScena0700WorkSubStateHandler D_801FDD3C[];
@@ -21,10 +21,10 @@ extern ScenarioScena0700WorkSubStateHandler D_801FDD3C[];
  * run based at 0x801FDD3C (`lui $at,%hi` / `addu $at,$at,$v0` / `lw
  * $v0,%lo($at)` / `jalr $v0`) with no arguments and no result consumed. That run
  * is the three-entry handler table 0x801FDD3C whose entry 0 is 0x801F6E54 (the
- * exact sibling clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54,
+ * exact sibling stateTableIncrementCountdown,
  * whose metadata records it as that table's entry 0), entry 1 is 0x801F6E90 and
  * entry 2 is the exact
- * clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F6F14, with the next data
+ * stateNoCallbackRan, with the next data
  * label D_801FDD48 at 0x801FDD48 closing the run. It reads no state beyond that byte
  * and writes none; its 0x18-byte frame exists only to keep $ra across the
  * indirect call, whose delay slot stays a nop, and the pointer-cell load

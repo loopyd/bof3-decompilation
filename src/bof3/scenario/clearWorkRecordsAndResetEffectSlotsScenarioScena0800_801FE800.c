@@ -17,7 +17,7 @@ void func_801C1630(void);
  * 0x801FE9C0 that dispatchRecordCallbackScenarioScena0800_801FE018 selects with
  * the record's unsigned byte at offset 0x7A. The three ids it tears down are the
  * three-entry overlay effect group of its immediate neighbour at 0x801FE840
- * (entry 9, armEffectGroupThenResetEffectSlotsScenarioScena0800_801FE840), which
+ * (entry 9, armEffectGroupSlots), which
  * arms exactly ids 7, 8 and 4 through func_80166E88(7, 8, 4, 0) and then calls
  * this address - its single in-image jal, at 0x801FE85C. The shape is the same
  * reset sequence the scena18 sibling clearWorkRecordsAndResetEffectSlots_scena18

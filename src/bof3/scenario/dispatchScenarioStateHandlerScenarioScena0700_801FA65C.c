@@ -4,7 +4,7 @@ extern s8 D_80146872;
 
 /* Overlay-local dispatch table of this code span's scenario state handlers,
  * indexed by the shared main-RAM state byte D_80146872: its first entry is
- * clearSharedByteAndAdvanceStateScenarioScena0700_801FA698 (the state-0 handler
+ * stateSharedByteScenario (the state-0 handler
  * that advances the state byte to 1) and it runs to entry 11 (0x801FD35C)
  * immediately before the halfword script data at 0x801FDE40.
  * @source 0x801FDE10 @kind table

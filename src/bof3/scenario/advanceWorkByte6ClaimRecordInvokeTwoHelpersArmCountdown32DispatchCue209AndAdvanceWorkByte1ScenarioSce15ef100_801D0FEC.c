@@ -17,7 +17,7 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
  * is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
+void renderEffectRecordsScenario(void);
 
 /* @source 0x801D0FEC
  * @behavior Entry 5 of the overlay's step-handler code-pointer run at
@@ -47,12 +47,12 @@ void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D208
  * run document.
  *
  * Shape evidence: the first ten instructions of this body are the exact lift
- * advanceWorkByte6ClaimRecordInvokeTwoHelpersAndOnProgress20RestoreMotionStateAndAdvanceWorkByte1ScenarioSce15ef100_801D0F10
+ * stateHelpersRestoreMotion
  * (0x801D0F10, entry 4 of the same run) byte for byte, so the scratchpad cell
  * spelling, the frame-tick local and the claim cadence are copied from it. The
  * countdown arm through a fresh cell load and the sound-cue dispatch that
  * follows the state-byte increment are the pairing the exact sibling
- * clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8
+ * stateHeadXYWords
  * (0x801D2BA8, entry 6 of the ten-word run at 0x801D3954) makes with cue 0x208
  * and countdown 0x14. This function's own offsets, countdown value and cue id
  * come from its original bytes: an increment carried in its own local and
@@ -77,7 +77,7 @@ void advanceWorkByte6ClaimRecordInvokeTwoHelpersArmCountdown32DispatchCue209AndA
   if ((frame & 3) == 0) {
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
-  drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088();
+  renderEffectRecordsScenario();
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   countdown = D_1F800044;
   countdown[9] = 0x20;

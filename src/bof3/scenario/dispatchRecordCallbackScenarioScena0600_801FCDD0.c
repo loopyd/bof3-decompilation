@@ -34,7 +34,7 @@ extern ScenarioScena0600RecordCallback D_801FE42C[];
  * five-word code-pointer run 0x801FE3C4..0x801FE3D4 (0x801F7298, this address,
  * 0x801FD800, 0x801FD294, 0x801FDD14) that immediately precedes the three-word
  * outer-state table at 0x801FE3D8 used by
- * dispatchScenarioStateHandlerScenarioScena0600_801F7298. Its 64 bytes are
+ * callScenarioHandlerScenario. Its 64 bytes are
  * instruction-for-instruction identical to the exact sibling
  * dispatchRecordCallbackScenarioScena0900_801FC5E4 (0x801FC5E4 of
  * emi/scenario/scena09/00), which differs only in the table-entry load

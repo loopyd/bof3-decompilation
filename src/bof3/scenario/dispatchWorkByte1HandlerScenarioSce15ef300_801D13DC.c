@@ -6,7 +6,7 @@
  * before the payload ends at 0x801D2818. It is the tail of the longer run based
  * at 0x801D27CC (nineteen entries, 0x801D0D7C through 0x801D16BC): this base is
  * that run's entry 13. Entry 0 here is 0x801D1420, the countdown-clearing
- * handler clearWorkCountdownSetWorkByte6AndAdvanceWorkByte1ScenarioSce15ef300_801D1420
+ * handler stateCountdownSetScenario
  * lifted exactly in this target, which advances the very work byte this
  * dispatcher reads, so work bytes 0 through 5 select this base's handlers. The
  * base word sits 0x30 bytes into the T_801D27D0 `textbin` span (0x801D27D0

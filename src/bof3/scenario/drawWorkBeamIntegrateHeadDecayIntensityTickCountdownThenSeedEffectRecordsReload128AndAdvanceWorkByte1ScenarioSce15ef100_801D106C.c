@@ -6,7 +6,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* Table of 0x2C-byte effect records at 0x801D3DE8, after the 0x20-entry
  * 0x2C-byte-stride table the exact lift
- * advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenResetRecordTableScenarioSce15ef100_801D0DD8
+ * stateOriginZOrigin
  * walks at 0x801D3B28 and inside the same Splat `textbin` row. seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68
  * seeds one record from the scratchpad work object, so each walk of this table
  * re-stamps the records from the object's current points. */
@@ -19,7 +19,7 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
  * is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
+void renderEffectRecordsScenario(void);
 /* Overlay beam draw helper at 0x801D1678: draws the translucent quad pair
  * between the head point at +0x18 and the point at +0x34 of the work object and
  * then its stepped trail, shading both with the intensity byte it is handed. */
@@ -115,7 +115,7 @@ void drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsRe
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
-  drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088();
+  renderEffectRecordsScenario();
   point = D_1F800044;
   drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
       point + 0x18, point + 0x34, 0x40);

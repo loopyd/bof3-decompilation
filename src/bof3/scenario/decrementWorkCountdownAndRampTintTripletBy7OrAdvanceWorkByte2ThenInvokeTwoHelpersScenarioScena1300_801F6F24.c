@@ -8,7 +8,7 @@ void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
  * @behavior Entry 1 of this overlay's twelve-word work-object handler table
  * D_801FBEF0 (its word at 0x801FBEF4), the entry the byte-1 dispatcher
  * func_801F6EA4 selects once the previous step
- * clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8 has
+ * stateTintArmCountdown has
  * zeroed that object's tint triplet, armed its countdown byte 0x09 with 0xF and
  * moved its dispatch byte 0x01 to 1. It takes no arguments and returns nothing;
  * it reaches the work object only through the scratchpad pointer cell

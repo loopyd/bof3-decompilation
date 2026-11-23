@@ -34,11 +34,11 @@ void func_8014E5A0(u8 arg0, u8 arg1);
  *
  * Shape evidence: the two quads, their primitive helper sequence and the
  * coordinate-before-colour store order are the same body as the exact sibling
- * drawRedGradientBandCenteredOnWorkEntryHalfwordWithFrameParityHalfHeightScenarioSce15ef200_801D1414
+ * renderRedCenteredHeight
  * (0x801D1414) of this target, whose band is centred on a work entry instead of
  * on the screen midline and whose frame carries an extra local area. The draw
  * mode arming is the exact prologue of the work-table step
- * stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624
+ * stepEntriesDecayActive
  * (0x801D1624), so the texture page is passed as the same u16 local and the
  * fifth SetDrawMode argument is the same literal zero. The own bytes fix the
  * geometry literals: 0x140 and 0x78 are materialised once in $s1 and $s0 and

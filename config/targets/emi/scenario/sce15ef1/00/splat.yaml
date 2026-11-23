@@ -32,8 +32,8 @@ segments:
     - '@behavior: First per-frame step dispatcher of the overlay step-handler run at 0x801D3918: loads the work-record pointer from the scratchpad pointer cell 0x1F800044, takes that record unsigned byte 0x1, scales it by four and invokes that entry of the overlay-local code-pointer run at 0x801D3918 with no arguments and no result consumed, creating its 0x18-byte frame only to keep the return address across the indirect call. It does not bound the index before the scaled table load, reads nothing else and writes no state.'
   - - 72
     - c
-    - seedWorkOriginTripleFromSharedPositionArmCountdown8ClearHalfword2EDispatchCue523AndAdvanceWorkByte1ScenarioSce15ef100_801D0C48
-    - '@source: src/bof3/scenario/seedWorkOriginTripleFromSharedPositionArmCountdown8ClearHalfword2EDispatchCue523AndAdvanceWorkByte1ScenarioSce15ef100_801D0C48.c'
+    - stateOriginTripleArm
+    - '@source: src/bof3/scenario/stateOriginTripleArm.c'
     - '@behavior: Entry 0 of the overlay step-handler code-pointer run at 0x801D3918: copies the shared position triple at 0x80145EC4/0x80145EC8/0x80145ECC into the scratchpad work object origin words at +0x64/+0x68/+0x6C with the third word lifted by 0x800000, arms the countdown byte at +0x9 with 8, clears the halfword at +0x2E, re-reads the pointer cell 0x1F800044, advances work byte +0x1 through that reloaded pointer and dispatches sound cue 0x20B, which moves the dispatcher func_801D0C04 on to entry 1 on the next frame.'
   - - 192
     - c
@@ -77,46 +77,46 @@ segments:
     - '@behavior: Entry 8 of the overlay step-handler code-pointer run at 0x801D3918: subtracts 0x10 from the unsigned work halfword +0x2E and 8 from the intensity byte +0x3 through one load of the scratchpad pointer cell 0x1F800044, calls the overlay helper 0x801D1A60, draws one semi-transparent quad from the work object head point +0x18 to the point +0x34 with the decayed intensity byte +0x3, ticks countdown byte +0x9 down by one through a third load of that cell and, when it reaches zero, calls the resident reset helper 0x80196070.'
   - - 2172
     - c
-    - drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C
-    - '@source: src/bof3/scenario/drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C.c'
+    - renderSectorConvertedExtent
+    - '@source: src/bof3/scenario/renderSectorConvertedExtent.c'
     - '@behavior: Draws one translucent radial sector fan of 32 POLY_G3 triangles around the projected origin point: GetTPage(0, 1, 0x2C0, 0x100) yields the texture page, SetDrawMode installs it on the g_PrimCursor packet with dfe 0 and dtd 1, func_8014E5A0 queues the 0xC-byte DR_MODE under OT slot 2 and func_801AFE18 initialises the 0x20-byte sort scratch; func_801AFF04 projects the origin point, the caller halfword is copied into both halves of the third scratch entry and converted at that depth by func_801AFFD8 into the radius, which gains the low bit of the frame counter 0x80143E6C so the fan breathes by one unit on alternate frames, and the second entry is seeded with the phase-zero arc point (projected x plus the whole radius, projected y unchanged). Each of the 32 passes stamps the cursor primitive, turns semi-transparency on, writes vertex 0 as the projected point and vertex 1 as the seeded point, advances the phase by 0x80, rebuilds vertex 2 as the projected point plus the radius rotated by 0x801783C8 for x and 0x801782FC for y shifted down by 12, lights the first colour triplet with 0x80 in a channel for each low bit of the caller mask (red bit 2, green bit 1, blue bit 0) while the other two triplets stay black, and appends the 0x1C-byte packet under OT slot 2.'
   - - 2680
     - c
-    - drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678
-    - '@source: src/bof3/scenario/drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678.c'
+    - renderSliverSteppedLags
+    - '@source: src/bof3/scenario/renderSliverSteppedLags.c'
     - '@behavior: Draws the beam body between the work object head point at +0x18 and the point at +0x34 as two translucent POLY_G4 slivers stamped at g_PrimCursor through SetPolyG4 and SetSemiTrans and filled from func_801AFF04 projections one screen unit apart, tinting alternate vertices with the caller intensity byte in red and green and appending each 0x24-byte packet under OT slot 2 through func_8014E5A0, then steps a trail from the second point plus the work object origin vector at +0x64/+0x68/+0x6C scaled by the low nibble of the frame counter 0x80143E6C while the first point first word stays below the marching x, stamping each 0xC-byte segment through func_8017AA30 and advancing all three words by that vector shifted left four.'
   - - 3484
     - c
-    - clearRecordActiveFlagsAt801D39A8ScenarioSce15ef100_801D199C
-    - '@source: src/bof3/scenario/clearRecordActiveFlagsAt801D39A8ScenarioSce15ef100_801D199C.c'
+    - stateRecordActiveFlags
+    - '@source: src/bof3/scenario/stateRecordActiveFlags.c'
     - '@behavior: Clears the lead byte of each of the 0x10 entries of the 0x18-byte-stride record table at 0x801D39A8, stepping the entry pointer by 0x18 and an unsigned byte counter by 1 in a bottom-tested loop; it takes no arguments and reads no other state.'
   - - 3528
     - c
-    - claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8
-    - '@source: src/bof3/scenario/claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8.c'
+    - claimFreeSeedPosition
+    - '@source: src/bof3/scenario/claimFreeSeedPosition.c'
     - '@behavior: Claims the first of the 0x10 entries of the 0x18-byte-stride record table at 0x801D39A8 whose lead byte reads zero, then seeds that record from the scratchpad work object behind pointer cell 0x1F800044 and stops the walk; it takes no argument, makes no call and returns nothing.'
   - - 3680
     - c
-    - stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60
-    - '@source: src/bof3/scenario/stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60.c'
+    - stepClaimedLifeExpired
+    - '@source: src/bof3/scenario/stepClaimedLifeExpired.c'
     - '@behavior: Per-frame pass over this overlay table of 0x10 records of 0x18 bytes at 0x801D39A8, one of the two helpers every step handler of the run at 0x801D3918 calls before it draws: it fills the 0x20-byte projection scratch through the resident helper 0x801AFE18, then for every record whose claim byte at +0x0 reads non-zero subtracts 1 from the countdown byte at +0x2 and 0x10 from the halfword at +0x14, clears the claim byte when that countdown reaches zero, and hands the record base to the in-payload draw helper 0x801D1B10. It returns 1 once any record was claimed and 0 when the whole table is free.'
   - - 3856
     - asm
     - func_801D1B10
   - - 4308
     - c
-    - drawTranslucentGouraudTriangleFromRecordPositionAndTwoRotatedOffsetsTintedRedAndGreenScenarioSce15ef100_801D1CD4
-    - '@source: src/bof3/scenario/drawTranslucentGouraudTriangleFromRecordPositionAndTwoRotatedOffsetsTintedRedAndGreenScenarioSce15ef100_801D1CD4.c'
+    - renderOffsetsRedGreen
+    - '@source: src/bof3/scenario/renderOffsetsRedGreen.c'
     - '@behavior: Draw pass for one 0x2C-byte effect record of this overlay, the helper the record walker 0x801D2088 calls for each of the 0x20 records of the table at 0x801D3B28 while it adds 0x10 to the spin angle of the record it just drew: it stamps the primitive cursor g_PrimCursor through 0x8017A97C, turns semi-transparency on, projects the record position triple at +0x0/+0x4/+0x8 into the first vertex of the POLY_G3 at cursor byte 0x08 through 0x801AFF04, builds the vertices at cursor bytes 0x10 and 0x18 by rotating the extent pairs at +0x10/+0x12 and +0x18/+0x1A with the spin angle at +0x24 through 0x801783C8 and 0x801782FC, shifting right by 8 and scaling by the halfword at +0x28 while z comes from the halfwords at +0x14 and +0x1C shifted left by 12 and scaled the same way, translates both by the record position, writes the halfword at +0x2A clamped to 0..0xFF into the red and green channels of the first vertex with its blue channel left zero, zeroes the other six channels and appends the 0x1C-byte primitive through 0x8014E5A0 for ordering-table index 2.'
   - - 4968
     - c
-    - seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68
-    - '@source: src/bof3/scenario/seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68.c'
+    - stateCornerRotationScale
+    - '@source: src/bof3/scenario/stateCornerRotationScale.c'
     - '@behavior: Effect-record seeder of the 0x2C-byte-stride record tables of this payload, called once per record by the two step handlers that walk 0x801D3B28 and 0x801D3DE8: it copies the scratchpad work object position triple +0x34/+0x38/+0x3C behind 0x1F800044 into the record words +0x00/+0x04/+0x08, seeds the corner offset SVECTORs +0x10 and +0x18 from the shared angular pair 0x801783C8/0x801782FC at +0x10 and -0x10 with their third halfwords cleared, takes three random Euler angles (rand() & 0xFFF, (rand() & 0x7FF) - 0x400, rand() & 0xFFF), builds the scratch rotation matrix through 0x801AFF64 and 0x80179C58/0x80179DF8 with the middle angle negated/0x80179F98, rotates both offset SVECTORs in place with ApplyMatrixSV, arms the scale halfword +0x28 with (rand() & 2) + 3, clears +0x20/+0x22/+0x24 and writes 0x40 into the second scale halfword +0x2A.'
   - - 5256
     - c
-    - drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088
-    - '@source: src/bof3/scenario/drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088.c'
+    - renderEffectRecordsScenario
+    - '@source: src/bof3/scenario/renderEffectRecordsScenario.c'
     - '@behavior: Overlay draw pass the four step handlers func_801D0F10, func_801D0FEC, func_801D106C and func_801D12A0 call after the record pass 0x801D1A60: arms the shared draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor g_PrimCursor, appends the 0xC-byte draw-mode primitive through 0x8014E5A0 for ordering-table slot 2, fills the 0x20-byte projection scratch of its frame through 0x801AFE18, then walks all 0x20 records of the 0x2C-byte-stride table at 0x801D3B28 drawing each through 0x801D1CD4 and adding 0x10 to that record spin angle halfword at +0x24.'
   - - 5432
     - c
@@ -128,25 +128,25 @@ segments:
     - '@behavior: Dispatches the overlay step from the work-record byte at offset 1 through the ten-word local code-pointer run at 0x801D3954; the record comes from the scratchpad pointer cell 0x1F800044 and takes no arguments.'
   - - 5556
     - c
-    - claimFrontEndRecordFromWorkBlockSeedPatternGridAndSpritePageRequestResource50Or4DResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D21B4
-    - '@source: src/bof3/scenario/claimFrontEndRecordFromWorkBlockSeedPatternGridAndSpritePageRequestResource50Or4DResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D21B4.c'
+    - claimBlockPatternPage
+    - '@source: src/bof3/scenario/claimBlockPatternPage.c'
     - '@behavior: Entry 0 of both work byte 1 code-pointer runs of this payload at 0x801D3954 and 0x801D397C: asks func_8019601C for a free front-end record index and, unless that index reads 0xFF, writes 1 into the payload selector byte 0x801D40AC, forms the 0x74-byte record at 0x80143FC8 + index * 0x74, calls func_8014E564 with 0x340/0x100/0x80/0x100, copies the 0x74-byte block that the work object word 0x4C points at into it, seeds bytes 0x00/0x01/0x02/0x05 with 1/2/0/0x3A and the halfwords 0x2E/0x30 from the base pair of the pattern-grid entry that byte 0x801D40AC selects, and while record byte 0x24 reads odd seeds byte 0x25 from GetTPage(0, 0, 0x340, 0x100) and byte 0x26 with 0x80, after which byte 0x24 |= 0x88; it then publishes the record through the scratchpad cell 0x1F800044 and, while record byte 0x24 reads odd, requests resource (0x50, 0x24) when the halfword at record +0x2C is nonzero and resource (0x4D, 0x1C) plus a clear of record byte 0x2A otherwise, runs func_8014D290 and the reset helper func_80196070 under that published record, restores the cell to the previous work object and arms its countdown byte 0x09 with 2. Either way it then reads the cell back and increments work byte 0x01.'
   - - 6048
     - asm
     - func_801D23A0
   - - 6260
     - c
-    - emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D2474
-    - '@source: src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D2474.c'
+    - emitProjectedPatternGrid
+    - '@source: src/bof3/scenario/emitProjectedPatternGrid.c'
     - '@behavior: Entry 2 of both overlay code-pointer runs at 0x801D3954 and 0x801D397C: through work pointer word 0x4C it projects the object point at +0x34/+0x38/+0x3C with 0x801AFF04 after filling the scratch through 0x801AFE18, then walks the pattern-cell pointer 0x801D40B0 over the bound-by-bound grid of the eight-byte entry at 0x801D393C that the byte 0x801D40AC selects, appends a ten-byte effect record at the cursor 0x801D40B4 for every nonzero cell with the cell as its colour halfword and the projected pair less the entry base plus the column and cell index as its position, raises the live count 0x801D40A8, and finally increments work byte 0x9 and advances work byte 0x1 when that value reads 2.'
   - - 6844
     - c
-    - seedBlinkingEffectRecordsRandomizeVelocityByWorkByteBAndLifeByWorkByte6ArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D26BC
-    - '@source: src/bof3/scenario/seedBlinkingEffectRecordsRandomizeVelocityByWorkByteBAndLifeByWorkByte6ArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D26BC.c'
+    - stateBlinkingRandomizeLife
+    - '@source: src/bof3/scenario/stateBlinkingRandomizeLife.c'
   - - 7476
     - c
-    - drawBlinkingTintedEffectRecordsAdvanceByVelocityBeforeOrAfterLifeExpiryByWorkByte6TickCountdown9ThenAdvanceWorkByte1ScenarioSce15ef100_801D2934
-    - '@source: src/bof3/scenario/drawBlinkingTintedEffectRecordsAdvanceByVelocityBeforeOrAfterLifeExpiryByWorkByte6TickCountdown9ThenAdvanceWorkByte1ScenarioSce15ef100_801D2934.c'
+    - renderBlinkingBeforeLife
+    - '@source: src/bof3/scenario/renderBlinkingBeforeLife.c'
     - '@behavior: Entry 4 of the ten-word overlay step-handler code-pointer run at 0x801D3954 and of the eleven-word run at 0x801D397C: sets bit 6 of the flag byte behind the work object pointer word +0x4C, then walks the ten-byte effect records of the shared table at 0x800EA200 up to this payload own count halfword 0x801D40A8. For a record whose blink flag reads nonzero, the scratchpad work byte +0x6 selects the phase: while it reads zero the record adds its signed velocity bytes +0x8 and +0x9 into the position halfwords +0x4 and +0x6 and decrements its life byte +0x1 only while that life byte reads nonzero, and while it reads nonzero the record decrements the life byte in place and adds the velocity only after that life byte has reached zero. The record is then drawn as one 0xC-byte semi-transparent primitive at its position through the cursor at 0x8014598C after preparation by 0x8017AA30, with the packed colour halfword +0x2 expanded per five-bit channel, and submitted under OT slot 2 through 0x8014E5A0; every record, drawn or not, has its blink flag complemented. The body finally ticks work countdown byte +0x9 down by one and, on zero, advances work byte +0x1 by one.'
   - - 8004
     - c
@@ -158,8 +158,8 @@ segments:
     - '@behavior: Third per-frame step dispatcher of this overlay: loads the work-record pointer from the scratchpad pointer cell 0x1F800044, takes that record unsigned byte 0x1, scales it by four and invokes that entry of the four-word overlay-local code-pointer run at 0x801D396C with no arguments and no result consumed, creating its 0x18-byte frame only to keep the return address across the indirect call. It does not bound the index before the scaled table load, reads nothing else and writes no state.'
   - - 8104
     - c
-    - clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8
-    - '@source: src/bof3/scenario/clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8.c'
+    - stateHeadXYWords
+    - '@source: src/bof3/scenario/stateHeadXYWords.c'
     - '@behavior: Entry 6 of the overlay step-handler code-pointer run at 0x801D3954: arms the scratchpad work object countdown byte +0x9 with 0x14, clears the word pair +0x0C/+0x10 of its step triple and the word pair +0x18/+0x1C of its head point through the first pointer-cell load, advances work byte +0x1 through a second load of that cell, and dispatches sound cue 0x208 through the resident cue dispatcher 0x8015DF18.'
   - - 8192
     - c
@@ -168,8 +168,8 @@ segments:
     - '@behavior: Entry 7 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it adds 0x200 to the work object head word +0x18 and 0x100 to +0x1C, adds that head pair into the step word pair +0x0C/+0x10, hands the work object point at +0x34 together with the updated step pair to the overlay quad ring emitter 0x801D36BC, then re-reads that cell and through the second load ticks countdown byte +0x9 down by one and calls the resident reset helper 0x80196070 when it reaches zero.'
   - - 8340
     - c
-    - advanceHeadPairIntegrateStepPair20TimesNegateStepPairArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2C94
-    - '@source: src/bof3/scenario/advanceHeadPairIntegrateStepPair20TimesNegateStepPairArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2C94.c'
+    - stateHeadIntegrateNegate
+    - '@source: src/bof3/scenario/stateHeadIntegrateNegate.c'
     - '@behavior: Entry 8 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it clears the work object step word pair +0x0C/+0x10 and head point word pair +0x18/+0x1C, then runs twenty integration passes that add 0x100 to the head word +0x18 and 0x200 to +0x1C and fold the updated head pair into the step pair, re-reads that cell and through the second load arms countdown byte +0x9 with 0x14 and negates the accumulated step pair, then re-reads that cell again and through the third load advances work byte +0x1 and dispatches sound cue 0x208.'
   - - 8540
     - c
@@ -196,21 +196,21 @@ segments:
     - '@behavior: Word 7 of the eleven-word code-pointer run at 0x801D397C that the dispatcher 0x801D2DEC indexes with work byte 1: through work pointer word 0x4C it projects the object point at +0x34/+0x38/+0x3C with 0x801AFF04 after filling the scratch through 0x801AFE18, then walks the pattern-cell pointer 0x801D40B0 over the bound-by-bound grid of the eight-byte entry at 0x801D393C that the byte 0x801D40AC selects, appends a ten-byte effect record at the cursor 0x801D40B4 for every nonzero cell with the cell as its colour halfword and the projected pair less the entry base plus the column and cell index as its position, raises the live count 0x801D40A8, and finally increments work byte 9 and advances work byte 1 when that value reads 2.'
   - - 9972
     - c
-    - seedBlinkingEffectRecordsWithRandomLifeAndVelocityArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D32F4
-    - '@source: src/bof3/scenario/seedBlinkingEffectRecordsWithRandomLifeAndVelocityArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D32F4.c'
+    - stateBlinkingLifeVelocity
+    - '@source: src/bof3/scenario/stateBlinkingLifeVelocity.c'
     - '@behavior: Seeding step handler 8 of the eleven-word code-pointer run at 0x801D397C that the dispatcher 0x801D2DEC indexes with work byte +0x1: it fills a sixteen-byte stack array with the alternating byte pattern 0, 1 and keeps it as the blink-flag source, then walks the ten-byte effect records of the shared array at 0x800EA200 up to this payload count halfword 0x801D40A8; every sixteenth pass it re-runs the sixteen-pass random redraw of that array in which one `rand() & 0xF` draw supplies both ends of the swap, and each record takes its flag byte 0x0 from the cursor, draws its velocity pair bytes 0x8 and 0x9 from two `rand() & 0xF` draws and orders them so byte 0x8 holds the larger draw and byte 0x9 its negation, arms its life byte 0x1 with `(rand() & 0x1E) + 0xA` and pre-adds the velocity scaled by that life to the position halfwords 0x4 and 0x6; it then re-reads the scratchpad cell 0x1F800044 and arms its countdown byte 0x9 with 0x50, re-reads the cell and advances work byte 0x1, and dispatches sound cue 0x20C.'
   - - 10480
     - c
-    - drawBlinkingTintedEffectRecordsAdvanceByVelocityTickCountdown9ThenSetProgress43AndAdvanceWorkByte1ScenarioSce15ef100_801D34F0
-    - '@source: src/bof3/scenario/drawBlinkingTintedEffectRecordsAdvanceByVelocityTickCountdown9ThenSetProgress43AndAdvanceWorkByte1ScenarioSce15ef100_801D34F0.c'
+    - renderBlinkingTintedVelocity
+    - '@source: src/bof3/scenario/renderBlinkingTintedVelocity.c'
     - '@behavior: Entry of the overlay record pass: sets bit 6 of the flag byte behind work pointer word 0x4C, walks the ten-byte effect records at 0x800EA200 up to the count halfword at 0x801D40A8, and for each record whose blink flag is set subtracts its signed velocity bytes 8 and 9 from its position halfwords 4 and 6 while its life byte is nonzero, then draws the 0xC-byte primitive at that position through the cursor at 0x8014598C with the packed colour halfword 2 expanded left by three per five-bit channel and submits it under OT slot 2. Every record has its blink flag complemented. It then ticks work countdown byte 9 down by one and, on zero, stores progress 0x2B and advances work byte 1 by one.'
   - - 10908
     - c
     - invokeHelperScenarioSce15ef100_801D369C
   - - 10940
     - c
-    - drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC
-    - '@source: src/bof3/scenario/drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC.c'
+    - renderRadiiOrangeBlack
+    - '@source: src/bof3/scenario/renderRadiiOrangeBlack.c'
     - '@behavior: Overlay quad ring emitter: GetTPage(0, 1, 0x2C0, 0x100) with SetDrawMode dfe 0 and dtd 0 at the g_PrimCursor packet, func_8014E5A0(2, 0xC) arming the draw mode and func_801AFE18 filling the 0x20-byte sort scratch; then the caller point at its first argument translated in x by the orange radius and by the black radius, each shifted left four and projected through func_801AFF04 into a screen entry; then thirty-two iterations of one semi-transparent POLY_G4 whose vertices 0 and 1 take the previous corner pair and whose vertices 2 and 3 take the pair recomputed at the phase advanced by 0x80, each corner being the caller point translated by the radius rotated through the 0x1000-unit cosine 0x801783C8 for x and sine 0x801782FC for y with the product shifted right eight, vertices 0 and 2 carrying the colour triplet 0xFF/0x7F/0x00 and vertices 1 and 3 black, each 0x24-byte packet appended through func_8014E5A0 under OT slot 2.'
   - - 11544
     - textbin

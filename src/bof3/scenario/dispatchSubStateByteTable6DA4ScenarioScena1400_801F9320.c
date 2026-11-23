@@ -92,7 +92,7 @@ void func_801636A0(u32 arg0, u32 arg1);
 void func_80166180(s32 arg0);
 u32 func_80163EA0(void);
 void func_80161D74(s32 arg0);
-void addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
+void signedTableStepScaled(
     u8 amount);
 
 /* @source 0x801F9320
@@ -128,7 +128,7 @@ void addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
  *           tick halfword with 0x64 and advances to 0x0D, while the 0x0E arm
  *           hands 0x32 to func_801C7A54 and advances to 0x0F. Sub-states 0x0C,
  *           0x0D and 0x0F then run the overlay step handler
- *           addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800
+ *           signedTableStepScaled
  *           with the per-tick scale 4. Sub-state 0x10 runs the shared front-end
  *           step func_8015C058, clears bit 3 of D_80146258, clears the progress
  *           byte, sets flag 0xF of D_8014686C through func_8015B580 and then
@@ -155,7 +155,7 @@ void addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
  * sub-state byte D_80146875 that this target's other sources name as the
  * second member of the front-end state tuple, and 0x801F6DA4 is this payload's
  * own leading table-data jump table, so the in-target family form of
- * dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0 names this body
+ * callSubByteScenario names this body
  * dispatchSubStateByteTable6DA4ScenarioScena1400.
  *
  * Shape: the payload holds no byte-identical copy of this 0x514-byte span and
@@ -165,7 +165,7 @@ void addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
  * other payload carries, so no clone or carver rung applies. The statement
  * order and declaration style come from the two exact in-target sources that
  * this body's own bytes confirm site by site:
- * dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0 for the switch, the
+ * callSubByteScenario for the switch, the
  * per-arm return tails and the declarations of D_80146875, D_80143BB0 and the
  * shared helpers, and claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp46700_801CF050
  * for the func_8019601C object-byte block whose 0x74 multiply chain, 0xFF test
@@ -283,7 +283,7 @@ void dispatchSubStateByteTable6DA4ScenarioScena1400_801F9320(void) {
       *counter = 0x64;
       D_80146875 = 0x0D;
     }
-    addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
+    signedTableStepScaled(
         4);
     return;
   }
@@ -297,7 +297,7 @@ void dispatchSubStateByteTable6DA4ScenarioScena1400_801F9320(void) {
       progress = &g_ScenarioProgress;
       (*progress)++;
     }
-    addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800(
+    signedTableStepScaled(
         4);
     return;
   }

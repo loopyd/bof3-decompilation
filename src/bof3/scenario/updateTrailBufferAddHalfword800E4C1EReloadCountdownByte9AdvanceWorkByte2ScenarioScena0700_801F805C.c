@@ -7,7 +7,7 @@
  * loads, which is what keeps the countdown arm's two pointer reads separate
  * `lui`/`lw` pairs in the original bytes. */
 extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
-extern u16 scenarioScena0700Halfword800E4C1E; /* @source 0x800E4C1E @kind unknown */
+extern u16 scenarioHalfword800; /* @source 0x800E4C1E @kind unknown */
 
 /* Trail rebuild at 0x801F88B8, still an `asm` row when this lift was written:
  * it shifts the trail records and recomputes their projected points and
@@ -45,7 +45,7 @@ void func_801F8BE8(u8* buffer);
  * is its own named-cell load, so both reloads in the countdown arm keep the
  * original's separate `lui`/`lw` pairs instead of a hoisted base. The 148 bytes
  * are byte-identical to the already-exact lift
- * updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F724C
+ * stateTrailBufferReload
  * (a payload cmp of the two 0x94-byte spans was equal word for word, both `jal`
  * immediates included), so that lift supplied the statement order, operand
  * forms and declaration style while this span's own address and run word are
@@ -61,9 +61,9 @@ void updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2Sce
 
   func_801F88B8(PSX_PTR(u8, 0x800E48E0u));
   func_801F8BE8(PSX_PTR(u8, 0x800E48E0u));
-  value = scenarioScena0700Halfword800E4C1E;
+  value = scenarioHalfword800;
   work = scenarioScena0700Work;
-  scenarioScena0700Halfword800E4C1E = (u16)(value + 6);
+  scenarioHalfword800 = (u16)(value + 6);
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
   if (countdown == 0) {

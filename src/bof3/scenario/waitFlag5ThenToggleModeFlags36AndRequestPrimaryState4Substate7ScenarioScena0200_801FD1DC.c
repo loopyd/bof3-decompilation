@@ -26,9 +26,9 @@ void func_8015C088(void);
  * delay slot, and each byte store materialises the 0x8014 page in $at on its
  * own. The role of the flipped bits and of the cleared bytes remains unknown.
  * Its 120 bytes are the reviewed exact neighbour
- * waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate5ScenarioScena0200_801FD164
+ * waitToggleRequestPrimary
  * (0x801FD164) shape, which differs only in the sub-state constant, and the
- * store tail repeats clearSharedBytes6566AndRequestPrimaryState0BSubstate7ScenarioScena0200_801FD0CC
+ * store tail repeats stateSharedRequestPrimary
  * (0x801FD0CC); a payload scan over every out/binaries entry found this 120-byte
  * span at offset 0x65DC only, so no shipped payload holds a byte-identical
  * copy and the neighbour supplied shape alone. The address anchor keeps the

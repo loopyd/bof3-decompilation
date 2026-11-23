@@ -11,7 +11,7 @@ extern u32 D_8014686C;
  * callback-pointer table at 0x801FE9C0 (eleven entries: func_801FE058,
  * func_801FE0A0, func_801FE0E0, func_801FE698, func_801FE6DC,
  * invokeHelperArgScenarioScena0800_801FE740,
- * armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE760,
+ * armGroupRecordsSlots,
  * func_801FE7AC,
  * func_801FE800, func_801FE840 and invokeHelperArgScenarioScena0800_801FE874),
  * passing the record pointer unchanged and the word held in the shared main-RAM

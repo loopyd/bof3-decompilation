@@ -63,7 +63,7 @@ void func_801BE1B0(u32 arg0);
 /* Shared front-end record index source at 0x8019601C; 0xFF means none. */
 extern u8 func_8019601C(void);
 /* Overlay-local rotation publisher of this same target. */
-void setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70(
+void stateSharedAngleOffsets(
     s32 arg0);
 
 /* @source 0x801F9A44
@@ -83,7 +83,7 @@ void setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70(
  * sprite ids 0x208 and 0x207 through func_8015DF18 and advances to 1.
  * Sub-state 1 publishes the shared record angle D_80147B5C (0x80147B5C) masked
  * with 0xFFF through the overlay's own
- * setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70 and
+ * stateSharedAngleOffsets and
  * advances to 2. Sub-state 2 takes that cell's address once, publishes its
  * masked low twelve bits as the scratchpad halfword 0x1F800000, and while the
  * shared held-pad word D_80145AA4 (0x80145AA4) carries bit 0x2000 adds 0x10 to
@@ -147,7 +147,7 @@ void runPrimaryState5SubstateSequenceScenarioScena1300_801F9A44(void) {
     D_80146875 = 1;
     break;
   case 1:
-    setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70(
+    stateSharedAngleOffsets(
         D_80147B5C & 0xFFF);
     D_80146875 = 2;
     break;
@@ -159,12 +159,12 @@ void runPrimaryState5SubstateSequenceScenarioScena1300_801F9A44(void) {
     if (D_80145AA4 & 0x2000) {
       angle += 0x10;
       *pAngle = angle;
-      setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70(
+      stateSharedAngleOffsets(
           angle & 0xFFF);
     } else if (D_80145AA4 & 0x8000) {
       angle -= 0x10;
       *pAngle = angle;
-      setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70(
+      stateSharedAngleOffsets(
           angle & 0xFFF);
     }
     if (D_80145AA8 & 0x40) {

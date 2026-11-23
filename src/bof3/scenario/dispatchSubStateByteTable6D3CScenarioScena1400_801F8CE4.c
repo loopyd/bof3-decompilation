@@ -108,7 +108,7 @@ void func_80150224(s32 action_id);
 u8 func_8019601C(void);
 void func_80161BBC(u32 selection_id);
 s32 func_80162D00(void);
-void stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C(
+void stepViewReferenceDistances(
     void);
 
 /* @source 0x801F8CE4
@@ -144,7 +144,7 @@ void stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScen
  *           answers in D_801FC4C0 and, unless that byte is 0xFF, marks its
  *           0x74-byte row at D_80143FC8 (+0 = 1, +5 = 0x8D). Sub-state 0x0F then
  *           runs the overlay view step
- *           stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C,
+ *           stepViewReferenceDistances,
  *           publishes 0x1F in D_8014832E, sets front-end mode 1 and advances to
  *           0x10; the 0x10 arm waits on the same gate, runs the view step, starts
  *           action 1, publishes phase 2 in D_80143BB0 and sets byte 1 of the
@@ -179,7 +179,7 @@ void stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScen
  * at 0x801FC424, it switches on the shared secondary sub-state byte D_80146875
  * like its two in-target siblings, and 0x801F6D3C is this payload's own leading
  * table-data jump table, so the in-target family form of
- * dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0 and
+ * callSubByteScenario and
  * dispatchSubStateByteTable6DA4ScenarioScena1400_801F9320 names this body
  * dispatchSubStateByteTable6D3CScenarioScena1400.
  *
@@ -199,7 +199,7 @@ void stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScen
  * two exact in-target switch bodies, dispatchSubStateByteTable6DA4ScenarioScena1400_801F9320
  * for the switch, the per-arm return tails, the pointer-locals that keep a
  * counter address in one register and the D_80143FC8 row writes, and
- * dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0 for the
+ * callSubByteScenario for the
  * selector-context arms and the D_80144F28 bank. Every literal, call constant
  * and bound here is this span's own bytes.
  *
@@ -286,7 +286,7 @@ void dispatchSubStateByteTable6D3CScenarioScena1400_801F8CE4(void) {
       D_80143FC8[(u32)D_801FC4C0 * 0x74U] = 1;
       D_80143FCD[(u32)D_801FC4C0 * 0x74U] = 0x8D;
     }
-    stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C();
+    stepViewReferenceDistances();
     D_8014832E = 0x1F;
     func_8014ECAC(1);
     D_80146875 = 0x10;
@@ -295,14 +295,14 @@ void dispatchSubStateByteTable6D3CScenarioScena1400_801F8CE4(void) {
     if (D_80143C40 != 0) {
       return;
     }
-    stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C();
+    stepViewReferenceDistances();
     func_80150224(1);
     D_80143BB0 = 2;
     D_80143FC8[(u32)D_801FC4C0 * 0x74U + 1] = 2;
     D_80146875 = 0x11;
     return;
   case 0x11:
-    stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C();
+    stepViewReferenceDistances();
     return;
   case 0x12:
     if (D_80143BB0 != 2) {
@@ -312,7 +312,7 @@ void dispatchSubStateByteTable6D3CScenarioScena1400_801F8CE4(void) {
         D_8014932E = (s16)D_8014932E / 2;
       }
     }
-    stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C();
+    stepViewReferenceDistances();
     return;
   case 0x13: {
     u16* counter = &D_80146876;
@@ -321,7 +321,7 @@ void dispatchSubStateByteTable6D3CScenarioScena1400_801F8CE4(void) {
       func_8014ECAC(0);
       D_80146875 = 0x14;
     }
-    stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C();
+    stepViewReferenceDistances();
     return;
   }
   case 0x14:

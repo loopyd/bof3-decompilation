@@ -35,11 +35,11 @@ segments:
     - '@behavior: Per-frame handler dispatcher of this overlay''s first step: it reads the work-object pointer cell at scratchpad 0x1F800044 before the frame is created, takes that object''s unsigned byte at offset 1, scales it by four and calls that entry of the overlay-local handler table at 0x801FD5A8, whose six code-pointer words are 0x801F743C, 0x801F745C, 0x801F74CC, 0x801F7530, 0x801F7554 and 0x801F7640, so the work byte selects which work-byte-1 handler runs this frame; it reads no other state and writes none, and its 0x18-byte frame only keeps $ra across the indirect call.'
   - - 2108
     - c
-    - incrementWorkByte1ClearCounterScenarioScena0500_801F743C
+    - incrementClearCounterScenario
   - - 2140
     - c
-    - drawWorkCursorThenTickProgressBy16AndAdvanceWorkByte1At501ScenarioScena0500_801F745C
-    - '@source: src/bof3/scenario/drawWorkCursorThenTickProgressBy16AndAdvanceWorkByte1At501ScenarioScena0500_801F745C.c'
+    - renderCursorTickProgress
+    - '@source: src/bof3/scenario/renderCursorTickProgress.c'
     - '@behavior: Work-byte-1 handler that the overlay dispatcher reaches through handler table word 1: it reads the work-object pointer cell at scratchpad 0x1F800044 before its frame is created, passes that object cursor triple at offsets 0x34, 0x38 and 0x3C plus its unsigned 16-bit word at offset 0x0C to the overlay-local drawing helper at 0x801F7660, then re-reads the same pointer cell, advances the 32-bit counter at offset 0x0C by 0x10 and, once the new value reaches 0x501, increments the object unsigned byte at offset 0x01 that indexes the handler table; it takes no arguments, returns nothing and its 0x18-byte frame only keeps $ra across the helper call.'
   - - 2252
     - c
@@ -51,7 +51,7 @@ segments:
     - '@behavior: Per-frame handler dispatcher of this overlay''s second step: it reads the work-object pointer cell at scratchpad 0x1F800044 before the frame is created, takes that object''s unsigned byte at offset 1, scales it by four and calls that entry of the overlay-local handler table continuation at 0x801FD5B4, so the work byte selects which of the three handlers ending the overlay''s six-word work-byte-1 run executes this frame; it reads no other state and writes none, and its 0x18-byte frame only keeps $ra across the indirect call.'
   - - 2352
     - c
-    - incrementWorkByte1SetCounterScenarioScena0500_801F7530
+    - incrementSetCounterScenario
   - - 2388
     - asm
     - func_801F7554
@@ -97,8 +97,8 @@ segments:
     - func_801F87C4
   - - 8084
     - c
-    - setScenarioFlagBit0AThenReleaseFrontEndAndRequestPrimaryState0AtProgress18ScenarioScena0500_801F8B94
-    - '@source: src/bof3/scenario/setScenarioFlagBit0AThenReleaseFrontEndAndRequestPrimaryState0AtProgress18ScenarioScena0500_801F8B94.c'
+    - stateFlagReleasePrimary
+    - '@source: src/bof3/scenario/stateFlagReleasePrimary.c'
     - '@behavior: Primary state 6 handler of this overlay, reached through word 6 of the thirty-two-word primary handler table at 0x801FD5E8: while the shared sub-state byte D_80146875 reads zero and the shared scenario progress byte g_ScenarioProgress reads 0x18 it sets flag bit 0xA of the shared scenario flag word D_8014686C through the shared bit-set helper func_8015B580 (0x8015B580), runs the shared front-end release helper func_8015C058 (0x8015C058), clears the three shared main-RAM state bytes 0x80146865, 0x80146866 and 0x80146867 and the shared sub-state byte D_80146875, and requests primary scene state 0 in the shared primary state byte D_80146874, leaving the progress byte unchanged; on any other sub-state or progress value it returns without touching anything. It takes no arguments and returns nothing, its 0x18-byte frame keeps $ra across the two calls and $s0 across the body, which holds the D_80146875 address because that cell is both read and written, the three state bytes and the primary state byte materialise the 0x8014 page in $at on their own while the sub-state store uses that saved pointer, the constant 0x18 is materialised into $v0 in the delay slot of the sub-state test, no in-image jal targets the address and its only image word is 0x801FD600.'
   - - 8220
     - c
@@ -116,8 +116,8 @@ segments:
     - func_801F9148
   - - 9964
     - c
-    - startActionZeroLatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801F92EC
-    - '@source: src/bof3/scenario/startActionZeroLatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801F92EC.c'
+    - audioActionLatchRelease
+    - '@source: src/bof3/scenario/audioActionLatchRelease.c'
     - '@behavior: Primary state 11 handler of this overlay, reached through word 11 of the thirty-two-word primary handler table at 0x801FD5E8: it drives the shared sub-state byte D_80146875 through two steps and does nothing for any other sub-state value. Sub-state 0 starts action 0 through the shared action helper func_80150224, latches the shared phase byte D_80143BB0 to 2 and advances the sub-state byte to 1. Sub-state 1 waits for that phase byte to read 2 and then runs the shared front-end release helper func_8015C058, clears the sub-state byte and requests primary scene state 0 in the shared primary state byte D_80146874. It takes no arguments, returns nothing, and its 0x18-byte frame keeps $ra across the two calls and $s0 across the body because the sub-state byte is both read and stored through that pointer, while the phase byte and the primary state byte materialise the 0x8014 page in $at on their own.'
   - - 10108
     - c
@@ -158,8 +158,8 @@ segments:
     - '@behavior: Primary state 22 handler of this overlay, reached through word 22 (0x801FD640) of the thirty-two-word primary handler table at 0x801FD5E8 that dispatchPrimaryStateHandlerScenarioScena0500_801F83EC (0x801F83EC) indexes with the shared primary state byte D_80146874, so no in-image jal targets it and that table word is its only image reference. It drives the shared sub-state byte D_80146875 through two steps and returns without touching anything for any other sub-state value: sub-state 0 starts action 0x4C through the shared action helper func_80150224 (0x80150224), latches the shared phase byte D_80143BB0 to 2 and advances the sub-state byte to 1, while sub-state 1 waits while that phase byte reads 2 and, once it changes, runs the shared front-end release helper func_8015C058 (0x8015C058), clears the sub-state byte and requests primary scene state 0 in D_80146874. It takes no arguments and returns nothing, its 0x18-byte frame keeps $ra across the two calls and $s0 for the sub-state pointer, the sub-state byte is read once into $v1 for the two-case test, the constants 1 and 2 are materialised into $v0 in the delay slots of that test, and the phase byte stores through $at while the sub-state byte stores through $s0.'
   - - 23560
     - c
-    - scanSelectionSlotsSettingSharedStateOneForFiveTwoForSixScenarioScena0500_801FC808
-    - '@source: src/bof3/scenario/scanSelectionSlotsSettingSharedStateOneForFiveTwoForSixScenarioScena0500_801FC808.c'
+    - querySettingFiveSix
+    - '@source: src/bof3/scenario/querySettingFiveSix.c'
     - '@behavior: Two mirrored scans of the three shared selection slots at D_80144F5A: the first stores 1 into the shared state byte D_80146865 for every slot that reads 5, the second stores 2 for every slot that reads 6, so the byte ends as 2 when any slot reads 6, as 1 when no slot reads 6 but one reads 5, and unchanged when no slot reads either value. It takes no arguments, returns nothing and its body is a leaf with no frame; each slot load adds the zero-extended index to the 0x8014 page in $at, and each scan hoists its own copy of the 0x80146865 address into $a1 beside its comparison and stored constants.'
   - - 23712
     - c
@@ -179,8 +179,8 @@ segments:
     - func_801FCAA0
   - - 24348
     - c
-    - setScenarioFlagBit0BThenClearProgressAndSharedStateBytesAndRequestPrimaryState8ScenarioScena0500_801FCB1C
-    - '@source: src/bof3/scenario/setScenarioFlagBit0BThenClearProgressAndSharedStateBytesAndRequestPrimaryState8ScenarioScena0500_801FCB1C.c'
+    - stateFlagProgressBytes
+    - '@source: src/bof3/scenario/stateFlagProgressBytes.c'
     - '@behavior: Record-callback entry 2 of this overlay''s nine-word callback run: it sets flag bit 0xB of the shared scenario flag word D_8014686C through the shared bit-set helper func_8015B580 (0x8015B580), which receives that word loaded with lui/lw and the bit index 0xB, then runs the shared front-end startup helper func_8015C088 (0x8015C088), then clears the shared progress byte g_ScenarioProgress (0x80146864), the three shared main-RAM state bytes 0x80146865, 0x80146866 and 0x80146867 and the shared sub-state byte D_80146875, and requests primary scene state 8 in the shared primary state byte D_80146874; it takes no arguments and returns nothing, the 0x18-byte frame only keeps $ra across the two calls, the constant 8 is materialised once in $v0 immediately after the second call to feed the last sb while each of the six byte stores materialises the 0x8014 page in $at on its own, and the record-callback dispatcher dispatchRecordCallbackScenarioScena0500_801FCA58 (0x801FCA58) reaches it only through word 2 of the nine-word overlay callback run at 0x801FD644 (0x801FD64C holds 0x801FCB1C), so the record byte at offset 0x7A selects it with the value 2.'
   - - 24448
     - c
