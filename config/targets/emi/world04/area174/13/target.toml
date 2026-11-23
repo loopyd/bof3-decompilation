@@ -24,6 +24,7 @@ sources = [
     "src/bof3/world/spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanceWorkByte1WhenPositionEquals408000World04Area17413_801F2D68.c",
     "src/bof3/world/seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld04Area17413_801F3490.c",
     "src/bof3/world/playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C.c",
+    "src/bof3/world/stepWorkRecordsAndResetWorkAreaWhenNoRecordActiveWorld04Area17413_801F2E28.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4.c",

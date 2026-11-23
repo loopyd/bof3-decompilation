@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F2E04
   - - 604
-    - asm
-    - func_801F2E5C
+    - c
+    - requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C
+    - '@source: src/bof3/world/requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C.c'
+    - '@behavior: State handler reached only as entry 1 of the thirteen-word pointer run at 0x801F4268 in the textbin row D_801F3F10; no jal names it. Indexes the world record table 0x8017F974 with the shared id 0x80143F00, takes word 0x10 as a per-state script pointer table, picks the entry with front-record byte 0x03 and adds front-record halfword 0x0A as the script byte offset. Requests the command byte at 0x02 through func_8014D6DC with the work record halfword 0x58 lowered by two, copies the command byte at 0x03 into work byte 0x2A, then advances the front-record halfword 0x0A by two. Takes no arguments and returns nothing.'
   - - 772
     - asm
     - func_801F2F04

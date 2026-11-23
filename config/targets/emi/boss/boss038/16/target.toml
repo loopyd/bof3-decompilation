@@ -12,6 +12,7 @@ sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03816_800C18EC.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03816_800C19E4.c",
     "src/bof3/boss/publishBattleHooksBossBoss03816_800C1B7C.c",
+    "src/bof3/boss/publishBattleHooksSetState40PublishWorkRecordAndCenterSharedChannelPairBossBoss03816_800C1A34.c",
 ]
 support_sources = [
     "src/bof3/boss/initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss03816_800C1B10.c",

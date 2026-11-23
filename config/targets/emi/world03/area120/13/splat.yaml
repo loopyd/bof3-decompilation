@@ -49,8 +49,10 @@ segments:
     - '@source: src/bof3/world/step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40.c'
     - '@behavior: Step 2 of the run the handler table at 0x801F43C0 dispatches. The body runs the target-local work-table routine at 0x801F36B0 and ignores its result, then, only when the shared scenario progress byte at 0x80146864 equals 0x11, queues cue 0x203 and then cue 0x202 through the same-binary dispatcher func_8015DF18, stores 2 into byte 0x06 of the scratchpad work record published through pointer cell 0x1F800044 and advances that record byte 0x01, the byte the table dispatcher indexes. Takes no arguments and returns nothing.'
   - - 432
-    - asm
-    - func_801F2DB0
+    - c
+    - step3ResetWorkStateWhenNoEffectRecordHandledWorld03Area12013_801F2DB0
+    - '@source: src/bof3/world/step3ResetWorkStateWhenNoEffectRecordHandledWorld03Area12013_801F2DB0.c'
+    - '@behavior: Step 3 of the run the handler table at 0x801F43C0 dispatches, whose fourth pointer word names this body; the exact dispatcher at 0x801F2C18 indexes that table with work record byte 0x01. The body runs the target-local effect sweep at 0x801F36B0, which walks the 256 entries of the effect table at 0x800E4800 and returns 1 when it handled at least one entry, and only when that result masked to a byte reads zero does it call the shared work-area reset helper at 0x80196070, which clears work record bytes 0x00-0x04 and so returns the overlay to step 0 of the same table. Takes no arguments, returns nothing, and its 0x18-byte frame holds only the saved return address at 0x10.'
   - - 484
     - c
     - dispatchStateByte1Table43d0World03Area12013_801F2DE4

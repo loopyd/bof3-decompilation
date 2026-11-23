@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/runStep5HandlerOnSceneState30600ElseAdvanceWorkByte9By8AndDrawQuadWorld03Area12013_801F3E7C.c",
     "src/bof3/world/step1ClaimFourEffectRecordsSweepArmWorkByte6To1AndAdvanceWorkByte1OnCountdownExpiryWorld03Area12013_801F2CB4.c",
     "src/bof3/world/step0ResetEffectTableSeedWorkPositionSetWorkByte6To0RefillWorkHalfword32AdvanceWorkByte1Cue201World03Area12013_801F2C5C.c",
+    "src/bof3/world/step3ResetWorkStateWhenNoEffectRecordHandledWorld03Area12013_801F2DB0.c",
 ]
 support_sources = [
     "src/bof3/support/area120_13_psyq.c",

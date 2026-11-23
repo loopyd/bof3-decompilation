@@ -72,8 +72,10 @@ segments:
     - c
     - noopHandlerBossBoss03816_800C1A2C
   - - 564
-    - asm
-    - func_800C1A34
+    - c
+    - publishBattleHooksSetState40PublishWorkRecordAndCenterSharedChannelPairBossBoss03816_800C1A34
+    - '@source: src/bof3/boss/publishBattleHooksSetState40PublishWorkRecordAndCenterSharedChannelPairBossBoss03816_800C1A34.c'
+    - '@behavior: Overlay entry that installs this overlay opening battle state: publishes the handler trio 0x800C1B10, 0x800C1B74 and 0x800C1B08 into the shared battle hook slots 0x801463A4, 0x801463A8 and 0x801463AC in slot order, writes 0x40 to the battle state byte 0x80146384, publishes this overlay work record 0x801EBDD8 into the scratchpad pointer cell 0x1F800044 and runs the shared helper 0x800AFD9C with no arguments; it then re-reads that cell and centres the shared fixed-point channel pair on the midpoint between the record position pair and the shared work position, storing 0x80143F24 plus half the signed difference to record word 0x34 into 0x80149308, 0x80143F28 plus half the signed difference to record word 0x38 into 0x8014930C, and writes 0x20 into the shared scale halfword 0x8014932E. No jal and no pointer word of the payload names it, its 0x18-byte frame keeps the return address at 0x10 across the one call, and the midpoint divisions truncate toward zero.'
   - - 776
     - c
     - zeroResultBossBoss03816_800C1B08

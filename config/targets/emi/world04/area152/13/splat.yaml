@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801F2DB0
   - - 804
-    - asm
-    - func_801F2F24
+    - c
+    - prepareWorkRecordForLookup1D1AndArmState1World04Area15213_801F2F24
+    - '@source: src/bof3/world/prepareWorkRecordForLookup1D1AndArmState1World04Area15213_801F2F24.c'
+    - '@behavior: Entry 0 of the five-entry work-byte-1 handler run based at 0x801F4D58 in this overlay, which the overlay update 0x801F2DB0 indexes with work record byte 0x01. It stores 0x80 into work byte 0x24 of the record published at the scratchpad pointer cell 0x1F800044, requests main lookup entry 0x1D1 through the shared 0x8014DD3C helper, stores 5 into work byte 0x29, clears work byte 0x2A and work bytes 0x5D, 0x5E and 0x5F, and finally sets work byte 0x01 to 1 so the next dispatch takes entry 1 of the same run at 0x801F2FB0.'
   - - 944
     - asm
     - func_801F2FB0
