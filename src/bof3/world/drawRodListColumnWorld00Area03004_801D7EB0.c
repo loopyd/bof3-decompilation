@@ -109,7 +109,7 @@ row_drawn:
       FIELD_REF(s32, work, 0x0C) = rows - 1;
     }
   }
-  drawListColumnFrameWorld00Area03004((s16)x, (s16)baseY);
+  renderListColumnFrame((s16)x, (s16)baseY);
   drawStretchedPanelColumnWorld00Area03004_801D8248(
       (s16)(x + 0x80), (s16)(baseY + 0x1C), 0x72);
   drawEncodedTextAt((s16)(x + 0x3A), (s16)(baseY + 7),

@@ -44,25 +44,25 @@ segments:
     - func_801EEFB0
   - - 1040
     - c
-    - dispatchStateByte1Table0ca8BmagicMagic12003_801EF010
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic12003DispatchTables.c'
   - - 1108
     - c
-    - dispatchWorkByte2HandlerThenCallF44CWhenGlobalWorkByteBNotFFAndWorkByte2SetBmagicMagic12003_801EF054
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF44CWhenGlobalWorkByteBNotFFAndWorkByte2SetBmagicMagic12003_801EF054.c'
+    - callGlobalByteNot
+    - '@source: src/bof3/bmagic/callGlobalByteNot.c'
     - '@behavior: Dispatches the work-byte-2 step handler chosen by the scratchpad record byte 2 from the local table at 0x801F0CB0 and, when shared battle work byte B is not 0xFF and the record byte 2 is nonzero after the call, invokes the target-local block at 0x801EF44C.'
   - - 1240
     - asm
     - func_801EF0D8
   - - 1648
     - c
-    - add3ToWorkByteAThenIncrementWorkByte9AndSetGlobalWorkByteBToOneAndAdvanceWorkByte2At8BmagicMagic12003_801EF270
-    - '@source: src/bof3/bmagic/add3ToWorkByteAThenIncrementWorkByte9AndSetGlobalWorkByteBToOneAndAdvanceWorkByte2At8BmagicMagic12003_801EF270.c'
+    - workIncrementGlobalOne
+    - '@source: src/bof3/bmagic/workIncrementGlobalOne.c'
     - '@behavior: Adds 3 to work byte A, increments work byte 9 and, when that byte reaches 8, sets global work byte B to one and advances work byte 2.'
   - - 1772
     - c
-    - decrementWorkByteBIncrementByte9RaiseFlag10At18ThenAdvanceWorkByte2BmagicMagic12003_801EF2EC
-    - '@source: src/bof3/bmagic/decrementWorkByteBIncrementByte9RaiseFlag10At18ThenAdvanceWorkByte2BmagicMagic12003_801EF2EC.c'
+    - decrementByteIncrementRaise
+    - '@source: src/bof3/bmagic/decrementByteIncrementRaise.c'
     - '@behavior: Decrements work-object byte B, increments work byte 9 and, when that stored byte reaches 0x18, passes the shared battle target byte at 0x80146384 with the constant 0x10 to func_800A9610 and then advances work byte 2.'
   - - 1908
     - c
@@ -78,8 +78,8 @@ segments:
     - func_801EF44C
   - - 4384
     - c
-    - setDrawModeThenDispatchWorkByte2HandlerBmagicMagic12003_801EFD20
-    - '@source: src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerBmagicMagic12003_801EFD20.c'
+    - stateDrawModeHandler
+    - '@source: src/bof3/bmagic/stateDrawModeHandler.c'
     - '@behavior: Sets draw mode, appends its packet, and dispatches the work-byte-2 handler between shared context publications.'
   - - 4564
     - asm
@@ -89,28 +89,28 @@ segments:
     - func_801F0008
   - - 5188
     - c
-    - invokeHelpers4D978And4D290ThenDecrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic12003_801F0044
-    - '@source: src/bof3/bmagic/invokeHelpers4D978And4D290ThenDecrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic12003_801F0044.c'
+    - callDecrementHelperZero
+    - '@source: src/bof3/bmagic/callDecrementHelperZero.c'
     - '@behavior: Invokes shared helpers 0x8014D978 and 0x8014D290, decrements work byte 9, and invokes shared helper 0x801E5988 on zero.'
   - - 5276
     - c
-    - runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic12003_801F009C
-    - '@source: src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic12003_801F009C.c'
+    - runSlotGridDraw
+    - '@source: src/bof3/bmagic/runSlotGridDraw.c'
     - '@behavior: Runs the local slot-grid draw routine, increments work byte 9, and advances work byte 2 at 0x60.'
   - - 5380
     - c
-    - runSlotGridDrawThenAdd1ToWorkByte9AndInvokeHelperAt70BmagicMagic12003_801F0104
-    - '@source: src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndInvokeHelperAt70BmagicMagic12003_801F0104.c'
+    - runSlotGridHelper
+    - '@source: src/bof3/bmagic/runSlotGridHelper.c'
     - '@behavior: Runs the local slot-grid draw routine, increments work byte 9, and invokes the shared helper at 0x801E5988 when that stored byte reaches 0x70.'
   - - 5464
     - c
-    - invokeHelper08ACThenIncrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic12003_801F0158
-    - '@source: src/bof3/bmagic/invokeHelper08ACThenIncrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic12003_801F0158.c'
+    - callIncrementAdvanceBmagic
+    - '@source: src/bof3/bmagic/callIncrementAdvanceBmagic.c'
     - '@behavior: Invokes the target-local helper at 0x801F08AC, advances work-object byte 9 modulo 256 through the scratchpad pointer cell at 0x1F800044, and, when that stored byte reaches 0x10, re-reads the cell and increments work-object byte 2 modulo 256.'
   - - 5568
     - c
-    - invokeHelper08ACThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic12003_801F01C0
-    - '@source: src/bof3/bmagic/invokeHelper08ACThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic12003_801F01C0.c'
+    - callDecrementByteZero
+    - '@source: src/bof3/bmagic/callDecrementByteZero.c'
     - '@behavior: Invokes the target-local helper at 0x801F08AC, decrements work-object byte A modulo 256 through the scratchpad pointer cell at 0x1F800044, and, when that byte reaches zero, re-reads the cell and increments work-object byte 2 modulo 256.'
   - - 5668
     - c
@@ -122,13 +122,13 @@ segments:
     - func_801F0274
   - - 6320
     - c
-    - drawUpToSixGreyTexturedQuadsScaledBySlotCounterBytesBmagicMagic12003_801F04B0
-    - '@source: src/bof3/bmagic/drawUpToSixGreyTexturedQuadsScaledBySlotCounterBytesBmagicMagic12003_801F04B0.c'
+    - renderUpSixGrey
+    - '@source: src/bof3/bmagic/renderUpSixGrey.c'
     - '@behavior: Draw up to six grey textured quads scaled by slot counter bytes.'
   - - 7052
     - c
-    - projectWorkPositionAndInstallAxisTurnFromWorkByte8BmagicMagic12003_801F078C
-    - '@source: src/bof3/bmagic/projectWorkPositionAndInstallAxisTurnFromWorkByte8BmagicMagic12003_801F078C.c'
+    - projectInstallAxisTurn
+    - '@source: src/bof3/bmagic/projectInstallAxisTurn.c'
     - '@behavior: Projects the work position and installs an axis turn selected by work byte 8.'
   - - 7340
     - asm

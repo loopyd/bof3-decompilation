@@ -23,7 +23,7 @@ extern u16 D_800100C2;    /* @source 0x800100C2 @kind unknown */
  * selectors 0, 1 and 2 choose 0x800100A0, 0x800100C0 or 0x800100DE.
  * The step at 0x801DC93C adds 0x80010000 and submits the selected byte stream
  * to drawEncodedTextAt. Live contents and resource ownership remain unresolved. */
-extern u16 handlerSelectorZeroTextOffsetState;    /* @source 0x800100A0 @kind unknown */
+extern u16 handlerSelectorTextOffset;    /* @source 0x800100A0 @kind unknown */
 extern u16 handlerSelectorOneTextOffsetState;    /* @source 0x800100C0 @kind unknown */
 extern u16 handlerSelectorTwoTextOffsetState;    /* @source 0x800100DE @kind unknown */
 /* Shared main-executable equipment record table: the AREA030 name steps scale
@@ -47,7 +47,7 @@ extern u32 D_8014930C;    /* @source 0x8014930C @kind unknown */
 extern s16 D_8014930E;    /* @source 0x8014930E @kind unknown */
 extern u8  D_80143FC9;    /* @source 0x80143FC9 @kind unknown */
 /* Shared front-end entry table at 0x80143FC8: 20 records of 0x74 bytes each
- * (the recordTable whose whole 0-4 byte head clearRecord zeroes). clearRecordHeadFieldsAndSetStateTwoWorld00Area03004
+ * (the recordTable whose whole 0-4 byte head clearRecord zeroes). stateHeadFieldsTwo
  * walks the head bytes 1-4 of the leading slots through this 0x74-byte view, so
  * the table base sits one byte before the D_80143FC9 scalar view above. */
 typedef struct Area030EntryRecord {
@@ -133,13 +133,13 @@ extern u8 D_801E1F20[][4]; /* @source 0x801E1F20 @kind data */
 extern u8 D_801E1F14[]; /* @source 0x801E1F14 @kind data */
 u32 findFreeRecord(void);
 /* Shared palette-stage serial byte published as 1 by the AREA030 color-row
- * builder buildColorRowAndStartTintFadeWorld00Area03004_801D130C after it
+ * builder setupColorStartTint after it
  * rewrites the 0x800396C0 color row. */
 extern u8  D_80145988;    /* @source 0x80145988 @kind unknown */
 /* Signed limit byte (and its +3 companion byte) of the AREA030 message state
- * advanced by updateFourTextSlotsAndPublishCompletedSlotLimitWorld00Area03004. */
+ * advanced by stateTextCompletedLimit. */
 extern s8  D_80143FCF;    /* @source 0x80143FCF @kind unknown */
-/* Front-end step word and its +4 companion word: latchPadMaskAndControlSharedStepWorld00Area03004 steps
+/* Front-end step word and its +4 companion word: latchPadMaskControl steps
  * D_80143FD8 back by 0x4000 while D_80143FDC stays clear, and reads the
  * companion as a plain scalar at its own address. */
 extern s32 D_80143FD8;    /* @source 0x80143FD8 @kind unknown */
@@ -184,7 +184,7 @@ extern u8  D_80144287;    /* @source 0x80144287 @kind unknown */
 /* Byte cleared by AREA030's pressed-mask arm at 0x801DC93C when it
  * publishes 4 into work-record dispatch byte 3. Its encoded meaning and
  * storage kind remain unverified; no other current target body reads it. */
-extern u8  padPressedMaskTransitionClearedByteState; /* @source 0x8014428B @kind unknown */
+extern u8  padPressedTransitionCleared; /* @source 0x8014428B @kind unknown */
 /* Shared AREA030 pad gate/latch byte directly after D_80144287: 0x801DD7CC
  * republishes 0xFF while the pad Cross bit D_80145AA8/0x4000 is set and 1
  * while the Triangle bit 0x1000 is set, and both 0x801DD7CC and 0x801D56F4
@@ -208,12 +208,12 @@ extern u16 selectedRecordValueState;    /* @source 0x801442AC @kind unknown */
 extern u8  D_80145E92;    /* @source 0x80145E92 @kind unknown */
 extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
 /* Shared AREA030 color-block row index byte:
- * buildColorRowAndStartTintFadeWorld00Area03004_801D130C reads it once per
+ * setupColorStartTint reads it once per
  * copied element and uses it to select the 0x40-byte row of the 0x80037800
  * color block that feeds the 0x800396C0 color row. */
 extern u8  D_80145EB7;    /* @source 0x80145EB7 @kind unknown */
 /* Shared AREA030 panel-template bytes published into the scratch work record
- * by publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0 (offsets 0x2A
+ * by publishPanelTemplateSelect (offsets 0x2A
  * and 0x49..0x4B) and its shared word/halfword
  * companions at 0x80145EE0/0x80145EE4 (scratch 0x50/0x54) and
  * 0x80145EE8/0x80145EEA (scratch 0x58/0x5A). */
@@ -226,7 +226,7 @@ extern s32 D_80145EE4;    /* @source 0x80145EE4 @kind unknown */
 extern u16 D_80145EE8;    /* @source 0x80145EE8 @kind unknown */
 extern u16 D_80145EEA;    /* @source 0x80145EEA @kind unknown */
 /* Shared pointer cell owned by the main executable; the AREA030 step
- * initializer resetWorkStepsAndSelectStateWorld00Area03004 gates its resource request on byte 0x79 of the
+ * initializer stateWorkStepsSelect gates its resource request on byte 0x79 of the
  * record it points at. */
 extern u8* D_80146250;    /* @source 0x80146250 @kind unknown */
 extern void (*D_801E2000[])(void); /* @source 0x801E2000 @kind table */
@@ -243,12 +243,12 @@ extern u8 D_801E2050[][8]; /* @source 0x801E2050 @kind rodata */
  * terminator. */
 extern u8 D_801E2070[][2]; /* @source 0x801E2070 @kind rodata */
 extern void (*D_801E2074[])(void); /* @source 0x801E2074 @kind table */
-/* Four-byte AREA030 step records at 0x801E207C walked by stepPanelMotionScriptAndDrawMarkerRowWorld00Area03004 through
+/* Four-byte AREA030 step records at 0x801E207C walked by stepMotionScriptMarker through
  * the work-record step byte (offset 10 of the record published at the scratchpad
  * cursor 0x1F800044): byte 0 is the 0xFF end marker and the 0x80/0x7F request
  * bits, byte 1 the step countdown copied into work byte 9, byte 2 the delta
  * integrated into work word 0x0C, and byte 3 the delta integrated into work word
- * 0x10 whose sign selects the clampMarkerPositionsAndDrawPanelRowWorld00Area03004 marker mode. The byte-0 and byte-2
+ * 0x10 whose sign selects the mathMarkerPositionsRow marker mode. The byte-0 and byte-2
  * request and subtraction sites read these bytes unsigned, so they reach the
  * table through an address-derived byte view of this same symbol. */
 typedef struct Area030StepRecord {
@@ -294,7 +294,7 @@ extern void (*D_801E22FC[])(void); /* @source 0x801E22FC @kind table */
 extern void (*D_801E2304[])(void); /* @source 0x801E2304 @kind table */
 extern void (*D_801E2340[])(void); /* @source 0x801E2340 @kind table */
 extern void (*D_801E2348[])(void); /* @source 0x801E2348 @kind table */
-/* Per-index halfword limits compared by advanceWorkModeAtIndexedOffsetElseStepSequenceWorld00Area03004 with the work-record
+/* Per-index halfword limits compared by stateIndexedOffsetSequence with the work-record
  * halfword at +0x58, selected by the record byte at +0x06. */
 extern u16 D_801E2354[];  /* @source 0x801E2354 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
@@ -315,18 +315,18 @@ extern u8 D_801D0C8C[]; /* @source 0x801D0C8C @kind rodata */
 extern u8  D_801C8964[];  /* @source 0x801C8964 @kind unknown */
 /* Three-entry AREA030 work-record stage-handler table at 0x801E1D00, indexed
  * by the record stage byte at scratch offset 3 by
- * dispatchStateByte3Table1d00World00Area03004_801D12C8. The three
+ * callStateByte3Table1. The three
  * code pointers observed at 0x801E1D00/0x801E1D04/0x801E1D08 are the
  * consecutive stage handlers 0x801D130C, 0x801D1434 and 0x801D1538. It sits
  * inside the T_801E1CD4 data blob, preceded there by an unrelated pointer
  * block, so the table base is the address the original code indexes from. */
 extern void (*D_801E1D00[])(void); /* @source 0x801E1D00 @kind table */
 /* Four-byte AREA030 texture-cell u0 table (bytes C0 D0 E0 D0) indexed by bits
- * 3-4 of the shared frame counter D_80143E6C by drawCounterIndexedSprite16x16World00Area03004. */
+ * 3-4 of the shared frame counter D_80143E6C by renderCounterIndexedSprite16. */
 extern u8 D_801E1D0C[]; /* @source 0x801E1D0C @kind table */
 extern u8  D_801E28C4[];  /* @source 0x801E28C4 @kind rodata */
 extern u8  D_801E28D0[];  /* @source 0x801E28D0 @kind rodata */
-/* Four 8-byte AREA030 text slot records read by updateFourTextSlotsAndPublishCompletedSlotLimitWorld00Area03004: a text pointer
+/* Four 8-byte AREA030 text slot records read by stateTextCompletedLimit: a text pointer
  * followed by the slot index byte. D_801E28F8 is an s8 byte-offset view of the
  * same index bytes (8-byte stride), which the original walks with its own
  * offset register. */
@@ -351,18 +351,18 @@ extern const char D_801D0C04[]; /* @source 0x801D0C04 @kind rodata */
 /* NUL-terminated "%d/6" format for the selected step counter. */
 extern const char D_801D0C08[]; /* @source 0x801D0C08 @kind rodata */
 /* Two-character rodata label "23" (bytes 0x32 0x33 0x00 0x00) that the AREA030
- * entry-panel counter row drawEntryPanelCounterRowWorld00Area03004 submits as the text-pointer argument of
+ * entry-panel counter row renderEntryCounterRow submits as the text-pointer argument of
  * the shared text drawer func_8014FF0C. */
 extern const char D_801D0C10[]; /* @source 0x801D0C10 @kind rodata */
 /* NUL-terminated "*%2d" format for lure slot counts of two or more. */
 extern const char D_801D0C14[]; /* @source 0x801D0C14 @kind rodata */
 /* Twelve-byte rodata run "GearDataRule" that the AREA030 status-cell row
- * drawLabeledStatusCellsWorld00Area03004_801D7C10 submits as three separate
+ * renderLabeledStatusCells submits as three separate
  * 4-character label runs through the shared text drawer drawEncodedTextAt. */
 extern const char D_801E21C0[]; /* @source 0x801E21C0 @kind rodata */
 /* Four-character rodata label "LURE" (bytes 0x4C 0x55 0x52 0x45), the second
  * word of the LUREEQUIPGUIDE run, that the AREA030 lure column
- * drawLureListColumnWorld00Area03004_801D8364 submits as the column title of
+ * renderLureListColumn submits as the column title of
  * the shared text drawer drawEncodedTextAt. */
 extern const char D_801E21D0[]; /* @source 0x801E21D0 @kind rodata */
 /* Five-character rodata label "EQUIP" (bytes 0x45 0x51 0x55 0x49 0x50), the
@@ -384,7 +384,7 @@ extern u16 D_801E2194[]; /* @source 0x801E2194 @kind table */
 extern u16 D_801E2114[]; /* @source 0x801E2114 @kind table */
 /* 54-entry halfword AREA030 step-strip sprite table: one sprite id per strip
  * frame with 0xFFFF marking a gap, walked circularly by
- * drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4 from the work
+ * renderEntryStripEntry from the work
  * record's strip clock word as the strip animates. */
 extern u16 D_801E2120[]; /* @source 0x801E2120 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
@@ -401,9 +401,9 @@ extern s32 D_8014421C;     /* @source 0x8014421C @kind unknown */
  * Element zero and the scalar below name the same byte. Its initial value,
  * complete domain, storage owner and downstream interpretation are unresolved. */
 extern u8  recordSelectionProgressState[];
-extern u8  recordSelectionProgressByteState; /* @source 0x80144216 @kind unknown */
+extern u8  recordSelectionProgressByte; /* @source 0x80144216 @kind unknown */
 /* Shared AREA030 selection-step byte at the head of the 0x8014421C region: the
- * dispatch step requestStateTwoOnGateThreeThenStepSequenceWorld00Area03004 advances it once per pass through its gate. */
+ * dispatch step requestTwoThreeSequence advances it once per pass through its gate. */
 extern u8  D_8014420D;     /* @source 0x8014420D @kind unknown */
 extern u16 D_80145AA8;     /* @source 0x80145AA8 @kind unknown */
 extern u16 D_80145AC2;     /* @source 0x80145AC2 @kind unknown */
@@ -414,20 +414,20 @@ extern u8  D_8014524C[];   /* @source 0x8014524C @kind unknown */
 extern u8  D_801E31F0;     /* @source 0x801E31F0 @kind unknown */
 extern u8  D_801E31F4;     /* @source 0x801E31F4 @kind unknown */
 extern u8  D_801E31F8;     /* @source 0x801E31F8 @kind unknown */
-/* Saved previous selection byte, read by playCueForChangedSelectedValueWorld00Area03004 as a plain scalar.
+/* Saved previous selection byte, read by audioCueChangedValue as a plain scalar.
  * The selection callers save 0x801E31F8 here before changing the selection. */
 extern u8  D_801E31FC;     /* @source 0x801E31FC @kind unknown */
-/* AREA030 text slot tables walked by updateFourTextSlotsAndPublishCompletedSlotLimitWorld00Area03004: D_801E31E0 holds the four
+/* AREA030 text slot tables walked by stateTextCompletedLimit: D_801E31E0 holds the four
  * per-slot character counters and D_801E31E4 the four per-slot frame timers. */
 extern u8  D_801E31E0[];   /* @source 0x801E31E0 @kind unknown */
 extern u8  D_801E31E4[];   /* @source 0x801E31E4 @kind unknown */
 /* Nonzero byte flag at the end of this overlay's data; read by
- * drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004 to gate its extra icon and cleared by func_801DBBAC while
+ * renderExtraIconEnabled to gate its extra icon and cleared by func_801DBBAC while
  * the shared pad mask 0x80145AA8/0x50 is set. */
 extern u8  D_801E3214;     /* @source 0x801E3214 @kind unknown */
 extern u8 D_80145026;      /* @source 0x80145026 @kind unknown */
 /* Companion byte cleared together with entry-ID byte 0x80145026 by
- * consumeEntryUnitOrClearPairedBytesThenConfirmSelectionStepWorld00Area03004 when the matching-entry amount consumer reports failure.
+ * consumeUnitPairedConfirm when the matching-entry amount consumer reports failure.
  * Read as a plain scalar at its own address; broader purpose is unknown. */
 extern u8 D_80145027;      /* @source 0x80145027 @kind unknown */
 extern u8 D_80145028;      /* @source 0x80145028 @kind unknown */
@@ -438,7 +438,7 @@ extern u8 D_801E2748[];    /* @source 0x801E2748 @kind unknown */
  * (sb at 0x801DE8E4) and cleared again by func_801DEBC4 (sb at 0x801DEBEC).
  * Role not established; kept address-anchored. */
 extern u8  D_801E3200;     /* @source 0x801E3200 @kind unknown */
-/* Latch used by selectWorkModeOrStepOnPadWithMatchingSlotLatchWorld00Area03004 after the hasAtLeastTwentyTwoMatchingSlotsWorld00Area03004 matching-slot test.
+/* Latch used by selectPadMatchingLatch after the hasLeastTwentyMatching matching-slot test.
  * A passing test sets it only when zero; a failed test clears it. */
 extern u8  D_801E3204;      /* @source 0x801E3204 @kind unknown */
 extern u8  D_801E3208;      /* @source 0x801E3208 @kind unknown */
@@ -446,7 +446,7 @@ extern s8* D_801E320C;     /* @source 0x801E320C @kind unknown */
 extern u8* D_801E3210;     /* @source 0x801E3210 @kind unknown */
 
 /* Global route/step table pair owned by the main executable: route entry `i`
- * is the step pair D_80181AC0[i * 2] / D_80181AC4[i * 2]. deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004
+ * is the step pair D_80181AC0[i * 2] / D_80181AC4[i * 2]. deriveReflectStepsReindex
  * reads one entry through the work-record route byte and scans the eight
  * entries again to re-index it. */
 extern s32 D_80181AC0[];  /* @source 0x80181AC0 @kind table */
@@ -528,7 +528,7 @@ typedef struct Area030ScaleRecord {
   u8 unk_14[6];
   u8 unk_1A;     /* +0x1A: heading floor and counter scale read by the entry
                   * step at 0x801DE5EC */
-  u8 unk_1B;     /* +0x1B: single-byte scale row read by deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004 */
+  u8 unk_1B;     /* +0x1B: single-byte scale row read by deriveReflectStepsReindex */
   u8 unk_1C[3];
   u8 limit;      /* +0x1F: highest slot amount that still scales */
   u8 unk_20[2];
@@ -544,7 +544,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind bss */
 
 /* Scoped companion-call ABI for func_801E0C20; not a callback contract. */
 void dispatchArea030CompanionHandler(void); /* @source 0x800F500C */
-void projectAndQueueActiveWork(void);
+void projectQueueActiveWork(void);
 u8   func_8014D978(void);
 /* Executable matching-entry amount consumer at 0x801665A0. AREA030 sites
  * pass (group 3, entry ID, 1, 0) and discard the result or test its low byte.
@@ -555,20 +555,20 @@ u8   func_801665A0(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
  * caller's argument selects the gate path and it returns nonzero on the taken
  * path (a local-mode-2 request plus scratch bytes 2/3). Only the argument matters to
  * the AREA030 call site, which discards the gate result. */
-u32  enterWorkModeEightIfInputMaskSetWorld00Area03004(u16 mask);
+u32  enterEightInputMask(u16 mask);
 void queueUnprojectedActiveWork(void);
 /* Target-local AREA030 selection helpers at 0x801DB04C and 0x801DB0AC: the
  * pad-mode dispatch step 0x801DB140 calls each with no arguments and discards
  * the result. */
-extern void selectRecordValueAndSlot(void); /* @source 0x801DB04C */
-extern void setActiveSlotValueFromFrameMask(void); /* @source 0x801DB0AC */
+extern void selectRecordValueSlot(void); /* @source 0x801DB04C */
+extern void stateValueFrameMask(void); /* @source 0x801DB0AC */
 u32  func_8014D8D4(u8 arg0);
 void applyMainLookupRecord(s32 arg0);
 /* Shared active-work sequence selector at 0x8014D6B8: the AREA030 record initializer
- * initializeWorkWordPairAndCountdownThenAdvanceHandlerWorld00Area03004 calls it with the sequence selector 3 (direct jal at 0x801D64B8). */
+ * initializeWordPairCountdown calls it with the sequence selector 3 (direct jal at 0x801D64B8). */
 void selectActiveWorkSequence(s32 arg0);
 /* Shared resource-request helper at 0x8014D6DC: the AREA030 step initializer
- * resetWorkStepsAndSelectStateWorld00Area03004 calls it with (0xA, 2) when the flag byte at D_80146250 + 0x79
+ * stateWorkStepsSelect calls it with (0xA, 2) when the flag byte at D_80146250 + 0x79
  * is clear. The shipped executable body reads the scratchpad cursor at
  * 0x1F800044 and masks its first argument with 0x80, confirming the
  * two-argument form (direct jal at 0x801D9DC8). */
@@ -579,35 +579,35 @@ void func_8014D6DC(s32 arg0, s32 arg1);
 void func_80153DE8(void);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 int  func_8017E3F4(char* buffer, char* fmt, ...);
-void drawStatusMarkerFrameWorld00Area03004(s16 originX, s16 originY);
-void drawFixedCellSprite8x8World00Area03004(s16 arg0, s16 arg1, u8 arg2);
+void renderStatusMarkerFrame(s16 originX, s16 originY);
+void renderFixedCellSprite8(s16 arg0, s16 arg1, u8 arg2);
 void initFlatQuadPrimitive(void* arg0);
 /* Target-local icon-row/numeric-label drawer at 0x801E1320: the AREA030 panel
  * step calls it with the constant top-left corner (176, 156). */
-void drawSlotValueSummaryAndThresholdIconsWorld00Area03004(s16 x, s16 y);
+void renderSummaryThresholdIcons(s16 x, s16 y);
 /* Draw sprite 0x0C and an optional indexed byte stream. The panel step calls
  * it at x=8, y=148 with run index 66. */
-void drawSpriteAndOptionalIndexedRunWorld00Area03004(s32 x, s32 y, u16 runIndex);
+void renderSpriteOptionalIndexed(s32 x, s32 y, u16 runIndex);
 void submitTpageDrawMode(s32 arg0, s32 arg1);
-u32 sumValuesForNonzeroSlotAmountsWorld00Area03004(void);
+u32 sumValuesNonzeroAmounts(void);
 extern u8 D_801454EC; /* @source 0x801454EC @kind unknown */
 u8*  appendIndexedSpriteWorld00Area03004(s32 spriteIndex, s32 drawMode, s16 x, s16 y);
-void drawIndexedPanelQuadWithHeightWorld00Area03004(s16 x, s16 y, u8 height, u8 recordIndex);
+void renderIndexedQuadHeight(s16 x, s16 y, u8 height, u8 recordIndex);
 void drawWidePanelFrameWorld00Area03004(s16 x, s16 y);
 /* Target-local stretched panel column at 0x801D8248: emits one 8-pixel-wide
  * grey quad of the requested height from the 8 by 4 texel slice at (0x58,
  * 0x9A) of the panel texture page. The AREA030 status panel drawer at
  * 0x801D7EB0 runs it at (x + 0x80, y + 0x1C) with the panel height 0x72, and
- * the lure column drawLureListColumnWorld00Area03004_801D8364 runs it at
+ * the lure column renderLureListColumn runs it at
  * x + 0x80 with a height it clamps to at most 0x72. */
-void drawStretchedPanelColumnWorld00Area03004_801D8248(s16 x, s16 y, u8 height);
-void drawSemiTransPaletteRectangleFill(u16 x, u16 y, u16 w, u16 h);
-void drawSemiTransPaletteRectangleBorder(u16 x, u16 y, u16 w, u16 h, u8 mode);
-void drawFilledPanelWithInsetBorderWorld00Area03004(s16 arg0, u16 arg1, s16 arg2, s16 arg3, u8 arg4);
-void drawLabeledStatusCellsWorld00Area03004_801D7C10(u16 x, u16 y, u8 mask);
+void renderStretchedPanelColumn(s16 x, s16 y, u8 height);
+void renderTransRectangleFill(u16 x, u16 y, u16 w, u16 h);
+void renderTransRectangleBorder(u16 x, u16 y, u16 w, u16 h, u8 mode);
+void renderFilledInsetBorder(s16 arg0, u16 arg1, s16 arg2, s16 arg3, u8 arg4);
+void renderLabeledStatusCells(u16 x, u16 y, u8 mask);
 /* Target-local AREA030 status-panel cell drawer at 0x801D7D68: the status-cell
  * row above draws its three cells through it with the per-cell flag. */
-void drawGroupedCellSpritesWorld00Area03004(s16 x, s16 y, u8 groupIndex);
+void renderGroupedCellSprites(s16 x, s16 y, u8 groupIndex);
 /* Target-local AREA030 equipment column at 0x801D88E0: draws the two status
  * boxes, the EQUIP and GUIDE rodata headers, the two equipment records of the
  * shared index bytes D_80145028/D_80145026 and the main-RAM guide icon of the
@@ -619,16 +619,16 @@ void drawEquipmentGuideColumn(s16 x, s16 y);
  * the left status column of drawEquipmentGuideColumn runs it at its own origin
  * and the fixed (16, 64) panel steps call it through that column drawer. */
 void drawStatusBoxPair(s16 x, s16 y);
-void drawListColumnFrameWorld00Area03004(s16 x, s16 y);
+void renderListColumnFrame(s16 x, s16 y);
 void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1);
 /* Target-local drawer of the AREA030 lure column at 0x801D8364: the fixed
  * (164, 64) panel step and the sliding panel steps call it beside the
  * drawEquipmentGuideColumn equipment column at the same origin row. */
-void drawLureListColumnWorld00Area03004_801D8364(s16 x, s16 y);
+void renderLureListColumn(s16 x, s16 y);
 /* Target-local drawer of one panel message token at 0x801D9740: the AREA030
  * message steps submit the current token of the run cursor with the reveal
  * width and the pen column. */
-void drawMessageTokenCellQuad(u8 arg0, u8* arg1, u8 arg2, s16 arg3);
+void renderMessageTokenCell(u8 arg0, u8* arg1, u8 arg2, s16 arg3);
 /* Target-local compact AREA030 panel drawer at 0x801E1758: the AREA030 panel
  * steps call it with the computed horizontal origin and the constant 0x56. */
 void drawArea030CompactPanel(s16 x, s16 y);
@@ -644,9 +644,9 @@ void func_8015D4F8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
  * it maps arg0 through a signed-byte table and prepares an indexed gain
  * increase. The AREA030 work-record step calls it with (0, 0, 0x14, 0x10).
  * The gate's meaning and the preceding halfword writes remain unresolved. */
-extern void requestMappedAudioGainIncrease(u32 arg0, u32 arg1, s32 arg2, s32 arg3); /* @source 0x8015D49C */
+extern void requestAudioGainIncrease(u32 arg0, u32 arg1, s32 arg2, s32 arg3); /* @source 0x8015D49C */
 /* Same-binary frontend selection-effect helper at 0x8015D404 (executable
- * space): the AREA030 dispatch step requestStateTwoOnGateThreeThenStepSequenceWorld00Area03004 calls it with both arguments
+ * space): the AREA030 dispatch step requestTwoThreeSequence calls it with both arguments
  * zero, which is the same shape the commu00 and world00/area007 views declare
  * as (effect index, value). */
 void func_8015D404(u32 arg0, s32 arg1);
@@ -666,20 +666,20 @@ s32 func_8014E640(u32 arg0);
 void drawFramedTexturedPanel(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4,
                    u32 arg5);
 /* Target-local prototype for the co-resident front-end entry probe at
- * 0x801BDD58 (direct `jal` at 0x801E0738 in checkWorkEntryGateOrSelectHandlerOneWorld00Area03004): it takes the
+ * 0x801BDD58 (direct `jal` at 0x801E0738 in checkEntrySelectOne): it takes the
  * record x at +0x34, y at +0x38 and signed counter at +0x3E, a byte range and
  * the entry-table pointer 0x80143FC8 in its fifth stack argument, and reports
  * a byte-valued match. Body not lifted in this target. */
 /* Consumes reference as a signed 16-bit value. */
 u8 matchesProjectedWorkBounds(s32 x, s32 y, s32 reference, s32 range, void* work);
 s32 sampleMapHeight(s32 arg0, s32 arg1);
-s32  calculateScaledSlotValueForAmountWorld00Area03004(s32 slotIndex, s32 slotAmount);
+s32  calculateScaledValueAmount(s32 slotIndex, s32 slotAmount);
 /* Target-local AREA030 panel combination drawer at 0x801E19CC: the entry-panel
  * slide steps call it with the sliding 0x44 +/- 0x50 * count origin on the
  * fixed 0x4E row. */
 void drawArea030Panel(s16 x, s16 y);
-s32  hasAtLeastTwentyTwoMatchingSlotsWorld00Area03004(void);
-void updateWorkScrollWordsWorld00Area03004_801E084C(void); /* per-record scroll updater on the 0x1F800044 cursor */
+s32  hasLeastTwentyMatching(void);
+void stateWorkScrollWords(void); /* per-record scroll updater on the 0x1F800044 cursor */
 /* Same-binary shared work-area selector at 0x80199440 (executable space, direct
  * `jal` at 0x801E0BD8): publishes one of the three shared work-area bases into
  * D_80146250 and the scratchpad cursor according to the load flags and takes no
@@ -697,9 +697,9 @@ void func_8014BA54(void);
 /* Target-local 0x1E-record dispatcher at 0x801DE4AC: publishes every active
  * shared work record at the scratchpad cursor 0x1F800044 and dispatches its
  * handler byte through the overlay handler table D_801E2314. */
-void dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004(void);
+void callActiveUpdateLevels(void);
 /* Target-local per-record scroll updater loop at 0x801E09B4. */
-void updateActiveWorkRecordScrollWordsWorld00Area03004(void);
+void stateActiveScrollWords(void);
 /* AREA030 overlay per-frame entry at 0x801E0BD0: invoked once by the
  * main-executable front-end substate-4 handler func_801984E8 (jal 0x80198578).
  */
@@ -708,43 +708,43 @@ void updateArea030OverlayFrame(void);
  * wait loops func_801985C8 (jals 0x80198614, 0x80198694). */
 void runArea030FrameServices(void);
 
-void publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0(void);
-void dispatchStateByte3Table1d00World00Area03004_801D12C8(void);
-void dispatchStateByte2Table21e0World00Area03004(void);
-void dispatchStateByte3Table2210World00Area03004(void);
-void advanceCounterAndWorkModeIfStateIsFourWorld00Area03004(void);
-void dispatchStateByte3Table221cWorld00Area03004(void);
-void dispatchStateByte3Table2000World00Area03004(void);
-void dispatchStateByte3Table2014World00Area03004(void);
-void dispatchStateByte3Table2048World00Area03004(void);
-void drawStatusHeaderCounterAndMarkerFrameWorld00Area03004(s16 x, s16 y);
-void drawBlueGradientQuad16x32World00Area03004(s16 x, s16 y, u8 drawMode);
-void drawCounterIndexedSprite16x16World00Area03004(s16 x, s16 y, u8 drawMode);
+void publishPanelTemplateSelect(void);
+void callStateByte3Table1(void);
+void callStateTable21World00(void);
+void callStateByte3Table2210(void);
+void stateCounterIsFour(void);
+void callStateByte3Table221(void);
+void callStateByte3Table2000(void);
+void callStateByte3Table2014(void);
+void callStateByte3Table2048(void);
+void renderHeaderCounterMarker(s16 x, s16 y);
+void renderBlueGradientQuad16(s16 x, s16 y, u8 drawMode);
+void renderCounterIndexedSprite16(s16 x, s16 y, u8 drawMode);
 /* @source 0x8017AA08 — shared 16x16 sprite helper that sets packet length 3 and command 0x7C verified in the shipped executable; absent from the SDK map, so it
  * stays target-local. */
 void initSprite16Primitive(SPRT_16* arg0);
 void drawGreenGradientBar(s16 arg0, s16 arg1, s16 arg2, u8 arg3);
 void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
-void copySharedWorkParametersOrClearWorkFlagsWorld00Area03004(void);
-void drawMirroredPanelCellQuadWorld00Area03004_801D2C34(s16 arg0, s16 arg1,
+void copySharedParametersFlags(void);
+void renderMirroredCellQuad(s16 arg0, s16 arg1,
                                                         s8 arg2, u8 arg3);
-void drawPanelCellAndOptionalBlinkingHighlightWorld00Area03004(s16 x, s16 y, u8 width, s8 uOffset, u8 drawMode, u8 highlightEnabled);
+void renderOptionalBlinkingHighlight(s16 x, s16 y, u8 width, s8 uOffset, u8 drawMode, u8 highlightEnabled);
 void advancePanelScroll(void);
-void seedMenuScratchAndSetWorkByteBWorld00Area03004(void);
-void advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34(void);
+void stateMenuScratchByte(void);
+void stateEntryCountValue(void);
 void seedMenuScratch(void);
-void clampMarkerPositionsAndDrawPanelRowWorld00Area03004(u8 cellVariant);
-void stepPanelMotionScriptAndDrawMarkerRowWorld00Area03004(void);
-void dispatchStateByte3Table20c4World00Area03004(void);
+void mathMarkerPositionsRow(u8 cellVariant);
+void stepMotionScriptMarker(void);
+void callStateByte3Table20(void);
 void advanceStepMode6(void);
 void clearFlagState10(void);
-void adjustAndClampCurrentWorkRangeValueWorld00Area03004(s8 delta);
-void seedSharedValuesAndAdvanceWorkStepIfGateClearWorld00Area03004(void);
+void adjustClampCurrentRange(s8 delta);
+void stateSharedValuesGate(void);
 void dispatchCompanion(void);
-void dispatchStateByte2Table2340World00Area03004(void);
-void dispatchHandlerBySelectorByteWorld00Area03004(void);
-void dispatchStateByte4Table22f0World00Area03004(void);
-void advanceWorkStepOnStateThreeOrFourAndDrawTextWorld00Area03004(void); /* AREA030 handler-table entry 0 at 0x801E22F0 */
+void callStateTable2340World00(void);
+void callHandlerSelectorByte(void);
+void callStateByte4Table22(void);
+void stateThreeFourText(void); /* AREA030 handler-table entry 0 at 0x801E22F0 */
 /* Same-binary grouped-entry quantity updater at 0x801650B4 (executable space): the AREA030
  * panel step passes (0, active record byte 6 + 0x38, 1, 0) and branches on the
  * byte-valued result. Body not lifted in this target. */
@@ -763,67 +763,67 @@ void func_800F7094(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s32 arg4);
  * AREA030 discards the result. */
 const u8* func_8014FC90(s32 x, s32 y, s32 attributes, u32 limit,
                        const u8* input);
-void saveAndUpdateTextAdvanceStateWorld00Area03004(void);
-void updateRecordCursorsFromNonzeroIndicesWorld00Area03004(void);
-void storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(s32 state);
-void updateScratchMarkerAndCountdownFromPadFlagsWorld00Area03004(void);
-void playCueForChangedSelectedValueWorld00Area03004(void);
-void updateFourTextSlotsAndPublishCompletedSlotLimitWorld00Area03004(void);
+void saveUpdateTextAdvance(void);
+void stateCursorsNonzeroIndices(void);
+void stateRequestedSelectedModes(s32 state);
+void stateMarkerPadFlags(void);
+void audioCueChangedValue(void);
+void stateTextCompletedLimit(void);
 void func_801DDDBC(void);
-void dispatchStateByte3Table22a4World00Area03004(void);
+void callStateByte3Table22(void);
 void dispatchStateByte3Table22b0World00Area03004(void);
 void dispatchStateByte3Table22bcWorld00Area03004(void);
 void dispatchStateByte3Table22c8World00Area03004(void);
-void initializeWorkDispatchBytesIfGateClearWorld00Area03004(void);
-void clearRecordHeadFieldsAndSetStateTwoWorld00Area03004(void);
-void seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C(void);
-void incrementSharedCounterAndSetWorkStepWorld00Area03004(void);
-void applyEntryPadConfirmOrCancelWorld00Area03004_801DA638(void);
-void dispatchStateByte3Table2258World00Area03004(void);
-void initializeWorkDispatchBytesIfBothGatesClearWorld00Area03004(void);
-void dispatchStateByte3Table2268World00Area03004(void);
+void initializeBytesGateClear(void);
+void stateHeadFieldsTwo(void);
+void stateChannelPairDispatch(void);
+void incrementSharedCounterStep(void);
+void statePadConfirmCancel(void);
+void callStateByte3Table2258(void);
+void initializeBytesBothGates(void);
+void callStateByte3Table2268(void);
 /* Draw the selected entry label and amount summary with the caller's slide
  * count. The second argument is the displayed amount, including zero. */
-void drawSlidingEntryLabelAndAmountSummaryWorld00Area03004(s32 entryId, s32 amount, s32 slideCount);
+void renderSlidingAmountSummary(s32 entryId, s32 amount, s32 slideCount);
 /* Target-local extra-icon drawer at 0x801E1C7C, gated by the D_801E3214 flag
  * byte and bit 3 of the shared frame counter D_80143E6C. */
-void drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004(void);
+void renderExtraIconEnabled(void);
 /* Test the original shared gates and record predicate. Success leaves the
  * handler unchanged; failure writes 1 to work handler byte 1. */
-u8 checkWorkEntryGateOrSelectHandlerOneWorld00Area03004(void);
+u8 checkEntrySelectOne(void);
 /* Target-local AREA030 step derivation at 0x801E03F8: rebuilds the record step
  * words from the route index byte 0x08. */
-void deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004(void);
+void deriveReflectStepsReindex(void);
 /* Target-local AREA030 step integrator at 0x801E0394: while the record
  * countdown byte 0x09 is non-zero it decrements it, adds the step words into
  * the record position words and the countdown step word into the timer. */
-void applyWorkStepTripleWhileCountdownActiveWorld00Area03004(void);
+void stateTripleWhileActive(void);
 /* Target-local AREA030 staging-window probe at 0x801E0770: reports whether the
  * record published at the scratchpad cursor 0x1F800044 sits inside the shared
  * reference window without arming anything. */
-u8 checkWorkReferenceBoundsUnderSharedGatesWorld00Area03004(void);
+u8 checkReferenceUnderGates(void);
 void submitPanelPair(s16 arg0, s16 arg1);
 void configureSpriteClut(s16 x, s16 y, u8 packedSelector);
 void appendDimTile(void);
 
 /* cursor and mask are distinct simple output locals. */
 #define WORLD00_AREA030_DRAW_HEADER_AND_STATUS(cursor, mask) \
-  (drawFilledPanelWithInsetBorderWorld00Area03004(20, 18, 280, 19, 0), \
+  (renderFilledInsetBorder(20, 18, 280, 19, 0), \
    (mask) = 0u, \
    (D_80145E93 >= 3u \
         ? ((cursor) = D_1F800044, \
            (mask) = (u8)(1u << (cursor)[6])) \
         : 0u), \
-   drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, (mask)))
+   renderLabeledStatusCells(88, 40, (mask)))
 
 /* Preserve the repeated record reads. Evaluate icon_row_y once, at the final
  * call. */
 #define WORLD00_AREA030_DRAW_PANEL_ROW(icon_row_y)                           \
   (submitPanelPair(0, 78),                                                   \
    configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]),          \
-   drawSlidingEntryLabelAndAmountSummaryWorld00Area03004(D_80146888[D_801E3208].unk_02[4],                           \
+   renderSlidingAmountSummary(D_80146888[D_801E3208].unk_02[4],                           \
                  D_80146888[D_801E3208].unk_90[0], 0),                       \
-   drawSlotValueSummaryAndThresholdIconsWorld00Area03004(176, (icon_row_y)))
+   renderSummaryThresholdIcons(176, (icon_row_y)))
 
 /* work_cell is read five times. Pass a volatile pointer-cell lvalue and distinct
  * simple cursor locals; each halfword value is evaluated once. */

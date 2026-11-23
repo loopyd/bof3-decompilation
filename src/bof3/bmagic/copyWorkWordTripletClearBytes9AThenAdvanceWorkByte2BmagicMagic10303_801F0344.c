@@ -15,7 +15,7 @@ extern u8 *D_8014638C; /* @source 0x8014638C @kind unknown */
  * re-reads the cell before each later store group, because a store through the
  * loaded pointer may alias the cell (same reasoning as the exact siblings
  * seedWorkObjectFromBattleRecordAndAdvanceWorkByte2BmagicMagic04500_801EF4A4
- * and copyWorkWordPairAndHalfwordClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801EEF94). */
+ * and copyWordPairHalfword). */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* @source 0x801F0344

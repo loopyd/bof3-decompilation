@@ -30,17 +30,17 @@ segments:
   subsegments:
   - - 40
     - c
-    - dispatchWorkByte1StateTableThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic00303_801EEC28
-    - '@source: src/bof3/bmagic/dispatchWorkByte1StateTableThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic00303_801EEC28.c'
+    - callEachOccupiedIts
+    - '@source: src/bof3/bmagic/callEachOccupiedIts.c'
     - '@behavior: Dispatches the byte-1 state handler of the work object from the in-image table at 0x801F0AD8, then publishes each occupied record and runs its byte-1 step.'
   - - 276
     - c
-    - clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14
-    - '@source: src/bof3/bmagic/clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14.c'
+    - stateMotionPairBytes
+    - '@source: src/bof3/bmagic/stateMotionPairBytes.c'
   - - 428
     - c
-    - runHelpers1DecrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EEDAC
-    - '@source: src/bof3/bmagic/runHelpers1DecrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EEDAC.c'
+    - runDecrementAdvanceBmagic
+    - '@source: src/bof3/bmagic/runDecrementAdvanceBmagic.c'
     - '@behavior: Calls both overlay helpers with 1, decrements work byte 9 and rearms it to 30 while advancing byte 1 on zero.'
   - - 552
     - c
@@ -52,26 +52,26 @@ segments:
     - func_801EEEA4
   - - 844
     - c
-    - drawWorkByteBGlyphThenMatchDpadAgainstTableIncrementWorkByteAAdvanceWorkByte1BmagicMagic00303_801EEF4C
-    - '@source: src/bof3/bmagic/drawWorkByteBGlyphThenMatchDpadAgainstTableIncrementWorkByteAAdvanceWorkByte1BmagicMagic00303_801EEF4C.c'
+    - renderGlyphMatchDpad
+    - '@source: src/bof3/bmagic/renderGlyphMatchDpad.c'
     - '@behavior: Calls helper 0x801F07B0 with 4 and draws work byte 0xB as a grey glyph, then matches the pressed-pad d-pad nibble against the byte table at 0x801F0A98 indexed by work byte 0xB; on a match it increments work byte 0xA and advances work byte 1 to 3 below 0x20, otherwise rearming work byte 9 to 6 and advancing byte 1 to 5.'
   - - 1100
     - c
-    - decrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EF04C
-    - '@source: src/bof3/bmagic/decrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EF04C.c'
+    - decrementWorkAdvanceBmagic
+    - '@source: src/bof3/bmagic/decrementWorkAdvanceBmagic.c'
     - '@behavior: Decrements unsigned work byte 9 through the scratchpad pointer cell at 0x1F800044; when the decremented byte is zero it rearms byte 9 to 30 and then advances work byte 1.'
   - - 1192
     - c
-    - drawWorkByteADecimalPairThenDecrementWorkByte9AdvanceWorkByte1BmagicMagic00303_801EF0A8
-    - '@source: src/bof3/bmagic/drawWorkByteADecimalPairThenDecrementWorkByte9AdvanceWorkByte1BmagicMagic00303_801EF0A8.c'
+    - renderDecimalPairDecrement
+    - '@source: src/bof3/bmagic/renderDecimalPairDecrement.c'
     - '@behavior: Calls overlay helper 0x801F07B0 with 0, draws work byte 0xA as a grey decimal pair through the scratchpad pointer cell at 0x1F800044, calls overlay helper 0x801F0164 with 0, then decrements work byte 9 and advances work byte 1 when it reaches zero.'
   - - 1324
     - asm
     - func_801EF12C
   - - 1532
     - c
-    - clearRecordFlag40AndInvokeHelperWhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic00303_801EF1FC
-    - '@source: src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic00303_801EF1FC.c'
+    - stateInvokeHelperZero
+    - '@source: src/bof3/bmagic/stateInvokeHelperZero.c'
     - '@behavior: When work byte B is zero, clears record flag 40, calls helper 0x800AEF98 with 4 and 0, then reloads the work pointer and increments byte 1.'
   - - 1640
     - asm
@@ -84,8 +84,8 @@ segments:
     - func_801EF324
   - - 1992
     - c
-    - decrementWorkByte9ThenSeedWorkMotionCopyTripletRearmFromHelperAFF98AndAdvanceWorkByte2BmagicMagic00303_801EF3C8
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedWorkMotionCopyTripletRearmFromHelperAFF98AndAdvanceWorkByte2BmagicMagic00303_801EF3C8.c'
+    - decrementMotionTripletRearm
+    - '@source: src/bof3/bmagic/decrementMotionTripletRearm.c'
     - '@behavior: Decrements work byte 9 and on zero seeds motion words, copies the word triplet, invokes helpers, rearms byte 9 and advances byte 2.'
   - - 2168
     - asm
@@ -106,23 +106,23 @@ segments:
     - func_801EF708
   - - 2984
     - c
-    - decrementWorkByte9SeedMotionTripletSetFlag20SubmitIndexedEffectAdvanceWorkByte2BmagicMagic00303_801EF7A8
+    - decrementMotionTripletSubmit
     # @source 0x801EF7A8
     # @behavior Decrement work byte 9, seed motion triplet, set flag 0x20, submit indexed effect and advance byte 2.
   - - 3352
     - c
-    - stepWorkWordTripletAndWord14ThenInvokeHelperAdvanceWorkByte2AtWord44BmagicMagic00303_801EF918
+    - stepWordTripletHelper
     # @source 0x801EF918
     # @behavior Step work word triplet and word 0x14, invoke helper, and advance byte 2 at word 0x44.
   - - 3500
     - c
-    - seedWorkWordCMinus2000ClearWord10ThenInvokeHelpersAndAdvanceWorkByte2BmagicMagic00303_801EF9AC
-    - '@source: src/bof3/bmagic/seedWorkWordCMinus2000ClearWord10ThenInvokeHelpersAndAdvanceWorkByte2BmagicMagic00303_801EF9AC.c'
+    - stateWordInvokeHelpers
+    - '@source: src/bof3/bmagic/stateWordInvokeHelpers.c'
     - '@behavior: Seeds work word C with -0x2000, clears word 10, invokes both helpers, reloads the work pointer and increments byte 2.'
   - - 3580
     - c
-    - stepWorkWordPairThenSubmitAtTargetDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic00303_801EF9FC
-    - '@source: src/bof3/bmagic/stepWorkWordPairThenSubmitAtTargetDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic00303_801EF9FC.c'
+    - stepWordSubmitTarget
+    - '@source: src/bof3/bmagic/stepWordSubmitTarget.c'
     - '@behavior: Steps work words 0x34 and 0x38; at their targets submits the work record, decrements shared work byte B and invokes helper 0x801E5988.'
   - - 3740
     - c
@@ -133,39 +133,39 @@ segments:
     - func_801EFAE0
   - - 3980
     - c
-    - decrementWorkByte9CopyRecordSeedHeaderFromTableRequestResourceAdvanceWorkByte2BmagicMagic00303_801EFB8C
-    - '@source: src/bof3/bmagic/decrementWorkByte9CopyRecordSeedHeaderFromTableRequestResourceAdvanceWorkByte2BmagicMagic00303_801EFB8C.c'
+    - decrementCopyHeaderResource
+    - '@source: src/bof3/bmagic/decrementCopyHeaderResource.c'
     - '@behavior: Decrements work byte 9; on zero copies record fields, seeds header bytes from a local table, requests a resource and advances work byte 2.'
   - - 4344
     - c
-    - invokeHelperTwiceThenDecrementGlobalWorkByteBAndClearWorkOnNonzeroBmagicMagic00303_801EFCF8
-    - '@source: src/bof3/bmagic/invokeHelperTwiceThenDecrementGlobalWorkByteBAndClearWorkOnNonzeroBmagicMagic00303_801EFCF8.c'
+    - callTwiceGlobalNonzero
+    - '@source: src/bof3/bmagic/callTwiceGlobalNonzero.c'
     - '@behavior: Calls helper 0x8014DAEC twice, then decrements shared work byte B and clears scratchpad work bytes 0 through 4 when the second returned byte is nonzero.'
   - - 4428
     - asm
     - func_801EFD4C
   - - 4808
     - c
-    - queueFourActingBattlerSlotsCopyRecordHeadStampOrdinalAndStepPublishWorkIncrementByteBBmagicMagic00303_801EFEC8
-    - '@source: src/bof3/bmagic/queueFourActingBattlerSlotsCopyRecordHeadStampOrdinalAndStepPublishWorkIncrementByteBBmagicMagic00303_801EFEC8.c'
+    - queueActingHeadOrdinal
+    - '@source: src/bof3/bmagic/queueActingHeadOrdinal.c'
     - '@behavior: Claims four queued slots, copies the acting battler record head, stamps ordinal fields, publishes the work pointer and increments work byte B.'
   - - 5240
     - c
-    - claimRecordsForGlobalWorkByteASeedOrdinalFieldsAndWorkPointerIncrementByteBBmagicMagic00303_801F0078
-    - '@source: src/bof3/bmagic/claimRecordsForGlobalWorkByteASeedOrdinalFieldsAndWorkPointerIncrementByteBBmagicMagic00303_801F0078.c'
+    - claimOrdinalFieldsPointer
+    - '@source: src/bof3/bmagic/claimOrdinalFieldsPointer.c'
     - '@behavior: Claims records up to shared work byte A, seeds ordinal fields and work pointers, and increments work byte B.'
   - - 5476
     - asm
     - func_801F0164
   - - 6128
     - c
-    - drawGrey12PixelGlyphAtWorkScreenPairBmagicMagic00303_801F03F0
-    - '@source: src/bof3/bmagic/drawGrey12PixelGlyphAtWorkScreenPairBmagicMagic00303_801F03F0.c'
+    - renderPixelGlyphScreen
+    - '@source: src/bof3/bmagic/renderPixelGlyphScreen.c'
     - '@behavior: Draws a grey 12-pixel glyph at the work screen pair using an indexed CLUT and texture column.'
   - - 6480
     - c
-    - drawGreyDecimalPairLeftOfWorkScreenPairBmagicMagic00303_801F0550
-    - '@source: src/bof3/bmagic/drawGreyDecimalPairLeftOfWorkScreenPairBmagicMagic00303_801F0550.c'
+    - renderGreyDecimalLeft
+    - '@source: src/bof3/bmagic/renderGreyDecimalLeft.c'
     - '@behavior: Draws the byte remainder by ten and optional nonzero quotient as grey 12-pixel glyphs left of the work screen pair.'
   - - 7088
     - asm

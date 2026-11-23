@@ -24,7 +24,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           at byte width (lbu / addiu $v0,$v0,1 / sb). Takes no arguments,
  *           returns nothing, keeps no frame and writes no other state; the
  *           scratchpad cell is dereferenced only on the taken path. The pointer
- *           word at 0x801F0364, the second entry of workByte2HandlerTableA at
+ *           word at 0x801F0364, the second entry of workByte2HandlerTable at
  *           0x801F0360, is the only in-image reference to this address; no jal
  *           in the payload reaches it, which is the dispatch shape rather than
  *           a missing caller, so the argument roles stay structural. The

@@ -8,7 +8,7 @@
  * repeats one box body at the rows y and y + 0x40. Each box body draws the
  * 0x25 sprite at x, ten 0x26 sprites spaced eight pixels from x + 0x20, the
  * 0x27 and 0x28 sprites at x + 0x70 and x + 0x88 on the box row, the two
- * drawIndexedPanelQuadWithHeightWorld00Area03004 text rows of width 0x1E
+ * renderIndexedQuadHeight text rows of width 0x1E
  * (upper box) or 0x40 (lower box) at (x, row + 0x18) and (x + 0x88, row +
  * 0x18), the 0x3C sprite at x on the row + 0x36 row, sixteen 0x3D sprites
  * spaced eight pixels from x + 8 on that row and the 0x3E sprite at x + 0x88
@@ -37,8 +37,8 @@ void drawStatusBoxPair(s16 x, s16 y) {
   appendIndexedSpriteWorld00Area03004(0x27, 1, (s16)(x + 0x70), y);
   appendIndexedSpriteWorld00Area03004(0x28, 1, (s16)(x + 0x88), y);
 
-  drawIndexedPanelQuadWithHeightWorld00Area03004(x, (s16)(y + 0x18), 0x1E, 0);
-  drawIndexedPanelQuadWithHeightWorld00Area03004((s16)(x + 0x88), (s16)(y + 0x18), 0x1E, 1);
+  renderIndexedQuadHeight(x, (s16)(y + 0x18), 0x1E, 0);
+  renderIndexedQuadHeight((s16)(x + 0x88), (s16)(y + 0x18), 0x1E, 1);
 
   appendIndexedSpriteWorld00Area03004(0x3C, 1, x, (s16)(y + 0x36));
   for (i = 0; i < 16; i++)
@@ -51,8 +51,8 @@ void drawStatusBoxPair(s16 x, s16 y) {
   appendIndexedSpriteWorld00Area03004(0x27, 1, (s16)(x + 0x70), (s16)(y + 0x40));
   appendIndexedSpriteWorld00Area03004(0x28, 1, (s16)(x + 0x88), (s16)(y + 0x40));
 
-  drawIndexedPanelQuadWithHeightWorld00Area03004(x, (s16)(y + 0x58), 0x40, 0);
-  drawIndexedPanelQuadWithHeightWorld00Area03004((s16)(x + 0x88), (s16)(y + 0x58), 0x40, 1);
+  renderIndexedQuadHeight(x, (s16)(y + 0x58), 0x40, 0);
+  renderIndexedQuadHeight((s16)(x + 0x88), (s16)(y + 0x58), 0x40, 1);
 
   appendIndexedSpriteWorld00Area03004(0x3C, 1, x, (s16)(y + 0x98));
   for (i = 0; i < 16; i++)

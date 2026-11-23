@@ -4,7 +4,7 @@
  * This target's generated undefined-syms map already binds the address because
  * the overlay's remaining assembly loads it, so the name needs no map row. The
  * sibling lifts of this target read the same record through this pointer:
- * seedWorkMotionFieldsWhenGlobalWorkByteBIs1BmagicMagic01500_801EFD7C guards on
+ * stateMotionFieldsGlobal guards on
  * its byte 0xB and decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01500
  * _801F0300 decrements it. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */

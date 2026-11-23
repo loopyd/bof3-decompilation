@@ -8,24 +8,24 @@ splat = "config/targets/emi/bmagic/magic039/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/copyRecordTripletClearWorkByte9SetWorkByteATo1AndAdvanceWorkByte2BmagicMagic03903_801EF070.c",
+    "src/bof3/bmagic/copyTripletClearByte.c",
     "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic03903_801EEEA8.c",
-    "src/bof3/bmagic/incrementWorkByte9ThenDecrementWorkByteBRecordCountersBy2AndAdvanceWorkByte2WhenCounterIsZeroBmagicMagic03903_801EF320.c",
+    "src/bof3/bmagic/incrementCountersCounterIs.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/add16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic03903_801EF690.c",
-    "src/bof3/bmagic/add2ToWorkByte9ClearWorkByteAAndAdvanceWorkByte2At10BmagicMagic03903_801EF0D4.c",
+    "src/bof3/bmagic/workAdvanceAt80Bmagic.c",
+    "src/bof3/bmagic/workClearByteBmagic.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic03903_801EEC34.c",
     "src/bof3/bmagic/resolveKindResultCodeBmagicMagic03903_801EEF3C.c",
     "src/bof3/bmagic/magic03903DispatchTables.c",
     "src/bof3/bmagic/incrementWorkByte9ThenAdd2ToWorkByteBRecordCountersAndAdvanceWorkByte2WhenCounterIs10BmagicMagic03903_801EF1F4.c",
     "src/bof3/support/magic039_03_psyq.c",
     "src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic03903_801EF6E0.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeDrawHelpersAndPopWhenActiveBmagicMagic03903_801EEFA8.c",
-    "src/bof3/bmagic/incrementWorkByte9Add2ToWorkByteAThenSubmitRecordStoreEffectByteBAndAdvanceWorkByte2At18BmagicMagic03903_801EF134.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadAboveWorkHalfwords2EAnd30WithHalfWidthFromWorkByteAAndHeightFromWorkByte9GradedBlackToPaletteRowAtWorkByte4BmagicMagic03903_801EF758.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSeedScratchAngleFromWorkByteBStepPositionPairBySampledAngularPairTimesTwelveClearByte9SetByteATo4AndAdvanceWorkByte2BmagicMagic03903_801EF584.c",
-    "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedBlackToPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801F0054.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadBandOfSixtyFourQuadsSteppingSixtyFourthTurnWithRandJitteredWorkByteAProfileTintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801EFAA4.c",
+    "src/bof3/bmagic/callHelpersPopActive.c",
+    "src/bof3/bmagic/incrementSubmitStoreEffect.c",
+    "src/bof3/bmagic/renderAboveWidthGraded.c",
+    "src/bof3/bmagic/decrementSampledAngularTwelve.c",
+    "src/bof3/bmagic/renderGradedBlackScaled.c",
+    "src/bof3/bmagic/renderSteppingRandProfile.c",
 ]
 psyq_source = "src/bof3/support/magic039_03_psyq.c"

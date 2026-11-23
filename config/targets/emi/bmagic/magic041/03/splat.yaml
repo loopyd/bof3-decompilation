@@ -35,35 +35,35 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, copies the six leading words of the code pointer run at 0x801EEC04 (0x801EECB0, 0x801EEE14, 0x801EEEB4, 0x801EEFC4, 0x801EEFF8, 0x801EF130) into its own 0x30-byte frame, and invokes the copy selected by the work object''s state byte at offset 0x1 with no arguments. It reads no other state and writes none.'
   - - 176
     - c
-    - seedWorkObjectFromBattleRecordTripletClearBytesBAndAQueueEightSlotsClearByte1StampByte9OrdinalStepPublishWorkPointerThenByte1SlotInvokeHelperAt100BmagicMagic04103_801EECB0
-    - '@source: src/bof3/bmagic/seedWorkObjectFromBattleRecordTripletClearBytesBAndAQueueEightSlotsClearByte1StampByte9OrdinalStepPublishWorkPointerThenByte1SlotInvokeHelperAt100BmagicMagic04103_801EECB0.c'
+    - stateObjectStampOrdinal
+    - '@source: src/bof3/bmagic/stateObjectStampOrdinal.c'
     - '@behavior: Copies record words 0x34, 0x38 and 0x3C from the pointer cell at 0x801EB4E0 into the scratchpad work object, zeroing work byte 0xB between the last read and its store, then re-reads the work-object cell at 0x1F800044 for three stores: work byte 0x9 set to 0xA, work byte 0xA cleared and work byte 0x1 incremented. Eight do-loop iterations claim one action slot each through func_801E590C(1, 0x3D), clear slot byte 0x01 of the 0x78-byte pool at 0x801EC330, stamp slot byte 0x09 with the ordinal times eight plus one, publish the work-object pointer in slot word 0x74 and increment work byte 0xB. A final claim with the same allocator arguments sets that slot byte 0x01 to one, publishes the work pointer in slot word 0x74, increments work byte 0xB and invokes func_8015D71C with 0x100. The 0x18-byte frame holds $ra and $s0. Reached through word 0 of the overlay code pointer run at 0x801EEC04.'
   - - 532
     - c
-    - decrementWorkByte9ThenSubmitRecordStoreEffectByte9AndAdvanceWorkByte1OnZeroBmagicMagic04103_801EEE14
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordStoreEffectByte9AndAdvanceWorkByte1OnZeroBmagicMagic04103_801EEE14.c'
+    - decrementSubmitStoreEffect
+    - '@source: src/bof3/bmagic/decrementSubmitStoreEffect.c'
     - '@behavior: Decrements the scratchpad work object byte at offset 0x9 at byte width and returns while the stored value stays non-zero; only on zero it submits the battle record published at 0x8014638C through func_80196718, stores the low return byte of func_8019651C called with the 0/0/0 offsets and mode 1 back into work byte 0x9, then advances the work object state byte at offset 0x1. Reached through word 1 of the overlay pointer run at 0x801EEC04.'
   - - 692
     - c
-    - incrementWorkByte9RecordCountersThenAdvanceWorkByteAAndWorkByte1WhenWorkByteAIs8BmagicMagic04103_801EEEB4
-    - '@source: src/bof3/bmagic/incrementWorkByte9RecordCountersThenAdvanceWorkByteAAndWorkByte1WhenWorkByteAIs8BmagicMagic04103_801EEEB4.c'
+    - incrementCountersByteByte
+    - '@source: src/bof3/bmagic/incrementCountersByteByte.c'
   - - 964
     - c
-    - incrementWorkByte1WhenWorkByteBIs1BmagicMagic04103_801EEFC4
-    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBIs1BmagicMagic04103_801EEFC4.c'
+    - incrementWorkByteBmagic
+    - '@source: src/bof3/bmagic/incrementWorkByteBmagic.c'
   - - 1016
     - c
-    - decrementWorkByte9RecordCountersThenSubmitRecordForwardBattleByteAndAdvanceWorkByte1WhenWorkByteAReachesZeroBmagicMagic04103_801EEFF8
-    - '@source: src/bof3/bmagic/decrementWorkByte9RecordCountersThenSubmitRecordForwardBattleByteAndAdvanceWorkByte1WhenWorkByteAReachesZeroBmagicMagic04103_801EEFF8.c'
+    - decrementCountersForwardReaches
+    - '@source: src/bof3/bmagic/decrementCountersForwardReaches.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, takes the work object byte at offset 0x9 as the index into the 12-byte counter records at 0x80145BD6 and subtracts 2 from the selected record byte 0x0, then re-reads the cell and the index byte for each of the remaining two counters and subtracts 1 from the selected record byte 0x1 and byte 0x2. Finally it re-reads the cell, decrements work object byte 0xA, zero-extends the stored byte and returns through the shared epilogue while the value stays non-zero; only on zero does it submit the battle record published at 0x8014638C through func_80196718, pass the shared battle byte at 0x80146384 to func_800AF814 and advance the work object state byte at offset 0x1. The 0x18-byte frame keeps only $ra across the two calls. Reached through word 4 of the overlay code pointer run at 0x801EEC04.'
   - - 1328
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04103_801EF130
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04103_801EF130.c'
+    - forwardBattleRaiseZero
+    - '@source: src/bof3/bmagic/forwardBattleRaiseZero.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns immediately when the work object''s byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned and passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes the shared helper func_801E5988. The 0x18-byte frame keeps only $ra across the two calls. Reached through word 5 of the overlay code pointer run at 0x801EEC04.'
   - - 1424
     - c
-    - dispatchStateByte1Tablefd8cBmagicMagic04103_801EF190
+    - callStateTablefd8Bmagic
     - '@source: src/bof3/bmagic/magic04103DispatchTables.c'
   - - 1492
     - c
@@ -71,21 +71,21 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4.c'
   - - 1660
     - c
-    - decrementWorkByte9ThenCopyWorkWordTripletClearBytes9AndAAndAdvanceWorkByte2OnZeroBmagicMagic04103_801EF27C
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyWorkWordTripletClearBytes9AndAAndAdvanceWorkByte2OnZeroBmagicMagic04103_801EF27C.c'
+    - decrementCopyWordTriplet
+    - '@source: src/bof3/bmagic/decrementCopyWordTriplet.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, decrements the work object byte at offset 0x9 at byte width and returns while the stored value stays non-zero; only on zero it copies the shared battle record words 0x34, 0x38 and 0x3C read through 0x801EB4E0 into the work object, clears work bytes 9 and 0xA, and advances the work object byte at offset 0x2. The byte 9 clear shares the triplet pointer load while the byte 0xA clear and the byte 2 advance each reload the cell. Reached through word 6 of the overlay pointer run at 0x801EEC04.'
   - - 1800
     - c
-    - add4ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic04103_801EF308
-    - '@source: src/bof3/bmagic/add4ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic04103_801EF308.c'
+    - workByteAdvanceBmagic
+    - '@source: src/bof3/bmagic/workByteAdvanceBmagic.c'
   - - 1880
     - c
-    - add4ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF358
-    - '@source: src/bof3/bmagic/add4ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF358.c'
+    - workDecrementGlobalZero
+    - '@source: src/bof3/bmagic/workDecrementGlobalZero.c'
   - - 2000
     - c
-    - dispatchWorkByte2FourEntryHandlerThenProjectWorkRecordAndDrawTrianglesAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF3D0
-    - '@source: src/bof3/bmagic/dispatchWorkByte2FourEntryHandlerThenProjectWorkRecordAndDrawTrianglesAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF3D0.c'
+    - callProjectTrianglesPop
+    - '@source: src/bof3/bmagic/callProjectTrianglesPop.c'
   - - 2180
     - c
     - copyWorkWordTripletAndClearByte9ThenAdvanceWorkByte2BmagicMagic04103_801EF484
@@ -110,13 +110,13 @@ segments:
     - '@behavior: Pushes the GTE matrix stack with PushMatrix inside a 0x50-byte frame that keeps $ra at 0x4C and $s0 at 0x48, loads the scratchpad work-record pointer cell at 0x1F800044 once, and zeroes the halfword triplet at 0x18..0x1D. The three halfwords at 0x10..0x15 are built from that record: word 0x34 and word 0x38 each shifted right by nine and biased by minus 0x4000, and half the negated signed halfword 0x3E, negated and halved through the signed divide-by-two fixup sequence. RotTrans projects that triplet through the matrices the caller left installed, writing the result vector into the translation field of the 0x20-byte scratch matrix at 0x20 and a flag word at 0x40; RotMatrix turns the zeroed triplet into an identity rotation in that same matrix; MulMatrix2 composes the shared screen matrix at 0x801492E8 under it; and the composed matrix is published through SetRotMatrix and SetTransMatrix. It pops no matrix of its own, so both callers run PopMatrix after their draw pass. Takes no arguments, returns nothing, and its only in-image references are the jal words at 0x801EF254 and 0x801EF45C.'
   - - 2672
     - c
-    - drawTranslucentGouraudQuadBandOfSixtyFourRandJitteredQuadsBetweenFixedRadius128AndWorkByte9ProfileGradedWhiteToRedBmagicMagic04103_801EF670
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadBandOfSixtyFourRandJitteredQuadsBetweenFixedRadius128AndWorkByte9ProfileGradedWhiteToRedBmagicMagic04103_801EF670.c'
+    - renderRandProfileGraded
+    - '@source: src/bof3/bmagic/renderRandProfileGraded.c'
     - '@behavior: The work-record draw arm of this overlay''s byte 2 dispatcher, run from the jal word at 0x801EF208 in dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2Set after projectWorkRecordPositionAndInstallTransformWithZeroRotation installed the transform and before PopMatrix, so it draws under that matrix, pops none of its own and takes no arguments. It publishes 0x80 into the scratchpad radius halfword 0x1F800000, seeds the signed phase halfword 0x1F800004 with ((rand() & 3) + work byte 9) & 0xF shifted left eight and keeps that value for the closing pass, derives the scratchpad halfwords 0x1F800002 and 0x1F800008 from work bytes 9 and 0xA minus sixteenths and eighths of the sine of that seeded phase, and primes the four 8-byte scratchpad vertices at 0x1F800014 with the phase-zero samples scaled by the signed 0x1F800002 radius and by the signed 0x1F800000 radius. It then runs sixty-four passes with the phase i << 6 jittered per pass by (rand() & 3) + i + work byte 9, the closing pass rewriting the phase cell with the seeded value, each pass copying the previous second vertex into the first and the previous fourth into the third, rebuilding the second vertex from the two profile radii and the fourth from the fixed 0x80 radius, projecting all four through RotTransPers4 into the POLY_G4 vertex pairs at 0x08 to 0x20, selecting texture page 0xA5 when GetGraphType returns 1 or 2 and 0x35 otherwise through SetDrawMode on g_PrimCursor with dfe 0, dtd 1 and a null RECT, linking empty 0xC-byte packets under the work record words 0x34 and 0x38 each biased by the fourth vertex x shifted left nine, marking the packet semi-transparent with SetSemiTrans, painting its first two vertices white 1/1/1 and its last two 0xC0 red with 0x30 green and blue, and linking the 0x24-byte packet after the projection. The 0x58-byte frame keeps $ra and all seven $s registers and holds the six RotTransPers4 stack words at 0x10 to 0x24.'
   - - 3768
     - c
-    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwoBmagicMagic04103_801EFAB8
-    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwoBmagicMagic04103_801EFAB8.c'
+    - renderGradedWhiteWeighted
+    - '@source: src/bof3/bmagic/renderGradedWhiteWeighted.c'
     - '@behavior: Second draw pass of the overlay work-record frame driver, run from the jal word at 0x801EF464 in dispatchWorkByte2FourEntryHandlerThenProjectWorkRecordAndDrawTrianglesAndPopWhenWorkByte0Bit0AndWorkByte2Set while work byte 0 bit 0 is set and work byte 2 is non-zero, between the transform installer and PopMatrix, so it pops no matrix of its own and takes no arguments. It picks the draw-mode texture page 0xA5 when GetGraphType returns 1 or 2 and 0x35 otherwise, arms SetDrawMode on g_PrimCursor with dfe 0, dtd 1 and a null RECT, links that 0xC-byte packet under slot 5, reads the work pointer cell at 0x1F800044 once and publishes 0x88 into the scratchpad radius halfword 0x1F800000 and work byte 9 shifted left three into the tint halfword 0x1F800006. It seeds the fan at phase zero through func_801782FC and func_801783C8 scaled by the signed radius and shifted right twelve, clears the three z halfwords, then runs sixteen passes advancing the phase by 0x100 each, projecting three vertices through RotTransPers3 into the primitive vertex pairs at 0x08, 0x10 and 0x18 and tinting the origin vertex 1/1/1, the rim red with the published tint and the rim green and blue with one quarter of it, each a fresh read of the tint cell, before linking each 0x1C-byte POLY_G3 packet under slot 5. After the loop it selects 0x25 when GetGraphType returns 1 or 2 and 0x15 otherwise, re-arms SetDrawMode and links a second 0xC-byte packet under slot 5. The 0x40-byte frame keeps $ra, $s4, $s3, $s2, $s1 and $s0.'
   - - 4492
     - asm

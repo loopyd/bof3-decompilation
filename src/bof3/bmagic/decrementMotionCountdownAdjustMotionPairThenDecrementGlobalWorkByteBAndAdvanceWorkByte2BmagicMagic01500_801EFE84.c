@@ -3,9 +3,9 @@
 /* Shared battle work pointer in main RAM, outside this overlay's image. Splat
  * binds the address through the encoded symbol name, so no target-map row or
  * WEAK_SYMBOL_AT binding is needed. The sibling bmagic lifts read the same
- * record: seedWorkMotionFieldsWhenGlobalWorkByteBIs1BmagicMagic01500_801EFD7C
+ * record: stateMotionFieldsGlobal
  * guards on its byte 0xB and
- * seedWorkWordsAndCopyRecordByte27ThenAdvanceWorkByte2BmagicMagic01500_801F0D48
+ * stateWordsCopyRecord
  * copies its byte 0x27. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
@@ -21,7 +21,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
  *           scratchpad work-object pointer cell at 0x1F800044 once, loads the
  *           object's countdown byte 0x9 and the 16.16 motion pair words at
  *           offsets 0x40 and 0x44 (the pair that
- *           seedWorkMotionFieldsWhenGlobalWorkByteBIs1BmagicMagic01500_801EFD7C
+ *           stateMotionFieldsGlobal
  *           seeds with 0x10000), decrements the countdown byte by one, adds
  *           0x2000 to the word at 0x40 and subtracts 0x3000 from the word at
  *           0x44, and writes the countdown byte back with sb and the two

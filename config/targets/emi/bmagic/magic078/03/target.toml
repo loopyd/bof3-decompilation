@@ -8,24 +8,24 @@ splat = "config/targets/emi/bmagic/magic078/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/queueTwoLinkedSlotsCopyRecordTripletsThenInvokeHelperAt100AndAdvanceWorkByte1BmagicMagic07803_801EECFC.c",
-    "src/bof3/bmagic/initializeAndProjectSemitransparentBlueLineF4BmagicMagic07803_801EFE14.c",
-    "src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenHeadingBucketMatchesRecordToward8014638CBmagicMagic07803_801EF12C.c",
-    "src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF228.c",
-    "src/bof3/bmagic/incrementWorkByte9Until8ThenInvokeHelperAt101AndAdvanceWorkByte2BmagicMagic07803_801F00EC.c",
-    "src/bof3/bmagic/applyHelper30AndAdd16ToWorkHalfword3EThenSetWorkByteATo30AndAdvanceWorkByte2OnRangeHitBmagicMagic07803_801F014C.c",
+    "src/bof3/bmagic/queueLinkedSlotsTriplets.c",
+    "src/bof3/bmagic/initializeSemitransparentBlueLine.c",
+    "src/bof3/bmagic/stateHeadingBucketMatches.c",
+    "src/bof3/bmagic/stateByteIncrementGlobal.c",
+    "src/bof3/bmagic/incrementInvokeHelperBmagic.c",
+    "src/bof3/bmagic/stateByteRangeHit.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic07803_801F07C8.c",
     "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF0E0.c",
     "src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenWorkRecordByteBIs1BmagicMagic07803_801F00A0.c",
     "src/bof3/bmagic/add8ToWorkByteAThenAdvanceWorkByte2WhenAtLeast81BmagicMagic07803_801EF278.c",
-    "src/bof3/bmagic/decrementWorkByteAThenSetGlobalWorkByteBTo1AndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF1CC.c",
-    "src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenWorkByte9Is12ElseIncrementWorkByte9BmagicMagic07803_801EF08C.c",
+    "src/bof3/bmagic/decrementByteGlobalZero.c",
+    "src/bof3/bmagic/stateByteIncrementBmagic.c",
     "src/bof3/bmagic/decrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic07803_801EF2CC.c",
-    "src/bof3/bmagic/decrementWorkByteAThenInvokeHelperAt102AndAdvanceWorkByte2OnZeroBmagicMagic07803_801F01D0.c",
-    "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic07803_801EEE84.c",
+    "src/bof3/bmagic/decrementInvokeHelperZero.c",
+    "src/bof3/bmagic/forwardBattleRaiseIs.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4.c",
+    "src/bof3/bmagic/incrementByteInvokeHelper.c",
     "src/bof3/bmagic/magic07803DispatchTables.c",
     "src/bof3/support/magic078_03_psyq.c",
 ]

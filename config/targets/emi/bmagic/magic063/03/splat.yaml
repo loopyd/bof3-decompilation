@@ -35,48 +35,48 @@ segments:
     - '@behavior: Per-frame entry of this overlay. Seeds a two-word local handler table in its own 0x28-byte frame with the overlay code bodies at 0x801EECF8 and 0x801EEEE4 and calls the entry selected by the unsigned byte 0x01 of the work object published at 0x1F800044, with no bound on the index. It then walks the 0x60 records of the flags pool at 0x801F0454 with stride 0x20 and, for each record whose flags byte has bit 0 set, publishes the record into the pointer cell at 0x801F1054, saves the shared work pointer at 0x801EB4E0, publishes that record word 0x1C into the shared cell, runs the record byte 1 step through the dispatcher at 0x801EF340 and restores the shared cell. Takes no arguments and returns nothing.'
   - - 248
     - c
-    - clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8
-    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8.c'
+    - statePoolPerEligible
+    - '@source: src/bof3/bmagic/statePoolPerEligible.c'
   - - 740
     - asm
     - func_801EEEE4
   - - 816
     - c
-    - dispatchStateByte1Table0400BmagicMagic06303_801EEF30
+    - callStateTable0400Bmagic
     - '@source: src/bof3/bmagic/magic06303DispatchTables.c'
   - - 884
     - c
-    - dispatchWorkByte2HandlerBmagicMagic06303_801EEF74
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06303_801EEF74.c'
+    - callWorkHandlerBmagic
+    - '@source: src/bof3/bmagic/callWorkHandlerBmagic.c'
   - - 996
     - c
-    - copySelectedBattlerRecordTripletPlus2000000SeedByte9RandomZeroByteBClaimPoolRecordCountByteBAdvanceWorkByte2BmagicMagic06303_801EEFE4
-    - '@source: src/bof3/bmagic/copySelectedBattlerRecordTripletPlus2000000SeedByte9RandomZeroByteBClaimPoolRecordCountByteBAdvanceWorkByte2BmagicMagic06303_801EEFE4.c'
+    - copyBattlerPoolCount
+    - '@source: src/bof3/bmagic/copyBattlerPoolCount.c'
     - '@behavior: Work byte 2 entry 0 of the five-word handler run at 0x801EEC04: reads the scratchpad work-object pointer cell at 0x1F800044, uses work byte 4 to pick the 0x140-byte-stride party battler record at 0x80145E90 when that index stays below three and the 0x118-byte-stride enemy record at 0x801EB2E8 otherwise, copies that record words 0x34, 0x38 and 0x3C into the same words of the work object while adding 0x2000000 to the third, seeds work byte 9 with one plus the low four bits of rand(), clears work byte 0xB and advances work byte 2, then claims one record of the pool at 0x801F0454 and on a non-0xFF answer stamps its byte 1 with 1 and its word 0x1C with the work-object pointer and raises work byte 0xB, all in a 0x18-byte frame that keeps only $ra.'
   - - 1296
     - c
-    - countDownWorkByte9ThenSetWorkByte2To3WhenGlobalWorkByteBIs1ElseDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic06303_801EF110
-    - '@source: src/bof3/bmagic/countDownWorkByte9ThenSetWorkByte2To3WhenGlobalWorkByteBIs1ElseDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic06303_801EF110.c'
+    - checkDownGlobalGlobal
+    - '@source: src/bof3/bmagic/checkDownGlobalGlobal.c'
     - '@behavior: Work byte 2 entry 1 of the five-word handler run at 0x801EEC04: reads the scratchpad work-object pointer cell at 0x1F800044 and decrements the work object byte 9 at byte width, returning at once while that countdown stays nonzero; when it reaches zero the pass reads the shared battle work pointer at 0x801EB4E0 and tests its byte 0xB against one, and on equality re-reads the cell and stores three into work byte 2, otherwise stores the decremented 0xB back into that shared record, re-reads the cell and advances work byte 2 by one. No frame, no arguments, nothing returned.'
   - - 1424
     - c
-    - call801E5988WhenWorkByteBIsZeroBmagicMagic06303_801EF190
-    - '@source: src/bof3/bmagic/call801E5988WhenWorkByteBIsZeroBmagicMagic06303_801EF190.c'
+    - call801ByteIsZero
+    - '@source: src/bof3/bmagic/call801ByteIsZero.c'
     - '@behavior: Work byte 2 entry 2 of the five-entry code pointer run this overlay''s leading data block holds at 0x801EEC04: reads the scratchpad work-object pointer cell at 0x1F800044 once, before its 0x18-byte frame is created, tests the work object byte 0xB, and only when that byte is zero falls through to the main-executable helper at 0x801E5988 with no arguments; it stores nothing, returns nothing and leaves through the jr $ra at 0x801EF1C0 with only $ra kept at 0x10.'
   - - 1480
     - c
-    - seedRandomByteAndFortyComplementInEveryFreeWorkRecordCountingWorkByteBThenAdvanceWorkByte2BmagicMagic06303_801EF1C8
-    - '@source: src/bof3/bmagic/seedRandomByteAndFortyComplementInEveryFreeWorkRecordCountingWorkByteBThenAdvanceWorkByte2BmagicMagic06303_801EF1C8.c'
+    - stateFortyComplementCounting
+    - '@source: src/bof3/bmagic/stateFortyComplementCounting.c'
     - '@behavior: Work byte 2 entry 3 of the five-word handler run at 0x801EEC04: reads the scratchpad work-object pointer cell at 0x1F800044 before its 0x20-byte frame and returns at once unless work byte 0xB is zero; the pass then claims pool records at 0x801F0454 through reserveFirstFreeRecordBmagicMagic06303_801F0354 0x5C times, and for each claim clears the record byte 1, writes the pass counter into byte 4, stores the work-object pointer in the record word 0x1C, seeds record byte 0x0A with one plus the low four bits of rand() added to the counter halved and masked with 0x70 and record byte 8 with 0x40 minus that value, and increments work byte 0xB through a fresh cell read; it then invokes the shared helper at 0x8015D71C with 0x101 and 0x102 and advances work byte 2, all in a 0x20-byte frame that keeps $ra, $s1 and $s0.'
   - - 1764
     - c
-    - invokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06303_801EF2E4
-    - '@source: src/bof3/bmagic/invokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06303_801EF2E4.c'
+    - callIsZeroGlobal
+    - '@source: src/bof3/bmagic/callIsZeroGlobal.c'
     - '@behavior: Step handler entry 4 of the five-word code pointer run at 0x801EEC04, invoked with no arguments by the dispatcher at 0x801EEF74. It reads the scratchpad work-object pointer cell at 0x1F800044 once, before its 0x18-byte frame, and tests that object unsigned byte 0x0B; only when that byte is zero does it pass the object unsigned byte 0x04 to the main-executable helper at 0x800A9820, load the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0x0B by one at byte width and invoke the shared helper at 0x801E5988 with the store filling the call delay slot.'
   - - 1856
     - c
-    - dispatchWorkRecordByte1HandlerBmagicMagic06303_801EF340
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic06303_801EF340.c'
+    - callRecordHandlerBmagic
+    - '@source: src/bof3/bmagic/callRecordHandlerBmagic.c'
     - '@behavior: Reads the work-record pointer cell at 0x801F1054, scales that record''s unsigned byte at offset 1 by four, and invokes the selected entry of the code-pointer table based at 0x801F0404 with no arguments; it keeps only $ra in a 0x18-byte frame and writes no state.'
   - - 1924
     - asm
@@ -89,8 +89,8 @@ segments:
     - func_801EF5CC
   - - 2820
     - c
-    - stepWorkRecordAngleProjectPositionPairIncrementWorkByteBAndRampWorkBytes3And5Through7ThenAdvanceWorkByte2OnZeroWorkByte8BmagicMagic06303_801EF704
-    - '@source: src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairIncrementWorkByteBAndRampWorkBytes3And5Through7ThenAdvanceWorkByte2OnZeroWorkByte8BmagicMagic06303_801EF704.c'
+    - stepAngleProjectRamp
+    - '@source: src/bof3/bmagic/stepAngleProjectRamp.c'
   - - 3200
     - asm
     - func_801EF880
@@ -101,8 +101,8 @@ segments:
     - '@behavior: Pushes the GTE matrix stack, reads the work record through the pointer cell at 0x801F1054 once, builds a zeroed translation triplet whose third element is record byte 0x03 shifted left seven minus the sum of record halfword 0x0E and 0x800 within 0x1000, and a rotation triplet whose first two elements are record words 0x10 and 0x14 shifted right nine and biased by minus 0x4000 and whose third element is half the negated record signed halfword 0x1A. It projects the rotation through RotTrans into a scratch matrix translation field, builds that matrix with RotMatrix, composes the shared matrix at 0x801492E8 under it with MulMatrix2, and publishes it through SetRotMatrix and SetTransMatrix.'
   - - 3676
     - c
-    - drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic06303_801EFA5C
-    - '@source: src/bof3/bmagic/drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic06303_801EFA5C.c'
+    - renderPhasedOriginLifetime
+    - '@source: src/bof3/bmagic/renderPhasedOriginLifetime.c'
     - '@behavior: Battle-magic drawing step of the record published through the pointer cell at 0x801F1054; its jal sites at 0x801EF3EC and 0x801EFDE4 reach it inside an installed transform. It picks the draw-mode tpage 0xA5 when GetGraphType returns 1 or 2 and 0x35 otherwise, seeds SetDrawMode at g_PrimCursor with dfe 0 and dtd 1, links the 0xC-byte cell at the record words 0x10 and 0x14 with kind 2, publishes the products of record bytes 0x05, 0x06 and 0x07 with byte 0x09 into the scratchpad colour triplet at 0x1F80000A, and fills the scalar block at 0x1F800000 from the four halfword phase tables plus record byte 0x0B jittered by the 0x801F043C byte table, masked to four bits and shifted left eight. Four iterations each take a fresh g_PrimCursor primitive, seed it through 0x8017A97C, mark it semi-transparent, fill two vertices from the 0x801782FC and 0x801783C8 samples of the phase cells scaled by the radius cells and shifted right 12 with a shared z shifted right 7, project through RotTransPers3 into the primitive vertex pairs at 0x08, 0x10 and 0x18, write the colour bytes in b/g/r order for the first vertex and r/g/b for the two later ones, and link the 0x1C-byte cell at the same record words.'
   - - 4476
     - asm
@@ -112,8 +112,8 @@ segments:
     - func_801EFE04
   - - 4888
     - c
-    - stepWorkRecordAngleProjectPositionPairIncrementWorkByte9ByTwoAndWorkByteBThenAdvanceWorkByte2AtSixteenBmagicMagic06303_801EFF18
-    - '@source: src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairIncrementWorkByte9ByTwoAndWorkByteBThenAdvanceWorkByte2AtSixteenBmagicMagic06303_801EFF18.c'
+    - stepAngleProjectSixteen
+    - '@source: src/bof3/bmagic/stepAngleProjectSixteen.c'
     - '@behavior: Step handler of the bmagic effect record published through the pointer cell at 0x801F1054: it adds 0x20 to the record 12-bit halfword angle at offset 0x0E inside 0x1000, stores that sum back, hands it to the shared rotator at 0x801782FC and stores the shared battle word at D_801EB4E0 offset 0x34 plus that rotator result shifted left five into the record word at offset 0x10; the second shared rotator at 0x801783C8 receives the record signed halfword at offset 0x0E and its result shifted left five is added to the shared battle word at offset 0x38 and stored in the record word at offset 0x14; it then adds two to the record byte at offset 0x09, adds one to the record byte at offset 0x0B and when the byte at offset 0x09 totals 0x10 advances the record step byte at offset 0x02, all in a 0x18-byte frame that keeps only $ra.'
   - - 5096
     - asm
@@ -123,8 +123,8 @@ segments:
     - func_801F00F0
   - - 5664
     - c
-    - stepWorkRecordAngleProjectPositionPairAddSixtyFourToAngleAndTwoToWorkByteBWhenGlobalWorkByte2IsThreeElseThirtyTwoAndOneThenCountDownWorkByte9DecrementGlobalWorkByteBAndClearRecordOnZeroBmagicMagic06303_801F0220
-    - '@source: src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairAddSixtyFourToAngleAndTwoToWorkByteBWhenGlobalWorkByte2IsThreeElseThirtyTwoAndOneThenCountDownWorkByte9DecrementGlobalWorkByteBAndClearRecordOnZeroBmagicMagic06303_801F0220.c'
+    - stepSixtyThirtyDown
+    - '@source: src/bof3/bmagic/stepSixtyThirtyDown.c'
     - '@behavior: Step handler of the bmagic effect record published through the pointer cell at 0x801F1054. It reads the shared battle work byte 0x02 through 0x801EB4E0 and branches on that byte equalling three: when it does it adds two to the record byte 0x0B and 0x40 to the record halfword angle at offset 0x0E, otherwise it adds one to the record byte 0x0B and 0x20 to the same angle. Both arms mask the sum to twelve bits and store it back at offset 0x0E. The shared rotator at 0x801782FC receives that signed halfword and its result shifted left five is added to the shared battle word at offset 0x34 and stored in the record word at offset 0x10; the second shared rotator at 0x801783C8 receives the same signed halfword and its result shifted left five is added to the shared battle word at offset 0x38 and stored in the record word at offset 0x14. It then decrements the record byte at offset 0x09 and, when that countdown reaches zero, decrements the shared battle byte 0x0B and invokes the record clear at 0x801F03B0, all in a 0x18-byte frame that keeps only $ra.'
   - - 5972
     - c

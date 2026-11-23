@@ -43,7 +43,7 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns immediately when the work-object byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned and passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper func_801E5988. It takes no arguments, returns nothing and writes no other state; the 0x18-byte frame only keeps the return address at 0x10 across the two calls.'
   - - 516
     - c
-    - dispatchStateByte1Table0a24BmagicMagic00603_801EEE04
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic00603DispatchTables.c'
   - - 584
     - textbin
@@ -53,13 +53,13 @@ segments:
     - func_801EEE50
   - - 808
     - c
-    - decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleToward8014638CRearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EEF28
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleToward8014638CRearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EEF28.c'
+    - decrementDirectionAngleRearm
+    - '@source: src/bof3/bmagic/decrementDirectionAngleRearm.c'
     - '@behavior: Entry index 0 of the thirteen-word handler run 0x801EEC04..0x801EEC34 that the overlay frame loop copies and indexes with work byte 2. Reads the work object through the scratchpad pointer cell 0x1F800044 and decrements its unsigned byte 9, running the rest only when that countdown reaches zero. On zero it copies words 0x34, 0x38 and 0x3C of the battle record published at 0x801EB4E0 into the work object, adding 0x800000 to word 0x3C, invokes the shared helper func_800AF764, aims the work object at the record published at 0x8014638C with two func_8017A138 angle calls that write work word 0xC and the masked value of word 0x14, invokes the shared helper func_8015D71C with 0x100, re-arms the countdown to 0x20 and advances work byte 2. Takes no arguments, returns nothing and keeps a 0x18-byte frame.'
   - - 1100
     - c
-    - advanceWorkWord14By80AndCountDownWorkByte9ThenRearmByte9FromWorkByteBPlusCAndAdvanceWorkByte2BmagicMagic00603_801EF04C
-    - '@source: src/bof3/bmagic/advanceWorkWord14By80AndCountDownWorkByte9ThenRearmByte9FromWorkByteBPlusCAndAdvanceWorkByte2BmagicMagic00603_801EF04C.c'
+    - stateCountDownPlus
+    - '@source: src/bof3/bmagic/stateCountDownPlus.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and advances the work object word at offset 0x14 by 0x80 with the store written in the taken/not-taken branch delay slot, then decrements the unsigned byte at offset 9 and returns while that new count is non-zero. On zero it re-reads the cell to set byte 9 from the unsigned byte at offset 0xB plus 0xC and increments byte 2 through a third cell read. Entry index 1 of the thirteen-word handler run 0x801EEC04..0x801EEC34 that the overlay frame loop indexes with work byte 2; no jal in the payload targets this body, it takes no arguments, returns nothing and keeps no frame.'
   - - 1208
     - asm
@@ -69,8 +69,8 @@ segments:
     - func_801EF118
   - - 1688
     - c
-    - queueEightSlotsSetByte1RandomByte9PublishRecordPointerThenSlotSetByte1To2InvokeHelperAt102RearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EF298
-    - '@source: src/bof3/bmagic/queueEightSlotsSetByte1RandomByte9PublishRecordPointerThenSlotSetByte1To2InvokeHelperAt102RearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EF298.c'
+    - queueEightSlotsPointer
+    - '@source: src/bof3/bmagic/queueEightSlotsPointer.c'
   - - 2076
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801EF41C
@@ -80,29 +80,29 @@ segments:
     - func_801EF478
   - - 3948
     - c
-    - drawTwoRotatedTranslucentGouraudQuadsAroundWorkHalfwords2EAnd30WithFixedRadii40And38AndTip8GradedDarkBlueBmagicMagic00603_801EFB6C
-    - '@source: src/bof3/bmagic/drawTwoRotatedTranslucentGouraudQuadsAroundWorkHalfwords2EAnd30WithFixedRadii40And38AndTip8GradedDarkBlueBmagicMagic00603_801EFB6C.c'
+    - renderGradedDarkBlue
+    - '@source: src/bof3/bmagic/renderGradedDarkBlue.c'
     - '@behavior: Draws two translucent gouraud quads around the work object halfwords 2E and 30, one per mirrored side, rotating fixed radii 40, 38 and 8 by the work object word 14 through the shared angular helpers at 801782FC and 801783C8.'
   - - 5220
     - c
-    - dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_801F0064
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_801F0064.c'
+    - callInvokeUpdateActive
+    - '@source: src/bof3/bmagic/callInvokeUpdateActive.c'
     - '@behavior: Copies the three words at 0x801EEC1C into its own frame and invokes the copy selected by the work object byte at offset 2, then, when that byte at offset 0 and the byte at offset 2 are both non-zero, calls the helper at 0x800AF764 and the draw routine at 0x801F0308. Takes no arguments, returns nothing and keeps a 0x28-byte frame.'
   - - 5376
     - asm
     - func_801F0100
   - - 5644
     - c
-    - incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C
-    - '@source: src/bof3/bmagic/incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C.c'
+    - incrementByteFrameParity
+    - '@source: src/bof3/bmagic/incrementByteFrameParity.c'
   - - 5776
     - c
     - add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290
     - '@source: src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290.c'
   - - 5896
     - c
-    - drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308.c'
+    - renderExtentsGradedDark
+    - '@source: src/bof3/bmagic/renderExtentsGradedDark.c'
     - '@behavior: Publishes the work object byte 0x9, byte 0xA and halfwords 0x2E and 0x30 into the scratchpad cells 0x1F800004, 0x1F800006, 0x1F800000 and 0x1F800002, picks the draw-mode page 0xA5 while the shared graphic type is 1 or 2 and 0x35 otherwise, links a 0xC-byte draw-mode packet at g_PrimCursor, and emits one semi-transparent gouraud quad around the published halfword pair with half extents taken from the two published bytes and a black-to-dark-blue gradient, then links the 0x24-byte quad. Takes no arguments, returns nothing and keeps a 0x20-byte frame.'
   - - 6388
     - asm
@@ -134,8 +134,8 @@ segments:
     - '@source: src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0.c'
   - - 7056
     - c
-    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius100TintedByWorkByte9WeightedEightTwoOneBmagicMagic00603_801F0790
-    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius100TintedByWorkByte9WeightedEightTwoOneBmagicMagic00603_801F0790.c'
+    - renderSixteenOriginWeighted
+    - '@source: src/bof3/bmagic/renderSixteenOriginWeighted.c'
     - '@behavior: Emits a translucent radial fan of sixteen gouraud triangles from the scratchpad origin at the fixed radius 0x100, tinted by the work object byte 0x9 at the weights eight, two and one. It opens and closes the fan with two SetDrawMode packets under ordering-table slot 5, selecting texture page 0xA5 before and 0x25 after when GetGraphType returns 1 or 2 and 0x35 and 0x15 otherwise, and it runs sixteen passes whose phase advances by 0x100, carrying the previous pass sample pair into the second vertex of the next triangle. No payload word names 0x801F0790 as a call, jump or pointer target, so the overlay loader entry is its only route; it takes no arguments, returns nothing and keeps a 0x48-byte frame.'
   - - 7716
     - textbin

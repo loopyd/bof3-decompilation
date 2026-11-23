@@ -39,7 +39,7 @@ void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic0410
  * installed by
  * projectWorkRecordPositionAndInstallTransformWithZeroRotation and does not pop
  * it. */
-void drawTranslucentGouraudQuadBandOfSixtyFourRandJitteredQuadsBetweenFixedRadius128AndWorkByte9ProfileGradedWhiteToRedBmagicMagic04103_801EF670(
+void renderRandProfileGraded(
     void);
 
 /* @source 0x801EF1D4
@@ -73,7 +73,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0
   handlers.handlers[g_battle_work[2]]();
   if ((g_battle_work[0] & 1u) && (g_battle_work[2] != 0u)) {
     projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0();
-    drawTranslucentGouraudQuadBandOfSixtyFourRandJitteredQuadsBetweenFixedRadius128AndWorkByte9ProfileGradedWhiteToRedBmagicMagic04103_801EF670();
+    renderRandProfileGraded();
     PopMatrix();
   }
 }

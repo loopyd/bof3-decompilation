@@ -21,7 +21,7 @@ extern u8 *volatile g_battle_work; /* @source 0x1F800044 @kind data */
 /* Shared battle work-record pointer in main RAM, outside this overlay's image.
  * The sibling bmagic lifts (clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFF
  * ThenAdvanceWorkByte1BmagicMagic00800_801EF9D4,
- * seedMotionTintAndChannelFieldsThenAdvanceWorkByte2BmagicMagic00800_801F05FC)
+ * stateMotionChannelFields)
  * read the same record's byte 0xB; splat binds the address through this
  * target's generated undefined_syms_auto.txt, so no target-map row is needed. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */

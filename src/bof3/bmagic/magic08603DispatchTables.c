@@ -4,7 +4,7 @@ extern void (*workByte1HandlerTable[])(void); /* @source 0x801F0354 @kind table 
 
 /* Encoded addresses read by the work-byte-2 dispatchers at 0x801EF2BC and
  * 0x801EF70C. Selector bounds and callback signatures remain unresolved. */
-extern u32 workByte2HandlerTableA[]; /* @source 0x801F0360 @kind table */
+extern u32 workByte2HandlerTable[]; /* @source 0x801F0360 @kind table */
 extern u32 workByte2HandlerTableB[]; /* @source 0x801F036C @kind table */
 
 /* @source 0x801EF278
@@ -17,4 +17,4 @@ extern u32 workByte2HandlerTableB[]; /* @source 0x801F036C @kind table */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table0354BmagicMagic08603_801EF278, workByte1HandlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable0354Bmagic, workByte1HandlerTable);

@@ -6,7 +6,7 @@
  * CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode
  * 9/1, draws the 0x25 sprite at x, eight 0x26 sprites spaced eight pixels from
  * x + 0x20, the 0x27 and 0x28 sprites at x + 0x48 and x + 0x60, the two
- * drawIndexedPanelQuadWithHeightWorld00Area03004 text rows of width 0x20 at
+ * renderIndexedQuadHeight text rows of width 0x20 at
  * (x, y + 0x18) and (x + 0x60, y + 0x18), the 0x30 sprite at x on the y + 0x38
  * row, eleven 0x31 sprites spaced eight pixels from x + 8 on that row and the
  * 0x32 sprite at x + 0x60 on that row, and finally the three main-RAM
@@ -29,8 +29,8 @@ void drawArea030CompactPanel(s16 x, s16 y) {
   appendIndexedSpriteWorld00Area03004(0x27, 1, (s16)(x + 0x48), y);
   appendIndexedSpriteWorld00Area03004(0x28, 1, (s16)(x + 0x60), y);
 
-  drawIndexedPanelQuadWithHeightWorld00Area03004(x, (s16)(y + 0x18), 0x20, 0);
-  drawIndexedPanelQuadWithHeightWorld00Area03004((s16)(x + 0x60), (s16)(y + 0x18), 0x20, 1);
+  renderIndexedQuadHeight(x, (s16)(y + 0x18), 0x20, 0);
+  renderIndexedQuadHeight((s16)(x + 0x60), (s16)(y + 0x18), 0x20, 1);
 
   appendIndexedSpriteWorld00Area03004(0x30, 1, x, (s16)(y + 0x38));
   for (i = 0; i < 0xB; i++)

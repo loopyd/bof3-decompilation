@@ -10,23 +10,23 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic14403_801EF294.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic14403_801EF1E4.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenShiftHalfwords2EAnd30BetweenHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EFF74.c",
+    "src/bof3/bmagic/callShiftBetweenHelpers.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EF554.c",
     "src/bof3/bmagic/clearWorkFlag40AndCopyRecordTripletSetBytes9ATo1ThenAdvanceWorkByte2BmagicMagic14403_801EF5D4.c",
     "src/bof3/bmagic/decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic14403_801F046C.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordForwardBattleByteDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByteB80BmagicMagic14403_801EF154.c",
+    "src/bof3/bmagic/decrementSubmitForwardGlobal.c",
     "src/bof3/bmagic/incrementWorkByte2WhenWorkByteBFlag80SetBmagicMagic14403_801EF11C.c",
     "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic14403_801F00A0.c",
     "src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At11BmagicMagic14403_801EF654.c",
-    "src/bof3/bmagic/incrementWorkByte9AndWorkByteAThenSetGlobalWorkByteBFlag80AndAdvanceWorkByte2At19BmagicMagic14403_801EF6A4.c",
+    "src/bof3/bmagic/incrementByteGlobalByte.c",
     "src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic14403_801EEC04.c",
 ]
 support_sources = [
     "src/bof3/support/magic144_03_psyq.c",
     "src/bof3/bmagic/magic14403DispatchTables.c",
-    "src/bof3/bmagic/clearWorkFlag40AndCopyRecordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic14403_801F0034.c",
+    "src/bof3/bmagic/stateCopyTripletClear.c",
 ]
 psyq_source = "src/bof3/support/magic144_03_psyq.c"

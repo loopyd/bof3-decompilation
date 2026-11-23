@@ -30,13 +30,13 @@ segments:
     - func_801EEC04
   - - 252
     - c
-    - queueTwoLinkedSlotsCopyRecordTripletsThenInvokeHelperAt100AndAdvanceWorkByte1BmagicMagic07803_801EECFC
-    - '@source: src/bof3/bmagic/queueTwoLinkedSlotsCopyRecordTripletsThenInvokeHelperAt100AndAdvanceWorkByte1BmagicMagic07803_801EECFC.c'
+    - queueLinkedSlotsTriplets
+    - '@source: src/bof3/bmagic/queueLinkedSlotsTriplets.c'
     - '@behavior: Claims two linked queued slots, copies record word triplets with distinct last-word biases, invokes helper 0x8015D71C(0x100), clears work byte B and advances work byte 1.'
   - - 644
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic07803_801EEE84
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic07803_801EEE84.c'
+    - forwardBattleRaiseIs
+    - '@source: src/bof3/bmagic/forwardBattleRaiseIs.c'
     - '@behavior: Entry index 1 of the two-entry work-byte-1 handler run that the per-frame driver at 0x801EEC04 builds on its stack and stores this span into at 0x1C, so there is no jal immediate. It loads the scratchpad work-object pointer cell at 0x1F800044 once before its 0x18-byte frame exists, compares the work object unsigned byte 0xB against 0xFF, and only on that equality forwards the shared battle byte at 0x80146384 to helper 0x800A9820, raises bit 4 of the shared halfword at 0x801462E8 and invokes helper 0x801E5988.'
   - - 740
     - c
@@ -48,8 +48,8 @@ segments:
     - func_801EEF28
   - - 1164
     - c
-    - setWorkByteATo15AndAdvanceWorkByte2WhenWorkByte9Is12ElseIncrementWorkByte9BmagicMagic07803_801EF08C
-    - '@source: src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenWorkByte9Is12ElseIncrementWorkByte9BmagicMagic07803_801EF08C.c'
+    - stateByteIncrementBmagic
+    - '@source: src/bof3/bmagic/stateByteIncrementBmagic.c'
     - '@behavior: Entry 3 of the nine-word work-byte-1 handler pointer run this overlay keeps at 0x801F0878: loads the scratchpad work object once through the cell at 0x1F800044 and reads its unsigned byte 9; on the value 12 it writes 15 to byte 0xA, re-materializes the cell and increments byte 2, otherwise it stores byte 9 plus one back to byte 9. Takes no arguments, returns nothing and keeps no frame.'
   - - 1248
     - c
@@ -58,18 +58,18 @@ segments:
     - '@behavior: Entry 3 of the nine-word work-byte-1 handler pointer run based at 0x801F0878: decrements the scratchpad work-object byte at offset 0xA as a byte-width read-modify-write and, only when it reaches zero, re-materializes the pointer cell at 0x1F800044 and increments the object byte at offset 0x2. Takes no arguments, returns nothing and keeps no frame.'
   - - 1324
     - c
-    - setWorkByteATo15AndAdvanceWorkByte2WhenHeadingBucketMatchesRecordToward8014638CBmagicMagic07803_801EF12C
-    - '@source: src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenHeadingBucketMatchesRecordToward8014638CBmagicMagic07803_801EF12C.c'
+    - stateHeadingBucketMatches
+    - '@source: src/bof3/bmagic/stateHeadingBucketMatches.c'
     - '@behavior: Computes helper 0x8017A138 of record-minus-work words 0x38 and 0x34 using record pointer 0x8014638C; compares signed work word 0xC divided by 64 with the masked helper heading divided by 64, then writes 15 to byte 0xA and reloads the pointer cell to increment byte 2 on equality. Takes no arguments and returns nothing.'
   - - 1484
     - c
-    - decrementWorkByteAThenSetGlobalWorkByteBTo1AndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF1CC
-    - '@source: src/bof3/bmagic/decrementWorkByteAThenSetGlobalWorkByteBTo1AndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF1CC.c'
+    - decrementByteGlobalZero
+    - '@source: src/bof3/bmagic/decrementByteGlobalZero.c'
     - '@behavior: Entry 6 of this overlay nine-word work-byte-1 handler pointer run based at 0x801F0878: decrements the scratchpad work-object byte at offset 0xA as a byte-width read-modify-write through the pointer cell at 0x1F800044 and, only when the stored value reaches zero, stores one into byte 0xB of the shared battle work record read through 0x801EB4E0 and then re-materializes the cell to increment the work-object byte at offset 0x2. Takes no arguments, returns nothing and keeps no frame.'
   - - 1576
     - c
-    - clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF228
-    - '@source: src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF228.c'
+    - stateByteIncrementGlobal
+    - '@source: src/bof3/bmagic/stateByteIncrementGlobal.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once and tests that record''s byte at offset 0xB against two; only when it equals 2 it clears the scratchpad work-object byte at offset 0xA and rewrites the work-object byte at offset 0x2 with a fresh pointer-cell load. Takes no arguments, returns nothing and keeps no frame.'
   - - 1656
     - c
@@ -86,8 +86,8 @@ segments:
     - func_801EF318
   - - 4628
     - c
-    - initializeAndProjectSemitransparentBlueLineF4BmagicMagic07803_801EFE14
-    - '@source: src/bof3/bmagic/initializeAndProjectSemitransparentBlueLineF4BmagicMagic07803_801EFE14.c'
+    - initializeSemitransparentBlueLine
+    - '@source: src/bof3/bmagic/initializeSemitransparentBlueLine.c'
     - '@behavior: Initializes a semitransparent LINE_F4 with RGB (0x40, 0x40, 0xC0), projects four by-value SVECTORs into its coordinate pairs with RotAverage4 and writes the returned average depth through argument two.'
   - - 4792
     - asm
@@ -108,26 +108,26 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, loads the record pointer held in that object''s word 0x4C and tests that record''s byte 0xB against 1; only on equality it clears the work object''s byte 0xA through the loaded pointer, reloads the pointer cell and increments the work object''s byte 0x2. Takes no arguments and returns nothing.'
   - - 5356
     - c
-    - incrementWorkByte9Until8ThenInvokeHelperAt101AndAdvanceWorkByte2BmagicMagic07803_801F00EC
-    - '@source: src/bof3/bmagic/incrementWorkByte9Until8ThenInvokeHelperAt101AndAdvanceWorkByte2BmagicMagic07803_801F00EC.c'
+    - incrementInvokeHelperBmagic
+    - '@source: src/bof3/bmagic/incrementInvokeHelperBmagic.c'
     - '@behavior: Tests work byte 9 against 8; invokes helper 0x8015D71C with 0x101 and increments work byte 2 on equality, otherwise increments byte 9. Reloads the scratchpad work pointer after the call. Takes no arguments and returns nothing.'
   - - 5452
     - c
-    - applyHelper30AndAdd16ToWorkHalfword3EThenSetWorkByteATo30AndAdvanceWorkByte2OnRangeHitBmagicMagic07803_801F014C
-    - '@source: src/bof3/bmagic/applyHelper30AndAdd16ToWorkHalfword3EThenSetWorkByteATo30AndAdvanceWorkByte2OnRangeHitBmagicMagic07803_801F014C.c'
+    - stateByteRangeHit
+    - '@source: src/bof3/bmagic/stateByteRangeHit.c'
     - '@behavior: Invokes helper 0x800AF2B4 with the shared record and 0x30, adds 16 to work halfword 0x3E, then tests range 0x1C000 and on a hit sets work byte 0xA to 30 and advances byte 2.'
   - - 5584
     - c
-    - decrementWorkByteAThenInvokeHelperAt102AndAdvanceWorkByte2OnZeroBmagicMagic07803_801F01D0
-    - '@source: src/bof3/bmagic/decrementWorkByteAThenInvokeHelperAt102AndAdvanceWorkByte2OnZeroBmagicMagic07803_801F01D0.c'
+    - decrementInvokeHelperZero
+    - '@source: src/bof3/bmagic/decrementInvokeHelperZero.c'
     - '@behavior: Decrements work-object byte 0xA through the scratchpad cell at 0x1F800044 and, only when it reaches zero, invokes helper 0x8015D71C with 0x102, reloads the cell and increments work byte 2.'
   - - 5680
     - asm
     - func_801F0230
   - - 5812
     - c
-    - incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4
-    - '@source: src/bof3/bmagic/incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4.c'
+    - incrementByteInvokeHelper
+    - '@source: src/bof3/bmagic/incrementByteInvokeHelper.c'
     - '@behavior: Advances the scratchpad work object byte at offset 0x0A: the pointer cell at 0x1F800044 is read once, the byte is loaded with lbu, incremented by one and stored back with sb, and when the new byte value equals 8 the shared helper at 0x801E5988 is called with no arguments. It reads no other state; the 0x18-byte frame only keeps $ra across that call. 0x801F02B4 is also the sixth word (index 5) of the in-image code pointer run based at 0x801F08C4.'
   - - 5884
     - asm

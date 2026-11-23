@@ -34,16 +34,16 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic02003_801EEC48.c'
   - - 192
     - c
-    - seedWorkObjectFromBattleRecordThenCopyActingBattlerRecordsIntoFiveQueuedSlotsStampMirroredOrdinalsPublishRecordBytes24And27And28AndRaiseFlag40BmagicMagic02003_801EECC0
-    - '@source: src/bof3/bmagic/seedWorkObjectFromBattleRecordThenCopyActingBattlerRecordsIntoFiveQueuedSlotsStampMirroredOrdinalsPublishRecordBytes24And27And28AndRaiseFlag40BmagicMagic02003_801EECC0.c'
+    - stateActingMirroredOrdinals
+    - '@source: src/bof3/bmagic/stateActingMirroredOrdinals.c'
     - '@behavior: Work byte 1 state 0 of this overlay, entry 0 of the six-word handler table at 0x801EEC04 that dispatchWorkByte1HandlerBmagicMagic02003_801EEC48 copies into its frame and indexes with scratchpad work byte 1. Copies the shared battle work record byte 8 and word triplet 0x34/0x38/0x3C into the work object, clears work bytes 0xB and 9, raises work byte 1 and dispatches event 0xC with value 2, then makes four passes that claim a queued slot through func_801E590C(1, 0x2E), copy the acting battler record head selected by 0x80146374 (party 0x80145E90 stride 0x140, enemy 0x801EB630 stride 0x118 indexed by selector minus 3) into the slot and stamp entry bytes 1/2/5/6/9/0xB and the work pointer at +0x74, fills one more slot the same way without ordinal bytes, publishes record bytes 0x27/0x28/0x24, raises record bit 0x40 and calls func_800AFC98(2, 0) only for a party selector.'
   - - 1272
     - asm
     - func_801EF0F8
   - - 1588
     - c
-    - drawFadeTileThenDecrementWorkByte9AndAdvanceWorkByte1WhenWorkByteBIsZeroBmagicMagic02003_801EF234
-    - '@source: src/bof3/bmagic/drawFadeTileThenDecrementWorkByte9AndAdvanceWorkByte1WhenWorkByteBIsZeroBmagicMagic02003_801EF234.c'
+    - renderTileIsZero
+    - '@source: src/bof3/bmagic/renderTileIsZero.c'
   - - 1704
     - asm
     - func_801EF2A8
@@ -64,8 +64,8 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC.c'
   - - 2200
     - c
-    - copyRecordByte27SeedByte2BAndCopyRecordTripletSetWorkByte9To10ThenAdvanceWorkByte2BmagicMagic02003_801EF498
-    - '@source: src/bof3/bmagic/copyRecordByte27SeedByte2BAndCopyRecordTripletSetWorkByte9To10ThenAdvanceWorkByte2BmagicMagic02003_801EF498.c'
+    - copyRecordSeedTriplet
+    - '@source: src/bof3/bmagic/copyRecordSeedTriplet.c'
     - '@behavior: Work byte 2 state 0 of this overlay, entry 0 of the eight-word work byte 2 handler table at 0x801EEC1C that dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC copies into its frame and indexes with the scratchpad work object byte 2. Copies the shared battle work record byte 0x27 into work byte 0x27, sets work byte 0x2B to 1, copies the record word triplet 0x34/0x38/0x3C into the work object, sets work byte 9 to 0x10 and advances work byte 2. Leaf, no frame, no arguments.'
   - - 2328
     - asm
@@ -79,9 +79,9 @@ segments:
     - func_801EF608
   - - 2680
     - c
-    - decrementWorkByte9ThenSetFlag20Mode1SeedWorkColorTripletToC0AndAdvanceWorkByte2BmagicMagic02003_801EF678
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetFlag20Mode1SeedWorkColorTripletToC0AndAdvanceWorkByte2BmagicMagic02003_801EF678.c'
-    - '@behavior: Work byte 2 state 4 of this overlay, entry 4 of the eight-word handler table at 0x801EEC1C that dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC copies into its frame and indexes with the scratchpad work object byte 2. This target''s entry 0 handler copyRecordByte27SeedByte2BAndCopyRecordTripletSetWorkByte9To10ThenAdvanceWorkByte2BmagicMagic02003_801EF498 belongs to the same run. Decrements work byte 9 and, only on zero, raises bit 0x20 of work byte 0, sets mode byte 0x5C to 1, sets the work colour triplet at 0x5D/0x5E/0x5F to -0x40, which is 0xC0 at byte width, and advances work byte 2. Leaf, no frame, no arguments, no return value.'
+    - decrementSeedColorTriplet
+    - '@source: src/bof3/bmagic/decrementSeedColorTriplet.c'
+    - '@behavior: Work byte 2 state 4 of this overlay, entry 4 of the eight-word handler table at 0x801EEC1C that dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC copies into its frame and indexes with the scratchpad work object byte 2. This target''s entry 0 handler copyRecordSeedTriplet belongs to the same run. Decrements work byte 9 and, only on zero, raises bit 0x20 of work byte 0, sets mode byte 0x5C to 1, sets the work colour triplet at 0x5D/0x5E/0x5F to -0x40, which is 0xC0 at byte width, and advances work byte 2. Leaf, no frame, no arguments, no return value.'
   - - 2848
     - c
     - subtractWorkColorTripletBy8ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic02003_801EF720
@@ -99,12 +99,12 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF894.c'
   - - 3368
     - c
-    - decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928
-    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928.c'
+    - decrementSeedTintRefresh
+    - '@source: src/bof3/bmagic/decrementSeedTintRefresh.c'
   - - 3696
     - c
-    - applyHelper60ToBattleRecordThenAdvanceWorkByte2WhenWorkWithin20000OfRecordBmagicMagic02003_801EFA70
-    - '@source: src/bof3/bmagic/applyHelper60ToBattleRecordThenAdvanceWorkByte2WhenWorkWithin20000OfRecordBmagicMagic02003_801EFA70.c'
+    - stateBattleRecordRecord
+    - '@source: src/bof3/bmagic/stateBattleRecordRecord.c'
   - - 3796
     - c
     - invokeHelperBmagicMagic02003_801EFAD4
@@ -113,15 +113,15 @@ segments:
     - func_801EFAF4
   - - 4000
     - c
-    - decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0
-    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0.c'
+    - decrementObjectRequestResource
+    - '@source: src/bof3/bmagic/decrementObjectRequestResource.c'
   - - 4368
     - c
-    - invokeHelperThenForwardBattleByteWhenWorkByteBIs7AndDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic02003_801EFD10
-    - '@source: src/bof3/bmagic/invokeHelperThenForwardBattleByteWhenWorkByteBIs7AndDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic02003_801EFD10.c'
+    - callForwardBattleGlobal
+    - '@source: src/bof3/bmagic/callForwardBattleGlobal.c'
   - - 4488
     - c
-    - drawFullscreenFadeTileTintedByWorkByte9TimesFifteenThenRearmGraphTypeDrawModeBmagicMagic02003_801EFD88
+    - renderFullscreenFifteenGraph
     - '@behavior: Full-screen fade tile of this overlay. Picks the draw-mode word by
       graph type, 0xA5 for types 1 and 2 and 0x35 otherwise, seeds SetDrawMode at
       g_PrimCursor with dfe 0 and dtd 1, appends the 0xC-byte draw-mode packet,
@@ -129,7 +129,7 @@ segments:
       work byte 9, appends the 0x10-byte tile, then re-arms the draw mode with
       0x25 for types 1 and 2 and 0x15 otherwise and appends a second 0xC-byte
       draw-mode packet.'
-    - '@source: src/bof3/bmagic/drawFullscreenFadeTileTintedByWorkByte9TimesFifteenThenRearmGraphTypeDrawModeBmagicMagic02003_801EFD88.c'
+    - '@source: src/bof3/bmagic/renderFullscreenFifteenGraph.c'
   - - 4792
     - textbin
     - D_801EFEB8

@@ -41,8 +41,8 @@ segments:
     - func_801EEE68
   - - 732
     - c
-    - invokeDrawHelperAdd2ToWorkByteAWhenBelow10IncrementWorkByte9AndAdvanceWorkByte1At10BmagicMagic11003_801EEEDC
-    - '@source: src/bof3/bmagic/invokeDrawHelperAdd2ToWorkByteAWhenBelow10IncrementWorkByte9AndAdvanceWorkByte1At10BmagicMagic11003_801EEEDC.c'
+    - callDrawHelperIncrement
+    - '@source: src/bof3/bmagic/callDrawHelperIncrement.c'
     - '@behavior: Entry 2 of the six-word work-byte-1 handler run at 0x801EEC04, selected by dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C with work byte 1. Calls the draw helper at 0x801EF148, then on the per-frame phases where bit 0 of 0x80143E6C is set adds two to work byte 0xA while it is below 0x10, increments work byte 9 and increments work byte 1 when that count reaches 0x10, re-reading the scratchpad pointer cell at 0x1F800044 before each group.'
   - - 896
     - asm
@@ -60,32 +60,32 @@ segments:
     - func_801EF148
   - - 2040
     - c
-    - dispatchStateByte1Table046cBmagicMagic11003_801EF3F8
+    - callStateTable046Bmagic
     - '@source: src/bof3/bmagic/magic11003DispatchTables.c'
   - - 2108
     - c
-    - dispatchStateByte2Table0478BmagicMagic11003_801EF43C
-    - '@source: src/bof3/bmagic/dispatchStateByte2Table0478BmagicMagic11003_801EF43C.c'
+    - callStateTable0478Bmagic
+    - '@source: src/bof3/bmagic/callStateTable0478Bmagic.c'
     - '@behavior: Publishes 0x800C3800 into 0x801459F0, dispatches through the table at 0x801F0478 using work byte 2, re-reads the work pointer and calls 0x8014D290 when work byte 0 has bit 0 set and byte 2 is at least 2, then publishes 0x800D3800 into 0x801459F0.'
   - - 2268
     - c
-    - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11003_801EF4DC
-    - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11003_801EF4DC.c'
+    - decrementAdvanceZeroBmagic
+    - '@source: src/bof3/bmagic/decrementAdvanceZeroBmagic.c'
     - '@behavior: Entry 3 of the fourteen-word byte-1 handler table at 0x801F046C: reads the scratchpad work pointer cell 0x1F800044 once, decrements work byte 9 modulo 256, and only when it reaches zero re-reads the cell and increments work byte 2 to advance the work-byte-2 dispatcher step.'
   - - 2344
     - c
-    - seedWorkHeaderHalfwords2EToA0And30To12CWords40To30000And44ToC000ClearBytes5CTo5FRequestResource0AndAdvanceWorkByte2BmagicMagic11003_801EF528
-    - '@source: src/bof3/bmagic/seedWorkHeaderHalfwords2EToA0And30To12CWords40To30000And44ToC000ClearBytes5CTo5FRequestResource0AndAdvanceWorkByte2BmagicMagic11003_801EF528.c'
+    - stateHeaderClearRequest
+    - '@source: src/bof3/bmagic/stateHeaderClearRequest.c'
     - '@behavior: Entry 4 of the fourteen-word byte-1 handler table at 0x801F046C: re-reads the scratchpad work pointer cell 0x1F800044 once per store group and seeds the work record it addresses, storing 0xA0 into halfword 0x2E, 0x12C into halfword 0x30, 0x80 into byte 0x24, 0x1D into byte 0x25, 0 into byte 0x26, 0x1A into byte 0x27, 1 into byte 0x28, 2 into byte 0x29, 0 into byte 0x2A, 1 into byte 0x2B, 0 into halfword 0x2C, 0x30000 into word 0x40, 0xC000 into word 0x44, 2 into byte 0x48 and 0 into bytes 0x5C, 0x5D, 0x5E and 0x5F, then requests resource 0 through 0x8014D6B8 and increments work byte 2 to advance the work-byte-2 dispatcher.'
   - - 2632
     - c
-    - setRandomWorkWord2ENearA0DecrementWorkWord30By2AdvanceWorkWord44By2000AndAdvanceWorkByte2Past17FFFBmagicMagic11003_801EF648
-    - '@source: src/bof3/bmagic/setRandomWorkWord2ENearA0DecrementWorkWord30By2AdvanceWorkWord44By2000AndAdvanceWorkByte2Past17FFFBmagicMagic11003_801EF648.c'
+    - stateRandomNearDecrement
+    - '@source: src/bof3/bmagic/stateRandomNearDecrement.c'
     - '@behavior: Entry 5 of the fourteen-word byte-1 handler table at 0x801F046C: reads the scratchpad work pointer cell 0x1F800044 once, stores the low two bits of rand() plus 0x9F into work halfword 0x2E, subtracts two from work halfword 0x30, advances signed work word 0x44 by 0x2000 and stores it in the branch delay slot, then advances work byte 2 when the new word is greater than 0x17FFF.'
   - - 2740
     - c
-    - setRandomWorkWord2ENearA0DecrementWorkWord30By4AndBelowB2DecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic11003_801EF6B4
-    - '@source: src/bof3/bmagic/setRandomWorkWord2ENearA0DecrementWorkWord30By4AndBelowB2DecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic11003_801EF6B4.c'
+    - stateRandomNearBelow
+    - '@source: src/bof3/bmagic/stateRandomNearBelow.c'
     - '@behavior: Entry 6 of the fourteen-word byte-1 handler table at 0x801F046C: calls rand() and stores the low two bits of the answer plus 0x9F into work halfword 0x2E, reads work halfword 0x30 and subtracts four, stores the new value back, and only while the sign-extended halfword stays below 0xB2 reads the shared battle work pointer 0x801EB4E0, decrements its record byte 0xB and advances work byte 2.'
   - - 2880
     - asm
@@ -101,13 +101,13 @@ segments:
     - func_801EF834
   - - 3140
     - c
-    - offsetChannelPairByMotionPairCopyRecordWordSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic11003_801EF844
-    - '@source: src/bof3/bmagic/offsetChannelPairByMotionPairCopyRecordWordSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic11003_801EF844.c'
+    - offsetChannelMotionWord
+    - '@source: src/bof3/bmagic/offsetChannelMotionWord.c'
     - '@behavior: Seeds work words 0xC and 0x10 with 0x60000, publishes the shared channel pair 0x80149308/0x8014930C plus those motions in work words 0x34 and 0x38, copies the shared battle record word 0x3C, sets work byte 9 to 0x10 and word 0x14 to 0x100, then advances work byte 2.'
   - - 3264
     - c
-    - advanceWorkWord14RadiusBy40AndAdvanceWorkByte2WhenItReachesC00BmagicMagic11003_801EF8C0
-    - '@source: src/bof3/bmagic/advanceWorkWord14RadiusBy40AndAdvanceWorkByte2WhenItReachesC00BmagicMagic11003_801EF8C0.c'
+    - stateRadiusItReaches
+    - '@source: src/bof3/bmagic/stateRadiusItReaches.c'
     - '@behavior: Entry 9 of the fourteen-word work-byte-1 handler table at 0x801F046C and entry 1 of the six-word work-byte-2 run at 0x801F048C; reads the scratchpad work pointer cell 0x1F800044 once, adds 0x40 to work word 0x14 and stores the sum back with the store in the branch delay slot, and only when that sum equals 0xC00 increments work byte 2.'
   - - 3320
     - c
@@ -124,13 +124,13 @@ segments:
     - func_801EF998
   - - 3656
     - c
-    - drawTranslucentFanOfSixtyFourGouraudTrianglesAtWorkWord14RadiusTintedByWorkByte9TimesFourBmagicMagic11003_801EFA48
-    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixtyFourGouraudTrianglesAtWorkWord14RadiusTintedByWorkByte9TimesFourBmagicMagic11003_801EFA48.c'
+    - renderSixtyRadiusTimes
+    - '@source: src/bof3/bmagic/renderSixtyRadiusTimes.c'
     - '@behavior: Draws sixty-four translucent Gouraud triangles from the origin at the radius in work word 0x14, tinted by work byte 9 times four, stepping phase by 64 and linking each packet at ordering-table slot 2.'
   - - 4248
     - c
-    - drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98.c'
+    - renderWideTintingOuter
+    - '@source: src/bof3/bmagic/renderWideTintingOuter.c'
     - '@behavior: Draws sixty-four translucent Gouraud quads between work word 0x14 radius and that radius plus 0x80, tinting the outer edge by work byte 9 times four and linking at ordering-table slot 2.'
   - - 5048
     - c
@@ -144,8 +144,8 @@ segments:
     - '@behavior: Entry 4 of the six-word work-byte-2 handler run at 0x801F048C, seeded from the shared channel pair 0x80149308/0x8014930C plus the offset pair in row 0xB of the table at 0x801F04A4, copies the shared battle record word 0x3C, sets work byte 9 to 0x60 and byte 0xA to 0x40, then advances work byte 2.'
   - - 5336
     - c
-    - add2ToWorkByte9AndDecrementWorkByteAThenInvokeHelperWhenZeroBmagicMagic11003_801F00D8
-    - '@source: src/bof3/bmagic/add2ToWorkByte9AndDecrementWorkByteAThenInvokeHelperWhenZeroBmagicMagic11003_801F00D8.c'
+    - workDecrementHelperZero
+    - '@source: src/bof3/bmagic/workDecrementHelperZero.c'
     - '@behavior: Entry 13 of the fourteen-word byte-1 handler table at 0x801F046C and the sixth and last word of the six-word work-byte-2 run at 0x801F048C, reached through the two-word dispatch base 0x801F049C as its index 1; reads the scratchpad work pointer cell 0x1F800044, adds 2 to work byte 9 at byte width, re-reads the cell, subtracts one from work byte 0xA and tests the truncated stored byte, then invokes the shared helper 0x801E5988 with no arguments only when that countdown reaches zero.'
   - - 5432
     - asm
@@ -158,5 +158,5 @@ segments:
     - T_801F046C
   - - 6308
     - textbin
-    - workByteBMotionPairTable
+    - workMotionPairTable
 - - 6356

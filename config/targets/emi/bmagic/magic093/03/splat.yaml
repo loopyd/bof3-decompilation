@@ -40,19 +40,19 @@ segments:
     - '@behavior: Entry 1 of the overlay''s local two-entry handler pair: raises bit 0x4 of the shared halfword at 0x801462E8 and invokes the shared helper when the work object''s word 0x08 masked with 0xFF00FF00 is zero.'
   - - 1152
     - c
-    - dispatchStateByte1Table089cBmagicMagic09303_801EF080
+    - callStateTable089Bmagic
     - '@source: src/bof3/bmagic/magic09303DispatchTables.c'
   - - 1220
     - c
-    - dispatchStateByte2Table08a0BmagicMagic09303_801EF0C4
+    - callStateTable08Bmagic
     - '@source: src/bof3/bmagic/magic09303DispatchTables.c'
   - - 1288
     - asm
     - func_801EF108
   - - 1636
     - c
-    - forwardWorkByte3SubmitSelectedRecordAndAdvanceWorkByte2WhenGlobalByteBBelow8BmagicMagic09303_801EF264
-    - '@source: src/bof3/bmagic/forwardWorkByte3SubmitSelectedRecordAndAdvanceWorkByte2WhenGlobalByteBBelow8BmagicMagic09303_801EF264.c'
+    - forwardSubmitSelectedGlobal
+    - '@source: src/bof3/bmagic/forwardSubmitSelectedGlobal.c'
     - '@behavior: Forward work byte 3, submit its selected record and advance work byte 2 when global record byte B is below eight.'
   - - 1956
     - c
@@ -74,12 +74,12 @@ segments:
     - func_801EF4BC
   - - 2248
     - c
-    - seedRandomRadiusAndProjectWorkPositionPairThenAdvanceBmagicMagic09303_801EF4C8
+    - stateRandomRadiusProject
     # @source 0x801EF4C8
     # @behavior Seed random radius and angle, project work position pair, copy word 0x3C and advance byte 2.
   - - 2560
     - c
-    - projectWorkPositionPairFromByte9AndByteAAtByte4AngleThenAdvanceAt16BmagicMagic09303_801EF600
+    - projectPositionPairAngle
     # @source 0x801EF600
     # @behavior Project work position pair from byte-derived radius and angle; advance byte 2 at byte 9 = 16.
   - - 2832
@@ -89,8 +89,8 @@ segments:
     - '@behavior: Increment work byte 2 of the scratchpad work object when the shared battle work record byte B is eight.'
   - - 2896
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic09303_801EF750
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic09303_801EF750.c'
+    - decrementGlobalBytesZero
+    - '@source: src/bof3/bmagic/decrementGlobalBytesZero.c'
     - '@behavior: Decrement work byte 9, then on zero decrement the shared battle work record byte B and clear the work object bytes.'
   - - 2988
     - c
@@ -99,35 +99,35 @@ segments:
     - '@behavior: Project the work record position, compose the shared matrix under zero rotation and install the transform.'
   - - 3164
     - c
-    - drawSixteenTranslucentGouraudFanTrianglesWithWorkByteBRadiusAndByte9TintBmagicMagic09303_801EF85C
-    - '@source: src/bof3/bmagic/drawSixteenTranslucentGouraudFanTrianglesWithWorkByteBRadiusAndByte9TintBmagicMagic09303_801EF85C.c'
+    - renderSixteenFanRadius
+    - '@source: src/bof3/bmagic/renderSixteenFanRadius.c'
     - '@behavior: Draw sixteen translucent Gouraud fan triangles with radius from work byte B and tint from work byte 9.'
   - - 3816
     - asm
     - func_801EFAE8
   - - 4700
     - c
-    - dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic09303_801EFE5C
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic09303_801EFE5C.c'
+    - callHandlerInvokeHelpers
+    - '@source: src/bof3/bmagic/callHandlerInvokeHelpers.c'
     - '@behavior: Dispatch work byte 2 then invoke both helpers when work bytes 0 and 2 are nonzero.'
   - - 4828
     - c
-    - countDownWorkByte9ThenRandomizePositionInvokeHelperByByteBAndAdvanceWorkByte2BmagicMagic09303_801EFEDC
-    - '@source: src/bof3/bmagic/countDownWorkByte9ThenRandomizePositionInvokeHelperByByteBAndAdvanceWorkByte2BmagicMagic09303_801EFEDC.c'
+    - checkDownRandomizePosition
+    - '@source: src/bof3/bmagic/checkDownRandomizePosition.c'
     - '@behavior: Count down work byte 9, randomize the position pair, invoke the helper by byte B and advance byte 2.'
   - - 5280
     - c
-    - add32ToWorkByte9AndAdvanceWorkByte2AtC0BmagicMagic09303_801F00A0
-    - '@source: src/bof3/bmagic/add32ToWorkByte9AndAdvanceWorkByte2AtC0BmagicMagic09303_801F00A0.c'
+    - workByte9AdvanceBmagic
+    - '@source: src/bof3/bmagic/workByte9AdvanceBmagic.c'
   - - 5360
     - c
-    - add2ToWorkByte9DecrementWorkByteAThenAdvanceWorkByte2At30BmagicMagic09303_801F00F0
-    - '@source: src/bof3/bmagic/add2ToWorkByte9DecrementWorkByteAThenAdvanceWorkByte2At30BmagicMagic09303_801F00F0.c'
+    - workDecrementByteBmagic
+    - '@source: src/bof3/bmagic/workDecrementByteBmagic.c'
     - '@behavior: Add 2 to work byte 9, decrement work byte A and advance work byte 2 when the new byte A is 0x30.'
   - - 5468
     - c
-    - incrementWorkByte9DecrementBytesAAndBThenClearAtZeroBmagicMagic09303_801F015C
-    - '@source: src/bof3/bmagic/incrementWorkByte9DecrementBytesAAndBThenClearAtZeroBmagicMagic09303_801F015C.c'
+    - incrementDecrementBytesZero
+    - '@source: src/bof3/bmagic/incrementDecrementBytesZero.c'
     - '@behavior: Increments work byte 9 and decrements bytes A and B; at zero B decrements global record byte B and clears work bytes 0 through 4.'
   - - 5616
     - asm

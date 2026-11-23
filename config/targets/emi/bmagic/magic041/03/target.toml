@@ -8,28 +8,28 @@ splat = "config/targets/emi/bmagic/magic041/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/seedWorkObjectFromBattleRecordTripletClearBytesBAndAQueueEightSlotsClearByte1StampByte9OrdinalStepPublishWorkPointerThenByte1SlotInvokeHelperAt100BmagicMagic04103_801EECB0.c",
+    "src/bof3/bmagic/stateObjectStampOrdinal.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0.c",
-    "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwoBmagicMagic04103_801EFAB8.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadBandOfSixtyFourRandJitteredQuadsBetweenFixedRadius128AndWorkByte9ProfileGradedWhiteToRedBmagicMagic04103_801EF670.c",
+    "src/bof3/bmagic/renderGradedWhiteWeighted.c",
+    "src/bof3/bmagic/renderRandProfileGraded.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04103_801EF130.c",
+    "src/bof3/bmagic/forwardBattleRaiseZero.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF564.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordStoreEffectByte9AndAdvanceWorkByte1OnZeroBmagicMagic04103_801EEE14.c",
-    "src/bof3/bmagic/dispatchWorkByte2FourEntryHandlerThenProjectWorkRecordAndDrawTrianglesAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF3D0.c",
-    "src/bof3/bmagic/add4ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic04103_801EF308.c",
+    "src/bof3/bmagic/decrementSubmitStoreEffect.c",
+    "src/bof3/bmagic/callProjectTrianglesPop.c",
+    "src/bof3/bmagic/workByteAdvanceBmagic.c",
     "src/bof3/support/magic041_03_psyq.c",
     "src/bof3/bmagic/magic04103DispatchTables.c",
     "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic04103_801EF4D4.c",
     "src/bof3/bmagic/copyWorkWordTripletAndClearByte9ThenAdvanceWorkByte2BmagicMagic04103_801EF484.c",
-    "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBIs1BmagicMagic04103_801EEFC4.c",
+    "src/bof3/bmagic/incrementWorkByteBmagic.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic04103_801EF524.c",
-    "src/bof3/bmagic/incrementWorkByte9RecordCountersThenAdvanceWorkByteAAndWorkByte1WhenWorkByteAIs8BmagicMagic04103_801EEEB4.c",
-    "src/bof3/bmagic/decrementWorkByte9RecordCountersThenSubmitRecordForwardBattleByteAndAdvanceWorkByte1WhenWorkByteAReachesZeroBmagicMagic04103_801EEFF8.c",
-    "src/bof3/bmagic/add4ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF358.c",
+    "src/bof3/bmagic/incrementCountersByteByte.c",
+    "src/bof3/bmagic/decrementCountersForwardReaches.c",
+    "src/bof3/bmagic/workDecrementGlobalZero.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04103_801EEC38.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenCopyWorkWordTripletClearBytes9AndAAndAdvanceWorkByte2OnZeroBmagicMagic04103_801EF27C.c",
+    "src/bof3/bmagic/decrementCopyWordTriplet.c",
 ]
 psyq_source = "src/bof3/support/magic041_03_psyq.c"

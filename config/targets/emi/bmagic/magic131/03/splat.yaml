@@ -33,8 +33,8 @@ segments:
     - func_801EEC24
   - - 492
     - c
-    - clearRecordPoolBytes0To2CopyRecordByte8SetByte9ToAClaimSlot69PublishWorkPointerCopy256HalfwordsSettingBit15Set80145988ToOneInvokeHelperAt102AdvanceWorkByte1BmagicMagic13103_801EEDEC
-    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2CopyRecordByte8SetByte9ToAClaimSlot69PublishWorkPointerCopy256HalfwordsSettingBit15Set80145988ToOneInvokeHelperAt102AdvanceWorkByte1BmagicMagic13103_801EEDEC.c'
+    - statePoolHalfwordsSetting
+    - '@source: src/bof3/bmagic/statePoolHalfwordsSetting.c'
     - '@behavior: Entry stage 0 of this overlay, word 0 of the eight-word code pointer run at 0x801EEC04 that the frame dispatcher func_801EEC24 copies to its stack and calls through work-object byte 1 scaled by four. It clears bytes 0, 1 and 2 of all 0x30 records of the 0x2C-byte-stride pool at 0x801F1CA0, copies byte 8 of the shared battle work record reached through the pointer cell 0x801EB4E0 into work byte 8 while calling the shared helper at 0x800AFD9C with no arguments, then clears work byte 0xB, sets work byte 9 to 0xA, clears work byte 0xA and increments work byte 1, the handler index this overlay dispatches on, so the next frame runs word 1 at 0x801EEF64. It claims one action slot through the shared allocator func_801E590C called with request class 1 and code 0x69, stores 1 into that slot''s byte 1, publishes the work-object pointer read from the scratchpad cell 0x1F800044 into slot word 0x74 and increments work byte 0xB. It then copies the 0x100 unsigned halfwords of the table at 0x80036C00 into the table at 0x8003AC00 with bit 15 set on every entry, stores 1 into the shared main-RAM byte 0x80145988 and invokes the main-executable helper func_8015D71C with 0x102. Takes no arguments and returns nothing; the 0x18-byte frame keeps only the return address at 0x10 across the two calls, and the roles of pool bytes 1 and 2, slot byte 1, the two halfword tables and the two helper codes remain offset- and address-anchored.'
   - - 868
     - asm
@@ -47,8 +47,8 @@ segments:
     - func_801EF110
   - - 1472
     - c
-    - decrementWorkByte9ThenStartHintStreamSlotWhenClass4FlaggedBattlerElseStartHintFamilyStreamThenAdvanceWorkByte1BmagicMagic13103_801EF1C0
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenStartHintStreamSlotWhenClass4FlaggedBattlerElseStartHintFamilyStreamThenAdvanceWorkByte1BmagicMagic13103_801EF1C0.c'
+    - decrementHintHintFamily
+    - '@source: src/bof3/bmagic/decrementHintHintFamily.c'
     - '@behavior: Entry index 4 of the eight-entry code pointer run at 0x801EEC04 that the overlay frame dispatcher func_801EEC24 copies to its stack and calls through work-object byte 1. It reads the scratchpad work-object pointer cell at 0x1F800044 once and decrements work byte 9 at byte width, comparing the stored register truncated to eight bits so no second cell read supplies the guard. Only when that countdown reaches zero does it scan the D_80146254 local work records, 0x140 bytes apart, setting a found flag whenever a record''s class byte at +0x79 is 4 and its flag word at +0x128 has bit 0 set, without stopping at the first match. When the flag is set it tests the hint byte 0x80145024 against 7, 0xD, 0xE and 0xF in four separate statements and starts the EMI stream slot 0x201, 0x202, 0x203 or 0x204, or the variant 0x205, 0x206, 0x207 or 0x208 when the 0x2 bit of the battle mode byte 0x801462EC is set; the last statement emits its two calls separately. Otherwise it tests the same mode bit and calls the shared wrapper at 0x8016728C from each arm with the hint byte masked to seven bits and family selector 2 or 1. It then re-reads the pointer cell and increments work byte 1, and the 0x18-byte frame only keeps $ra at 0x10 across the five calls.'
   - - 2000
     - asm
@@ -73,8 +73,8 @@ segments:
     - func_801EF7FC
   - - 3688
     - c
-    - addMotionPairIntoHalfwordsDecrementCountdownSetByte9To6SeedMotionPairByModeAdvanceWorkByte2BmagicMagic13103_801EFA68
-    - '@source: src/bof3/bmagic/addMotionPairIntoHalfwordsDecrementCountdownSetByte9To6SeedMotionPairByModeAdvanceWorkByte2BmagicMagic13103_801EFA68.c'
+    - motionPairIntoHalfwords
+    - '@source: src/bof3/bmagic/motionPairIntoHalfwords.c'
   - - 3940
     - c
     - addMotionPairIntoHalfwordsDecrementCountdownSetByte9To24AdvanceWorkByte2BmagicMagic13103_801EFB64
@@ -92,28 +92,28 @@ segments:
     - '@behavior: Entry index 9 (the word at 0x801F1BE8) of the twelve-entry code pointer run at 0x801F1BC4 that the work-byte-1 dispatcher indexes, so it runs as that step handler while work byte 2 is still zero. It calls the shared readiness helper at 0x8014DAEC and tests the returned byte zero-extended; only when the helper reports ready does it re-materialize the scratchpad work-object pointer cell at 0x1F800044, store 0xF into work byte 9, then read the cell again and increment work byte 2 with a byte-width add, advancing dispatch to the next table entry at 0x801EFF48. The 0xF constant is materialized ahead of the guard branch, the 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 4936
     - c
-    - decrementWorkByte9ThenForwardBattleByteSeedMotionPairByModeSetByteATo1EAndAdvanceWorkByte2BmagicMagic13103_801EFF48
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenForwardBattleByteSeedMotionPairByModeSetByteATo1EAndAdvanceWorkByte2BmagicMagic13103_801EFF48.c'
+    - decrementForwardMotionPair
+    - '@source: src/bof3/bmagic/decrementForwardMotionPair.c'
     - '@behavior: Entry index 10 (the word at 0x801F1BEC) of the twelve-entry code pointer run at 0x801F1BC4 that the work-byte-1 dispatcher indexes, so it runs as that step handler while work byte 2 is still zero. It reads the scratchpad work-object pointer cell at 0x1F800044 once and decrements work byte 9 at byte width, comparing the stored register truncated to eight bits so no second cell read supplies the guard. Only when that countdown reaches zero does it forward the global battle byte at 0x80146384 to the main-executable helper at 0x800A9820, then read the global mode byte at 0x801462EC: mode 0 or 3 seeds the work word pairs at 0xC/0x10 and 0x18/0x1C with 8/-1/1/-1, and any other mode seeds them with -8/-1/-1/-1. It then re-reads the pointer cell for each of the remaining three stores: work byte 9 is cleared, work byte 0xA is set to 0x1E, and work byte 2 is advanced with a byte-width add, moving dispatch to table entry 11 at 0x801F0034. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 5172
     - asm
     - func_801F0034
   - - 5376
     - c
-    - dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F0100
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F0100.c'
+    - callHandlerDrawActive
+    - '@source: src/bof3/bmagic/callHandlerDrawActive.c'
   - - 5496
     - c
     - clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178
   - - 5544
     - c
-    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic13103_801F01A8
+    - workAdvanceAt10Bmagic
   - - 5624
     - asm
     - func_801F01F8
   - - 5732
     - c
-    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13103_801F0264
+    - decrementByteZeroBmagic
   - - 5808
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F02B0
@@ -127,35 +127,35 @@ segments:
     - func_801F0438
   - - 6336
     - c
-    - seedWorkWordPairAndFlagsThenAdvanceWorkByte2BmagicMagic13103_801F04C0
+    - stateWordPairFlags
   - - 6460
     - c
-    - add4ToWorkByte9AndAdvanceWorkByte2At40BmagicMagic13103_801F053C
-    - '@source: src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At40BmagicMagic13103_801F053C.c'
+    - workAdvanceAt40Bmagic
+    - '@source: src/bof3/bmagic/workAdvanceAt40Bmagic.c'
   - - 6540
     - c
-    - add2ToWorkByte9DecrementWorkTintChannel5DBy4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F058C
-    - '@source: src/bof3/bmagic/add2ToWorkByte9DecrementWorkTintChannel5DBy4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F058C.c'
+    - workTintGlobalZero
+    - '@source: src/bof3/bmagic/workTintGlobalZero.c'
     - '@behavior: Entry index 7 of the eight-word dispatcher code pointer run at 0x801F1BF4 that 0x801F0100 indexes with the scratchpad work object''s byte 2 scaled by four. Adds 2 to work-object byte 0x9 at byte width through the first pointer-cell load, then re-reads the cell at 0x1F800044 and subtracts 4 from work-object byte 0x5D at byte width, testing the stored value truncated to eight bits so no second cell read supplies the guard. Only when that byte reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record''s byte 0x0B by one and invoke the shared helper at 0x801E5988, the store filling the call delay slot. The cell load precedes frame creation and the 0x18-byte frame only keeps $ra at 0x10 across the call; nothing is returned.'
   - - 6660
     - asm
     - func_801F0604
   - - 6836
     - c
-    - drawSemiTransTexturedRippledDiscOfEightRingsSixteenSectorsWithRadiiFromWorkByte9AndRippleFromWorkByteATintedByWorkByte5DBmagicMagic13103_801F06B4
-    - '@source: src/bof3/bmagic/drawSemiTransTexturedRippledDiscOfEightRingsSixteenSectorsWithRadiiFromWorkByte9AndRippleFromWorkByteATintedByWorkByte5DBmagicMagic13103_801F06B4.c'
+    - renderRippledSectorsRipple
+    - '@source: src/bof3/bmagic/renderRippledSectorsRipple.c'
     - '@behavior: Draws a rippled disc as eight concentric ring bands of sixteen longitude steps, one semi-transparent textured quad per step. Selects the draw-mode texture page from GetGraphType, 0xA5 for graph types 1 and 2 and 0x35 otherwise, arms SetDrawMode on the shared primitive cursor at 0x8014598C with dfe 0, dtd 1 and a null tw, and appends a 0xC-byte packet to output list 3 through the shared append routine at 0x8014E5A0. Reads the scratchpad work-object pointer cell at 0x1F800044 once: work-object byte 0x5D shifted left three becomes the three grey tint lanes at 0x1F800008, 0x1F80000A and 0x1F80000C, and work bytes 0xA and 9 shifted left four seed the ripple radius 0x1F800000 and the band radius 0x1F800002. Each band copies that radius into 0x1F800004, drops the band radius by 0x40, samples the phase-zero rotators at 0x801782FC and 0x801783C8 against the previous radius into the last vector at 0x1F80002C, copies the previous band depth 0x1F800020 into the depth of the third and fourth vectors, samples the same rotators against the new radius into the second vector at 0x1F80001C, and stores -(cos(band << 8) * ripple radius >> 12) into the depth of the first and second vectors. The sixteen steps of a band run (i & 0xF) << 8: each step publishes that phase into 0x1F800006, copies the sample holding the previous longitude into the first vector, samples both rotators at the phase against the new radius into the second vector and against the previous radius into the fourth vector, and copies the fourth vector into the third. It then stamps a POLY_FT4 at the primitive cursor through SetPolyFT4, sets semi-transparency with a fixed one, writes GetTPage(1, 1, 0x340, 0x100) and GetClut(0, 0x1FA), places the quad in the 0x40-wide atlas column selected by the band group and the step parity with a 0x3F-wide neighbour, reads this target''s two atlas byte lanes at 0x801F1C13 and 0x801F1C1B for its four v coordinates, copies the three tint lanes into the red, green and blue bytes, projects the four vectors into x0 to x3 through RotTransPers4, and appends the 0x28-byte primitive to output list 3 unless the step is 10 or 11. Takes no arguments and returns nothing; the 0x58-byte frame keeps $ra, $fp and $s0 to $s7 and the two projection outputs stay at 0x28 and 0x2C.'
   - - 8004
     - c
-    - dispatchWorkByte2HandlerThenCall0D44And0DF4AndPopWhenWorkBytes0And2SetBmagicMagic13103_801F0B44
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCall0D44And0DF4AndPopWhenWorkBytes0And2SetBmagicMagic13103_801F0B44.c'
+    - callHandlerPopSet
+    - '@source: src/bof3/bmagic/callHandlerPopSet.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 ahead of its 0x18-byte frame and calls the three-entry handler-table entry at 0x801F1C24 selected by unsigned work byte 2 scaled by four, without bounding the index. Re-reads the same cell after the handler returns and tests work byte 0 and then work byte 2 from that single second load; only when both are nonzero does it call the in-payload helper at 0x801F0D44, then the ring-band draw helper at 0x801F0DF4, then the SDK routine PopMatrix. The handler run ends at 0x801F1C30, which this target names dispatchHandlerTable801F1C30. The frame only keeps $ra at 0x10, and nothing is stored or returned.'
   - - 8140
     - c
-    - seedWorkWordTripletSetWord14AndAdvanceWorkByte2BmagicMagic13103_801F0BCC
+    - stateWordTripletSet
   - - 8268
     - c
-    - advanceWorkWord14By20SetByteBAndAdvanceWorkByte2At200BmagicMagic13103_801F0C4C
+    - stateSetByteBmagic
   - - 8344
     - asm
     - func_801F0C98
@@ -169,8 +169,8 @@ segments:
     - func_801F0D44
   - - 8692
     - c
-    - drawSixteenGreyTexturedRingQuadsAtRadiusWorkWord14BetweenZ0AndZ400FromWorkByteBTexPageBmagicMagic13103_801F0DF4
-    - '@source: src/bof3/bmagic/drawSixteenGreyTexturedRingQuadsAtRadiusWorkWord14BetweenZ0AndZ400FromWorkByteBTexPageBmagicMagic13103_801F0DF4.c'
+    - renderGreyTexPage
+    - '@source: src/bof3/bmagic/renderGreyTexPage.c'
     - '@behavior: Draws the sixteen translucent textured quads of a ring band around the radius the caller left in work-object word 0x14, one quad per 0x100 phase step of the full 4096-unit turn. It seeds the scratchpad radius halfword 0x1F800000 from that word and the first sample from the phase-zero rotator pair, then each step copies the previous sample into the vertices at 0x1F800014 and 0x1F800024 at depth -0x400, stores the step samples scaled by the radius into 0x1F80001C and 0x1F80001E and copies them to 0x1F80002C and 0x1F80002E at depth 0, stamps a POLY_FT4 at the shared primitive cursor with SetPolyFT4, sets semi-transparency from work-object byte 0xB and writes GetTPage(1, work byte 0xB, 0x340, 0x100) and GetClut(0, 0x1FA), toggles the texture u coordinate between 0 and 0x40 and v between 0 and 0xBF by step parity, copies the grey tint lanes at 0x1F800008, 0x1F80000A and 0x1F80000C, which hold three times work byte 0x9 shifted left three, into the primitive colour bytes, projects the four vectors through RotTransPers4 and appends the 0x28-byte primitive to output list 3 unless the step index lies in 7 to 14. It opens by selecting the draw-mode texture page from GetGraphType with the low two bits of work byte 0xB folded into bit 7 or bit 5, arms SetDrawMode on the cursor at 0x8014598C with dfe 0, dtd 1 and a null tw, and appends a 0xC-byte packet to output list 3 through the shared append routine at 0x8014E5A0. It takes no arguments and returns nothing.'
   - - 9460
     - c
@@ -182,57 +182,57 @@ segments:
     - '@source: src/bof3/bmagic/dispatchRecordByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F1138.c'
   - - 9656
     - c
-    - seedRecordPositionPairFromPhaseTableThenSetFieldsAndAdvanceWorkByte2BmagicMagic13103_801F11B8
-    - '@source: src/bof3/bmagic/seedRecordPositionPairFromPhaseTableThenSetFieldsAndAdvanceWorkByte2BmagicMagic13103_801F11B8.c'
+    - statePairPhaseFields
+    - '@source: src/bof3/bmagic/statePairPhaseFields.c'
     - '@behavior: Reads the record pointer cell at 0x801F24E0 and uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C38; the selected byte shifted left seven becomes the phase published to the shared scratchpad halfword at 0x1F800006 and is passed to the shared angular helper at 0x801782FC. That result scaled by eight and added to the word at 0x80149308 forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result scaled by eight and added to the word at 0x8014930C forms the record word at offset 0x18. The record halfword at offset 0xC is then set to 0x40, the byte at offset 0x5 to 0x10, and word 0x3C of the record reached through 0x801EB4E0 copied into the record word at offset 0x1C. Two closing statements re-read the cell at 0x801F24E0 to store 0x14 into the record byte at offset 0x6 and to increment the record byte at offset 0x2. It takes no arguments, returns nothing, and its address is the first word of the three-entry handler table at 0x801F1C48.'
   - - 9888
     - c
-    - advanceRecordByte6By2AndHalfwordCBy20AccumulateScaledSampleIntoPositionPairThenAdvanceRecordByte2AtHalfwordC200BmagicMagic13103_801F12A0
-    - '@source: src/bof3/bmagic/advanceRecordByte6By2AndHalfwordCBy20AccumulateScaledSampleIntoPositionPairThenAdvanceRecordByte2AtHalfwordC200BmagicMagic13103_801F12A0.c'
+    - stateAccumulateScaledSample
+    - '@source: src/bof3/bmagic/stateAccumulateScaledSample.c'
     - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 2 to the record byte at offset 0x6, then re-reads the cell and adds 0x20 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store. It uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C38; the selected byte shifted left seven becomes the phase published to the shared scratchpad halfword at 0x1F800006 and the same shift is passed to the shared angular helper at 0x801782FC. That helper result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword at offset 0xC, shifted right three and added to the word at 0x8014930C forms the record word at offset 0x18. A closing guard compares the record halfword at offset 0xC with 0x200 and, only on equality, increments the record byte at offset 0x2. It takes no arguments, returns nothing and keeps its 0x18-byte frame only for the return address and the scratchpad phase register across the two calls. Its address is the second word, index 1, of the three-entry handler table at 0x801F1C48.'
   - - 10148
     - c
     - advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5ClearRecordAtZeroBmagicMagic13103_801F13A4
     - '@source: src/bof3/bmagic/advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5ClearRecordAtZeroBmagicMagic13103_801F13A4.c'
-    - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 0x10 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store, then uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C38. The selected byte shifted left seven becomes the phase published to the shared scratchpad halfword at 0x1F800006 and the same shift is passed to the shared angular helper at 0x801782FC; that result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword shifted right three and added to the word at 0x8014930C forms the record word at offset 0x18. It then subtracts 2 from the record byte at offset 0x5 and, only when that countdown reaches zero, decrements byte 0xB of the shared record at 0x801EB4E0 and calls clearRecordBytes0Through4BmagicMagic13103_801F1AC4. It takes no arguments, returns nothing and its address is the third word (index 2) of the three-entry handler table at 0x801F1C48.'
+    - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 0x10 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store, then uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C38. The selected byte shifted left seven becomes the phase published to the shared scratchpad halfword at 0x1F800006 and the same shift is passed to the shared angular helper at 0x801782FC; that result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword shifted right three and added to the word at 0x8014930C forms the record word at offset 0x18. It then subtracts 2 from the record byte at offset 0x5 and, only when that countdown reaches zero, decrements byte 0xB of the shared record at 0x801EB4E0 and calls stateRecordThrough4Bmagic. It takes no arguments, returns nothing and its address is the third word (index 2) of the three-entry handler table at 0x801F1C48.'
   - - 10400
     - c
-    - dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0
-    - '@source: src/bof3/bmagic/dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0.c'
+    - callDecrementCountdownActive
+    - '@source: src/bof3/bmagic/callDecrementCountdownActive.c'
   - - 10556
     - c
-    - seedRecordPositionPairFromPhaseTableAddSecondPhaseStepToHalfword1ESetFieldsAndAdvanceWorkByte2BmagicMagic13103_801F153C
-    - '@source: src/bof3/bmagic/seedRecordPositionPairFromPhaseTableAddSecondPhaseStepToHalfword1ESetFieldsAndAdvanceWorkByte2BmagicMagic13103_801F153C.c'
+    - statePhaseSecondFields
+    - '@source: src/bof3/bmagic/statePhaseSecondFields.c'
     - '@behavior: Reads the record pointer cell at 0x801F24E0 and uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C54; the selected byte shifted left six is published to the shared scratchpad halfword at 0x1F800006 and passed to the shared angular helper at 0x801782FC. That result scaled by eight and added to the word at 0x80149308 forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result scaled by eight and added to the word at 0x8014930C forms the record word at offset 0x18. Word 0x3C of the record reached through the pointer cell at 0x801EB4E0 is copied into the record word at 0x1C, and the same record byte 0x7 indexes the byte table at 0x801F1C74, whose selected byte shifted left six is added to the record halfword at 0x1E. The record halfword at offset 0xC is then set to 0x40 and the byte at offset 0x5 to 0x10. Two closing statements re-read the cell at 0x801F24E0 to store 8 into the record byte at offset 0x6 and to increment the record byte at offset 0x2. It takes no arguments, returns nothing, and its address is the first word of the three-entry handler table at 0x801F1C94.'
   - - 10820
     - c
     - advanceRecordByte6By2AndHalfwordCBy20AccumulateScaledSampleIntoPositionPairThenAdvanceRecordByte2AtHalfwordC200BmagicMagic13103_801F1644
     - '@source: src/bof3/bmagic/advanceRecordByte6By2AndHalfwordCBy20AccumulateScaledSampleIntoPositionPairThenAdvanceRecordByte2AtHalfwordC200BmagicMagic13103_801F1644.c'
-    - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 2 to the record byte at offset 0x6, then re-reads the cell and adds 0x20 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store. It uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C54; the selected byte shifted left six becomes the phase published to the shared scratchpad halfword at 0x1F800006 and the same shift is passed to the shared angular helper at 0x801782FC; that result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword, shifted right three and added to the word at 0x8014930C, forms the record word at offset 0x18. A closing guard compares the record halfword at offset 0xC with 0x200 and, only on equality, increments the record byte at offset 0x2. The 0x18-byte frame only keeps $ra at 0x10 and the scratchpad phase pointer across the two calls; nothing is returned, and the roles of record bytes 0x2, 0x6 and 0x7 and of the record halfword at 0xC remain offset-based. Its address is the second word (index 1) of the three-entry handler table at 0x801F1C94 that dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0 indexes with the record byte at offset 0x2 scaled by four.'
+    - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 2 to the record byte at offset 0x6, then re-reads the cell and adds 0x20 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store. It uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C54; the selected byte shifted left six becomes the phase published to the shared scratchpad halfword at 0x1F800006 and the same shift is passed to the shared angular helper at 0x801782FC; that result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword, shifted right three and added to the word at 0x8014930C, forms the record word at offset 0x18. A closing guard compares the record halfword at offset 0xC with 0x200 and, only on equality, increments the record byte at offset 0x2. The 0x18-byte frame only keeps $ra at 0x10 and the scratchpad phase pointer across the two calls; nothing is returned, and the roles of record bytes 0x2, 0x6 and 0x7 and of the record halfword at 0xC remain offset-based. Its address is the second word (index 1) of the three-entry handler table at 0x801F1C94 that callDecrementCountdownActive indexes with the record byte at offset 0x2 scaled by four.'
   - - 11080
     - c
     - advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5By2ClearRecordAtZeroBmagicMagic13103_801F1748
     - '@source: src/bof3/bmagic/advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5By2ClearRecordAtZeroBmagicMagic13103_801F1748.c'
-    - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 0x10 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store, then uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C54. The selected byte shifted left six is published to the shared scratchpad halfword at 0x1F800006 and passed to the shared angular helper at 0x801782FC; that result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword shifted right three and added to the word at 0x8014930C forms the record word at offset 0x18. It then subtracts 2 from the record byte at offset 0x5, testing the stored value truncated to eight bits so no second cell read supplies the guard, and only when that countdown reaches zero does it read the shared record pointer at 0x801EB4E0, decrement that record byte 0x0B by one and call clearRecordBytes0Through4BmagicMagic13103_801F1AC4, the store filling the call delay slot. The 0x18-byte frame only keeps $ra at 0x10 and the scratchpad phase pointer across the three calls; nothing is returned. Its address is the third word (index 2) of the three-entry handler table at 0x801F1C94 that dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0 indexes with the record byte at offset 0x2 scaled by four.'
+    - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 0x10 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store, then uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C54. The selected byte shifted left six is published to the shared scratchpad halfword at 0x1F800006 and passed to the shared angular helper at 0x801782FC; that result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword shifted right three and added to the word at 0x8014930C forms the record word at offset 0x18. It then subtracts 2 from the record byte at offset 0x5, testing the stored value truncated to eight bits so no second cell read supplies the guard, and only when that countdown reaches zero does it read the shared record pointer at 0x801EB4E0, decrement that record byte 0x0B by one and call stateRecordThrough4Bmagic, the store filling the call delay slot. The 0x18-byte frame only keeps $ra at 0x10 and the scratchpad phase pointer across the three calls; nothing is returned. Its address is the third word (index 2) of the three-entry handler table at 0x801F1C94 that callDecrementCountdownActive indexes with the record byte at offset 0x2 scaled by four.'
   - - 11332
     - c
-    - drawEightTranslucentGouraudFanTrianglesAroundWorkScreenPairAtRadiusWorkByte6PlusRandomTintedByWorkByte5TimesFourteenOrByFourPlusRandomWhenByte1SetBmagicMagic13103_801F1844
-    - '@source: src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkScreenPairAtRadiusWorkByte6PlusRandomTintedByWorkByte5TimesFourteenOrByFourPlusRandomWhenByte1SetBmagicMagic13103_801F1844.c'
+    - renderPlusFourteenPlus
+    - '@source: src/bof3/bmagic/renderPlusFourteenPlus.c'
     - '@behavior: Reads the work record pointer cell at 0x801F24E0 and publishes to scratchpad halfword 0x1F800000 the record unsigned byte 0x6 plus the low two bits of a rand result, then publishes the record screen pair at halfwords 0x20 and 0x22 to scratchpad halfwords 0x1F80000C and 0x1F80000E. The first vertex shade is the record unsigned byte 0x5 times fourteen when record byte 0x1 is zero and byte 0x5 times four plus the low two bits of a second rand result otherwise. It then emits eight semi-transparent gouraud POLY_G3 triangles, one per 0x200 step of the 0x1000 turn: each packet is seeded by the shared helper at 0x8017A97C, takes the published screen pair as its first vertex with the shade in all three channels, and builds its second and third vertices from the 0x801782FC and 0x801783C8 samples of the current and next phase scaled by the signed radius halfword and shifted right twelve, with one in all three channels, linking each 0x1C-byte packet at ordering slot 2. Each phase is published to scratchpad halfword 0x1F800006 before the 0x801782FC sample and read back as a signed halfword for the 0x801783C8 sample of the same pair. Its address is called with no arguments by the record state handlers at 0x801F1138 and 0x801F14A0 when record bytes 0x0 and 0x2 are both non-zero; it returns nothing and keeps a 0x30-byte frame for $ra and six saved registers.'
   - - 11864
     - c
-    - reserveFirstFreeRecordBmagicMagic13103_801F1A58
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic13103_801F1A58.c'
+    - reserveFirstFreeRecord
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecord.c'
   - - 11972
     - c
-    - clearRecordBytes0Through4BmagicMagic13103_801F1AC4
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic13103_801F1AC4.c'
+    - stateRecordThrough4Bmagic
+    - '@source: src/bof3/bmagic/stateRecordThrough4Bmagic.c'
   - - 12052
     - c
-    - projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14
-    - '@source: src/bof3/bmagic/projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14.c'
+    - projectStoreScreenPair
+    - '@source: src/bof3/bmagic/projectStoreScreenPair.c'
     - '@behavior: Builds an eight-byte vector inside its 0x20-byte frame from the work record pointer cell at 0x801F24E0 and projects it through the primitive cursor. The record word at 0x14 shifted down nine bits and biased by -0x4000 becomes the halfword at stack offset 0x10, the record word at 0x18 the same way the halfword at 0x12, and the signed record halfword at 0x1E halved toward zero and negated the halfword at 0x14. Calls the shared helper at 0x8017AA30 with the primitive cursor, then RotTransPers with the frame vector, the cursor plus eight, the frame slot at 0x10 and the halfword slot at 0x14. A second read of the record cell stores the projected primitive halfwords at +8 and +0xA into the record halfwords at 0x20 and 0x22. Reads no other state and returns nothing.'
   - - 12228
     - rodata
-    - dispatchHandlerTable801F1BC4
+    - callHandlerTable801
 - - 14564

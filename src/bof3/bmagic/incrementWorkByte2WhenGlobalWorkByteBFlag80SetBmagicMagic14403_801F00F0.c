@@ -4,7 +4,7 @@
  * binds the address through this target's generated undefined_syms_auto.txt, so
  * no target-map row or WEAK_SYMBOL_AT binding is needed. The sibling bmagic
  * lifts read the same record through this pointer
- * (clearWorkFlag40AndCopyRecordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic14403_801F0034
+ * (stateCopyTripletClear
  * copies its words 0x34/0x38/0x3C into the work object behind 0x1F800044). */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 

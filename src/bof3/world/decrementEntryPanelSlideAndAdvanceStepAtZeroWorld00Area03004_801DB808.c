@@ -16,7 +16,7 @@ void decrementEntryPanelSlideAndAdvanceStepAtZeroWorld00Area03004(void) {
   work[9] = work[9] - 1;
   submitPanelPair(0, 78);
   configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]);
-  drawSlidingEntryLabelAndAmountSummaryWorld00Area03004(D_80146888[D_801E3208].unk_02[4], 0, D_1F800044[9]);
+  renderSlidingAmountSummary(D_80146888[D_801E3208].unk_02[4], 0, D_1F800044[9]);
   work = D_1F800044;
   if (work[9] == 0) {
     work[3]++;

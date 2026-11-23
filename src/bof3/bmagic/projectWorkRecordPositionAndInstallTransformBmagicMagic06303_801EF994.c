@@ -6,7 +6,7 @@
  * 0x801F0454, so the cell holds a live record when this function runs. Splat
  * binds the address through this target generated undefined_syms_auto.txt row,
  * so no map row is needed. Declaration matches the same-target sibling
- * stepWorkRecordAngleProjectPositionPairIncrementWorkByte9ByTwoAndWorkByteBThenAdvanceWorkByte2AtSixteenBmagicMagic06303_801EFF18,
+ * stepAngleProjectSixteen,
  * which reads the same cell. */
 extern u8 *D_801F1054; /* @source 0x801F1054 @kind data */
 

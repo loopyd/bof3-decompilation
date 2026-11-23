@@ -8,23 +8,23 @@ splat = "config/targets/emi/bmagic/magic058/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/accumulateWorkWordCByWord18StepDecrementByteAAndWord18OnGlobalBit0ThenDecrementGlobalWorkByteBAndClearWorkBytesWhenByteAReachesZeroBmagicMagic05803_801EF61C.c",
+    "src/bof3/bmagic/accumulateWordBytesReaches.c",
     "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic05803_801EEC28.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05803_801EF338.c",
 ]
 support_sources = [
     "src/bof3/support/magic058_03_psyq.c",
     "src/bof3/bmagic/magic05803DispatchTables.c",
-    "src/bof3/bmagic/clearRecordPoolBytes0To2AndByteTableThenPublishRecordPoseClearWorkByteBAdvanceWorkByte1ClaimSlotAt3FClearSlotByte1StoreWorkPointerIncrementWorkByteBInvokeHelperAt100BmagicMagic05803_801EED30.c",
+    "src/bof3/bmagic/statePoolPosePointer.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic05803_801EFE9C.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenOnZeroSeedWorkCoordTripletByBattlerSlotSetByteATo16WordsCAnd18To16AdvanceWorkByte2TwiceBmagicMagic05803_801EF454.c",
+    "src/bof3/bmagic/decrementCoordWordsTwice.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05803_801EF3B0.c",
-    "src/bof3/bmagic/accumulateWorkWordCByWord18StepDecrementWord18ThenAdvanceWorkByte2WhenWord18Reaches16BmagicMagic05803_801EF5D4.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWordCRadiusOneTwentyEightWideInSixtyFourStepsTintingOuterEdgeGreyNinetySixBmagicMagic05803_801EF74C.c",
+    "src/bof3/bmagic/accumulateWordStepDecrement.c",
+    "src/bof3/bmagic/renderWideOuterNinety.c",
     "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWordCRadiusSixtyFourWideInSixteenStepsTintingOuterEdgeByWorkByteATimesSixBmagicMagic05803_801EFA78.c",
     "src/bof3/bmagic/pushUiRingTripleThenAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05803_801EEE78.c",
-    "src/bof3/bmagic/recordWithinWorkPositionRadiusBmagicMagic05803_801EFDD4.c",
+    "src/bof3/bmagic/recordWithinPositionRadius.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05803_801EFE38.c",
-    "src/bof3/bmagic/seedWorkFromRecordCopyByte8AndWordTripletSetByteATo16AndWordCTo8ThenAdvanceWorkByte2BmagicMagic05803_801EF008.c",
+    "src/bof3/bmagic/stateWordTripletWord.c",
 ]
 psyq_source = "src/bof3/support/magic058_03_psyq.c"

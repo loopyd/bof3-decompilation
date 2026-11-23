@@ -8,26 +8,26 @@ splat = "config/targets/emi/bmagic/magic110/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/advanceWorkWord14RadiusBy40AndAdvanceWorkByte2WhenItReachesC00BmagicMagic11003_801EF8C0.c",
+    "src/bof3/bmagic/stateRadiusItReaches.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C.c",
-    "src/bof3/bmagic/invokeDrawHelperAdd2ToWorkByteAWhenBelow10IncrementWorkByte9AndAdvanceWorkByte1At10BmagicMagic11003_801EEEDC.c",
+    "src/bof3/bmagic/callDrawHelperIncrement.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic11003_801EF114.c",
-    "src/bof3/bmagic/seedWorkHeaderHalfwords2EToA0And30To12CWords40To30000And44ToC000ClearBytes5CTo5FRequestResource0AndAdvanceWorkByte2BmagicMagic11003_801EF528.c",
-    "src/bof3/bmagic/add2ToWorkByte9AndDecrementWorkByteAThenInvokeHelperWhenZeroBmagicMagic11003_801F00D8.c",
+    "src/bof3/bmagic/stateHeaderClearRequest.c",
+    "src/bof3/bmagic/workDecrementHelperZero.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98.c",
-    "src/bof3/bmagic/dispatchStateByte2Table0478BmagicMagic11003_801EF43C.c",
+    "src/bof3/bmagic/renderWideTintingOuter.c",
+    "src/bof3/bmagic/callStateTable0478Bmagic.c",
     "src/bof3/support/magic110_03_psyq.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8.c",
     "src/bof3/bmagic/magic11003DispatchTables.c",
-    "src/bof3/bmagic/offsetChannelPairByMotionPairCopyRecordWordSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic11003_801EF844.c",
+    "src/bof3/bmagic/offsetChannelMotionWord.c",
     "src/bof3/bmagic/offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11003_801EF8F8.c",
-    "src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11003_801EF4DC.c",
+    "src/bof3/bmagic/decrementAdvanceZeroBmagic.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11003_801EF93C.c",
-    "src/bof3/bmagic/setRandomWorkWord2ENearA0DecrementWorkWord30By2AdvanceWorkWord44By2000AndAdvanceWorkByte2Past17FFFBmagicMagic11003_801EF648.c",
-    "src/bof3/bmagic/setRandomWorkWord2ENearA0DecrementWorkWord30By4AndBelowB2DecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic11003_801EF6B4.c",
-    "src/bof3/bmagic/drawTranslucentFanOfSixtyFourGouraudTrianglesAtWorkWord14RadiusTintedByWorkByte9TimesFourBmagicMagic11003_801EFA48.c",
+    "src/bof3/bmagic/stateRandomNearDecrement.c",
+    "src/bof3/bmagic/stateRandomNearBelow.c",
+    "src/bof3/bmagic/renderSixtyRadiusTimes.c",
 ]
 psyq_source = "src/bof3/support/magic110_03_psyq.c"

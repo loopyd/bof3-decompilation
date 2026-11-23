@@ -33,14 +33,14 @@ segments:
     - func_801EEC28
   - - 280
     - c
-    - clearRecordPoolBytes0To2AndWorkBytes4AndBThenQueueSlotPerEligibleEnemyOrPartyBattlerClearByte1SetByte4ClaimOrdinalByte9AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic07303_801EED18
-    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2AndWorkBytes4AndBThenQueueSlotPerEligibleEnemyOrPartyBattlerClearByte1SetByte4ClaimOrdinalByte9AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic07303_801EED18.c'
+    - statePerEligibleOrdinal
+    - '@source: src/bof3/bmagic/statePerEligibleOrdinal.c'
   - - 848
     - asm
     - func_801EEF50
   - - 944
     - c
-    - dispatchStateByte1Table0668BmagicMagic07303_801EEFB0
+    - callStateTable0668Bmagic
     - '@source: src/bof3/bmagic/magic07303DispatchTables.c'
   - - 1012
     - asm
@@ -53,20 +53,20 @@ segments:
     - func_801EF2DC
   - - 2004
     - c
-    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07303_801EF3D4
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07303_801EF3D4.c'
+    - incrementCountersDecrementZero
+    - '@source: src/bof3/bmagic/incrementCountersDecrementZero.c'
     - '@behavior: Per-frame handler of this overlay handler run. It reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group, and for each of the record three counter bytes it re-reads the work object unsigned byte 0xA, scales it by the 12-byte record stride into a byte offset and increments the selected 0x80145BD6 record bytes 0x0/0x1/0x2 at byte width. It then re-reads the cell and decrements work byte 9 at byte width, testing the stored value against zero, and only when that countdown reaches zero it re-reads the cell and increments work byte 2 to move the dispatcher on work byte 2 to its next step. Leaf with no saved registers and no calls. The original reserves a 0x10-byte frame that no statement of the body touches, reproduced by one declared local of that size flagged for review.'
   - - 2276
     - c
-    - setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07303_801EF4E4
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07303_801EF4E4.c'
+    - stateIncrementByteBmagic
+    - '@source: src/bof3/bmagic/stateIncrementByteBmagic.c'
   - - 2348
     - asm
     - func_801EF52C
   - - 2744
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenInvokeHelperBmagicMagic07303_801EF6B8
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenInvokeHelperBmagicMagic07303_801EF6B8.c'
+    - decrementGlobalIsZero
+    - '@source: src/bof3/bmagic/decrementGlobalIsZero.c'
     - '@behavior: Handler of the scratchpad work object, the sixth and last of the six code pointers in the run at 0x801EEC04 that the byte-2 dispatcher func_801EEFF4 copies into its own 0x30-byte frame and indexes with the work object unsigned byte 2, so it runs with no arguments; the word at 0x801EEC18 names this address and no jal in the payload does. It loads the work-object pointer cell at 0x1F800044 once before the 0x18-byte frame is created and tests work byte 0x0B for zero. Only when that byte is zero it loads the shared battle work record pointer at 0x801EB4E0 and decrements that record byte 0x0B at byte width, the stored value never tested, then re-reads the 0x1F800044 cell because the record store may alias the cell object and passes work byte 0x04 to the main-executable helper at 0x800A9820, and finally invokes the shared helper at 0x801E5988 with no arguments. The frame keeps only $ra at 0x10 and the body returns through the jr $ra at 0x801EF71C. The roles of work byte 0x0B, work byte 0x04 and record byte 0x0B are not established, so they stay offset-anchored.'
   - - 2852
     - c
@@ -74,36 +74,36 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724.c'
   - - 2920
     - c
-    - dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic07303_801EF768
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic07303_801EF768.c'
+    - callInvokeDrawHelpers
+    - '@source: src/bof3/bmagic/callInvokeDrawHelpers.c'
     - '@behavior: Per-frame step dispatcher of this overlay handler run. It copies the three code pointers at 0x801EEC1C into its own 0x28-byte frame, indexes that copy with the published work record unsigned byte 2 and calls the selected entry with no arguments. It then re-reads the record cell at 0x801F21F0 and, when record byte 0 has bit 0 set and byte 2 is non-zero, calls the no-argument draw helper at 0x801F00C4; when the record unsigned halfword at 0xC has either low bit set it calls the spoke drawing step at 0x801EFBF8 with the halved shared frame counter at 0x80143E6C masked to 16 bits and with record byte 6, then 0x801EFE2C with that halved counter plus four and with record byte 6 plus half of itself. It returns nothing and stores no state of its own.'
   - - 3172
     - c
-    - decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic07303_801EF864
-    - '@source: src/bof3/bmagic/decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic07303_801EF864.c'
+    - decrementLoadFieldsApply
+    - '@source: src/bof3/bmagic/decrementLoadFieldsApply.c'
     - '@behavior: Step handler of this overlay stage walk, first of the three code pointers at 0x801EEC1C that the dispatcher at 0x801EF768 copies into its frame and indexes with work record byte 2. It decrements the record countdown byte at 0x5 at byte width and returns while the stored value stays non-zero. Only when that countdown reaches zero it reloads the record motion fields from the shared battle record at 0x801EB4E0, copying that record word triplet at 0x34, 0x38 and 0x3C into the record words at 0x14, 0x18 and 0x1C and its halfwords at 0x2E and 0x30 into the record halfwords at 0x20 and 0x22, then applies a randomized motion offset pair: the pair table at 0x801F05A4 indexed by record byte 7 masked with 0x1F contributes its first halfword, subtracted when that halfword is negative and added when it is not, together with the low three bits of a rand result into record halfword 0x20, and its second halfword plus those three bits is subtracted from record halfword 0x22. It then copies record halfword 0x20 into record halfword 0x8, seeds record halfwords 0xA and 0xC from rand results masked with 1 and unmasked, reseeds record byte 7 with the byte table at 0x801F0664 indexed by record byte 4 plus a rand result masked with 6, re-arms record byte 5 with 0x10, clears record byte 6 and advances record byte 2. Returns nothing.'
   - - 3684
     - c
-    - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07303_801EFA64
-    - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07303_801EFA64.c'
+    - stateAccumulateSampleLimit
+    - '@source: src/bof3/bmagic/stateAccumulateSampleLimit.c'
   - - 3860
     - c
-    - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07303_801EFB14
-    - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07303_801EFB14.c'
+    - stateSampleEveryFourth
+    - '@source: src/bof3/bmagic/stateSampleEveryFourth.c'
     - '@behavior: Step handler of this overlay stage walk, third of the three code pointers at 0x801EEC1C that the dispatcher at 0x801EF768 copies into its frame and indexes with work record byte 2. It increments the record halfword at 0xC, publishes its low six bits shifted left 6 into the scratchpad halfword at 0x1F800006, passes the same shifted value to 0x801782FC and adds that result scaled by 0x18 and shifted right 12 into the record halfword at 0x8 stored at 0x20, then adds record halfword 0xA into record halfword 0x22. Only when the shared frame counter at 0x80143E6C has its low two bits clear does it decrement record byte 6, and it always decrements record byte 5, where a zero countdown decrements shared record byte 0xB at 0x801EB4E0 and calls the record-clearing helper at 0x801F0454.'
   - - 4088
     - c
-    - drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8
-    - '@source: src/bof3/bmagic/drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8.c'
+    - renderRotatedSpokesPublished
+    - '@source: src/bof3/bmagic/renderRotatedSpokesPublished.c'
     - '@behavior: Draw step of this overlay run, reached only from the draw branch of the dispatcher at 0x801EF768, which passes half of the shared frame counter at 0x80143E6C masked to 16 bits and work record byte 6. It publishes the record halfwords 0x20 and 0x22 from the cell at 0x801F21F0 into scratchpad cells 0x1F800000 and 0x1F800002, then six times record byte 5 into 0x1F800008, 0x1F80000A and 0x1F80000C. The draw-mode tpage is 0xA5 when GetGraphType returns 1 and again when it returns 2, and 0x35 otherwise; SetDrawMode is seeded at g_PrimCursor with dfe 0 and dtd 1 and a 0xC-byte draw-mode packet is linked at record words 0x14 and 0x18 with kind 2. It then runs four iterations from the first argument masked to 16 bits in steps of 8, writing the low five bits of the counter shifted left 7 into the phase cell at 0x1F800006, and each iteration takes a fresh g_PrimCursor primitive, seeds it through 0x8017AA94, marks it semi-transparent, copies the published centre into primitive halfwords 0x08 and 0x0A, adds the 0x801783C8 and 0x801782FC samples of the phase cell scaled by the second argument and shifted right 12 into primitive halfwords 0x10 and 0x12, writes the tint triplet into primitive bytes 0x04, 0x05 and 0x06, stores 1 into bytes 0x0C, 0x0D and 0x0E, and links the 0x20-byte packet at record words 0x14 and 0x18 with kind 2. It keeps a 0x38-byte frame and returns nothing.'
   - - 4652
     - c
-    - drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C
-    - '@source: src/bof3/bmagic/drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C.c'
+    - renderRotatedPublishedFull
+    - '@source: src/bof3/bmagic/renderRotatedPublishedFull.c'
   - - 5316
     - c
-    - drawTranslucentFanOfEightGouraudTrianglesFromPublishedCenterAtRadiusWorkByte6PlusRandomTintFromTableOfWorkBytes3And4TimesWorkByte5BmagicMagic07303_801F00C4
-    - '@source: src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromPublishedCenterAtRadiusWorkByte6PlusRandomTintFromTableOfWorkBytes3And4TimesWorkByte5BmagicMagic07303_801F00C4.c'
+    - renderPublishedCenterPlus
+    - '@source: src/bof3/bmagic/renderPublishedCenterPlus.c'
     - '@behavior: Draw step of this overlay run, reached only from the draw branch of the dispatcher at 0x801EF768, which calls it with no arguments when record byte 0 has bit 0 set and byte 2 is non-zero. It selects the draw-mode texture page 0xA5 when the shared graphic type is 1 or 2 and 0x35 otherwise, installs it at g_PrimCursor with dfe 0 and dtd 1, and links a 0xC-byte draw-mode packet at the record words 0x14 and 0x18 with kind 2. It then publishes the burst into the scratchpad: the radius cell 0x1F800004 takes record byte 0x06 plus a rand result masked with 3, the centre cells 0x1F800000 and 0x1F800002 take record halfwords 0x20 and 0x22, the tint triplet 0x1F800008, 0x1F80000A and 0x1F80000C takes the colour-table triple at index record byte 0x03 times three plus byte 0x04 times twelve multiplied by record byte 0x05, and the alpha cell 0x1F80000E takes record byte 0x05 alone. It emits eight triangles, one per 0x200 step of the 0x1000 circle, each a semi-transparent gouraud POLY_G3 seeded by 0x8017A97C whose first vertex is the published centre and whose second and third are that centre plus the 0x801782FC and 0x801783C8 samples of the current and next phase scaled by the signed radius cell and shifted right 12. The first vertex takes the published tint triplet, the other two take the published alpha byte in all three colour components, and every iteration links a 0x1C-byte packet at the record words 0x14 and 0x18 with kind 2. It keeps a 0x30-byte frame and returns nothing.'
   - - 6120
     - c

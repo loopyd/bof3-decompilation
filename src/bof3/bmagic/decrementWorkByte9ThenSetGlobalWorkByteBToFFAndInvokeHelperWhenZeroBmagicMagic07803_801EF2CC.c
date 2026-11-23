@@ -2,7 +2,7 @@
 
 /* Shared overlay helper invoked once the work-object script/state countdown
  * reaches zero; the same extern address is called by the exact sibling
- * incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4 of this
+ * incrementByteInvokeHelper of this
  * target. The call takes no arguments in the original (jal with no argument
  * setup). */
 void func_801E5988(void);

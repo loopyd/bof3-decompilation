@@ -8,19 +8,19 @@ splat = "config/targets/emi/bmagic/magic064/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/initializeRenderCellMapFromViewOriginThenBuildReverseCellIndexBmagicMagic06403_801F103C.c",
+    "src/bof3/bmagic/initializeViewBuildReverse.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EEC7C.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/clearWorkByteBBit0ThenInvokeHelperWhenNoRecordByte0SetBmagicMagic06403_801F0364.c",
+    "src/bof3/bmagic/stateInvokeHelperNo.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic06403_801F0C38.c",
-    "src/bof3/bmagic/invokeHelperThenAdvanceWorkByteBOrBothRecordByte2BmagicMagic06403_801F0278.c",
-    "src/bof3/bmagic/invokeHelperThenDecrementWorkByte9AndAdvanceWorkByte2WhenZeroBmagicMagic06403_801F0214.c",
-    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByte2Is10ThenInvokeHelperBmagicMagic06403_801F0310.c",
-    "src/bof3/bmagic/clearWorkByteBSetWorkByte9To64InvokeHelperThenAdvanceWorkByte2BmagicMagic06403_801F01C4.c",
-    "src/bof3/bmagic/writeDiagonalOffsetMapCellCoordinatesOrZeroBmagicMagic06403_801F12B8.c",
+    "src/bof3/bmagic/callHelperByteBoth.c",
+    "src/bof3/bmagic/callHelperDecrementZero.c",
+    "src/bof3/bmagic/incrementGlobalInvokeHelper.c",
+    "src/bof3/bmagic/stateByteInvokeHelper.c",
+    "src/bof3/bmagic/textDiagonalOffsetCoordinates.c",
     "src/bof3/bmagic/dispatchWorkByte3HandlerBmagicMagic06403_801EF89C.c",
-    "src/bof3/bmagic/submitWorkObjectThenInvokeHelperBmagicMagic06403_801F0D34.c",
+    "src/bof3/bmagic/submitObjectInvokeHelper.c",
     "src/bof3/bmagic/magic06403DispatchTables.c",
     "src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic06403_801F0DA8.c",
     "src/bof3/bmagic/incrementWorkByte2BmagicMagic06403_801F0D14.c",
@@ -33,9 +33,9 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic06403_801F0448.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EF78C.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50.c",
-    "src/bof3/bmagic/seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0.c",
-    "src/bof3/bmagic/decrementWorkByte9AdvanceWorkByte2WhenMinus6ThenInvokeHelperBmagicMagic06403_801F0DD8.c",
-    "src/bof3/bmagic/publishSelectedWorkRecordThenAdvanceWorkByte2WhenHelperReadyElseSetWorkByte9To16BmagicMagic06403_801EEE1C.c",
-    "src/bof3/bmagic/publishSelectedWorkRecordLevelFourSpritePiecesByWorkByte9ThenStartStreamSlotFromSharedRecordAndAdvanceWorkByte2BmagicMagic06403_801EF2A4.c",
+    "src/bof3/bmagic/stateRecordMotionRecord.c",
+    "src/bof3/bmagic/decrementInvokeHelperBmagic.c",
+    "src/bof3/bmagic/publishSelectedHelperReady.c",
+    "src/bof3/bmagic/publishLevelPiecesStream.c",
 ]
 psyq_source = "src/bof3/support/magic064_03_psyq.c"

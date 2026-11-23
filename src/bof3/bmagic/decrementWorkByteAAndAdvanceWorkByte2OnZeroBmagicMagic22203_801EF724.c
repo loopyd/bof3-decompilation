@@ -11,7 +11,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * @behavior Work-object handler step, entry 12 of the sixteen-word
  *           handler-pointer run at 0x801F0D54 whose word at 0x801F0D84 holds
  *           this function address, so the byte-1 dispatcher
- *           dispatchStateByte1Table0d54BmagicMagic22203_801EEEE0 selects it
+ *           callStateTable0Bmagic selects it
  *           while work object byte 1 is 12 and no jal in this payload targets
  *           the span. It
  *           reads the scratchpad work object through the pointer cell at

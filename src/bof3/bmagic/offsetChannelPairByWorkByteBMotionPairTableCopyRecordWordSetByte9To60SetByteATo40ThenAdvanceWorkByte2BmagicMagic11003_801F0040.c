@@ -23,7 +23,7 @@ extern u32 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * row to the shared channel words at 0x80149308 and 0x8014930C. This table
  * follows the fourteen handler addresses at 0x801F046C. */
 /* @source 0x801F04A4 @kind table */
-extern u32 workByteBMotionPairTable[][2];
+extern u32 workMotionPairTable[][2];
 
 /* @source 0x801F0040
  * @behavior Entry 4 of the six-word work-byte-2 handler run at 0x801F048C
@@ -60,8 +60,8 @@ void offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByt
   u32 *source;
 
   work = (u32 *)g_battle_work;
-  work[13] = D_80149308[0] + workByteBMotionPairTable[((u8 *)work)[0xB]][0];
-  work[14] = D_8014930C[0] + workByteBMotionPairTable[((u8 *)work)[0xB]][1];
+  work[13] = D_80149308[0] + workMotionPairTable[((u8 *)work)[0xB]][0];
+  work[14] = D_8014930C[0] + workMotionPairTable[((u8 *)work)[0xB]][1];
   source = (u32 *)D_801EB4E0;
   work[15] = source[15];
   ((u8 *)work)[9] = 0x60;

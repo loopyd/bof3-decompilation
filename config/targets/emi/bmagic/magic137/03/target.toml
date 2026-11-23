@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic13703_801EF21C.c",
     "src/bof3/bmagic/advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic13703_801EF174.c",
-    "src/bof3/bmagic/clearWorkBytesBAnd9RequestResource3InvokeHelpers4D978And4D4E0ThenAdvanceWorkByte2BmagicMagic13703_801F001C.c",
+    "src/bof3/bmagic/stateBytesRequestInvoke.c",
     "src/bof3/bmagic/decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic13703_801EEEFC.c",
     "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13703_801EFD50.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF3B0AndF4C4AndPopWhenWorkByte0NonzeroBmagicMagic13703_801EF018.c",
@@ -18,7 +18,7 @@ sources = [
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic13703_801EFD00.c",
     "src/bof3/bmagic/invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic13703_801F007C.c",
     "src/bof3/bmagic/seedMotionOffsetPositionPairDistanceCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic13703_801EF090.c",
-    "src/bof3/bmagic/setWorkByte9To18ClaimTwoSlotsCopyHalfwordTableWithBit15SetAndWhenActingRecordByteF0Is29ClaimSlotCopyWorkHeadBmagicMagic13703_801EEC7C.c",
+    "src/bof3/bmagic/stateSlotsActingHead.c",
 ]
 support_sources = [
     "src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic13703_801EF2C4.c",
@@ -26,7 +26,7 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13703_801EFD9C.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic13703_801EEC1C.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic13703_801EFFBC.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeFDF8WhenWorkByte0NonzeroBmagicMagic13703_801EFC58.c",
+    "src/bof3/bmagic/callHandlerInvokeNonzero.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic13703_801F00D8.c",
     "src/bof3/bmagic/magic13703DispatchTables.c",
     "src/bof3/support/magic137_03_psyq.c",

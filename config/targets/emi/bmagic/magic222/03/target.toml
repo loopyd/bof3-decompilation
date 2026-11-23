@@ -9,25 +9,25 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic22203_801EEC10.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawTransformedAndPopWhenWorkBytes0And2SetBmagicMagic22203_801EFDEC.c",
-    "src/bof3/bmagic/incrementWorkWord0CProjectPositionPairAtWorkByteBAngleThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic22203_801EFF7C.c",
-    "src/bof3/bmagic/drawTranslucentMirroredGouraudRibbonOfThirtyTwoSixtyFourthTurnStepsAroundWorkHalfwords2EAnd30InnerRadiusWorkByteBOuterTwiceItTintedByWorkByte9TimesFifteenAndEightBmagicMagic22203_801F07A8.c",
-    "src/bof3/bmagic/seedRandomWordCScaleEightToFifteenAndProjectPositionPairAtByteBAngleCopyRecordWord3CSetByte9ToEightByteATo16AdvanceWorkByte2BmagicMagic22203_801EFE74.c",
+    "src/bof3/bmagic/callDrawTransformedPop.c",
+    "src/bof3/bmagic/incrementProjectPairAngle.c",
+    "src/bof3/bmagic/renderMirroredRibbonInner.c",
+    "src/bof3/bmagic/stateScaleFifteenAngle.c",
     "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801EF724.c",
-    "src/bof3/bmagic/decrementWorkByteAThenRearmTo16AndAdvanceWorkByte2OnZeroBmagicMagic22203_801F066C.c",
+    "src/bof3/bmagic/decrementByteRearmZero.c",
 ]
 support_sources = [
     "src/bof3/support/magic222_03_psyq.c",
     "src/bof3/bmagic/add4ToWorkByteBAndDecrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801F0730.c",
     "src/bof3/bmagic/magic22203DispatchTables.c",
     "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C.c",
-    "src/bof3/bmagic/incrementWorkByte9AdvanceWorkWord14By6AndAdvanceWorkByte2At10BmagicMagic22203_801EF6C8.c",
-    "src/bof3/bmagic/add4ToWorkByteBThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801F06C8.c",
+    "src/bof3/bmagic/incrementAdvanceAdvanceBmagic.c",
+    "src/bof3/bmagic/workByteDecrementZero.c",
     "src/bof3/bmagic/decrementWorkByte9ThenCopyWorkWordTripletClearWord14AndByte9SetATo26AndAdvanceWorkByte2BmagicMagic22203_801EF634.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSetFlag20Mode1ClearTintTripletAndAdvanceWorkByte2BmagicMagic22203_801EF448.c",
-    "src/bof3/bmagic/stepHalfword801492D8ByWorkByte9LowBitDecrementWorkByte9ThenSeedNegative682OnZeroSetByte9To22AdvanceWorkByte2BmagicMagic22203_801EF274.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawTwiceWhenActiveBmagicMagic22203_801F0504.c",
-    "src/bof3/bmagic/seedWorkHalfwordPairFromRecordRaiseFlag10RearmWorkBytesAndAdvanceWorkByte2BmagicMagic22203_801F0584.c",
+    "src/bof3/bmagic/decrementClearTintTriplet.c",
+    "src/bof3/bmagic/stepLowBitSeed.c",
+    "src/bof3/bmagic/callDrawTwiceActive.c",
+    "src/bof3/bmagic/stateHalfwordRaiseRearm.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801EF770.c",
 ]
 psyq_source = "src/bof3/support/magic222_03_psyq.c"

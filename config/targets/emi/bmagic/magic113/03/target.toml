@@ -9,18 +9,18 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/bmagic/drawFiveProjectedPartialStarEdgesTintedByWorkByteABmagicMagic11303_801EFDA0.c",
-    "src/bof3/bmagic/drawProjectedPartialRingOfThirtyTwoFlatLinesTintedByWorkByteABmagicMagic11303_801EF944.c",
-    "src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerAndRestoreDrawModeBmagicMagic11303_801F0764.c",
-    "src/bof3/bmagic/incrementWorkByte9WhenReadyThenIncrementGlobalByteBAt3OrToggleByte2AAndDispatchCueBmagicMagic11303_801F0A80.c",
-    "src/bof3/bmagic/invokeD104AndD228ThenQueueSixSlotsCopyWorkPoseClearByteBAndAdvanceWorkByte1WhenByteBIs5BmagicMagic11303_801EF1F8.c",
-    "src/bof3/bmagic/incrementWorkByte9ThenQueueTwoSlotsCopyWorkPoseDispatchCue101AndAdvanceWorkByte1At16BmagicMagic11303_801EEE24.c",
-    "src/bof3/bmagic/forwardBattleByteAndRaiseFlag4OrCopyPoseAnd16HalfwordsThenAdvanceWorkByte1BmagicMagic11303_801EECE0.c",
-    "src/bof3/bmagic/seedWorkHeaderTintAndConditionalWord3CThenAdvanceWorkByte2BmagicMagic11303_801F08B4.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF440And02CCAndPopWhenWorkByte0NonzeroBmagicMagic11303_801F0140.c",
+    "src/bof3/bmagic/renderPartialStarEdges.c",
+    "src/bof3/bmagic/renderPartialFlatLines.c",
+    "src/bof3/bmagic/stateModeRestoreMode.c",
+    "src/bof3/bmagic/incrementReadyToggleCue.c",
+    "src/bof3/bmagic/callSixSlotsPose.c",
+    "src/bof3/bmagic/incrementSlotsCopyPose.c",
+    "src/bof3/bmagic/forwardRaisePoseHalfwords.c",
+    "src/bof3/bmagic/stateHeaderTintConditional.c",
+    "src/bof3/bmagic/callInvokePopNonzero.c",
     "src/bof3/bmagic/incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EFD40.c",
-    "src/bof3/bmagic/incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EF8E4.c",
-    "src/bof3/bmagic/dispatchCue103AndAdvanceWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801F0218.c",
+    "src/bof3/bmagic/incrementDecrementGlobalHelper.c",
+    "src/bof3/bmagic/callGlobalByteBmagic.c",
     "src/bof3/support/magic113_03_psyq.c",
     "src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBTo5AndAdvanceWorkByte2At31BmagicMagic11303_801F01B8.c",
     "src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11303_801F0868.c",
@@ -28,6 +28,6 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBIs80BmagicMagic11303_801EF3A0.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801EF8A4.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801EFD00.c",
-    "src/bof3/bmagic/setWorkByteBTo84AndIncrementWorkByte1WhenWorkByteBIs6BmagicMagic11303_801EF35C.c",
+    "src/bof3/bmagic/stateByteIncrementByte.c",
 ]
 psyq_source = "src/bof3/support/magic113_03_psyq.c"

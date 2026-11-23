@@ -33,8 +33,8 @@ segments:
     - func_801EEC28
   - - 328
     - c
-    - clearRecordPoolBytes0To2CopyBattleStateToWorkByte4CopyRecordByte8TripletSetByte9To3CClaimSlot62PublishWorkPointerCopy256And16HalfwordsBit15Set80145988InvokeHelper100AdvanceWorkByte1BmagicMagic07603_801EED48
-    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2CopyBattleStateToWorkByte4CopyRecordByte8TripletSetByte9To3CClaimSlot62PublishWorkPointerCopy256And16HalfwordsBit15Set80145988InvokeHelper100AdvanceWorkByte1BmagicMagic07603_801EED48.c'
+    - statePoolPointerHalfwords
+    - '@source: src/bof3/bmagic/statePoolPointerHalfwords.c'
     - '@behavior: Clear record pool bytes 0 to 2, copy the battle-state answer to work byte 4 and the shared record byte 8 and word triplet to the work object, rearm work byte 9 to 0x3C, claim one slot with allocator code 0x62, copy the two halfword tables with bit 15 set, store 1 into the shared byte 0x80145988 and advance work byte 1.'
   - - 860
     - asm
@@ -44,37 +44,37 @@ segments:
     - func_801EF00C
   - - 1308
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBZeroBmagicMagic07603_801EF11C
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBZeroBmagicMagic07603_801EF11C.c'
+    - stateIncrementByteZero
+    - '@source: src/bof3/bmagic/stateIncrementByteZero.c'
   - - 1376
     - c
-    - decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07603_801EF160
-    - '@source: src/bof3/bmagic/decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07603_801EF160.c'
+    - decrementCountersSubmitZero
+    - '@source: src/bof3/bmagic/decrementCountersSubmitZero.c'
     - '@behavior: Decrement work-byte-A record counters and work byte 9; on zero submit the published record and advance work byte 1.'
   - - 1672
     - asm
     - func_801EF288
   - - 1768
     - c
-    - isBattleStateFourWithKindOtherThan4COrB4BmagicMagic07603_801EF2E8
-    - '@source: src/bof3/bmagic/isBattleStateFourWithKindOtherThan4COrB4BmagicMagic07603_801EF2E8.c'
+    - checkFourKindOther
+    - '@source: src/bof3/bmagic/checkFourKindOther.c'
     - '@behavior: Return whether state is four and kind is neither 0x4C nor 0xB4.'
   - - 1840
     - c
-    - dispatchStateByte1Table0488BmagicMagic07603_801EF330
+    - callStateTable0488Bmagic
     - '@source: src/bof3/bmagic/magic07603DispatchTables.c'
   - - 1908
     - asm
     - func_801EF374
   - - 2036
     - c
-    - decrementWorkByte9ThenCopyRecordByte4AndTripletAddC00000ClearByte9SetATo3CAndAdvanceWorkByte2BmagicMagic07603_801EF3F4
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordByte4AndTripletAddC00000ClearByte9SetATo3CAndAdvanceWorkByte2BmagicMagic07603_801EF3F4.c'
+    - decrementCopyTripletClear
+    - '@source: src/bof3/bmagic/decrementCopyTripletClear.c'
     - '@behavior: Decrement work byte 9; on zero copy record byte 4 and triplet, bias word 0x3C, rearm and advance byte 2.'
   - - 2216
     - c
-    - incrementWorkByte9ThenAllocateTableCountEntriesAndAdvanceWorkByte2BmagicMagic07603_801EF4A8
-    - '@source: src/bof3/bmagic/incrementWorkByte9ThenAllocateTableCountEntriesAndAdvanceWorkByte2BmagicMagic07603_801EF4A8.c'
+    - incrementAllocateCountEntries
+    - '@source: src/bof3/bmagic/incrementAllocateCountEntries.c'
     - '@behavior: Increment work byte 9; at 16 allocate table-count entries, initialize their fields and advance work byte 2.'
   - - 2544
     - asm
@@ -89,35 +89,35 @@ segments:
     - func_801EF698
   - - 3240
     - c
-    - dispatchStateByte1Table04a0BmagicMagic07603_801EF8A8
+    - callStateTable04Bmagic
     - '@source: src/bof3/bmagic/magic07603DispatchTables.c'
   - - 3308
     - c
-    - dispatchWorkByte2HandlerThenDrawBetweenGraphTypeDrawModesAroundHelpersWhenWorkBytes0And2SetBmagicMagic07603_801EF8EC
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawBetweenGraphTypeDrawModesAroundHelpersWhenWorkBytes0And2SetBmagicMagic07603_801EF8EC.c'
+    - callGraphTypeModes
+    - '@source: src/bof3/bmagic/callGraphTypeModes.c'
     - '@behavior: Copy the three code pointers at 0x801EEC1C into the frame, call the entry selected by unsigned work byte 2 of the scratchpad work object, then open and link a 12-byte draw-mode packet with page 0xA5 for graphics types 1 or 2 and 0x35 otherwise; call 0x800AF764 and the overlay draw passes 0x801EFEA8 and 0x801F00FC when work bytes 0 and 2 are both set, and finally open and link a second draw-mode packet with page 0x25 for graphics types 1 or 2 and 0x15 otherwise.'
   - - 3680
     - c
-    - seedRandomWorkWord14AndBytes5DTo5FProjectPositionPairAtWordCScaleEightSetWord3CAndAdvanceWorkByte2OnWorkByte9CountdownBmagicMagic07603_801EFA60
-    - '@source: src/bof3/bmagic/seedRandomWorkWord14AndBytes5DTo5FProjectPositionPairAtWordCScaleEightSetWord3CAndAdvanceWorkByte2OnWorkByte9CountdownBmagicMagic07603_801EFA60.c'
+    - stateRandomScaleEight
+    - '@source: src/bof3/bmagic/stateRandomScaleEight.c'
     - '@behavior: Decrement work byte 9 and return while the countdown is nonzero; at zero request helper 0x8015D71C with code 0x101 when work byte 0xB is clear, set work word 0x0C to 8, project the position pair from masked work byte 0xB through 0x801782FC and 0x801783C8, set work word 0x3C from shared record word 0x3C biased by 0x800000, seed work words 0x14 and 0x20 from a masked rand() value, seed work bytes 0x5D through 0x5F from masked rand() values, clear work byte 9, set work byte 0xA to 0x10 and advance work byte 2.'
   - - 4144
     - c
-    - growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic07603_801EFC30
+    - growProjectDecayAccumulate
     # @source 0x801EFC30
     # @behavior Grow work word 0x0C, project position pair, decay word 0x14 into word 0x3C and advance byte 2 at byte 9 value 16.
   - - 4448
     - c
-    - incrementWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CThenOnFrameParityDecrementWorkByte9AndSharedByteBAndClearAtZeroBmagicMagic07603_801EFD60
-    - '@source: src/bof3/bmagic/incrementWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CThenOnFrameParityDecrementWorkByte9AndSharedByteBAndClearAtZeroBmagicMagic07603_801EFD60.c'
+    - incrementDecayAccumulateParity
+    - '@source: src/bof3/bmagic/incrementDecayAccumulateParity.c'
     - '@behavior: Increment work word 0x0C, project the position pair from scratchpad angle samples and decay word 0x14 into word 0x3C; on frame-counter parity decrement work byte 9 and, at zero, shared record byte 0xB and work bytes 0x00 through 0x04.'
   - - 4776
     - asm
     - func_801EFEA8
   - - 5372
     - c
-    - drawTranslucentGouraudRingOfEightQuadsBetweenRadiiTwentyAndEightTintedByWorkByte9TimesSignedBytes5d5e5fBmagicMagic07603_801F00FC
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudRingOfEightQuadsBetweenRadiiTwentyAndEightTintedByWorkByte9TimesSignedBytes5d5e5fBmagicMagic07603_801F00FC.c'
+    - renderRadiiTwentySigned
+    - '@source: src/bof3/bmagic/renderRadiiTwentySigned.c'
     - '@behavior: Publish the fixed radii 8 and 0x14 and the fade tint, the unsigned work byte 9 times the signed work bytes 5D, 5E and 5F, into the scratchpad halfwords at 0x1F800000, 0x1F800002 and 0x1F800008 to 0x1F80000C, then emit eight semi-transparent Gouraud quads over the eight 0x200 steps of the circle between those two radii around the work halfwords 0x2E and 0x30, with vertices zero and one on radius 0x14 and RGB 1 and vertices two and three on radius 8 carrying the tint bytes, linking each 0x24-byte packet at work words 0x34 and 0x38 with kind 2.'
   - - 6100
     - asm

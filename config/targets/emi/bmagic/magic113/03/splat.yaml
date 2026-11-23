@@ -33,13 +33,13 @@ segments:
     - func_801EEC24
   - - 224
     - c
-    - forwardBattleByteAndRaiseFlag4OrCopyPoseAnd16HalfwordsThenAdvanceWorkByte1BmagicMagic11303_801EECE0
-    - '@source: src/bof3/bmagic/forwardBattleByteAndRaiseFlag4OrCopyPoseAnd16HalfwordsThenAdvanceWorkByte1BmagicMagic11303_801EECE0.c'
+    - forwardRaisePoseHalfwords
+    - '@source: src/bof3/bmagic/forwardRaisePoseHalfwords.c'
     - '@behavior: Forwards the battle byte and raises flag 4 when both classification bytes are on the same side of 3; otherwise copies the pose and sixteen halfwords, clears work bytes B and 9 and advances byte 1.'
   - - 548
     - c
-    - incrementWorkByte9ThenQueueTwoSlotsCopyWorkPoseDispatchCue101AndAdvanceWorkByte1At16BmagicMagic11303_801EEE24
-    - '@source: src/bof3/bmagic/incrementWorkByte9ThenQueueTwoSlotsCopyWorkPoseDispatchCue101AndAdvanceWorkByte1At16BmagicMagic11303_801EEE24.c'
+    - incrementSlotsCopyPose
+    - '@source: src/bof3/bmagic/incrementSlotsCopyPose.c'
     - '@behavior: Increments work byte 9 and at 16 queues two slots, copies the work pose, dispatches cue 0x101 and advances work byte 1.'
   - - 1024
     - asm
@@ -49,13 +49,13 @@ segments:
     - func_801EF0F0
   - - 1528
     - c
-    - invokeD104AndD228ThenQueueSixSlotsCopyWorkPoseClearByteBAndAdvanceWorkByte1WhenByteBIs5BmagicMagic11303_801EF1F8
-    - '@source: src/bof3/bmagic/invokeD104AndD228ThenQueueSixSlotsCopyWorkPoseClearByteBAndAdvanceWorkByte1WhenByteBIs5BmagicMagic11303_801EF1F8.c'
+    - callSixSlotsPose
+    - '@source: src/bof3/bmagic/callSixSlotsPose.c'
     - '@behavior: Calls helpers 0x8015D104 and 0x8015D228, then when work byte B is 5 queues six slots with paired ordinals, copies the work pose, clears byte B and advances work byte 1.'
   - - 1884
     - c
-    - setWorkByteBTo84AndIncrementWorkByte1WhenWorkByteBIs6BmagicMagic11303_801EF35C
-    - '@source: src/bof3/bmagic/setWorkByteBTo84AndIncrementWorkByte1WhenWorkByteBIs6BmagicMagic11303_801EF35C.c'
+    - stateByteIncrementByte
+    - '@source: src/bof3/bmagic/stateByteIncrementByte.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and, only when the work object byte at offset 0xB equals 6, stores 0x84 into that byte and then re-reads the cell and increments the work object byte at offset 0x1 by one.'
   - - 1952
     - c
@@ -73,7 +73,7 @@ segments:
     - func_801EF4F0
   - - 2908
     - c
-    - dispatchStateByte1Table0b94BmagicMagic11303_801EF75C
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic11303DispatchTables.c'
   - - 2976
     - asm
@@ -88,13 +88,13 @@ segments:
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record byte at offset 0xB equals 0x84, reads the scratchpad work-object pointer cell at 0x1F800044 once and increments its byte at offset 0x2 by one.'
   - - 3300
     - c
-    - incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EF8E4
-    - '@source: src/bof3/bmagic/incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EF8E4.c'
+    - incrementDecrementGlobalHelper
+    - '@source: src/bof3/bmagic/incrementDecrementGlobalHelper.c'
     - '@behavior: Increments scratchpad work byte 0xA modulo 256 and, when the stored byte equals 12, decrements shared battle work byte 0xB and calls the helper at 0x801E5988.'
   - - 3396
     - c
-    - drawProjectedPartialRingOfThirtyTwoFlatLinesTintedByWorkByteABmagicMagic11303_801EF944
-    - '@source: src/bof3/bmagic/drawProjectedPartialRingOfThirtyTwoFlatLinesTintedByWorkByteABmagicMagic11303_801EF944.c'
+    - renderPartialFlatLines
+    - '@source: src/bof3/bmagic/renderPartialFlatLines.c'
     - '@behavior: Draws projected ring lines for steps below work byte 9, with state-dependent tint and semi-transparency, enclosed by draw-mode packets at ordering-table slot 5.'
   - - 4136
     - asm
@@ -114,13 +114,13 @@ segments:
     - '@behavior: Increments scratchpad work byte 0xA modulo 256 and, when the stored byte equals 12, decrements shared battle work byte 0xB and calls the helper at 0x801E5988.'
   - - 4512
     - c
-    - drawFiveProjectedPartialStarEdgesTintedByWorkByteABmagicMagic11303_801EFDA0
-    - '@source: src/bof3/bmagic/drawFiveProjectedPartialStarEdgesTintedByWorkByteABmagicMagic11303_801EFDA0.c'
+    - renderPartialStarEdges
+    - '@source: src/bof3/bmagic/renderPartialStarEdges.c'
     - '@behavior: Draws five projected star edges exposed in eight increments by work byte 9, with state-dependent tint and semi-transparency, enclosed by draw-mode packets at ordering-table slot 5.'
   - - 5440
     - c
-    - dispatchWorkByte2HandlerThenInvokeF440And02CCAndPopWhenWorkByte0NonzeroBmagicMagic11303_801F0140
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF440And02CCAndPopWhenWorkByte0NonzeroBmagicMagic11303_801F0140.c'
+    - callInvokePopNonzero
+    - '@source: src/bof3/bmagic/callInvokePopNonzero.c'
     - '@behavior: Dispatches unsigned work byte 2 through table 0x801F0BCC, reloads the work pointer and, when byte 0 is nonzero, calls 0x801EF440, 0x801F02CC and PopMatrix.'
   - - 5560
     - c
@@ -129,8 +129,8 @@ segments:
     - '@behavior: Increments work byte 9 modulo 256 and, at 0x31, stores 5 into shared battle work byte 0xB, reloads the scratchpad work pointer and increments byte 2.'
   - - 5656
     - c
-    - dispatchCue103AndAdvanceWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801F0218
-    - '@source: src/bof3/bmagic/dispatchCue103AndAdvanceWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801F0218.c'
+    - callGlobalByteBmagic
+    - '@source: src/bof3/bmagic/callGlobalByteBmagic.c'
     - '@behavior: If shared battle work byte 0xB equals 0x84, dispatches sound cue 0x103, then reads the scratchpad work pointer and increments byte 2.'
   - - 5740
     - asm
@@ -140,8 +140,8 @@ segments:
     - func_801F02CC
   - - 7012
     - c
-    - setDrawModeThenDispatchWorkByte2HandlerAndRestoreDrawModeBmagicMagic11303_801F0764
-    - '@source: src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerAndRestoreDrawModeBmagicMagic11303_801F0764.c'
+    - stateModeRestoreMode
+    - '@source: src/bof3/bmagic/stateModeRestoreMode.c'
     - '@behavior: Sets draw mode, dispatches the handler indexed by work byte 2, and restores draw mode.'
   - - 7272
     - c
@@ -150,13 +150,13 @@ segments:
     - '@behavior: Decrements work byte 9 and, when the stored byte becomes zero, reloads the scratchpad work pointer and increments byte 2.'
   - - 7348
     - c
-    - seedWorkHeaderTintAndConditionalWord3CThenAdvanceWorkByte2BmagicMagic11303_801F08B4
-    - '@source: src/bof3/bmagic/seedWorkHeaderTintAndConditionalWord3CThenAdvanceWorkByte2BmagicMagic11303_801F08B4.c'
+    - stateHeaderTintConditional
+    - '@source: src/bof3/bmagic/stateHeaderTintConditional.c'
     - '@behavior: Seeds work header and tint fields, conditionally adds to word 0x3C, advances byte 2 and invokes resident helpers.'
   - - 7808
     - c
-    - incrementWorkByte9WhenReadyThenIncrementGlobalByteBAt3OrToggleByte2AAndDispatchCueBmagicMagic11303_801F0A80
-    - '@source: src/bof3/bmagic/incrementWorkByte9WhenReadyThenIncrementGlobalByteBAt3OrToggleByte2AAndDispatchCueBmagicMagic11303_801F0A80.c'
+    - incrementReadyToggleCue
+    - '@source: src/bof3/bmagic/incrementReadyToggleCue.c'
     - '@behavior: When ready, increments work byte 9, advances shared byte B at 3 or toggles byte 0x2A and invokes helpers and conditional cues.'
   - - 8084
     - textbin

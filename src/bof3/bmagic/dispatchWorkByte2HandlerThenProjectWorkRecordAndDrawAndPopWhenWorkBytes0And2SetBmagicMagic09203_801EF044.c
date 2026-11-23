@@ -6,7 +6,7 @@
  * the indirect call, because that call may republish the pointer, so both reads
  * stay on this named cell rather than on a pointer local, as in the exact
  * bmagic sibling
- * dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenWorkBytes0And2SetBmagicMagic09203_801EF840,
+ * callInvokeUpdateDraw,
  * which reads the same cell. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
@@ -37,7 +37,7 @@ void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic0920
  * mode. It draws under the matrix
  * projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0
  * installed and does not pop it. */
-void drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic09203_801EF580(
+void renderOriginTimesCapped(
     void);
 
 /* @source 0x801EF044
@@ -68,7 +68,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And
   D_801F07C0[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
     projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0();
-    drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic09203_801EF580();
+    renderOriginTimesCapped();
     PopMatrix();
   }
 }

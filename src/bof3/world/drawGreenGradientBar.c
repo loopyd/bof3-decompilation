@@ -10,7 +10,7 @@
  *           with the two edge colours exchanged, so the 8-row band runs
  *           black-green-black. Each strip reads its x and y values back out of
  *           the quad and re-reads the cursor cell before the second SetPolyG4,
- *           the same shape as the sibling quad builder drawBlueGradientQuad16x32World00Area03004. Both
+ *           the same shape as the sibling quad builder renderBlueGradientQuad16. Both
  *           callers pass a width already clamped to 0x60 (the ramp maximum in
  *           func_801D1CF0 and func_801D5D88) and an append mode of 1 or 2.
  * @status exact
@@ -19,7 +19,7 @@
  */
 /* The lower-row y value goes through a named s32 temporary so both lower vertex
  * rows are stored from one computed value: `y3 = (y_lower = (y2 = y0 + 0x04))`.
- * That is the retained form of the exact sibling drawBlueGradientQuad16x32World00Area03004, whose build
+ * That is the retained form of the exact sibling renderBlueGradientQuad16, whose build
  * needed the named lifetime to keep the append-argument mask hoisted and the
  * x1 store/read-back pair adjacent. */
 void drawGreenGradientBar(s16 arg0, s16 arg1, s16 arg2, u8 arg3) {

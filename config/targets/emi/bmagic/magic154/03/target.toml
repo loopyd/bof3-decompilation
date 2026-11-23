@@ -9,23 +9,23 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic15403_801EF4B4.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSeedWorkHeaderAndAdvanceWorkByte2BmagicMagic15403_801EF1EC.c",
+    "src/bof3/bmagic/decrementSeedHeaderBmagic.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic15403_801EEC24.c",
     "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic15403_801EF544.c",
-    "src/bof3/bmagic/decrementWorkMotionWord44By1000ThenDecrementGlobalWorkByteBAndInvokeHelperWhenTintChannel5FIsMinus80BmagicMagic15403_801EF454.c",
-    "src/bof3/bmagic/decrementGlobalWorkByte9AndAdvanceWorkByte2WhenHelperReadyBmagicMagic15403_801EF648.c",
-    "src/bof3/bmagic/decrementWorkMotionPairAndByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15403_801EF3E4.c",
+    "src/bof3/bmagic/decrementMotionTintIs.c",
+    "src/bof3/bmagic/decrementGlobalHelperReady.c",
+    "src/bof3/bmagic/decrementMotionPairGlobal.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic15403_801EF060.c",
-    "src/bof3/bmagic/callAEF98With4And0ClearRecordFlag40RaiseBattleTargetFlag10AndAdvanceWorkByte1WhenWorkByte9ZeroBmagicMagic15403_801EEFE0.c",
-    "src/bof3/bmagic/callAEF98WithCAnd2ClaimSlot52CopySelectedBattlerRecordHeadStampSlotBytesPublishWorkPointerCopy16HalfwordsSet80145988RaiseRecordFlag40SetWorkBytesBAnd9ThenAdvanceWorkByte1BmagicMagic15403_801EEC90.c",
-    "src/bof3/bmagic/seedWorkObjectFromBattleRecordClearWordCSeedWord10Minus18000ClaimSixSlots52StepByte9ByThreePublishWorkPointerCountWorkByteBAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic15403_801EEE94.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenInvokeHelperPairWhenZeroOrReadinessHelperReadyClearWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic15403_801EF58C.c",
-    "src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerThenInvokeD290WhenWorkBytes0And2SetBmagicMagic15403_801EF104.c",
+    "src/bof3/bmagic/callRaiseBattleTarget.c",
+    "src/bof3/bmagic/callHeadStampHalfwords.c",
+    "src/bof3/bmagic/stateObjectSixPointer.c",
+    "src/bof3/bmagic/decrementReadinessReadyGlobal.c",
+    "src/bof3/bmagic/stateDrawModeInvoke.c",
 ]
 support_sources = [
     "src/bof3/bmagic/invokeHelperBmagicMagic15403_801EF6AC.c",
     "src/bof3/bmagic/magic15403DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceMotionPairThenAdvanceWorkByte2At4BmagicMagic15403_801EF380.c",
+    "src/bof3/bmagic/incrementMotionPairBmagic.c",
     "src/bof3/support/magic154_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic154_03_psyq.c"

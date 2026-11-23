@@ -14,14 +14,14 @@ extern void (*D_801F0760[])(void); /* @source 0x801F0760 @kind data */
  * RotTrans and installs the resulting transform with RotMatrix, MulMatrix2,
  * SetRotMatrix and SetTransMatrix. Lifted from its own span; this row used to
  * be an asm row in this target. */
-extern void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410(
+extern void projectInstallTransformRotation(
     void); /* @source 0x801EF410 @kind function */
 
 /* Second draw pass of the work record, lifted from its own span: a
  * semi-transparent fan of sixteen Gouraud triangles from the record origin,
  * whose radius comes from record byte 9 with a pulse keyed on record byte 2 and
  * whose tint comes from record byte 0xA. */
-extern void drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadiusWorkByte9TimesFourPlus528FadingFromWorkByteATintToBlackBmagicMagic05603_801EFC74(
+extern void renderSixteenFadingBlack(
     void); /* @source 0x801EFC74 @kind function */
 
 /* @source 0x801EFA50
@@ -47,7 +47,7 @@ extern void drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadiusWorkByt
  *
  *           Statement order, operand forms and declaration style follow the exact
  *           same-target sibling
- *           dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05603_801EF1F4:
+ *           callProjectDrawPop:
  *           one payload cmp of the two 0x88-byte spans left exactly two differing
  *           words, this span's own table word (0x801F0760 for 0x801F0754) and its
  *           own draw callee (0x801EFC74 for 0x801EF4C0), with every relative
@@ -62,8 +62,8 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And
     void) {
   D_801F0760[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
-    projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410();
-    drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadiusWorkByte9TimesFourPlus528FadingFromWorkByteATintToBlackBmagicMagic05603_801EFC74();
+    projectInstallTransformRotation();
+    renderSixteenFadingBlack();
     PopMatrix();
   }
 }

@@ -5,7 +5,7 @@
  * remaining asm span func_801EEC94 still references it, so
  * this lift needs no target-map row. The offsets read here
  * (words 0x34, 0x38 and 0x3C) are the ones the exact duplicates
- * copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic05603_801EF27C
+ * copyWordTripletClear
  * and copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801F0344
  * copy from the record they read through their own record-global address; the
  * record layout is shared, the address is this overlay's own. */
@@ -14,7 +14,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 /* Scratchpad work-object pointer cell, bound at 0x1F800044 by this target's map
  * and shared by this overlay's dispatchers and handlers. Declared as a named
  * cell symbol, the form the exact sibling
- * copyRecordByte27ThenAdvanceWorkByte2BmagicMagic05603_801EFFE8 uses: the
+ * copyRecordAdvanceBmagic uses: the
  * symbolic address folds into each load (lui $vN,0x1F80 / lw $vN,68($vN)) and
  * the original re-reads the cell before every later store group, because a
  * store through the loaded pointer may alias the cell. */

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Scratchpad work-object pointer cell, the same named cell this target's exact
- * lifts advanceWorkByte2WhenHelperReadyBmagicMagic00800_801F117C,
+ * lifts stateHelperReadyBmagic,
  * copyRecordPositionPairOnFrameParityElseAddStepPairThenDecrementWorkByte9AndO
  * nZeroInvokeBattleHelpersWhenWorkByteBIsZeroAndAdvanceWorkByte2Bmagic
  * Magic00800_801F1090 and that body's twin at 0x801F1384 declare. The named

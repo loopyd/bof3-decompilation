@@ -12,7 +12,7 @@ extern u16 D_80145AA4;
  * following branch delay slots. The stored byte is the state byte the exact
  * siblings resetScratchStateToMode1World03Area13413_801F35A4 (mode 1),
  * countdownScratchStateToMode15World03Area13413_801F3B7C (mode 0x0F) and
- * countdownScratchStateToMode17World03Area13413_801F32E4 (mode 0x11) arm
+ * countdownScratchStateMode17 (mode 0x11) arm
  * through the same cell, so this handler arms mode 1 of that family when the
  * pad word matches. It takes no arguments, makes no call, keeps no register
  * and reads no other state, so its 0x3C bytes carry no frame. The same three

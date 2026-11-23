@@ -44,8 +44,8 @@ segments:
     - func_801EED7C
   - - 540
     - c
-    - publishSelectedWorkRecordThenAdvanceWorkByte2WhenHelperReadyElseSetWorkByte9To16BmagicMagic06403_801EEE1C
-    - '@source: src/bof3/bmagic/publishSelectedWorkRecordThenAdvanceWorkByte2WhenHelperReadyElseSetWorkByte9To16BmagicMagic06403_801EEE1C.c'
+    - publishSelectedHelperReady
+    - '@source: src/bof3/bmagic/publishSelectedHelperReady.c'
     - '@behavior: Publishes the selected local work record as the scratchpad work object, polls the shared readiness helper against it, then restores the previous work object and steps the overlay handler state. Reads the battle selection byte at 0x80146374 unsigned, keeps the work-object pointer cell 0x1F800044 in a saved register, and stores the address of the 0x140-byte-stride record at that index of the D_80145E90 table into the cell. While that record is published it calls the shared readiness helper func_8014DAEC and keeps only the returned byte: a non-zero result restores the previous work object and advances its unsigned byte 2 by one, while a zero result restores it and writes 0x10 into byte 9. Takes no arguments and returns nothing; the 0x18-byte frame keeps the return address at 0x14 and the saved pointer at 0x10, and no other state is read or written.'
   - - 680
     - asm
@@ -67,8 +67,8 @@ segments:
     - noopHandlerBmagicMagic06403_801EF29C
   - - 1700
     - c
-    - publishSelectedWorkRecordLevelFourSpritePiecesByWorkByte9ThenStartStreamSlotFromSharedRecordAndAdvanceWorkByte2BmagicMagic06403_801EF2A4
-    - '@source: src/bof3/bmagic/publishSelectedWorkRecordLevelFourSpritePiecesByWorkByte9ThenStartStreamSlotFromSharedRecordAndAdvanceWorkByte2BmagicMagic06403_801EF2A4.c'
+    - publishLevelPiecesStream
+    - '@source: src/bof3/bmagic/publishLevelPiecesStream.c'
     - '@behavior: Publishes the selected local work record as the scratchpad work object, re-levels the four sprite pieces that draw it by the previous work object byte 9 through the sprite-piece drawer at 0x801F0EEC, then starts the EMI stream slot the shared battle record selects and advances work byte 2. Reads the battle selection byte at 0x80146374 unsigned, keeps the work-object pointer cell 0x1F800044 in a saved register and stores the address of the 0x140-byte-stride record at that index of the D_80145E90 table into the cell. Pieces 1 and 2 take 0x80 minus the saved object byte 9 and pieces 0 and 3 take that byte unchanged, with the constant 0x80 materialised once into a saved register. Reads the shared battle record pointer at 0x801EB4E0, keeps its halfword 0x2C, restores the saved work object through the pointer cell and calls func_80161FDC with 0x240, 0x242, 0x241 or 0x243: the halfword being zero selects the 0x240/0x242 pair, a non-zero value the 0x241/0x243 pair, and the record unsigned byte 8 below 2 selects the even value of the pair. Finally re-reads the pointer cell and increments the restored work object byte 2. Takes no arguments and returns nothing; the 0x20-byte frame keeps the return address at 0x18, the saved pointer at 0x14 and the 0x80 constant at 0x10.'
   - - 1992
     - asm
@@ -110,28 +110,28 @@ segments:
     - func_801F009C
   - - 5572
     - c
-    - clearWorkByteBSetWorkByte9To64InvokeHelperThenAdvanceWorkByte2BmagicMagic06403_801F01C4
+    - stateByteInvokeHelper
     # @source 0x801F01C4
     # @behavior Clears work byte B, sets byte 9 to 64, invokes the local helper, then advances byte 2.
   - - 5652
     - c
-    - invokeHelperThenDecrementWorkByte9AndAdvanceWorkByte2WhenZeroBmagicMagic06403_801F0214
+    - callHelperDecrementZero
     # @source 0x801F0214
     # @behavior Calls the local helper, decrements work byte 9, then advances work byte 2 on zero.
   - - 5752
     - c
-    - invokeHelperThenAdvanceWorkByteBOrBothRecordByte2BmagicMagic06403_801F0278
+    - callHelperByteBoth
     # @source 0x801F0278
     # @behavior Calls helper then, with global bit 0 clear, advances work byte 0xB below 24 or both record byte-2 states otherwise.
   - - 5904
     - c
-    - incrementWorkByte2WhenGlobalWorkByte2Is10ThenInvokeHelperBmagicMagic06403_801F0310
+    - incrementGlobalInvokeHelper
     # @source 0x801F0310
     # @behavior Increment work byte 2 when shared record byte 2 is 10, then call helper.
   - - 5988
     - c
-    - clearWorkByteBBit0ThenInvokeHelperWhenNoRecordByte0SetBmagicMagic06403_801F0364
-    - '@source: src/bof3/bmagic/clearWorkByteBBit0ThenInvokeHelperWhenNoRecordByte0SetBmagicMagic06403_801F0364.c'
+    - stateInvokeHelperNo
+    - '@source: src/bof3/bmagic/stateInvokeHelperNo.c'
     - '@behavior: Scans the overlay work record array at 0x801F13B4 in order, widening an unsigned 16-bit index for the 0x1C-byte stride, and returns as soon as a record byte 0 is non-zero, which marks a record the local helper at 0x801F03D8 has already claimed by storing 1 there. When all 0xC0 records the unsigned bound allows are still unclaimed, reads the shared battle work record pointer at 0x801EB4E0 once, clears bit 0 of its byte 0xB at byte width, and calls the shared helper at 0x801E5988 with that store in the call delay slot. The payload pointer word at 0x801EEC6C, offset 0x6C of the run based at 0x801EEC04, is its only in-image reference, so it consumes no arguments and its result is unused; the 0x18-byte frame only keeps $ra at 0x10.'
   - - 6104
     - asm
@@ -143,8 +143,8 @@ segments:
     - '@behavior: Reads the current bmagic work record pointer from the cell at 0x801F28B4, seeds a two-entry local handler table with 0x801F04A0 and 0x801F05A4, and invokes the entry selected by the unsigned record byte at offset 1. Reads no other state and writes none; the 0x20-byte frame only keeps $ra across the indirect call.'
   - - 6304
     - c
-    - seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0
-    - '@source: src/bof3/bmagic/seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0.c'
+    - stateRecordMotionRecord
+    - '@source: src/bof3/bmagic/stateRecordMotionRecord.c'
     - '@behavior: Entry 0 of the two-entry handler table that 0x801F0448 selects with the unsigned record byte at offset 1. Seeds the current bmagic work record: halfword 0x2 from rand() & 0xFFF, words 0xC and 0x10 from the shared work-object byte 0xB lifted into 16.16 form, words 0x18 and 0x14 from the constant velocities 0x19800 and 0x32000, and words 0x4 and 0x8 from a halfword of the acting battler 0x140-byte party record plus the signed offset pair selected from the 0x801F138C table by that record byte at offset 0. Increments the record handler byte at offset 1 so the next dispatch reaches entry 1. The 0x18-byte frame only keeps $ra across the rand call.'
   - - 6564
     - asm
@@ -165,8 +165,8 @@ segments:
     - incrementWorkByte2BmagicMagic06403_801F0D14
   - - 8500
     - c
-    - submitWorkObjectThenInvokeHelperBmagicMagic06403_801F0D34
-    - '@source: src/bof3/bmagic/submitWorkObjectThenInvokeHelperBmagicMagic06403_801F0D34.c'
+    - submitObjectInvokeHelper
+    - '@source: src/bof3/bmagic/submitObjectInvokeHelper.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and passes that work object to the shared function at 0x80196718, then invokes the shared helper at 0x801E5988 with no arguments. Reads and writes no other state; the work-object load is issued before the 0x18-byte frame is created and that frame only keeps $ra across the two calls, each of which has a nop delay slot.'
   - - 8548
     - c
@@ -180,8 +180,8 @@ segments:
     - '@behavior: Clears the scratchpad work-object byte at offset 0x9 with sb $zero and then increments the work-object byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb scheduled into the $ra delay slot). The pointer cell at 0x1F800044 is re-materialized and reloaded once per access, so the original keeps two separate lui $vN,0x1F80 / lw $vN,0x44($vN) pairs. Reads and writes no other state and the function has no frame.'
   - - 8664
     - c
-    - decrementWorkByte9AdvanceWorkByte2WhenMinus6ThenInvokeHelperBmagicMagic06403_801F0DD8
-    - '@source: src/bof3/bmagic/decrementWorkByte9AdvanceWorkByte2WhenMinus6ThenInvokeHelperBmagicMagic06403_801F0DD8.c'
+    - decrementInvokeHelperBmagic
+    - '@source: src/bof3/bmagic/decrementInvokeHelperBmagic.c'
     - '@behavior: Handler step 1 of the four-word handler run at 0x801F1394 that the dispatcher at 0x801F0D64 selects with the scratchpad work object''s byte 0x2. Reads the work-object pointer cell at 0x1F800044 and decrements that object''s byte at offset 0x9 with a byte-width add (lbu, addiu $v1,$v1,-1, sb), then, only when the decremented value read back as a signed byte equals -6, re-reads the cell and increments the work object''s byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb through the same base). Finally re-reads the cell a third time, loads byte 0x9 through a signed byte view (lb) and passes it to the shared function at 0x80155AF8; the 0x18-byte frame only keeps $ra across that call, whose delay slot is a nop, and nothing is returned.'
   - - 8784
     - c
@@ -196,10 +196,10 @@ segments:
     - func_801F0EEC
   - - 9276
     - c
-    - initializeRenderCellMapFromViewOriginThenBuildReverseCellIndexBmagicMagic06403_801F103C
-    - '@source: src/bof3/bmagic/initializeRenderCellMapFromViewOriginThenBuildReverseCellIndexBmagicMagic06403_801F103C.c'
+    - initializeViewBuildReverse
+    - '@source: src/bof3/bmagic/initializeViewBuildReverse.c'
     - '@behavior: Builds the overlay''s render-cell map from the shared view-origin mirror pair, clears the record block, drains the pending scroll in 0x200 steps and fills the reverse cell index before calling two shared helpers.'
-  - [9912, c, writeDiagonalOffsetMapCellCoordinatesOrZeroBmagicMagic06403_801F12B8] # @source 0x801F12B8 @behavior Converts diagonal offsets to valid nonzero map-cell coordinates or writes zero bytes.
+  - [9912, c, textDiagonalOffsetCoordinates] # @source 0x801F12B8 @behavior Converts diagonal offsets to valid nonzero map-cell coordinates or writes zero bytes.
   - - 10124
     - textbin
     - D_801F138C

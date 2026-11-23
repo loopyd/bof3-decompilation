@@ -15,7 +15,7 @@ typedef struct BmagicMagic15403Byte2DispatchTable {
  * 0x801EF060, then these four words), so this extern covers only the copied
  * words.
  */
-extern BmagicMagic15403Byte2DispatchTable dispatchWorkByte2HandlerTable801EEC14; /* @source 0x801EEC14 @kind data */
+extern BmagicMagic15403Byte2DispatchTable callWorkHandlerTable801; /* @source 0x801EEC14 @kind data */
 
 /*
  * Scratchpad work-object pointer cell, outside this overlay's image and read
@@ -36,7 +36,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
  * @behavior Work byte 2 step dispatcher of this overlay's work object, reached
  *           as entry 1 of the code pointer run at 0x801EF6CC (0x801EF104,
  *           0x801EF4B4, 0x801EF1EC, 0x801EF380, 0x801EF3E4, 0x801EF454) that
- *           the exact lift dispatchStateByte1Tablef6ccBmagicMagic15403_801EF0C0
+ *           the exact lift callStateTablef6Bmagic
  *           indexes with work-object byte 1. It reads the work-object pointer
  *           cell at 0x1F800044 once before its frame exists, copies the
  *           four-entry work byte 2 handler table at 0x801EEC14 (0x801EF544,
@@ -57,7 +57,7 @@ void dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic15403_
     void) {
   BmagicMagic15403Byte2DispatchTable handlers;
 
-  handlers = dispatchWorkByte2HandlerTable801EEC14;
+  handlers = callWorkHandlerTable801;
   handlers.handlers[D_1F800044[2]]();
   if (D_1F800044[0] != 0) {
     func_8014D290();

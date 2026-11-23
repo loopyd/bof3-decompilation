@@ -10,7 +10,7 @@ extern u16 D_80144154; /* @source 0x80144154 @kind unknown */
  * halfword 0x2E of the work record published at the scratchpad cursor
  * 0x1F800044 down by one and by two. While the timer runs it submits the
  * partially revealed message run at record word 0x50 through
- * drawMessageTokenCellQuad with the shade span (8 - 0x09 * 2) & 0xFE and the
+ * renderMessageTokenCell with the shade span (8 - 0x09 * 2) & 0xFE and the
  * pen column 0x09 * 2 + 0x11D. Once the timer reaches zero it steps the run
  * cursor past the message control codes 0x12 and 0x15 (one payload byte each,
  * as in countMessageTokens), counts one revealed token in byte 0x49, rearms
@@ -90,7 +90,7 @@ void advancePanelTextCursor(void) {
       *(u8**)(entry + 0x50u) = repoint;
     }
   } else {
-    drawMessageTokenCellQuad(0, *(u8**)(next + 0x50u), (u8)((8 - count * 2) & 0xFE),
+    renderMessageTokenCell(0, *(u8**)(next + 0x50u), (u8)((8 - count * 2) & 0xFE),
                   (s16)(count * 2 + 0x11D));
   }
 

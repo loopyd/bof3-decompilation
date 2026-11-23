@@ -12,7 +12,7 @@ extern s32 func_801782FC(s32 phase); /* @source 0x801782FC */
 extern s32 func_801783C8(s32 phase); /* @source 0x801783C8 */
 
 /* Clears the active work record's bytes 0 through 4. */
-extern void clearRecordBytes0Through4BmagicMagic13103_801F1AC4(void);
+extern void stateRecordThrough4Bmagic(void);
 
 /* @source 0x801F1748
  * @behavior Reads the record pointer cell at 0x801F24E0 and adds 0x10 to the
@@ -36,7 +36,7 @@ extern void clearRecordBytes0Through4BmagicMagic13103_801F1AC4(void);
  * keeps its 0x18-byte frame only for $ra and the scratchpad phase register
  * across the three calls. Its address is the third word (index 2) of the
  * three-entry handler table at 0x801F1C94 that
- * dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0
+ * callDecrementCountdownActive
  * indexes with the record byte at offset 0x2 scaled by four. The roles of
  * record bytes 0x5 and 0x7 and of the record halfword at 0xC remain
  * offset-based.
@@ -62,6 +62,6 @@ void advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecr
       D_8014930C[0] + ((cosine * *(s16 *)(workRecord801F24E0 + 0xC)) >> 3);
   if ((workRecord801F24E0[5] -= 2) == 0) {
     ((u8 *)record801EB4E0)[0xB] -= 1;
-    clearRecordBytes0Through4BmagicMagic13103_801F1AC4();
+    stateRecordThrough4Bmagic();
   }
 }

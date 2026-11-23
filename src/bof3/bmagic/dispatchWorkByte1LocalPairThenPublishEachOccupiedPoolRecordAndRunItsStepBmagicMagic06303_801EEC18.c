@@ -45,14 +45,14 @@ extern u8 *D_801F1054; /* @source 0x801F1054 @kind data */
  * still an `asm` row of this target's Splat, so it keeps its address-anchored
  * name; the two words form the code-pointer run this entry copies into its own
  * frame. Both handlers take no arguments and return nothing. */
-extern void clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8(
+extern void statePoolPerEligible(
     void); /* @source 0x801EECF8 */
 extern void func_801EEEE4(void); /* @source 0x801EEEE4 */
 
 /* This target's record byte-1 step dispatcher, exact at 0x801EF340: it scales
  * the published record's unsigned byte at offset 1 by four and invokes the
  * selected entry of the code-pointer table based at 0x801F0404. */
-extern void dispatchWorkRecordByte1HandlerBmagicMagic06303_801EF340(
+extern void callRecordHandlerBmagic(
     void); /* @source 0x801EF340 */
 
 /* @source 0x801EEC18
@@ -93,7 +93,7 @@ extern void dispatchWorkRecordByte1HandlerBmagicMagic06303_801EF340(
 void dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic06303_801EEC18(
     void) {
   void (*handlers[2])(void) = {
-      clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8,
+      statePoolPerEligible,
       func_801EEEE4};
   u8 *record;
   u8 *saved_pointer;
@@ -110,7 +110,7 @@ void dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBma
       record_work = *(u8 **)((u8 *)D_801F0470 + offset);
       D_801F1054 = record;
       D_801EB4E0 = record_work;
-      dispatchWorkRecordByte1HandlerBmagicMagic06303_801EF340();
+      callRecordHandlerBmagic();
       D_801EB4E0 = saved_pointer;
     }
   }

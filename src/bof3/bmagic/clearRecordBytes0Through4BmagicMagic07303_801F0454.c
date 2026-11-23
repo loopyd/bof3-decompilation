@@ -4,7 +4,7 @@
  * the bmagic work record that is being stepped: func_801EEC28 publishes the
  * record there with one store, the dispatcher at 0x801EF724 selects a handler
  * with that record's byte 1, and the spoke drawing step
- * drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8,
+ * renderRotatedSpokesPublished,
  * func_801EFE2C and func_801F00C4
  * read it. The cell is reloaded once per access, so the original re-materializes
  * its address (lui $v0,0x801F / lw $v0,%lo(D_801F21F0)($v0)) before each byte

@@ -9,20 +9,20 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic01703_801EEC38.c",
-    "src/bof3/bmagic/addWord0CToWord34AndWord10ToWord38AndSubtract4FromTintTripletThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF248.c",
+    "src/bof3/bmagic/word0TintTripletZero.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/copyRecordTripletIntoWorkQueueSixActingBattlerSlotsStampOrdinalAndStepPublishWorkCopyStatBytesAndRaiseFlag40BmagicMagic01703_801EEC98.c",
-    "src/bof3/bmagic/incrementWorkByte9To16ThenSeedStepPairFromWorkByteBAddPublishedRecordPositionCopyWord3CSetVerticalStepInvokeHelperAt101RearmByte9AndAdvanceWorkByte2BmagicMagic01703_801EF300.c",
-    "src/bof3/bmagic/invokeHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroWhenGlobalWorkByteBIs1BmagicMagic01703_801EF5FC.c",
-    "src/bof3/bmagic/invokeHelperThenClearRecordFlag40WhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic01703_801EEF68.c",
+    "src/bof3/bmagic/copyActingOrdinalStat.c",
+    "src/bof3/bmagic/incrementPublishedVerticalRearm.c",
+    "src/bof3/bmagic/callBattleHelpersGlobal.c",
+    "src/bof3/bmagic/callHelperByteZero.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic01703_801EF970.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic01703_801EF014.c",
     "src/bof3/support/magic017_03_psyq.c",
     "src/bof3/bmagic/addWorkColorTripletBy8ThenDecrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF8B4.c",
     "src/bof3/bmagic/setWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic01703_801EF694.c",
-    "src/bof3/bmagic/subtractWorkColorTripletBy8ThenDecrementWorkByte9ThenCopyRecordTripletSetWorkByte9To8AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF7E0.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenInvokeActingEnemyScriptSetFlag20Mode1SeedByte2BAndWorkColorTripletToC0SetWorkByte9To8AndAdvanceWorkByte2BmagicMagic01703_801EF6EC.c",
-    "src/bof3/bmagic/addWord0CToWord34AndWord10ToWord38And4ToTintTripletThenDecrementWorkByte9AndOnZeroDecrementGlobalWorkByteBOrClearFlag20ResetWorkAdvanceWorkByte2BmagicMagic01703_801EF460.c",
+    "src/bof3/bmagic/subtractColorTripletTriplet.c",
+    "src/bof3/bmagic/decrementActingScriptColor.c",
+    "src/bof3/bmagic/word0TintTripletGlobal.c",
 ]
 psyq_source = "src/bof3/support/magic017_03_psyq.c"

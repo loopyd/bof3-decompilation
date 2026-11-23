@@ -36,32 +36,32 @@ segments:
     - func_801EEDA0
   - - 644
     - c
-    - incrementWorkByteAThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEE84
-    - '@source: src/bof3/bmagic/incrementWorkByteAThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEE84.c'
+    - incrementByteClearBmagic
+    - '@source: src/bof3/bmagic/incrementByteClearBmagic.c'
     - '@behavior: Increment work byte A at byte width, and once it reaches 0x21 advance state byte 1 and clear the byte-9 countdown.'
   - - 740
     - c
-    - incrementWorkByte9ThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEEE4
-    - '@source: src/bof3/bmagic/incrementWorkByte9ThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEEE4.c'
+    - incrementAdvanceClearBmagic
+    - '@source: src/bof3/bmagic/incrementAdvanceClearBmagic.c'
     - '@behavior: Increment work byte 9 at byte width, and once it reaches 0x21 advance state byte 1 and clear that byte-9 countdown.'
   - - 836
     - asm
     - func_801EEF44
   - - 1020
     - c
-    - decrementWorkByte9AdvanceWorkByte1OnZeroOtherwiseCall801F0FBCBmagicMagic11403_801EEFFC
-    - '@source: src/bof3/bmagic/decrementWorkByte9AdvanceWorkByte1OnZeroOtherwiseCall801F0FBCBmagicMagic11403_801EEFFC.c'
+    - decrementZeroOtherwiseBmagic
+    - '@source: src/bof3/bmagic/decrementZeroOtherwiseBmagic.c'
     - '@behavior: Decrement work byte 9, advance state byte 1 on zero, otherwise call helper at 0x801F0FBC.'
   - - 1120
     - c
-    - decrementWorkByteAAdvanceWorkByte1AndSetWorkByte9To40OnZeroBmagicMagic11403_801EF060
-    - '@source: src/bof3/bmagic/decrementWorkByteAAdvanceWorkByte1AndSetWorkByte9To40OnZeroBmagicMagic11403_801EF060.c'
+    - decrementByteSetZero
+    - '@source: src/bof3/bmagic/decrementByteSetZero.c'
   - - 1212
     - asm
     - func_801EF0BC
   - - 1320
     - c
-    - drawEightScaledEndpointTrianglesAndSubmitBmagicMagic11403_801EF128
+    - renderEightScaledEndpoint
     # @source 0x801EF128
     # @behavior Draw eight scaled-endpoint triangles, submit packets and restore the matrix.
   - - 1664
@@ -72,11 +72,11 @@ segments:
     - func_801EF6A8
   - - 2932
     - c
-    - dispatchStateByte1Table121cBmagicMagic11403_801EF774
+    - callStateTable121Bmagic
     - '@source: src/bof3/bmagic/magic11403DispatchTables.c'
   - - 3000
     - c
-    - dispatchStateByte2Table1228BmagicMagic11403_801EF7B8
+    - callStateTable1228Bmagic
     - '@source: src/bof3/bmagic/magic11403DispatchTables.c'
   - - 3068
     - asm
@@ -86,18 +86,18 @@ segments:
     - func_801EF8C0
   - - 3712
     - c
-    - drawTranslucentGouraudQuadFromWorkByte9OffsetsBmagicMagic11403_801EFA80
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadFromWorkByte9OffsetsBmagicMagic11403_801EFA80.c'
+    - renderGouraudQuadOffsets
+    - '@source: src/bof3/bmagic/renderGouraudQuadOffsets.c'
     - '@behavior: Draw a semi-transparent Gouraud quad using transformed work-byte-9 offsets and RotAverage4.'
   - - 4568
     - c
-    - dispatchWorkByte2HandlerThenCall093c04d4And0004WhenWorkBytes0And2SetBmagicMagic11403_801EFDD8
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCall093c04d4And0004WhenWorkBytes0And2SetBmagicMagic11403_801EFDD8.c'
+    - callHandlerSetBmagic
+    - '@source: src/bof3/bmagic/callHandlerSetBmagic.c'
     - '@behavior: Dispatch work byte 2, then call 0x801F093C, 0x801F04D4 with work byte B, and 0x801F0004 when work bytes 0 and 2 are nonzero.'
   - - 4720
     - c
-    - decrementWorkByte9ThenOffsetChannelPairClearByteBRearmByte9ClearWords14And20AndAdvanceWorkByte2BmagicMagic11403_801EFE70
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenOffsetChannelPairClearByteBRearmByte9ClearWords14And20AndAdvanceWorkByte2BmagicMagic11403_801EFE70.c'
+    - decrementOffsetChannelRearm
+    - '@source: src/bof3/bmagic/decrementOffsetChannelRearm.c'
     - '@behavior: Decrement byte 9; on zero invoke helper at 0x8015D71C with 0x102, offset the channel pair, clear byte B, rearm byte 9, clear words 14 and 20, and advance byte 2.'
   - - 4892
     - c
@@ -106,8 +106,8 @@ segments:
     - '@behavior: Subtract 5 from work word 20, call 0x800A9610 at word 14 equal to 0x30, then add 2 and set byte B and advance byte 2 at 0xC0.'
   - - 5040
     - c
-    - decrementWorkByte9Subtract5FromWord20Add2ToWord14ThenCall801E5988OnZeroBmagicMagic11403_801EFFB0
-    - '@source: src/bof3/bmagic/decrementWorkByte9Subtract5FromWord20Add2ToWord14ThenCall801E5988OnZeroBmagicMagic11403_801EFFB0.c'
+    - decrementWorkZeroBmagic
+    - '@source: src/bof3/bmagic/decrementWorkZeroBmagic.c'
     - '@behavior: Decrement work byte 9, subtract 5 from work word 0x20 and add 2 to work word 0x14, then call 0x801E5988 if the decremented byte is zero.'
   - - 5124
     - asm
@@ -120,22 +120,22 @@ segments:
     - func_801F093C
   - - 8456
     - c
-    - dispatchStateByte2Table123cBmagicMagic11403_801F0D08
-    - '@source: src/bof3/bmagic/dispatchStateByte2Table123cBmagicMagic11403_801F0D08.c'
+    - callStateTable123Bmagic
+    - '@source: src/bof3/bmagic/callStateTable123Bmagic.c'
   - - 8556
     - c
-    - seedWorkHeaderSelectParityAndAdvanceWorkByte2BmagicMagic11403_801F0D6C
-    - '@source: src/bof3/bmagic/seedWorkHeaderSelectParityAndAdvanceWorkByte2BmagicMagic11403_801F0D6C.c'
+    - stateHeaderSelectParity
+    - '@source: src/bof3/bmagic/stateHeaderSelectParity.c'
     - '@behavior: Seeds work header and parity, clears counters, advances byte 2, and calls resident helpers.'
   - - 8780
     - c
-    - call801E5988WhenReadyOtherwiseCall8014D290BmagicMagic11403_801F0E4C
-    - '@source: src/bof3/bmagic/call801E5988WhenReadyOtherwiseCall8014D290BmagicMagic11403_801F0E4C.c'
+    - call801ReadyOtherwiseBmagic
+    - '@source: src/bof3/bmagic/call801ReadyOtherwiseBmagic.c'
     - '@behavior: Calls helper 0x801E5988 when the shared readiness byte is nonzero, otherwise helper 0x8014D290.'
   - - 8848
     - c
-    - seedOffsetFromModeThenProjectWorkPositionAndInstallAxisQuarterTurnBmagicMagic11403_801F0E90
-    - '@source: src/bof3/bmagic/seedOffsetFromModeThenProjectWorkPositionAndInstallAxisQuarterTurnBmagicMagic11403_801F0E90.c'
+    - stateAxisQuarterTurn
+    - '@source: src/bof3/bmagic/stateAxisQuarterTurn.c'
     - '@behavior: Seed the mode-transformed offset, project the work position and install the parity-selected axis quarter turn.'
   - - 9148
     - asm

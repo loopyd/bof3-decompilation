@@ -9,25 +9,25 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic09303_801EEC04.c",
-    "src/bof3/bmagic/add2ToWorkByte9DecrementWorkByteAThenAdvanceWorkByte2At30BmagicMagic09303_801F00F0.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic09303_801EF750.c",
+    "src/bof3/bmagic/workDecrementByteBmagic.c",
+    "src/bof3/bmagic/decrementGlobalBytesZero.c",
     "src/bof3/bmagic/decrementGlobalWorkByte9AndInvokeHelperBmagicMagic09303_801EF3A4.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/drawSixteenTranslucentGouraudFanTrianglesWithWorkByteBRadiusAndByte9TintBmagicMagic09303_801EF85C.c",
+    "src/bof3/bmagic/renderSixteenFanRadius.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09303_801EF7AC.c",
-    "src/bof3/bmagic/forwardWorkByte3SubmitSelectedRecordAndAdvanceWorkByte2WhenGlobalByteBBelow8BmagicMagic09303_801EF264.c",
-    "src/bof3/bmagic/countDownWorkByte9ThenRandomizePositionInvokeHelperByByteBAndAdvanceWorkByte2BmagicMagic09303_801EFEDC.c",
-    "src/bof3/bmagic/seedRandomRadiusAndProjectWorkPositionPairThenAdvanceBmagicMagic09303_801EF4C8.c",
-    "src/bof3/bmagic/projectWorkPositionPairFromByte9AndByteAAtByte4AngleThenAdvanceAt16BmagicMagic09303_801EF600.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic09303_801EFE5C.c",
-    "src/bof3/bmagic/incrementWorkByte9DecrementBytesAAndBThenClearAtZeroBmagicMagic09303_801F015C.c",
+    "src/bof3/bmagic/forwardSubmitSelectedGlobal.c",
+    "src/bof3/bmagic/checkDownRandomizePosition.c",
+    "src/bof3/bmagic/stateRandomRadiusProject.c",
+    "src/bof3/bmagic/projectPositionPairAngle.c",
+    "src/bof3/bmagic/callHandlerInvokeHelpers.c",
+    "src/bof3/bmagic/incrementDecrementBytesZero.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic09303_801F05BC.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic09303_801F0620.c",
     "src/bof3/support/magic093_03_psyq.c",
     "src/bof3/bmagic/magic09303DispatchTables.c",
-    "src/bof3/bmagic/add32ToWorkByte9AndAdvanceWorkByte2AtC0BmagicMagic09303_801F00A0.c",
+    "src/bof3/bmagic/workByte9AdvanceBmagic.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs8BmagicMagic09303_801EF710.c",
 ]
 psyq_source = "src/bof3/support/magic093_03_psyq.c"

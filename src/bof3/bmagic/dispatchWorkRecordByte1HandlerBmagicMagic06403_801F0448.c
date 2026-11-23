@@ -2,7 +2,7 @@
 
 typedef void (*BmagicMagic06403Handler)(void);
 
-extern void seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0(void); /* @source 0x801F04A0 @kind function */
+extern void stateRecordMotionRecord(void); /* @source 0x801F04A0 @kind function */
 void func_801F05A4(void);
 
 /* Pointer cell at 0x801F28B4 holding the bmagic work record that is being
@@ -28,7 +28,7 @@ extern u8 *D_801F28B4; /* @source 0x801F28B4 @kind data */
  * @residual none
  */
 void dispatchWorkRecordByte1HandlerBmagicMagic06403_801F0448(void) {
-  BmagicMagic06403Handler handlers[2] = { seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0, func_801F05A4 };
+  BmagicMagic06403Handler handlers[2] = { stateRecordMotionRecord, func_801F05A4 };
 
   handlers[D_801F28B4[1]]();
 }

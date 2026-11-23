@@ -1,0 +1,47 @@
+#include "bof3/world/area03004_internal.h"
+
+void renderEntryStripEntry(s32 x,
+                                                                  s32 y);
+
+/* @source 0x801D5574
+ * @behavior increments work byte 9 and draws the header, entry panels and
+ * scrolling panel at offsets derived from that byte. At step four, clears
+ * state byte 1 if byte 0xB is zero; otherwise selects state 2 for mode zero
+ * or state 6 for mode one, leaving other modes unchanged.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void stateEntrySlideSelect(void) {
+  u8* step;
+  u8* header;
+  u8* entries;
+  u8* mode;
+  u8* panel;
+  u8* state;
+  u32 mask;
+
+  step = D_1F800044;
+  step[9]++;
+  header = D_1F800044;
+  if (header[0xB] == 0) {
+    renderFilledInsetBorder(20, (18 - header[9] * 16) & 0xFFFE, 280, 19, 0);
+    entries = D_1F800044;
+    renderLabeledStatusCells((u16)(88 + entries[9] * 45), 40, 0);
+  } else {
+    WORLD00_AREA030_DRAW_HEADER_AND_STATUS(mode, mask);
+  }
+  panel = D_1F800044;
+  renderEntryStripEntry(
+      39, (s16)(64 + panel[9] * 60));
+  state = D_1F800044;
+  if (state[9] == 4) {
+    if (state[0xB] == 0) {
+      state[1] = 0;
+    } else if (state[6] == 0) {
+      state[1] = 2;
+    } else if (state[6] == 1) {
+      state[1] = 6;
+    }
+  }
+}

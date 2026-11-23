@@ -8,13 +8,13 @@ splat = "config/targets/emi/bmagic/magic020/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/copyRecordByte27SeedByte2BAndCopyRecordTripletSetWorkByte9To10ThenAdvanceWorkByte2BmagicMagic02003_801EF498.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSetFlag20Mode1SeedWorkColorTripletToC0AndAdvanceWorkByte2BmagicMagic02003_801EF678.c",
+    "src/bof3/bmagic/copyRecordSeedTriplet.c",
+    "src/bof3/bmagic/decrementSeedColorTriplet.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/invokeHelperThenForwardBattleByteWhenWorkByteBIs7AndDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic02003_801EFD10.c",
-    "src/bof3/bmagic/decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0.c",
-    "src/bof3/bmagic/applyHelper60ToBattleRecordThenAdvanceWorkByte2WhenWorkWithin20000OfRecordBmagicMagic02003_801EFA70.c",
+    "src/bof3/bmagic/callForwardBattleGlobal.c",
+    "src/bof3/bmagic/decrementObjectRequestResource.c",
+    "src/bof3/bmagic/stateBattleRecordRecord.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF894.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC.c",
     "src/bof3/bmagic/invokeHelperThenDecrementWorkByte9AndAdvanceWorkByte2WhenZeroBmagicMagic02003_801EF5A4.c",
@@ -23,12 +23,12 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic02003_801EF398.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic02003_801EF874.c",
     "src/bof3/bmagic/addWorkColorTripletBy16ThenSetGlobalWorkByteBToFFAndAdvanceWorkByte2WhenChannelIsZeroBmagicMagic02003_801EF7D0.c",
-    "src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928.c",
+    "src/bof3/bmagic/decrementSeedTintRefresh.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy8ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic02003_801EF720.c",
-    "src/bof3/bmagic/drawFadeTileThenDecrementWorkByte9AndAdvanceWorkByte1WhenWorkByteBIsZeroBmagicMagic02003_801EF234.c",
+    "src/bof3/bmagic/renderTileIsZero.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic02003_801EF31C.c",
-    "src/bof3/bmagic/drawFullscreenFadeTileTintedByWorkByte9TimesFifteenThenRearmGraphTypeDrawModeBmagicMagic02003_801EFD88.c",
+    "src/bof3/bmagic/renderFullscreenFifteenGraph.c",
     "src/bof3/support/magic020_03_psyq.c",
-    "src/bof3/bmagic/seedWorkObjectFromBattleRecordThenCopyActingBattlerRecordsIntoFiveQueuedSlotsStampMirroredOrdinalsPublishRecordBytes24And27And28AndRaiseFlag40BmagicMagic02003_801EECC0.c",
+    "src/bof3/bmagic/stateActingMirroredOrdinals.c",
 ]
 psyq_source = "src/bof3/support/magic020_03_psyq.c"

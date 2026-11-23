@@ -42,7 +42,7 @@ extern void func_801EF4C4(void); /* @source 0x801EF4C4 @kind function */
  *           run at 0x801F00F8 that the byte-1 dispatcher at 0x801EEFD4
  *           indexes, so no jal in the payload reaches it. Bytes
  *           0x801EF018..0x801EF08F are not identical to the exact lift
- *           dispatchWorkByte2HandlerThenInvokeFDF8WhenWorkByte0NonzeroBmagicMagic13703_801EFC58:
+ *           callHandlerInvokeNonzero:
  *           the guard body carries three calls there instead of one and the
  *           indexed base is 0x801F0104 instead of 0x801F0114, so the earlier
  *           lift supplied this body's statement order, operand forms and cell

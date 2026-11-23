@@ -14,7 +14,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Record pool of this overlay at 0x801EFEF4: 36 records of stride 0x78, the
  * same run reserveFirstFreeRecordBmagicMagic05803_801EFE38 and the init stage
- * clearRecordPoolBytes0To2AndByteTableThenPublishRecordPoseClearWorkByteBAdvanceWorkByte1ClaimSlotAt3FClearSlotByte1StoreWorkPointerIncrementWorkByteBInvokeHelperAt100BmagicMagic05803_801EED30
+ * statePoolPosePointer
  * walk through this same base name. Byte 0 bit 0 is the in-use flag this sweep
  * tests. The flag read re-materialises the pool base, so it keeps the pool
  * name. */
@@ -46,7 +46,7 @@ extern BmagicMagic05803DispatchTable D_801EEC04; /* @source 0x801EEC04 @kind dat
  * published at 0x1F800044 and calls the handler its unsigned byte 1 selects
  * from the table at 0x801EFEF0, so publishing a record there runs that record's
  * step. */
-extern void dispatchStateByte1Tablefef0BmagicMagic05803_801EF36C(void); /* @source 0x801EF36C @kind function */
+extern void callStateTablefef0Bmagic(void); /* @source 0x801EF36C @kind function */
 
 /* @source 0x801EEC28
  * @behavior Per-frame entry of this overlay. It copies the three code-pointer
@@ -103,7 +103,7 @@ void dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicM
       recordWork = *(u8 **)&D_801EFF68[offset];
       g_battle_work = record;
       D_801EB4E0 = recordWork;
-      dispatchStateByte1Tablefef0BmagicMagic05803_801EF36C();
+      callStateTablefef0Bmagic();
       D_801EB4E0 = savedRecord;
       g_battle_work = savedWork;
     }

@@ -38,7 +38,7 @@ segments:
     - func_801EEE50
   - - 668
     - c
-    - dispatchStateByte1Table04d0BmagicMagic14403_801EEE9C
+    - callStateTable04Bmagic
     - '@source: src/bof3/bmagic/magic14403DispatchTables.c'
   - - 736
     - asm
@@ -56,8 +56,8 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and, when bit 0x80 of the work object byte at offset 0xB is set, increments the byte at offset 0x2 through the same pointer.'
   - - 1364
     - c
-    - decrementWorkByte9ThenSubmitRecordForwardBattleByteDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByteB80BmagicMagic14403_801EF154
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordForwardBattleByteDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByteB80BmagicMagic14403_801EF154.c'
+    - decrementSubmitForwardGlobal
+    - '@source: src/bof3/bmagic/decrementSubmitForwardGlobal.c'
     - '@behavior: Decrements nonzero work byte 9, then when work byte 0xB equals 0x80 submits the published record, forwards the battle byte, decrements global work byte 0xB and invokes 0x801E5988.'
   - - 1508
     - c
@@ -89,8 +89,8 @@ segments:
     - '@behavior: Adds four to scratchpad work-object byte 9 modulo 256 through the work pointer cell at 0x1F800044, re-reads the cell and that byte, and increments work-object byte 2 only when the byte equals 0x11.'
   - - 2724
     - c
-    - incrementWorkByte9AndWorkByteAThenSetGlobalWorkByteBFlag80AndAdvanceWorkByte2At19BmagicMagic14403_801EF6A4
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndWorkByteAThenSetGlobalWorkByteBFlag80AndAdvanceWorkByte2At19BmagicMagic14403_801EF6A4.c'
+    - incrementByteGlobalByte
+    - '@source: src/bof3/bmagic/incrementByteGlobalByte.c'
     - '@behavior: Increments scratchpad work-object bytes 9 and 0xA modulo 256 through the work pointer cell at 0x1F800044 and, only when the reloaded byte 9 equals 0x19, sets bit 0x80 of the shared record byte 0xB at 0x801EB4E0 and increments work-object byte 2.'
   - - 2872
     - c
@@ -101,13 +101,13 @@ segments:
     - func_801EF818
   - - 4980
     - c
-    - dispatchWorkByte2HandlerThenShiftHalfwords2EAnd30BetweenHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EFF74
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenShiftHalfwords2EAnd30BetweenHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EFF74.c'
+    - callShiftBetweenHelpers
+    - '@source: src/bof3/bmagic/callShiftBetweenHelpers.c'
     - '@behavior: Dispatches by work byte 2, then when bytes 0 and 2 are nonzero calls 0x800AF764, shifts work halfwords 0x2E and 0x30, and calls 0x801F01D0.'
   - - 5172
     - c
-    - clearWorkFlag40AndCopyRecordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic14403_801F0034
-    - '@source: src/bof3/bmagic/clearWorkFlag40AndCopyRecordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic14403_801F0034.c'
+    - stateCopyTripletClear
+    - '@source: src/bof3/bmagic/stateCopyTripletClear.c'
   - - 5280
     - c
     - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic14403_801F00A0

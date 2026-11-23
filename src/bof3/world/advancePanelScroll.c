@@ -23,6 +23,6 @@ void advancePanelScroll(void) {
     }
   }
 
-  drawFilledPanelWithInsetBorderWorld00Area03004(0x14, *(volatile u16*)(WORLD00_AREA030_SCRATCH_PTR + 0x30u),
+  renderFilledInsetBorder(0x14, *(volatile u16*)(WORLD00_AREA030_SCRATCH_PTR + 0x30u),
                 0x118, 0x13, 0);
 }

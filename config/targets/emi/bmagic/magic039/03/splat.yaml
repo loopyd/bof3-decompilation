@@ -56,23 +56,23 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, scales its unsigned byte at offset 1 by four, and invokes the selected entry of the overlay-local two-entry code-pointer table at 0x801F0424 (0x801EEFA8, 0x801EF4E4) with no arguments; it keeps only $ra in a 0x18-byte frame and writes no state.'
   - - 936
     - c
-    - dispatchWorkByte2HandlerThenInvokeDrawHelpersAndPopWhenActiveBmagicMagic03903_801EEFA8
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeDrawHelpersAndPopWhenActiveBmagicMagic03903_801EEFA8.c'
+    - callHelpersPopActive
+    - '@source: src/bof3/bmagic/callHelpersPopActive.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, copies the six-entry code pointer run at 0x801EEC10 (0x801EF070, 0x801EF0D4, 0x801EF134, 0x801EF1F4, 0x801EF320, 0x801EF44C) into its own 0x30-byte frame and invokes the copy selected by the work object unsigned byte at offset 2 with no arguments; after the call it re-reads the cell and, when work byte 0 has bit 0 set and work byte 2 is non-zero, runs the three draw helpers at 0x801EF9F4, 0x801EFAA4 and 0x801F0054 and then PopMatrix.'
   - - 1136
     - c
-    - copyRecordTripletClearWorkByte9SetWorkByteATo1AndAdvanceWorkByte2BmagicMagic03903_801EF070
-    - '@source: src/bof3/bmagic/copyRecordTripletClearWorkByte9SetWorkByteATo1AndAdvanceWorkByte2BmagicMagic03903_801EF070.c'
+    - copyTripletClearByte
+    - '@source: src/bof3/bmagic/copyTripletClearByte.c'
     - '@behavior: Entry 0 of the six-entry work-byte-2 handler run at 0x801EEC10 (word 0x801EEC10 of the twelve-word code-pointer run 0x801EEC04..0x801EEC34). Leaf with no frame. Loads the shared battle work record pointer cell at 0x801EB4E0, then the scratchpad work-object pointer cell at 0x1F800044, copies the record words 0x34, 0x38 and 0x3C into the same work-object word offsets, clears work-object byte 9 between the third load and the store of the copied word 0x3C, sets work-object byte 0xA to 1 through a fresh read of the pointer cell, and re-reads the cell once more to advance the dispatch state byte 0x2.'
   - - 1236
     - c
-    - add2ToWorkByte9ClearWorkByteAAndAdvanceWorkByte2At10BmagicMagic03903_801EF0D4
-    - '@source: src/bof3/bmagic/add2ToWorkByte9ClearWorkByteAAndAdvanceWorkByte2At10BmagicMagic03903_801EF0D4.c'
+    - workClearByteBmagic
+    - '@source: src/bof3/bmagic/workClearByteBmagic.c'
     - '@behavior: Adds 2 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and, when the stored byte equals 0x10, re-reads that pointer cell to clear work-object byte 0xA and re-reads the cell again to increment the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 1332
     - c
-    - incrementWorkByte9Add2ToWorkByteAThenSubmitRecordStoreEffectByteBAndAdvanceWorkByte2At18BmagicMagic03903_801EF134
-    - '@source: src/bof3/bmagic/incrementWorkByte9Add2ToWorkByteAThenSubmitRecordStoreEffectByteBAndAdvanceWorkByte2At18BmagicMagic03903_801EF134.c'
+    - incrementSubmitStoreEffect
+    - '@source: src/bof3/bmagic/incrementSubmitStoreEffect.c'
     - '@behavior: Adds 1 to scratchpad work-object byte 0x9 and 2 to byte 0xA through the pointer at 0x1F800044 and, when byte 0xA has ramped to 0x18, submits the battle record published at 0x8014638C through func_80196718, submits its positional effect through func_8019651C with the 0/0/0/1 arguments, stores the low return byte in work-object byte 0xB, and increments the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 1524
     - c
@@ -81,8 +81,8 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and adds 1 to the work object byte 0x9, then adds 2 to the three counter bytes of the 12-byte counter record selected by the unsigned work byte 0xB, re-reading the cell and that byte for each group, and finally advances the work byte 2 dispatcher by incrementing work object byte 0x2 when the selected record byte 0x0 equals 0x10.'
   - - 1824
     - c
-    - incrementWorkByte9ThenDecrementWorkByteBRecordCountersBy2AndAdvanceWorkByte2WhenCounterIsZeroBmagicMagic03903_801EF320
-    - '@source: src/bof3/bmagic/incrementWorkByte9ThenDecrementWorkByteBRecordCountersBy2AndAdvanceWorkByte2WhenCounterIsZeroBmagicMagic03903_801EF320.c'
+    - incrementCountersCounterIs
+    - '@source: src/bof3/bmagic/incrementCountersCounterIs.c'
     - '@behavior: Per-frame step of this overlay work byte 2 handler, entry 4 of the six-entry code pointer run at 0x801EEC10: reads the scratchpad work-object pointer cell at 0x1F800044, adds 1 to work object byte 9, subtracts 2 from the three countdown bytes of the 12-byte counter record selected by the work object unsigned byte 0xB with a fresh cell read and record-stride index scale per subtraction, and re-reads the cell once more to increment work byte 2 when the first countdown byte, read signed, is zero.'
   - - 2124
     - asm
@@ -92,13 +92,13 @@ segments:
     - func_801EF4E4
   - - 2436
     - c
-    - decrementWorkByte9ThenSeedScratchAngleFromWorkByteBStepPositionPairBySampledAngularPairTimesTwelveClearByte9SetByteATo4AndAdvanceWorkByte2BmagicMagic03903_801EF584
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedScratchAngleFromWorkByteBStepPositionPairBySampledAngularPairTimesTwelveClearByte9SetByteATo4AndAdvanceWorkByte2BmagicMagic03903_801EF584.c'
+    - decrementSampledAngularTwelve
+    - '@source: src/bof3/bmagic/decrementSampledAngularTwelve.c'
     - '@behavior: Decrements the scratchpad work-object byte 9 and, when that countdown reaches zero, scales work byte 0xB by 0x200 into the scratchpad halfword 0x1F80000A and steps the position pair from the shared record at 0x801EB4E0 by twelve times the first sampled angular value of that angle (word 0x34) and twelve times the second, sampled from the stored halfword (word 0x38), copies the record word 0x3C, clears work byte 9, sets work byte 0xA to 4 and advances the dispatch state byte 0x2.'
   - - 2704
     - c
-    - add16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic03903_801EF690
-    - '@source: src/bof3/bmagic/add16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic03903_801EF690.c'
+    - workAdvanceAt80Bmagic
+    - '@source: src/bof3/bmagic/workAdvanceAt80Bmagic.c'
     - '@behavior: Adds 0x10 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and, when the stored byte has ramped to 0x80, re-reads that pointer cell and increments the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 2784
     - c
@@ -107,22 +107,22 @@ segments:
     - '@behavior: Adds 8 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and subtracts 1 from work-object byte 0xA, then, when that stored byte reaches zero, reads the shared battle work record pointer at 0x801EB4E0, decrements its byte 0xB and invokes the helper at 0x801E5988.'
   - - 2904
     - c
-    - drawTranslucentGouraudQuadAboveWorkHalfwords2EAnd30WithHalfWidthFromWorkByteAAndHeightFromWorkByte9GradedBlackToPaletteRowAtWorkByte4BmagicMagic03903_801EF758
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadAboveWorkHalfwords2EAnd30WithHalfWidthFromWorkByteAAndHeightFromWorkByte9GradedBlackToPaletteRowAtWorkByte4BmagicMagic03903_801EF758.c'
+    - renderAboveWidthGraded
+    - '@source: src/bof3/bmagic/renderAboveWidthGraded.c'
     - '@behavior: Publishes work byte 9 into scratchpad halfword 1F800006, work byte A into 1F800008, work halfwords 2E and 30 into 1F80000A and 1F80000C and the palette record selected by work byte 4 into 1F800000, 1F800002 and 1F800004, selects the draw-mode page from the graph type, then builds one translucent Gouraud quad whose upper corners at y = centreY - height are graded black and whose lower corners at y = centreY take the published palette row, linking 0xC and 0x24 byte packets through func_80155A08.'
   - - 3572
     - asm
     - func_801EF9F4
   - - 3748
     - c
-    - drawTranslucentGouraudQuadBandOfSixtyFourQuadsSteppingSixtyFourthTurnWithRandJitteredWorkByteAProfileTintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801EFAA4
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadBandOfSixtyFourQuadsSteppingSixtyFourthTurnWithRandJitteredWorkByteAProfileTintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801EFAA4.c'
-    - '@behavior: Middle draw helper of this overlay work-byte-2 handler group, invoked with no arguments from the jal at 0x801EF048 in dispatchWorkByte2HandlerThenInvokeDrawHelpersAndPopWhenActiveBmagicMagic03903_801EEFA8 between func_801EF9F4 and func_801F0054 while work byte 0 is odd and byte 2 is non-zero. It publishes work byte 0x0A into scratchpad halfword 1F800008, takes the rand-jittered profile angle ((rand() & 3) + work byte 9) & 0xF shifted left eight into 1F80000A, publishes 0x80 into 1F80000C, and derives the driven radius 1F800006 as twice the 801782FC sample of that angle times the amplitude shifted right twelve less six amplitudes and the profile radius 1F80000E as eight amplitudes less twice the 801782FC sample times the amplitude shifted right twelve minus 0x80. It fills the colour halfwords 1F800000, 1F800002 and 1F800004 from the 3-byte-stride palette row at 0x801F0414 selected by work byte 4, multiplied by work byte 9 below 0x10 and shifted left four from 0x10 up, primes the quad at phase zero through 801783C8 and 801782FC scaled by the driven radius and by 0x80 and shifted right twelve, and runs sixty-four passes at phase i << 6 that republish both profile radii from a fresh jittered angle, carry the primed edges into the leading vertices, build the far vertices from the phase samples, offset the work record words 0x34 and 0x38 by the signed 1F80002C halfword shifted left nine, and link a 0xC-byte packet plus a 0x24-byte POLY_G4 through func_80155A08 with kind 0 whose near vertex is graded 1/1/1 and whose far vertices take the published palette triple after a RotTransPers4 projection.'
+    - renderSteppingRandProfile
+    - '@source: src/bof3/bmagic/renderSteppingRandProfile.c'
+    - '@behavior: Middle draw helper of this overlay work-byte-2 handler group, invoked with no arguments from the jal at 0x801EF048 in callHelpersPopActive between func_801EF9F4 and func_801F0054 while work byte 0 is odd and byte 2 is non-zero. It publishes work byte 0x0A into scratchpad halfword 1F800008, takes the rand-jittered profile angle ((rand() & 3) + work byte 9) & 0xF shifted left eight into 1F80000A, publishes 0x80 into 1F80000C, and derives the driven radius 1F800006 as twice the 801782FC sample of that angle times the amplitude shifted right twelve less six amplitudes and the profile radius 1F80000E as eight amplitudes less twice the 801782FC sample times the amplitude shifted right twelve minus 0x80. It fills the colour halfwords 1F800000, 1F800002 and 1F800004 from the 3-byte-stride palette row at 0x801F0414 selected by work byte 4, multiplied by work byte 9 below 0x10 and shifted left four from 0x10 up, primes the quad at phase zero through 801783C8 and 801782FC scaled by the driven radius and by 0x80 and shifted right twelve, and runs sixty-four passes at phase i << 6 that republish both profile radii from a fresh jittered angle, carry the primed edges into the leading vertices, build the far vertices from the phase samples, offset the work record words 0x34 and 0x38 by the signed 1F80002C halfword shifted left nine, and link a 0xC-byte packet plus a 0x24-byte POLY_G4 through func_80155A08 with kind 0 whose near vertex is graded 1/1/1 and whose far vertices take the published palette triple after a RotTransPers4 projection.'
   - - 5204
     - c
-    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedBlackToPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801F0054
-    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedBlackToPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801F0054.c'
-    - '@behavior: Third draw helper of this overlay work-byte-2 handler group, invoked with no arguments from the jal at 0x801EF050 in dispatchWorkByte2HandlerThenInvokeDrawHelpersAndPopWhenActiveBmagicMagic03903_801EEFA8 between func_801EFAA4 and PopMatrix while work byte 0 has bit 0 set and byte 2 is non-zero. It picks the draw-mode texture page from GetGraphType (0xA5 for types 1 and 2, 0x35 otherwise), arms SetDrawMode on g_PrimCursor with dfe 0, dtd 1 and a null RECT, links a 0xC-byte packet under slot 5, publishes 0x88 into the scratchpad radius halfword 0x1F800006, and fills the three colour halfwords 0x1F800000, 0x1F800002 and 0x1F800004 from the 3-byte-stride palette row at 0x801F0404 selected by work byte 4, multiplied by work byte 9 below 0x10 and shifted left four from 0x10 up. It seeds the fan sample at phase zero through func_801782FC and func_801783C8 scaled by the signed radius and shifted right twelve, clears the three z halfwords, and runs sixteen passes at phase i << 8, each projecting the origin vertex, the previous sample and the current sample through RotTransPers3 and linking a 0x1C-byte POLY_G3 whose origin vertex is graded 1/1/1 and whose two rim vertices take the published palette triple; it closes by re-selecting the draw mode page (0x25 for types 1 and 2, 0x15 otherwise) and linking a second 0xC-byte packet.'
+    - renderGradedBlackScaled
+    - '@source: src/bof3/bmagic/renderGradedBlackScaled.c'
+    - '@behavior: Third draw helper of this overlay work-byte-2 handler group, invoked with no arguments from the jal at 0x801EF050 in callHelpersPopActive between func_801EFAA4 and PopMatrix while work byte 0 has bit 0 set and byte 2 is non-zero. It picks the draw-mode texture page from GetGraphType (0xA5 for types 1 and 2, 0x35 otherwise), arms SetDrawMode on g_PrimCursor with dfe 0, dtd 1 and a null RECT, links a 0xC-byte packet under slot 5, publishes 0x88 into the scratchpad radius halfword 0x1F800006, and fills the three colour halfwords 0x1F800000, 0x1F800002 and 0x1F800004 from the 3-byte-stride palette row at 0x801F0404 selected by work byte 4, multiplied by work byte 9 below 0x10 and shifted left four from 0x10 up. It seeds the fan sample at phase zero through func_801782FC and func_801783C8 scaled by the signed radius and shifted right twelve, clears the three z halfwords, and runs sixteen passes at phase i << 8, each projecting the origin vertex, the previous sample and the current sample through RotTransPers3 and linking a 0x1C-byte POLY_G3 whose origin vertex is graded 1/1/1 and whose two rim vertices take the published palette triple; it closes by re-selecting the draw mode page (0x25 for types 1 and 2, 0x15 otherwise) and linking a second 0xC-byte packet.'
   - - 6148
     - rodata
     - T_801F0404

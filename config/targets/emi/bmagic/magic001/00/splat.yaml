@@ -34,8 +34,8 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00100_801EEC64.c'
   - - 196
     - c
-    - seedWorkFromRecordQueueSelectedBattlerSlot49PublishRecordBytesRaiseFlag40AndAdvanceWorkByte1BmagicMagic00100_801EECC4
-    - '@source: src/bof3/bmagic/seedWorkFromRecordQueueSelectedBattlerSlot49PublishRecordBytesRaiseFlag40AndAdvanceWorkByte1BmagicMagic00100_801EECC4.c'
+    - stateSelectedBattlerRaise
+    - '@source: src/bof3/bmagic/stateSelectedBattlerRaise.c'
     - '@behavior: Seed work fields, queue selected battler slot 0x49, publish record bytes, raise flag 0x40 and advance work byte 1.'
   - - 820
     - c
@@ -49,30 +49,30 @@ segments:
     - '@behavior: Overlay work handler, entry 2 of the leading 24-word code pointer run at 0x801EEC04. Raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword read-modify-write, then invokes the shared helper at 0x801E5988 unconditionally; the halfword store fills the call delay slot and the 0x18-byte frame only keeps $ra. No arguments, no return value, no other state.'
   - - 984
     - c
-    - dispatchStateByte1Table04b4BmagicMagic00100_801EEFD8
+    - callStateTable04Bmagic
     - '@source: src/bof3/bmagic/magic00100DispatchTables.c'
   - - 1052
     - asm
     - func_801EF01C
   - - 1256
     - c
-    - invokeActingEnemyScriptThenCopyRecordByte27ClearByte9AndByteAThenAdvanceWorkByte2BmagicMagic00100_801EF0E8
-    - '@source: src/bof3/bmagic/invokeActingEnemyScriptThenCopyRecordByte27ClearByte9AndByteAThenAdvanceWorkByte2BmagicMagic00100_801EF0E8.c'
+    - callActingEnemyScript
+    - '@source: src/bof3/bmagic/callActingEnemyScript.c'
     - '@behavior: Overlay work handler, word 3 of the leading 24-word code pointer run at 0x801EEC04. Runs the shared enemy script helper 0x801E257C with the acting battler byte 0x80146374 as the enemy work index and 0xA as the script byte selector, copies byte 0x27 of the shared battle work record read through 0x801EB4E0 into byte 0x27 of the scratchpad work object read through the pointer cell 0x1F800044, clears work bytes 9 and 0xA, then advances work byte 2. The 0x18-byte frame only keeps $ra across the helper call.'
   - - 1380
     - c
-    - invokeBattleHelpersSeedWorkWordsAndAdvanceWorkByte2WhenHelperReadyBmagicMagic00100_801EF164
-    - '@source: src/bof3/bmagic/invokeBattleHelpersSeedWorkWordsAndAdvanceWorkByte2WhenHelperReadyBmagicMagic00100_801EF164.c'
+    - callHelpersWordsReady
+    - '@source: src/bof3/bmagic/callHelpersWordsReady.c'
     - '@behavior: When the readiness helper succeeds, invoke battle helpers, seed work words 0x14 and 0x20, and advance work byte 2.'
   - - 1484
     - c
-    - addWorkWord20ToWord14AccumulateWord14IntoHalfword3EThenWhenWord14IsZeroCopyRecordWordPairAdjustWord3CSetByte9To1FAndAdvanceWorkByte2BmagicMagic00100_801EF1CC
-    - '@source: src/bof3/bmagic/addWorkWord20ToWord14AccumulateWord14IntoHalfword3EThenWhenWord14IsZeroCopyRecordWordPairAdjustWord3CSetByte9To1FAndAdvanceWorkByte2BmagicMagic00100_801EF1CC.c'
+    - workAccumulateIsAdjust
+    - '@source: src/bof3/bmagic/workAccumulateIsAdjust.c'
     - '@behavior: Per-frame field integrator for the scratchpad work object at 0x1F800044. Adds work word 0x20 into word 0x14 and word 0x14 into halfword 0x3E; while the new word 0x14 is nonzero it returns, and when it has reached zero it copies record words 0x34 and 0x38 from 0x8014638C, sets work byte 9 to 0x1F, subtracts the 0x801EB4E0 minus 0x8014638C word 0x3C difference from work word 0x3C, and advances work byte 2.'
   - - 1664
     - c
-    - integrateWorkWord14IntoHalfword3EAndDecrementByte9ThenInvokeHelpersAndAdvanceAtZeroBmagicMagic00100_801EF280
-    - '@source: src/bof3/bmagic/integrateWorkWord14IntoHalfword3EAndDecrementByte9ThenInvokeHelpersAndAdvanceAtZeroBmagicMagic00100_801EF280.c'
+    - integrateIntoHelpersZero
+    - '@source: src/bof3/bmagic/integrateIntoHelpersZero.c'
     - '@behavior: Integrate work words 0x14 and 0x20 into halfword 0x3E, decrement byte 9, then invoke three helpers and advance byte 2 when the countdown reaches zero.'
   - - 1828
     - asm
@@ -82,13 +82,13 @@ segments:
     - func_801EF37C
   - - 2056
     - c
-    - addWorkWord20ToWord14AccumulateIntoHalfword3EAndDecrementByteAThenAdvanceWorkByte2AtZeroBmagicMagic00100_801EF408
-    - '@source: src/bof3/bmagic/addWorkWord20ToWord14AccumulateIntoHalfword3EAndDecrementByteAThenAdvanceWorkByte2AtZeroBmagicMagic00100_801EF408.c'
+    - workAccumulateIntoZero
+    - '@source: src/bof3/bmagic/workAccumulateIntoZero.c'
     - '@behavior: Handler registered as word 9 of the code pointer run at 0x801EEC04. Decrements work-object byte 0xA, adds work word 0x20 into word 0x14 and accumulates the new word into halfword 0x3E, then re-reads the scratchpad cell and advances work byte 2 when the decremented byte has reached zero. Leaf with no frame, no arguments and no return value.'
   - - 2152
     - c
-    - invokeHelpersThenDecrementWorkByte9AndRetreatOrAdvanceWorkByte2WhenReadyBmagicMagic00100_801EF468
-    - '@source: src/bof3/bmagic/invokeHelpersThenDecrementWorkByte9AndRetreatOrAdvanceWorkByte2WhenReadyBmagicMagic00100_801EF468.c'
+    - callHelpersRetreatReady
+    - '@source: src/bof3/bmagic/callHelpersRetreatReady.c'
     - '@behavior: Calls helper 0x8014DAEC three times; when the third returned byte is nonzero, invokes helpers with 0x203 and the battle byte plus 0xC, decrements work byte 9, then reloads the scratchpad work pointer and subtracts 3 from work byte 2 while the countdown is nonzero or advances it otherwise.'
   - - 2328
     - asm
@@ -126,13 +126,13 @@ segments:
     - '@behavior: Overlay work-byte-1 dispatcher: reads the scratchpad work object through pointer slot 0x1F800044, takes its unsigned byte at offset 1, scales it by four and calls that entry of the overlay-local handler run based at 0x801F04B8 (its only in-image code pointer is 0x801EFAFC at index 0) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 3836
     - c
-    - dispatchWorkByte2HandlerThenInvokeHelpersBelow5WhenActiveBmagicMagic00100_801EFAFC
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersBelow5WhenActiveBmagicMagic00100_801EFAFC.c'
+    - callInvokeHelpersActive
+    - '@source: src/bof3/bmagic/callInvokeHelpersActive.c'
     - '@behavior: Copies the seven-entry handler table at 0x801EEC48 and calls its work-byte-2 entry; when work bytes 0 and 2 are nonzero, invokes helper 0x8014D290, then when the reloaded byte 2 is below 5 invokes helpers 0x801F014C and 0x801F0238 followed by PopMatrix. No arguments or return value.'
   - - 4076
     - c
-    - seedWorkWordsAndCopyRecordByte27ClearByte9SetByteATo16ThenAdvanceWorkByte2BmagicMagic00100_801EFBEC
-    - '@source: src/bof3/bmagic/seedWorkWordsAndCopyRecordByte27ClearByte9SetByteATo16ThenAdvanceWorkByte2BmagicMagic00100_801EFBEC.c'
+    - stateWordsCopyClear
+    - '@source: src/bof3/bmagic/stateWordsCopyClear.c'
     - '@behavior: Overlay step handler seed: copies byte 0x27 of the shared battle work record at 0x801EB4E0 into byte 0x27 of the scratchpad work object read through cell 0x1F800044, then sets work word 0x14 = 0x100, word 0x20 = -0x10, byte 9 = 0 and byte 0xA = 0x10, and finally advances work byte 2 with a byte-width read-modify-write whose store lands in the return delay slot; leaf with no frame, reads no other state.'
   - - 4180
     - c
@@ -141,8 +141,8 @@ segments:
     - '@behavior: Per-frame field integrator for the scratchpad work object. It reads the pointer cell at 0x1F800044 once, adds work word 0x20 into work word 0x14, adds the new word 0x14 into the halfword at 0x3E and decrements work byte 0xA while it is nonzero. It then re-reads the cell and returns while the new word 0x14 is still nonzero; when word 0x14 has reached zero it copies words 0x34 and 0x38 of the record published at 0x8014638C into the same offsets of the work object, sets work byte 9 to 0xF, subtracts from work word 0x3C the difference between word 0x3C of the record published at 0x801EB4E0 and word 0x3C of the 0x8014638C record, and advances work byte 2. Leaf with no frame; takes no arguments and returns nothing.'
   - - 4392
     - c
-    - integrateWorkWord14GrowByteATo8ThenOnByte9ZeroSeedMotionSetHeadingToward801EB4E0ForwardBattleByteAndAdvanceWorkByte2BmagicMagic00100_801EFD28
-    - '@source: src/bof3/bmagic/integrateWorkWord14GrowByteATo8ThenOnByte9ZeroSeedMotionSetHeadingToward801EB4E0ForwardBattleByteAndAdvanceWorkByte2BmagicMagic00100_801EFD28.c'
+    - integrateGrowHeadingForward
+    - '@source: src/bof3/bmagic/integrateGrowHeadingForward.c'
     - '@behavior: Integrates work word 0x14 into halfword 0x3E, grows byte 0xA to 8 and decrements byte 9. On zero, invokes helpers, seeds motion words, sets heading toward the 0x801EB4E0 record, forwards the battle byte, rearms byte 9 and advances handler byte 2.'
   - - 4664
     - asm
@@ -166,5 +166,5 @@ segments:
     - func_801F0238
   - - 6324
     - rodata
-    - dispatchHandlerTable801F04B4
+    - callHandlerTable801
 - - 6332

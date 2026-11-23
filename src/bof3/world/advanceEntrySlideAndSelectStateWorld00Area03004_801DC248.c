@@ -6,9 +6,9 @@
  * (-80 * slide, 78), configures the sprite at 128 + 48 * slide at y 91 with the packed selector from
  * byte 6 of the active 0x98-byte work record D_80146888[D_801E3208],
  * draws that record byte together with the record byte at +0x90 through
- * drawSlidingEntryLabelAndAmountSummaryWorld00Area03004, draws the icon row at (176, 156 + 30 * slide) and, while the
+ * renderSlidingAmountSummary, draws the icon row at (176, 156 + 30 * slide) and, while the
  * dispatch byte 0xB reads 1 or 2, sprite 0x0C at (8, 148 + 30 * slide) with indexed run 68
- * (dispatch 1) or 66 (dispatch 2) through drawSpriteAndOptionalIndexedRunWorld00Area03004. Once the slide count
+ * (dispatch 1) or 66 (dispatch 2) through renderSpriteOptionalIndexed. Once the slide count
  * reaches 4 it clears byte 9 and selects the next work state: dispatch 1 with a
  * clear flag byte 6 selects state 11, every other case selects state 1, and
  * both paths clear the dispatch byte, where the second also advances the
@@ -28,14 +28,14 @@ void advanceEntrySlideAndSelectStateWorld00Area03004_801DC248(void) {
   submitPanelPair((s16)(D_1F800044[9] * -80), 78);
   configureSpriteClut((s16)(128 + D_1F800044[9] * 48), 91,
                       D_80146888[D_801E3208].unk_02[4]);
-  drawSlidingEntryLabelAndAmountSummaryWorld00Area03004(D_80146888[D_801E3208].unk_02[4],
+  renderSlidingAmountSummary(D_80146888[D_801E3208].unk_02[4],
                 D_80146888[D_801E3208].unk_90[0], D_1F800044[9]);
-  drawSlotValueSummaryAndThresholdIconsWorld00Area03004(176, (s16)(D_1F800044[9] * 30 + 156));
+  renderSummaryThresholdIcons(176, (s16)(D_1F800044[9] * 30 + 156));
   work = D_1F800044;
   if (work[0xB] == 1) {
-    drawSpriteAndOptionalIndexedRunWorld00Area03004(8, work[9] * 30 + 148, 68);
+    renderSpriteOptionalIndexed(8, work[9] * 30 + 148, 68);
   } else if (work[0xB] == 2) {
-    drawSpriteAndOptionalIndexedRunWorld00Area03004(8, work[9] * 30 + 148, 66);
+    renderSpriteOptionalIndexed(8, work[9] * 30 + 148, 66);
   }
   state = D_1F800044;
   if (state[9] == 4) {

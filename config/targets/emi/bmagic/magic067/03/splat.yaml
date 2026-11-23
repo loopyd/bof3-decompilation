@@ -35,18 +35,18 @@ segments:
     - '@behavior: Dispatches the work byte at offset 1 of the scratchpad work object through the five-entry code pointer run at 0x801EEC04, copied into the function own frame, and invokes the selected handler with no arguments.'
   - - 148
     - c
-    - setWorkByte9To18ClaimTwoSlotsCopy256HalfwordsWithBit15AndTwo16HalfwordBandsSet80145988ThenCopyActingEnemyHeadWhenKindIs29BmagicMagic06703_801EEC94
-    - '@source: src/bof3/bmagic/setWorkByte9To18ClaimTwoSlotsCopy256HalfwordsWithBit15AndTwo16HalfwordBandsSet80145988ThenCopyActingEnemyHeadWhenKindIs29BmagicMagic06703_801EEC94.c'
+    - stateBandsActingHead
+    - '@source: src/bof3/bmagic/stateBandsActingHead.c'
     - '@behavior: Clears work byte 0xB, sets work byte 9 to 0x18 and increments work byte 1, claims two 0x78-byte-stride action slots through the shared allocator at 0x801E590C with class 1 and mode 0x13, stamps slot byte 1 with 0 and 1, copies battle work record byte 8 into the first slot byte 8, publishes the scratchpad work pointer into slot word 0x74 of both, copies 0x100 halfwords from 0x80033C00 to 0x80037C00 with bit 15 set, copies the two 16-halfword bands at 0x80036C00 into 0x8003AC00 and 0x8003AC20, sets the shared byte 0x80145988 to 1, and when the shared byte 0x801462EA is non-zero and the acting enemy record byte at 0x801EB720 equals 0x29 claims one more slot and copies that record 0x74-byte head into it with slot bytes 1, 6, 2, 5 and 9 stamped 3, 1, 0, 0x13 and 0.'
   - - 828
     - c
-    - decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic06703_801EEF3C
-    - '@source: src/bof3/bmagic/decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic06703_801EEF3C.c'
+    - decrementRaiseBattleTarget
+    - '@source: src/bof3/bmagic/decrementRaiseBattleTarget.c'
     - '@behavior: Reads the scratchpad work pointer cell at 0x1F800044 before creating its 0x18-byte frame, decrements work byte 9 at byte width and tests the stored byte truncated to eight bits. Only when that byte reaches zero does it pass the shared battle target byte at 0x80146384 and the flag word 0x20 to 0x800A9610, then reload the work pointer cell and increment work byte 1. Entry 1 of the five-word code pointer run at 0x801EEC04 that the overlay dispatcher at 0x801EEC24 indexes by work byte 1, so no jal in the payload reaches it.'
   - - 932
     - c
-    - forwardBattleByteSetWorkByte9To30AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic06703_801EEFA4
-    - '@source: src/bof3/bmagic/forwardBattleByteSetWorkByte9To30AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic06703_801EEFA4.c'
+    - forwardBattleByteZero
+    - '@source: src/bof3/bmagic/forwardBattleByteZero.c'
     - '@behavior: Reads the scratchpad work pointer cell at 0x1F800044 before creating its 0x18-byte frame and tests work byte 0xB at byte width. Only when that byte is zero does it pass the shared battle target byte at 0x80146384 to 0x800A9820, reload the work pointer cell and store 0x1E into work byte 9, then reload the cell again and increment work byte 1. Entry 2 of the five-word code pointer run at 0x801EEC04 that the overlay dispatcher at 0x801EEC24 indexes by work byte 1, so no jal in the payload reaches it.'
   - - 1040
     - asm
@@ -58,32 +58,32 @@ segments:
     - '@behavior: When work byte 0xB is zero, raises mask 0x4 in the halfword at 0x801462E8 and invokes 0x801E5988.'
   - - 1744
     - c
-    - dispatchStateByte1Table04b8BmagicMagic06703_801EF2D0
+    - callStateTable04Bmagic
     - '@source: src/bof3/bmagic/magic06703DispatchTables.c'
   - - 1812
     - c
-    - dispatchWorkByte2HandlerThenInvoke0688And079CAndPopWhenWorkByte0NonzeroBmagicMagic06703_801EF314
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0688And079CAndPopWhenWorkByte0NonzeroBmagicMagic06703_801EF314.c'
+    - callHandlerPopNonzero
+    - '@source: src/bof3/bmagic/callHandlerPopNonzero.c'
     - '@behavior: Dispatches unsigned work byte 2 through table 0x801F04C8, reloads the scratchpad work pointer, and invokes 0x801EF688, 0x801EF79C, and PopMatrix when work byte 0 is nonzero.'
   - - 1932
     - c
-    - seedMotionOffsetPositionPairCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic06703_801EF38C
-    - '@source: src/bof3/bmagic/seedMotionOffsetPositionPairCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic06703_801EF38C.c'
+    - stateMotionOffsetFields
+    - '@source: src/bof3/bmagic/stateMotionOffsetFields.c'
     - '@behavior: Invokes the shared helper 0x800AFD9C, seeds work word 0xC with 0xFFFC0000 and work word 0x10 with zero, runs 0x801DD350 on the work pointer, publishes the absolute position pair by adding 0x80149308 and 0x8014930C to those step words into work words 0x34 and 0x38, dispatches cue 0x100 through 0x8015DF18, then sets work byte 0xB to 0x34, work word 0x14 to 0x2FFF, clears work byte 9, sets work byte 0xA to 0x10 and increments work byte 2.'
   - - 2124
     - c
-    - advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic06703_801EF44C
-    - '@source: src/bof3/bmagic/advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic06703_801EF44C.c'
+    - stateIncrementGlobalTwo
+    - '@source: src/bof3/bmagic/stateIncrementGlobalTwo.c'
     - '@behavior: Reads the scratchpad work pointer cell at 0x1F800044, adds one plus work byte 9 shifted right by six to work byte B, increments work byte A when bit 0 of 0x80143E6C is set, adds two to work byte 9, and advances work byte 2 when the stored byte is 0xC0.'
   - - 2292
     - c
-    - advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic06703_801EF4F4
-    - '@source: src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic06703_801EF4F4.c'
+    - stateDecrementGlobalTwo
+    - '@source: src/bof3/bmagic/stateDecrementGlobalTwo.c'
     - '@behavior: Adds one plus work byte 9 shifted right by six to byte B, decrements byte A when bit 0 of 0x80143E6C is set, subtracts two from byte 9, and advances byte 2 when the stored byte is 0x60.'
   - - 2460
     - c
-    - advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06703_801EF59C
-    - '@source: src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06703_801EF59C.c'
+    - stateGlobalWordsGlobal
+    - '@source: src/bof3/bmagic/stateGlobalWordsGlobal.c'
     - '@behavior: Steps the scratchpad work object one frame of a position advance: adds one plus work byte 9 shifted right by six to byte B, decrements work byte A when bit 0 of 0x80143E6C is set, stores the step word pair 0x2000 and 0 in work words 0xC and 0x10, invokes 0x801DD350 with the work pointer, subtracts two from byte 9 while adding the step pair into the position words 0x34 and 0x38, and on byte 9 reaching 0x30 decrements byte B of the record selected by 0x801EB4E0 and invokes 0x801E5988.'
   - - 2696
     - asm
@@ -93,13 +93,13 @@ segments:
     - func_801EF79C
   - - 4900
     - c
-    - dispatchWorkByte2HandlerThenInvoke00C4WhenWorkByte0NonzeroBmagicMagic06703_801EFF24
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke00C4WhenWorkByte0NonzeroBmagicMagic06703_801EFF24.c'
+    - callHandlerNonzeroBmagic
+    - '@source: src/bof3/bmagic/callHandlerNonzeroBmagic.c'
     - '@behavior: Dispatches work byte 2 through table 0x801F04D8, reloads the scratchpad work pointer, and invokes 0x801F00C4 when work byte 0 is nonzero.'
   - - 5004
     - c
-    - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic06703_801EFF8C
-    - '@source: src/bof3/bmagic/clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic06703_801EFF8C.c'
+    - stateSetByteIncrement
+    - '@source: src/bof3/bmagic/stateSetByteIncrement.c'
     - '@behavior: Resets two bytes of the scratchpad work object and advances a third: the object byte at offset 0x9 is cleared with sb $zero, the object byte at offset 0xA is set to the literal 0x88 (addiu $v0,$zero,0x88 then sb) and the object byte at offset 0x2 is incremented by one with a byte-width add (lbu, addiu 1, sb, the store scheduled into the $ra delay slot). The work-object pointer cell at 0x1F800044 is re-materialized and reloaded once per access, so the original keeps three separate lui $vN,0x1F80 / lw $vN,0x44($vN) pairs; nothing is returned, no other state is read or written and the function has no frame.'
   - - 5068
     - c
@@ -125,8 +125,8 @@ segments:
     - '@source: src/bof3/bmagic/magic06703DispatchTables.c'
   - - 5860
     - c
-    - invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic06703_801F02E4
-    - '@source: src/bof3/bmagic/invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic06703_801F02E4.c'
+    - callHelperOneIncrement
+    - '@source: src/bof3/bmagic/callHelperOneIncrement.c'
     - '@behavior: Reads the scratchpad work record through the pointer cell 0x1F800044 and passes its unsigned byte 4 and unsigned byte 3 to the shared helper 0x800AEEC8, then stores 1 in work byte 0xB and increments work byte 2, which advances the two-entry handler table at 0x801F04E8 from its first word 0x801F02E4 to 0x801F033C.'
   - - 5948
     - c
@@ -139,13 +139,13 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06703_801F038C.c'
   - - 6124
     - c
-    - clearWorkBytesBAnd9Invoke8014D6B8With3ThenAdvanceWorkByte2BmagicMagic06703_801F03EC
-    - '@source: src/bof3/bmagic/clearWorkBytesBAnd9Invoke8014D6B8With3ThenAdvanceWorkByte2BmagicMagic06703_801F03EC.c'
+    - stateBytesAdvanceBmagic
+    - '@source: src/bof3/bmagic/stateBytesAdvanceBmagic.c'
     - '@behavior: Clears work bytes 0xB and 9, invokes 0x8014D6B8 with 3, then increments work byte 2, reloading the scratchpad work pointer for each operation.'
   - - 6204
     - c
-    - invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic06703_801F043C
-    - '@source: src/bof3/bmagic/invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic06703_801F043C.c'
+    - callAdvanceSetBmagic
+    - '@source: src/bof3/bmagic/callAdvanceSetBmagic.c'
     - '@behavior: Invokes the shared main-executable helpers at 0x8014D978 and 0x8014D4E0 in that order with no arguments, then reads the shared battle halfword at 0x801462E8 once and, only when bit 0x0004 of it is set, reloads the scratchpad work pointer from cell 0x1F800044 and increments work byte 2. Entry 1 of the three-word code pointer run at 0x801EEC18 that the dispatcher at 0x801F038C indexes with work-object byte 2.'
   - - 6296
     - c

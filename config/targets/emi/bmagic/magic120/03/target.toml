@@ -8,25 +8,25 @@ splat = "config/targets/emi/bmagic/magic120/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/add3ToWorkByteAThenIncrementWorkByte9AndSetGlobalWorkByteBToOneAndAdvanceWorkByte2At8BmagicMagic12003_801EF270.c",
+    "src/bof3/bmagic/workIncrementGlobalOne.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic12003_801EEC10.c",
-    "src/bof3/bmagic/invokeHelper08ACThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic12003_801F01C0.c",
-    "src/bof3/bmagic/invokeHelper08ACThenIncrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic12003_801F0158.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF44CWhenGlobalWorkByteBNotFFAndWorkByte2SetBmagicMagic12003_801EF054.c",
-    "src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndInvokeHelperAt70BmagicMagic12003_801F0104.c",
+    "src/bof3/bmagic/callDecrementByteZero.c",
+    "src/bof3/bmagic/callIncrementAdvanceBmagic.c",
+    "src/bof3/bmagic/callGlobalByteNot.c",
+    "src/bof3/bmagic/runSlotGridHelper.c",
     "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByte4ThenIncrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperAt88BmagicMagic12003_801EF3C4.c",
-    "src/bof3/bmagic/decrementWorkByteBIncrementByte9RaiseFlag10At18ThenAdvanceWorkByte2BmagicMagic12003_801EF2EC.c",
+    "src/bof3/bmagic/decrementByteIncrementRaise.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/drawUpToSixGreyTexturedQuadsScaledBySlotCounterBytesBmagicMagic12003_801F04B0.c",
-    "src/bof3/bmagic/projectWorkPositionAndInstallAxisTurnFromWorkByte8BmagicMagic12003_801F078C.c",
+    "src/bof3/bmagic/renderUpSixGrey.c",
+    "src/bof3/bmagic/projectInstallAxisTurn.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic12003_801F0BF8.c",
-    "src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerBmagicMagic12003_801EFD20.c",
+    "src/bof3/bmagic/stateDrawModeHandler.c",
     "src/bof3/support/magic120_03_psyq.c",
     "src/bof3/bmagic/invokeHelper08ACThenDecrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic12003_801F0224.c",
     "src/bof3/bmagic/magic12003DispatchTables.c",
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374.c",
-    "src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic12003_801F009C.c",
-    "src/bof3/bmagic/invokeHelpers4D978And4D290ThenDecrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic12003_801F0044.c",
+    "src/bof3/bmagic/runSlotGridDraw.c",
+    "src/bof3/bmagic/callDecrementHelperZero.c",
 ]
 psyq_source = "src/bof3/support/magic120_03_psyq.c"

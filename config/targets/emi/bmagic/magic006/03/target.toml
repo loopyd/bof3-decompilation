@@ -9,24 +9,24 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte1LocalPairBmagicMagic00603_801EEC38.c",
-    "src/bof3/bmagic/advanceWorkWord14By80AndCountDownWorkByte9ThenRearmByte9FromWorkByteBPlusCAndAdvanceWorkByte2BmagicMagic00603_801EF04C.c",
+    "src/bof3/bmagic/stateCountDownPlus.c",
 ]
 support_sources = [
     "src/bof3/support/magic006_03_psyq.c",
-    "src/bof3/bmagic/queueEightSlotsSetByte1RandomByte9PublishRecordPointerThenSlotSetByte1To2InvokeHelperAt102RearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EF298.c",
+    "src/bof3/bmagic/queueEightSlotsPointer.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801EF41C.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic00603_801EEDA4.c",
     "src/bof3/bmagic/magic00603DispatchTables.c",
     "src/bof3/bmagic/copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic00603_801F0644.c",
     "src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic00603_801F05F4.c",
-    "src/bof3/bmagic/incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C.c",
+    "src/bof3/bmagic/incrementByteFrameParity.c",
     "src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_801F0064.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleToward8014638CRearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EEF28.c",
+    "src/bof3/bmagic/callInvokeUpdateActive.c",
+    "src/bof3/bmagic/decrementDirectionAngleRearm.c",
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308.c",
-    "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius100TintedByWorkByte9WeightedEightTwoOneBmagicMagic00603_801F0790.c",
-    "src/bof3/bmagic/drawTwoRotatedTranslucentGouraudQuadsAroundWorkHalfwords2EAnd30WithFixedRadii40And38AndTip8GradedDarkBlueBmagicMagic00603_801EFB6C.c",
+    "src/bof3/bmagic/renderExtentsGradedDark.c",
+    "src/bof3/bmagic/renderSixteenOriginWeighted.c",
+    "src/bof3/bmagic/renderGradedDarkBlue.c",
 ]
 psyq_source = "src/bof3/support/magic006_03_psyq.c"

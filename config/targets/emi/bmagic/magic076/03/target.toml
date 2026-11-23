@@ -8,18 +8,18 @@ splat = "config/targets/emi/bmagic/magic076/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawBetweenGraphTypeDrawModesAroundHelpersWhenWorkBytes0And2SetBmagicMagic07603_801EF8EC.c",
-    "src/bof3/bmagic/decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07603_801EF160.c",
-    "src/bof3/bmagic/isBattleStateFourWithKindOtherThan4COrB4BmagicMagic07603_801EF2E8.c",
+    "src/bof3/bmagic/callGraphTypeModes.c",
+    "src/bof3/bmagic/decrementCountersSubmitZero.c",
+    "src/bof3/bmagic/checkFourKindOther.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic07603_801EF63C.c",
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBZeroBmagicMagic07603_801EF11C.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenCopyRecordByte4AndTripletAddC00000ClearByte9SetATo3CAndAdvanceWorkByte2BmagicMagic07603_801EF3F4.c",
-    "src/bof3/bmagic/incrementWorkByte9ThenAllocateTableCountEntriesAndAdvanceWorkByte2BmagicMagic07603_801EF4A8.c",
-    "src/bof3/bmagic/growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic07603_801EFC30.c",
-    "src/bof3/bmagic/incrementWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CThenOnFrameParityDecrementWorkByte9AndSharedByteBAndClearAtZeroBmagicMagic07603_801EFD60.c",
-    "src/bof3/bmagic/clearRecordPoolBytes0To2CopyBattleStateToWorkByte4CopyRecordByte8TripletSetByte9To3CClaimSlot62PublishWorkPointerCopy256And16HalfwordsBit15Set80145988InvokeHelper100AdvanceWorkByte1BmagicMagic07603_801EED48.c",
-    "src/bof3/bmagic/seedRandomWorkWord14AndBytes5DTo5FProjectPositionPairAtWordCScaleEightSetWord3CAndAdvanceWorkByte2OnWorkByte9CountdownBmagicMagic07603_801EFA60.c",
-    "src/bof3/bmagic/drawTranslucentGouraudRingOfEightQuadsBetweenRadiiTwentyAndEightTintedByWorkByte9TimesSignedBytes5d5e5fBmagicMagic07603_801F00FC.c",
+    "src/bof3/bmagic/stateIncrementByteZero.c",
+    "src/bof3/bmagic/decrementCopyTripletClear.c",
+    "src/bof3/bmagic/incrementAllocateCountEntries.c",
+    "src/bof3/bmagic/growProjectDecayAccumulate.c",
+    "src/bof3/bmagic/incrementDecayAccumulateParity.c",
+    "src/bof3/bmagic/statePoolPointerHalfwords.c",
+    "src/bof3/bmagic/stateRandomScaleEight.c",
+    "src/bof3/bmagic/renderRadiiTwentySigned.c",
 ]
 support_sources = [
     "src/bof3/bmagic/clearWorkBytesBmagicMagic07603_801F0438.c",

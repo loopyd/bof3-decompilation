@@ -39,15 +39,15 @@ segments:
     - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06903_801EEE30.c'
   - - 656
     - c
-    - dispatchStateByte1Table04f8BmagicMagic06903_801EEE90
+    - callStateTable04Bmagic
     - '@source: src/bof3/bmagic/magic06903DispatchTables.c'
   - - 724
     - asm
     - func_801EEED4
   - - 1076
     - c
-    - decrementWorkCountdownThenSeedHalfwordsFromRecordSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF034
-    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedHalfwordsFromRecordSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF034.c'
+    - decrementSeedHalfwordsWord
+    - '@source: src/bof3/bmagic/decrementSeedHalfwordsWord.c'
   - - 1220
     - asm
     - func_801EF0C4
@@ -56,39 +56,39 @@ segments:
     - func_801EF15C
   - - 1488
     - c
-    - oscillateWorkByte9UsingWorkByteBDirectionThenInvokeHelperAt101SetByte9To10AndAdvanceWorkByte2WhenGlobalWorkByteBIsOneBmagicMagic06903_801EF1D0
-    - '@source: src/bof3/bmagic/oscillateWorkByte9UsingWorkByteBDirectionThenInvokeHelperAt101SetByte9To10AndAdvanceWorkByte2WhenGlobalWorkByteBIsOneBmagicMagic06903_801EF1D0.c'
+    - oscillateUsingDirectionIs
+    - '@source: src/bof3/bmagic/oscillateUsingDirectionIs.c'
     - '@behavior: Work-byte-1 state 6 handler: branches on the scratchpad work object byte 0x0B and, while that direction flag is set, adds four to work byte 0x09 and clears the flag when the stored byte reaches 0x10, otherwise subtracts two from work byte 0x09 and sets the flag when the stored byte reaches zero; when the shared battle record byte 0x0B is one it invokes the helper at 0x8015D71C with 0x101, stores 0x10 into work byte 0x09 and advances work byte 2.'
   - - 1708
     - c
-    - decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenEightBmagicMagic06903_801EF2AC
-    - '@source: src/bof3/bmagic/decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenEightBmagicMagic06903_801EF2AC.c'
+    - decrementTwoGlobalEight
+    - '@source: src/bof3/bmagic/decrementTwoGlobalEight.c'
   - - 1804
     - asm
     - func_801EF30C
   - - 2096
     - c
-    - decrementWorkCountdownThenSubtractFromRecordHalfwordsSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF430
-    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSubtractFromRecordHalfwordsSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF430.c'
+    - decrementSubtractHalfwordsWord
+    - '@source: src/bof3/bmagic/decrementSubtractHalfwordsWord.c'
     - '@behavior: Work-byte-1 state 8 handler: decrements the scratchpad work countdown byte 9 and, on zero, stores 0xB into work word 0xC, seeds work halfwords 0x2E and 0x30 from the shared battle record less 0x37 and 0x10, clears byte 9, sets byte 0xA to 0x20 and advances work byte 2.'
   - - 2240
     - c
-    - advanceWorkHalfword2EByCountdownStepThenDecrementGlobalWorkByteBAndInvokeHelperOnZeroBmagicMagic06903_801EF4C0
-    - '@source: src/bof3/bmagic/advanceWorkHalfword2EByCountdownStepThenDecrementGlobalWorkByteBAndInvokeHelperOnZeroBmagicMagic06903_801EF4C0.c'
+    - stateCountdownGlobalZero
+    - '@source: src/bof3/bmagic/stateCountdownGlobalZero.c'
     - '@behavior: Work-byte-1 state 9 handler: loads the scratchpad work object, decrements its countdown word 0xC, adds the decremented word into halfword 0x2E, and only when that word reached zero decrements the shared battle record byte 0x0B and invokes the helper at 0x801E5988.'
   - - 2336
     - c
-    - dispatchStateByte2Table0520BmagicMagic06903_801EF520
+    - callStateTable0520Bmagic
     - '@source: src/bof3/bmagic/magic06903DispatchTables.c'
   - - 2404
     - c
-    - seedWorkHalfwords2EAnd30FromSelectedBattlerRecordClassDeltaSubmitRecordStoreEffectByteAAdvanceWorkByte2BmagicMagic06903_801EF564
-    - '@source: src/bof3/bmagic/seedWorkHalfwords2EAnd30FromSelectedBattlerRecordClassDeltaSubmitRecordStoreEffectByteAAdvanceWorkByte2BmagicMagic06903_801EF564.c'
+    - stateBattlerClassDelta
+    - '@source: src/bof3/bmagic/stateBattlerClassDelta.c'
     - '@behavior: Work-byte-2 state 0 handler: selects the 0x140-stride party work record at 0x80145E90 or the 0x118-stride enemy work record at 0x801EB2E8 by the work object byte 0xB, submits it through 0x80196718 and its 0/0/0/1 positional effect through 0x8019651C, stores the returned effect value in work byte 0xA, seeds work halfwords 0x2E and 0x30 from the record halfwords less 0x20 and 0xC, reduces 0x30 by the 0x801EB108/0x801EB109 party byte pair selected by record byte 0x79 when record byte 0x08 is below two or by the 0x800E40CB class row of the 0x801EB710 enemy class byte otherwise, then clears work byte 9 and advances work byte 2.'
   - - 2852
     - c
-    - incrementWorkByteARecordCountersThenAdvanceWorkByte2WhenCounterIs10BmagicMagic06903_801EF724
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenAdvanceWorkByte2WhenCounterIs10BmagicMagic06903_801EF724.c'
+    - incrementByteCountersCounter
+    - '@source: src/bof3/bmagic/incrementByteCountersCounter.c'
     - '@behavior: Per-frame handler: reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group, scales the work object unsigned byte 0xA by the 12-byte stride of the 0x80145BD6 counter table and increments the selected record''s bytes 0x0/0x1/0x2 with byte-width read-modify-writes, then re-reads the cell and that work byte and, when the selected record byte 0 read through the signed view equals 0x10, increments the work object byte 2 to advance the work byte 2 dispatcher. Leaf with no frame, no saved registers and no calls.'
   - - 3124
     - asm
@@ -101,25 +101,25 @@ segments:
     - func_801EFA50
   - - 3716
     - c
-    - drawGreyTexturedQuadAtWorkHalfwords2EAnd30Sized30ByWorkByteABmagicMagic06903_801EFA84
-    - '@source: src/bof3/bmagic/drawGreyTexturedQuadAtWorkHalfwords2EAnd30Sized30ByWorkByteABmagicMagic06903_801EFA84.c'
+    - renderGreyTexturedQuad
+    - '@source: src/bof3/bmagic/renderGreyTexturedQuad.c'
   - - 4096
     - asm
     - func_801EFC00
   - - 4884
     - c
-    - drawTranslucentGreyDashedCircleOfFourArcsAtWorkHalfwords2EAnd30RadiusWorkByteAShadeWorkByteBBmagicMagic06903_801EFF14
-    - '@source: src/bof3/bmagic/drawTranslucentGreyDashedCircleOfFourArcsAtWorkHalfwords2EAnd30RadiusWorkByteAShadeWorkByteBBmagicMagic06903_801EFF14.c'
+    - renderDashedCircleArcs
+    - '@source: src/bof3/bmagic/renderDashedCircleArcs.c'
     - '@behavior: Ring emitter of the MAGIC069 work object, reached by the jal at 0x801EEF88 inside the per-frame draw function func_801EEED4 and by the jal at 0x801EF3C0 inside the state-7 frame function func_801EF30C, both guarded by work byte 0 bit 0 and work byte 2 non-zero and both followed by the sibling draw routine func_801EFC00. It takes no arguments and returns nothing. It seeds the scratchpad radius cell 0x1F800000 from work byte 0x0A, the centre cells 0x1F80000C and 0x1F80000E from work halfwords 0x2E and 0x30 and the shade cell 0x1F800006 with 0x80 - 0x30 * work byte 0x0B while work byte 0x02 is below 2 and with 0x80 otherwise, then walks one full 0x1000 turn in 64 steps of 0x40 and emits a segment only when (phase & 0xC) is 4 or 8, so the drawn phases form four 45-degree arcs separated by four 45-degree gaps. A segment is one semi-transparent flat 0x10-byte primitive from g_PrimCursor, initialised by func_8017AA80 and SetSemiTrans with 1 and queued with GpuAppendPrim(3, 0x10); its corners are the scratchpad centre plus the rotator samples func_801782FC and func_801783C8 of the current and next segment angle times the signed radius shifted right 12, and its three colour bytes are reads of the shade cell, so the ring is a dashed grey circle around the cached work screen pair.'
   - - 5380
     - c
-    - drawTranslucentGreyCrossOfTwoFlatLinesAtWorkHalfwords2EAnd30BmagicMagic06903_801F0104
-    - '@source: src/bof3/bmagic/drawTranslucentGreyCrossOfTwoFlatLinesAtWorkHalfwords2EAnd30BmagicMagic06903_801F0104.c'
+    - renderGreyCrossLines
+    - '@source: src/bof3/bmagic/renderGreyCrossLines.c'
     - '@behavior: Draw routine of the MAGIC069 work object, reached by the jal at 0x801EEFCC inside this overlay function func_801EEED4 when work byte 0 has bit 0 set and work byte 2 is at least 3. It takes no arguments and returns nothing. The body publishes 0x80 into the scratchpad shade halfword 0x1F800006 and copies the work object halfwords 0x2E and 0x30 into the scratchpad centre pair 0x1F80000C and 0x1F80000E, then emits two semi-transparent flat 0x10-byte line primitives through g_PrimCursor, each initialised by func_8017AA80 and SetSemiTrans with 1 and each queued with GpuAppendPrim(3, 0x10). The first line runs from (centre x - 4, centre y) to (centre x + 4, centre y) and the second from (centre x, centre y + 4) to (centre x, centre y - 4), so the pair draws one grey cross of four-pixel arms around the cached work screen pair. Takes no arguments and returns nothing.'
   - - 5748
     - c
-    - queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274
-    - '@source: src/bof3/bmagic/queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274.c'
+    - queuePerEligibleOrdinal
+    - '@source: src/bof3/bmagic/queuePerEligibleOrdinal.c'
     - '@behavior: Claims one action slot for every battler that passes both of its scans. The first scan walks the eight enemy battlers, selector 3 to 10, with a byte offset stepped by the 0x118-byte enemy stride; the second walks the three local party members, selector 0 to 2, with a byte offset stepped by the 0x140-byte party stride. A battler is skipped when the shared availability test func_801DB524 reports it inactive or flagged 0x4000, when it equals the acting battler byte at 0x80146374 or the selection byte 0x10 past it, and, in the enemy scan, when its halfword at +0xAA is not below two, its halfword at +0x82 has no 0x20 bit and its flag word at +0x104 has no 0x4000 bit; the party scan keeps the same halfword and 0x20 tests at +0x9A and +0x80 and accepts a flag word at +0x128 carrying either 0x4000 or bit 0. For every accepted battler it claims a pool entry through func_801E590C with the constants 1 and 0x39, scales the returned index by the 0x78-byte slot stride and stamps four fields of that entry: byte +0x01 becomes 2, byte +0x04 receives the running count of stamped entries, byte +0x0B receives the battler selector and the pointer word at +0x74 receives the shared battle record pointer read from 0x801EB4E0, after which it increments that record byte 0x0B and the running count. Takes no arguments and returns nothing; the 0x28-byte frame keeps the return address at 0x24 and $s0..$s4 at 0x10..0x20 across the calls.'
   - - 6392
     - textbin

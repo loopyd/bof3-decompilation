@@ -36,7 +36,7 @@ segments:
     - func_801EEE70
   - - 720
     - c
-    - dispatchStateByte1Table125cBmagicMagic12603_801EEED0
+    - callStateTable125Bmagic
     - '@source: src/bof3/bmagic/magic12603DispatchTables.c'
   - - 788
     - asm
@@ -75,8 +75,8 @@ segments:
     - func_801EF1C8
   - - 2104
     - c
-    - drawSixteenStepJitteredGouraudRingWithWorkByteARadiiAndWorkByte9TintBmagicMagic12603_801EF438
-    - '@source: src/bof3/bmagic/drawSixteenStepJitteredGouraudRingWithWorkByteARadiiAndWorkByte9TintBmagicMagic12603_801EF438.c'
+    - renderSixteenJitteredRadii
+    - '@source: src/bof3/bmagic/renderSixteenJitteredRadii.c'
     - '@behavior: Draws a sixteen-step translucent Gouraud ring with jittered work-byte-A radii and work-byte-9 tint.'
   - - 2980
     - asm
@@ -86,8 +86,8 @@ segments:
     - func_801EFAF4
   - - 3956
     - c
-    - decrementWorkByte9ThenInvokeHelperCopyRecordTripletClearByteBRearmByte9ClearByteAAndAdvanceWorkByte2BmagicMagic12603_801EFB74
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenInvokeHelperCopyRecordTripletClearByteBRearmByte9ClearByteAAndAdvanceWorkByte2BmagicMagic12603_801EFB74.c'
+    - decrementCopyTripletRearm
+    - '@source: src/bof3/bmagic/decrementCopyTripletRearm.c'
     - '@behavior: Decrements work byte 9; on zero invokes helper at 0x100, copies record triplet, clears B, rearms 9, clears A and advances byte 2.'
   - - 4136
     - c
@@ -96,28 +96,28 @@ segments:
     - '@behavior: Increments work bytes 9 and 0xA, then increments byte 2 when the resulting byte 0xA is 0x10.'
   - - 4244
     - c
-    - add2ToWorkByte9AndAdvanceWorkByte2At96BmagicMagic12603_801EFC94
-    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At96BmagicMagic12603_801EFC94.c'
+    - workAdvanceAt96Bmagic
+    - '@source: src/bof3/bmagic/workAdvanceAt96Bmagic.c'
     - '@behavior: Adds two to work byte 9 and increments work byte 2 when the resulting byte is 0x96.'
   - - 4324
     - c
-    - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic12603_801EFCE4
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic12603_801EFCE4.c'
+    - incrementDecrementGlobalZero
+    - '@source: src/bof3/bmagic/incrementDecrementGlobalZero.c'
     - '@behavior: Increments work byte 9 and decrements byte 0xA, then decrements shared record byte B and calls helper 801E5988 when byte 0xA is zero.'
   - - 4444
     - c
-    - drawTranslucentTexturedQuadPairAtWorkScreenPairWithHalfWidth40AndWorkByte9HeightBmagicMagic12603_801EFD5C
-    - '@source: src/bof3/bmagic/drawTranslucentTexturedQuadPairAtWorkScreenPairWithHalfWidth40AndWorkByte9HeightBmagicMagic12603_801EFD5C.c'
+    - renderTexturedHalfHeight
+    - '@source: src/bof3/bmagic/renderTexturedHalfHeight.c'
     - '@behavior: Draws two translucent textured quad bands at the work screen pair with half-width 40 and upper height from work byte 9.'
   - - 5568
     - c
-    - dispatchWorkByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F01C0
-    - '@source: src/bof3/bmagic/dispatchWorkByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F01C0.c'
+    - callHelpersSetBmagic
+    - '@source: src/bof3/bmagic/callHelpersSetBmagic.c'
     - '@behavior: Dispatches work byte 2, then calls helpers when work bytes 0 and 2 are nonzero.'
   - - 5696
     - c
-    - decrementWorkByte9ThenSeedFrom8014637CStepPositionSetHeadingToward801EB4E0AndAdvanceWorkByte2BmagicMagic12603_801F0240
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedFrom8014637CStepPositionSetHeadingToward801EB4E0AndAdvanceWorkByte2BmagicMagic12603_801F0240.c'
+    - decrementSeedPositionHeading
+    - '@source: src/bof3/bmagic/decrementSeedPositionHeading.c'
     - '@behavior: Decrements work byte 9, seeds and steps position on zero, sets heading toward the record at 0x801EB4E0 and advances byte 2.'
   - - 6012
     - asm
@@ -133,30 +133,30 @@ segments:
     - func_801F06AC
   - - 7452
     - c
-    - dispatchRecordByte1Table12a8BmagicMagic12603_801F091C
-    - '@source: src/bof3/bmagic/dispatchRecordByte1Table12a8BmagicMagic12603_801F091C.c'
+    - callRecordTable12Bmagic
+    - '@source: src/bof3/bmagic/callRecordTable12Bmagic.c'
   - - 7520
     - c
-    - dispatchRecordByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F0960
-    - '@source: src/bof3/bmagic/dispatchRecordByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F0960.c'
+    - callRecordHelpersSet
+    - '@source: src/bof3/bmagic/callRecordHelpersSet.c'
     - '@behavior: Dispatches record byte 2, then calls helpers when record bytes 0 and 2 are nonzero.'
   - - 7648
     - asm
     - func_801F09E0
   - - 7988
     - c
-    - projectRecordPositionPairAccumulateWord18IncrementByte6AndAdvanceAt16BmagicMagic12603_801F0B34
-    - '@source: src/bof3/bmagic/projectRecordPositionPairAccumulateWord18IncrementByte6AndAdvanceAt16BmagicMagic12603_801F0B34.c'
+    - projectPositionPairAccumulate
+    - '@source: src/bof3/bmagic/projectPositionPairAccumulate.c'
     - '@behavior: Projects the record position pair, accumulates word 18, increments byte 6, and advances byte 2 at 16.'
   - - 8316
     - c
-    - stepRecordWord8ProjectPositionPairAndAdvanceAtLimitBmagicMagic12603_801F0C7C
-    - '@source: src/bof3/bmagic/stepRecordWord8ProjectPositionPairAndAdvanceAtLimitBmagicMagic12603_801F0C7C.c'
+    - stepProjectPairLimit
+    - '@source: src/bof3/bmagic/stepProjectPairLimit.c'
     - '@behavior: Steps record word 8, projects the position pair, and advances byte 2 above the signed limit.'
   - - 8612
     - c
-    - projectRecordPositionPairAccumulateWord18CountDownByte6AndClearAtZeroBmagicMagic12603_801F0DA4
-    - '@source: src/bof3/bmagic/projectRecordPositionPairAccumulateWord18CountDownByte6AndClearAtZeroBmagicMagic12603_801F0DA4.c'
+    - projectAccumulateCountDown
+    - '@source: src/bof3/bmagic/projectAccumulateCountDown.c'
     - '@behavior: Projects record position pair, accumulates word 18, counts down byte 6, and clears at zero.'
   - - 8912
     - asm
@@ -166,8 +166,8 @@ segments:
     - func_801F1110
   - - 9580
     - c
-    - clearRecordBytes0Through3BmagicMagic12603_801F116C
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through3BmagicMagic12603_801F116C.c'
+    - stateRecordThrough3Bmagic
+    - '@source: src/bof3/bmagic/stateRecordThrough3Bmagic.c'
   - - 9644
     - asm
     - func_801F11AC
