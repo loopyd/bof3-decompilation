@@ -2,18 +2,31 @@
 
 ## Required loop
 
-`another source transaction holds the writer lease`
-means that selector was not measured. Leave its source and bindings unchanged,
-confirm the owning writer has terminated, then re-gate it. Matches for other batch
-members do not validate the refused selector.
-
 Before changing existing C, obtain a live normal asm diff. For absent C, follow
 the [first-source route](#first-source). A gate that stops before comparison yields
-no `first=`: `undefined reference` at link is a binding gap, so add the row for the
-address it names to this target's own map and re-gate the same source instead of
-editing C. Rows are per target, so a cell or callee already exact in a sibling target
-still needs its own row here; add those rows before the first gate, where the link
-error names the missing symbols and, for a cell, the offsets of its uses.
+no `first=`, and six wiring stops can come before any diff: `source/map drift: <source>
+(0xADDRESS) has no map address` is the seed's own claimed address missing its map row;
+`undefined reference` at link names a symbol needing a row in this target's own map;
+an object-build error naming an undeclared cell needs that `extern` in the header that
+owns it, with no row where the shared map already names the address; `reviewed .rodata
+placement for <name> does not match original bytes` is that span's own placement row
+wrong in address or size, which the gate reports after the byte comparison and without
+an instruction count; an object-build failure reading `File name too long` names the
+source stem, because the build derives that unit's file names from it, so a stem near
+210 characters overruns the filesystem limit before any comparison and shortening it
+changes no instruction of the body; a prose rewrap that split a comment delimiter into
+`/ *` leaves that block open, so the batch stops on an object-build error in that file
+and measures nothing, and rejoining the delimiter is the whole repair. Each repairs
+wiring, never the body, so re-gate the same source and read only a call that measures
+as a rung; a fresh seed can take several such stops before its first diff.
+`another source transaction holds the writer lease` means that selector was not
+measured, so leave its source and bindings unchanged, confirm the owning writer has
+terminated, then re-gate it. Matches for other batch members do not validate the
+refused selector. A diff measured past a held-out placement row is a shape probe, not
+the measurement: correct or restore that row and re-gate before calling exact. Rows are
+per target, so a cell or callee already exact in a sibling target still needs its own
+row here; add them before the first gate, since the link error then names the missing
+symbols and, for a cell, the offsets of its uses.
 Diagnose `first=`, classify through the
 [playbook](matching-knowledge.md#delay-slots-and-entry-copies), make one structural
 fix and rerun normal diff. Revert percentage regressions immediately. Use full diff
@@ -43,11 +56,6 @@ and what stayed equal around it. Discovery of further actions: `bin/harness lift
 
 ## First source
 
-If only the branch
-polarity differs and its target offset matches, retain the donor's arms and invert
-the condition. That opcode difference is not a relocation delta, so the twin is a
-shape seed, not clone-eligible.
-
 For genuinely absent C, require parent admission for the selected source. Pin original
 bytes/load, reviewed boundary, caller/callee evidence, PRE absence, owned source/
 header/map/layout paths and attempts. Create evidenced C89 with `@source`/`@behavior`,
@@ -55,43 +63,74 @@ manifest claim, declarations/bindings and `c` boundary. For a fresh member of a 
 that already holds an exact lift, take that C89 from the sibling's body
 ([reverse protocol](reverse/mission-protocol.md)): where the twin differed only in
 relocation words it measured first-gate exact, owed no sweep variant and left no
-prototype or cell to declare, so `m2c`/`m2ctx` is not the next rung. Proven regions can be whole record arms or single statements.
-Combining an exact donor's gate test with another's masked update measured exact
-at the first gate. No donor has to cover the whole span. A donor may have a different size. Reuse only its proven matching regions and write
-the rest from this span's bytes. Among siblings
-that carry the identical span, transcribe the one whose own gate measured exact: a
-span-equal sibling whose lift recorded a partial carries a spelling that reproduces
-its residual, so keep it a shape donor rather than the seed. That residual need not
-show as a score gap: a partial donor's spelling can reach the original's own byte
-count while dropping instructions, first difference a callee-saved register shift,
-so size parity never makes a partial seed the right one. A partial donor also reproduces its residual exactly: a seed taken from a 120/127 donor measured 120/127 at another target with the same block's slots differing, so a seed that lands on the donor's own score names the donor's spelling as the residual, not this body. A twin that is not
+prototype or cell to declare, so `m2c`/`m2ctx` is not the next rung. A body no single
+sibling spans composes the same way: take each region from the exact sibling whose own
+bytes carry it. Proven regions can be whole record arms or single statements.
+Combining an exact donor's gate test with another's masked update measured exact at the
+first gate. No donor has to cover the whole span, and a donor may have a different size:
+reuse only its proven matching regions and write the rest from this span's bytes. Among
+siblings that carry the identical span, transcribe the one whose own gate measured exact:
+a span-equal sibling whose lift recorded a partial carries a spelling that reproduces its
+residual, so keep it a shape donor rather than the seed. That residual need not show as a
+score gap: a partial donor's spelling can reach the original's own byte count while
+dropping instructions, first difference a callee-saved register shift, so size parity
+never makes a partial seed the right one. A partial donor also reproduces its residual
+exactly: a seed taken from a 120/127 donor measured 120/127 at another target with the
+same block's slots differing, so a seed that lands on the donor's own score names the
+donor's spelling as the residual, not this body. A twin that is not
 byte-identical still seeds once every remaining differing word shifts by the span's
 own address delta, which is what an internal jump target does; a twin carrying one
-differing word more than that delta explains differs in a carried constant, so it is
+differing word more than that delta explains diverges in one carried value, so it is
 no clone source, yet it still seeds transcription: keep its statement shape and write
-every constant from this span's own bytes, which measured exact on the first gate for
-siblings differing only in a cell address, in a pool base together with its bound, and
-in a set of literal ids. That twin may live in another target: the exact lift there
-transcribed into this target on the first gate once the table and cell words came from
-the receiving span's own bytes. The cell-access spelling carries the same way: a
-pointer cell written by name and a paraphrase of it into a fixed-address constant
-address compile differently, so a seed that swaps one for the other opens a rung-1
-base-materialisation miss ([scratchpad cells](matching-knowledge.md#scratchpad-cells-and-record-views)), and
+that word from this span's own bytes, reading its opcode first, because the odd word
+is a carried constant in some siblings and an access's own sign and displacement in
+others (an unsigned byte load where the donor held a signed one). If only the branch
+polarity differs and its target offset matches, retain the donor's arms and invert
+the condition. That opcode difference is not a relocation delta, so the twin is a
+shape seed, not clone-eligible. A donor that fills an argument register with
+`addu aN,$zero,$zero` where this span's own bytes carry a constant there is that same
+carried argument, not a call with fewer arguments: write the constant and keep the
+donor's arity. A seed carries statement order, not a statement set, so a member that
+adds or drops statements against its donor still seeds, each written from the span's
+own bytes at the position its own call and store order gives it, and the counts those
+statements drive (a copied word run, a loop bound) sized from the span rather than from
+the donor's type or trip count. A seed takes the donor's loop body, not its exit form:
+a donor that walks every slot where this span leaves at the first hit still seeds, with
+the exit, and any per-pass store this span does not make, written from its own bytes.
+That shape measured exact on the first gate for siblings differing only in a cell
+address, in a pool base together with its bound, in a set of literal ids, in that one
+access word, and in that exit form. A twin differing in more than one of those ways
+still seeds: each differing word is one value the span carries, so write it from this
+span's bytes and keep the rest, and a member differing in a cell read width plus its own
+data immediate measured first-gate exact that way. That twin may live in another target:
+the exact lift there transcribed into this target on the first gate once the table and
+cell words came from the receiving span's own bytes. Sibling payloads of one overlay
+family can share a load address, so a twin sits at the same payload offset: compare both
+original byte ranges there and every differing word is a value the receiving span owns
+(a literal, an access displacement, a call target), with no address delta owed on
+internal branch words. Read both load addresses before looking for a delta. The
+cell-access spelling carries the same way: a pointer cell written by name and a
+paraphrase of it into a fixed-address constant address compile differently, so a seed
+that swaps one for the other opens a rung-1 base-materialisation miss
+([scratchpad cells](matching-knowledge.md#scratchpad-cells-and-record-views)), and
 that miss is this transcription rather than a wrong donor. For an extra base-building
 `addiu` before a fixed-address halfword access, test the pointer-local form in
 [halfword read-modify-write](matching-knowledge.md#halfword-read-modify-write)
-before rejecting the donor's statement shape. Obtain a live
-[native diff](native-execution.md) before another edit. Missing-source errors supply
-no baseline; seeds grant no score or acceptance. Unresolved
-ownership/ABI or failed native gates stop matching. Require final byte match and
-independent review. Diagnosis requires existing C.
+before rejecting the donor's statement shape. The record view carries the same way, and
+a donor's view belongs to the donor's body: one table's two exact users can hold an
+element record and a flat base with a per-store byte offset, so take the view from the
+receiving span's own address form and relocations, not from its donor's declaration.
+Obtain a live [native diff](native-execution.md) before another edit. Missing-source
+errors supply no baseline; seeds grant no score or acceptance. Unresolved ownership/ABI
+or failed native gates stop matching. Require final byte match and independent review.
+Diagnosis requires existing C.
 
 Exact metadata: `@status exact`, `@match 100.00`, `@residual none`. Notes on separate
 lines, never semicolon suffix in tag. The metadata counter merges comment blocks
 separated only by whitespace and sums their tags. Keep provenance notes free of
-metadata tags to avoid an extra function count. A name refused after the body matched is a
-name-only repair: keep the matched body and its proof, change the name, re-gate in the
-same batch. Never re-lift a matched body to satisfy a name, weaken parser or repair
+metadata tags to avoid an extra function count. A name refused after the body matched
+is a name-only repair: keep the matched body and its proof, change the name, re-gate in
+the same batch. Never re-lift a matched body to satisfy a name, weaken parser or repair
 unrelated rows to admit selected function.
 
 ## Terminal ladder
@@ -108,7 +147,7 @@ through the tooling owner; matching work grants no profile-change authority.
 
 | Rung | Work | Gate |
 | --- | --- | --- |
-| 1. Representation/access | Prove ABI, widths, qualifiers, pointer cells and original reloads; inspect callees before declaring allocation-only. Measure caller and callee separately: a partial callee does not prevent its caller from matching the original call instructions. For an unlifted callee the declared parameter form is representation too: by-value pair/aggregate parameters expand at this call site and can justify a preheader register or a size deficit the scalar spelling never produces. Its declared return type decides the same way: with the callee declared `void` a literal the original keeps in `$v1` materialised in `$v0` and the body held at 11 of 13, while declaring the return the original's call result implies kept `$v0` for that result and matched. That decision belongs to call sites: an address-taken publish emits only the callee's address, so one exact installer stores both `void` and `s32` callees through its slots and the published return type moves no instruction there. Keep the callee's real return type and cast to the slot's type at the assignment; look for the residual at the calls, not at the publish. That width also follows the consumption: an answer tested against `-1` is the signed byte return, one compared with byte constants the unsigned byte return, and one exact body declares both widths at its two calls. An answer tested only against zero is narrowed at the test, not in the declaration: a zero test reads the same at either sign, so the callee keeps its full returned word and the test carries the cast (`(u8)callee() == 0`), and where the callee's own row is still `asm` that word comes from the register its body returns rather than from this test. A pool allocator's answer that the span never compares against its no-free-entry code takes no failure arm: keep the full returned word on the declaration and cast the index at the assignment (`slot = (u8)alloc(kind, mode)`), because a `==` guard on that code would emit a compare and a branch the original does not have | Original calls, conversions and memory events accounted for |
+| 1. Representation/access | Prove ABI, widths, qualifiers, pointer cells and original reloads; inspect callees before declaring allocation-only. Measure caller and callee separately: a partial callee does not prevent its caller from matching the original call instructions. For an unlifted callee the declared parameter form is representation too: by-value pair/aggregate parameters expand at this call site and can justify a preheader register or a size deficit the scalar spelling never produces. Its declared return type decides the same way: with the callee declared `void` a literal the original keeps in `$v1` materialised in `$v0` and the body held at 11 of 13, while declaring the return the original's call result implies kept `$v0` for that result and matched. That decision belongs to call sites: an address-taken publish emits only the callee's address, so one exact installer stores both `void` and `s32` callees through its slots and the published return type moves no instruction there. Keep the callee's real return type and cast to the slot's type at the assignment; look for the residual at the calls, not at the publish. That width also follows the consumption: an answer tested against `-1` is the signed byte return, one compared with byte constants the unsigned byte return, and one exact body declares both widths at its two calls. An answer tested only against zero is narrowed at the test, not in the declaration: a zero test reads the same at either sign, so the callee keeps its full returned word and the test carries the cast (`(u8)callee() == 0`); where the callee's own row is still `asm` that word comes from the register its body returns, not from this test. A pool allocator's answer that the span never compares against its no-free-entry code takes no failure arm: keep the full returned word on the declaration and cast the index at the assignment (`slot = (u8)alloc(kind, mode)`), because a `==` guard on that code would emit a compare and a branch the original does not have | Original calls, conversions and memory events accounted for |
 | 2. Control flow | Branch direction, loop/return/switch; test [boolean return expansion](matching-knowledge.md#boolean-return-expansion), shared result definitions, branch-local calculations, the branch matrix and evidenced [explicit cursors](matching-knowledge.md#explicit-cursors-and-signed-bounds) | Branch/topology mismatch clears |
 | 3. Value lifetimes | Reuse a consumed local for a later real result; split a call answer read both raw and signed into two locals at the call; diagnose [orphan stack slots](matching-knowledge.md#orphan-stack-slots); test block-local initialization, [operation scopes](matching-knowledge.md#operation-scopes-and-loop-note-dependencies), arithmetic grouping and the emitted order of two independent updates | Predicted instruction effect measured; semantics and complete diff checked |
 | 4. Compiler evidence | Find the first divergent pass in owning sources and before/after RTL, including return expansion before CSE/allocation; follow the relevant [compiler lever](matching-knowledge.md#compiler-evidence) | Source-backed mechanism predicts a new probe; diagnostics grant no match |
@@ -158,15 +197,26 @@ Use `--subprocess` only for deliberate legacy reproduction. Give every variant t
 measured `@source`/`@behavior` metadata: one without them is refused before
 comparing and the sweeper prints `-`, while a plain `asm-diff` on that variant
 prints no diff line at all, so record that as a non-measurement and fix the
-variant rather than reading it as a neutral result. A batch where every row is `-`,
-including a variant that is the installed seed, measured nothing: that is the route,
-not the shapes, so fix the route and take the retained candidate's own `asm-diff`
-plus the gate as the measurement. A sweep row is that variant's own
-measurement, not a reproducible one: variants with identical codegen scored
-differently, and a shape the sweep reported a few instructions short at the original
-byte size reached exact on the native gate, so when two rows disagree, or a retained
-shape sits short at equal size, install that variant and gate it natively before
-discarding it.
+variant rather than reading it as a neutral result. A row is also `-` when the variant
+does not compile, and the target build log names the cause (an undeclared identifier in
+the probe), so read that log before reading the row as a shape result: a compile
+failure is a source fault, not a measurement. A batch where every row is `-`, including
+the variant that is the installed seed, measured nothing: that is the route, not the
+shapes, so fix the route, reinstall the pre-sweep candidate and take its own `asm-diff`
+plus the gate as the measurement. A batch where no row compiled still installs a
+variant, because files that lost the function's opening line score `-` on every row and
+the kept row then replaced the installed source with one that cannot build. A sweep row
+is that variant's own measurement, not a reproducible one: variants with identical
+codegen scored differently, and a shape the sweep reported a few instructions short at
+the original byte size reached exact on the native gate, so when two rows disagree, or a
+retained shape sits short at equal size, install that variant and gate it natively
+before discarding it.
+
+A sweep's best is best within its own batch: `--keep-best` ranks only that call's
+variants and drops the pre-sweep backup, so a batch whose rows all trail the installed
+candidate keeps the least-bad row and installs it as a regression. Read the kept row
+against the installed candidate's own measurement and re-measure that candidate when no
+variant beats it.
 
 Before each sweep, state the semantic precondition and predicted instruction
 change. Change one statement class per variant, as in the repair loop: a variant
@@ -181,11 +231,15 @@ the same count, size and first difference, test value lifetimes next. In one
 two independent updates matched 32 of 32.
 Partial gains compose the same way: two order levers that each closed one instruction
 and neither finished measured exact as their union, so a retained partial gain is
-input to the next composed variant, not a lever to re-test alone. Three attributable
-variants that each moved a different residual are the point to cross those axes in one
-sweep instead of composing two at a time: the deciding axis can be two at once, and
-four of ten rows in one grid measured exact, so gate a grid hit natively rather than
-attributing it to a single class.
+input to the next composed variant, not a lever to re-test alone. A residual that
+survives every single-class representation spelling belongs to that composition and
+takes a rung up: a loop's sampling order together with a tail pointer-role exchange
+measured exact where neither half did, and one half had scored below the retained
+partial and been reverted, so a reverted row is compose input, not a closed lever.
+Three attributable variants that each moved a different residual are the point to cross
+those axes in one sweep instead of composing two at a time: the deciding axis can be two
+at once, and four of ten rows in one grid measured exact, so gate a grid hit natively
+rather than attributing it to a single class.
 Compare the full result, not score alone. Restore neutral/regressive probes.
 Retain a strict coherent partial improvement only after semantic review and truthful
 metadata; retention is not exact acceptance or exhaustion. Near-exact allocation
@@ -196,15 +250,24 @@ negative batch or lack of a new idea does not prove it.
 
 ## Eligible-condition levers
 
-Classify before first edit. Use eligible lever before clean-C attempts. Record
-ineligible/declined reasons; revisit only with new evidence.
-A frameless leaf can be a complete function. Verify its entry, control flow,
-accesses and return within the reviewed range; a `jr $ra` word alone is not proof
-that the range is code.
+Classify before first edit, and use an eligible lever before clean-C attempts. Record
+ineligible and declined reasons; revisit only with new evidence. One observation settles
+two rows: original bytes that open on their own prologue and close on a `jr $ra` inside
+the declared boundary are a whole function, so record data and carve ineligible together
+and spend no analysis call. A frameless leaf can also be complete, so verify its entry,
+control flow, accesses and return within the reviewed range. A verified code-pointer
+table entry supports the span's entry identity but does not replace those checks, and a
+`jr $ra` word alone does not prove that a range is code. A shared macro is a statement
+group, not a statement, so read what it emits before writing a call or store it already
+makes. A seed that composed a state macro with its own copy of the helper the macro
+calls duplicated that helper in every arm using it and measured 1340 bytes against the
+original 1300, with 281 of 325 instructions matching; dropping the explicit call in the
+macro arms, and keeping that call beside the plain stores in the arm that sets the cells
+itself, closed that class.
 
 | Condition | Lever | Evidence and authority |
 | --- | --- | --- |
-| No function-shaped bytes: neither a prologue nor a `jr $ra` return path, pointer runs, printable blocks; or ASM-backlog triage | `bin/harness analysis data-candidates [TARGET...]` | Ranked byte evidence only. Promotion requires reviewed layout transaction, `source splat` and index refresh, not C lift. A target-wide run also settles one selector: a range with its own prologue and `jr $ra` return that is absent from that target's ranked list declines the data lever on measured evidence, with no per-range probe owed |
+| No function-shaped bytes: neither a prologue nor a `jr $ra` return path, pointer runs, printable blocks; or ASM-backlog triage | `bin/harness analysis data-candidates [TARGET...]` | Ranked byte evidence only. Promotion requires reviewed layout transaction, `source splat` and index refresh, not C lift. A target-wide run also settles one selector: a range with its own prologue and `jr $ra` return that is absent from that target's ranked list declines the data lever on measured evidence, with no per-range probe owed. |
 | Fragment/jump-table arm/shared epilogue with head elsewhere; code inside leading bare `[offset, bin, name]` segment or `bin` subsegment | `bin/harness analysis carve TARGET@0xADDRESS START:END` | Isolated two-split row/segment regroup probe preserving `vram`/text order. Never applies a layout change. A range that already starts at its own declared entry and ends at the next declared one has no fragment boundary to regroup, so carve is ineligible and owes no probe. Lane reports evidence; parent owns reviewed Splat placement, no whole-image oracle. A head that sits in a `textbin` row is ineligible: the probe regroups `bin` subsegments and bare `bin` segments only and refuses with `carve range is not inside a single bin subsegment or bare bin segment`, so that head row and the `asm` body become one reviewed `c` row with the old map rows replaced, and until they merge no body seed can match, because the diff opens after the head. The same merge covers a body split across several declared rows. A code row between the body's entry and the next declared entry is live code when the body's last access continues into it, so a `data-candidates` report of `kind=no_function_shape` / `jr_ra=False` on that fragment describes the fragment, not the bytes, and a trailing `asm` row whose only in-image reach is the body's own branch targets is that body's epilogue. Merge all of them into the one `c` row ending at the next declared entry before seeding, because the layout, not the C, is what the match was waiting on. The selector itself can name a prologue whose body starts two instructions earlier: the compiler hoists a fixed-address load above the frame setup, so that `asm` row opens on its own `addiu sp` and ends at the next declared start and passes every self-containment test on the late start. Read the payload instead: no branch word targets the address and no payload word equals it, while the only in-image reference is a pointer word to the row two instructions earlier, and another target's copy of the body carries the same split. Merge that row in and lift from the earlier address |
 | Few clean-C shapes explain `first=` | `bin/harness lift sweep SELECTOR SOURCE variants...` | In-process comparison; retain each variant and outcome |
 | A result needs a raw copy and a saved narrow value, or CSE changes a real copy | Trace [CSE width conversions, copy direction and value phases](matching-knowledge.md#compiler-evidence) | Prove narrowing at every consumer; trace real quantities, actual basic blocks, adjacent retargeting, equivalence propagation and flow deletion. Use post-jump RTL arm order to compare original and snapshot last uses against each CSE scan boundary; verify actual consumers in both passes. Count surviving SETs and deaths separately before allocation, then require the complete native gate |
@@ -280,43 +343,24 @@ that the range is code.
 | Literal return arms fold, or a final zero merges into an earlier return | Trace [both jump passes and shared outcome exits](matching-knowledge.md#boolean-return-expansion) | Share only real outcomes. Inspect target uses and duplicate return suffixes; preserve guard domains, calls, reads and ABI, then verify the complete native image |
 | Early return branches match but final branch polarity or a return literal differs | Trace [late reorganization and path liveness](matching-knowledge.md#compiler-evidence) | Compare `.sched2` and `.dbr`; check whether the other path overwrites the return register before another source control or native probe |
 | Join-spanning boolean result or extra return copy | Compare expression return with [constant-return arms](matching-knowledge.md#boolean-return-expansion) | Predict the RTL change; preserve arithmetic, accesses and ABI; require the complete live gate |
-| Overlay step dispatcher: scratchpad work-byte slot, scale by four, indirect call through a local handler table | `EMI_DEFINE_DISPATCHER` or `_THEN_RESET` in `include/bof3/emi/dispatchers.h`, with the matching `EMI_DISPATCH_WORK_BYTE_n` and shape variant | Emits the recorded 17-instruction, 68-byte body; keep the metadata block above the invocation. That body loads the record pointer before it creates the frame, so a hand-written variant keeps that order. Covers the bare body only: a dispatcher that keeps working after the call (second cell load, then a gate on the work bytes) is hand-written with one pointer local per original reload point and shares only the table extern. A hand-written bare body also reaches exact but duplicates the shared definition. Index width is part of the condition: the variants cover an unsigned byte slot only, and `n` is the record byte the original's `lbu` reads, not its table base, so a dispatcher that reads a wide slot of the same cell is not a macro gap. Cell identity is the same kind of condition: the macro hardcodes the scratchpad work slot, so a member whose record pointer comes from an in-image word is no macro gap either; declare both cells and call `TABLE[CELL[1]]()`, which reached the identical body. Write it by hand as `TABLE[SPAD_PTR_SLOT(u16, 0x44u)[slot]]()` with this function's own slot, which reaches exact on the first gate; do not add a variant or force the byte form. That typed base makes the subscript an element index, so a halfword at record byte 0x2C is `[0x16]`; spelling the byte offset loads the wrong halfword. A dispatcher whose whole handler table is two function addresses seeded into its own frame is neither shape: declare a local array of function pointers initialized with those addresses and index it with the work byte, because the macro indexes an extern table in place, never stores addresses into the frame and takes no index argument. How many of those words are seeded is not part of that condition: a two-word frame table with only word 0 seeded, called through the state byte with no index bound, matched on the first gate with the same local array and indexed call. An extern table copied into the frame is that same exclusion with an aggregate assignment in place of the initializer: `handlers = D_table; handlers.handlers[slot]();` emits the copied words and reads the call target back from them. An indexed body whose index arrives in the first argument register (`andi a0,0xFF` then `sll 2`, table loaded from its own immediate) is no macro gap either: declare the extern at the word the scaled index adds to and call `TABLE[index]()` in one statement Bind each dispatcher to the table base its own `%lo` names. Two same-target dispatchers that differ at that word need distinct table bindings and are shape siblings, not byte-identical clones. |
-| Shared gate byte selects one of two constants into one shared status halfword | `WORLD_DEFINE_GATE_STATUS(function_name, gate_byte, status_halfword, when_nonzero, when_zero)` in `include/world/gate_status.h` | Matched on the first gate, and the macro already backs exact users in four overlays. The macro carries the branch and both arm constants, so a hand-written `if`/`else` duplicates the shared definition and re-opens an arm order that this shape is sensitive to. Declare the gate cell at the width and signedness its own load shows; per function only the two constants and the cell identities vary. The macro tests against zero. An original that compares the byte to a nonzero literal needs a plain `if`/`else` with that literal. This form matched with the else constant in the branch delay slot. Two blocks that advance one field under separate gate conditions select no constant, so keep them ordinary `if`s rather than this macro. A gate that only decides whether a constant lands in a different cell, while the shared halfword takes one constant on both paths, selects no arm either: write the plain `if` and then the unconditional store. When only two gate values write constants to another cell, preserve the no-store path for all other values. A case-per-value `switch` with `default: break;` matched that shape; a plain `if`/`else` would change behavior. For a three-value selector that stores on every path, the two-constant macro is ineligible. A plain `if`/`else if`/`else` chain matched a measured `bnez`/`j`/`bne` body. Preserve its catch-all store rather than the no-store default of the other shape. The mirror order is a shape too: when the original's `sh` to the shared halfword precedes the guard's branch while the arm writes several byte cells, write that store first and put every arm store inside one `if`, which matched on the first gate with the arm's first constant filling the branch delay slot. Read that order off the `sh` position, not the arm spelling. A non-zero arm that stores a second cell after the status halfword is no macro shape either, since the macro emits one store per arm; write that pair as the plain `if`/`else` with the extra store following the status store, which matched on the first gate |
+| Overlay step dispatcher: scratchpad work-byte slot, scale by four, indirect call through a local handler table | `EMI_DEFINE_DISPATCHER` or `_THEN_RESET` in `include/bof3/emi/dispatchers.h`, with the matching `EMI_DISPATCH_WORK_BYTE_n` and shape variant | Emits the recorded 17-instruction, 68-byte body; keep the metadata block above the invocation. That body loads the record pointer before it creates the frame, so a hand-written variant keeps that order. Covers the bare body only: a dispatcher that keeps working after the call (second cell load, then a gate on the work bytes) is hand-written with one pointer local per original reload point and shares only the table extern. A hand-written bare body also reaches exact but duplicates the shared definition. Index width is part of the condition: the variants cover an unsigned byte slot only, and `n` is the record byte the original's `lbu` reads, not its table base, so a dispatcher that reads a wide slot of the same cell is not a macro gap. Cell identity is the same kind of condition: the macro hardcodes the scratchpad work slot, so a member whose record pointer comes from an in-image word is no macro gap either; declare both cells and call `TABLE[CELL[1]]()`, which reached the identical body. Write it by hand as `TABLE[SPAD_PTR_SLOT(u16, 0x44u)[slot]]()` with this function's own slot, which reaches exact on the first gate; do not add a variant or force the byte form. That typed base makes the subscript an element index, so a halfword at record byte 0x2C is `[0x16]`; spelling the byte offset loads the wrong halfword. A dispatcher whose whole handler table is two function addresses seeded into its own frame is neither shape: declare a local array of function pointers initialized with those addresses and index it with the work byte, because the macro indexes an extern table in place, never stores addresses into the frame and takes no index argument. How many of those words are seeded is not part of that condition: a two-word frame table with only word 0 seeded, called through the state byte with no index bound, matched on the first gate with the same local array and indexed call. An extern table copied into the frame is that same exclusion with an aggregate assignment in place of the initializer: `handlers = D_table; handlers.handlers[slot]();` emits the copied words and reads the call target back from them. An indexed body whose index arrives in the first argument register (`andi a0,0xFF` then `sll 2`, table loaded from its own immediate) is no macro gap either: declare the extern at the word the scaled index adds to and call `TABLE[index]()` in one statement. Bind each dispatcher to the table base its own `%lo` names. Two same-target dispatchers that differ at that word need distinct table bindings and are shape siblings, not byte-identical clones. |
+| Shared gate byte selects one of two constants into one shared status halfword | `WORLD_DEFINE_GATE_STATUS(function_name, gate_byte, status_halfword, when_nonzero, when_zero)` in `include/world/gate_status.h` | Matched on the first gate, and the macro already backs exact users in four overlays. The macro carries the branch and both arm constants, so a hand-written `if`/`else` duplicates the shared definition and re-opens an arm order that this shape is sensitive to. Declare the gate cell at the width and signedness its own load shows; per function only the two constants and the cell identities vary. The macro tests against zero. An original that compares the byte to a nonzero literal needs a plain `if`/`else` with that literal. This form matched with the else constant in the branch delay slot. Two blocks that advance one field under separate gate conditions select no constant, so keep them ordinary `if`s rather than this macro. A gate that only decides whether a constant lands in a different cell, while the shared halfword takes one constant on both paths, selects no arm either: write the plain `if` and then the unconditional store. When only two gate values write constants to another cell, preserve the no-store path for all other values. A case-per-value `switch` with `default: break;` matched that shape; a plain `if`/`else` would change behavior. For a three-value selector that stores on every path, the two-constant macro is ineligible. A plain `if`/`else if`/`else` chain matched a measured `bnez`/`j`/`bne` body. Preserve its catch-all store rather than the no-store default of the other shape. The mirror order is a shape too: when the original's `sh` to the shared halfword precedes the guard's branch while the arm writes several byte cells, write that store first and put every arm store inside one `if`, which matched on the first gate with the arm's first constant filling the branch delay slot. Read that order off the `sh` position, not the arm spelling. A non-zero arm that stores a second cell after the status halfword is no macro shape either, since the macro holds the loaded gate byte in one local, assigns both constants into it and emits a single `sh` after the merge, with the retained arm value filling the branch delay slot; write that pair as the plain `if`/`else` with the extra store following the status store, which matched on the first gate |
 | Shared status byte takes the constant 2 and a `u16` counter moves by 0x14 | `COUNTER_ADVANCE(function_name, counter, flag)` or `COUNTER_RETREAT(...)` in `include/game/counter_step.h` | Emits the recorded body: read the counter into a local, store 2 into the status byte, then store counter ± 0x14, so the read stays ahead of both stores. Exact users in several overlays share it, and a hand-written body duplicates the shared definition. Eligibility is that trio: mode 2, movement 0x14, `u16` counter extern; a body with another amount, another mode constant or extra cells is no macro gap, and an ineligible amount still owes this recorded order, since writing it in place as `counter = (u16)(counter - K)` around the status store measured 7 of 11 instructions and four bytes over the original while the load-first order matched, so take the order and not the macro |
 | Work-byte-`0xB` handler with three paths. Step 1 polls readiness, requests the resource in work byte 8 and stores step 2. Other nonzero steps update and finish when the state byte is zero. Step 0 finishes when ready. Finishing clears work byte `0x2B`, then published-record byte `0x12B` | `PLCHAR_DEFINE_WORK_BYTE_B_STEP(function_name, work_cell, record_cell, state_byte, ready, request, update)` in `include/bof3/plchar/work_byte_b_step.h` | Pass pointer-cell symbols, not loaded pointer locals. The macro preserves the original reload sites and owns `u8` step and done locals. Keep function metadata above the invocation. Reuse it only when all paths and stores agree with the original. Different paths, cleared cells or extra stores require a hand-written body, not a new macro variant |
-| Bytes identical to already-exact function | `bin/harness lift clone TARGET@0xADDRESS --from REPRESENTATIVE` | Dry-run emits self-contained raw `func_`/`D_` clone, no foreign header. Cross-target only: the adapter refuses a representative from the clone target's own binary (`clone target is the representative's own target`), so a byte-identical sibling inside one target is copied-body shape evidence, not a clone. A declared replica payload with its own target id, the representative's sha256 and its load address is that same binary, so the adapter refuses it too; the lift already covers the replica's span at that address, and a separate registry row for the replica is a parent decision. A twin the manifest already lists as a replica with no target directory has no source to clone either, so record that decline and transcribe the body from the sibling's shape instead of spending an adapter call. `--apply` wires and retains only on `lift gate` PASS, otherwise restores. Still needs own exact gate/required review; `--apply` runs that gate itself, so a lane reporting one gate batch takes the dry-run body and performs the same splat/map/manifest wiring by hand. That hand copy is also the route when this target already binds an evidenced name for a symbol the body touches, such as a shared scratchpad cell every sibling names: `--apply` writes the dry-run's raw spelling, while the copy keeps the evidenced name at the same bytes. The same choice is owed for the body itself: `--name` carries the evidenced name into the emitted body and, on `--apply`, into the splat row, the map row and the filename, so a body whose own evidence names it needs no rename afterwards, and the hand copy is owed only when the body carries more than the label — this target's own `@behavior` reference facts, or a symbol it binds by an evidenced name, since `--apply` writes referenced symbols in their raw spelling. An empty `rewrites` list does not validate donor comments. Replace donor-specific
-claims with this span's evidence, since byte gates do not check prose. A clone rewrite can misclassify a called function as `D_<ADDRESS>`. Check this target's map and generated `undefined_funcs_auto.txt`; reject a data rewrite for a proven callee and transcribe the body with the function binding. Check the composed `config/targets/shared/symbols.txt` too. A dry run replaced an established shared name with `D_<ADDRESS>` even though neither the target map nor `undefined_funcs_auto.txt` named that address. Transcribing the body with the shared name retained the exact match without taking `--apply`. Declined target-local include/unresolved external is recorded, never bypassed. The clone adapter has refused proven-equal donors that use accessor macros. It reported `unresolved external 'SPAD_PTR_SLOT': not declared, not in the target map` for `SPAD_PTR_SLOT` and the same refusal for `FIELD_REF`. Transcribing the byte-proven `FIELD_REF` body matched on the first gate. When the same limitation is already established for the donor, skip the adapter call, record the known limitation and transcribe the byte-proven body. Do not report an unissued call as a new refusal. A macro-defined representative can fail with `representative source requires one unambiguous function definition for 0xADDRESS` even when its bytes match. Record the refusal and invoke the same shared macro with this span's own bindings instead. Prove identity yourself with one `cmp` of the two payload spans at their own `runtime address - load address` offsets, which is the evidence the dry run would have reported. For a complete span containing no direct `j` or `jal` word, masking
-those immediates changes nothing, so a second scan with only that mask is redundant. A payload scan that
-finds no twin proves nothing until it is repeated with each `jal` immediate word
-masked: a relocation-different sibling differs exactly in those words, so the
-unmasked miss is inconclusive and a masked hit is that shape donor. Decode those
-words in the payload's own byte order: a big-endian pass reported a clean miss on a
-span whose six masked siblings sit in the corpus, so a zero-hit masked scan is
-inconclusive until it repeats little-endian. Masking covers
-call-target words only, so a miss that stands on a table base, an installed pointer or
-other data immediate is conclusive and owes no masked re-scan: that word belongs to
-this body, and no other payload holds it. A branch or jump target inside the span is
-not that class: it names the span's own code and relocates with the span, and one
-member measured against six siblings differed in exactly its two internal jump words,
-so mask those words too. A masked miss that stands only on one of them is that
-relocation, not proof that no twin exists. Masking a data immediate finds shape candidates, not byte-identity proof.
-Compare each candidate's original words before claiming a twin; the masked literal
-may distinguish otherwise matching bodies. A raw `func_<ADDRESS>` row carrying the same label at the same address in a sibling target is not that evidence: sibling targets holding one such label at one address held unrelated bytes there, so the twin is a span match, never a name match. Nor is a pointer word: a sibling that loads at the same base can carry this address only because it names its own same-offset function, so that word is a self-reference, not a copy of this body. A family whose members each encode their own table base, callee address, passed constant or carried bound (a loop count, a length) in the instruction words can never be byte-identical to one another, so clone is ineligible across it and the family's shared body is the shape lever. Narrow that set before scanning: when every call target and referenced symbol of the span resolves in the shared main executable, only those carried constants can differ, so a member that differs from its sibling in one bound alone declines clone and takes the sibling as shape donor. A bound is a data immediate, so that miss is conclusive and owes no masked re-scan. Read that lever as a transcription of statement order, guard nesting and local shapes, and re-read each member's own table base, callee address, passed constant and bound from its bytes: those are exactly the words that differ between members, so a donor constant copied across is the one defect the shape never shows. A duplicate group whose `promotion_blockers` read `["no exact member"]` declines for lack of a representative, not for lack of shape; the first member lifted to exact becomes the representative its byte-identical peers clone from. A twin that differs in how many calls it makes is not one of those peers at any byte count, so count call sites before comparing sizes. Scan every extracted payload under `out/binaries`: twins cross area directories and archive indices, so a search confined to the current family or area directory is incomplete evidence. Validate a zero-hit scan with a known twin set using the same parameters. If the scan misses those known twins, its setup is unverified and the negative result cannot decline clone. The one hit at the span's own offset in its own
-payload is that scan's self-match, so a one-hit scan is no twin however many words are
-masked. A byte miss still leaves a shape donor: one more pass that compares every
-word's opcode and register fields finds a member of the family whose immediates alone
-differ, and a miss at that granularity is the evidence that no sibling seeds these
-statements, so write them from this span's bytes and spend no variant on donor search Check whether another byte hit is a whole function or an interior block of a larger body. An identical interior block supplies shape evidence, not a whole-function clone representative. Hits in unlifted `asm` rows or an unlifted executable copy provide no authored representative either. Record the reason and use a proven exact sibling's shape where available. |
+| Bytes identical to already-exact function | `bin/harness lift clone TARGET@0xADDRESS --from REPRESENTATIVE` | Dry-run emits a self-contained raw `func_`/`D_` clone with no foreign header. Cross-target only: the adapter refuses a representative from the clone target's own binary (`clone target is the representative's own target`), so a byte-identical sibling inside one target is copied-body shape evidence, not a clone. A declared replica payload with its own target id, the representative's sha256 and its load address is that same binary, so the adapter refuses it too; the lift already covers the replica's span at that address, and a separate registry row for the replica is a parent decision. A twin the manifest lists as a replica with no target directory has no source to clone, so record that decline and transcribe the body from the sibling's shape instead of spending an adapter call. `--apply` wires and retains only on `lift gate` PASS, otherwise restores. It still needs its own exact gate and required review; because `--apply` runs that gate itself, a lane taking one gate batch copies the dry-run body and performs the same splat/map/manifest wiring by hand. That hand copy is also the route when this target already binds an evidenced name for a symbol the body touches, such as a shared scratchpad cell every sibling names: `--apply` writes the dry-run's raw spelling, while the copy keeps the evidenced name at the same bytes. `--name` carries the body's evidenced name into the emitted body and, on `--apply`, into the splat row, the map row and the filename, so a body its own evidence names needs no rename afterwards. The hand copy is owed only when the body carries more than the label: this target's own `@behavior` reference facts, or a symbol it binds by an evidenced name, since `--apply` writes referenced symbols in their raw spelling. An empty `rewrites` list does not validate donor comments. Replace donor-specific claims with this span's evidence, since byte gates do not check prose. A clone rewrite can misclassify a called function as `D_<ADDRESS>`. Check this target's map and generated `undefined_funcs_auto.txt`; reject a data rewrite for a proven callee and transcribe the body with the function binding. Check the composed `config/targets/shared/symbols.txt` too. A dry run replaced an established shared name with `D_<ADDRESS>` even though neither the target map nor `undefined_funcs_auto.txt` named that address; transcribing the body with the shared name retained the exact match without taking `--apply`. Declined target-local include or unresolved external is recorded, never bypassed. The adapter has refused proven-equal donors that use accessor macros, reporting `unresolved external 'SPAD_PTR_SLOT': not declared, not in the target map` for `SPAD_PTR_SLOT` and the same refusal for `FIELD_REF`. Transcribing the byte-proven `FIELD_REF` body matched on the first gate. When the donor already has that limitation, skip the adapter call, record it and transcribe the byte-proven body. Do not report an unissued call as a new refusal. A macro-defined representative can fail with `representative source requires one unambiguous function definition for 0xADDRESS` even when its bytes match; record the refusal and invoke the same shared macro with this span's own bindings. Prove identity yourself with one `cmp` of the two payload spans at their own `runtime address - load address` offsets, which is the evidence the dry run would have reported. A payload scan that finds no twin proves nothing until it is repeated with each `jal` immediate word masked: a relocation-different sibling differs exactly in those words, so the unmasked miss is inconclusive and a masked hit is that shape donor. Decode those words in the payload's own byte order: a big-endian pass reported a clean miss on a span whose six masked siblings sit in the corpus, so a zero-hit masked scan is inconclusive until it repeats little-endian. Masking covers call-target words only, so a miss that stands on a table base, an installed pointer or another data immediate is conclusive and owes no masked re-scan: that word belongs to this body, and no other payload holds it. A carried bound is such a data immediate, so that miss owes no re-scan either. A subrange that excludes every call, jump and data word (the frame-setting prologue, say) compares no relocation word, so a zero hit there declines clone with no masked pass owed, and a complete span holding no direct `j` or `jal` word owes no masked re-scan either, since that mask changes nothing. A branch or jump target inside the span is not that class: it names the span's own code and relocates with the span, and one member measured against six siblings differed in exactly its two internal jump words, so mask those words too. A masked miss that stands only on one of them is that relocation, not proof that no twin exists. Masking a data immediate finds shape candidates, not byte-identity proof, so compare each candidate's original words before claiming a twin; the masked literal may distinguish otherwise matching bodies. A prologue hit proves nothing by itself, because siblings share prologues, so it seeds a fuller scan, never a clone. Check whether another hit is a whole function or an interior block of a larger body: an identical interior block supplies shape evidence, not a whole-function clone representative, and hits in unlifted `asm` rows or an unlifted executable copy provide no authored representative either. Record the reason and use a proven exact sibling's shape where available. A raw `func_<ADDRESS>` row carrying the same label at the same address in a sibling target is not that evidence: sibling targets holding one such label at one address held unrelated bytes there, so the twin is a span match, never a name match. Nor is a pointer word: a sibling that loads at the same base can carry this address only because it names its own same-offset function, so that word is a self-reference, not a copy of this body. A family whose members each encode their own table base, callee address, passed constant or carried bound (a loop count, a length) in the instruction words can never be byte-identical to one another, so clone is ineligible across it and the family's shared body is the shape lever. Narrow that set before scanning: when every call target and referenced symbol of the span resolves in the shared main executable, only those carried constants can differ, so a member that differs from its sibling in one bound alone declines clone and takes the sibling as shape donor. Read that lever as a transcription of statement order, guard nesting and local shapes, and re-read each member's own table base, callee address, passed constant and bound from its bytes: those are exactly the words that differ between members, so a donor constant copied across is the one defect the shape never shows. A duplicate group whose `promotion_blockers` read `["no exact member"]` declines for lack of a representative, not for lack of shape; the first member lifted to exact becomes the representative its byte-identical peers clone from. A twin that differs in how many calls it makes is not one of those peers at any byte count, so count call sites before comparing sizes. Scan every extracted payload under `out/binaries` (the overlay payloads in `out/binaries/emi` plus the executable and logo payloads in `out/binaries/exe`), because twins cross area directories and archive indices, so a search confined to the current family or area directory is incomplete evidence. A decline names the subtree and the count it scanned: an overlay-only scan leaves an executable-resident twin unexamined, the count grows as extracts are added, and a count copied from a sibling is not this lane's measurement. Validate a zero-hit scan with a known twin set using the same parameters; if the scan misses those known twins, its setup is unverified and the negative result cannot decline clone. The one hit at the span's own offset in its own payload is that scan's self-match, so a one-hit scan is no twin however many words are masked. A byte miss still leaves a shape donor: one more pass that compares every word's opcode and register fields finds a member of the family whose immediates alone differ, and a miss at that granularity is the evidence that no sibling seeds these statements, so write them from this span's bytes and spend no variant on donor search |
 
 Search the applicable levers before exhaustion. Byte identity proves no shared ownership.
 
 For a grouped representative, use `--from TARGET@0xADDRESS` to select one attached
 function. Clone retains common declarations and includes and rejects target-local
 `*_internal.h` headers. If one proven-equal donor is refused for that reason, try a
-sibling with file-local externs before transcribing the body by hand. A dry run
-checks clone eligibility without a native gate. Clone compares both complete
-reviewed ranges using validated PS-X payload placement. Address rewriting changes only the selected source tag;
-body literals stay unchanged.
+sibling with file-local externs before transcribing the body by hand. A grouped
+member that is a macro-generated template rather than an ordinary function is
+refused as well (`grouped clone requires an ordinary function`), so its measured
+byte equality seeds a transcription under the macro that emitted it, not another
+clone call. A dry run checks clone eligibility without a native gate. Clone compares
+both complete reviewed ranges using validated PS-X payload placement. Address rewriting
+changes only the selected source tag; body literals stay unchanged.
 
 ## Review and stop
 
