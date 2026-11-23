@@ -46,6 +46,7 @@ def match_target_source(
             section_placements=manifest.section_placements.get(address, ()),
             diagnostics=diagnostics,
             image_evidence=image_evidence,
+            manifests={manifest.id.value: manifest} if manifest is not None else None,
         )
     )
 
@@ -63,10 +64,10 @@ def run_asm_diff_one(
         > 1
     ):
         return compare_selected_member(request, layout=repo)
-    resolved = _asm_diff_resolve(repo, request)
+    resolved = _asm_diff_resolve(repo, request, manifests=request.manifests)
     run_build_object(
         repo,
         resolved["source_path"],
         resolved["output_dir"] / "build.log" if request.diagnostics else None,
     )
-    return _asm_diff_compare(repo, request, resolved)
+    return _asm_diff_compare(repo, request, resolved, manifests=request.manifests)

@@ -13,6 +13,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from harness.build.compilation import compile_objects_parallel
 from harness.build.compiler import CONFIGURATION_PATH, sanitize_identifier
 from harness.common.lease import acquire_writer
 from harness.common.lexicon import mask_c_text
@@ -42,9 +43,17 @@ def _boundary(name: str) -> re.Pattern[str]:
 
 
 def _definition(name: str) -> re.Pattern[str]:
-    """A function definition: the name followed by a parameter list."""
+    """A function definition: a type and the name at the start of a line.
+
+    Anchoring matters: a call inside an `if (...)` condition is followed by a
+    brace too, and matching one made the transaction believe an unrelated unit
+    owned the name.
+    """
     return re.compile(
-        r"(?<![A-Za-z0-9_])" + re.escape(name) + r"\s*\([^;{]*\)\s*\{", re.S
+        r"^[A-Za-z_][A-Za-z0-9_ \t\*]*\b"
+        + re.escape(name)
+        + r"\s*\([^;{]*\)\s*\{",
+        re.MULTILINE | re.S,
     )
 
 
@@ -134,7 +143,8 @@ def _owned_source(root: Path, manifest, name: str) -> Path | None:
     """
     sources = manifest_source_paths(root, manifest)
     for path in sources:
-        if path.stem == name and path.is_file():
+        # A unit may keep an address tail while its map row does not.
+        if path.is_file() and _stem_base(path.stem) == _stem_base(name):
             return path
     for path in sources:
         if path.is_file() and _definition(name).search(path.read_text(encoding="utf-8")):
@@ -144,48 +154,68 @@ def _owned_source(root: Path, manifest, name: str) -> Path | None:
 
 def _collect_files(plan: RenamePlan, root: Path, manifest) -> None:
     boundary = _boundary(plan.old)
-    owned = list(manifest_source_paths(root, manifest)) + list(
-        manifest_header_paths(root, manifest)
-    )
-    for path in owned:
-        if path.is_file() and boundary.search(path.read_text(encoding="utf-8")):
-            plan.files.append(path)
-    if plan.source is not None and plan.source not in plan.files:
-        plan.files.append(plan.source)
-
     splat = root / manifest.splat
     map_file = map_path(root, plan.target)
     claim = root / CONFIG / plan.target / "target.toml"
-    for path in (splat, map_file, claim):
-        if path.is_file() and boundary.search(path.read_text(encoding="utf-8")):
+    config = [splat, map_file, claim]
+    owned = list(manifest_source_paths(root, manifest)) + list(
+        manifest_header_paths(root, manifest)
+    )
+
+    grouped = False
+    if plan.source is not None and _stem_base(plan.source.stem) == _stem_base(plan.old):
+        grouped = count_function_metadata(plan.source.read_text(encoding="utf-8")) > 1
+        if not grouped:
+            # A grouped unit keeps its filename: the name follows its first
+            # function, and one rename must not churn the unit others use.
+            plan.renames.append(
+                (plan.source, plan.source.with_name(plan.new + ".c"))
+            )
+
+    boundary_base = _boundary(_stem_base(plan.old))
+
+    def mentions(path: Path) -> bool:
+        if not path.is_file():
+            return False
+        text = path.read_text(encoding="utf-8")
+        return (
+            bool(boundary.search(text))
+            or bool(boundary_base.search(text))
+            or any(
+                before.relative_to(root).as_posix() in text
+                for before, _after in plan.renames
+            )
+        )
+
+    for path in owned + config:
+        if mentions(path) and path not in plan.files:
             plan.files.append(path)
 
-    if (
-        plan.source is not None
-        and plan.source.stem == plan.old
-        and count_function_metadata(plan.source.read_text(encoding="utf-8")) <= 1
-    ):
-        # A grouped unit keeps its filename: the name follows its first function,
-        # and one rename must not churn the unit that other functions use.
-        plan.renames.append((plan.source, plan.source.with_name(plan.new + ".c")))
+    if plan.renames:
         # Per-object flags and compiler ids are keyed by the unit's own path.
         flags = root / CONFIGURATION_PATH
         if flags.is_file() and _unit_key(root, plan.source) in flags.read_text(
             encoding="utf-8"
         ):
             plan.files.append(flags)
-    else:
-        # A path claim that embeds the old spelling cannot follow a name whose
-        # owning unit is not being renamed: that would leave a dangling claim.
-        for path in (splat, map_file, claim):
-            if path.is_file() and re.search(
-                re.escape(plan.old) + r"[^\s\"']*\.c", path.read_text(encoding="utf-8")
-            ):
-                plan.refuse(
-                    "path-claim",
-                    f"{path.relative_to(root).as_posix()} names a file after {plan.old} "
-                    "but no owned unit carries that stem",
-                )
+        return
+
+    # A path claim that embeds the old spelling cannot follow a name whose owning
+    # unit is not being renamed: that would leave a dangling claim.
+    for path in config:
+        if path.is_file() and re.search(
+            re.escape(plan.old) + r"[^\s\"']*\.c", path.read_text(encoding="utf-8")
+        ):
+            plan.refuse(
+                "path-claim",
+                f"{path.relative_to(root).as_posix()} names a file after {plan.old} "
+                "but no owned unit carries that stem",
+            )
+
+
+def _stem_base(stem: str) -> str:
+    """A unit stem without its trailing address tail, when it has one."""
+    return re.sub(r"_[0-9A-F]{8}$", "", stem)
 
 
 def _census(root: Path, manifests):
@@ -261,7 +291,10 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
             try:
                 before = _measure(plan, plan.source)
                 wrote = True
-                _write(plan, old, new)
+                try:
+                    _write(plan, old, new)
+                except (RuntimeError, ValueError, OSError) as error:
+                    raise RuntimeError(f"write refused: {error}") from error
                 # The manifest lists claimed unit paths, so the generation that
                 # describes the renamed tree is the one the proof must read.
                 plan.manifests = load_target_manifests(root)
@@ -285,6 +318,97 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
         plan.refuse("lease", str(error))
         return _payload(root, plan, applied=False, proof=(), attempted=True)
     return _payload(root, plan, applied=True, proof=(before, after), attempted=True)
+
+
+def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int = 4) -> list[dict]:
+    """Apply several renames with shared manifest and parallel compilation work.
+
+    Each row keeps its own write, proof and rollback. The batch only overlaps the
+    parts that do not interact: one manifest generation for the plan, one parallel
+    compile of the plan sources, one reload after the writes, and one parallel
+    compile of the renamed units before their proofs.
+    """
+    root = root.resolve()
+    plans = [_resolve(root, target, old, new) for target, old, new in requests]
+    ready = [plan for plan in plans if plan.passed]
+    payloads: list[dict] = []
+    for plan in plans:
+        if not plan.passed:
+            payloads.append(_payload(root, plan, applied=False, proof=(), attempted=True))
+    if not ready:
+        return payloads
+
+    compile_objects_parallel(
+        root, [plan.source for plan in ready if plan.source is not None], jobs=jobs
+    )
+    results: list[tuple[RenamePlan, dict]] = []
+    try:
+        with acquire_writer(root):
+            for plan in ready:
+                try:
+                    before = _measure(plan, plan.source)
+                    _write(plan, plan.old, plan.new)
+                except (RuntimeError, ValueError, OSError) as error:
+                    plan.refuse("write", str(error).strip()[:200])
+                    payloads.append(
+                        _payload(root, plan, applied=False, proof=(), attempted=True)
+                    )
+                    continue
+                results.append((plan, before))
+
+            if results:
+                try:
+                    generation = load_target_manifests(root)
+                except (ValueError, OSError) as error:
+                    for plan, _before in results:
+                        _write(plan, plan.new, plan.old)
+                        plan.refuse("manifests", str(error).strip()[:200])
+                    return payloads + [
+                        _payload(root, plan, applied=False, proof=(), attempted=True)
+                        for plan, _before in results
+                    ]
+                moved = [
+                    _source_after(plan)
+                    for plan, _ in results
+                    if _source_after(plan) is not None
+                ]
+                compile_objects_parallel(root, moved, jobs=jobs)
+
+            for plan, before in results:
+                plan.manifests = generation
+                plan.manifest = generation.get(plan.target) or plan.manifest
+                try:
+                    after = _measure(plan, _source_after(plan))
+                except (RuntimeError, ValueError, OSError) as error:
+                    _write(plan, plan.new, plan.old)
+                    plan.refuse("measure", str(error).strip()[:200])
+                    payloads.append(
+                        _payload(root, plan, applied=False, proof=(before,), attempted=True)
+                    )
+                    continue
+                if before != after:
+                    _write(plan, plan.new, plan.old)
+                    plan.refuse("proof", "the renamed source no longer measures the same")
+                    payloads.append(
+                        _payload(
+                            root, plan, applied=False, proof=(before, after), attempted=True
+                        )
+                    )
+                    continue
+                payloads.append(
+                    _payload(root, plan, applied=True, proof=(before, after), attempted=True)
+                )
+    except RuntimeError as error:
+        for plan in ready:
+            if not any(row is plan for row, _ in results):
+                continue
+            plan.refuse("lease", str(error))
+        payloads.extend(
+            _payload(root, plan, applied=False, proof=(), attempted=True)
+            for plan in ready
+            if any(row is plan for row, _ in results)
+        )
+    return payloads
 
 
 def _source_after(plan: RenamePlan) -> Path | None:
@@ -352,6 +476,15 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
             if after.is_file() and not before.exists():
                 after.rename(before)
     pattern = _boundary(source_name)
+    # A claim or Splat path names the unit's file exactly; an address tail or a
+    # neighbouring path segment would defeat a word-boundary rewrite.
+    paths = [
+        (
+            before.relative_to(plan.root).as_posix(),
+            after.relative_to(plan.root).as_posix(),
+        )
+        for before, after in plan.renames
+    ]
     if plan.source is not None and source_name == plan.old and plan.renames:
         after = plan.source.with_name(plan.new + ".c")
         before_key = _unit_key(plan.root, plan.source)
@@ -363,6 +496,12 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
             continue
         text = path.read_text(encoding="utf-8")
         rewritten = pattern.sub(target_name, text)
+        for old_path, new_path in paths:
+            rewritten = (
+                rewritten.replace(old_path, new_path)
+                if forward
+                else rewritten.replace(new_path, old_path)
+            )
         if before_key and path == plan.root / CONFIGURATION_PATH:
             rewritten = rewritten.replace(before_key, after_key)
         if rewritten != text:

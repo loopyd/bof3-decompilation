@@ -46,6 +46,9 @@ class AsmDiffRequest:
     section_placements: tuple[SectionPlacement, ...] | None = None
     diagnostics: bool = True
     image_evidence: bool = False
+    # A caller that already holds a validated manifest catalog passes it here;
+    # otherwise the resolve step reloads and re-validates every claim file.
+    manifests: Mapping[str, Any] | None = None
 
 
 def render_diff(original_lines: list[str], current_lines: list[str]) -> str:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import subprocess
 
@@ -84,3 +85,34 @@ def compile_sources(
             detail = str(error)
         failures.append(f"FAILED: {output}\n{detail}")
     return subprocess.CompletedProcess([], int(bool(failures)), "\n".join(failures), "")
+
+
+def compile_objects_parallel(
+    root: Path, sources: list[Path], *, jobs: int = 4
+) -> dict[Path, str]:
+    """Produce several objects through the same guarded driver, concurrently.
+
+    Each unit keeps its own invocation and its own gates; a wave only overlaps
+    them, so the compiler's per-object accounting is unchanged. Returns the
+    failure text per source that did not produce its object.
+    """
+    if jobs < 1:
+        raise ValueError("parallel compilation requires at least one job")
+    unique = list(dict.fromkeys(sources))
+    if not unique:
+        return {}
+
+    def build(source: Path) -> tuple[Path, str | None]:
+        output = root / "build" / source.relative_to(root).with_suffix(".o")
+        try:
+            result = compile_object(root, source, output)
+        except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+            return source, str(error)
+        return source, None if result.returncode == 0 else (result.stderr or "failed")
+
+    with ThreadPoolExecutor(max_workers=min(jobs, len(unique))) as pool:
+        return {
+            source: error
+            for source, error in pool.map(build, unique)
+            if error is not None
+        }
