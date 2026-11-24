@@ -9,13 +9,13 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeFF50And0014AndPopWhenWorkByte0SetAndByte2Neither0Nor3BmagicMagic08703_801EF99C.c",
+    "src/bof3/bmagic/callByte2ServicePop.c",
     "src/bof3/bmagic/incrementAdvanceCallInvoke.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBIs80BmagicMagic08703_801EF530.c",
+    "src/bof3/bmagic/stateGlobalCountdownCall4.c",
     "src/bof3/support/magic087_03_psyq.c",
     "src/bof3/bmagic/decrementGlobalClearZero.c",
     "src/bof3/bmagic/magic08703DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs82BmagicMagic08703_801EFCA0.c",
+    "src/bof3/bmagic/stateIncrementOn82.c",
     "src/bof3/bmagic/stateSetSetIncrement.c",
 ]
 psyq_source = "src/bof3/support/magic087_03_psyq.c"

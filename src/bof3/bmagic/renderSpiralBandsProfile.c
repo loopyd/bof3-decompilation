@@ -5,7 +5,7 @@
  * re-materializes the cell with its own lui/lw pair at every use, so the plain
  * named cell suffices; the same-target siblings
  * copyIntoBattlerForward
- * and incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC
+ * and stateSetGlobalCall
  * bind it the same way. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 

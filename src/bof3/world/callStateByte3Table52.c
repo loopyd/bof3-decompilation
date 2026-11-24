@@ -6,7 +6,7 @@
  * here. This dispatcher indexes it from 0x801F52A0, entry 8 of that run, so the
  * four entries it can reach are 0x801F3708, 0x801F3788, 0x801F3860 and
  * 0x801F3960. Its own address is not in the run: its only in-image reference is
- * the jal at 0x801F34E8 in the wrapper invokeTwoHelpersWorld01Area06513_801F34D8. */
+ * the jal at 0x801F34E8 in the wrapper invokeStateHelperPair. */
 extern void (*D_801F52A0[])(void);
 
 /* @source 0x801F36C4

@@ -1,7 +1,7 @@
 func_801EEC28 = 0x801EEC28;
 func_801EED38 = 0x801EED38;
 func_801EEFA4 = 0x801EEFA4;
-incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07103_801EF04C = 0x801EF04C;
+stateCounterCountdownAdvance2 = 0x801EF04C;
 stateByte9Below5 = 0x801EF15C;
 func_801EF1A4 = 0x801EF1A4;
 func_801EF2DC = 0x801EF2DC;
@@ -14,5 +14,5 @@ func_801EF810 = 0x801EF810;
 func_801EFA44 = 0x801EFA44;
 func_801EFCDC = 0x801EFCDC;
 func_801F0000 = 0x801F0000;
-clearRecordBytes0Through4BmagicMagic07103_801F006C = 0x801F006C;
+stateClearRecordBytes2 = 0x801F006C;
 D_801F00BC = 0x801F00BC;

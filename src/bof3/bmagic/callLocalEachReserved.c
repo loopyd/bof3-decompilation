@@ -20,7 +20,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* The action-slot pool at 0x801F0F1C, stride 0x78, and the word 0x74 view of the
  * same records at 0x801F0F90. The sibling
- * reserveFirstFreeRecordBmagicMagic08303_801F0DC0 proves the pool base, the
+ * resourceReserveFreeRecord5 proves the pool base, the
  * stride and the flags bit this body tests, and 24 records of stride 0x78 fill
  * the pool exactly to the end of this payload. */
 extern u8 D_801F0F1C[]; /* @source 0x801F0F1C @kind data */
@@ -36,7 +36,7 @@ extern void func_801EF080(void); /* @source 0x801EF080 @kind function */
 /* Work-byte-1 dispatcher over this overlay's local handler table at
  * 0x801F0F04, emitted by magic08303DispatchTables.c. */
 extern void
-dispatchStateByte1Table0f04BmagicMagic08303_801EFE54(void);
+callStateTableDispatch(void);
 
 /* @source 0x801EEC04
  * @behavior Overlay entry step: reads the scratchpad work-object pointer cell
@@ -77,7 +77,7 @@ void callLocalEachReserved(
       saved_word = *(u8 **)(D_801F0F90 + offset);
       g_battle_work = record;
       D_801EB4E0 = saved_word;
-      dispatchStateByte1Table0f04BmagicMagic08303_801EFE54();
+      callStateTableDispatch();
       D_801EB4E0 = saved_record;
       g_battle_work = saved_work;
     }

@@ -27,9 +27,9 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef300_801D0C04
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D0C04.c'
-    - '@behavior: Overlay work-state dispatcher of this payload, and its first code word: it loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its 0x18-byte frame, takes that object byte at +0x1, scales it by four and calls that entry of the three-word in-image code-pointer run at 0x801D27C0 with no arguments, discarding the result. That run holds 0x801D0C48, 0x801D0CC4 and 0x801D0D18, the last being the helper wrapper invokeHelper, so work bytes 0 through 2 select the handlers of this dispatcher; the index is not bounded before the scaled table load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D0C04, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the five exact siblings dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38, ..._801D0EAC, ..._801D1068, ..._801D13DC and ..._801D1588 record; a span comparison leaves one differing byte at 0x24 against the first three and that byte plus the page low byte at 0x25 against the last two, the table-address low immediate (0xC0 here).'
+    - callByteStepHandler
+    - '@source: src/bof3/scenario/callByteStepHandler.c'
+    - '@behavior: Overlay work-state dispatcher of this payload, and its first code word: it loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its 0x18-byte frame, takes that object byte at +0x1, scales it by four and calls that entry of the three-word in-image code-pointer run at 0x801D27C0 with no arguments, discarding the result. That run holds 0x801D0C48, 0x801D0CC4 and 0x801D0D18, the last being the helper wrapper invokeHelper, so work bytes 0 through 2 select the handlers of this dispatcher; the index is not bounded before the scaled table load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D0C04, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the five exact siblings callByteStepHandler2, ..._801D0EAC, ..._801D1068, ..._801D13DC and ..._801D1588 record; a span comparison leaves one differing byte at 0x24 against the first three and that byte plus the page low byte at 0x25 against the last two, the table-address low immediate (0xC0 here).'
   - - 72
     - asm
     - func_801D0C48
@@ -41,13 +41,13 @@ segments:
     - invokeHelper
   - - 312
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38.c'
+    - callByteStepHandler2
+    - '@source: src/bof3/scenario/callByteStepHandler2.c'
     - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its frame, takes that object''s unsigned byte at +0x1, scales it by four and calls that entry of the overlay work-state handler run at 0x801D27CC with no arguments, discarding the result. The run holds nineteen in-image code pointers, entry 0 = 0x801D0D7C through entry 18 = 0x801D16BC, so work bytes 0 through 18 select the overlay''s step handlers. It reads no other state and writes none, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D0D38, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the exact siblings dispatchWorkByte1HandlerScenarioScena0300_801F6E70 and dispatchWorkByte1HandlerScenarioScena0700_801F6DCC record, which differ from it only in the table-address immediate.'
   - - 380
     - c
-    - armCountdownAdvanceScenario
-    - '@source: src/bof3/scenario/armCountdownAdvanceScenario.c'
+    - armCountdownArm8
+    - '@source: src/bof3/scenario/armCountdownArm8.c'
     - '@behavior: Entry 0 of the overlay work-state handler table at 0x801D27CC (D_801D27CC), which the dispatcher at 0x801D0D38 selects with the unsigned work byte at scratchpad pointer slot 0x1F800044 + 0x1 and calls with no arguments: it stores 8 into that work object byte at +0x9, then advances the work byte at +0x1 to 1 so the next dispatch selects entry 1 (0x801D0DAC). Takes no arguments, returns nothing and reads no other state. Its 0x30-byte instruction stream is byte-identical apart from the immediate (0xF there, 8 here) to the exact lift armCountdownAndAdvanceWorkByte1ScenarioScena0300_801F7AE0, whose documentation reads the +0x9 byte as the work object countdown.'
   - - 428
     - asm
@@ -57,9 +57,9 @@ segments:
     - func_801D0E38
   - - 684
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef300_801D0EAC
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D0EAC.c'
-    - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its 0x18-byte frame, takes that object unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D27D8 with no arguments, discarding the result. That run holds sixteen in-image code pointers, entry 0 = 0x801D0EF0 through entry 15 = 0x801D16BC at 0x801D2814, so work bytes 0 through 15 select handlers; the index is not bounded before the scaled load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D0EAC, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the exact sibling dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38 records, which differs only in the table-address low immediate.'
+    - callByteStepHandler3
+    - '@source: src/bof3/scenario/callByteStepHandler3.c'
+    - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its 0x18-byte frame, takes that object unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D27D8 with no arguments, discarding the result. That run holds sixteen in-image code pointers, entry 0 = 0x801D0EF0 through entry 15 = 0x801D16BC at 0x801D2814, so work bytes 0 through 15 select handlers; the index is not bounded before the scaled load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D0EAC, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the exact sibling callByteStepHandler2 records, which differs only in the table-address low immediate.'
   - - 752
     - asm
     - func_801D0EF0
@@ -74,12 +74,12 @@ segments:
     - stateIncrementByte1Twice
   - - 1096
     - c
-    - invokeHelperScenarioSce15ef300_801D1048
+    - callOverlayHelper3
   - - 1128
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef300_801D1068
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D1068.c'
-    - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its 0x18-byte frame, takes that object''s unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D27EC with no arguments, discarding the result. That run holds eleven in-image code pointers, entry 0 = 0x801D10AC through entry 10 = 0x801D16BC at 0x801D2814, so work bytes 0 through 10 select handlers; the index is not bounded before the scaled load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D1068, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the exact siblings dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38 and dispatchWorkByte1HandlerScenarioSce15ef300_801D0EAC record; a span comparison leaves one differing halfword at 0x24, the table-address low immediate.'
+    - callByteStepHandler4
+    - '@source: src/bof3/scenario/callByteStepHandler4.c'
+    - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its 0x18-byte frame, takes that object''s unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D27EC with no arguments, discarding the result. That run holds eleven in-image code pointers, entry 0 = 0x801D10AC through entry 10 = 0x801D16BC at 0x801D2814, so work bytes 0 through 10 select handlers; the index is not bounded before the scaled load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D1068, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the exact siblings callByteStepHandler2 and callByteStepHandler3 record; a span comparison leaves one differing halfword at 0x24, the table-address low immediate.'
   - - 1196
     - asm
     - func_801D10AC
@@ -97,14 +97,14 @@ segments:
     - func_801D1370
   - - 2012
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef300_801D13DC
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D13DC.c'
-    - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its 0x18-byte frame, takes that object''s unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D2800 with no arguments, discarding the result. That run holds six in-image code pointers, entry 0 = 0x801D1420 through entry 5 = 0x801D16BC at 0x801D2814, so work bytes 0 through 5 select this dispatcher''s handlers; the index is not bounded before the scaled load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D13DC, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the three exact siblings dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38, ..._801D0EAC and ..._801D1068 record; a span comparison against each leaves the same two differing bytes at 0x24, the table-address low immediate.'
+    - callByteStepHandler5
+    - '@source: src/bof3/scenario/callByteStepHandler5.c'
+    - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its 0x18-byte frame, takes that object''s unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D2800 with no arguments, discarding the result. That run holds six in-image code pointers, entry 0 = 0x801D1420 through entry 5 = 0x801D16BC at 0x801D2814, so work bytes 0 through 5 select this dispatcher''s handlers; the index is not bounded before the scaled load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D13DC, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the three exact siblings callByteStepHandler2, ..._801D0EAC and ..._801D1068 record; a span comparison against each leaves the same two differing bytes at 0x24, the table-address low immediate.'
   - - 2080
     - c
     - stateCountdownSet
     - '@source: src/bof3/scenario/stateCountdownSet.c'
-    - '@behavior: Entry 0 of the overlay work-state handler table at 0x801D2800 (D_801D2800), which the dispatcher dispatchWorkByte1HandlerScenarioSce15ef300_801D13DC selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it clears that object byte at +0x9, writes 0x10 to its byte at +0x6, then increments the work byte at +0x1 to 1 so the next dispatch selects entry 1 (0x801D1460). The 0x40-byte instruction stream re-reads the scratchpad pointer cell before each byte store, and the +0x9 byte is the work countdown the exact sibling armCountdownAdvanceScenario documents.'
+    - '@behavior: Entry 0 of the overlay work-state handler table at 0x801D2800 (D_801D2800), which the dispatcher callByteStepHandler5 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it clears that object byte at +0x9, writes 0x10 to its byte at +0x6, then increments the work byte at +0x1 to 1 so the next dispatch selects entry 1 (0x801D1460). The 0x40-byte instruction stream re-reads the scratchpad pointer cell before each byte store, and the +0x9 byte is the work countdown the exact sibling armCountdownArm8 documents.'
   - - 2144
     - asm
     - func_801D1460
@@ -113,9 +113,9 @@ segments:
     - func_801D14DC
   - - 2440
     - c
-    - dispatchWorkByte1HandlerScenarioSce15ef300_801D1588
-    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D1588.c'
-    - '@behavior: Overlay work-state dispatcher: it loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its 0x18-byte frame, takes that object''s unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D280C with no arguments, discarding the result. That base is entry 16 of the nineteen-word run at 0x801D27CC, so only three of its words lie in the payload: entry 0 = 0x801D15CC, entry 1 = 0x801D1614 and entry 2 = 0x801D16BC at 0x801D2814, the last word before the payload ends at 0x801D2818. Work bytes 0 through 2 therefore select this dispatcher''s handlers, and the index is not bounded before the scaled load, so a larger byte reads past the payload end. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D1588, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the four exact siblings dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38, ..._801D0EAC, ..._801D1068 and ..._801D13DC record; a span comparison against each leaves the same two differing bytes at 0x24, the table-address low immediate.'
+    - callByteStepHandler6
+    - '@source: src/bof3/scenario/callByteStepHandler6.c'
+    - '@behavior: Overlay work-state dispatcher: it loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its 0x18-byte frame, takes that object''s unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D280C with no arguments, discarding the result. That base is entry 16 of the nineteen-word run at 0x801D27CC, so only three of its words lie in the payload: entry 0 = 0x801D15CC, entry 1 = 0x801D1614 and entry 2 = 0x801D16BC at 0x801D2814, the last word before the payload ends at 0x801D2818. Work bytes 0 through 2 therefore select this dispatcher''s handlers, and the index is not bounded before the scaled load, so a larger byte reads past the payload end. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D1588, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the four exact siblings callByteStepHandler2, ..._801D0EAC, ..._801D1068 and ..._801D13DC record; a span comparison against each leaves the same two differing bytes at 0x24, the table-address low immediate.'
   - - 2508
     - asm
     - func_801D15CC
@@ -124,7 +124,7 @@ segments:
     - func_801D1614
   - - 2748
     - c
-    - invokeHelperScenarioSce15ef300_801D16BC
+    - callOverlayHelper4
   - - 2780
     - c
     - stateTableLeadBytes

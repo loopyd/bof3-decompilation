@@ -15,7 +15,7 @@ extern void (*angleStepHandlerTable[])(void); /* @source 0x801D1F88 @kind table 
  * advance that same +0x1 byte themselves, so one byte both selects the step and
  * records progress through the run. The original does not bound the index before
  * the scaled table load, so a work byte above 7 reads past the run into the 16
- * zero bytes of the trailing row T_801D1FA8. Its 0x18-byte frame only keeps $ra at
+ * zero bytes of the trailing row angleStepPadTable. Its 0x18-byte frame only keeps $ra at
  * 0x10 across the indirect call, and the index load's delay slot and the table
  * load's delay slot both stay nops. No `jal` and no word of this payload holds
  * 0x801D0C04, so the overlay loader outside the payload enters it there. Its 68

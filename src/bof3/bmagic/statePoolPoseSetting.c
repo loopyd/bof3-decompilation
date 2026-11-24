@@ -6,7 +6,7 @@
  * it are cleared here for every record. The map row names the pool base, and the
  * two following bytes are bound by the address-anchored names the generated
  * undefined_syms_auto.txt carries for them. */
-extern u8 magic08103RecordFlags[]; /* @source 0x801EFA8C @kind data */
+extern u8 stateRecordFlags2[]; /* @source 0x801EFA8C @kind data */
 extern u8 D_801EFA8D[]; /* @source 0x801EFA8D @kind data */
 extern u8 D_801EFA8E[]; /* @source 0x801EFA8E @kind data */
 
@@ -97,7 +97,7 @@ void statePoolPoseSetting(void) {
 
     for (index = 0; index < 0x30; index++) {
         offset = index * 0x78;
-        magic08103RecordFlags[offset] = 0;
+        stateRecordFlags2[offset] = 0;
         D_801EFA8D[offset] = 0;
         D_801EFA8E[offset] = 0;
     }

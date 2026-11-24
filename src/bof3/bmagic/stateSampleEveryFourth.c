@@ -34,7 +34,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 s32 func_801782FC(s32 arg0);
 
 /* Record-clearing helper of this target, exact at 0x801F0454. */
-extern void clearRecordBytes0Through4BmagicMagic07303_801F0454(
+extern void stateClearRecordBytes4(
     void); /* @source 0x801F0454 */
 
 /* @source 0x801EFB14
@@ -100,6 +100,6 @@ void stateSampleEveryFourth(
   ((u8 *)D_801F21F0)[5] = count;
   if (count == 0) {
     D_801EB4E0[0x0B]--;
-    clearRecordBytes0Through4BmagicMagic07303_801F0454();
+    stateClearRecordBytes4();
   }
 }

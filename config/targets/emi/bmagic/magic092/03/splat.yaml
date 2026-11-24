@@ -42,9 +42,9 @@ segments:
     - '@source: src/bof3/bmagic/magic09203DispatchTables.c'
   - - 1092
     - c
-    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044.c'
-    - '@behavior: Entry 0 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which the byte-1 dispatcher at 0x801EF000 indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It dispatches one step on scratchpad work byte 2 through the handler-pointer word at 0x801F07C0, then, only when the reloaded work bytes 0 and 2 are both set, installs the work-record transform with projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0, draws the effect with renderOriginTimesCapped and restores the GTE matrix stack with PopMatrix. Frame 0x18 keeps $ra at 0x10; work bytes 0 and 2 stay offset-anchored.'
+    - callByte2ProjectDraw2
+    - '@source: src/bof3/bmagic/callByte2ProjectDraw2.c'
+    - '@behavior: Entry 0 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which the byte-1 dispatcher at 0x801EF000 indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It dispatches one step on scratchpad work byte 2 through the handler-pointer word at 0x801F07C0, then, only when the reloaded work bytes 0 and 2 are both set, installs the work-record transform with renderProjectTransform2, draws the effect with renderOriginTimesCapped and restores the GTE matrix stack with PopMatrix. Frame 0x18 keeps $ra at 0x10; work bytes 0 and 2 stay offset-anchored.'
   - - 1228
     - c
     - decrementPoolSeedingOrdinal
@@ -61,13 +61,13 @@ segments:
     - func_801EF388
   - - 2256
     - c
-    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0.c'
+    - renderProjectTransform2
+    - '@source: src/bof3/bmagic/renderProjectTransform2.c'
   - - 2432
     - c
     - renderOriginTimesCapped
     - '@source: src/bof3/bmagic/renderOriginTimesCapped.c'
-    - '@behavior: Translucent radial fan of eight gouraud triangles around the origin at the fixed scratchpad radius 0x180, drawn by the draw branch of dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044 under the work-record transform. Two draw-mode selectors over GetGraphType, a 0xC-byte packet before and after, eight POLY_G3 triangles stepping 0x200 of the 0x1000 circle, tint from work byte 9 shifted left three and capped at 0x80.'
+    - '@behavior: Translucent radial fan of eight gouraud triangles around the origin at the fixed scratchpad radius 0x180, drawn by the draw branch of callByte2ProjectDraw2 under the work-record transform. Two draw-mode selectors over GetGraphType, a 0xC-byte packet before and after, eight POLY_G3 triangles stepping 0x200 of the 0x1000 circle, tint from work byte 9 shifted left three and capped at 0x80.'
   - - 3068
     - c
     - callStateByte1Table07
@@ -125,8 +125,8 @@ segments:
     - '@behavior: Draw pass reached only from the draw branch of the dispatcher at 0x801F0260, so no jal outside that caller names this body in this payload. It seeds the scratchpad halfword at 0x1F800000 with the low four bits of rand plus 0x40 as the radius every sampled offset of the fan is scaled by, and the halfword at 0x1F80000E with ten times work byte 9 as the centre tint, then runs eight iterations of one 0xC-byte draw-mode packet plus one POLY_G3 translucent Gouraud triangle around the work record screen pair 0x2E and 0x30, taking a fresh g_PrimCursor primitive, stamping it through func_8017A97C, marking it semi-transparent, filling its other two vertices with the func_801782FC and func_801783C8 samples of the counter shifted left 9 and of the incremented counter scaled by the signed radius cell and shifted right 12, tinting the centre vertex from the ten-times-work-byte-9 cell and both rim vertices with one, and linking the 0x1C-byte packet at the work record projection words 0x34 and 0x38 with kind 2. The draw-mode tpage argument is 0xA5 when GetGraphType answers 1 or 2 and 0x35 otherwise. Frame 0x38 keeps ra at 0x30, s0 to s5 at 0x18 to 0x2C and the fifth draw-mode argument at 0x10; the two scratchpad cells and the work record offsets stay address-anchored.'
   - - 7000
     - c
-    - reserveFirstFreeRecordBmagicMagic09203_801F0758
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic09203_801F0758.c'
+    - resourceReserveFreeRecord6
+    - '@source: src/bof3/bmagic/resourceReserveFreeRecord6.c'
     - '@behavior: Leaf at 0x801F0758 that reserves the first of the 48 records in the pool at 0x801F07F8 whose flags byte has bit 0 clear, sets that bit and returns the index, or returns 0xFF once every record is occupied. It computes the record offset as the index times 0x78 (sll 4, subu, sll 3), re-materializes the pool address for the flags load and again for the store, tests the loaded byte with andi 0x1, and bounds the scan with sltiu 0x30 on the index masked to a byte. Its only in-image caller at 0x801EF0CC calls it three times, masks the result to a byte, compares that against 0xFF and indexes the same pool with the same 0x78 stride to fill record bytes 1 through 3 and word 0x74, so a zero-extended byte result is what the caller consumes. Leaf with no frame and no arguments; the pool cell at 0x801F07F8 stays address-anchored.'
   - - 7100
     - textbin

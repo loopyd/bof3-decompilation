@@ -4,7 +4,7 @@
  * bytes that follow it. The pool occupies 0x801F0670 through 0x801F21F0, the
  * last 0x1B80 bytes of the payload at stride 0x2C, and ends exactly at the
  * pointer cell 0x801F21F0 that the overlay publishes its stepped work record
- * through. The sibling lift reserveFirstFreeRecordBmagicMagic07303_801F03E8
+ * through. The sibling lift resourceReserveFreeRecord4
  * walks the same base with the same 0x2C stride and tests record byte 0x00 as
  * the reservation flag, so this body's byte 0x00/0x01/0x02 clear of every
  * record is the pool reset that precedes the claims. Splat binds the three

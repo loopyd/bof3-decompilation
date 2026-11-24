@@ -29,7 +29,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
  *           byte-2 dispatcher moves to step 1 instead of re-entering this
  *           handler. Reads or writes no other state and returns nothing.
  *           This function's own address is the word at 0x800C26C8, entry 0 of
- *           the handler run that dispatchStateByte2Table26c8BossBoss01316_800C1D58
+ *           the handler run that callStateByte2Table3
  *           indexes with work byte 2, inside the reviewed `textbin` row
  *           D_800C25D8, so the overlay dispatcher is its only caller and no jal
  *           in the payload names it. The 0x18-byte prologue frame only keeps $ra

@@ -39,8 +39,8 @@ segments:
     - func_801EEFA4
   - - 1100
     - c
-    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07103_801EF04C
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07103_801EF04C.c'
+    - stateCounterCountdownAdvance2
+    - '@source: src/bof3/bmagic/stateCounterCountdownAdvance2.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group, increments the three counter bytes at offsets 0x0, 0x1 and 0x2 of the 12-byte record selected by the work object''s unsigned byte 0xA, then re-reads the cell and decrements the work byte at 0x9 at byte width and, only when the stored value reaches zero, re-reads the cell and increments the work byte at 0x1, advancing the handler index the dispatcher func_801EEC28 selects entry 2 of the six-word run at 0x801EEC04 with; it reserves a 0x10-byte frame it never touches and writes no other state.'
   - - 1372
     - c
@@ -84,8 +84,8 @@ segments:
     - func_801F0000
   - - 5228
     - c
-    - clearRecordBytes0Through4BmagicMagic07103_801F006C
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic07103_801F006C.c'
+    - stateClearRecordBytes2
+    - '@source: src/bof3/bmagic/stateClearRecordBytes2.c'
   - - 5308
     - textbin
     - D_801F00BC

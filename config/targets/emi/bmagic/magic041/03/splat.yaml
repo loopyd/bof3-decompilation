@@ -100,8 +100,8 @@ segments:
     - '@source: src/bof3/bmagic/incrementByteAtOne.c'
   - - 2404
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF564
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF564.c'
+    - stateCountdownTwiceCall
+    - '@source: src/bof3/bmagic/stateCountdownTwiceCall.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 before the frame is set up, decrements the work object byte at offset 0x9 at byte width and returns while the stored value stays non-zero; only on zero it reads the shared battle record pointer at 0x801EB4E0, decrements that record byte 0xB at byte width and invokes func_801E5988 with no arguments, the byte store filling the call delay slot. The 0x18-byte frame keeps only $ra. Reached through word 12 of the overlay code pointer run at 0x801EEC04.'
   - - 2496
     - c

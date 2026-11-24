@@ -9,14 +9,14 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C18FC.c",
+    "src/bof3/boss/callIndexedHandler6.c",
     "src/bof3/boss/zeroResult8.c",
     "src/bof3/boss/initModeProgress32.c",
     "src/bof3/boss/noopHandlerBossBoss01316_800C2004.c",
     "src/bof3/boss/noopHandler40.c",
     "src/bof3/boss/noopHandler39.c",
-    "src/bof3/boss/dispatchStateByte2Table26c8BossBoss01316_800C1D58.c",
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C1E58.c",
+    "src/bof3/boss/callStateByte2Table3.c",
+    "src/bof3/boss/callIndexedHandler7.c",
     "src/bof3/boss/callStateTable2698Boss.c",
     "src/bof3/boss/publishBattleHooksBossBoss01316_800C200C.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkByte8AndStateTo2BossBoss01316_800C1D08.c",

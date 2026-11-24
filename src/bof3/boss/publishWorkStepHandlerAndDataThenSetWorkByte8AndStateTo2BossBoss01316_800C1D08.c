@@ -31,13 +31,13 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 /* This payload's byte-indexed dispatcher at 0x800C1E58, the handler this
  * publisher installs at +0xE4: it masks its argument with 0xFF, scales it by
  * four and calls the entry of the 0x800C26D4 run it selects. */
-void dispatchIndexedHandlerBossBoss01316_800C1E58(u8 index);
+void callIndexedHandler7(u8 index);
 
 /* @source 0x800C1D08
  * @behavior Step setup of this overlay work state machine: publishes three
  * words into the current enemy work record loaded from 0x801EB4E8 -- the data
  * row pointer 0x800C25F0 into +0xEC, the indexed dispatcher
- * dispatchIndexedHandlerBossBoss01316_800C1E58 into +0xE4 and the in-row pointer
+ * callIndexedHandler7 into +0xE4 and the in-row pointer
  * 0x800C2618 (0x800C25D8 + 0x40) into +0xE8 -- then stores 1 into the byte at
  * +8 of the work record the main program publishes at the scratchpad pointer
  * cell 0x1F800044 and 2 into that record's state byte at +1. It calls nothing:
@@ -60,7 +60,7 @@ void publishWorkStepHandlerAndDataThenSetWorkByte8AndStateTo2BossBoss01316_800C1
   Boss01316PublishWork *work = (Boss01316PublishWork *)D_801EB4E8;
 
   work->data_row = &D_800C25F0;
-  work->step_handler = dispatchIndexedHandlerBossBoss01316_800C1E58;
+  work->step_handler = callIndexedHandler7;
   work->step_data = &D_800C2618;
   D_1F800044[8] = 1;
   D_1F800044[1] = 2;

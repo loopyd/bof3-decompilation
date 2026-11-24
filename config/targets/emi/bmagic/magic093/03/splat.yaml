@@ -27,16 +27,16 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic09303_801EEC04
-    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic09303_801EEC04.c'
+    - callByte1Publish
+    - '@source: src/bof3/bmagic/callByte1Publish.c'
     - '@behavior: Per-frame entry: dispatch work byte 1 through a local two-entry handler pair, then publish each occupied pool record as the work object and its word 0x74 into 0x801EB4E0 and run that record byte 1 step.'
   - - 260
     - asm
     - func_801EED04
   - - 1068
     - c
-    - raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkBytes8AndAZeroBmagicMagic09303_801EF02C.c'
+    - raiseFlagInvokeHelper
+    - '@source: src/bof3/bmagic/raiseFlagInvokeHelper.c'
     - '@behavior: Entry 1 of the overlay''s local two-entry handler pair: raises bit 0x4 of the shared halfword at 0x801462E8 and invokes the shared helper when the work object''s word 0x08 masked with 0xFF00FF00 is zero.'
   - - 1152
     - c
@@ -56,8 +56,8 @@ segments:
     - '@behavior: Forward work byte 3, submit its selected record and advance work byte 2 when global record byte B is below eight.'
   - - 1956
     - c
-    - decrementGlobalWorkByte9AndInvokeHelperBmagicMagic09303_801EF3A4
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByte9AndInvokeHelperBmagicMagic09303_801EF3A4.c'
+    - stateCountdownGlobalCall
+    - '@source: src/bof3/bmagic/stateCountdownGlobalCall.c'
     - '@behavior: Decrement the shared battle work record byte 9 and invoke the shared helper, as one work byte 2 handler of this overlay.'
   - - 2008
     - c
@@ -84,8 +84,8 @@ segments:
     # @behavior Project work position pair from byte-derived radius and angle; advance byte 2 at byte 9 = 16.
   - - 2832
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBIs8BmagicMagic09303_801EF710
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs8BmagicMagic09303_801EF710.c'
+    - stateIncrementOnEight
+    - '@source: src/bof3/bmagic/stateIncrementOnEight.c'
     - '@behavior: Increment work byte 2 of the scratchpad work object when the shared battle work record byte B is eight.'
   - - 2896
     - c
@@ -94,8 +94,8 @@ segments:
     - '@behavior: Decrement work byte 9, then on zero decrement the shared battle work record byte B and clear the work object bytes.'
   - - 2988
     - c
-    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09303_801EF7AC
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09303_801EF7AC.c'
+    - renderProjectTransform3
+    - '@source: src/bof3/bmagic/renderProjectTransform3.c'
     - '@behavior: Project the work record position, compose the shared matrix under zero rotation and install the transform.'
   - - 3164
     - c
@@ -134,12 +134,12 @@ segments:
     - func_801F01F0
   - - 6588
     - c
-    - reserveFirstFreeRecordBmagicMagic09303_801F05BC
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic09303_801F05BC.c'
+    - resourceReserveFreeRecord7
+    - '@source: src/bof3/bmagic/resourceReserveFreeRecord7.c'
   - - 6688
     - c
-    - clearWorkBytesBmagicMagic09303_801F0620
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic09303_801F0620.c'
+    - stateClearWorkBytes4
+    - '@source: src/bof3/bmagic/stateClearWorkBytes4.c'
   - - 6768
     - asm
     - func_801F0670

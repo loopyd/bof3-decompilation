@@ -61,7 +61,7 @@ segments:
     - invokeOverlayHelper
   - - 956
     - c
-    - dispatchIndexedHandlerBossBoss00413_800C1BBC
+    - callIndexedHandler5
   - - 1012
     - c
     - noopHandler19

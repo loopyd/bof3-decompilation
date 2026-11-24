@@ -4,7 +4,7 @@ extern u8 *D_801F20DC; /* @source 0x801F20DC @kind data */
 extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern s32 func_801782FC(s32 phase); /* @source 0x801782FC @kind function */
-extern void clearRecordBytes0Through4BmagicMagic07403_801F0440(void); /* @source 0x801F0440 @kind function */
+extern void stateClearRecordBytes5(void); /* @source 0x801F0440 @kind function */
 
 /* @source 0x801EFB00
  * @behavior Handler selected by record byte 2 equal to 2 from the three-word
@@ -40,6 +40,6 @@ void mathAccumulateSampleFourth(void) {
   D_801F20DC[5] = count;
   if (count == 0) {
     D_801EB4E0[0x0B]--;
-    clearRecordBytes0Through4BmagicMagic07403_801F0440();
+    stateClearRecordBytes5();
   }
 }

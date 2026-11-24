@@ -70,8 +70,8 @@ segments:
     - '@behavior: Handler of the scratchpad work object, the sixth and last of the six code pointers in the run at 0x801EEC04 that the byte-2 dispatcher func_801EEFF4 copies into its own 0x30-byte frame and indexes with the work object unsigned byte 2, so it runs with no arguments; the word at 0x801EEC18 names this address and no jal in the payload does. It loads the work-object pointer cell at 0x1F800044 once before the 0x18-byte frame is created and tests work byte 0x0B for zero. Only when that byte is zero it loads the shared battle work record pointer at 0x801EB4E0 and decrements that record byte 0x0B at byte width, the stored value never tested, then re-reads the 0x1F800044 cell because the record store may alias the cell object and passes work byte 0x04 to the main-executable helper at 0x800A9820, and finally invokes the shared helper at 0x801E5988 with no arguments. The frame keeps only $ra at 0x10 and the body returns through the jr $ra at 0x801EF71C. The roles of work byte 0x0B, work byte 0x04 and record byte 0x0B are not established, so they stay offset-anchored.'
   - - 2852
     - c
-    - dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724.c'
+    - callWorkByte1Handler4
+    - '@source: src/bof3/bmagic/callWorkByte1Handler4.c'
   - - 2920
     - c
     - callInvokeDrawHelpers
@@ -107,13 +107,13 @@ segments:
     - '@behavior: Draw step of this overlay run, reached only from the draw branch of the dispatcher at 0x801EF768, which calls it with no arguments when record byte 0 has bit 0 set and byte 2 is non-zero. It selects the draw-mode texture page 0xA5 when the shared graphic type is 1 or 2 and 0x35 otherwise, installs it at g_PrimCursor with dfe 0 and dtd 1, and links a 0xC-byte draw-mode packet at the record words 0x14 and 0x18 with kind 2. It then publishes the burst into the scratchpad: the radius cell 0x1F800004 takes record byte 0x06 plus a rand result masked with 3, the centre cells 0x1F800000 and 0x1F800002 take record halfwords 0x20 and 0x22, the tint triplet 0x1F800008, 0x1F80000A and 0x1F80000C takes the colour-table triple at index record byte 0x03 times three plus byte 0x04 times twelve multiplied by record byte 0x05, and the alpha cell 0x1F80000E takes record byte 0x05 alone. It emits eight triangles, one per 0x200 step of the 0x1000 circle, each a semi-transparent gouraud POLY_G3 seeded by 0x8017A97C whose first vertex is the published centre and whose second and third are that centre plus the 0x801782FC and 0x801783C8 samples of the current and next phase scaled by the signed radius cell and shifted right 12. The first vertex takes the published tint triplet, the other two take the published alpha byte in all three colour components, and every iteration links a 0x1C-byte packet at the record words 0x14 and 0x18 with kind 2. It keeps a 0x30-byte frame and returns nothing.'
   - - 6120
     - c
-    - reserveFirstFreeRecordBmagicMagic07303_801F03E8
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic07303_801F03E8.c'
+    - resourceReserveFreeRecord4
+    - '@source: src/bof3/bmagic/resourceReserveFreeRecord4.c'
     - '@behavior: Reserves the first of 0xA0 records in the pool at 0x801F0670 whose flags byte has bit 0 clear, sets that bit and returns its index. Records have stride 0x2C. The original re-materializes the pool address for the flags load and again for the store, tests the loaded byte with andi 0x1, and returns 0xFF once all 0xA0 records are occupied, the scan bound being the sltiu 0xA0 on the index masked to a byte. Its only in-image caller at 0x801EF1A8 masks the result to a byte, compares that against 0xFF and indexes the same pool with the same 0x2C stride. Leaf with no frame, no saved registers and no calls.'
   - - 6228
     - c
-    - clearRecordBytes0Through4BmagicMagic07303_801F0454
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic07303_801F0454.c'
+    - stateClearRecordBytes4
+    - '@source: src/bof3/bmagic/stateClearRecordBytes4.c'
   - - 6308
     - asm
     - func_801F04A4

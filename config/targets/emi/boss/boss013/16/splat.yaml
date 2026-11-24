@@ -38,8 +38,8 @@ segments:
     - func_800C1860
   - - 252
     - c
-    - dispatchIndexedHandlerBossBoss01316_800C18FC
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C18FC.c'
+    - callIndexedHandler6
+    - '@source: src/bof3/boss/callIndexedHandler6.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the run interior word 0x800C2650, so the selected handler result stays in the return register. The index is bounded only to a byte and never checked against the run length; the slot after the scaled table load and the indirect call delay slot both stay nops, and no argument is passed. The 0x18-byte frame only keeps the return address across the call, the epilogue leaves the return value untouched, and no jal or word of this payload names 0x800C18FC, so the overlay entry reaches it.'
   - - 308
     - asm
@@ -48,7 +48,7 @@ segments:
     - c
     - raiseWorkHalfword
     - '@source: src/bof3/boss/raiseWorkHalfword.c'
-    - '@behavior: Entry 1 of the handler run the byte-indexed dispatcher dispatchIndexedHandlerBossBoss01316_800C18FC selects from, its base the run interior word 0x800C2650 of this payload D_800C25D8 data row: entry 0 is 0x800C1934, this body is entry 1, entry 2 is the inert handler 0x800C1A2C and entry 3 is the next payload body 0x800C1A78. Only the one word at 0x800C2654 holds this address and no jal in the payload names it, so the overlay dispatcher is what reaches it. It raises the unsigned halfword +0x94 of the current enemy work record published at 0x801EB4E8 from zero to 1 and leaves that halfword untouched when it is already nonzero; the 0x801EB4E8 cell is read once and the loaded pointer is reused for the store, so the body is a leaf with no frame that takes no arguments, returns nothing and keeps no state across the single store. Roles of the halfword are not established here.'
+    - '@behavior: Entry 1 of the handler run the byte-indexed dispatcher callIndexedHandler6 selects from, its base the run interior word 0x800C2650 of this payload D_800C25D8 data row: entry 0 is 0x800C1934, this body is entry 1, entry 2 is the inert handler 0x800C1A2C and entry 3 is the next payload body 0x800C1A78. Only the one word at 0x800C2654 holds this address and no jal in the payload names it, so the overlay dispatcher is what reaches it. It raises the unsigned halfword +0x94 of the current enemy work record published at 0x801EB4E8 from zero to 1 and leaves that halfword untouched when it is already nonzero; the 0x801EB4E8 cell is read once and the loaded pointer is reused for the store, so the body is a leaf with no frame that takes no arguments, returns nothing and keeps no state across the single store. Roles of the halfword are not established here.'
   - - 556
     - c
     - noopHandler39
@@ -85,33 +85,33 @@ segments:
     - c
     - publishWorkStepHandlerAndDataThenSetWorkByte8AndStateTo2BossBoss01316_800C1D08
     - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkByte8AndStateTo2BossBoss01316_800C1D08.c'
-    - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C25F0 into +0xEC of the current enemy work record from 0x801EB4E8, the byte-indexed dispatcher dispatchIndexedHandlerBossBoss01316_800C1E58 into +0xE4 and the in-row pointer 0x800C2618 (0x800C25D8 + 0x40) into +0xE8, then stores 1 into the byte at +8 of the work record published at the scratchpad pointer cell 0x1F800044 and 2 into that record state byte at +1, and returns without calling anything: the state byte is what the overlay dispatcher at 0x800C1CC4 scales into the run based at 0x800C2698, whose entry 0 this function is and whose entry 2 is the main-executable handler 0x801E35D8.'
+    - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C25F0 into +0xEC of the current enemy work record from 0x801EB4E8, the byte-indexed dispatcher callIndexedHandler7 into +0xE4 and the in-row pointer 0x800C2618 (0x800C25D8 + 0x40) into +0xE8, then stores 1 into the byte at +8 of the work record published at the scratchpad pointer cell 0x1F800044 and 2 into that record state byte at +1, and returns without calling anything: the state byte is what the overlay dispatcher at 0x800C1CC4 scales into the run based at 0x800C2698, whose entry 0 this function is and whose entry 2 is the main-executable handler 0x801E35D8.'
   - - 1368
     - c
-    - dispatchStateByte2Table26c8BossBoss01316_800C1D58
-    - '@source: src/bof3/boss/dispatchStateByte2Table26c8BossBoss01316_800C1D58.c'
+    - callStateByte2Table3
+    - '@source: src/bof3/boss/callStateByte2Table3.c'
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x800C26C8 with no arguments.'
   - - 1436
     - c
     - stateMainLookupRequest
     - '@source: src/bof3/boss/stateMainLookupRequest.c'
-    - '@behavior: Step 0 handler of this overlay work state machine: applies main lookup record 0xF9 through the shared main-executable helper 0x8014DD3C, clears bit 0 of the scratch work record byte at offset 0x24 published at the pointer cell 0x1F800044, requests resource 2 through func_8014D6B8, then re-reads the cell and advances that record step byte at offset 2 by one. This address is the word at 0x800C26C8, entry 0 of the byte-2 handler run dispatchStateByte2Table26c8BossBoss01316_800C1D58 indexes, and no jal in the payload names it.'
+    - '@behavior: Step 0 handler of this overlay work state machine: applies main lookup record 0xF9 through the shared main-executable helper 0x8014DD3C, clears bit 0 of the scratch work record byte at offset 0x24 published at the pointer cell 0x1F800044, requests resource 2 through func_8014D6B8, then re-reads the cell and advances that record step byte at offset 2 by one. This address is the word at 0x800C26C8, entry 0 of the byte-2 handler run callStateByte2Table3 indexes, and no jal in the payload names it.'
   - - 1524
     - asm
     - func_800C1DF4
   - - 1624
     - c
-    - dispatchIndexedHandlerBossBoss01316_800C1E58
+    - callIndexedHandler7
   - - 1680
     - c
     - stateOneBitBit
     - '@source: src/bof3/boss/stateOneBitBit.c'
-    - '@behavior: Entry 0 of the payload handler run at 0x800C26D4 that dispatchIndexedHandlerBossBoss01316_800C1E58 scales a byte index into. Reads the shared flag byte 0x801462ED once: while its bit 0 is set it stores 3 into the global byte 0x80146375 and returns; otherwise, while the overlay step countdown byte 0x800C26E0 is nonzero it stores one less there and clears 0x80146375 to 0; when that countdown is already zero it stores 1 into 0x80146375, stores 4 into the global byte 0x80146384, writes back the flag byte it read at entry with bit 0 set, and stores the global byte 0x80146322 less one. It calls nothing, takes no arguments, has no frame and returns no value, and only the run word at 0x800C26D4 holds its address, so no jal in the payload names it.'
+    - '@behavior: Entry 0 of the payload handler run at 0x800C26D4 that callIndexedHandler7 scales a byte index into. Reads the shared flag byte 0x801462ED once: while its bit 0 is set it stores 3 into the global byte 0x80146375 and returns; otherwise, while the overlay step countdown byte 0x800C26E0 is nonzero it stores one less there and clears 0x80146375 to 0; when that countdown is already zero it stores 1 into 0x80146375, stores 4 into the global byte 0x80146384, writes back the flag byte it read at entry with bit 0 set, and stores the global byte 0x80146322 less one. It calls nothing, takes no arguments, has no frame and returns no value, and only the run word at 0x800C26D4 holds its address, so no jal in the payload names it.'
   - - 1828
     - c
     - setupUiBattlerName
     - '@source: src/bof3/boss/setupUiBattlerName.c'
-    - '@behavior: Entry 1 of the handler run at 0x800C26D4 that dispatchIndexedHandlerBossBoss01316_800C1E58 scales a byte index into. Initializes the battle UI bundle slot 0 through 0x801D9484, copies eight bytes of the field record selected by the local-battler byte 0x80181B11 into the shared name slot 0x801490D8 through 0x801501E4, resolves texture 0x25 through 0x801502D0 and queues it through 0x801DE560 as event row kind 2 with halfword 0x2D, clears the overlay step countdown byte 0x800C26E0, runs the shared transition helper 0x801C1254 with 1 and 1, stores 4 into byte 0x29 of the work record published at the scratchpad pointer cell 0x1F800044, republishes the in-row pointer 0x800C25FC into the +0xEC data-row word of the current enemy work record from 0x801EB4E8, requests resource work byte +8 plus 4 through 0x8014D6B8 and raises bit 0x40 of the shared flag byte 0x801462ED. Only the word at 0x800C26D8 holds its address, so no jal in the payload names it.'
+    - '@behavior: Entry 1 of the handler run at 0x800C26D4 that callIndexedHandler7 scales a byte index into. Initializes the battle UI bundle slot 0 through 0x801D9484, copies eight bytes of the field record selected by the local-battler byte 0x80181B11 into the shared name slot 0x801490D8 through 0x801501E4, resolves texture 0x25 through 0x801502D0 and queues it through 0x801DE560 as event row kind 2 with halfword 0x2D, clears the overlay step countdown byte 0x800C26E0, runs the shared transition helper 0x801C1254 with 1 and 1, stores 4 into byte 0x29 of the work record published at the scratchpad pointer cell 0x1F800044, republishes the in-row pointer 0x800C25FC into the +0xEC data-row word of the current enemy work record from 0x801EB4E8, requests resource work byte +8 plus 4 through 0x8014D6B8 and raises bit 0x40 of the shared flag byte 0x801462ED. Only the word at 0x800C26D8 holds its address, so no jal in the payload names it.'
   - - 2052
     - c
     - noopHandlerBossBoss01316_800C2004

@@ -53,8 +53,8 @@ segments:
     - '@behavior: Entry 3 of the nine-word work-byte-1 handler pointer run this overlay keeps at 0x801F0878: loads the scratchpad work object once through the cell at 0x1F800044 and reads its unsigned byte 9; on the value 12 it writes 15 to byte 0xA, re-materializes the cell and increments byte 2, otherwise it stores byte 9 plus one back to byte 9. Takes no arguments, returns nothing and keeps no frame.'
   - - 1248
     - c
-    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF0E0
-    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF0E0.c'
+    - stateCountdownByteAdvance2
+    - '@source: src/bof3/bmagic/stateCountdownByteAdvance2.c'
     - '@behavior: Entry 3 of the nine-word work-byte-1 handler pointer run based at 0x801F0878: decrements the scratchpad work-object byte at offset 0xA as a byte-width read-modify-write and, only when it reaches zero, re-materializes the pointer cell at 0x1F800044 and increments the object byte at offset 0x2. Takes no arguments, returns nothing and keeps no frame.'
   - - 1324
     - c

@@ -62,15 +62,15 @@ segments:
     - func_801EF2F8
   - - 2344
     - c
-    - incrementWorkByte2WhenWorkByteBZeroBmagicMagic08303_801EF528
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenWorkByteBZeroBmagicMagic08303_801EF528.c'
+    - stateIncrementOnZero
+    - '@source: src/bof3/bmagic/stateIncrementOnZero.c'
   - - 2396
     - asm
     - func_801EF55C
   - - 2884
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic08303_801EF744
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic08303_801EF744.c'
+    - stateGlobalCountdownCall3
+    - '@source: src/bof3/bmagic/stateGlobalCountdownCall3.c'
     - '@behavior: Decrements shared work byte 0xB and invokes the helper when scratchpad work byte 0xB is zero.'
   - - 2964
     - asm
@@ -85,7 +85,7 @@ segments:
     - '@behavior: Draws a translucent gouraud ring of sixteen quads that steps a 12-bit turn in sixteenths between radius 128 and 256, tinting the inner vertices by the palette row selected by work byte 4 and scaled by work byte 9 and the outer vertices with the constant one.'
   - - 4692
     - c
-    - dispatchStateByte1Table0f04BmagicMagic08303_801EFE54
+    - callStateTableDispatch
     - '@source: src/bof3/bmagic/magic08303DispatchTables.c'
   - - 4760
     - c
@@ -118,13 +118,13 @@ segments:
     - func_801F0BA8
   - - 8640
     - c
-    - reserveFirstFreeRecordBmagicMagic08303_801F0DC0
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic08303_801F0DC0.c'
+    - resourceReserveFreeRecord5
+    - '@source: src/bof3/bmagic/resourceReserveFreeRecord5.c'
     - '@behavior: Reserves the first free record in the 24-entry pool, or returns 0xFF.'
   - - 8740
     - c
-    - clearWorkBytesBmagicMagic08303_801F0E24
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic08303_801F0E24.c'
+    - stateClearWorkBytes3
+    - '@source: src/bof3/bmagic/stateClearWorkBytes3.c'
   - - 8820
     - textbin
     - D_801F0E74

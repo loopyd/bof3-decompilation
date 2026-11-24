@@ -35,8 +35,8 @@ segments:
     - func_800C1848
   - - 160
     - c
-    - dispatchIndexedHandlerBossBoss01416_800C18A0
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss01416_800C18A0.c'
+    - callIndexedHandler8
+    - '@source: src/bof3/boss/callIndexedHandler8.c'
     - '@behavior: Byte-indexed overlay dispatcher: it masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B74 handler table, so the selected handler''s result stays in the return register'
   - - 216
     - c
@@ -49,15 +49,15 @@ segments:
     - noopHandler44
   - - 240
     - c
-    - dispatchStateByte1Table1b80BossBoss01416_800C18F0
-    - '@source: src/bof3/boss/dispatchStateByte1Table1b80BossBoss01416_800C18F0.c'
+    - callStateByte1Table3
+    - '@source: src/bof3/boss/callStateByte1Table3.c'
     - '@behavior: Overlay state dispatch on work-record byte 1 against the entry table at 0x800C1B80: it loads the work-record pointer from the scratchpad pointer cell 0x1F800044, takes that record byte at offset 1, scales it by four and calls the handler selected from the twelve-word 0x800C1B80 code pointer run whose first entry is the overlay entry point 0x800C1934, so the selected handler result stays in the return register'
   - - 308
     - asm
     - func_800C1934
   - - 408
     - c
-    - dispatchIndexedHandlerBossBoss01416_800C1998
+    - callIndexedHandler9
   - - 464
     - c
     - noopHandler45
@@ -69,12 +69,12 @@ segments:
     - noopHandler47
   - - 488
     - c
-    - publishBattleHooksBossBoss01416_800C19E8
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss01416_800C19E8.c'
-    - '@behavior: Publishes this overlay handler trio into the shared hook slots: func_800C1A28 into 0x801463A4, invokeZeroArgOverlay into 0x801463A8 and zeroResultBossBoss01416_800C1A20 into 0x801463AC'
+    - publishBattleHooks7
+    - '@source: src/bof3/boss/publishBattleHooks7.c'
+    - '@behavior: Publishes this overlay handler trio into the shared hook slots: func_800C1A28 into 0x801463A4, invokeZeroArgOverlay into 0x801463A8 and zeroResult5 into 0x801463AC'
   - - 544
     - c
-    - zeroResultBossBoss01416_800C1A20
+    - zeroResult5
   - - 552
     - asm
     - func_800C1A28
@@ -83,7 +83,7 @@ segments:
     - invokeZeroArgOverlay
   - - 660
     - c
-    - publishBattleHooksBossBoss01416_800C1A94
+    - publishBattleHooks8
   - - 716
     - c
     - zeroResult10

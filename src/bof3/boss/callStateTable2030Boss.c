@@ -29,7 +29,7 @@ extern void (*D_800C2030[])(void); /* @source 0x800C2030 @kind data */
  * payload word that names this entry is the run word 0x800C2018, so the
  * dispatcher at 0x800C18A0 is its caller: it takes no arguments and forwards
  * none. Same shape as the already-exact sibling
- * dispatchStateByte2Table1FECBossBoss00216_800C18A0 of this target, whose span
+ * callStateByte2Table2 of this target, whose span
  * differs from this one in the two low bytes of this table word alone.
  * @status exact
  * @match 100.00

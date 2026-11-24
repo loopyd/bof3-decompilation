@@ -1,10 +1,10 @@
 callStateTable19Boss = 0x800C1804;
-publishWorkStepHandlerAndDataThenSetStateTo2BossBoss01516_800C1848 = 0x800C1848;
+publishWorkStepHandler1 = 0x800C1848;
 dispatchIndexedHandlerBossBoss01516_800C18A0 = 0x800C18A0;
 noopHandler49 = 0x800C18D8;
 noopHandlerBoss015_800C18E0 = 0x800C18E0;
 noopHandler51 = 0x800C18E8;
-publishBattleHooksBossBoss01516_800C18F0 = 0x800C18F0;
+publishBattleHooks9 = 0x800C18F0;
 zeroResult11 = 0x800C1928;
 initModeProgress4B = 0x800C1930;
 invokeHelperArg = 0x800C197C;

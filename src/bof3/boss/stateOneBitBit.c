@@ -27,7 +27,7 @@ extern u8 D_800C26E0; /* @source 0x800C26E0 @kind data */
 
 /* @source 0x800C1E90
  * @behavior Overlay step handler and entry 0 of the payload handler run at
- * 0x800C26D4 that dispatchIndexedHandlerBossBoss01316_800C1E58 scales a byte
+ * 0x800C26D4 that callIndexedHandler7 scales a byte
  * index into. It reads the shared flag byte 0x801462ED once: while bit 0 is set
  * it stores 3 into the global byte 0x80146375 and returns. Otherwise, while the
  * overlay step countdown byte 0x800C26E0 is nonzero it stores one less there and

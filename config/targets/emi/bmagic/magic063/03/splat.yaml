@@ -46,8 +46,8 @@ segments:
     - '@source: src/bof3/bmagic/magic06303DispatchTables.c'
   - - 884
     - c
-    - callWorkHandlerBmagic
-    - '@source: src/bof3/bmagic/callWorkHandlerBmagic.c'
+    - callWorkHandler2
+    - '@source: src/bof3/bmagic/callWorkHandler2.c'
   - - 996
     - c
     - copyBattlerPoolCount
@@ -67,7 +67,7 @@ segments:
     - c
     - stateFortyComplementCounting
     - '@source: src/bof3/bmagic/stateFortyComplementCounting.c'
-    - '@behavior: Work byte 2 entry 3 of the five-word handler run at 0x801EEC04: reads the scratchpad work-object pointer cell at 0x1F800044 before its 0x20-byte frame and returns at once unless work byte 0xB is zero; the pass then claims pool records at 0x801F0454 through reserveFirstFreeRecordBmagicMagic06303_801F0354 0x5C times, and for each claim clears the record byte 1, writes the pass counter into byte 4, stores the work-object pointer in the record word 0x1C, seeds record byte 0x0A with one plus the low four bits of rand() added to the counter halved and masked with 0x70 and record byte 8 with 0x40 minus that value, and increments work byte 0xB through a fresh cell read; it then invokes the shared helper at 0x8015D71C with 0x101 and 0x102 and advances work byte 2, all in a 0x20-byte frame that keeps $ra, $s1 and $s0.'
+    - '@behavior: Work byte 2 entry 3 of the five-word handler run at 0x801EEC04: reads the scratchpad work-object pointer cell at 0x1F800044 before its 0x20-byte frame and returns at once unless work byte 0xB is zero; the pass then claims pool records at 0x801F0454 through resourceReserveFreeRecord3 0x5C times, and for each claim clears the record byte 1, writes the pass counter into byte 4, stores the work-object pointer in the record word 0x1C, seeds record byte 0x0A with one plus the low four bits of rand() added to the counter halved and masked with 0x70 and record byte 8 with 0x40 minus that value, and increments work byte 0xB through a fresh cell read; it then invokes the shared helper at 0x8015D71C with 0x101 and 0x102 and advances work byte 2, all in a 0x20-byte frame that keeps $ra, $s1 and $s0.'
   - - 1764
     - c
     - callIsZeroGlobal
@@ -128,8 +128,8 @@ segments:
     - '@behavior: Step handler of the bmagic effect record published through the pointer cell at 0x801F1054. It reads the shared battle work byte 0x02 through 0x801EB4E0 and branches on that byte equalling three: when it does it adds two to the record byte 0x0B and 0x40 to the record halfword angle at offset 0x0E, otherwise it adds one to the record byte 0x0B and 0x20 to the same angle. Both arms mask the sum to twelve bits and store it back at offset 0x0E. The shared rotator at 0x801782FC receives that signed halfword and its result shifted left five is added to the shared battle word at offset 0x34 and stored in the record word at offset 0x10; the second shared rotator at 0x801783C8 receives the same signed halfword and its result shifted left five is added to the shared battle word at offset 0x38 and stored in the record word at offset 0x14. It then decrements the record byte at offset 0x09 and, when that countdown reaches zero, decrements the shared battle byte 0x0B and invokes the record clear at 0x801F03B0, all in a 0x18-byte frame that keeps only $ra.'
   - - 5972
     - c
-    - reserveFirstFreeRecordBmagicMagic06303_801F0354
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic06303_801F0354.c'
+    - resourceReserveFreeRecord3
+    - '@source: src/bof3/bmagic/resourceReserveFreeRecord3.c'
     - '@behavior: Scans the 0x60 records of the pool at 0x801F0454, whose stride is 0x20, sets bit 0 of the first record whose flags byte has that bit clear and returns its index, or returns 0xFF once every record is occupied; the original keeps the mask-free counter and its byte-masked copy in separate registers, scales the masked copy once per iteration and reuses it for the load and the store, re-materializes the pool address for each access, and runs in no stack frame.'
   - - 6064
     - c

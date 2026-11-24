@@ -19,19 +19,19 @@ extern u8 D_80145E90[]; /* @source 0x80145E90 @kind table */
 extern u8 D_801EB2E8[]; /* @source 0x801EB2E8 @kind unknown */
 
 /* Record pool at 0x801F0454: 0x60 records of stride 0x20 whose byte 0 carries
- * the in-use bit reserveFirstFreeRecordBmagicMagic06303_801F0354 sets and whose
+ * the in-use bit resourceReserveFreeRecord3 sets and whose
  * bytes 0, 1 and 2 the reset at 0x801EECF8 clears. This body fills byte 1 of the
  * record it claims and the pointer word at +0x1C of that same record, and the
  * original reaches both as `lui $at,%hi(ADDR)` / `addu $at,$at,index*0x20` /
  * `sb|sw %lo(ADDR)($at)` over the flat addresses 0x801F0455 and 0x801F0470, so
  * each addressed field stays an offset of this one named base. */
-extern u8 magic06303RecordFlags[]; /* @source 0x801F0454 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801F0454 @kind data */
 
 /* Claimed-record allocator of this overlay: returns the index of the first pool
  * record whose flags byte has bit 0 clear, or 0xFF once all 0x60 are occupied,
  * which is the value this body tests. It sits behind a jal in the original, so
  * it keeps an extern prototype. */
-extern u8 reserveFirstFreeRecordBmagicMagic06303_801F0354(void); /* @source 0x801F0354 */
+extern u8 resourceReserveFreeRecord3(void); /* @source 0x801F0354 */
 
 /* PsyQ C runtime at 0x8017E3D4. Only the low four bits of the answer are used,
  * as the one-based byte written into work byte 9. */
@@ -54,7 +54,7 @@ extern int rand(void);
  *           to the third copy, then seeds work byte 9 with one plus the low four
  *           bits of rand(), clears work byte 0xB and increments work byte 2, the
  *           handler selector the dispatcher reads. It then claims one pool
- *           record through reserveFirstFreeRecordBmagicMagic06303_801F0354 and,
+ *           record through resourceReserveFreeRecord3 and,
  *           unless the answer is 0xFF, stamps the claimed record byte 1 with 1
  *           and its word 0x1C with the work-object pointer and increments work
  *           byte 0xB once more, so that byte ends as the number of records this
@@ -94,16 +94,16 @@ void copyBattlerPoolCount(void) {
   g_battle_work[9] = random + 1;
   g_battle_work[0xB] = 0;
   g_battle_work[2]++;
-  claimed = reserveFirstFreeRecordBmagicMagic06303_801F0354();
+  claimed = resourceReserveFreeRecord3();
   if (claimed != 0xFF) {
     slot = claimed * 0x20;
     /* The original reads the cell once for the pointer-word store and once more
      * for the trailing byte 0xB increment, and issues that second read before
      * the store; the two locals keep each read at its own site. */
     claims = g_battle_work;
-    magic06303RecordFlags[slot + 1] = 1;
+    stateRecordFlags[slot + 1] = 1;
     count = g_battle_work;
-    *(u8 **)(magic06303RecordFlags + slot + 0x1C) = claims;
+    *(u8 **)(stateRecordFlags + slot + 0x1C) = claims;
     count[0xB]++;
   }
 }

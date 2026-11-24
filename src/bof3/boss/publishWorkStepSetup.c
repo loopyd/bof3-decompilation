@@ -35,7 +35,7 @@ void func_8014D978(void);
  * pointer 0x800C1D90 (0x800C1D78 + 0x18, inside that same row) into +0xE8 --
  * then stores 2 into the state byte at +1 of the work record the main program
  * publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.
- * That state byte is the value dispatchStateByte1Table1da0BossBoss00716_800C1820
+ * That state byte is the value callStateByte1Table1
  * indexes its 0x800C1DA0 table by (row 0x800C1D78 + 0x28), and the word
  * 0x800C1864 is entry 0 of that table, so writing 2 leaves this entry for entry
  * 2; no jal names 0x800C1864 and the sole in-image reference is that table

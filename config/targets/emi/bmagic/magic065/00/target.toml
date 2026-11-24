@@ -13,7 +13,7 @@ sources = [
     "src/bof3/bmagic/copyEquipmentObjectName.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/invokeHelperBmagicMagic06500_801EF408.c",
+    "src/bof3/bmagic/callSharedHelper2.c",
     "src/bof3/bmagic/magic06500DispatchTables.c",
     "src/bof3/support/magic065_00_psyq.c",
 ]

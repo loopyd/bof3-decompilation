@@ -11,7 +11,7 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06803_801EEC18.c",
     "src/bof3/bmagic/decrementAfterHelpersGlobal.c",
     "src/bof3/bmagic/decrementResetInvokeZero.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic06803_801EFBE8.c",
+    "src/bof3/bmagic/renderProjectTransform.c",
     "src/bof3/bmagic/renderTilePrimitivesPad.c",
     "src/bof3/bmagic/copyTripletStorePointer.c",
 ]

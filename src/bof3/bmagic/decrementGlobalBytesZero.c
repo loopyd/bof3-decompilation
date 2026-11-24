@@ -2,7 +2,7 @@
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
-extern void clearWorkBytesBmagicMagic09303_801F0620(void); /* @source 0x801F0620 */
+extern void stateClearWorkBytes4(void); /* @source 0x801F0620 */
 
 /* @source 0x801EF750
  * @behavior Reads the scratchpad work-object pointer cell at 0x1F800044 and
@@ -39,6 +39,6 @@ extern void clearWorkBytesBmagicMagic09303_801F0620(void); /* @source 0x801F0620
 void decrementGlobalBytesZero(void) {
   if (--g_battle_work[0x09] == 0) {
     D_801EB4E0[0x0B]--;
-    clearWorkBytesBmagicMagic09303_801F0620();
+    stateClearWorkBytes4();
   }
 }

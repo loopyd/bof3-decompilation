@@ -12,7 +12,7 @@ typedef struct Area06513WorkRecord {
 } Area06513WorkRecord;
 
 /* @source 0x1F800044 @kind unknown */
-extern Area06513WorkRecord* area06513WorkCursor_1F800044;
+extern Area06513WorkRecord* stateWorkCursor;
 
 void func_80196070(void);
 void func_8014D978(void);
@@ -36,7 +36,7 @@ void stepPositionRunUpdates(void) {
   Area06513WorkRecord* work;
   Area06513WorkRecord* state;
 
-  work = area06513WorkCursor_1F800044;
+  work = stateWorkCursor;
   if (work->unk_0b != 0) {
     if ((work->unk_00 & 0x80) != 0) {
       func_80196070();
@@ -46,7 +46,7 @@ void stepPositionRunUpdates(void) {
     work->unk_0b = 1;
   }
 
-  state = area06513WorkCursor_1F800044;
+  state = stateWorkCursor;
   state->unk_34 += state->unk_0c;
   state->unk_38 += state->unk_10;
   func_8014D978();

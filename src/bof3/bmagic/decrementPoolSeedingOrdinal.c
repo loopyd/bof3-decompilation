@@ -11,7 +11,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Base of the 48-record pool this overlay keeps in its own image at 0x801F07F8,
  * right after the fifteen-word handler-pointer run at 0x801F07BC, with the same
- * 0x78-byte stride reserveFirstFreeRecordBmagicMagic09203_801F0758 scans. The
+ * 0x78-byte stride resourceReserveFreeRecord6 scans. The
  * original reaches each field as `lui $at,%hi(base)` / `addu $at,$at,index*0x78`
  * / `sb|sw %lo(base + field)($at)`, so the fields 0x0, 0x1, 0x2, 0xB and word
  * 0x74 all stay flat addresses inside this one base. Splat binds the address
@@ -21,7 +21,7 @@ extern u8 D_801F07F8[]; /* @source 0x801F07F8 @kind data */
 /* Claims the first record of that pool whose flags byte has bit 0 clear, sets
  * the bit and returns the index, or returns 0xFF when all 48 records are taken.
  */
-u8 reserveFirstFreeRecordBmagicMagic09203_801F0758(void);
+u8 resourceReserveFreeRecord6(void);
 
 /* Main-executable helper at 0x8015D71C. The handler family passes the selector
  * that this overlay wants the shared code to run; here it is 0x100 on the same
@@ -39,7 +39,7 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
  *   body below runs only on the tick that countdown reaches zero.
  *   On that tick the work record's byte 0xB is cleared to zero and then, in a
  *   three-iteration loop, the body claims a free record of the pool at
- *   0x801F07F8 through reserveFirstFreeRecordBmagicMagic09203_801F0758 and
+ *   0x801F07F8 through resourceReserveFreeRecord6 and
  *   skips the iteration when that claim returns 0xFF. The returned index is
  *   scaled by the 0x78-byte record stride and the record is seeded: byte 0x1
  *   receives the unsigned comparison `slot != 0` (so 0x0 for the first claim
@@ -74,7 +74,7 @@ void decrementPoolSeedingOrdinal(
   if (--g_battle_work[0x09] == 0) {
     g_battle_work[0x0B] = 0;
     for (slot = 0; slot < 3; slot++) {
-      index = reserveFirstFreeRecordBmagicMagic09203_801F0758();
+      index = resourceReserveFreeRecord6();
       if (index == 0xFF) {
         continue;
       }

@@ -22,7 +22,7 @@ void func_801E5988(void);
  *           overlay's five-entry code pointer run at 0x801EEC04
  *           (0x801EEFE4, 0x801EF110, 0x801EF190, 0x801EF1C8, 0x801EF2E4),
  *           whose only in-payload reader is the dispatcher
- *           callWorkHandlerBmagic: it copies the
+ *           callWorkHandler2: it copies the
  *           run into its own frame and indexes it with work byte 2, so this
  *           entry is invoked with no arguments. The body reads the scratchpad
  *           work-object pointer cell at 0x1F800044 once, before the 0x18-byte

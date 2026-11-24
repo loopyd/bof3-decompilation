@@ -108,8 +108,8 @@ segments:
     - '@behavior: Increments work byte 9 and, when the stored byte equals 0x10, reloads the scratchpad work pointer and increments work byte 2.'
   - - 5148
     - c
-    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06703_801F001C
-    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06703_801F001C.c'
+    - stateCountdownByteAdvance
+    - '@source: src/bof3/bmagic/stateCountdownByteAdvance.c'
     - '@behavior: Decrements work byte 0xA and, when it reaches zero, reloads the scratchpad work pointer and increments work byte 2.'
   - - 5224
     - c
@@ -130,8 +130,8 @@ segments:
     - '@behavior: Reads the scratchpad work record through the pointer cell 0x1F800044 and passes its unsigned byte 4 and unsigned byte 3 to the shared helper 0x800AEEC8, then stores 1 in work byte 0xB and increments work byte 2, which advances the two-entry handler table at 0x801F04E8 from its first word 0x801F02E4 to 0x801F033C.'
   - - 5948
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801F033C
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801F033C.c'
+    - stateGlobalCountdownCall2
+    - '@source: src/bof3/bmagic/stateGlobalCountdownCall2.c'
     - '@behavior: When scratchpad work byte 0xB is zero, decrements byte 0xB of the record selected by 0x801EB4E0 and invokes 0x801E5988.'
   - - 6028
     - c

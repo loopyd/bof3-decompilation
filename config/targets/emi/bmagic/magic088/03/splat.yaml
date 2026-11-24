@@ -44,8 +44,8 @@ segments:
     - func_801EEFA0
   - - 1136
     - c
-    - incrementWorkByte1WhenWorkByteBBelow2BmagicMagic08803_801EF070
-    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBBelow2BmagicMagic08803_801EF070.c'
+    - stateIncrementByteOne
+    - '@source: src/bof3/bmagic/stateIncrementByteOne.c'
   - - 1192
     - asm
     - func_801EF0A8
@@ -74,12 +74,12 @@ segments:
     - func_801EF524
   - - 2460
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08803_801EF59C
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08803_801EF59C.c'
+    - stateIncrementAtTen
+    - '@source: src/bof3/bmagic/stateIncrementAtTen.c'
   - - 2540
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic08803_801EF5EC
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic08803_801EF5EC.c'
+    - stateIncrementBelowTwo
+    - '@source: src/bof3/bmagic/stateIncrementBelowTwo.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and compares its byte at offset 0xB against two with an unsigned bound, so the guard is taken for every value below two; only on that path it reads the scratchpad work pointer cell at 0x1F800044 and increments the byte at offset 2 of that work object by one at byte width.'
   - - 2608
     - asm

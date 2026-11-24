@@ -65,7 +65,7 @@ void func_8014D6B8(u32 resource); /* @source 0x8014D6B8 */
 
 /* @source 0x800C1F24
  * @behavior Entry 1 of this payload's handler run at 0x800C26D4, the run
- * dispatchIndexedHandlerBossBoss01316_800C1E58 scales a byte index into: it
+ * callIndexedHandler7 scales a byte index into: it
  * initializes the battle UI bundle slot 0, copies eight bytes of the field
  * record selected by the local-battler byte 0x80181B11 into the shared name slot
  * 0x801490D8, resolves texture 0x25 through 0x801502D0 and queues it as event

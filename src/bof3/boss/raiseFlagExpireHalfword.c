@@ -10,7 +10,7 @@ extern u8 D_801462ED; /* @source 0x801462ED @kind unknown */
 /* @source 0x800C1A4C
  * @behavior Entry 3 of the twelve-word handler run based at 0x800C1FEC, the
  * word 0x800C1FF8 of the payload data row D_800C1F9C: the dispatcher
- * dispatchStateByte2Table1FECBossBoss00216_800C18A0 indexes that run from
+ * callStateByte2Table2 indexes that run from
  * work-record byte 2 and calls the selected entry with no arguments, and no jal
  * in the payload names this body, so the prologue and the return path alone
  * place its boundary. It loads the current enemy work record pointer published

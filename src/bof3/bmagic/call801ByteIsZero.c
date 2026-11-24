@@ -15,7 +15,7 @@ void func_801E5988(void);
  * @behavior Work byte 2 entry 2 of the five-entry code pointer run this
  *           overlay's leading data block holds at 0x801EEC04
  *           (0x801EEFE4, 0x801EF110, 0x801EF190, 0x801EF1C8, 0x801EF2E4),
- *           which the dispatcher callWorkHandlerBmagic
+ *           which the dispatcher callWorkHandler2
  *           copies into its own frame and indexes with work byte 2, so this
  *           entry is invoked with no arguments. The body reads the scratchpad
  *           work-object pointer cell at 0x1F800044 once, before the 0x18-byte

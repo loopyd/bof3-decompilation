@@ -26,7 +26,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table0eecBmagi
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table0f04BmagicMagic08303_801EFE54, D_801F0F04);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTableDispatch, D_801F0F04);
 
 /* @source 0x801EFE98
  * @behavior Overlay step dispatch: reads the state byte at +2 of

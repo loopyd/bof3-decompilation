@@ -59,8 +59,8 @@ segments:
     - '@behavior: Increment work byte 9; at 16 advance byte 2, otherwise increment byte 4 and call 0x800AF764 then 0x801EF580 with 0 and 15.'
   - - 2352
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBIs80BmagicMagic08703_801EF530
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBIs80BmagicMagic08703_801EF530.c'
+    - stateGlobalCountdownCall4
+    - '@source: src/bof3/bmagic/stateGlobalCountdownCall4.c'
     - '@behavior: When work byte B is 0x80, decrement global work byte B and invoke helper 0x801E5988.'
   - - 2432
     - asm
@@ -71,8 +71,8 @@ segments:
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 3484
     - c
-    - dispatchWorkByte2HandlerThenInvokeFF50And0014AndPopWhenWorkByte0SetAndByte2Neither0Nor3BmagicMagic08703_801EF99C
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeFF50And0014AndPopWhenWorkByte0SetAndByte2Neither0Nor3BmagicMagic08703_801EF99C.c'
+    - callByte2ServicePop
+    - '@source: src/bof3/bmagic/callByte2ServicePop.c'
     - '@behavior: Dispatch work byte 2, then call 0x801EFF50, 0x801F0014 and PopMatrix when byte 0 is nonzero and byte 2 is neither 0 nor 3.'
   - - 3628
     - asm
@@ -82,8 +82,8 @@ segments:
     - func_801EFAD4
   - - 4256
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBIs82BmagicMagic08703_801EFCA0
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs82BmagicMagic08703_801EFCA0.c'
+    - stateIncrementOn82
+    - '@source: src/bof3/bmagic/stateIncrementOn82.c'
   - - 4320
     - c
     - decrementGlobalClearZero

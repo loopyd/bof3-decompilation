@@ -1,7 +1,7 @@
 func_800C1804 = 0x800C1804;
 callStateTable21Boss = 0x800C1820;
 func_800C1864 = 0x800C1864;
-dispatchStateByte2Table21ecBossBoss00113_800C18BC = 0x800C18BC;
+callStateByte2Table1 = 0x800C18BC;
 func_800C1900 = 0x800C1900;
 callStateTable2204Boss = 0x800C1980;
 func_800C19C4 = 0x800C19C4;

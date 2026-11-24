@@ -40,7 +40,7 @@ support_sources = [
     "src/bof3/boss/noopHandler28.c",
     "src/bof3/boss/noopHandler27.c",
     "src/bof3/boss/publishBattleHooksBossBoss00816_800C1F9C.c",
-    "src/bof3/boss/publishBattleHooksBossBoss00816_800C2088.c",
+    "src/bof3/boss/publishBattleHooks5.c",
     "src/bof3/boss/publishBattleHooksBossBoss00816_800C2184.c",
     "src/bof3/boss/publishBattleHooks4.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1D1C.c",

@@ -45,7 +45,7 @@ segments:
     - func_800C18E4
   - - 356
     - c
-    - dispatchIndexedHandlerBossBoss01716_800C1964
+    - callIndexedHandler10
   - - 412
     - c
     - noopHandlerBossBoss01716_800C199C

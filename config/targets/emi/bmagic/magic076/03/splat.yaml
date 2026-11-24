@@ -81,8 +81,8 @@ segments:
     - func_801EF5F0
   - - 2620
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic07603_801EF63C
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic07603_801EF63C.c'
+    - stateCountdownTwiceCall3
+    - '@source: src/bof3/bmagic/stateCountdownTwiceCall3.c'
     - '@behavior: Decrement work byte 9; on zero decrement shared record byte B and invoke helper.'
   - - 2712
     - asm
@@ -124,7 +124,7 @@ segments:
     - func_801F03D4
   - - 6200
     - c
-    - clearWorkBytesBmagicMagic07603_801F0438
+    - stateClearWorkBytes2
   - - 6280
     - textbin
     - T_801F0488

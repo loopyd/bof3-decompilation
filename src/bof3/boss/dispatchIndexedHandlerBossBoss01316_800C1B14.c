@@ -27,7 +27,7 @@ extern Boss01316Handler D_800C268C[]; /* @source 0x800C268C @kind data */
  * $ra at 0x10 across that call, and the epilogue leaves $v0 untouched. No jal and
  * no word of this payload names 0x800C1B14, so the overlay entry is what reaches
  * it. Only the load word's %lo displacement differs from the already-exact
- * dispatcher dispatchIndexedHandlerBossBoss01316_800C18FC of this overlay, whose
+ * dispatcher callIndexedHandler6 of this overlay, whose
  * 56-byte body holds this statement order and these operand forms exactly.
  * @status exact
  * @match 100.00

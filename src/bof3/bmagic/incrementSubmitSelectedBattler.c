@@ -64,7 +64,7 @@ extern u8 D_801EB2E8[]; /* @source 0x801EB2E8 @kind unknown */
  *           no arguments, returns nothing and reads or writes no other state.
  *           Statement order, operand forms and declaration style follow the
  *           exact sibling
- *           incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC
+ *           stateSetGlobalCall
  *           (same pointer cell, same unsigned ramp into a u8 that is stored and
  *           then tested, same single call in the equality arm) and the exact
  *           sibling

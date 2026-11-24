@@ -14,8 +14,8 @@ sources = [
 ]
 support_sources = [
     "src/bof3/boss/callStateTable1Boss.c",
-    "src/bof3/boss/dispatchStateByte2Table1FECBossBoss00216_800C18A0.c",
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss00216_800C19C8.c",
+    "src/bof3/boss/callStateByte2Table2.c",
+    "src/bof3/boss/callIndexedHandler1.c",
     "src/bof3/boss/invokeZeroArgHelper.c",
     "src/bof3/boss/noopHandler9.c",
     "src/bof3/boss/zeroResult2.c",
@@ -40,7 +40,7 @@ support_sources = [
     "src/bof3/boss/setupFlagOwnerFields.c",
     "src/bof3/boss/runOwnerPendingBit.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss00216_800C1C08.c",
-    "src/bof3/boss/publishBattleHooksBossBoss00216_800C1D50.c",
+    "src/bof3/boss/publishBattleHooks1.c",
     "src/bof3/boss/callStateTable2000Boss.c",
     "src/bof3/boss/callStateTable2030Boss.c",
     "src/bof3/boss/raiseFlagExpireHalfword.c",

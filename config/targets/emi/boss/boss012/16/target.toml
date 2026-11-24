@@ -19,10 +19,10 @@ support_sources = [
     "src/bof3/boss/noopHandler37.c",
     "src/bof3/boss/noopHandler36.c",
     "src/bof3/boss/noopHandler35.c",
-    "src/bof3/boss/publishBattleHooksBossBoss01216_800C1B68.c",
+    "src/bof3/boss/publishBattleHooks6.c",
     "src/bof3/support/boss012_16_psyq.c",
     "src/bof3/boss/setupModeFlagProgress.c",
-    "src/bof3/boss/dispatchStateByte1Table1e74BossBoss01216_800C1804.c",
+    "src/bof3/boss/callStateByte1Table2.c",
     "src/bof3/boss/callWorkByte3State.c",
 ]
 psyq_source = "src/bof3/support/boss012_16_psyq.c"

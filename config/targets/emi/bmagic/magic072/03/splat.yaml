@@ -39,26 +39,26 @@ segments:
     - func_801EEFA4
   - - 1100
     - c
-    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07203_801EF04C
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07203_801EF04C.c'
+    - stateCounterCountdownAdvance3
+    - '@source: src/bof3/bmagic/stateCounterCountdownAdvance3.c'
     - '@behavior: Handler at entry 2, zero-based, of the code-pointer run at 0x801EEC04: the word at 0x801EEC0C holds this address, ahead of which the run reads 0x801EED38 and 0x801EEFA4. This overlay''s work-byte-1 dispatcher func_801EEC28 copies the six words of that run into its own frame, scales the work object''s unsigned byte 1 by four and calls the word it selects. The body reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group and, for each of the record''s three counter bytes, re-reads the work object''s unsigned byte 0xA, scales it by the 12-byte record stride into a byte offset and increments the selected record''s bytes 0x0, 0x1 and 0x2 with a byte-width read-modify-write. It then re-reads the cell, loads the work object''s unsigned byte 9 and decrements it in place, testing the stored value truncated to eight bits, so the tail group runs only when that countdown reaches zero; on zero it re-reads the cell and increments the work object''s byte 1 at byte width, advancing the stage index the dispatcher selects to the next entry of the same run. It keeps a 0x10-byte frame whose bytes it never touches, takes no arguments, returns nothing and writes no other state.'
   - - 1372
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07203_801EF15C
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07203_801EF15C.c'
+    - stateSetByteAdvance2
+    - '@source: src/bof3/bmagic/stateSetByteAdvance2.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, loads the work object''s unsigned byte at offset 0xB and compares it against five with an unsigned bound, so the arm runs for every value below five. Only on that path it stores 8 into the work byte at 0x9 - the countdown the entry-2 handler 0x801EF04C decrements at 0x801EF118 - then re-reads the cell and increments the work byte at 0x1, the stage index the entry dispatcher func_801EEC28 scales by four into the six-word run at 0x801EEC04, by one at byte width. This address is word 3 of that run. Takes no arguments, returns nothing, keeps no frame and writes no other state.'
   - - 1444
     - asm
     - func_801EF1A4
   - - 1756
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic07203_801EF2DC
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic07203_801EF2DC.c'
+    - stateForwardFlagCall
+    - '@source: src/bof3/bmagic/stateForwardFlagCall.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns when the work object''s unsigned byte at offset 0xB is non-zero; otherwise it passes the shared battle byte at 0x80146384 to func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes func_801E5988, keeping $ra in a 0x18-byte frame.'
   - - 1852
     - c
-    - dispatchWorkRecordByte1HandlerBmagicMagic07203_801EF33C
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07203_801EF33C.c'
+    - callWorkByte1Handler3
+    - '@source: src/bof3/bmagic/callWorkByte1Handler3.c'
     - '@behavior: Reads the work-record pointer cell at 0x801F17B4, scales that record''s unsigned byte at offset 1 by four, and invokes the selected entry of the code-pointer table based at 0x801F01B0 with no arguments; it keeps only $ra in a 0x18-byte frame and writes no state.'
   - - 1920
     - asm
@@ -86,8 +86,8 @@ segments:
     - func_801F0000
   - - 5228
     - c
-    - clearRecordBytes0Through4BmagicMagic07203_801F006C
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic07203_801F006C.c'
+    - stateClearRecordBytes3
+    - '@source: src/bof3/bmagic/stateClearRecordBytes3.c'
     - '@behavior: Stores zero into bytes 0x00 through 0x04 of the bmagic work record published through the pointer cell at 0x801F17B4, with one sb per byte. The cell is re-materialized and the record pointer reloaded before every store, and the last sb fills the return delay slot. It takes no arguments, returns nothing and writes no other state; the 0x50-byte span ends exactly at the trailing textbin row.'
   - - 5308
     - textbin

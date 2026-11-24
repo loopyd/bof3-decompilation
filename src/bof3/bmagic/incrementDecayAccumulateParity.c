@@ -6,7 +6,7 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind unknown */
 extern s16 D_1F800004; /* @source 0x1F800004 @kind data */
 extern s32 func_801782FC(s32 angle); /* @source 0x801782FC */
 extern s32 func_801783C8(s32 angle); /* @source 0x801783C8 */
-extern void clearWorkBytesBmagicMagic07603_801F0438(void); /* @source 0x801F0438 */
+extern void stateClearWorkBytes2(void); /* @source 0x801F0438 */
 
 /* @source 0x801EFD60
  * @behavior Adds one to work word 0x0C and publishes (work byte 0xB & 15)
@@ -53,7 +53,7 @@ void incrementDecayAccumulateParity(void) {
         work4 = g_battle_work;
         if (--work4[9] == 0) {
             D_801EB4E0[0xB]--;
-            clearWorkBytesBmagicMagic07603_801F0438();
+            stateClearWorkBytes2();
         }
     }
 }

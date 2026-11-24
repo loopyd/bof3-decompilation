@@ -24,7 +24,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           width (lbu $v0,0x2($a0) / addiu $v0,$v0,1 / sb $v0,0x2($a0)).
  *           The 84-byte body has no frame and no call, so it is a leaf: jr $ra
  *           with an empty delay slot. Word 1 of the pointer run
- *           workByte2HandlerTableC at 0x801F0384 holds 0x801F0100, so the
+ *           tableHandlerByte2C at 0x801F0384 holds 0x801F0100, so the
  *           entry is reached through that table and no jal in this 6032-byte
  *           payload names it. Takes no arguments and returns nothing.
  * @status exact

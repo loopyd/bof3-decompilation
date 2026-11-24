@@ -15,4 +15,4 @@ WORLD_DEFINE_RESET_ADVANCE_STATE(stateAdvanceScratchClone)
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_WORK_HALFWORDS_A0_50(setWorkHalfwordsWorld01Area06513_801F3438)
+WORLD_DEFINE_WORK_HALFWORDS_A0_50(stateWorkHalfwords)

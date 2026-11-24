@@ -2,7 +2,7 @@
 
 /* Record pool of this overlay at 0x801F07F8: 48 records of stride 0x78 whose
  * byte 0 is the flags byte that
- * reserveFirstFreeRecordBmagicMagic09203_801F0758 tests for bit 0 and sets on
+ * resourceReserveFreeRecord6 tests for bit 0 and sets on
  * reservation, and whose bytes 0x0B and word 0x74 the claimant at 0x801EF0CC
  * fills. This body clears bytes 0x00, 0x01 and 0x02 of every record, so the
  * three separate symbols the original addresses are the pool base and the two

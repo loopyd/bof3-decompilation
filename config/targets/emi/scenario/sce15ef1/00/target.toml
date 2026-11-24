@@ -45,8 +45,8 @@ sources = [
     "src/bof3/scenario/callHeadPairStep.c",
 ]
 support_sources = [
-    "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",
-    "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D2B44.c",
+    "src/bof3/scenario/callOverlayHelper2.c",
+    "src/bof3/scenario/callOverlayHelper1.c",
     "src/bof3/support/sce15ef1_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/sce15ef1_00_psyq.c"

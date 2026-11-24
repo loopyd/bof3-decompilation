@@ -8,20 +8,20 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Record pool at 0x801F0454: 0x60 records of stride 0x20 whose byte 0 carries
- * the in-use bit reserveFirstFreeRecordBmagicMagic06303_801F0354 sets and whose
+ * the in-use bit resourceReserveFreeRecord3 sets and whose
  * bytes 0, 1 and 2 the reset at 0x801EECF8 clears. This body fills the claimed
  * record byte 1, byte 4, bytes 8 and 0x0A and the pointer word at +0x1C, and
  * the original reaches each of them as `lui $at,%hi(ADDR)` /
  * `addu $at,$at,index*0x20` / `sb|sw %lo(ADDR)($at)` over the flat addresses
  * 0x801F0455, 0x801F0458, 0x801F045C, 0x801F045E and 0x801F0470, so each
  * addressed field stays an offset of this one named base. */
-extern u8 magic06303RecordFlags[]; /* @source 0x801F0454 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801F0454 @kind data */
 
 /* Claimed-record allocator of this overlay: returns the index of the first pool
  * record whose flags byte has bit 0 clear, sets that bit, or returns 0xFF once
  * all 0x60 are occupied, which is the value this body tests. It sits behind a
  * jal in the original, so it keeps an extern prototype. */
-extern u8 reserveFirstFreeRecordBmagicMagic06303_801F0354(void); /* @source 0x801F0354 */
+extern u8 resourceReserveFreeRecord3(void); /* @source 0x801F0354 */
 
 /* PsyQ C runtime at 0x8017E3D4. Only the low four bits of the answer are used,
  * as the random seed byte of the pair this body writes. */
@@ -43,7 +43,7 @@ void func_8015D71C(s32 arg0);
  *           before its 0x20-byte frame is created and returns at once when work
  *           byte 0xB is not zero, so the seeding pass below runs only while that
  *           byte is clear. The pass tries to claim a pool record 0x5C times
- *           through reserveFirstFreeRecordBmagicMagic06303_801F0354, gives up on
+ *           through resourceReserveFreeRecord3, gives up on
  *           a 0xFF answer without leaving the loop, and for each claimed record
  *           clears byte 1, writes the pass counter itself into byte 4, stores
  *           the work-object pointer into the record word at offset 0x1C, then
@@ -68,7 +68,7 @@ void func_8015D71C(s32 arg0);
  *           copySelectedBattlerRecordTripletPlus2000000SeedByte9RandomZeroByteB
  *           ClaimPoolRecordCountByteBAdvanceWorkByte2BmagicMagic06303_801EEFE4
  *           supplied the claim-and-stamp shape and the site-local cell reads,
- *           and reserveFirstFreeRecordBmagicMagic06303_801F0354 the byte-masked
+ *           and resourceReserveFreeRecord3 the byte-masked
  *           loop counter form; the byte pair, the pass counter store and the
  *           two fixed-selector calls come from this span's own bytes. The pool
  *           and cell addresses are this target's, so no byte-identical sibling
@@ -90,16 +90,16 @@ void stateFortyComplementCounting(void) {
     return;
   }
   for (index = 0; index < 0x5C; index++) {
-    claimed = reserveFirstFreeRecordBmagicMagic06303_801F0354();
+    claimed = resourceReserveFreeRecord3();
     if (claimed != 0xFF) {
       slot = claimed * 0x20;
       work = g_battle_work;
-      magic06303RecordFlags[slot + 1] = 0;
-      magic06303RecordFlags[slot + 4] = index;
-      *(u8 **)(magic06303RecordFlags + slot + 0x1C) = work;
+      stateRecordFlags[slot + 1] = 0;
+      stateRecordFlags[slot + 4] = index;
+      *(u8 **)(stateRecordFlags + slot + 0x1C) = work;
       value = ((index >> 1) & 0x70) + (rand() & 0xF) + 1;
-      magic06303RecordFlags[slot + 0xA] = value;
-      magic06303RecordFlags[slot + 8] = 0x40 - value;
+      stateRecordFlags[slot + 0xA] = value;
+      stateRecordFlags[slot + 8] = 0x40 - value;
       /* The original reads the cell once more after the pair stores. Its four
        * reloads land in two registers, so the body keeps two locals: this read
        * and the trailing work byte 2 advance share the second one, while the

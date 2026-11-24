@@ -32,7 +32,7 @@ support_sources = [
     "src/bof3/bmagic/renderNameResultLabels.c",
     "src/bof3/bmagic/renderPartyTargetPad.c",
     "src/bof3/bmagic/raiseInvokeHelperByte.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06000_801F00D0.c",
+    "src/bof3/bmagic/stateCountdownTwiceCall2.c",
     "src/bof3/bmagic/queueSlotPublishPointer.c",
     "src/bof3/bmagic/raiseTargetDeltaRoll.c",
     "src/bof3/bmagic/submitStoreEffectIncrement.c",

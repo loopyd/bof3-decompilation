@@ -11,13 +11,13 @@ sources = []
 support_sources = [
     "src/bof3/support/magic070_03_psyq.c",
     "src/bof3/bmagic/stateClearRecordBytes.c",
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07003_801EF15C.c",
+    "src/bof3/bmagic/stateSetByteAdvance.c",
     "src/bof3/bmagic/mathAccumulateSampleLimit.c",
     "src/bof3/bmagic/stateCountersSubmitZero.c",
     "src/bof3/bmagic/statePoolSourceActivate.c",
     "src/bof3/bmagic/renderSpokesPublishedCenter.c",
     "src/bof3/bmagic/renderRotatedCenterFull.c",
-    "src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07003_801EF33C.c",
-    "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07003_801EF04C.c",
+    "src/bof3/bmagic/callWorkByte1Handler2.c",
+    "src/bof3/bmagic/stateCounterCountdownAdvance.c",
 ]
 psyq_source = "src/bof3/support/magic070_03_psyq.c"

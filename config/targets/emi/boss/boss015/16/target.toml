@@ -9,11 +9,11 @@ load_address = 0x800C1800
 
 sources = [
     "src/bof3/boss/callStateTable19Boss.c",
-    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss01516_800C1848.c",
+    "src/bof3/boss/publishWorkStepHandler1.c",
     "src/bof3/boss/initModeProgress4B.c",
 ]
 support_sources = [
-    "src/bof3/boss/publishBattleHooksBossBoss01516_800C18F0.c",
+    "src/bof3/boss/publishBattleHooks9.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01516_800C18A0.c",
     "src/bof3/boss/invokeHelperArg.c",
     "src/bof3/boss/zeroResult11.c",

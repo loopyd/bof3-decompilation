@@ -19,7 +19,7 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
  * bytes at +0xA and +0xB of one record; the original reaches each of them as
  * `lui $at,%hi(ADDR)` / `addu $at,$at,index*0x78` / `sb|sw %lo(ADDR)($at)`, so
  * every addressed field keeps its own flat address inside this one base. */
-extern u8 magic08103RecordFlags[]; /* @source 0x801EFA8C @kind data */
+extern u8 stateRecordFlags2[]; /* @source 0x801EFA8C @kind data */
 
 u8 resourceReserveFreeRecord(void); /* @source 0x801EFA20 */
 
@@ -58,15 +58,15 @@ void reserveEveryFourthPointer(void) {
         index = resourceReserveFreeRecord();
         offset = index * 0x78;
         work = g_battle_work;
-        *(u32 *)&magic08103RecordFlags[offset + 0x74] = (u32)work;
-        magic08103RecordFlags[offset + 0xB] = work[9];
+        *(u32 *)&stateRecordFlags2[offset + 0x74] = (u32)work;
+        stateRecordFlags2[offset + 0xB] = work[9];
         frame = g_battle_work[9];
         if (frame < 100) {
             step = 8;
         } else {
             step = 8 - (frame - 100) / 4;
         }
-        magic08103RecordFlags[offset + 0xA] = step;
+        stateRecordFlags2[offset + 0xA] = step;
         g_battle_work[0xB]++;
     }
     if (++g_battle_work[9] >= 0x81) {

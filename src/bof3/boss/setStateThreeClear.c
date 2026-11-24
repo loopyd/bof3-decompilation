@@ -20,7 +20,7 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
 /* @source 0x800C1A00
  * @behavior Entry 2 of the twelve-word handler run based at 0x800C1FEC, the
  * word 0x800C1FF4 of the payload data row D_800C1F9C: the dispatcher
- * dispatchStateByte2Table1FECBossBoss00216_800C18A0 indexes that run from
+ * callStateByte2Table2 indexes that run from
  * work-record byte 2 and calls the selected entry with no arguments, and no jal
  * in the payload names this body, so its parameters stay structural. It loads
  * the current enemy work record pointer published at 0x801EB4E8 ahead of its own

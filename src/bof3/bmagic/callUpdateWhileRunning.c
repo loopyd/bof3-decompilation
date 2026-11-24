@@ -19,7 +19,7 @@ extern void (*workByte1HandlerTable[])(void); /* @source 0x801EF988 @kind data *
  * The remaining asm span func_801EF710 still references the address, so Splat's
  * generated undefined_syms_auto.txt binds it and no target-map row is needed.
  * Byte 0xB of that record is the work step the exact sibling
- * incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC
+ * stateSetGlobalCall
  * rewrites to 0xFF when the step finishes, which is the terminal value tested
  * here. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
@@ -28,7 +28,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * record's rotation and translation through SetRotMatrix/SetTransMatrix/
  * RotMatrix/MulMatrix2 and projects the record origin with RotTrans. Lifted
  * exact at 0x801EF654, and it takes no arguments. */
-void projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654(
+void renderProjectAngle(
     void);
 
 /* This overlay's large draw step: runs six spiral bands of eight triangles
@@ -96,7 +96,7 @@ void callUpdateWhileRunning(
   workByte1HandlerTable[g_battle_work[1]]();
   record = D_801EB4E0;
   if (record[0xB] != 0xFF) {
-    projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654();
+    renderProjectAngle();
     renderSpiralBandsProfile();
     func_801EF710();
     PopMatrix();

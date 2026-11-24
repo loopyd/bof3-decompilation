@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/bmagic/incrementPairReachTwenty.c",
     "src/bof3/bmagic/mathIncrementByteAdvance.c",
     "src/bof3/bmagic/incrementGlobalInvokeZero.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05903_801F0490.c",
+    "src/bof3/bmagic/resourceReserveFreeRecord2.c",
     "src/bof3/bmagic/dispatchByte2DrawSpokes.c",
     "src/bof3/bmagic/callProjectPairActive.c",
     "src/bof3/bmagic/copyHalfwordInstallTransform.c",

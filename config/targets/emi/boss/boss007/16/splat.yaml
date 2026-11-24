@@ -30,8 +30,8 @@ segments:
     - D_800C1804
   - - 32
     - c
-    - dispatchStateByte1Table1da0BossBoss00716_800C1820
-    - '@source: src/bof3/boss/dispatchStateByte1Table1da0BossBoss00716_800C1820.c'
+    - callStateByte1Table1
+    - '@source: src/bof3/boss/callStateByte1Table1.c'
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this payload handler run based at 0x800C1DA0 with no arguments, leaving the selected handler return value untouched. The original bounds nothing before the scaled table load and the delay slots after the index byte and after the table load stay nops. The 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal and no payload word names 0x800C1820, so the overlay loader steps it.'
   - - 100
     - c

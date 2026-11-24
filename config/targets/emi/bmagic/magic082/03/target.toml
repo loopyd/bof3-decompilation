@@ -12,10 +12,10 @@ sources = [
     "src/bof3/bmagic/renderFansOppositeDepths.c",
     "src/bof3/bmagic/stateCountersQueueZero.c",
     "src/bof3/bmagic/callInvokeHelpersPop.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic08203_801EF6C4.c",
+    "src/bof3/bmagic/stateCountdownTwiceCall4.c",
     "src/bof3/bmagic/stateIncrementByte2Below3.c",
-    "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic08203_801EFD74.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08203_801EF630.c",
+    "src/bof3/bmagic/stateCountdownByteAdvance3.c",
+    "src/bof3/bmagic/stateIncrementByteAdvance2.c",
     "src/bof3/bmagic/renderArgumentGreyCentre.c",
     "src/bof3/bmagic/stateWorkIncrementByte.c",
 ]

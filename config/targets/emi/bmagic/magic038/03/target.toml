@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/raiseFlag4ZeroCall.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic03803_801EF954.c",
+    "src/bof3/bmagic/stateGlobalCountdownCall.c",
     "src/bof3/bmagic/stepProjectionCountersReaches.c",
 ]
 support_sources = [

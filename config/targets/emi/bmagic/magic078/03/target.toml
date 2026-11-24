@@ -15,7 +15,7 @@ sources = [
     "src/bof3/bmagic/incrementInvokeHelper.c",
     "src/bof3/bmagic/stateByteRangeHit.c",
     "src/bof3/bmagic/stateProjectTransformZero.c",
-    "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF0E0.c",
+    "src/bof3/bmagic/stateCountdownByteAdvance2.c",
     "src/bof3/bmagic/stateClearByteIncrement.c",
     "src/bof3/bmagic/workByteAdvanceLeast81.c",
     "src/bof3/bmagic/decrementByteGlobalZero.c",

@@ -11,5 +11,5 @@ func_801EF710 = 0x801EF710;
 decrementGlobalStep = 0x801EF884;
 callStateTablef9 = 0x801EF8B8;
 callArgsSetStep = 0x801EF8FC;
-decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic03803_801EF954 = 0x801EF954;
+stateGlobalCountdownCall = 0x801EF954;
 D_801EF9A4 = 0x801EF9A4;

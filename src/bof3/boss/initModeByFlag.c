@@ -14,7 +14,7 @@ void initModeTuple520(void); /* @source 0x801DDF00 */
  * service that seeds the three-byte battle mode tuple with 5, 1 and 0; when the
  * bit is clear it runs initModeTuple520 instead, which seeds the same tuple
  * with 5, 2 and 0. It takes no arguments and returns nothing. The installer
- * publishBattleHooksBossBoss01416_800C1A94 materializes this function's address
+ * publishBattleHooks8 materializes this function's address
  * and stores it into the shared battle hook slot 0x801463A4; no `jal` in this
  * payload reaches it, so the main program calls it through that slot. Its body
  * is the same shape as the mode-transition members of the sibling overlays in

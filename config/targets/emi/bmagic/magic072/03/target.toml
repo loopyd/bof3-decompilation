@@ -8,13 +8,13 @@ splat = "config/targets/emi/bmagic/magic072/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic07203_801F006C.c",
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07203_801EF15C.c",
-    "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07203_801EF04C.c",
+    "src/bof3/bmagic/stateClearRecordBytes3.c",
+    "src/bof3/bmagic/stateSetByteAdvance2.c",
+    "src/bof3/bmagic/stateCounterCountdownAdvance3.c",
 ]
 support_sources = [
     "src/bof3/support/magic072_03_psyq.c",
-    "src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07203_801EF33C.c",
-    "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic07203_801EF2DC.c",
+    "src/bof3/bmagic/callWorkByte1Handler3.c",
+    "src/bof3/bmagic/stateForwardFlagCall.c",
 ]
 psyq_source = "src/bof3/support/magic072_03_psyq.c"

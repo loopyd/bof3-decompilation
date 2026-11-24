@@ -65,7 +65,7 @@ segments:
     - func_801EF394
   - - 2056
     - c
-    - invokeHelperBmagicMagic06500_801EF408
+    - callSharedHelper2
   - - 2088
     - c
     - copyEquipmentObjectName

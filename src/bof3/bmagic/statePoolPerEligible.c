@@ -7,7 +7,7 @@
  * two bytes that follow it with their own `lui` / `addu` / `sb` triple; the row
  * in this target's symbols.txt names the base and the generated
  * undefined_syms_auto.txt binds the other two. */
-extern u8 magic06303RecordFlags[]; /* @source 0x801F0454 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801F0454 @kind data */
 extern u8 D_801F0455[]; /* @source 0x801F0455 @kind data */
 extern u8 D_801F0456[]; /* @source 0x801F0456 @kind data */
 
@@ -122,7 +122,7 @@ void statePoolPerEligible(
 
   for (index = 0; index < 0x60; index++) {
     offset = index * 0x20;
-    magic06303RecordFlags[offset] = 0;
+    stateRecordFlags[offset] = 0;
     D_801F0455[offset] = 0;
     D_801F0456[offset] = 0;
   }

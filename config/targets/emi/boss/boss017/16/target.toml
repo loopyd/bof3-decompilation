@@ -13,7 +13,7 @@ sources = [
     "src/bof3/boss/dispatchStateByte2Table1adcBossBoss01716_800C18A0.c",
 ]
 support_sources = [
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss01716_800C1964.c",
+    "src/bof3/boss/callIndexedHandler10.c",
     "src/bof3/boss/invokeZeroArgBossBoss01716_800C1A50.c",
     "src/bof3/boss/zeroResultBossBoss01716_800C19FC.c",
     "src/bof3/boss/publishBattleHooksBossBoss01716_800C19C4.c",

@@ -8,10 +8,10 @@ splat = "config/targets/emi/bmagic/magic091/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/incrementWorkByteBAddTwoToWorkByteADecrementWorkByte9ByTwoThenAdvanceWorkByte1At10BmagicMagic09103_801EF09C.c",
+    "src/bof3/bmagic/statePairTwoCountdown.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/incrementWorkBytes9AThenAdvanceWorkByte1At10BmagicMagic09103_801EEE3C.c",
+    "src/bof3/bmagic/stateIncrementPairAdvance2.c",
     "src/bof3/support/magic091_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic091_03_psyq.c"

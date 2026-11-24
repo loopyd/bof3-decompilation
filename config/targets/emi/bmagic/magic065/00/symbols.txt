@@ -14,6 +14,6 @@ func_801EF250 = 0x801EF250;
 stateWorkHelperAdvance = 0x801EF2E0;
 func_801EF328 = 0x801EF328;
 func_801EF394 = 0x801EF394;
-invokeHelperBmagicMagic06500_801EF408 = 0x801EF408;
+callSharedHelper2 = 0x801EF408;
 copyEquipmentObjectName = 0x801EF428;
 func_801EF508 = 0x801EF508;

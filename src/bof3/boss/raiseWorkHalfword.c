@@ -6,7 +6,7 @@ extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
 
 /* @source 0x800C1A04
  * @behavior Entry 1 of the handler run the byte-indexed dispatcher
- * dispatchIndexedHandlerBossBoss01316_800C18FC selects from, its base the run
+ * callIndexedHandler6 selects from, its base the run
  * interior word 0x800C2650 of this payload's D_800C25D8 data row: entry 0 is
  * 0x800C1934, this body is entry 1, entry 2 is the inert handler 0x800C1A2C and
  * entry 3 is 0x800C1A78. Only the one word at 0x800C2654 holds this address and

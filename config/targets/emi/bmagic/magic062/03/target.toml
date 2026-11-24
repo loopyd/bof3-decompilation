@@ -11,12 +11,12 @@ sources = [
     "src/bof3/bmagic/stateByte9Below2.c",
     "src/bof3/bmagic/mathByteDecrementZero.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06203_801EEC1C.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic06203_801EF588.c",
+    "src/bof3/bmagic/stateIncrementByteAdvance.c",
     "src/bof3/bmagic/stateCountersAdvanceByte1.c",
 ]
 support_sources = [
     "src/bof3/support/magic062_03_psyq.c",
     "src/bof3/bmagic/magic06203DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic06203_801EF5D8.c",
+    "src/bof3/bmagic/stateIncrementBelowThree.c",
 ]
 psyq_source = "src/bof3/support/magic062_03_psyq.c"

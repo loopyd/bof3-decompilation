@@ -39,7 +39,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           no frame and touches no other state. The word at 0x801EEC08 is
  *           entry 1 of this overlay's leading five-word handler run based at
  *           0x801EEC04 (0x801EEFE4, 0x801EF110, 0x801EF190, 0x801EF1C8,
- *           0x801EF2E4), which callWorkHandlerBmagic
+ *           0x801EF2E4), which callWorkHandler2
  *           indexes with work byte 2; no jal in this payload reaches the span,
  *           which is the dispatch-table shape rather than a missing caller.
  *           Statement order, operand forms and declaration style follow the

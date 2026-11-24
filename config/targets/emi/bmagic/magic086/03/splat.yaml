@@ -51,8 +51,8 @@ segments:
     - func_801EF024
   - - 1384
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic08603_801EF168
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic08603_801EF168.c'
+    - stateForwardFlagCall2
+    - '@source: src/bof3/bmagic/stateForwardFlagCall2.c'
     - '@behavior: When scratchpad work byte B is FF, forward the shared battle byte, set mask 0x4 in the shared battle halfword and invoke the shared helper.'
   - - 1480
     - asm
@@ -66,18 +66,18 @@ segments:
     - func_801EF2BC
   - - 1844
     - c
-    - incrementWorkBytes9AThenAdvanceWorkByte2At10BmagicMagic08603_801EF334
+    - stateIncrementPairAdvance
     # @source 0x801EF334
     # @behavior Increment work bytes 9 and A, then advance byte 2 when byte 9 is 0x10.
   - - 1952
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic08603_801EF3A0
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic08603_801EF3A0.c'
+    - stateIncrementOnTwo
+    - '@source: src/bof3/bmagic/stateIncrementOnTwo.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once and tests its byte at offset 0xB against two; only when that byte equals 2 it loads the scratchpad work-object pointer cell at 0x1F800044 with its own lui/lw pair and increments that object''s byte at offset 0x2 at byte width. Takes no arguments, returns nothing, keeps no frame and writes no other state.'
   - - 2016
     - c
-    - decrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic08603_801EF3E0
-    - '@source: src/bof3/bmagic/decrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic08603_801EF3E0.c'
+    - stateCountdownCallHelper
+    - '@source: src/bof3/bmagic/stateCountdownCallHelper.c'
     - '@behavior: Decrement work byte 9 and invoke the shared helper at 0x801E5988 when the stored byte reaches zero.'
   - - 2084
     - asm
@@ -87,8 +87,8 @@ segments:
     - func_801EF70C
   - - 2948
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08603_801EF784
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08603_801EF784.c'
+    - stateIncrementByteAdvance3
+    - '@source: src/bof3/bmagic/stateIncrementByteAdvance3.c'
     - '@behavior: Increment scratchpad work-object byte 9 and, when the value just stored equals 0x10, re-read the pointer cell and increment byte 2.'
   - - 3028
     - c
@@ -97,9 +97,9 @@ segments:
     - '@behavior: Increment work byte A then byte 9; when the stored byte 9 equals 0x18, set global work byte B to one and advance work byte 2.'
   - - 3152
     - c
-    - incrementByteAdvanceBmagic
-    - '@source: src/bof3/bmagic/incrementByteAdvanceBmagic.c'
-    - '@behavior: Per-step handler of the work-object state machine published at the scratchpad pointer cell 0x1F800044. It loads that cell once, increments the object byte at offset 0xA by one at byte width and compares the truncated stored value with 0x16; only when that byte equals 0x16 it re-materializes the cell with its own lui/lw pair and increments the object byte at offset 0x2 by one at byte width. Takes no arguments, returns nothing and keeps no frame; the pointer word at 0x801F0374 in workByte2HandlerTableB is its only in-image reference.'
+    - stateIncrementAdvance
+    - '@source: src/bof3/bmagic/stateIncrementAdvance.c'
+    - '@behavior: Per-step handler of the work-object state machine published at the scratchpad pointer cell 0x1F800044. It loads that cell once, increments the object byte at offset 0xA by one at byte width and compares the truncated stored value with 0x16; only when that byte equals 0x16 it re-materializes the cell with its own lui/lw pair and increments the object byte at offset 0x2 by one at byte width. Takes no arguments, returns nothing and keeps no frame; the pointer word at 0x801F0374 in tableHandlerByte2B is its only in-image reference.'
   - - 3232
     - c
     - decrementByteIncrementZero
@@ -122,13 +122,13 @@ segments:
     - '@behavior: Draw sixty-four Gouraud quads with frame-selected flat segments and oscillating depth.'
   - - 5176
     - c
-    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic08603_801F0038
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic08603_801F0038.c'
+    - callByte2ProjectDraw
+    - '@source: src/bof3/bmagic/callByte2ProjectDraw.c'
     - '@behavior: Dispatch the handler indexed by work byte 2, re-read the scratchpad work pointer and, when work bytes 0 and 2 are nonzero, invoke the local transform and draw helpers followed by PopMatrix.'
   - - 5312
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic08603_801F00C0
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic08603_801F00C0.c'
+    - stateIncrementOnOne
+    - '@source: src/bof3/bmagic/stateIncrementOnOne.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once, tests that record''s byte at offset 0xB against one and, only when it equals 1, loads the scratchpad work-object pointer cell at 0x1F800044 with its own lui/lw pair and increments that object''s byte at offset 0x2 at byte width. Takes no arguments, returns nothing, keeps no frame and writes no other state; the table entry at 0x801F0384 is its only in-image reference.'
   - - 5376
     - c
@@ -151,8 +151,8 @@ segments:
     - workByte2HandlerTable
   - - 5996
     - textbin
-    - workByte2HandlerTableB
+    - tableHandlerByte2B
   - - 6020
     - textbin
-    - workByte2HandlerTableC
+    - tableHandlerByte2C
 - - 6032

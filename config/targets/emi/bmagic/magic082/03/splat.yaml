@@ -72,16 +72,16 @@ segments:
     - '@behavior: Dispatch work byte 2; when work byte 0 is nonzero invoke helpers 0x801EF4BC, 0x801EFA00, 0x801EF720 and PopMatrix.'
   - - 2608
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08203_801EF630
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08203_801EF630.c'
+    - stateIncrementByteAdvance2
+    - '@source: src/bof3/bmagic/stateIncrementByteAdvance2.c'
   - - 2688
     - c
     - stateIncrementByte2Below3
     - '@source: src/bof3/bmagic/stateIncrementByte2Below3.c'
   - - 2756
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic08203_801EF6C4
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic08203_801EF6C4.c'
+    - stateCountdownTwiceCall4
+    - '@source: src/bof3/bmagic/stateCountdownTwiceCall4.c'
     - '@behavior: Decrement work byte 9; on zero decrement global work byte 0xB and call helper 0x801E5988.'
   - - 2848
     - asm
@@ -95,8 +95,8 @@ segments:
     - '@source: src/bof3/bmagic/magic08203DispatchTables.c'
   - - 4468
     - c
-    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic08203_801EFD74
-    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic08203_801EFD74.c'
+    - stateCountdownByteAdvance3
+    - '@source: src/bof3/bmagic/stateCountdownByteAdvance3.c'
   - - 4544
     - asm
     - func_801EFDC0

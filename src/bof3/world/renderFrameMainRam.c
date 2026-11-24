@@ -5,7 +5,7 @@
  * draw mode, queues one SPRT from its own four-byte entry table and sizes it
  * from the entry its third argument indexes, so this body keeps that argument
  * as a plain immediate. Its two call sites here take no result. */
-void emitSemiTransSpriteFromIndexedEntryTableWorld01Area06513_801F3A10(
+void renderIndexedSprite(
     s16 x, s16 y, u8 entry);
 
 /* @source 0x8014832E @kind unknown */
@@ -42,9 +42,9 @@ void renderFrameMainRam(s16 arg0,
 
   if ((D_8014832E & 0x1bu) != 0u) {
     y = arg1;
-    emitSemiTransSpriteFromIndexedEntryTableWorld01Area06513_801F3A10(
+    renderIndexedSprite(
         arg0, y, 4u);
-    emitSemiTransSpriteFromIndexedEntryTableWorld01Area06513_801F3A10(
+    renderIndexedSprite(
         (s16)(arg0 + 0x80), y, 5u);
     func_8014F800((s16)(arg0 + 4), (s16)(arg1 + 4), 0, 0xffu,
                   0x80010000u + (u32)D_80010004);

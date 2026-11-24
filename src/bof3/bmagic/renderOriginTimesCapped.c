@@ -47,9 +47,9 @@ s32 GetGraphType(void);
 /* @source 0x801EF580
  * @behavior Translucent radial fan of this overlay's work-byte-2 handler group.
  *           Its only in-image caller is the draw branch of
- *           dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044,
+ *           callByte2ProjectDraw2,
  *           which has just installed the work record transform with
- *           projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0
+ *           renderProjectTransform2
  *           and pops the GTE matrix stack after the call, so the fan is drawn
  *           under that matrix. It reads no incoming register, takes no
  *           arguments and returns nothing.

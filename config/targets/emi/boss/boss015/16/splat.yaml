@@ -32,8 +32,8 @@ segments:
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-word code pointer run based at 0x800C19B0 with no arguments, leaving the handler''s result in the return register. The original does not bound the index before the scaled table load, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the pointer-cell load precedes frame creation. No word of this payload names this function''s address, so it is an overlay entry reached from outside the payload.'
   - - 72
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss01516_800C1848
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss01516_800C1848.c'
+    - publishWorkStepHandler1
+    - '@source: src/bof3/boss/publishWorkStepHandler1.c'
     - '@behavior: Step-0 setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C199C into +0xEC, the step dispatcher dispatchIndexedHandlerBossBoss01516_800C18A0 into +0xE4 and the data pointer 0x800C19A8 (0x800C199C + 0xC, inside that same row) into +0xE8 -- then stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state byte is the value callStateTable19Boss indexes its twelve-word 0x800C19B0 run by, and this function is that run''s entry 0, so writing 2 selects its third entry, 0x801E35D8. No jal reaches this function and the 0x800C19B0 word is its only in-image reference, so it is an overlay entry reached from outside the payload.'
   - - 160
     - c
@@ -51,8 +51,8 @@ segments:
     - noopHandler51
   - - 240
     - c
-    - publishBattleHooksBossBoss01516_800C18F0
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss01516_800C18F0.c'
+    - publishBattleHooks9
+    - '@source: src/bof3/boss/publishBattleHooks9.c'
     - '@behavior: Publishes this overlay handler trio into the shared hook slots in slot order: the state switch initModeProgress4B into 0x801463A4, the helper wrapper invokeHelperArg into 0x801463A8, and the zero-result accessor zeroResult11 into 0x801463AC through the void slot type. The 0x38-byte body reserves no frame and keeps nothing across the three stores. No word of this payload names this function and no jal reaches it, so it is an overlay entry reached from outside the payload.'
   - - 296
     - c
@@ -61,7 +61,7 @@ segments:
     - c
     - initModeProgress4B
     - '@source: src/bof3/boss/initModeProgress4B.c'
-    - '@behavior: Battle-flag state switch of this overlay and first member of the hook trio its installer publishBattleHooksBossBoss01516_800C18F0 writes. It loads the shared battle flag byte 0x80146328 once, before it reserves its frame, and tests bit 0x2; while the bit is set it stores 0x4B into the shared scenario progress byte 0x80146864 and runs initModeTuple510 (0x801DDED8), which seeds the three-byte battle mode tuple with 5, 1 and 0; when the bit is clear it runs initModeTuple520 (0x801DDF00) instead, which seeds that tuple with 5, 2 and 0, and it stores nothing there. It reads no other state, writes only that one byte, takes no arguments and returns nothing, and its 0x18-byte frame keeps $ra at 0x10 across the chosen call. The installer in this payload materializes this function''s address into the shared battle-hook slot 0x801463A4; no other word of this payload holds that address and no jal reaches it, so the main program reaches it through that slot.'
+    - '@behavior: Battle-flag state switch of this overlay and first member of the hook trio its installer publishBattleHooks9 writes. It loads the shared battle flag byte 0x80146328 once, before it reserves its frame, and tests bit 0x2; while the bit is set it stores 0x4B into the shared scenario progress byte 0x80146864 and runs initModeTuple510 (0x801DDED8), which seeds the three-byte battle mode tuple with 5, 1 and 0; when the bit is clear it runs initModeTuple520 (0x801DDF00) instead, which seeds that tuple with 5, 2 and 0, and it stores nothing there. It reads no other state, writes only that one byte, takes no arguments and returns nothing, and its 0x18-byte frame keeps $ra at 0x10 across the chosen call. The installer in this payload materializes this function''s address into the shared battle-hook slot 0x801463A4; no other word of this payload holds that address and no jal reaches it, so the main program reaches it through that slot.'
   - - 380
     - c
     - invokeHelperArg

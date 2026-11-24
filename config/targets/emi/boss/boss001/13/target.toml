@@ -27,6 +27,6 @@ support_sources = [
     "src/bof3/boss/callStateTable224Boss.c",
     "src/bof3/support/boss001_13_psyq.c",
     "src/bof3/boss/callIndexedHandler.c",
-    "src/bof3/boss/dispatchStateByte2Table21ecBossBoss00113_800C18BC.c",
+    "src/bof3/boss/callStateByte2Table1.c",
 ]
 psyq_source = "src/bof3/support/boss001_13_psyq.c"

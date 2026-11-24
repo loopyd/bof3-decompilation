@@ -18,9 +18,9 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 /* Record flags pool of this overlay at 0x801F0454: 0x60 records of stride 0x20,
  * so the pool ends exactly at 0x801F1054, the record pointer cell the sweep
  * below publishes into. Bit 0 of a record's flags byte is the in-use flag:
- * reserveFirstFreeRecordBmagicMagic06303_801F0354 sets it and this sweep tests
+ * resourceReserveFreeRecord3 sets it and this sweep tests
  * it. The flags read re-materialises this base, so the row keeps the pool name. */
-extern u8 magic06303RecordFlags[]; /* @source 0x801F0454 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801F0454 @kind data */
 
 /* Word 0x1C of every pool record, based at 0x801F0470 = 0x801F0454 + 0x1C at the
  * same 0x20 stride. seedRandomByteAndFortyComplementInEveryFreeWorkRecordCountin
@@ -104,8 +104,8 @@ void callPublishPoolRecords(
   handlers[g_battle_work[1]]();
   for (index = 0; index < 0x60; index++) {
     offset = index * 0x20;
-    if (magic06303RecordFlags[offset] & 1) {
-      record = &magic06303RecordFlags[offset];
+    if (stateRecordFlags[offset] & 1) {
+      record = &stateRecordFlags[offset];
       saved_pointer = D_801EB4E0;
       record_work = *(u8 **)((u8 *)D_801F0470 + offset);
       D_801F1054 = record;

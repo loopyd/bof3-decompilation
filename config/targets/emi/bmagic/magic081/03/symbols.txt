@@ -18,4 +18,4 @@ mathClearGlobalBytes = 0x801EF614;
 renderTranslucentRadiusRamping = 0x801EF6A0;
 resourceReserveFreeRecord = 0x801EFA20;
 T_801EFA84 = 0x801EFA84;
-magic08103RecordFlags = 0x801EFA8C;
+stateRecordFlags2 = 0x801EFA8C;
