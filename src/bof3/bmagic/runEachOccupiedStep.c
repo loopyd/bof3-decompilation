@@ -39,7 +39,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * the work object published at 0x1F800044 and calls the handler its unsigned
  * byte 1 selects from the three-entry run at 0x801F03D8, so publishing a record
  * there makes it run that record step. */
-extern void dispatchWorkByte1HandlerBmagicMagic01303_801EFDB4(void); /* @source 0x801EFDB4 @kind function */
+extern void callWorkByte1Handler13(void); /* @source 0x801EFDB4 @kind function */
 
 /* The statement order, operand forms, offset spelling and declaration style
  * follow the near-identical body at 0x801EEC28 of emi/bmagic/magic021/03, which
@@ -99,7 +99,7 @@ void runEachOccupiedStep(void) {
             recordWork = *(u8 **)&recordFlagTable[offset + 0x74];
             g_battle_work = record;
             D_801EB4E0 = recordWork;
-            dispatchWorkByte1HandlerBmagicMagic01303_801EFDB4();
+            callWorkByte1Handler13();
             D_801EB4E0 = savedRecord;
             g_battle_work = savedWork;
         }

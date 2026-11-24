@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 28
     - c
-    - dispatchWorkByte1HandlerBmagicMagic08203_801EEC1C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic08203_801EEC1C.c'
+    - callWorkByte1Handler22
+    - '@source: src/bof3/bmagic/callWorkByte1Handler22.c'
     - '@behavior: Copy the six-entry local handler table at 0x801EEC04 into the frame, then invoke the entry indexed by work byte 1 of the record published at 0x1F800044.'
   - - 148
     - asm

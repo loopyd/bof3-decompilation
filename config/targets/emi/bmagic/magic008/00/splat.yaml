@@ -143,7 +143,7 @@ segments:
     - '@behavior: Reads the shared battle-kind halfword at 0x801463C0 and returns the result code 7 when it equals 7, and 0xFF for any other value; its only caller func_801EFD90 stores that byte in work byte 0x04 of the scratchpad work object. The original computes the code in $a0 and copies it to $v0 at the single shared return.'
   - - 5712
     - c
-    - dispatchWorkByte1HandlerBmagicMagic00800_801F0250
+    - callWorkByte1Handler14
     - '@source: src/bof3/bmagic/magic00800DispatchTables.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects an entry of the overlay-local handler table at 0x801F1BEC (0x801F0294, 0x801F0568, 0x801F0964, 0x801F0DA8, 0x801F1294, 0x801F1708), and that entry is invoked with no arguments. It reads no state other than that byte and writes none; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 5780

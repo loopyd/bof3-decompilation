@@ -17,7 +17,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           the jr $ra at 0x801EF798 and reads or writes no other state.
  *           Reached by no in-image jal; it is entry 2 of the four-in-image-code-
  *           pointer run at 0x801EFE04 (0x801EF578, 0x801EF600, 0x801EF750,
- *           0x801EF7A0) that dispatchWorkByte1HandlerBmagicMagic02103_801EF534
+ *           0x801EF7A0) that callWorkByte1Handler10
  *           indexes with the work object's byte 1, so the handler-table entry
  *           proves the function-entry boundary at 0x801EF750. The roles of
  *           work-object bytes 9 and 2 are not established, so both stay

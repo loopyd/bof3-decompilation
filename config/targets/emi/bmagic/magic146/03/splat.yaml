@@ -48,7 +48,7 @@ segments:
     - '@source: src/bof3/bmagic/magic14603DispatchTables.c'
   - - 1168
     - c
-    - callStateByte2Tablef9
+    - callWorkByte2Table
     - '@source: src/bof3/bmagic/magic14603DispatchTables.c'
   - - 1236
     - asm

@@ -52,8 +52,8 @@ segments:
     - '@source: src/bof3/bmagic/magic13803DispatchTables.c'
   - - 932
     - c
-    - callStateTableec10
-    - '@source: src/bof3/bmagic/callStateTableec10.c'
+    - callDispatchBattleUpdate
+    - '@source: src/bof3/bmagic/callDispatchBattleUpdate.c'
     - '@behavior: Overlay header handler, entries 3, 4 and 5 of the nine-word handler pointer run at 0x801EEC04 (the payload words at 0x801EEC10, 0x801EEC14 and 0x801EEC18); copies those three code pointers (0x801EF04C, 0x801EF3A0, 0x801EF50C) into its own 0x28-byte frame, publishes 0x800C3800 into the shared cell at 0x801459F0, and invokes the copied entry that unsigned work byte 2 of the scratchpad work object at 0x1F800044 selects. It re-reads that cell after the call and, when work byte 0 has bit 0 set, invokes the shared battle update at 0x8014D4E0, then publishes 0x800D3800 into 0x801459F0.'
   - - 1100
     - c
@@ -68,8 +68,8 @@ segments:
     - invokeHelperBmagicMagic13803_801EF50C
   - - 2348
     - c
-    - callStateTableec1
-    - '@source: src/bof3/bmagic/callStateTableec1.c'
+    - callDispatchFlagService
+    - '@source: src/bof3/bmagic/callDispatchFlagService.c'
     - '@behavior: Copies the three code-pointer words at 0x801EEC1C, entries 6, 7 and 8 of the overlay header handler run at 0x801EEC04, into its own 0x28-byte frame, publishes 0x800F0800 into the shared cell at 0x801459F0, calls the copied entry that unsigned work byte 2 of the scratchpad work object at 0x1F800044 selects, re-reads that cell and calls the shared service at 0x8014D290 when work byte 0 is nonzero, then publishes 0x800D3800 into 0x801459F0.'
   - - 2512
     - c

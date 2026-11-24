@@ -98,7 +98,7 @@ void func_801F01A4(void);
  *           only keeps $ra and the phase cell address across the calls. Takes
  *           no arguments, returns nothing and reads or writes no other state.
  *           No jal in this payload reaches it: its address is the word at
- *           0x801F0680 inside the textbin row T_801F065C that the byte-1
+ *           0x801F0680 inside the textbin row D_801F065C that the byte-1
  *           dispatcher callStateTable0680
  *           indexes. The last turn offset is computed into its own local before
  *           the record word 0x38 store: the original issues that frame-counter

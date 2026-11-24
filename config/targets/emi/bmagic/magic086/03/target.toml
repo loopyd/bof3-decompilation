@@ -24,7 +24,7 @@ sources = [
     "src/bof3/bmagic/stateIncrementAdvance.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic08603_801EEC1C.c",
+    "src/bof3/bmagic/callWorkByte1Handler23.c",
     "src/bof3/bmagic/incrementWorkWorkByte.c",
     "src/bof3/bmagic/stateIncrementOnOne.c",
     "src/bof3/support/magic086_03_psyq.c",

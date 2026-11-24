@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/stateByte9Below2.c",
     "src/bof3/bmagic/mathByteDecrementZero.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06203_801EEC1C.c",
+    "src/bof3/bmagic/callWorkByte1Handler16.c",
     "src/bof3/bmagic/stateIncrementByteAdvance.c",
     "src/bof3/bmagic/stateCountersAdvanceByte1.c",
 ]

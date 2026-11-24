@@ -2,7 +2,7 @@
 
 /* Pairs copied into work words 0x0C and 0x10 by 0x801EEC80 and 0x801EEEC0.
  * @source 0x801F08A8 @kind table */
-extern u32 workWord0C10SeedPairTable[][2];
+extern u32 workSeedPairTable[][2];
 
 extern void (*D_801F08E8[])(void);
 

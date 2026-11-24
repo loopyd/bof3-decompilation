@@ -6,7 +6,7 @@
  * wider role is still unknown. Reads of the pointer cell keep their own named
  * loads, which is what keeps the countdown arm's two pointer reads separate
  * `lui`/`lw` pairs in the original bytes. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 extern u16 scenarioHalfword800; /* @source 0x800E4C1E @kind unknown */
 
 /* Trail rebuild at 0x801F88B8, still an `asm` row when this lift was written:
@@ -26,7 +26,7 @@ void func_801F8BE8(u8* buffer);
 /* @source 0x801F805C
  * @behavior Overlay per-frame handler, entry 7 of the twelve-word in-image
  * code-pointer run based at 0x801FDDC0 (the word at 0x801FDDDC) that
- * dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the work
+ * callWorkByte2Step8 indexes with the work
  * object's unsigned byte at +0x02, so it runs while that byte reads 7. It first
  * runs the trail rebuild at 0x801F88B8 on the trail buffer base 0x800E48E0,
  * then the trail draw pass at 0x801F8BE8 on that same base, discarding both
@@ -62,12 +62,12 @@ void updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2Sce
   func_801F88B8(PSX_PTR(u8, 0x800E48E0u));
   func_801F8BE8(PSX_PTR(u8, 0x800E48E0u));
   value = scenarioHalfword800;
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   scenarioHalfword800 = (u16)(value + 6);
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
   if (countdown == 0) {
-    scenarioScena0700Work[9] = 0x20;
-    scenarioScena0700Work[2]++;
+    workPointerCell[9] = 0x20;
+    workPointerCell[2]++;
   }
 }

@@ -31,7 +31,7 @@ support_sources = [
     "src/bof3/scenario/noopHandlerScenarioScena1400_801F7B98.c",
     "src/bof3/support/scena14_00_psyq.c",
     "src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena1400_801F6FD8.c",
-    "src/bof3/scenario/requestPrimaryState5.c",
+    "src/bof3/scenario/requestPrimaryState5Substate5.c",
     "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena1400_801F7B5C.c",
     "src/bof3/scenario/dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C.c",
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBD2C.c",

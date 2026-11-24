@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 28
     - c
-    - dispatchWorkByte1HandlerBmagicMagic06203_801EEC1C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06203_801EEC1C.c'
+    - callWorkByte1Handler16
+    - '@source: src/bof3/bmagic/callWorkByte1Handler16.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, copies the six words of the code pointer table at 0x801EEC04 (0x801EEC94, 0x801EEEC0, 0x801EEF68, 0x801EF078, 0x801EF0C0, 0x801EF2A0) into its own 0x30-byte frame, and invokes the copy selected by the work byte at offset 0x1 of the work object with no arguments. It reads no other state and writes none.'
   - - 148
     - asm

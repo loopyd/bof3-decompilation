@@ -17,7 +17,7 @@ support_sources = [
     "src/bof3/bmagic/magic07403DispatchTables.c",
     "src/bof3/bmagic/callStateTable0558.c",
     "src/bof3/bmagic/stateClearRecordBytes5.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic07403_801EEFE0.c",
+    "src/bof3/bmagic/callByte2SixHandler.c",
     "src/bof3/bmagic/callRunFlaggedCallbacks.c",
     "src/bof3/bmagic/mathAccumulateSampleFourth.c",
 ]

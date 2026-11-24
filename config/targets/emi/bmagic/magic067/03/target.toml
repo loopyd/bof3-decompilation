@@ -19,7 +19,7 @@ sources = [
     "src/bof3/bmagic/stateBandsActingHead.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06703_801EEC24.c",
+    "src/bof3/bmagic/callWorkByte1Handler19.c",
     "src/bof3/bmagic/callHandlerPopNonzero.c",
     "src/bof3/bmagic/stateGlobalCountdownCall2.c",
     "src/bof3/bmagic/stateRaiseFlag4Helper.c",
@@ -29,7 +29,7 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkAdvanceWork.c",
     "src/bof3/bmagic/stateCountdownByteAdvance.c",
     "src/bof3/bmagic/stateSetByteIncrement.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06703_801F038C.c",
+    "src/bof3/bmagic/callWorkByte2Handler3.c",
     "src/bof3/bmagic/magic06703DispatchTables.c",
     "src/bof3/bmagic/callHelperWrapper.c",
     "src/bof3/support/magic067_03_psyq.c",

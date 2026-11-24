@@ -5,7 +5,7 @@
  * it once into a local; the later groups read it inline, and the two inline
  * reads of the countdown group fold into the single cell load the original bytes
  * show there. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* First word of the shared coordinate pair in main RAM that this handler
  * copies into the work object's position pair.
@@ -37,10 +37,10 @@ extern void func_801FA01C(void);
 /* @source 0x801F7D6C
  * @behavior One-shot overlay handler, word 0 of the ten-word in-image
  * code-pointer run based at 0x801FDDC8 (the word at 0x801FDDC8), which
- * dispatchWorkByte2HandlerScenarioScena0700_801F7D28 indexes with the
+ * callWorkByte2Step9 indexes with the
  * scratchpad work object's unsigned byte at offset 0x02, so it runs while that
  * byte reads 0. The address is also word 2 of the twelve-word run based at
- * 0x801FDDC0 that dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes;
+ * 0x801FDDC0 that callWorkByte2Step8 indexes;
  * no in-image `jal` reaches it and those two run words are the only image words
  * naming it. It loads the work-object pointer cell at 0x1F800044 before it
  * creates its frame, seeds that object's word at 0x34 from the shared
@@ -84,13 +84,13 @@ void statePairDistanceArm(void) {
    * instruction touches, so no use is made of this region. */
   u32 pad[4];
 
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   *(s32*)&work[0x34] = D_80145EC4;
   pairB = D_80145EC8;
   pairA = *(volatile s32*)&work[0x34];
   *(s32*)&work[0x38] = pairB;
-  *(s32*)&scenarioScena0700Work[0x3C] = func_8015477C(pairA, pairB) << 16;
+  *(s32*)&workPointerCell[0x3C] = func_8015477C(pairA, pairB) << 16;
   func_801FA01C();
-  *(s32*)&scenarioScena0700Work[0x0C] = 0x78;
-  scenarioScena0700Work[2]++;
+  *(s32*)&workPointerCell[0x0C] = 0x78;
+  workPointerCell[2]++;
 }

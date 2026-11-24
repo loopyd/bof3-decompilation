@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/initializeViewBuildReverse.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EEC7C.c",
+    "src/bof3/bmagic/callWorkByte1Handler17.c",
 ]
 support_sources = [
     "src/bof3/bmagic/stateInvokeHelperNo.c",

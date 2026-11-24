@@ -26,8 +26,8 @@ sources = [
     "src/bof3/scenario/returnZero2_scena16.c",
     "src/bof3/scenario/returnZero3_scena16.c",
     "src/bof3/scenario/returnZero_scena16.c",
-    "src/bof3/scenario/seedRouteEnterState2_scena16.c",
-    "src/bof3/scenario/seedRouteEnterState3_scena16.c",
+    "src/bof3/scenario/stateRouteEffectRearm.c",
+    "src/bof3/scenario/stateRouteChannelArm.c",
 ]
 support_sources = [
     "src/bof3/support/scena16_symbols.c",

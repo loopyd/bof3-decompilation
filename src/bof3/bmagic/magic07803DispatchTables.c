@@ -28,4 +28,4 @@ extern u32 indexedHandlerAddressTable[]; /* @source 0x801F08C4 @kind table */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4, workByte1HandlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkByte1Handler5, workByte1HandlerTable);

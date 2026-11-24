@@ -33,8 +33,8 @@ segments:
     - func_801EEC5C
   - - 824
     - c
-    - raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic09703_801EEF38
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic09703_801EEF38.c'
+    - raiseInvokeHelperZero2
+    - '@source: src/bof3/bmagic/raiseInvokeHelperZero2.c'
   - - 900
     - c
     - dispatchStateByte1Table0ac0BmagicMagic09703_801EEF84
@@ -54,8 +54,8 @@ segments:
     - func_801EF324
   - - 2184
     - c
-    - incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic09703_801EF488
-    - '@source: src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic09703_801EF488.c'
+    - incrementTwoGlobalZero2
+    - '@source: src/bof3/bmagic/incrementTwoGlobalZero2.c'
   - - 2320
     - asm
     - func_801EF510

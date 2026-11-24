@@ -1,5 +1,5 @@
 g_battle_work = 0x1F800044;
-dispatchWorkByte1HandlerBmagicMagic07503_801EEC10 = 0x801EEC10;
+callWorkByte1Handler21 = 0x801EEC10;
 copySevenActionSixteen = 0x801EEC70;
 stateDoubleIntoTriplet = 0x801EEDE0;
 decrementForwardFirstIs = 0x801EEEB0;

@@ -1,5 +1,5 @@
 g_battle_work = 0x1F800044;
-dispatchWorkByte1HandlerBmagicMagic06803_801EEC18 = 0x801EEC18;
+callWorkByte1Handler20 = 0x801EEC18;
 copyTripletStorePointer = 0x801EEC88;
 func_801EED50 = 0x801EED50;
 decrementByteResetZero = 0x801EF44C;

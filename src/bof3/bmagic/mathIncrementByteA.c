@@ -24,7 +24,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           callStateTable066 indexes, and
  *           entry 2 of the same run viewed from 0x801F0680 by
  *           callStateTable0680; both rows sit
- *           inside the reviewed textbin row T_801F065C. Bytes
+ *           inside the reviewed textbin row D_801F065C. Bytes
  *           0x801F0070..0x801F00DB differ from the exact same-target sibling
  *           incrementPairReachTwenty
  *           in exactly one byte of one word (one payload cmp of both 0x6C-byte

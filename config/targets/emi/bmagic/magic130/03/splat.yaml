@@ -48,8 +48,8 @@ segments:
     - '@source: src/bof3/bmagic/magic13003DispatchTables.c'
   - - 792
     - c
-    - callStateTablefa4
-    - '@source: src/bof3/bmagic/callStateTablefa4.c'
+    - callDispatchIndexService
+    - '@source: src/bof3/bmagic/callDispatchIndexService.c'
     - '@behavior: Publish dispatch context, dispatch work byte 2, conditionally invoke the shared service, and restore context.'
   - - 948
     - asm

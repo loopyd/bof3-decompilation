@@ -4,7 +4,7 @@
  * work-pointer cell at 0x1F800044. Each source-level read keeps its own cell
  * load, because the handler-advance arm's pointer read follows stores through
  * the pointer an earlier read returned. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* First word of the shared coordinate pair in main RAM that this handler
  * copies into the work object's position pair.
@@ -37,7 +37,7 @@ extern void func_801F90F4(u8* block);
 /* @source 0x801F7BE0
  * @behavior One-shot overlay handler, word 0 of the twelve-word in-image
  * code-pointer run based at 0x801FDDC0, which
- * dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad
+ * callWorkByte2Step8 indexes with the scratchpad
  * work object's unsigned byte at offset 0x02, so it runs while that byte reads
  * 0; that run word is the only image word naming the address and no in-image
  * `jal` reaches it. It loads the work-object pointer cell at 0x1F800044 before
@@ -98,15 +98,15 @@ void stateDistanceBlockArm(
    * instruction touches, so no use is made of this region. */
   u32 pad[4];
 
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   *(s32*)&work[0x34] = D_80145EC4;
   do {
     pairA = *(volatile s32*)&work[0x34];
   } while (0);
   pairB = D_80145EC8;
   *(s32*)&work[0x38] = pairB;
-  *(s32*)&scenarioScena0700Work[0x3C] = func_8015477C(pairA, pairB) << 16;
-  saved = scenarioScena0700Work;
+  *(s32*)&workPointerCell[0x3C] = func_8015477C(pairA, pairB) << 16;
+  saved = workPointerCell;
   PSX_REF(s32, 0x800E4C24u) = *(s32*)(saved + 0x34);
   PSX_REF(s32, 0x800E4C28u) = *(s32*)(saved + 0x38);
   PSX_REF(u8*, 0x801FDFC0u) = PSX_PTR(u8, 0x800E4C24u);
@@ -114,7 +114,7 @@ void stateDistanceBlockArm(
   PSX_REF(u16, 0x800E5134u) = 0x800;
   PSX_REF(s32, 0x800E4C2Cu) = dist3c + 0x2000000;
   func_801F90F4(PSX_PTR(u8, 0x800E4C24u));
-  advance = scenarioScena0700Work;
+  advance = workPointerCell;
   *(s32*)(advance + 0x0C) = 0x28;
   advance[2]++;
 }

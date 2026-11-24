@@ -13,7 +13,7 @@ sources = [
     "src/bof3/scenario/stateFlagRecordCallback.c",
     "src/bof3/scenario/callStateChainHandler.c",
     "src/bof3/scenario/stateWorkTableByte25.c",
-    "src/bof3/scenario/stateTableAdvanceScenario.c",
+    "src/bof3/scenario/stateClearFieldAdvance.c",
     "src/bof3/scenario/queryFreeRecord.c",
     "src/bof3/scenario/callPrimaryHandler.c",
     "src/bof3/scenario/callCallbackSelector.c",
@@ -39,23 +39,23 @@ sources = [
     "src/bof3/scenario/stepClampHeightDecay.c",
     "src/bof3/scenario/armEffectGroupCount.c",
     "src/bof3/scenario/drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084.c",
-    "src/bof3/scenario/requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4.c",
+    "src/bof3/scenario/checkStageRecordMatch.c",
     "src/bof3/scenario/renderFourShadeLevels.c",
-    "src/bof3/scenario/runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98.c",
+    "src/bof3/scenario/runSubstateController.c",
     "src/bof3/scenario/runPrimarySubstateSequence.c",
     "src/bof3/scenario/commitStagesRouteSteps.c",
 ]
 support_sources = [
-    "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",
-    "src/bof3/scenario/invokeHelperScenarioScena0400_801F7064.c",
-    "src/bof3/scenario/noopHandlerScenarioScena0400_801FA178.c",
-    "src/bof3/scenario/zeroResultScenarioScena0400_801F9DAC.c",
-    "src/bof3/scenario/noopHandlerScenarioScena0400_801F8678.c",
+    "src/bof3/scenario/stateClearWorkHeader2.c",
+    "src/bof3/scenario/stateClearWorkHeader.c",
+    "src/bof3/scenario/noopStepHandler2.c",
+    "src/bof3/scenario/zeroReturnValue.c",
+    "src/bof3/scenario/noopStepHandler.c",
     "src/bof3/support/scena04_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/scena04_00_psyq.c"
 
-# The switch table of runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98
+# The switch table of runSubstateController
 # is 31 code words (0x7C bytes) in the original's leading table data at
 # 0x801F6C84, not beside the code.
 [[matching.section_placements]]

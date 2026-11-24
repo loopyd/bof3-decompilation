@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 1688
     - c
-    - callScenarioHandlerScenario
+    - dispatchOuterState
   - - 1748
     - c
     - stateSharedFields
@@ -39,7 +39,7 @@ segments:
     - statePendingIdSetup
     - '@source: src/bof3/scenario/statePendingIdSetup.c'
     - '@behavior: Word 1 of the three-word outer state table at 0x801FE3D8,
-      which callScenarioHandlerScenario
+      which dispatchOuterState
       (0x801F7298) indexes with the signed shared main-RAM state byte
       D_80146872. It reads the pending world id halfword D_80143F00 once per
       arm, applies one arm per world id, and then stores 2 in D_80146872 so the
@@ -576,7 +576,7 @@ segments:
     - runPrimaryState17Phases
   - - 24448
     - c
-    - publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80
+    - publishWorkBaseFront2
   - - 24888
     - asm
     - func_801FCD38

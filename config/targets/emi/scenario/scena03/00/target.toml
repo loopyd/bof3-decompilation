@@ -74,7 +74,7 @@ support_sources = [
     "src/bof3/scenario/requestPrimaryFrontEnd.c",
     "src/bof3/scenario/stateFlagRequestPrimary.c",
     "src/bof3/scenario/requestArmPackedMatch.c",
-    "src/bof3/scenario/submitSelectedRecordsArea.c",
+    "src/bof3/scenario/submitSelectedRecords.c",
     "src/bof3/scenario/renderTranslucentTrianglesFour.c",
     "src/bof3/scenario/stateRectRandomOffsets.c",
     "src/bof3/scenario/renderTranslucentGouraudTriangle.c",

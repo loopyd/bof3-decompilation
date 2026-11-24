@@ -6,9 +6,9 @@ extern u32 D_8014686C;
 
 /* Overlay-local per-record callback table at 0x801FD644, indexed by the
  * record's unsigned byte field at offset 0x7A: its nine code-pointer words run
- * from the inert noopHandlerScenarioScena0500_801FCA98 (0x801FCA98, word 0)
+ * from the inert noopInertSlot6 (0x801FCA98, word 0)
  * through
- * clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCD0C
+ * clearProgressRequestMode
  * (0x801FCD0C, word 8, the last pointer word), and the
  * first non-pointer word, 0x07108434, sits immediately after them at
  * 0x801FD668. Every word is an overlay handler address reached only through
@@ -27,7 +27,7 @@ extern ScenarioScena0500RecordCallback D_801FD644[];
  * then invokes that callback with `jalr`, passing the record pointer unchanged
  * as the first argument and the shared word D_8014686C (0x8014686C, read with
  * `lw` into $a1) as the second. The nine table words are the handlers
- * 0x801FCA98 (word 0, the inert noopHandlerScenarioScena0500_801FCA98) through
+ * 0x801FCA98 (word 0, the inert noopInertSlot6) through
  * 0x801FCD0C (word 8), so the dispatch reaches that run of the overlay's record
  * callbacks. It reads no other state and writes none; the 0x18-byte frame only
  * keeps $ra across the indirect call, and the word load of D_8014686C is

@@ -179,7 +179,7 @@ segments:
     - func_801D27B0
   - - 7120
     - textbin
-    - T_801D27D0
+    - workStepHandlerTable
   - - 7184
     - asm
     - func_801D2810

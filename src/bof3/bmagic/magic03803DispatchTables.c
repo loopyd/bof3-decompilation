@@ -17,7 +17,7 @@ extern void (*D_801EF9D0[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerBmagicMagic03803_801EF0D0, D_801EF9A4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkByte1Handler8, D_801EF9A4);
 
 /* @source 0x801EF8B8
  * @behavior Overlay step dispatch: reads the state byte at +2 of

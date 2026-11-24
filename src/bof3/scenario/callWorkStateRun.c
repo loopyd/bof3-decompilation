@@ -2,7 +2,12 @@
 
 typedef void (*ScenarioScena0100WorkStateHandler)(void);
 
-extern ScenarioScena0100WorkStateHandler func_801FE26C[];
+/* The overlay-local five-word handler run this dispatcher indexes: entry 0 is
+ * 0x801F73FC and entry 4 is 0x801F7644, and the non-code words at 0x801FE280
+ * follow the run inside the same Splat row.
+ * @source 0x801FE26C @kind table
+ */
+extern ScenarioScena0100WorkStateHandler workByteHandlerTable[];
 
 /* @source 0x801F73B8
  * @behavior Dispatches this overlay's per-frame state handler from the scratchpad
@@ -24,5 +29,5 @@ extern ScenarioScena0100WorkStateHandler func_801FE26C[];
  * @residual none
  */
 void callWorkStateRun(void) {
-  func_801FE26C[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
+  workByteHandlerTable[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
 }

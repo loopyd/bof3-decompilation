@@ -13,7 +13,7 @@ extern s32 func_801A7AD8(u8 *records, s32 count, u16 coordA, u16 coordB);
  * direction clear, category nibble 5) and span count 2.
  * @source 0x801FA228 @kind table
  */
-extern u8 scenarioScena0400CoordinateLookupRecords[];
+extern u8 coordinateLookupRecord[];
 
 /* Four-word primary-state request handler run at 0x801FA230: 0x801FA074,
  * 0x801FA0B4, 0x801FA12C and 0x801FA178, the last of which is the no-op
@@ -55,7 +55,7 @@ extern ScenarioScena0400CoordinateLookupHandler coordinateSlotsTable[];
 s32 callCoordinateLookupHandler(u16 coordA, u16 coordB) {
   s8 index;
 
-  index = func_801A7AD8(scenarioScena0400CoordinateLookupRecords, 1, coordA, coordB);
+  index = func_801A7AD8(coordinateLookupRecord, 1, coordA, coordB);
   if (index < 0) {
     return -1;
   }

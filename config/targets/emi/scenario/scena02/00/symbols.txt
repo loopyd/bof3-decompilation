@@ -85,4 +85,4 @@ func_801FD780 = 0x801FD780;
 callHelperArg4Constant = 0x801FE178;
 callHelperArgPair = 0x801FE198;
 stateIndexedBitsTwice = 0x801FE1C0;
-T_801FE26C = 0x801FE26C;
+chainHandlerTable = 0x801FE26C;

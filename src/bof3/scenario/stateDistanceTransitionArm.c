@@ -5,7 +5,7 @@
  * named-cell load, because a store through the pointer it returned could write
  * that very cell, so the handler-advance arm's pointer read is a separate
  * `lui`/`lw` pair from the saved pointer the two field stores run through. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* First word of the shared coordinate pair in main RAM that this handler
  * copies into the work object's position pair.
@@ -33,7 +33,7 @@ void stateTableFlagBytes(void);
 /* @source 0x801F7A30
  * @behavior One-shot overlay handler, word 0 of the three-word in-image
  * code-pointer run labelled T_801FDDB4 at 0x801FDDB4, which
- * dispatchWorkByte2HandlerScenarioScena0700_801F79EC indexes with the
+ * callWorkByte2Step7 indexes with the
  * scratchpad work object's unsigned byte at offset 0x02, so it runs while that
  * byte reads 0. No in-image `jal` reaches the address and that run word is the
  * only image word naming it. It loads the work-object pointer cell at
@@ -92,16 +92,16 @@ void stateDistanceTransitionArm(
    * instruction touches, so no use is made of this region. */
   u32 pad[4];
 
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   *(s32*)&work[0x34] = D_80145EC4;
   pairB = D_80145EC8;
   pairA = *(volatile s32*)&work[0x34];
   *(s32*)&work[0x38] = pairB;
-  *(s32*)&scenarioScena0700Work[0x3C] = func_8015477C(pairA, pairB) << 16;
+  *(s32*)&workPointerCell[0x3C] = func_8015477C(pairA, pairB) << 16;
   stateTableFlagBytes();
-  saved = scenarioScena0700Work;
+  saved = workPointerCell;
   saved[6] = 1;
-  advance = scenarioScena0700Work;
+  advance = workPointerCell;
   *(s32*)(saved + 0xC) = 0x28;
   advance[2]++;
 }

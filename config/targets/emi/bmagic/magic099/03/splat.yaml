@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 24
     - c
-    - dispatchWorkByte1HandlerBmagicMagic09903_801EEC18
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic09903_801EEC18.c'
+    - callWorkByte1Handler25
+    - '@source: src/bof3/bmagic/callWorkByte1Handler25.c'
   - - 136
     - c
     - statePoseNineSlots
@@ -47,8 +47,8 @@ segments:
     - '@behavior: On work byte 0xB non-zero, store 8 into work byte 9 and advance work byte 1.'
   - - 988
     - c
-    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic09903_801EEFDC
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic09903_801EEFDC.c'
+    - incrementCountersDecrementZero2
+    - '@source: src/bof3/bmagic/incrementCountersDecrementZero2.c'
     - '@behavior: Increment the counter triple of the 12-byte record work byte 0xA selects, count down work byte 9 and advance work byte 1 when it reaches zero.'
   - - 1260
     - asm
@@ -135,7 +135,7 @@ segments:
     - workByte2HandlerTable
   - - 7600
     - textbin
-    - workByte2HandlerTableB
+    - workByte2HandlerTable2
   - - 7616
     - textbin
     - workByte2HandlerTableC

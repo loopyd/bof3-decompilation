@@ -32,7 +32,7 @@ void stateClearWorkBytes(void);
  *           frame only keeps $ra across the call. Takes no arguments, returns
  *           nothing and reads or writes no other state. No jal in this payload
  *           reaches it: its address is entry 4 of the handler table based at
- *           0x801F0680, the word at 0x801F0690 inside the textbin row T_801F065C
+ *           0x801F0680, the word at 0x801F0690 inside the textbin row D_801F065C
  *           that the byte-1 dispatcher
  *           callStateTable0680 indexes.
  *           Bytes 0x801F012C..0x801F01A3 are identical to the exact sibling

@@ -51,7 +51,7 @@ extern u8 D_80181B12;
  */
 extern u8 D_8014496F[];
 
-void publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80(u8 step);
+void publishWorkBaseFront2(u8 step);
 void func_801BE1B0(u32 arg0);
 void func_801C601C(u32 arg0);
 void func_8015D404(u32 arg0, s32 arg1);
@@ -77,7 +77,7 @@ void func_8015C058(void);
  *           secondary scene state byte D_80146875 through a twenty-entry case
  *           table in which state 9 has no case and falls to the epilogue:
  *           state 0 claims front-end record 0x91 through
- *           publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80 and
+ *           publishWorkBaseFront2 and
  *           arms state 1; state 1 runs func_801BE1B0 and func_801C601C with
  *           mode 0 and arms state 2; states 2 to 6 each wait for one progress
  *           value (1, 3, 5, 0x0A, 0x1D) and then advance one state after
@@ -122,7 +122,7 @@ void runPrimaryState12Phases(
     void) {
   switch (D_80146875) {
     case 0:
-      publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80(0x91);
+      publishWorkBaseFront2(0x91);
       D_80146875 = 1u;
       break;
 

@@ -18,6 +18,14 @@
  */
 extern void (*D_801D2800[])(void);
 
+/* The Splat `textbin` span at 0x801D27D0..0x801D280F: it carries the tail of
+ * this overlay's nineteen-entry work-step handler run (the run based at
+ * 0x801D27CC, whose entry 13 opens this span at 0x801D27D0) through the last
+ * word at 0x801D280F, so the span holds code-pointer words and no instructions.
+ * @source 0x801D27D0 @kind table
+ */
+extern u8 workStepHandlerTable[];
+
 /* @source 0x801D13DC
  * @behavior Overlay work-state dispatcher of this payload: it loads the
  * work-object pointer published at the scratchpad pointer cell 0x1F800044

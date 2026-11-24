@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/raiseTargetKindFlag.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06000_801EEC34.c",
+    "src/bof3/bmagic/callWorkByte1Handler15.c",
     "src/bof3/bmagic/stateAdvanceStepAt83.c",
     "src/bof3/bmagic/renderTargetNumbersRows.c",
     "src/bof3/bmagic/renderPartyEnemyTarget.c",

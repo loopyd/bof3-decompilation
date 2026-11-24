@@ -5,7 +5,7 @@
  * index, byte at +0x09 the ramp step index and word at +0x0C the countdown. It
  * is the target map's own cell (symbols.txt), read once per block so each read
  * keeps its own `lui`/`lw` pair. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* Overlay-local per-step bit-mask table at 0x801FDD9C: one byte per ramp step
  * index (the work object's unsigned byte at +0x09) tested against the work
@@ -44,7 +44,7 @@ s32 func_801F97E0(u8* obj);
 /* @source 0x801F76D0
  * @behavior Per-frame tick of the shared effect object published at 0x801FDFBC
  * and word 1 of the four-word in-image code-pointer run labelled D_801FDD8C at
- * 0x801FDD8C, which dispatchWorkByte2HandlerScenarioScena0700_801F75F4 indexes
+ * 0x801FDD8C, which callWorkByte2Step5 indexes
  * with the scratchpad work object's unsigned byte at +0x02, so it runs while
  * that byte reads one. It loads the work-object pointer cell at 0x1F800044
  * before it creates its frame, reads that object's unsigned byte at +0x09 (the
@@ -63,7 +63,7 @@ s32 func_801F97E0(u8* obj);
  * index of the byte-2 state machine, so the expired countdown advances the run.
  * It takes no arguments, returns nothing, and its 0x18-byte frame only keeps
  * $ra across the one call. The bytes are not identical to the sibling run
- * member tickObjectRampDrawQuadAndAdvanceHandlerScenarioScena0700_801F77AC at
+ * member tickEffectObjectRamp at
  * 0x801F77AC, which draws the same object, ticks the same countdown and
  * advances the same handler index with a constant four-step ramp and no
  * countdown reload, so that sibling supplied the statement order, operand forms
@@ -72,7 +72,7 @@ s32 func_801F97E0(u8* obj);
  * Probes before this gate, every one of them on this same body: the
  * SPAD_PTR_SLOT(u8,0x44) spelling measured 39/55 instructions with 228 bytes,
  * because three reads of the cell kept 0x1F800044 in one saved register and
- * emitted a `lui`/`ori` base; the map's named cell scenarioScena0700Work with
+ * emitted a `lui`/`ori` base; the map's named cell workPointerCell with
  * one function-scope base reused for all three reads measured 46/55 at the
  * original 220 bytes, where the two hunks that differed were the register the
  * first and second base took (`a0` against the original `v0` and `v1`); giving
@@ -91,18 +91,18 @@ void tickObjectRampQuad(
   u8 step;
   u8* obj;
 
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   step = work[9];
   if ((*(s32*)(work + 0x0C) & D_801FDD9C[step]) == 0) {
     obj = D_801FDFBC;
     *(u16*)(obj + 0x10) += D_801FDDA4[step];
   }
-  next = scenarioScena0700Work;
+  next = workPointerCell;
   if ((*(s32*)(next + 0x0C) & 0xF) == 0) {
     next[9]++;
   }
   func_801F97E0(D_801FDFBC);
-  pending = scenarioScena0700Work;
+  pending = workPointerCell;
   if (--*(s32*)(pending + 0x0C) == 0) {
     *(s32*)(pending + 0x0C) = 0x10;
     pending[2]++;

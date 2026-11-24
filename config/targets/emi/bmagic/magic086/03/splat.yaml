@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 28
     - c
-    - dispatchWorkByte1HandlerBmagicMagic08603_801EEC1C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic08603_801EEC1C.c'
+    - callWorkByte1Handler23
+    - '@source: src/bof3/bmagic/callWorkByte1Handler23.c'
   - - 148
     - asm
     - func_801EEC94

@@ -81,7 +81,7 @@ extern u32 func_800AF66C(u8 *record, u32 size); /* @source 0x800AF66C */
 /* Service helpers of the main executable called unconditionally by this step,
  * and the battler status helper that raises one flag of the shared target byte.
  * The no-argument service shape is the one the exact same-target sibling
- * callStateTable09 calls, and the status
+ * callDispatchStepService calls, and the status
  * helper keeps the two-argument shape every bmagic lift of this family uses. */
 extern void func_800AF764(void); /* @source 0x800AF764 */
 extern void func_800A9610(u8 arg0, s32 arg1); /* @source 0x800A9610 */

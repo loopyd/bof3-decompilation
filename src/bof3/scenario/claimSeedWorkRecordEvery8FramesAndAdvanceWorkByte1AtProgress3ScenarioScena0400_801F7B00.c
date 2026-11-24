@@ -43,7 +43,7 @@ void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena040
  *           words, the every-eight-frames gate from the D_80143E6C mask, and
  *           the work-byte advance from the byte this body increments, which is
  *           the same cell the exact entry 0
- *           (stateTableAdvanceScenario)
+ *           (stateClearFieldAdvance)
  *           increments on its way to this entry.
  *
  * Shape evidence: statement order, operand forms and the `*(s32*)(record + N)`

@@ -65,7 +65,7 @@ void func_801FCD38(void);
 
 /* @source 0x801F7300
  * @behavior Word 1 of the three-word outer state table at 0x801FE3D8, which
- * callScenarioHandlerScenario (0x801F7298) indexes
+ * dispatchOuterState (0x801F7298) indexes
  * with the signed shared main-RAM state byte D_80146872 (word 0 is the state-0
  * seeder stateSharedFields at
  * 0x801F72D4 and word 2 is the primary state dispatcher

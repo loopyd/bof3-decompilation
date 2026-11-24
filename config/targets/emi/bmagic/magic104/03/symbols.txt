@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
-dispatchWorkByte1HandlerBmagicMagic10403_801EEC14 = 0x801EEC14;
+callWorkByte1Handler26 = 0x801EEC14;
 func_801EEC80 = 0x801EEC80;
-setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBIs7BmagicMagic10403_801EEE7C = 0x801EEE7C;
+stateBarrierSevenSet = 0x801EEE7C;
 func_801EEEC0 = 0x801EEEC0;
 func_801EF03C = 0x801EF03C;
 dispatchStateByte1Table08e8BmagicMagic10403_801EF09C = 0x801EF09C;
@@ -20,5 +20,5 @@ func_801F020C = 0x801F020C;
 stateByteZeroDecrement = 0x801F02F4;
 decrementAfterHelpersPublish = 0x801F034C;
 func_801F03C4 = 0x801F03C4;
-workWord0C10SeedPairTable = 0x801F08A8;
+workSeedPairTable = 0x801F08A8;
 T_801F08E8 = 0x801F08E8;

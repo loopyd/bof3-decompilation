@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
-dispatchWorkByte1HandlerBmagicMagic06703_801EEC24 = 0x801EEC24;
+callWorkByte1Handler19 = 0x801EEC24;
 stateBandsActingHead = 0x801EEC94;
 decrementRaiseBattleTarget = 0x801EEF3C;
 forwardBattleByteZero = 0x801EEFA4;
@@ -23,7 +23,7 @@ func_801F00C4 = 0x801F00C4;
 callStateByte2Table04 = 0x801F02A0;
 callHelperOneIncrement = 0x801F02E4;
 stateGlobalCountdownCall2 = 0x801F033C;
-dispatchWorkByte2HandlerBmagicMagic06703_801F038C = 0x801F038C;
+callWorkByte2Handler3 = 0x801F038C;
 stateBytesAdvance = 0x801F03EC;
 callAdvanceSet = 0x801F043C;
 callHelperWrapper = 0x801F0498;

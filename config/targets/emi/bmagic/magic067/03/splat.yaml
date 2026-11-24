@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 36
     - c
-    - dispatchWorkByte1HandlerBmagicMagic06703_801EEC24
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06703_801EEC24.c'
+    - callWorkByte1Handler19
+    - '@source: src/bof3/bmagic/callWorkByte1Handler19.c'
     - '@behavior: Dispatches the work byte at offset 1 of the scratchpad work object through the five-entry code pointer run at 0x801EEC04, copied into the function own frame, and invokes the selected handler with no arguments.'
   - - 148
     - c
@@ -135,8 +135,8 @@ segments:
     - '@behavior: When scratchpad work byte 0xB is zero, decrements byte 0xB of the record selected by 0x801EB4E0 and invokes 0x801E5988.'
   - - 6028
     - c
-    - dispatchWorkByte2HandlerBmagicMagic06703_801F038C
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06703_801F038C.c'
+    - callWorkByte2Handler3
+    - '@source: src/bof3/bmagic/callWorkByte2Handler3.c'
   - - 6124
     - c
     - stateBytesAdvance

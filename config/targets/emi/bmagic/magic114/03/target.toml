@@ -22,7 +22,7 @@ support_sources = [
     "src/bof3/bmagic/decrementOffsetChannelRearm.c",
     "src/bof3/bmagic/callHandlerSet.c",
     "src/bof3/bmagic/decrementZeroOtherwise.c",
-    "src/bof3/bmagic/callStateTable123.c",
+    "src/bof3/bmagic/callDispatchPublish.c",
     "src/bof3/support/magic114_03_psyq.c",
     "src/bof3/bmagic/magic11403DispatchTables.c",
     "src/bof3/bmagic/decrementByteSetZero.c",

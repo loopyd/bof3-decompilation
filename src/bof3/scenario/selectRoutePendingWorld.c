@@ -2,8 +2,8 @@
 
 /* @behavior routes the primary SCENA16 area path from the pending world id
  * D_80143F00, read with an unsigned halfword load before the frame is set up:
- * world 2 runs stageRoutePath2Setup and world 4 runs seedRouteEnterState2, both
- * leaving D_80143C30 = 1; world 0x1F runs seedRouteEnterState3 and leaves
+ * world 2 runs stageRoutePath2Setup and world 4 runs stateRouteEffectRearm, both
+ * leaving D_80143C30 = 1; world 0x1F runs stateRouteChannelArm and leaves
  * D_80143C30 = 0. Every other world id keeps D_80143C30 unchanged. All paths then
  * store 2 in the secondary route byte D_80146872, which is also the value the two
  * shared `D_80143C30 = 1` arms carry into that store through the shared exit
@@ -21,12 +21,12 @@ void selectRoutePendingWorld(void) {
       break;
 
     case 4:
-      seedRouteEnterState2();
+      stateRouteEffectRearm();
       D_80143C30 = 1u;
       break;
 
     case 0x1f:
-      seedRouteEnterState3();
+      stateRouteChannelArm();
       D_80143C30 = 0u;
       break;
   }

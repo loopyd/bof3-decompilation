@@ -120,8 +120,8 @@ segments:
     - func_801F093C
   - - 8456
     - c
-    - callStateTable123
-    - '@source: src/bof3/bmagic/callStateTable123.c'
+    - callDispatchPublish
+    - '@source: src/bof3/bmagic/callDispatchPublish.c'
   - - 8556
     - c
     - stateHeaderSelectParity

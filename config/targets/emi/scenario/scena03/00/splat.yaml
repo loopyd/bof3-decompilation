@@ -45,8 +45,8 @@ segments:
     - '@behavior: Ticks work byte 9 with flag bit 0x40 set; at zero clears that bit and two selected record lead bytes, then sets work byte 1 to 2.'
   - - 1844
     - c
-    - submitSelectedRecordsArea
-    - '@source: src/bof3/scenario/submitSelectedRecordsArea.c'
+    - submitSelectedRecords
+    - '@source: src/bof3/scenario/submitSelectedRecords.c'
     - '@behavior: Submits the 0x98-byte work records at 0x80146888 selected by work bytes 3 and 4 through func_80196718, then clears the scratchpad work-area header through func_80196070.'
   - - 1980
     - c

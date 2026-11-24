@@ -9,11 +9,11 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/workMatchesTableEntry.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic09603_801EEC24.c",
+    "src/bof3/bmagic/callWorkByte1Handler24.c",
     "src/bof3/bmagic/decrementWorkAdvanceZero.c",
-    "src/bof3/bmagic/decrementWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF348.c",
+    "src/bof3/bmagic/decrementByteAdvanceZero2.c",
     "src/bof3/bmagic/renderSevenNineRim.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadRingAroundOriginBetweenRadiiSixteenTimesWorkByteAPlusSixteenAndPlusOneTwentyEightInEightStepsOf512TintingInnerEdgeByWorkByteATimesNineAndSevenBmagicMagic09603_801EFDF4.c",
+    "src/bof3/bmagic/renderEightStepRing.c",
 ]
 support_sources = [
     "src/bof3/support/magic096_03_psyq.c",

@@ -14,4 +14,4 @@ extern void (*sixStepHandlerTable[])(void); /* @source 0x801F1BEC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerBmagicMagic00800_801F0250, sixStepHandlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkByte1Handler14, sixStepHandlerTable);

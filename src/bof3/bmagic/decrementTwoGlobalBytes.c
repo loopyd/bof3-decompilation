@@ -29,7 +29,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  *           across that call. No jal in this payload reaches it: the fifth and
  *           last word of the pointer run at 0x801EFE00 holds 0x801EF7A0
  *           (0x801EF020, 0x801EF578, 0x801EF600, 0x801EF750, 0x801EF7A0), and
- *           dispatchWorkByte1HandlerBmagicMagic02103_801EF534 indexes that run
+ *           callWorkByte1Handler10 indexes that run
  *           with the work object's byte 1, so the table word fixes the entry
  *           boundary, not a missing caller. Same-target exact sibling
  *           add2ToWorkByte9AndAdvanceWorkByte2At10 (0x801EF750) supplied the

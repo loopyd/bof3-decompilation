@@ -39,7 +39,7 @@ extern void func_801E5988(void); /* @source 0x801E5988 */
 /* @source 0x801EEEB0
  * @behavior Per-frame effect step reached as entry 2 of the three-word code
  *           pointer run at 0x801EEC04 (0x801EEC70, 0x801EEDE0, 0x801EEEB0), which
- *           the overlay entry dispatchWorkByte1HandlerBmagicMagic07503_801EEC10
+ *           the overlay entry callWorkByte1Handler21
  *           copies into its own frame and indexes with the scratchpad work
  *           object's unsigned byte 0x01. It subtracts two from the +0x2, +0x3
  *           and +0x4 countdown bytes of the 12-byte effect record selected by the

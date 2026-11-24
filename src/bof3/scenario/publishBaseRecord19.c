@@ -31,10 +31,10 @@ extern u8 D_80143FF8[];
  * @source 0x80144F5A @kind unknown
  */
 extern u8 D_80144F5A;
-/* Overlay-local byte table in the T_801FE26C textbin segment.
+/* Overlay-local byte table in the chainHandlerTable textbin segment.
  * @source 0x801FE26C @kind table
  */
-extern u8 T_801FE26C[];
+extern u8 chainHandlerTable[];
 
 u8 func_8019601C(void);
 
@@ -44,7 +44,7 @@ u8 func_8019601C(void);
  * into that base's byte 0x0B and, unless that byte reads 0xFF, seeds the
  * 0x74-byte front-end record it selects at 0x80143FC8: record byte 0x00 = 1,
  * byte 0x05 = 0x19, byte 0x06 = the caller's value plus 0x68 truncated to a
- * byte, word 0x0C = 0, word 0x10 = the byte T_801FE26C[D_80144F5A] and the
+ * byte, word 0x0C = 0, word 0x10 = the byte chainHandlerTable[D_80144F5A] and the
  * halfwords at 0x2E/0x30 copied from the work base at the same offsets.
  * Nothing is returned. The one in-image jal caller is func_801FB868 at
  * 0x801FBA90, which passes 0x99 and then calls func_8015D404 with two zero
@@ -82,7 +82,7 @@ void publishBaseRecord19(u8 step) {
 
     work = D_1F800044;
     *(u32*)(D_80143FD4 + (u32)work[0x0B] * 0x74u) = 0u;
-    *(u32*)(D_80143FD8 + (u32)work[0x0B] * 0x74u) = T_801FE26C[D_80144F5A];
+    *(u32*)(D_80143FD8 + (u32)work[0x0B] * 0x74u) = chainHandlerTable[D_80144F5A];
     *(u16*)(D_80143FF6 + (u32)work[0x0B] * 0x74u) = *(u16*)(work + 0x2E);
     *(u16*)(D_80143FF8 + (u32)work[0x0B] * 0x74u) = *(u16*)(work + 0x30);
   }

@@ -37,16 +37,16 @@ segments:
     - c
     - selectRoutePendingWorld
     - '@source: src/bof3/scenario/selectRoutePendingWorld.c'
-    - '@behavior: Routes the primary SCENA16 area path from the pending world id D_80143F00: world 2 runs stageRoutePath2Setup and world 4 runs seedRouteEnterState2, both leaving D_80143C30 = 1, while world 0x1F runs seedRouteEnterState3 and leaves D_80143C30 = 0; every other world id keeps D_80143C30 unchanged. All paths then store 2 in the secondary route byte D_80146872.'
+    - '@behavior: Routes the primary SCENA16 area path from the pending world id D_80143F00: world 2 runs stageRoutePath2Setup and world 4 runs stateRouteEffectRearm, both leaving D_80143C30 = 1, while world 0x1F runs stateRouteChannelArm and leaves D_80143C30 = 0; every other world id keeps D_80143C30 unchanged. All paths then store 2 in the secondary route byte D_80146872.'
   - - 560
     - c
-    - seedRouteEnterState3
-    - '@source: src/bof3/scenario/seedRouteEnterState3_scena16.c'
+    - stateRouteChannelArm
+    - '@source: src/bof3/scenario/stateRouteChannelArm.c'
     - '@behavior: Seeds one routed setup path: arms the shared halfword channels D_801492D8 and D_8014932C with 0x100, clears D_801492DC and D_801492DA, runs func_8015C100 and, when func_8015B5D4(D_8014686C, 1) reports success as zero, clears the effect bank D_8014832E, runs func_8015B580(D_8014686C, 1) and enters secondary state 3 by storing 3 in D_80146874. D_8014686C is read once per call.'
   - - 688
     - c
-    - seedRouteEnterState2
-    - '@source: src/bof3/scenario/seedRouteEnterState2_scena16.c'
+    - stateRouteEffectRearm
+    - '@source: src/bof3/scenario/stateRouteEffectRearm.c'
   - - 816
     - c
     - stageRoutePath2Setup

@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 36
     - c
-    - dispatchWorkByte1HandlerBmagicMagic09603_801EEC24
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic09603_801EEC24.c'
+    - callWorkByte1Handler24
+    - '@source: src/bof3/bmagic/callWorkByte1Handler24.c'
     - '@behavior: Overlay entry: reads the work-object pointer cell at 0x1F800044, copies the three-word code pointer prefix at 0x801EEC04 (0x801EEC84, 0x801EEDD8, 0x801EEE40) into its own 0x28-byte frame and invokes the entry the work-object byte 1 selects, with no arguments.'
   - - 132
     - asm
@@ -65,8 +65,8 @@ segments:
     - '@behavior: Entry 4 of the five-word handler run at 0x801EEC10, whose word at 0x801EEC14 holds this address and which the dispatcher at 0x801EEEE4 copies and indexes by the work object byte 2. It reads the scratchpad work-object pointer cell at 0x1F800044 three times, once per store group. The first read adds two modulo 256 to the object unsigned byte 9 with a byte-width read-modify-write; the second adds two to unsigned byte 10 the same way; the third takes the object byte 4 as an index, loads the unsigned byte at that index of the table at 0x801F0488 and compares the object byte 9 read from that same pointer with it. Only on equality it increments the object byte 2, which moves the byte-2 dispatcher to its next step. A frameless leaf that takes no arguments and returns nothing.'
   - - 1864
     - c
-    - decrementWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF348
-    - '@source: src/bof3/bmagic/decrementWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF348.c'
+    - decrementByteAdvanceZero2
+    - '@source: src/bof3/bmagic/decrementByteAdvanceZero2.c'
     - '@behavior: Decrements the unsigned byte 11 of the scratchpad work object reached through the pointer cell at 0x1F800044 with a byte-width read-modify-write, and only when that byte reaches zero re-reads the cell and increments the object''s byte 2 to advance the dispatcher step. A leaf with no frame, no arguments and no return value.'
   - - 1940
     - c
@@ -90,8 +90,8 @@ segments:
     - '@source: src/bof3/bmagic/renderSevenNineRim.c'
   - - 4596
     - c
-    - drawTranslucentGouraudQuadRingAroundOriginBetweenRadiiSixteenTimesWorkByteAPlusSixteenAndPlusOneTwentyEightInEightStepsOf512TintingInnerEdgeByWorkByteATimesNineAndSevenBmagicMagic09603_801EFDF4
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingAroundOriginBetweenRadiiSixteenTimesWorkByteAPlusSixteenAndPlusOneTwentyEightInEightStepsOf512TintingInnerEdgeByWorkByteATimesNineAndSevenBmagicMagic09603_801EFDF4.c'
+    - renderEightStepRing
+    - '@source: src/bof3/bmagic/renderEightStepRing.c'
   - - 5476
     - asm
     - func_801F0164

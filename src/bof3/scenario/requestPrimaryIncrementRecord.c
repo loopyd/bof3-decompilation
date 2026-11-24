@@ -21,7 +21,7 @@ void func_8015C088(void);
  * of the twenty-two-word overlay callback run at 0x801FC468 (0x801FC468
  * through 0x801FC4BC) that dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C
  * (0x801FB37C) indexes with the unsigned record byte at offset 0x7A. Its
- * neighbour requestPrimaryState5
+ * neighbour requestPrimaryState5Substate5
  * (0x801FB574, entry 5) is the same startup-and-request shape for sub-state 5,
  * and the exact sibling lift
  * invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC

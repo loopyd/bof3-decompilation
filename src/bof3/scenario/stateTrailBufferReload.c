@@ -6,7 +6,7 @@
  * wider role is still unknown. Reads of the pointer cell keep their own named
  * loads, which is what keeps the countdown arm's two pointer reads separate
  * `lui`/`lw` pairs in the original bytes. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 extern u16 scenarioHalfword800; /* @source 0x800E4C1E @kind unknown */
 
 /* Trail rebuild at 0x801F88B8, still an `asm` row when this lift was written:
@@ -48,7 +48,7 @@ void func_801F8BE8(u8* buffer);
  * countdown arm keep the original's separate `lui`/`lw` pairs instead of a
  * hoisted base. The 148 bytes share their statement order, operand forms and
  * offset spelling with the already-exact near-twin
- * updateTrailBufferSubtractHalfword800E4C1ETickCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F72E0,
+ * stateTrailRebuildTick,
  * whose body differs only in the halfword literal and in that added countdown
  * reload, so the twin supplied the shape and this span's own bytes supplied the
  * literals.
@@ -64,12 +64,12 @@ void stateTrailBufferReload(void) {
   func_801F88B8(PSX_PTR(u8, 0x800E48E0u));
   func_801F8BE8(PSX_PTR(u8, 0x800E48E0u));
   value = scenarioHalfword800;
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   scenarioHalfword800 = (u16)(value + 6);
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
   if (countdown == 0) {
-    scenarioScena0700Work[9] = 0x20;
-    scenarioScena0700Work[2]++;
+    workPointerCell[9] = 0x20;
+    workPointerCell[2]++;
   }
 }

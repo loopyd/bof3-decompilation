@@ -73,7 +73,7 @@ void func_801C7A54(s32 arg0);
  * table from the shared selection array. */
 void func_801FBC88(void);
 u8 func_8019601C(void);
-void publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80(u8 step);
+void publishWorkBaseFront2(u8 step);
 
 /* @source 0x801FB30C
  * @behavior Primary state 14 of this overlay, reached as word 14 of the
@@ -105,7 +105,7 @@ void publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80(u8 step);
  *           one reset tail that clears D_80146865..D_80146867, runs the shared
  *           overlay release helper func_8015C058 and clears both scene state
  *           bytes. State 10, unless the phase byte reads 2, seeds a front-end
- *           record through publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80
+ *           record through publishWorkBaseFront2
  *           with selector 0x93 and arms secondary state 0x0B; state 11 runs the
  *           sibling subsegment func_801FBC88; state 12, unless the phase byte
  *           reads 2, releases the overlay with mode 4 and arms state 0x0D;
@@ -142,7 +142,7 @@ void publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80(u8 step);
  * different case set each, so they are shape evidence only.
  *
  * Shape evidence: the claim-and-seed statement run is the exact sibling
- * publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80 of this same
+ * publishWorkBaseFront2 of this same
  * target, transcribed three times with this span's own work record and
  * selection slot per copy and with the selector constant 3 written directly
  * instead of that sibling's caller value plus 0x70. The dispatch, the scan
@@ -278,7 +278,7 @@ void runPrimaryState14Phases(void) {
         break;
       }
 
-      publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80(0x93);
+      publishWorkBaseFront2(0x93);
       D_80146875 = 0xBu;
       break;
 

@@ -11,7 +11,7 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Word 1 of the code-pointer run based at 0x801F07BC, which Splat places as the
- * single textbin row T_801F07BC: the fifteen non-zero words from 0x801EF044
+ * single textbin row D_801F07BC: the fifteen non-zero words from 0x801EF044
  * through 0x801F0420, followed by the record pool at 0x801F07F8. The byte-1
  * dispatcher at 0x801EF000 indexes that run from its head, while this body
  * dispatches on work byte 2 from the word at 0x801F07C0, whose own entries are

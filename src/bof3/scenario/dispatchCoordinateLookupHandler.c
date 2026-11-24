@@ -11,10 +11,10 @@ s32 func_801A7AD8(u8 *records, s32 count, u16 coordA, u16 coordB);
  * second coordinate 0x10, then the same key and base with second coordinate
  * 0x13, both carrying flags 0x07 and span count 2. The two bytes at
  * 0x801FD672..0x801FD673 are alignment, and the handler run starts at
- * 0x801FD674. The address is the row's own splat label, so this target's map
- * does not own it.
+ * 0x801FD674. The row's own Splat label is the map row this target spells.
+ * @source 0x801FD668 @kind table
  */
-extern u8 T_801FD668[];
+extern u8 coordinateScanRecords[];
 
 /* The code-pointer run that begins immediately after those records, at
  * 0x801FD674: eighteen overlay handler addresses from 0x801FD178 through
@@ -64,7 +64,7 @@ extern ScenarioScena0500LookupHandler D_801FD674[];
 s32 dispatchCoordinateLookupHandler(u16 coordA, u16 coordB) {
   s8 index;
 
-  index = func_801A7AD8(T_801FD668, 2, coordA, coordB);
+  index = func_801A7AD8(coordinateScanRecords, 2, coordA, coordB);
   if (index < 0) {
     return -1;
   }

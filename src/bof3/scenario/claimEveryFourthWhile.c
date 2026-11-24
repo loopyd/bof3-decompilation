@@ -4,13 +4,13 @@ u8* findFreeWorkRecordScenarioScena0700_801F8394(void);
 void func_801F8478(u8* record);
 s32 func_801F85D8(void);
 void func_801F9330(u8* p);
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* @source 0x801F7AB0
  * @behavior Entry 1, the middle entry of this overlay's three-entry work-state
  * handler run at 0x801FDDB4 (0x801F7A30 / this function /
- * clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68), which the
- * dispatcher dispatchWorkByte2HandlerScenarioScena0700_801F79EC indexes with
+ * stateClearCallbackFlags), which the
+ * dispatcher callWorkByte2Step7 indexes with
  * the work-object byte at scratchpad pointer slot 0x1F800044 + 0x02.
  * It first hands the pointer read from the overlay cell 0x801FDFC0 - the cell
  * func_801F78B0 stores the shared 0x800E4C24 block's address into - to the
@@ -45,16 +45,16 @@ void claimEveryFourthWhile(
 
   func_801F9330(*PSX_PTR(u8*, 0x801FDFC0u));
 
-  if (*(s32*)(scenarioScena0700Work + 0xC) >= 9) {
+  if (*(s32*)(workPointerCell + 0xC) >= 9) {
     record = findFreeWorkRecordScenarioScena0700_801F8394();
-    if ((*(s32*)(scenarioScena0700Work + 0xC) & 3) == 0 && record != 0) {
+    if ((*(s32*)(workPointerCell + 0xC) & 3) == 0 && record != 0) {
       func_801F8478(record);
     }
   }
 
   func_801F85D8();
 
-  work = scenarioScena0700Work;
+  work = workPointerCell;
 
   if (--*(s32*)(work + 0xC) == 0) {
     work[2]++;

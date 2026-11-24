@@ -95,7 +95,7 @@ segments:
     - '@behavior: Draws sixteen semi-transparent Gouraud quads using work-byte-8-selected phase, work-byte-4 grey level, 128-unit radial steps and an 80-unit z edge offset; projects and links size-36 packets at work words 0x34 and 0x38.'
   - - 4532
     - c
-    - dispatchWorkByte1HandlerBmagicMagic01303_801EFDB4
+    - callWorkByte1Handler13
     - '@source: src/bof3/bmagic/magic01303DispatchTables.c'
     - '@behavior: Overlay work-byte-1 dispatcher: reads the scratchpad work object through pointer slot 0x1F800044, takes its unsigned byte at offset 1, scales it by four and calls that entry of the overlay-local three-entry code-pointer run at 0x801F03D8 (entries 0x801EFDF8, 0x801EFE80 and 0x801EFF88) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 4600

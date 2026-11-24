@@ -24,7 +24,7 @@ void func_80196070(void);
 /* @source 0x801F7810
  * @behavior Entry 3, the last word of the four-word in-image code-pointer run
  * labelled D_801FDD8C at 0x801FDD8C (0x801F7638 / 0x801F76D0 / 0x801F77AC /
- * this function), which dispatchWorkByte2HandlerScenarioScena0700_801F75F4
+ * this function), which callWorkByte2Step5
  * indexes with the scratchpad work object's unsigned byte at offset 0x02, so it
  * runs while that byte reads three; no in-image `jal` reaches the address and
  * that run word at 0x801FDD98 is the only image reference to it. It loads the
@@ -45,7 +45,7 @@ void func_80196070(void);
  * Seed and representation notes. Written directly from this span's original
  * bytes with the statement order, operand forms, offset spelling and
  * declaration style of the sibling run members
- * tickObjectRampDrawQuadAndAdvanceHandlerScenarioScena0700_801F77AC (the
+ * tickEffectObjectRamp (the
  * pointer-cell load before the frame, the in-place word update and the second
  * read of the cell after the call) and
  * stateEffectObjectDistance

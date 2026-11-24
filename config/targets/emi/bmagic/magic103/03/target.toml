@@ -9,23 +9,23 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/callWorkHandlerTableec04.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic10303_801EEE94.c",
-    "src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic10303_801EEE38.c",
+    "src/bof3/bmagic/raiseFlag4InvokeHelper2.c",
+    "src/bof3/bmagic/callForwardBattleAdvance.c",
 ]
 support_sources = [
     "src/bof3/bmagic/renderEightBandsThirty.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF128And04E0AndPopWhenWorkBytes0And2SetBmagicMagic10303_801F02BC.c",
-    "src/bof3/bmagic/incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic10303_801F0460.c",
+    "src/bof3/bmagic/callHandlerPopSet2.c",
+    "src/bof3/bmagic/incrementUpGlobalZero2.c",
     "src/bof3/bmagic/stateScratchPlusBytes.c",
     "src/bof3/bmagic/callIncrementTwoIncrement.c",
     "src/bof3/bmagic/callSubtractHalfPrevious.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenCallFE20WhenWorkBytes0And2SetBmagicMagic10303_801EFB10.c",
+    "src/bof3/bmagic/callWorkHandlerSet2.c",
     "src/bof3/bmagic/decrementIndexedTripletClear.c",
     "src/bof3/support/magic103_03_psyq.c",
     "src/bof3/bmagic/magic10303DispatchTables.c",
     "src/bof3/bmagic/copyWordPairHalfword.c",
-    "src/bof3/bmagic/copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801F0344.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At1EBmagicMagic10303_801F0410.c",
+    "src/bof3/bmagic/copyWordTripletClear2.c",
+    "src/bof3/bmagic/incrementWorkAdvanceWork2.c",
     "src/bof3/bmagic/incrementByteTwoAdvance.c",
 ]
 psyq_source = "src/bof3/support/magic103_03_psyq.c"

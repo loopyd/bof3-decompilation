@@ -19,7 +19,7 @@ extern u32 D_801FA210[];
  * indirectly, through the same-overlay chain dispatcher
  * callStateChainHandler (0x801F8124) that indexes
  * that run with D_80146872. Its own table at 0x801FA210 holds three code words -
- * the inert entry noopHandlerScenarioScena0400_801F8678 (0x801F8678, word 0),
+ * the inert entry noopStepHandler (0x801F8678, word 0),
  * func_801F8680 (word 1) and func_801F8F98 (word 2) - and the word that follows
  * it at 0x801FA21C is 0xFF000100, not a code pointer. Its 60 bytes are
  * instruction-for-instruction identical to the exact siblings

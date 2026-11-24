@@ -6,7 +6,7 @@ typedef void (*ScenarioScena1400RecordCallback)(u8 *record, u32 arg1);
  * unsigned byte field at offset 0x7A: its twenty-two code-pointer words run
  * from func_801FB3BC (0x801FB3BC, word 0) through func_801FC328 (0x801FC328,
  * word 21), word 5 being
- * requestPrimaryState5 (0x801FB574) and
+ * requestPrimaryState5Substate5 (0x801FB574) and
  * word 8 being func_801FBD2C (0x801FBD2C). It begins immediately after the
  * seven data words at 0x801FC44C and ends immediately before the zero word at
  * 0x801FC4C0.

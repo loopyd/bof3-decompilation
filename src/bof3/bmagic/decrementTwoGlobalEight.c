@@ -18,7 +18,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* @source 0x801EF2AC
  * @behavior Per-frame handler reached through the pointer run at 0x801F04F8
- *           (this target's textbin entry T_801F04F8): the little-endian word
+ *           (this target's textbin entry D_801F04F8): the little-endian word
  *           0x801EF2AC at 0x801F1914 is the only place in the payload that
  *           addresses this function, so it has no jal caller. It reads the
  *           scratchpad work object through the pointer cell at 0x1F800044 once

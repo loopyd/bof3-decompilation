@@ -30,16 +30,16 @@ segments:
   subsegments:
   - - 20
     - c
-    - dispatchWorkByte1HandlerBmagicMagic10403_801EEC14
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic10403_801EEC14.c'
+    - callWorkByte1Handler26
+    - '@source: src/bof3/bmagic/callWorkByte1Handler26.c'
     - '@behavior: Per-frame step dispatcher of the overlay: reads the scratchpad work-object pointer cell at 0x1F800044 once, copies the four-word step run at 0x801EEC04 into the 0x10 record of its 0x28-byte frame and calls the word selected by unchecked work byte 0x1. Takes no arguments and returns nothing.'
   - - 128
     - asm
     - func_801EEC80
   - - 636
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBIs7BmagicMagic10403_801EEE7C
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBIs7BmagicMagic10403_801EEE7C.c'
+    - stateBarrierSevenSet
+    - '@source: src/bof3/bmagic/stateBarrierSevenSet.c'
     - '@behavior: Stage handler at index 1 of the four-word code pointer run at 0x801EEC04 that the overlay entry at 0x801EEC14 dispatches with work byte 0x1. Reads the scratchpad work-object pointer cell at 0x1F800044 once and tests work byte 0xB against seven by equality; only on that path it stores 8 into work byte 0x9 and then re-reads the cell to increment work byte 0x1 by one, moving the stage index from 1 to 2. Takes no arguments and returns nothing.'
   - - 704
     - asm
@@ -114,7 +114,7 @@ segments:
     - func_801F03C4
   - - 7336
     - textbin
-    - workWord0C10SeedPairTable
+    - workSeedPairTable
   - - 7400
     - textbin
     - T_801F08E8

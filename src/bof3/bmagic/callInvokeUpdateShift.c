@@ -12,7 +12,7 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Word 11 of the fifteen-word code-pointer run based at 0x801F07BC, which Splat
- * places as the single textbin row T_801F07BC: 0x801F0320, 0x801F038C,
+ * places as the single textbin row D_801F07BC: 0x801F0320, 0x801F038C,
  * 0x801F03DC and 0x801F0420 follow it. The work record's byte 2 scales by four
  * and is added to 0x801F07E8, so the extern is declared at the indexed word and
  * the run stays that one map row; the generated undefined_syms_auto.txt row for

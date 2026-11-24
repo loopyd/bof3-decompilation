@@ -4,7 +4,7 @@
  * work-pointer cell at 0x1F800044. Each source-level read keeps its own cell
  * load, because the handler-advance arm's pointer read follows stores through
  * the pointer an earlier read returned. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* Overlay-local pointer cell holding the shared main-RAM effect object at
  * 0x800E5148, which this handler publishes into it. The cell has no target map
@@ -22,7 +22,7 @@ extern s32 func_8015477C(s32 x, s32 y);
 /* @source 0x801F7638
  * @behavior Overlay handler and word 0 of the four-word in-image code-pointer
  * run labelled D_801FDD8C at 0x801FDD8C, which
- * dispatchWorkByte2HandlerScenarioScena0700_801F75F4 indexes with the scratchpad
+ * callWorkByte2Step5 indexes with the scratchpad
  * work object's unsigned byte at offset 0x02, so it runs while that byte reads
  * zero; no in-image `jal` reaches the address and that run word is the only
  * image word naming it. It loads the work-object pointer cell at 0x1F800044
@@ -50,13 +50,13 @@ extern s32 func_8015477C(s32 x, s32 y);
  * (0x801F7D6C) and stateDistanceTransitionArm
  * (0x801F7A30), which supplied the statement order, operand forms, offset
  * spelling and declaration style, and from the dispatcher
- * dispatchWorkByte2HandlerScenarioScena0700_801F75F4 for the run membership. The
+ * callWorkByte2Step5 for the run membership. The
  * clone lever was declined: a scan of the 398 payloads under out/binaries for
  * this 0x98-byte span matched the span itself only, so no byte-identical twin
  * exists anywhere. Probes before this gate, every one of them 152 bytes unless
  * noted: the SPAD_PTR_SLOT(u8,0x44u) spelling measured 24/38 (164 bytes) because
  * it kept 0x1F800044 in $s0 and emitted a `lui`/`ori` base; the map's named cell
- * scenarioScena0700Work with three separate reads measured 30/38; adding the
+ * workPointerCell with three separate reads measured 30/38; adding the
  * 0x10-byte frame reservation measured 34/38, where 0x20 bytes of reservation
  * gave 30/38; the copy order 0x800E5148 / 0x801FDFBC / 0x800E514C / 0x800E5158 /
  * 0x800E5150 measured 34/38 and 36/38 in its permutations, and the order
@@ -76,9 +76,9 @@ void stateEffectObjectDistance(
    * instruction touches, so no use is made of this region. */
   u32 pad[4];
 
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   distance = func_8015477C(*(s32*)(work + 0x34), *(s32*)(work + 0x38));
-  saved = scenarioScena0700Work;
+  saved = workPointerCell;
   *(s32*)(saved + 0x3C) = distance << 16;
   PSX_REF(s32, 0x800E5148u) = *(s32*)(saved + 0x34);
   PSX_REF(s32, 0x800E514Cu) = *(s32*)(saved + 0x38);
@@ -86,7 +86,7 @@ void stateEffectObjectDistance(
   PSX_REF(s32, 0x800E5150u) = *(s32*)(saved + 0x3C);
   PSX_REF(u16, 0x800E5158u) = 0;
   saved[9] = 0;
-  advance = scenarioScena0700Work;
+  advance = workPointerCell;
   *(s32*)(advance + 0x0C) = 0x5F;
   advance[2]++;
 }

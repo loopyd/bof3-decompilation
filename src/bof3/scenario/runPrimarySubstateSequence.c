@@ -161,7 +161,7 @@ void func_801C16B8(void);
  *           handler run at 0x801FA210, which
  *           callPrimaryHandler indexes with
  *           the signed shared state byte D_80146874. Word 0 of that run is the
- *           inert noopHandlerScenarioScena0400_801F8678 and word 2 is the
+ *           inert noopStepHandler and word 2 is the
  *           state-2 substate controller at 0x801F8F98, so this body is the
  *           overlay's second primary state and its only non-inert one besides
  *           state 2. It switches on the shared substate byte D_80146875 with an
@@ -238,7 +238,7 @@ void func_801C16B8(void);
  *           substates 5 and 8.
  *
  * Shape notes from the original bytes: this body was seeded on the exact
- * sibling runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98, the word-2
+ * sibling runSubstateController, the word-2
  * handler of the same 0x801FA210 run, which carries the same dispatch prologue -
  * the substate byte read hoisted above the frame setup, the unsigned 31 bound,
  * the scaled table read and the indirect jump - plus the same countdown and

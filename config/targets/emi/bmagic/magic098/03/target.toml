@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/magic098_03_psyq.c",
     "src/bof3/bmagic/magic09803DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic09803_801EF498.c",
+    "src/bof3/bmagic/incrementTwoGlobalZero3.c",
     "src/bof3/bmagic/workSubmitSelectedRaise.c",
     "src/bof3/bmagic/renderScaledLineCounted.c",
 ]

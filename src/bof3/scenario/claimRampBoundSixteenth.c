@@ -11,7 +11,7 @@ s32 func_801F9EFC(void);
  * is what makes each of them re-materialize the cell address in a caller-saved
  * register after the pass call below (see the representation note under the
  * metadata block). */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* Overlay-local pointer cell holding the shared main-RAM effect object at
  * 0x800E5148 whose draw bound this handler ramps. The cell sits in the
@@ -45,7 +45,7 @@ extern u8 D_801FDD84[];
  * @behavior Entry 1 (the word at 0x801FDD74) of this overlay's three-entry
  * in-image code-pointer run based at 0x801FDD70 (0x801F7408 / this address /
  * stateTableIdle), which
- * dispatchWorkByte2HandlerScenarioScena0700_801F73C4 indexes with the work
+ * callWorkByte2Step4 indexes with the work
  * object's unsigned byte at offset 0x02; no in-image `jal` reaches the address
  * and that run word is the only image reference to it. It loads the scratchpad
  * work-object pointer cell at 0x1F800044 ahead of the frame reservation, reads
@@ -113,13 +113,13 @@ void claimRampBoundSixteenth(
     }
   }
 
-  if ((*(u32*)(scenarioScena0700Work + 0xC) & 0xF) == 0) {
-    scenarioScena0700Work[9]++;
+  if ((*(u32*)(workPointerCell + 0xC) & 0xF) == 0) {
+    workPointerCell[9]++;
   }
 
   func_801F9EFC();
 
-  again = scenarioScena0700Work;
+  again = workPointerCell;
 
   if (--*(s32*)(again + 0xC) == 0) {
     again[2]++;

@@ -6,10 +6,10 @@ void func_80196070(void);
 /* @source 0x801F7DDC
  * @behavior Overlay per-frame handler: word 3 of the twelve-word in-image
  * code-pointer run based at 0x801FDDC0 (the word at 0x801FDDCC), which
- * dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad
+ * callWorkByte2Step8 indexes with the scratchpad
  * work object's unsigned byte at offset 0x02, so it runs while that byte reads 3.
  * That same word is word 1 of the ten-word run based at 0x801FDDC8, so
- * dispatchWorkByte2HandlerScenarioScena0700_801F7D28 selects it as well, when
+ * callWorkByte2Step9 selects it as well, when
  * that byte reads 1. Those two run words are the only image words naming the
  * address, and no in-image jal reaches it.
  * It first runs this overlay's effect draw pass at 0x801FA38C with no arguments

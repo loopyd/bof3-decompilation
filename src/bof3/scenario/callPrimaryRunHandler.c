@@ -5,8 +5,8 @@ extern s8 D_80146874;
 /* Overlay-local primary state-dispatch table of this code span's scenario
  * handlers, indexed by the signed shared primary state byte D_80146874: its
  * thirty-two code words run from the inert entry
- * noopHandlerScenarioScena0500_801F8428 (0x801F8428, word 0) to
- * clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCD0C
+ * noopInertSlot (0x801F8428, word 0) to
+ * clearProgressRequestMode
  * (0x801FCD0C, word 31), so that byte selects which of the overlay's primary
  * states runs this frame. It begins immediately after the last word of the
  * three-word state row at 0x801FD5DC, and the word immediately after its last

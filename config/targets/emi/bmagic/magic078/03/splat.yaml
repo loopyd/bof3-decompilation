@@ -40,7 +40,7 @@ segments:
     - '@behavior: Entry index 1 of the two-entry work-byte-1 handler run that the per-frame driver at 0x801EEC04 builds on its stack and stores this span into at 0x1C, so there is no jal immediate. It loads the scratchpad work-object pointer cell at 0x1F800044 once before its 0x18-byte frame exists, compares the work object unsigned byte 0xB against 0xFF, and only on that equality forwards the shared battle byte at 0x80146384 to helper 0x800A9820, raises bit 4 of the shared halfword at 0x801462E8 and invokes helper 0x801E5988.'
   - - 740
     - c
-    - dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4
+    - callWorkByte1Handler5
     - '@source: src/bof3/bmagic/magic07803DispatchTables.c'
     - '@behavior: Overlay per-frame handler dispatcher: reads the scratchpad work-object pointer cell at 0x1F800044, takes the object byte at offset 0x01 as an index, scales it by four and invokes the selected entry of the nine-word in-image code pointer run based at 0x801F0878 (0x801EEF28, 0x801EFF84, 0x801EF08C, 0x801EF0E0, 0x801EF12C, 0x801EF1CC, 0x801EF228, 0x801EF278, 0x801EF2CC) with no arguments. It reads no other state and writes none; the pointer cell is loaded before the 0x18-byte frame is created and that frame only keeps $ra across the indirect call.'
   - - 808

@@ -50,7 +50,7 @@ void func_801EF70C(int angle, int offset);
  *           arguments, returns nothing and reads or writes no other state. No
  *           jal in this payload reaches it: its address is entry 0 of the
  *           handler table based at 0x801F066C, the word at 0x801F066C inside
- *           the textbin row T_801F065C that the byte-1 dispatcher
+ *           the textbin row D_801F065C that the byte-1 dispatcher
  *           callStateTable066 indexes.
  * @status exact
  * @match 100.00

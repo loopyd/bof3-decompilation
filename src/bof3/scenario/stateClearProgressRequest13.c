@@ -35,8 +35,8 @@ void func_8015C088(void);
  * address and that table word is its only image reference. Its 84 bytes
  * repeat the helper-and-clear shape of the sibling lifts in this target
  * stateClearSharedRequest16
- * (0x801FCC28), clearSharedStateBytesThenRequestPrimaryState11ScenarioScena0500_801FCC74
- * (0x801FCC74) and clearSharedStateBytesThenRequestPrimaryState12ScenarioScena0500_801FCCC0
+ * (0x801FCC28), clearStateRequestMode11
+ * (0x801FCC74) and clearStateRequestMode12
  * (0x801FCCC0), which run the same helper, clear the same four state bytes
  * and differ from this body in the one extra g_ScenarioProgress clear and in
  * the stored primary-state immediate.

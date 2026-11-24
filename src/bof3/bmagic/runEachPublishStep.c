@@ -54,7 +54,7 @@ extern BmagicMagic02103DispatchTable D_801EEC04; /* @source 0x801EEC04 @kind dat
  * at 0x1F800044 and calls the handler its unsigned byte 1 selects from the
  * four-entry run at 0x801EFE04, so publishing a record there makes it run that
  * record's step. */
-extern void dispatchWorkByte1HandlerBmagicMagic02103_801EF534(void); /* @source 0x801EF534 @kind function */
+extern void callWorkByte1Handler10(void); /* @source 0x801EF534 @kind function */
 
 /* @source 0x801EEC28
  * @behavior Per-frame entry of this overlay. It copies the three code-pointer
@@ -102,7 +102,7 @@ void runEachPublishStep(void) {
             recordWork = *(u8 **)&recordFlagPool[offset + 0x74];
             g_battle_work = record;
             D_801EB4E0 = recordWork;
-            dispatchWorkByte1HandlerBmagicMagic02103_801EF534();
+            callWorkByte1Handler10();
             D_801EB4E0 = savedRecord;
             g_battle_work = savedWork;
         }

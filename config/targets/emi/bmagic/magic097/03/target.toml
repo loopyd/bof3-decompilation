@@ -10,9 +10,9 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/support/magic097_03_psyq.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic09703_801EEF38.c",
+    "src/bof3/bmagic/raiseInvokeHelperZero2.c",
     "src/bof3/bmagic/magic09703DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic09703_801EF488.c",
+    "src/bof3/bmagic/incrementTwoGlobalZero2.c",
     "src/bof3/bmagic/callDrawRecordPop.c",
     "src/bof3/bmagic/renderFanTintedJittered.c",
     "src/bof3/bmagic/renderSeventeenSliceRibbon.c",

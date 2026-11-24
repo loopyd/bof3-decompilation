@@ -38,13 +38,13 @@ segments:
     - func_801EEC70
   - - 568
     - c
-    - forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic10303_801EEE38
-    - '@source: src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic10303_801EEE38.c'
+    - callForwardBattleAdvance
+    - '@source: src/bof3/bmagic/callForwardBattleAdvance.c'
     - '@behavior: Entry 1 of the three-entry code pointer run in this payload''s leading data at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94); the run''s second word at 0x801EEC08 holds this address and the payload dispatcher callWorkHandlerTableec04 calls the entry named by work byte 0x1. Reads the scratchpad work-object pointer cell at 0x1F800044 and tests work byte 0xB; only when that byte is zero does it forward the unsigned battle byte 0x80146384 to helper 0x800A9820, re-read the cell, and increment work byte 1. The 0x18-byte frame only keeps the return address across that call. Nothing is returned and no other state is read or written.'
   - - 660
     - c
-    - raiseFlag4AndInvokeHelperBmagicMagic10303_801EEE94
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic10303_801EEE94.c'
+    - raiseFlag4InvokeHelper2
+    - '@source: src/bof3/bmagic/raiseFlag4InvokeHelper2.c'
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the helper at 0x801E5988 with no arguments. Its address is the third word (index 2) of the three-word code pointer run at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94) in this payload''s leading data; the payload dispatcher callWorkHandlerTableec04 copies those words into its frame and calls the entry named by work byte 0x1. The halfword address is materialized once and kept live across the call, so the read-modify-write goes through a local pointer; the 0x18-byte frame holds only the return address. Nothing is returned and no other state is read or written.'
   - - 712
     - c
@@ -79,8 +79,8 @@ segments:
     - func_801EF7CC
   - - 3856
     - c
-    - dispatchWorkByte2HandlerThenCallFE20WhenWorkBytes0And2SetBmagicMagic10303_801EFB10
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallFE20WhenWorkBytes0And2SetBmagicMagic10303_801EFB10.c'
+    - callWorkHandlerSet2
+    - '@source: src/bof3/bmagic/callWorkHandlerSet2.c'
     - '@behavior: Dispatches the work-byte-2 handler, reloads the work pointer and calls 0x801EFE20 when work bytes 0 and 2 are nonzero.'
   - - 3976
     - c
@@ -105,13 +105,13 @@ segments:
     - func_801EFE20
   - - 5820
     - c
-    - dispatchWorkByte2HandlerThenCallF128And04E0AndPopWhenWorkBytes0And2SetBmagicMagic10303_801F02BC
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF128And04E0AndPopWhenWorkBytes0And2SetBmagicMagic10303_801F02BC.c'
+    - callHandlerPopSet2
+    - '@source: src/bof3/bmagic/callHandlerPopSet2.c'
     - '@behavior: Dispatches the work-byte-2 handler through 0x801F07D4, reloads the work pointer and calls 0x801EF128, 0x801F04E0 and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 5956
     - c
-    - copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801F0344
-    - '@source: src/bof3/bmagic/copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801F0344.c'
+    - copyWordTripletClear2
+    - '@source: src/bof3/bmagic/copyWordTripletClear2.c'
     - '@behavior: Copies the words at 0x34, 0x38 and 0x3C of the battle record published at 0x8014638C into the scratchpad work object published at the pointer cell 0x1F800044, clears work byte 9 and work byte 0xA, and advances work byte 2 by one. The word at 0x3C is held in a local so its load precedes the byte 9 clear and its store follows it, and the pointer cell is re-read before that store and before the byte 0xA clear.'
   - - 6052
     - c
@@ -120,13 +120,13 @@ segments:
     - '@behavior: Adds two to work byte 0xA, re-reads the pointer cell at 0x1F800044, and increments work byte 9. When that truncated byte equals eight, re-reads the cell and increments work byte 2.'
   - - 6160
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At1EBmagicMagic10303_801F0410
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At1EBmagicMagic10303_801F0410.c'
+    - incrementWorkAdvanceWork2
+    - '@source: src/bof3/bmagic/incrementWorkAdvanceWork2.c'
     - '@behavior: Increments work byte 9 through the pointer cell at 0x1F800044, tests the truncated byte against 0x1E, and only on equality re-reads the pointer cell and increments work byte 2.'
   - - 6240
     - c
-    - incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic10303_801F0460
-    - '@source: src/bof3/bmagic/incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic10303_801F0460.c'
+    - incrementUpGlobalZero2
+    - '@source: src/bof3/bmagic/incrementUpGlobalZero2.c'
     - '@behavior: Increments work byte 9 unless it equals 0x2E, reloads the work pointer and decrements byte 0xA, then on zero decrements byte 0xB through pointer cell 0x801EB4E0 and calls helper 0x801E5988.'
   - - 6368
     - asm

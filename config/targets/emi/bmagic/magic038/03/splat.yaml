@@ -44,7 +44,7 @@ segments:
     - '@behavior: Overlay work-byte-1 handler, entry 2 of the three-entry code pointer run at 0x801EEC04 (0x801EEC70, 0x801EEE14, 0x801EF084) that 0x801EEC10 copies into its frame and selects with the work object byte 1. Reads the scratchpad work-object pointer cell at 0x1F800044 once and, only when the work object byte at offset 0xB is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 with a halfword read-modify-write and calls the shared helper at 0x801E5988 with no arguments, the store filling the delay slot; the 0x18-byte frame only keeps $ra across that call.'
   - - 1232
     - c
-    - dispatchWorkByte1HandlerBmagicMagic03803_801EF0D0
+    - callWorkByte1Handler8
     - '@source: src/bof3/bmagic/magic03803DispatchTables.c'
     - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler-pointer table at 0x801EF9A4 (seven in-image code pointers, entry 0 = 0x801EF114 through entry 6 = 0x801EF884, followed by the packed byte words at 0x801EF9C0) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 1300

@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/bmagic/callStateTable09.c",
+    "src/bof3/bmagic/callDispatchStepService.c",
     "src/bof3/support/magic173_03_psyq.c",
     "src/bof3/bmagic/magic17303DispatchTables.c",
     "src/bof3/bmagic/insertEmptyRecordAtWorkByteBAndShiftRowRecordsUpBmagicMagic17303_801F03A0.c",

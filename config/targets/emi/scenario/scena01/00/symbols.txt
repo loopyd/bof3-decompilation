@@ -74,6 +74,6 @@ stateIndexedEffectGroup = 0x801FE10C;
 func_801FE1B0 = 0x801FE1B0;
 callHelperArg4Solo = 0x801FE224;
 callHelperArg4Pair = 0x801FE244;
-T_801FE26C = 0x801FE26C;
+workByteHandlerTable = 0x801FE26C;
 coordinateRecordTable = 0x801FE350;
 coordinateHandlersTable = 0x801FE35C;

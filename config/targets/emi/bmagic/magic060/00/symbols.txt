@@ -1,5 +1,5 @@
 g_battle_work = 0x1F800044;
-dispatchWorkByte1HandlerBmagicMagic06000_801EEC34 = 0x801EEC34;
+callWorkByte1Handler15 = 0x801EEC34;
 queuePointerTargetKind = 0x801EECA4;
 queueSlotPublishPointer = 0x801EED68;
 renderPartyEnemyTarget = 0x801EEE00;

@@ -2,12 +2,12 @@
 
 extern u16 D_80143F00;
 
-s32 requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4(
+s32 checkStageRecordMatch(
     s32 arg0, s32 arg1);
 
 /* @source 0x801F9DB4
  * @behavior Route-0x28 gate of this overlay in front of its own packed-record
- * handler requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4
+ * handler checkStageRecordMatch
  * (0x801F9DF4): when the shared route word D_80143F00
  * reads 0x28 (40) it forwards its own two incoming packed record words
  * unchanged (no argument register is set up anywhere in its body) and returns
@@ -38,7 +38,7 @@ s32 requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F
  */
 s32 forwardRoute28Record(s32 arg0, s32 arg1) {
   if (D_80143F00 == 0x28) {
-    return (s8)requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4(
+    return (s8)checkStageRecordMatch(
         arg0, arg1);
   }
   return 0;

@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 52
     - c
-    - dispatchWorkByte1HandlerBmagicMagic06000_801EEC34
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06000_801EEC34.c'
+    - callWorkByte1Handler15
+    - '@source: src/bof3/bmagic/callWorkByte1Handler15.c'
     - '@behavior: Work-byte-1 step dispatcher of this overlay and its entry point: it loads the scratchpad work-object pointer cell 0x1F800044 before the frame exists, copies the five-entry code pointer run at 0x801EEC04 (0x801EECA4, 0x801EED68, 0x801EEE00, 0x801EEE84 and 0x801EEF04, terminated by a zero word at 0x801EEC18) into its own 0x30-byte frame at sp+0x10, and calls the entry selected by that object byte at offset 0x1 scaled by four. The selector is not bounds-checked, no result of the selected step is propagated, and the 0x30-byte frame keeps only ra at 0x28. No word of this payload holds its own entry address, so the prologue and return path alone place the boundary.'
   - - 164
     - c

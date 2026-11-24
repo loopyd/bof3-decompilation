@@ -5,7 +5,7 @@
  * named-cell load, because a store through the pointer it returned could write
  * that very cell, so this body reads the cell three times: once for the
  * arithmetic, once for the two end tests and once for the handler advance. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* Trail rebuild at 0x801F88B8, still an `asm` row in this target's map: it
  * shifts the trail records and recomputes their projected points and headings.
@@ -69,16 +69,16 @@ void stateTrailBufferSubtract(
 
   func_801F88B8(PSX_PTR(u8, 0x800E48E0u));
   func_801F8BE8(PSX_PTR(u8, 0x800E48E0u));
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   *(u32*)&work[0x34] -= 0x10000;
   *(u32*)&work[0x38] += 0;
   *(u32*)&work[0x3C] += *(u32*)&work[0x14];
   if (*(u32*)&work[0x14] != 0) {
     *(u32*)&work[0x14] += 0x800000;
   }
-  next = scenarioScena0700Work;
+  next = workPointerCell;
   if (*(u32*)&next[0x34] == *(u32*)&next[0x0C] && *(u32*)&next[0x38] == *(u32*)&next[0x10]) {
     next[9] = 0x2F;
-    scenarioScena0700Work[2]++;
+    workPointerCell[2]++;
   }
 }

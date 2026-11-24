@@ -5,7 +5,7 @@
  * named-cell load, because a store through the pointer it returned could write
  * that very cell, so the handler-advance arm's pointer read is a separate
  * `lui`/`lw` pair from the one saved pointer the arithmetic runs through. */
-extern u8* scenarioScena0700Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workPointerCell; /* @source 0x1F800044 @kind unknown */
 
 /* Trail rebuild at 0x801F88B8, still an `asm` row: it shifts the trail records
  * and recomputes their projected points and headings. A payload cmp showed its
@@ -35,7 +35,7 @@ void func_801F8BE8(u8* buffer);
  * @source 0x801F7EF8
  * @behavior Overlay per-frame handler: entry 5 of the twelve-word in-image
  * code-pointer run based at 0x801FDDC0 (the word at 0x801FDDD4), which
- * dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the
+ * callWorkByte2Step8 indexes with the
  * scratchpad work object's unsigned byte at offset 0x02, so this handler runs
  * while that byte reads 5. It runs the trail rebuild at 0x801F88B8 on the trail
  * buffer base 0x800E48E0, then the trail draw pass at 0x801F8BE8 on that same
@@ -62,12 +62,12 @@ void stateTrailBufferTarget(void) {
 
   func_801F88B8(PSX_PTR(u8, 0x800E48E0u));
   func_801F8BE8(PSX_PTR(u8, 0x800E48E0u));
-  work = scenarioScena0700Work;
+  work = workPointerCell;
   *(u32*)&work[0x34] += *(u32*)&work[0x0C];
   *(u32*)&work[0x38] += *(u32*)&work[0x10];
   *(u32*)&work[0x3C] += *(u32*)&work[0x14];
   if (*(u32*)&work[0x34] == *(u32*)&work[0x18] && *(u32*)&work[0x38] == *(u32*)&work[0x1C]) {
     work[9] = 0x2F;
-    scenarioScena0700Work[2]++;
+    workPointerCell[2]++;
   }
 }
