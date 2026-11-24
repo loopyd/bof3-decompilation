@@ -31,7 +31,7 @@ void func_8015C088(void);
  * 0x14; the stored 4 is the emitted `addiu v0,zero,0x4` and the cleared 0 is
  * the emitted `sb $zero`, the pair the same repository names
  * "RequestPrimaryState4Substate0" in
- * requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC
+ * requestPrimaryFrontEnd
  * (0x801FC9DC). The address anchor keeps the name target-qualified.
  *
  * Table evidence: the address is word 0 of the nine-entry callback-pointer run

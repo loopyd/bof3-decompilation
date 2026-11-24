@@ -19,7 +19,7 @@ void clearOwnerRecordHead(u8 id); /* @source 0x800AC934 */
  * from that evaluated sibling while the callee binding here uses the canonical
  * in-repo name of 0x800AC934.
  */
-void clearOwnerRecordHeadsBossBoss03016_800C1A84(void) {
+void stateOwnerHeadsBoss(void) {
   clearOwnerRecordHead(0);
   clearOwnerRecordHead(1);
   clearOwnerRecordHead(2);

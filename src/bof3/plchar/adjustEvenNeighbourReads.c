@@ -9,13 +9,13 @@
 extern u8* D_1F800044;
 
 /* Step test of this payload, lifted exact at 0x801CF7A0 as
- * testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0:
+ * checkProjectedAgainstCodes:
  * it reads work byte 8, takes that entry of the direction-vector word tables at
  * 0x80181B94/0x80181B98, offsets the record position held at work +0x34/+0x38 by
  * the entry and classifies the tile the step lands on. This caller reads that
  * answer as an unsigned byte.
  */
-u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0(
+u8 checkProjectedAgainstCodes(
     void);
 
 /* Position refresh of this payload, lifted exact at 0x801CF944 as
@@ -69,10 +69,10 @@ void adjustEvenNeighbourReads(
     void) {
   if (!(D_1F800044[8] & 1)) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0() ==
+    if (checkProjectedAgainstCodes() ==
         0) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0() ==
+      if (checkProjectedAgainstCodes() ==
           0) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }

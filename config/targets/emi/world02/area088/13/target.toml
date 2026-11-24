@@ -13,7 +13,7 @@ sources = [
     "src/bof3/world/snapshotResourceKeyArm.c",
     "src/bof3/world/stepPairRunUpdates.c",
     "src/bof3/world/projectScrollIntoScratchSelectByte0BThenDispatchModeWorld02Area08813_801F3A50.c",
-    "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld02Area08813_801F4E58.c",
+    "src/bof3/world/stateFacingPositionResource.c",
     "src/bof3/world/initializeStampMapGated.c",
     "src/bof3/world/stateRandomTicksGated.c",
     "src/bof3/world/stateHeadingsAverageAngles.c",

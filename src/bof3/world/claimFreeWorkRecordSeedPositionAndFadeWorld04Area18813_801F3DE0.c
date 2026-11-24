@@ -9,7 +9,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * 0x18-byte-stride record table based at 0x800E4800 - the main-RAM work area
  * this overlay shares with the world and scenario overlays, whose 0x18-stride
  * byte-0 boundary this target's exact
- * clearWorkTableByte0At800E4800World04Area18813_801F3DB4 also clears - and
+ * stateWorkTableByte0 also clears - and
  * claims the first entry whose byte at offset 0 reads zero, storing 1 there.
  * It then seeds that record: byte 1 takes 0, byte 2 takes 0x10, the triple at
  * 0x04/0x08/0x0C takes the published scratch work object's words 0x34/0x38/0x3C

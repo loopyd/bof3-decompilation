@@ -49,7 +49,7 @@ extern s32 D_80181BC0;
  * answer to a byte before the branch. The two jal words at 0x801CECA8 and
  * 0x801CECD8 of this span are the only sites that reach it in this payload.
  */
-u8 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp57800_801CF528(
+u8 checkProjectedAgainstCode(
     void);
 
 /* Screen-space position routine of the shared EXE image, outside this payload:
@@ -148,10 +148,10 @@ void adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeL
 
   if (!(D_1F800044[8] & 1)) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp57800_801CF528() ==
+    if (checkProjectedAgainstCode() ==
         0) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp57800_801CF528() ==
+      if (checkProjectedAgainstCode() ==
           0) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }

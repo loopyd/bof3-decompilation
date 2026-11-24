@@ -63,7 +63,7 @@ u8 func_8019601C(void);
  * @match 100.00
  * @residual none
  */
-void seedFrontEndRecordHandler90AndClearRowByte1FromWorkPositionWorld03Area13413_801F557C(
+void stateFrontRowPosition(
     void) {
   u8* record;
   u8* work;

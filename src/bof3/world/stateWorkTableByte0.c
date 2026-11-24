@@ -19,7 +19,7 @@
  * @match 100.00
  * @residual none
  */
-void clearWorkTableByte0At800E4800World04Area18813_801F3DB4(void) {
+void stateWorkTableByte0(void) {
   u8* work;
   u8 i;
 

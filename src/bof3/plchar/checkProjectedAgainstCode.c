@@ -68,7 +68,7 @@ u8 func_80166CB0(s16 col, s16 row);
  * @match 100.00
  * @residual none
  */
-u8 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp57800_801CF528(
+u8 checkProjectedAgainstCode(
     void) {
   u8* work;
   u8 route;

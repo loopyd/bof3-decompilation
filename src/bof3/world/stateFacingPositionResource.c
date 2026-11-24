@@ -51,7 +51,7 @@ void func_8014D290(void);
  * @match 100.00
  * @residual none
  */
-void seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld02Area08813_801F4E58(
+void stateFacingPositionResource(
     void) {
   u8* record;
   s16 stepped;

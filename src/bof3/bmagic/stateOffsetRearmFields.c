@@ -62,7 +62,7 @@ extern void func_8015DF18(u32 cue); /* @source 0x8015DF18 */
  * @match 100.00
  * @residual none
  */
-void seedMotionOffsetPositionPairDistanceCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic13703_801EF090(void) {
+void stateOffsetRearmFields(void) {
   u32 *work;
   u32 *position;
   u32 *rearm;

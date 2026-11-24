@@ -17,7 +17,7 @@ sources = [
     "src/bof3/bmagic/forwardBattleByteSetWorkByte9To30RaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13703_801EEF64.c",
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic13703_801EFD00.c",
     "src/bof3/bmagic/callAdvanceWorkSet.c",
-    "src/bof3/bmagic/seedMotionOffsetPositionPairDistanceCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic13703_801EF090.c",
+    "src/bof3/bmagic/stateOffsetRearmFields.c",
     "src/bof3/bmagic/stateSlotsActingHead.c",
 ]
 support_sources = [

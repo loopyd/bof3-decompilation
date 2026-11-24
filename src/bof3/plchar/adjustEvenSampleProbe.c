@@ -43,12 +43,12 @@ extern s32 D_80181BBC;
 extern s32 D_80181BC0;
 
 /* Step test of this payload, lifted exact at 0x801D05D0 as
- * testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp56700_801D05D0:
+ * checkProjectedAgainstMap:
  * the original calls it through a plain `jal` with nothing set up in the
  * argument registers, so it takes no arguments, and it masks the answer to a
  * byte before the branch.
  */
-u8 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp56700_801D05D0(
+u8 checkProjectedAgainstMap(
     void);
 
 /* Screen-space position routine of the shared EXE image, outside this payload:
@@ -140,10 +140,10 @@ void adjustEvenSampleProbe(
 
   if (!(D_1F800044[8] & 1)) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp56700_801D05D0() ==
+    if (checkProjectedAgainstMap() ==
         0) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp56700_801D05D0() ==
+      if (checkProjectedAgainstMap() ==
           0) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }

@@ -71,7 +71,7 @@ support_sources = [
     "src/bof3/scenario/requestPrimaryPackedMatch.c",
     "src/bof3/scenario/requestPrimaryQueueEnd.c",
     "src/bof3/scenario/claimFlaggedEndTick.c",
-    "src/bof3/scenario/requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC.c",
+    "src/bof3/scenario/requestPrimaryFrontEnd.c",
     "src/bof3/scenario/stateFlagRequestPrimary.c",
     "src/bof3/scenario/requestArmPackedMatch.c",
     "src/bof3/scenario/submitSelectedRecordsArea.c",

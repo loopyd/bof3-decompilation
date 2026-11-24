@@ -5,7 +5,7 @@ extern u16 D_80143F00;
 s32 requestPrimaryPackedMatch(s32 arg0, s32 arg1);
 s32 requestRoute29State3(s32 arg0, s32 arg1);
 s32 requestPrimaryQueueEnd(s32 arg0, s32 arg1);
-s32 requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(s32 arg0, s32 arg1);
+s32 requestPrimaryFrontEnd(s32 arg0, s32 arg1);
 s32 requestRoute63FrontEnd(s32 arg0, s32 arg1);
 s32 requestRoute32FrontEnd(s32 arg0, s32 arg1);
 
@@ -18,7 +18,7 @@ s32 requestRoute32FrontEnd(s32 arg0, s32 arg1);
  * requestRoute32FrontEnd,
  * 0x33 runs
  * requestPrimaryPackedMatch, 0x45 runs
- * requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC
+ * requestPrimaryFrontEnd
  * and 0x63 runs requestRoute63FrontEnd — and
  * returns that handler's result sign-extended from its low byte (sll/sra 24).
  * Every other route value returns 0. Both incoming packed record words are
@@ -53,7 +53,7 @@ s32 dispatchRouteHandler(s32 arg0, s32 arg1) {
     return (s8)requestPrimaryPackedMatch(arg0, arg1);
 
   case 0x45:
-    return (s8)requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(arg0, arg1);
+    return (s8)requestPrimaryFrontEnd(arg0, arg1);
 
   case 0x63:
     return (s8)requestRoute63FrontEnd(arg0, arg1);

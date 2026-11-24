@@ -29,7 +29,7 @@ void seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area1
 void func_8015DF18(u16 arg0);
 
 /* Clears the lead byte of the 0x18-byte-stride record table at 0x800E4800. */
-void clearWorkTableByte0At800E4800World04Area18813_801F3DB4(void);
+void stateWorkTableByte0(void);
 
 /* @source 0x801F3484
  * @behavior Overlay progress step handler, element 3 of the nine-word handler
@@ -123,7 +123,7 @@ void retreatExtentZReseed(
     D_1F800044[9] = 0x20;
     D_1F800044[6] = 0;
     D_1F800044[1]++;
-    clearWorkTableByte0At800E4800World04Area18813_801F3DB4();
+    stateWorkTableByte0();
     motion = D_1F800044;
     originX = *(s32*)(motion + 0x64);
     originY = *(s32*)(motion + 0x68);

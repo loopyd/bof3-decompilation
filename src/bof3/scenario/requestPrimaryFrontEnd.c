@@ -35,7 +35,7 @@ s32 queueFrontEndPrimary(s32 arg0);
  * @match 100.00
  * @residual none
  */
-s32 requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(s32 arg0, s32 arg1) {
+s32 requestPrimaryFrontEnd(s32 arg0, s32 arg1) {
   if (func_8015B5D4(D_8014686C, 0x18) != 0) {
     return 0;
   }

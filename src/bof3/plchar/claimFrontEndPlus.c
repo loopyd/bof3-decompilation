@@ -69,7 +69,7 @@ void func_8015DF18(u32 cue_id);
  * @match 100.00
  * @residual none
  */
-void claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp45700_801CEA3C(
+void claimFrontEndPlus(
     void) {
   func_8014D978();
   if (*(u16*)(D_1F800044 + 0x58) == 0x0A) {

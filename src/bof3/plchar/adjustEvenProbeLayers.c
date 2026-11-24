@@ -131,7 +131,7 @@ void func_8015DF18(u32 cue_id);
  * @match 100.00
  * @residual none
  */
-void adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp45700_801CEE94(
+void adjustEvenProbeLayers(
     void) {
   s32 x;
   s32 y;

@@ -9,7 +9,7 @@ void func_80150224(s32 arg0);
  * @behavior Shared overlay tail called by four sibling handlers of this
  * overlay — requestPrimaryQueueEnd
  * (jal at 0x801FC9AC with 0x33),
- * requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC
+ * requestPrimaryFrontEnd
  * (0x801FCA88 with 0x12), requestRoute32FrontEnd
  * (0x801FCB1C with 0x1F) and
  * requestRoute63FrontEnd (0x801FCC6C with 0x0C, and 0x11 on the branch path that lands

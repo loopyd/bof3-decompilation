@@ -44,7 +44,7 @@ void func_8014D290(void);
  * @match 100.00
  * @residual none
  */
-void stepWorkPositionPairAndRunSharedUpdatesWorld02Area08713_801F4558(void) {
+void stepPositionPairUpdates(void) {
   Area08713WorkRecord* work;
   Area08713WorkRecord* state;
 

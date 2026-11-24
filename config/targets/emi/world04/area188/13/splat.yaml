@@ -108,7 +108,7 @@ segments:
     - func_801F3ADC
   - - 4532
     - c
-    - clearWorkTableByte0At800E4800World04Area18813_801F3DB4
+    - stateWorkTableByte0
   - - 4576
     - c
     - claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0
