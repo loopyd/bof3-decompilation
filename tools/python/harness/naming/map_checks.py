@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from harness.domain.claims import (
@@ -17,6 +18,7 @@ from harness.domain.identity import (
 )
 from harness.domain.layout import parse_splat_layout
 from harness.domain.symbols import MapSymbol
+from harness.match._asm_resolve import extract_original_bytes
 from harness.domain.manifests import load_target_manifests
 from harness.domain.sources import (
     LiftMetadataError,
@@ -38,6 +40,7 @@ from harness.domain.tags import (
     parse_declaration_source_tag,
 )
 from .debt import collect_naming_debt, load_naming_baseline, naming_debt_regressions
+from .shape import same_shape
 
 
 def _sdk_symbols(root: Path, manifest) -> list[MapSymbol]:
@@ -47,6 +50,82 @@ def _sdk_symbols(root: Path, manifest) -> list[MapSymbol]:
         target=manifest.id.value,
         space=manifest.psyq_space,
     )
+
+
+_ORDINAL = re.compile(r"^(?P<stem>.*?[a-z])(?P<number>\d{1,3})$")
+
+
+def ordinal_findings(root: Path, target: str, manifest) -> list[str]:
+    """An ordinal is licensed only when the bodies it separates share a shape.
+
+    A name that ends in a digit token is admitted when some row carrying the same
+    stem in this target or in another target of the same source parent has an
+    identical instruction shape, i.e. differs only by an immediate such as a table
+    base. Anything else must be described, not numbered.
+    """
+    findings: list[str] = []
+    try:
+        layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+    except (OSError, ValueError):
+        return findings
+    binary = root / manifest.binary
+    if not binary.is_file():
+        return findings
+    rows = load_map(map_path(root, target))
+    own = {
+        symbol.name: symbol.address
+        for symbol in rows
+        if _ORDINAL.match(symbol.name) and symbol.name[-1].isdigit()
+    }
+    if not own:
+        return findings
+    sizes: dict[int, int] = {}
+    for symbol in rows:
+        boundary = layout.find_boundary_at(symbol.address)
+        if boundary is not None and boundary.virtual_end is not None:
+            sizes[symbol.address] = boundary.virtual_end - boundary.virtual_start
+    for name, address in own.items():
+        match = _ORDINAL.match(name)
+        stem = match.group("stem")
+        size = sizes.get(address)
+        if size is None:
+            continue
+        try:
+            body = extract_original_bytes(
+                binary,
+                address=address,
+                size=size,
+                load_address=manifest.load_address,
+            )
+        except (OSError, ValueError):
+            continue
+        licensed = False
+        sibling_seen = False
+        for other in rows:
+            if other.address == address or not other.name.startswith(stem):
+                continue
+            sibling_seen = True
+            other_size = sizes.get(other.address)
+            if other_size != size:
+                continue
+            try:
+                sibling = extract_original_bytes(
+                    binary,
+                    address=other.address,
+                    size=other_size,
+                    load_address=manifest.load_address,
+                )
+            except (OSError, ValueError):
+                continue
+            if same_shape(body, sibling):
+                licensed = True
+                break
+        if sibling_seen and not licensed:
+            findings.append(
+                f"ordinal without shape licence: {target} 0x{address:08X} {name} "
+                "has no sibling of the same shape"
+            )
+    return findings
 
 
 def duplicate_name_findings(maps: dict[str, list[MapSymbol]]) -> list[str]:
@@ -290,4 +369,5 @@ def symbol_findings(
                 for finding in composed_map_findings(layers)
                 if finding.verdict == "reject"
             )
+            errors.extend(ordinal_findings(root, target, manifest))
     return errors

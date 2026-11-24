@@ -23,9 +23,14 @@ offset or width belongs to the typed view, not to the name. A raw placeholder
 (`func_801CE404`, `D_801CE404`) is not a semantic name and stays as it is; an
 unevidenced role keeps that placeholder rather than an address-anchored spelling.
 
-One name per address, unique inside its target. A clash takes a more specific
+One name per address, unique inside the target, and no two targets of one source
+parent may use one spelling for different bodies. A clash takes a more specific
 object word (`renderDrawQuadBand` / `renderDrawQuadRow`). An ordinal is the last
-resort, only for byte-identical twins with no evidence separating their roles.
+resort and is licensed only when the bodies it separates have no evidence
+separating their roles *and* their instructions agree apart from an immediate
+address or constant - a table base, a passed constant, a carried pointer - or the
+bodies are byte-identical. `bin/harness naming check` proves that shape and reports
+`ordinal without shape licence` when a sibling with the same stem differs.
 `bin/harness naming list/check` report and enforce these rules.
 
 Use `s8/u8/s16/u16/s32/u32/f32`, hex addresses/offsets/masks/encoded values, decimal
