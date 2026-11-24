@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell shared by this overlay's dispatchers and
  * handlers. Typed as the same volatile u8 pointer the exact bmagic siblings use
- * (copyRecordAdvanceBmagic reads the same
+ * (stateCopyRecordAdvance reads the same
  * cell): every statement that goes through it must re-read the cell, because a
  * store through the pointer it supplied may alias the cell itself, and the
  * original reloads it before each of the three channel stores and again before

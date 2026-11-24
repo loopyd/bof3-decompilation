@@ -16,7 +16,7 @@ sources = [
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState12ScenarioScena0500_801FCCC0.c",
     "src/bof3/scenario/stateClearProgressRequest13.c",
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCD0C.c",
-    "src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena0500_801FD110.c",
+    "src/bof3/scenario/dispatchCoordinateLookupHandler.c",
     "src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecordScenarioScena0500_801FC8A0.c",
     "src/bof3/scenario/stateFlagProgressBytes.c",
     "src/bof3/scenario/stateFlagReleasePrimary.c",

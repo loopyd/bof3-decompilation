@@ -21,7 +21,7 @@ sources = [
     "src/bof3/world/func_801F2FD4_area02414.c",
     "src/bof3/world/func_801F3080.c",
     "src/bof3/world/advanceWorkDoubleVelocity.c",
-    "src/bof3/world/advanceWorkStateUntilExpired.c",
+    "src/bof3/world/stateAdvanceUntilExpired.c",
     "src/bof3/world/advanceMotionRecords.c",
     "src/bof3/world/func_801F3708_area02414.c",
     "src/bof3/world/func_801F3E48_area02414.c",

@@ -39,6 +39,6 @@ void func_800F5E44(void);
 
 /* Call into BIN/WORLD00/AREA030.EMI#4 at 0x801D9534 from 0x800F5084.
  * Preserve this caller-side declaration; the caller ignores the return value. */
-s32 drawFilledPanelWithInsetBorderWorld00Area03004(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4); /* @source 0x801D9534 */
+s32 renderFilledInsetPanel(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4); /* @source 0x801D9534 */
 
 #endif

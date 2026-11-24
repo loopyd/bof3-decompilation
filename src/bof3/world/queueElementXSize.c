@@ -20,7 +20,7 @@ void func_801A4BC0(s16 x, s16 y, u32 size);
  * 0xC and a2 = 0xC0, 0xC0, 0xA1, 0xA1, each spelled `addiu a2,zero,imm`. That
  * is two adjacent x columns over two rows with one size per row, so the name
  * follows the block grammar of the neighbouring
- * queueSharedUiElementBlock48To49xBToCSize0World00Area02313_801F2C88 and the
+ * renderQueueUiBlock48 and the
  * size-pair form of
  * queueSharedUiElementBlock1CTo1Dx3SizeC0And20x15To16SizeA1World04Area18813_801F4A54,
  * with both sizes in body order.
@@ -33,7 +33,7 @@ void func_801A4BC0(s16 x, s16 y, u32 size);
  * 0x58 bytes finds only this span, at payload offset 0xE0 of
  * emi/world00/area023/13.bin, so the clone lever does not apply. The nearest
  * exact sibling,
- * queueSharedUiElementBlock48To49xBToCSize0World00Area02313_801F2C88, differs
+ * renderQueueUiBlock48, differs
  * from this span in exactly four words - its delay slots spell
  * `addu a2,zero,zero` where this body stores the immediates 0xC0 and 0xA1 -
  * so it supplied the statement order, operand forms and declaration style

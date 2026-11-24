@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatusFFFFAndSelectMode2IfGateClearWorld00Area03313_801F2C04
-    - '@source: src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld00Area03313_801F2C04.c'
+    - stateStatusMode2Gate
+    - '@source: src/bof3/world/stateStatusMode2Gate.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword D_801490A8 on every path, and first writes 2 to the shared mode byte D_801448EC when the shared gate byte D_801490C7 is zero.'
   - - 56
     - asm
@@ -80,7 +80,7 @@ segments:
     - '@source: src/bof3/world/area03313_work_state.c'
   - - 2004
     - c
-    - invokeTwoHelpersWorld00Area03313_801F33D4
+    - invokeLocalHandlerPair
   - - 2044
     - c
     - dispatchByte2Table4f80
@@ -102,17 +102,17 @@ segments:
     - '@behavior: When the shared mode byte at 0x801454F2 reads 2, writes 3 to byte 0x02 of the work record published at the scratchpad pointer cell 0x1F800044, then reloads that cell and calls the local drawer 0x801F3A34 with 0x10 and the signed halfword at record offset 0x2E. Takes no arguments and returns nothing.'
   - - 2364
     - c
-    - decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld00Area03313_801F353C
-    - '@source: src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld00Area03313_801F353C.c'
+    - stateDecrementDraw2e
+    - '@source: src/bof3/world/stateDecrementDraw2e.c'
     - '@behavior: Byte-2 state handler 3 of the byte-2 handler table based at 0x801F4F80 in this overlay, and entry 5 of the byte-1 table based at 0x801F4F78, for the work record published at the scratchpad pointer cell 0x1F800044. Subtracts 0x10 from the halfword at record offset 0x2E and stores the truncated halfword. While the stored signed value stays below -0x2F it writes 0 to state byte 0x02; unless the shared mode byte at 0x801454F2 is 2 it then writes 1 to state byte 0x02 through a second read of the pointer cell. Finally it reads that cell once more and calls the local drawer 0x801F3A34 with 0x10 and the signed halfword at record offset 0x2E, discarding any result. Takes no arguments, uses no result and saves only the return address in its 0x18-byte frame.'
   - - 2496
     - c
-    - dispatchStateByte3Table4f90World00Area03313_801F35C0
-    - '@source: src/bof3/world/dispatchStateByte3Table4f90World00Area03313_801F35C0.c'
+    - dispatchWorkStep3Handler
+    - '@source: src/bof3/world/dispatchWorkStep3Handler.c'
   - - 2564
     - c
-    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604
-    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604.c'
+    - stateSetHalfword30
+    - '@source: src/bof3/world/stateSetHalfword30.c'
   - - 2692
     - c
     - stateDecrementHalfword30
@@ -125,8 +125,8 @@ segments:
     - '@behavior: Entry 8 of the ten-entry work-byte-1 handler table based at 0x801F4F78 in this overlay, entry 6 of the work-byte-2 table at 0x801F4F80 and entry 2 of the four-entry work-byte-3 run at 0x801F4F90, for the work record published at the scratchpad pointer cell 0x1F800044. While work byte 0x0B is still zero it increments work byte 0x09 and, once that byte re-read through the pointer cell reaches 0x5A, increments work byte 0x0B as well. When the shared mode byte 0x801454F2 is nonzero and work byte 0x0B is nonzero, byte 0x80143BB0 reads 2, or bit 0x100 of halfword 0x80146258 is set, it then increments work byte 0x03 through a further read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the overlay emitter 0x801F3FF8. Takes no arguments and returns nothing.'
   - - 3164
     - c
-    - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World00Area03313_801F385C
-    - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World00Area03313_801F385C.c'
+    - stateAdvanceHalfword30
+    - '@source: src/bof3/world/stateAdvanceHalfword30.c'
     - '@behavior: Entry 9 of the work-byte-1 handler table based at 0x801F4F78 in this overlay, entry 7 of the work-byte-2 table at 0x801F4F80 and entry 3 of the four-entry work-byte-3 run at 0x801F4F90, for the work record published at the scratchpad pointer cell 0x1F800044. Adds 0x0A to record halfword 0x30, stores the truncated halfword, and clears work state byte 0x03 once that stored signed value reaches 0xF0. Unless the shared mode byte 0x801454F2 is set, byte 0x80143BB0 reads 2, or bit 0x100 of halfword 0x80146258 is set, it writes 1 to work byte 0x03 through a second read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the overlay emitter 0x801F3FF8. Takes no arguments and returns nothing.'
   - - 3340
     - c
@@ -166,7 +166,7 @@ segments:
     - func_801F4544
   - - 6772
     - c
-    - invokeTwoHelpersWorld00Area03313_801F4674
+    - invokeSharedRoutinePair
   - - 6812
     - c
     - renderScrollingNearFocus

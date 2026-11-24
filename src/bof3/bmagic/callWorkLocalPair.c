@@ -9,7 +9,7 @@ typedef void (*BmagicMagic06903Handler)(void);
  * caller of this body and both handler roles stay structural.
  */
 void func_801EEC5C(void);
-void forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06903_801EEE30(
+void callForwardRaiseFlag4(
     void);
 
 /* @source 0x801EEC04
@@ -34,7 +34,7 @@ void forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic0
 void callWorkLocalPair(void) {
   BmagicMagic06903Handler handlers[2] = {
       func_801EEC5C,
-      forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06903_801EEE30};
+      callForwardRaiseFlag4};
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
 }

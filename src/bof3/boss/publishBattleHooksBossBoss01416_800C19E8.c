@@ -11,7 +11,7 @@ typedef void (*Boss01416Handler)(void);
  * calls the helper at 0x800AC934 with argument zero. The third returns a zero
  * result, which the void slot type drops. */
 void func_800C1A28(void);
-void invokeZeroArgBossBoss01416_800C1A74(void);
+void invokeZeroArgOverlay(void);
 s32  zeroResultBossBoss01416_800C1A20(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -27,7 +27,7 @@ extern Boss01416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * 0x80146328 and, while it is set, stores 0xC into the shared scenario progress
  * byte 0x80146864 and runs initModeTuple510, and otherwise runs
  * initModeTuple520) into 0x801463A4, the thin wrapper
- * invokeZeroArgBossBoss01416_800C1A74 (calls the helper at 0x800AC934 with
+ * invokeZeroArgOverlay (calls the helper at 0x800AC934 with
  * argument zero) into 0x801463A8, and the zero-result accessor
  * zeroResultBossBoss01416_800C1A20 into 0x801463AC; the accessor's s32 result is
  * dropped by the void slot type. Each slot is built as an address pair and
@@ -45,6 +45,6 @@ extern Boss01416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss01416_800C19E8(void) {
   D_801463A4 = func_800C1A28;
-  D_801463A8 = invokeZeroArgBossBoss01416_800C1A74;
+  D_801463A8 = invokeZeroArgOverlay;
   D_801463AC = (Boss01416Handler)zeroResultBossBoss01416_800C1A20;
 }

@@ -73,8 +73,8 @@ segments:
     - '@source: src/bof3/bmagic/queueEightSlotsPointer.c'
   - - 2076
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801EF41C
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801EF41C.c'
+    - mathDecrementGlobalHelper
+    - '@source: src/bof3/bmagic/mathDecrementGlobalHelper.c'
   - - 2168
     - asm
     - func_801EF478

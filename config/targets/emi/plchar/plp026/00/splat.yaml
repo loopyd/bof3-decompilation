@@ -47,8 +47,8 @@ segments:
     - func_801CEA94
   - - 2096
     - c
-    - stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp02600_801CEC30
-    - '@source: src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp02600_801CEC30.c'
+    - stepClearReportsByte
+    - '@source: src/bof3/plchar/stepClearReportsByte.c'
     - '@behavior: Work-step handler reached as entry 5 of the thirty-word code-pointer run at 0x801D0A54 that the overlay dispatcher of work record byte 2 steps. It dispatches on work record byte 0x0B read through the scratchpad pointer cell 0x1F800044: byte 0 polls the shared readiness helper func_8014DAEC and reports done when that helper answers nonzero; byte 1 polls the same helper and, once it answers, passes work byte 0x08 to the shared resource request helper func_8014D6B8 and writes 2 into byte 0x0B; every other value runs the shared no-argument helper func_8014D978 and reports done when the front-end phase byte 0x80143BB0 reads zero. When the done flag is set it clears work byte 0x2B and byte 0x12B of the record published at 0x80146250. It takes no arguments and returns nothing.'
   - - 2332
     - asm
@@ -61,8 +61,8 @@ segments:
     - func_801CEFF8
   - - 3372
     - c
-    - dispatchStateByte2Table0a6cPlcharPlp02600_801CF12C
-    - '@source: src/bof3/plchar/dispatchStateByte2Table0a6cPlcharPlp02600_801CF12C.c'
+    - callStateByte2Table02
+    - '@source: src/bof3/plchar/callStateByte2Table02.c'
   - - 3440
     - asm
     - func_801CF170
@@ -103,8 +103,8 @@ segments:
     - invokeHelperPlcharPlp02600_801CFB30
   - - 5968
     - c
-    - dispatchStateByte2Table0a8cPlcharPlp02600_801CFB50
-    - '@source: src/bof3/plchar/dispatchStateByte2Table0a8cPlcharPlp02600_801CFB50.c'
+    - callStateByte2State
+    - '@source: src/bof3/plchar/callStateByte2State.c'
   - - 6036
     - c
     - dispatchByte3Table0a94
@@ -121,13 +121,13 @@ segments:
     - '@behavior: Work byte 3 == 1 step of the work-byte-3 dispatcher at 0x801CFB94: entry 1 of the five-word run the dispatcher reaches from the base word 0x801D0A94 with work record byte 3 read through the scratchpad pointer cell 0x1F800044, the word 0x801CFCD8 at 0x801D0A98, entry 18 of the thirty-word code-pointer run based at 0x801D0A54. It decrements work byte 0x0A, armed with 0xB by the preceding step at 0x801CFBD8, and does nothing else while that byte stays nonzero. When it reaches zero it queues the cue computed from the work record unsigned halfword 0x2C plus 0x100 and asks the no-argument slot search func_801B5AE4 for a front-end row: an answered slot writes 1 into field 0x0A and work byte 0x08 into field 0x08 of that 0x74-byte row, copies the slot into work byte 0x06 and advances work byte 3. Otherwise it projects the work position with the doubled offsets of 0x80181B94/0x80181B98 selected by work byte 0x08, raises the animation bit 0x74 of the work record the range-0 slot search func_801BDE14 reports, queues cue 0x10B, and claims a front-end row at the projected point through the payload map cell claim handler claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteB with one column and then one row retry on nonzero low halves. Every path then increments work byte 3 and runs the shared readiness helper func_8014DAEC.'
   - - 6948
     - c
-    - passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp02600_801CFF24
-    - '@source: src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp02600_801CFF24.c'
+    - passResourceReportsDone2
+    - '@source: src/bof3/plchar/passResourceReportsDone2.c'
     - '@behavior: Work byte 3 == 2 step of the work-byte-3 dispatcher at 0x801CFB94: entry 2 of the five-word run the dispatcher reaches from the base word 0x801D0A94 with work record byte 3 read through the scratchpad pointer cell 0x1F800044, the word 0x801CFF24 at 0x801D0A9C, entry 18 of the thirty-word code-pointer run based at 0x801D0A54. When work byte 0x0B reads 1 it passes the 0x40-byte palette row at 0x80035600 selected by work byte 5 to the shared palette helper func_80166C48 with mode 0 and writes 2 into byte 0x0B. It then re-reads the pointer cell and dispatches on byte 0x0B again: zero polls the shared readiness helper func_8014DAEC and reports done once that helper answers nonzero, two polls the same helper and, once it answers nonzero, passes work byte 8 to the shared resource request helper func_8014D6B8 and writes 3 into byte 0x0B, and every other value runs the shared no-argument update helper func_8014D978 and reports done whenever the front-end phase byte 0x80143BB0 reads zero. When done it clears work byte 0x2B and byte 0x12B of the record published at 0x80146250.'
   - - 7252
     - c
-    - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp02600_801D0054
-    - '@source: src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp02600_801D0054.c'
+    - requestResourceHelperReady2
+    - '@source: src/bof3/plchar/requestResourceHelperReady2.c'
     - '@behavior: Work byte 3 == 3 step of the work-byte-3 dispatcher at 0x801CFB94: entry 3 of the thirty-word code-pointer run at 0x801D0A54, the word 0x801D0054 at 0x801D0AA0. It calls the shared readiness helper func_8014DAEC and, once that returned byte reads nonzero, passes record byte 8 to the shared resource request helper func_8014D6B8, re-loads the scratchpad pointer cell 0x1F800044 and advances record byte 3 by one so the next dispatch reaches 0x801D00B4.'
   - - 7348
     - c
@@ -139,8 +139,8 @@ segments:
     - '@behavior: Map cell claim step of this front-end payload, reached from the work byte 3 == 1 step at 0x801CFCD8 and from its one-column and one-row retries. The body narrows both arguments to the signed cell pair the map probe and the record claim take and asks the shared map probe func_80166CB0 for the one-byte code of that cell. For the codes 0xF0 and 0xF1, spelled (u8)(code + 0x10) below 2, and for 0xF4 it claims one front-end record with state 0 at the cell and, when rand masked to three bits reads 6 or 7, a second one with state 4 at the same cell, then queues cue 0x10B through func_8015DF18 and answers 1. For the codes 0xF6 and 0xF7, spelled (u8)(code + 0xA) below 2, it claims one record with state 0, queues cue 0x10B and rolls rand masked to four bits: a roll below 7 claims a record with state 3, copies the twelve-byte name that func_80165D48 answers for entry 0 of stream 0x29 into 0x801490D8, clears the terminator byte 0x801490E4, takes the cue selector 2 when func_801650B4 reports entry 0 of stream 0x29 as set and 3 otherwise, after queueing cue 0x106 in the set case, dispatches that selector through func_80150284 and stores 2 into work byte 0xB of the record at the scratchpad pointer cell 0x1F800044; a roll of 0xC or more claims a record with state 2, runs func_801C308C with 0, passes 1 and byte 0x79 of the record published at 0x80146250 to func_8016813C, dispatches cue 0xD9 through func_80150284 and stores 1 into that work byte 0xB; the rolls 7 to 0xB claim nothing further. Every path that claimed a record marks the local state byte 0x80143BB0 busy with 2 and answers 1, and any other cell code answers 0 without touching state, which is why the 0x801CFCD8 step retries the neighbouring cells only on a zero answer.'
   - - 8020
     - c
-    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp02600_801D0354
-    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp02600_801D0354.c'
+    - claimStoreDistanceRow2
+    - '@source: src/bof3/plchar/claimStoreDistanceRow2.c'
     - '@behavior: Claims one free row of the shared 0x74-byte front-end record table at 0x80143FC8, from the row index the shared allocator func_8019601C answers (0xFF skips the body), and seeds it from a caller-supplied position pair: row byte 0 takes 1, row byte 5 takes the handler selector 0x34, row byte 1 takes the first argument, row words 0x34 and 0x38 take the second and third arguments shifted left 16, row halfword 0x3E takes the shared distance helper func_8015477C answer plus 0x200, and row byte 0x0B takes 1.'
   - - 8256
     - c
@@ -151,8 +151,8 @@ segments:
     - refreshSelectSequence
   - - 8432
     - c
-    - selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp02600_801D04F0
-    - '@source: src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp02600_801D04F0.c'
+    - selectSequenceReadyWork
+    - '@source: src/bof3/plchar/selectSequenceReadyWork.c'
     - '@behavior: Work byte 3 == 1 step, the second handler of the work-byte-3 run based at 0x801D0AA8: runs the shared readiness helper func_8014DAEC and, while it reports ready, passes work byte 8 to the shared work-sequence selector func_8014D8D4 and writes 2 into work byte 3, advancing the dispatch to the 0x801D0628 handler. Otherwise it decrements work byte 0x0A, the counter the 0x801D0484 step armed with 0xB, and leaves the record untouched while that counter still reads nonzero; when the countdown reaches zero it queues the cue computed from work halfword 0x2C plus 0x100, copies work byte 8 into field 0x08 of the 0x74-byte front-end row selected by work byte 0x0B, copies work byte 7 into that row field 0x0A after defaulting work byte 7 to 1 when it reads zero, and closes by queueing cue 0x10B.'
   - - 8744
     - c
@@ -161,8 +161,8 @@ segments:
     - '@behavior: Work byte 3 == 2 step: reads the front-end record index from work byte 0x0B of the record published at scratchpad pointer cell 0x1F800044, looks it up in the shared 0x74-byte front-end record table at 0x80143FC8 and, when row byte 0 reads 0 or row byte 1 reads 1 and the shared gate byte 0x80149332 reads zero, clears work byte 0x2B and the state byte at 0x12B of the record published at 0x80146250; both paths then run the shared no-argument update helper func_8014D978.'
   - - 8900
     - c
-    - testProjectedWorkPositionAgainstWorkRecordsOrMapCodesF0F1F4F6F7PlcharPlp02600_801D06C4
-    - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodesF0F1F4F6F7PlcharPlp02600_801D06C4.c'
+    - checkAgainstMapCodes2
+    - '@source: src/bof3/plchar/checkAgainstMapCodes2.c'
     - '@behavior: Step test of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from the work-byte-3 steps 0x801CFBD8 and 0x801D0484 of this payload, which rewrite work byte 0x08 and then read this answer to decide whether the rewritten route is walkable. It projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1, raises the same answer to one when the no-argument slot search func_801B5AE4 reports any of its own 0x17-class records rather than -1, and then raises it again whenever the map code probe func_80166CB0 answers 0xF0, 0xF1, 0xF4, 0xF6 or 0xF7 for the projected cell, for the cell one column further when the low half of the first projected word is nonzero, or for the cell one row further when the low half of the second is nonzero. It returns that answer as an unsigned byte and takes no arguments.'
   - - 9320
     - c

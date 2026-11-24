@@ -8,8 +8,8 @@ splat = "config/targets/emi/world00/area005/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/stateScenario64Gate.c",
-    "src/bof3/world/stateScenarioC8Gate.c",
+    "src/bof3/world/stateProgress64Gate.c",
+    "src/bof3/world/stateProgressC8Gate.c",
 ]
 support_sources = [
     "src/bof3/world/publishModeStatusTable3.c",

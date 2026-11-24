@@ -41,7 +41,7 @@ extern u8 D_801468FC[];
  * signed halves, and the retry paths let the compiler narrow the stepped
  * coordinate to the same signed half before the call.
  */
-u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp24700_801CF664(
+u8 claimSizeItemRecord(
     s16 x, s16 y);
 
 /* Slot search of the shared EXE image, outside this payload: it answers the
@@ -112,5 +112,5 @@ PLCHAR_DEFINE_COUNTDOWN_PROJECTED_CELL_CLAIM(
     markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp24700_801CF3DC,
     D_1F800044, D_80181B94, D_80181B98, D_801468FC,
     func_801BDE14,
-    claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp24700_801CF664,
+    claimSizeItemRecord,
     func_8014DAEC)

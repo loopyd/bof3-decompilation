@@ -23,7 +23,7 @@ support_sources = [
     "src/bof3/scenario/stateIncrementByte1.c",
     "src/bof3/scenario/invokeHelperScenarioSce15ef300_801D16BC.c",
     "src/bof3/scenario/invokeHelperScenarioSce15ef300_801D1048.c",
-    "src/bof3/scenario/invokeHelperScenarioSce15ef300_801D0D18.c",
+    "src/bof3/scenario/invokeHelper.c",
     "src/bof3/support/sce15ef3_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/sce15ef3_00_psyq.c"

@@ -38,7 +38,7 @@ u32 func_8014D8D4(u8 arg0);
  *           dispatchByte3Table0aa8 selects while the
  *           work record's dispatch byte 3 reads zero, and it advances that byte
  *           to 1, the step-1 entry
- *           selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp02600_801D04F0.
+ *           selectSequenceReadyWork.
  *           It first refreshes this payload's two layers through the
  *           position-query routine at 0x801D0868, then
  *           takes the work record published at the scratchpad pointer cell

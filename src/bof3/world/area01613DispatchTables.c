@@ -30,7 +30,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchState02, D_801F511C);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchArea016ScratchMode, D_801F51AC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchScratchModeSelect, D_801F51AC);
 
 /* @behavior dispatches the scratch mode byte at offset 1 through the local
  * handler table at 0x801F51D0.

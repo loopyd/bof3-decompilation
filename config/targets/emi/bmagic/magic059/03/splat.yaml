@@ -45,8 +45,8 @@ segments:
     - '@behavior: Step handler for state 0 of the overlay work object published at the scratchpad pointer cell 0x1F800044. It reads that object unsigned byte 0x2, scales it by four and calls the handler pointer at that index of the work byte 2 handler table based at 0x801F0670. When the handler returns it re-reads the cell and, only when the record byte 0x0 and the byte 0x2 are both non-zero, calls the projection helper at 0x801EF638, then the sixteen positional draw calls to 0x801EF70C and finally PopMatrix, restoring the GTE stack the projection helper pushed. The first eight draw calls subtract the record byte 0x9 from the base angles 0x00 through 0x38 and mask to the six bit turn with offset 0x20; the next eight subtract twice that byte from the base angles 0x04 through 0x3C and mask to 0x3E with offset 0x50. Each draw re-reads the cell and the byte instead of holding the record pointer across the calls. The 0x18-byte frame only keeps $ra across the indirect call; takes no arguments, returns nothing and reads or writes no other state.'
   - - 2244
     - c
-    - stateWorkAdvanceBmagic
-    - '@source: src/bof3/bmagic/stateWorkAdvanceBmagic.c'
+    - stateWorkAdvance
+    - '@source: src/bof3/bmagic/stateWorkAdvance.c'
     - '@behavior: Step handler published at index 1 of the work byte 2 handler table based at 0x801F066C. It clears work object bytes 0x9 and 0xA with byte-width zero stores through the scratchpad pointer cell at 0x1F800044, re-materializing the cell before each store, then re-reads the cell and adds one to work byte 0x2 at byte width, advancing the byte 0x2 dispatch to the next handler. Leaf with no frame; the closing store sits in the return delay slot. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 2308
     - c
@@ -85,18 +85,18 @@ segments:
     - '@source: src/bof3/bmagic/copyTripletStepClear.c'
   - - 5232
     - c
-    - incrementWorkByte9Add1ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801F0070
-    - '@source: src/bof3/bmagic/incrementWorkByte9Add1ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801F0070.c'
+    - mathIncrementByte9At20
+    - '@source: src/bof3/bmagic/mathIncrementByte9At20.c'
     - '@behavior: Per-frame step of an overlay work-object handler. Reads the scratchpad work-object pointer cell at 0x1F800044 once and advances the object unsigned byte 0x9 by one with a byte-width add, then re-reads the cell and adds one to the object byte 0xA, tests the truncated byte it just stored against 0x20, and only on that equality re-reads the pointer cell and increments the object byte 0x2 to advance to the next handler step.'
   - - 5340
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801F00DC
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801F00DC.c'
+    - mathIncrementByteAdvance
+    - '@source: src/bof3/bmagic/mathIncrementByteAdvance.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, advances the object unsigned byte 0x9 by one with a byte-width add, tests the truncated byte it just stored against 0xA0, and only then reloads the pointer cell and increments the object byte 0x2 to advance to the next handler step.'
   - - 5420
     - c
-    - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic05903_801F012C
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic05903_801F012C.c'
+    - mathIncrementGlobalClear
+    - '@source: src/bof3/bmagic/mathIncrementGlobalClear.c'
     - '@behavior: Per-frame handler of the battle work object published at the scratchpad pointer cell 0x1F800044. It increments that object unsigned byte 0x9 by one at byte width, re-reads the cell and subtracts one from unsigned byte 0xA the same way, then tests the stored byte truncated to eight bits so that the truncated register rather than a reload supplies the compared value. Only when byte 0xA reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0xB by one and invoke this overlay work-byte clear routine at 0x801F04F4, the store filling the call delay slot. The first cell load precedes frame creation because the increment needs no stack; the 0x18-byte frame only keeps $ra across the call. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 5540
     - asm
@@ -108,8 +108,8 @@ segments:
     - '@behavior: Finds and reserves a slot in the record pool at 0x801F0694. It walks up to 24 records of stride 0x78 comparing each record flags byte bit 0 for zero, and on the first clear slots sets that bit with a byte store and returns the zero-extended record index; when all 24 records are occupied it returns 0xFF. The pool address is re-materialized for the flags load and again for the store, and both callers index the same pool with the returned byte.'
   - - 6388
     - c
-    - clearWorkBytesBmagicMagic05903_801F04F4
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic05903_801F04F4.c'
+    - stateClearWorkBytes
+    - '@source: src/bof3/bmagic/stateClearWorkBytes.c'
   - - 6468
     - asm
     - func_801F0544

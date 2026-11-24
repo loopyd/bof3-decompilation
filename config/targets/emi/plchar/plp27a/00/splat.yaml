@@ -55,8 +55,8 @@ segments:
     - '@behavior: Overlay step: reads the unsigned countdown byte 0x09 of the active work object through the scratchpad pointer cell 0x1F800044 and, while it is nonzero, stores the value one lower and runs the work advance step func_801B0DFC, which moves the record by its current delta; when it reads zero, clears the state byte 0x12B of the front-end record at 0x80146250 and clears bit 0x1000 of the world-flag halfword 0x80146258; both paths then run the shared no-argument update helper func_8014D978.'
   - - 1196
     - c
-    - findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp27a00_801CE8AC
-    - '@source: src/bof3/plchar/findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp27a00_801CE8AC.c'
+    - queryIndexProjectedFront
+    - '@source: src/bof3/plchar/queryIndexProjectedFront.c'
     - '@behavior: Finds the index of the first front-end record whose stored position matches the projected position of the active work area. The record published at 0x80146250 must report state byte 0x79 == 2 with bit 0 of byte 0x12C clear, else the body answers -1; the work area read through the scratchpad pointer cell 0x1F800044 supplies the route byte at 0x08 that selects the movement offsets at 0x80181B94 and 0x80181B98 added to its words at 0x34 and 0x38, and the twenty 0x74-byte rows of 0x80143FC8 with nonzero byte 0 and byte 5 == 0x30 are each passed with that projected pair, the work halfword at 0x3E as a signed reference, the range 1 and the row address to the shared gate matchesProjectedWorkBounds, the row index being returned as a signed byte when the gate matches and the row word at 0x80143FFC or 0x80144000 equals the work word at 0x34 or 0x38, and -1 otherwise'
   - - 1552
     - c
@@ -71,8 +71,8 @@ segments:
     - '@behavior: Overlay step dispatch on the work-record byte 0x02 read through the scratchpad pointer cell 0x1F800044: the body loads that record pointer once, takes its unsigned byte 2, scales it by four and calls the matching entry of this payload handler run based at 0x801CF914 with no arguments, discarding any result; the index is not bounded before the scaled table load, and that interior base is entry 5 of the seventeen-word run at 0x801CF900, so entry 0 is 0x801CEC40. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame keeps only $ra at 0x10 across the indirect call.'
   - - 2112
     - c
-    - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp27a00_801CEC40
-    - '@source: src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp27a00_801CEC40.c'
+    - statePickNearerState
+    - '@source: src/bof3/plchar/statePickNearerState.c'
     - '@behavior: Overlay step of the front-end work object reached from outside this payload: while the signed scenario-state byte 0x80146870 reads 0xF it skips the work step entirely and only clears the state byte 0x12B of the front-end record published at 0x80146250, and for every other scenario it compares the distance from the work route index byte 0x08 read through the scratchpad pointer cell 0x1F800044 to the candidate route indices 3 and 5, asks the shared helper func_801B2D00 for the step sign towards the closer candidate and stores that answer in byte 0x0B, both paths then storing the chosen candidate itself in byte 0x03 through one shared store; the body closes by setting the countdown byte 0x09 to 2 and incrementing the step counter byte 0x02.'
   - - 2356
     - c
@@ -116,7 +116,7 @@ segments:
     - queryClearPlchar
   - - 5224
     - c
-    - getAndClearPlcharPlp27a00_801CF868
+    - queryClear3
   - - 5240
     - c
     - callWorkTablef92

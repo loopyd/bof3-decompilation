@@ -44,8 +44,8 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group, increments the three counter bytes at offsets 0x0, 0x1 and 0x2 of the 12-byte record selected by the work object''s unsigned byte 0xA, then re-reads the cell and decrements the work byte at 0x9 at byte width and, only when the stored value reaches zero, re-reads the cell and increments the work byte at 0x1, advancing the handler index the dispatcher func_801EEC28 selects entry 2 of the six-word run at 0x801EEC04 with; it reserves a 0x10-byte frame it never touches and writes no other state.'
   - - 1372
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07103_801EF15C
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07103_801EF15C.c'
+    - stateByte9Below5
+    - '@source: src/bof3/bmagic/stateByte9Below5.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, takes the arm only while the work object''s unsigned byte 0xB stays below five, stores 8 into the work byte at 0x9, then re-reads the cell and increments the work byte at 0x1, the stage index the entry dispatcher func_801EEC28 indexes the six-word run at 0x801EEC04 with, by one at byte width; it keeps no frame and writes no other state.'
   - - 1444
     - asm
@@ -55,8 +55,8 @@ segments:
     - func_801EF2DC
   - - 1852
     - c
-    - dispatchWorkRecordByte1HandlerBmagicMagic07103_801EF33C
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07103_801EF33C.c'
+    - callDispatchRecordHandler
+    - '@source: src/bof3/bmagic/callDispatchRecordHandler.c'
     - '@behavior: Reads the work-record pointer cell at 0x801F17B4, scales that record''s unsigned byte at offset 1 by four, and invokes the selected entry of the code-pointer table based at 0x801F01B0 with no arguments; it keeps only $ra in a 0x18-byte frame and writes no state.'
   - - 1920
     - asm

@@ -32,8 +32,8 @@ segments:
     - '@behavior: requests the shared front selector context through func_8019FA28 with selection seed 0x64, the context pair 0x460000/0x340000 and kind 0x81. The entry takes no arguments and returns nothing.'
   - - 48
     - c
-    - clearWorkByte48ThenSubmitRecordWorld00Area03613_801F2C30
-    - '@source: src/bof3/world/clearWorkByte48ThenSubmitRecordWorld00Area03613_801F2C30.c'
+    - stateClearByte48Submit
+    - '@source: src/bof3/world/stateClearByte48Submit.c'
     - '@behavior: clears byte 0x48 of the work record published through the scratchpad pointer cell 0x1F800044, then reloads that cell and submits the record through the shared submitter func_80196718. The payload records this handler at 0x801F32BC, the second word of the two-entry run based at 0x801F32B8, so the entry takes no arguments and returns nothing.'
   - - 100
     - asm

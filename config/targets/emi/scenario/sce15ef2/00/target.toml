@@ -10,7 +10,7 @@ load_address = 0x801D0C00
 sources = []
 support_sources = [
     "src/bof3/scenario/callDrawRecordActive.c",
-    "src/bof3/scenario/armAdvanceByteScenario.c",
+    "src/bof3/scenario/armAdvanceByte.c",
     "src/bof3/scenario/stateWordArm.c",
     "src/bof3/scenario/claimExpiryReloadRandom.c",
     "src/bof3/support/sce15ef2_00_psyq.c",

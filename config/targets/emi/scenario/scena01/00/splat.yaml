@@ -42,10 +42,10 @@ segments:
     - stateObjectClearTable
   - - 2176
     - c
-    - incrementAdvanceStateScenario
+    - incrementAdvanceState
   - - 2348
     - c
-    - decrementAdvanceStateScenario
+    - decrementAdvanceState
   - - 2504
     - c
     - stateCountdownAdvance
@@ -87,7 +87,7 @@ segments:
     - func_801F8050
   - - 7840
     - c
-    - dispatchProgressHandlerScenarioScena0100_801F8AA0
+    - dispatchProgressHandler
   - - 7900
     - c
     - noopHandlerScenarioScena0100_801F8ADC

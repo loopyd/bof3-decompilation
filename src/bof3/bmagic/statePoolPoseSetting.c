@@ -1,7 +1,7 @@
 #include "base/types.h"
 
 /* Record pool of this overlay at 0x801EFA8C: 48 records of stride 0x78 whose
- * byte 0 is the flags byte that reserveFirstFreeRecordBmagicMagic08103_801EFA20
+ * byte 0 is the flags byte that resourceReserveFreeRecord
  * tests for bit 0 and sets on reservation. Byte 0 plus the two bytes that follow
  * it are cleared here for every record. The map row names the pool base, and the
  * two following bytes are bound by the address-anchored names the generated

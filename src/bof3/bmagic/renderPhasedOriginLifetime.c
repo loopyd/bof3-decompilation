@@ -4,7 +4,7 @@
 /* Work-record pointer cell at the tail of this overlay data block, the last
  * word before the next segment at 0x801F1058. The dispatcher at 0x801EF340, the
  * handler at 0x801EF384 and the exact sibling
- * projectWorkRecordPositionAndInstallTransformBmagicMagic06303_801EF994 all read
+ * stateProjectTransform all read
  * the same cell, and the record it points into is one of the 0x60 0x20-byte
  * entries of the pool at 0x801F0454, so the cell holds a live record when this
  * function runs. Splat binds the address through this target generated

@@ -9,4 +9,4 @@ D_800F7244 = 0x800F7244;
 handlerIndex = 0x800F724C;
 handlerPhase = 0x800F724D;
 D_80143C40 = 0x80143C40;
-drawFilledPanelWithInsetBorderWorld00Area03004 = 0x801D9534;
+renderFilledInsetPanel = 0x801D9534;

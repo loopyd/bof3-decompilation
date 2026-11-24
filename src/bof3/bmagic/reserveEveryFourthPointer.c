@@ -21,13 +21,13 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
  * every addressed field keeps its own flat address inside this one base. */
 extern u8 magic08103RecordFlags[]; /* @source 0x801EFA8C @kind data */
 
-u8 reserveFirstFreeRecordBmagicMagic08103_801EFA20(void); /* @source 0x801EFA20 */
+u8 resourceReserveFreeRecord(void); /* @source 0x801EFA20 */
 
 /* @source 0x801EF18C
  * @behavior Per-frame record spawner of this overlay. On the frame phases where
  *           the low two bits of the shared counter at 0x80143E6C are both set
  *           - every fourth frame - it claims the first free record of the pool
- *           at 0x801EFA8C through reserveFirstFreeRecordBmagicMagic08103_801EFA20,
+ *           at 0x801EFA8C through resourceReserveFreeRecord,
  *           scales the returned byte index by the 0x78-byte record stride, and
  *           fills three fields of that record: the pointer word at +0x74
  *           receives the scratchpad work-object pointer read from the cell at
@@ -55,7 +55,7 @@ void reserveEveryFourthPointer(void) {
     u8 step;
 
     if ((D_80143E6C & 3) == 3) {
-        index = reserveFirstFreeRecordBmagicMagic08103_801EFA20();
+        index = resourceReserveFreeRecord();
         offset = index * 0x78;
         work = g_battle_work;
         *(u32 *)&magic08103RecordFlags[offset + 0x74] = (u32)work;

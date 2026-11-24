@@ -2,7 +2,7 @@
 
 /* Overlay handler run indexed from 0x801D27C0: three in-image code-pointer
  * words holding 0x801D0C48, 0x801D0CC4 and 0x801D0D18, the last of which is
- * the helper wrapper invokeHelperScenarioSce15ef300_801D0D18. The base word
+ * the helper wrapper invokeHelper. The base word
  * sits inside the Splat `asm` row func_801D27B0, whose span 0x801D27B0 through
  * 0x801D27CC holds four packed halfword pairs followed by these three code
  * pointers, so no reviewed data row places the base; the dispatcher below is
@@ -19,7 +19,7 @@ extern void (*D_801D27C0[])(void);
  * three-word in-image code-pointer run at 0x801D27C0 with no arguments,
  * discarding any result. That run holds 0x801D0C48, 0x801D0CC4 and
  * 0x801D0D18, the last being the helper wrapper
- * invokeHelperScenarioSce15ef300_801D0D18, so work bytes 0 through 2 select
+ * invokeHelper, so work bytes 0 through 2 select
  * this dispatcher's handlers; the index is not bounded before the scaled table
  * load. It reads no other state and writes none; the 0x18-byte frame only
  * keeps $ra at 0x10 across the indirect call, and the index load's delay slot,

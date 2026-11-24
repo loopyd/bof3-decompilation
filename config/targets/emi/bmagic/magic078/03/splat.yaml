@@ -78,8 +78,8 @@ segments:
     - '@behavior: Entry 7 of this overlay nine-word work-byte-1 handler pointer run based at 0x801F0878: adds eight to the scratchpad work-object byte at offset 0xA as a byte-width read-modify-write through the pointer cell at 0x1F800044, re-materializes the cell and re-reads that byte, takes an unsigned bound of 0x81 and, when the byte is at least that bound, increments the work-object byte at offset 0x2 through the same loaded pointer. Takes no arguments, returns nothing and keeps no frame.'
   - - 1740
     - c
-    - decrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic07803_801EF2CC
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic07803_801EF2CC.c'
+    - mathSetGlobalHelper
+    - '@source: src/bof3/bmagic/mathSetGlobalHelper.c'
     - '@behavior: Entry 9 of this overlay nine-word work-byte-1 handler pointer run based at 0x801F0878: loads the scratchpad work-object pointer cell at 0x1F800044 once, decrements that object byte at offset 0x9 as a byte-width read-modify-write and tests the stored byte against zero; only when it reaches zero it loads the shared battle work-record pointer at 0x801EB4E0, stores 0xFF into that record byte at offset 0xB and invokes the shared helper at 0x801E5988, with that store filling the call delay slot. Takes no arguments, returns nothing and does not advance the work object byte at offset 0x2 itself.'
   - - 1816
     - asm
@@ -103,8 +103,8 @@ segments:
     - func_801F0024
   - - 5280
     - c
-    - clearWorkByteAAndIncrementWorkByte2WhenWorkRecordByteBIs1BmagicMagic07803_801F00A0
-    - '@source: src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenWorkRecordByteBIs1BmagicMagic07803_801F00A0.c'
+    - stateClearByteIncrement
+    - '@source: src/bof3/bmagic/stateClearByteIncrement.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, loads the record pointer held in that object''s word 0x4C and tests that record''s byte 0xB against 1; only on equality it clears the work object''s byte 0xA through the loaded pointer, reloads the pointer cell and increments the work object''s byte 0x2. Takes no arguments and returns nothing.'
   - - 5356
     - c
@@ -134,8 +134,8 @@ segments:
     - func_801F02FC
   - - 7112
     - c
-    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic07803_801F07C8
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic07803_801F07C8.c'
+    - stateProjectTransformZero
+    - '@source: src/bof3/bmagic/stateProjectTransformZero.c'
     - '@behavior: Pushes the matrix stack, projects work-record position words 0x34 and 0x38 and signed halfword 0x3E, builds a zero-angle rotation, composes matrix 0x801492E8, and installs the rotation and translation. Takes no arguments and returns nothing.'
   - - 7288
     - textbin

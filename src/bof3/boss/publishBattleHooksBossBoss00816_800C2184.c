@@ -4,7 +4,7 @@ typedef void (*Boss00816Handler)(void);
 
 /* Overlay entrypoints this installer publishes; the first two return void,
  * the third is the overlay's zero-result accessor. */
-void initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C4(
+void initModeProgress30(
     void);
 void setupOwnerTwoHalfword(
     void);
@@ -30,7 +30,7 @@ extern Boss00816Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss00816_800C2184(void) {
-  D_801463A4 = initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C4;
+  D_801463A4 = initModeProgress30;
   D_801463A8 =
       setupOwnerTwoHalfword;
   D_801463AC = (Boss00816Handler)zeroResult3;

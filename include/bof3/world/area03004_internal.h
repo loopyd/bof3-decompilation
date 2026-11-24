@@ -677,7 +677,7 @@ s32  calculateScaledValueAmount(s32 slotIndex, s32 slotAmount);
 /* Target-local AREA030 panel combination drawer at 0x801E19CC: the entry-panel
  * slide steps call it with the sliding 0x44 +/- 0x50 * count origin on the
  * fixed 0x4E row. */
-void drawArea030Panel(s16 x, s16 y);
+void renderInsetPanel(s16 x, s16 y);
 s32  hasLeastTwentyMatching(void);
 void stateWorkScrollWords(void); /* per-record scroll updater on the 0x1F800044 cursor */
 /* Same-binary shared work-area selector at 0x80199440 (executable space, direct
@@ -686,7 +686,7 @@ void stateWorkScrollWords(void); /* per-record scroll updater on the 0x1F800044 
  * arguments. Body not lifted in this target. */
 void func_80199440(void);
 /* Same-binary frame-service entries (executable space) run in this order by the
- * AREA030 frame chain functions updateArea030OverlayFrame (jals at 0x801E0BE8,
+ * AREA030 frame chain functions stateOverlayFrameUpdate (jals at 0x801E0BE8,
  * 0x801E0BF0, 0x801E0BF8, 0x801E0C00, 0x801E0C08) and runFrameServices
  * (jals at 0x801E0C48, 0x801E0C50, 0x801E0C58, 0x801E0C60, 0x801E0C68). The
  * game00 view declares them void(void). Bodies not lifted in this target. */
@@ -703,7 +703,7 @@ void stateActiveScrollWords(void);
 /* AREA030 overlay per-frame entry at 0x801E0BD0: invoked once by the
  * main-executable front-end substate-4 handler func_801984E8 (jal 0x80198578).
  */
-void updateArea030OverlayFrame(void);
+void stateOverlayFrameUpdate(void);
 /* Shared frame-service chain at 0x801E0C40: invoked by the front-end substate-4
  * wait loops func_801985C8 (jals 0x80198614, 0x80198694). */
 void runFrameServices(void);

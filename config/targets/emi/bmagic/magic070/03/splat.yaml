@@ -51,8 +51,8 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and compares the work object byte 0xB against 5 with an unsigned bound, so the arm runs only below 5; on that path it stores 8 into work byte 0x9 and then re-reads the cell and increments work byte 0x1, the entry stage index, at byte width. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 1444
     - c
-    - decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07003_801EF1A4
-    - '@source: src/bof3/bmagic/decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07003_801EF1A4.c'
+    - stateCountersSubmitZero
+    - '@source: src/bof3/bmagic/stateCountersSubmitZero.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per access group and decrements the counter bytes 0x0/0x1/0x2 of the 12-byte record that the work object byte 0xA selects in the 0x80145BD6 table, then decrements the work object countdown byte 9 and, only when it reaches zero, submits the battle record word at 0x8014638C through func_80196718, passes the shared battle byte at 0x80146384 to func_800AF814 and increments the work object stage byte 0x1; takes no arguments and returns nothing.'
   - - 1756
     - asm
@@ -70,8 +70,8 @@ segments:
     - func_801EF47C
   - - 2684
     - c
-    - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07003_801EF67C
-    - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07003_801EF67C.c'
+    - mathAccumulateSampleLimit
+    - '@source: src/bof3/bmagic/mathAccumulateSampleLimit.c'
     - '@behavior: Steps the 0x2C-byte work record published through the pointer cell at 0x801F17B4: increments and stores back the record halfword at 0xC unmasked, stores the low six bits of the incremented value shifted left 6 into the scratchpad halfword cell at 0x1F800006, passes the same shifted value to func_801782FC and adds that result scaled by 0x18 and shifted right 12 to the record halfword at 0x8 into the record halfword at 0x20, re-reads the cell and adds the record halfword at 0xA into the record halfword at 0x22, then increments the record byte at 0x6 and increments the record byte at 0x2 when that byte equals the record byte at 0x7; takes no arguments and returns nothing.'
   - - 2860
     - asm
@@ -94,8 +94,8 @@ segments:
     - func_801F0000
   - - 5228
     - c
-    - clearRecordBytes0Through4BmagicMagic07003_801F006C
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic07003_801F006C.c'
+    - stateClearRecordBytes
+    - '@source: src/bof3/bmagic/stateClearRecordBytes.c'
     - '@behavior: Clears work-record bytes 0x00 through 0x04 of the record published through the pointer cell at 0x801F17B4 with one sb per byte, re-materializing the cell address and reloading the record pointer before each store; takes no arguments, returns nothing and writes no other state.'
   - - 5308
     - textbin

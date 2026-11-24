@@ -55,7 +55,7 @@ segments:
     - func_801EEFF8
   - - 1240
     - c
-    - noopHandlerBmagicMagic06403_801EF0D8
+    - noopHandlerOne
   - - 1248
     - asm
     - func_801EF0E0
@@ -64,7 +64,7 @@ segments:
     - func_801EF20C
   - - 1692
     - c
-    - noopHandlerBmagicMagic06403_801EF29C
+    - noopHandlerTwo
   - - 1700
     - c
     - publishLevelPiecesStream
@@ -84,8 +84,8 @@ segments:
     - func_801EF69C
   - - 2956
     - c
-    - dispatchWorkByte1HandlerBmagicMagic06403_801EF78C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EF78C.c'
+    - callDispatchWorkHandler
+    - '@source: src/bof3/bmagic/callDispatchWorkHandler.c'
     - '@behavior: Dispatches one frame of the overlay work handler: reads the scratchpad work-object pointer cell at 0x1F800044, copies the four-entry code pointer table at 0x801EEC40 (0x801EF7F8, 0x801F009C, 0x801F0C38, 0x801F0D64) into its own 0x28-byte frame, and invokes the entry selected by the work-object byte at offset 1 with no arguments. Reads no other state and writes none; the frame only keeps $ra across the indirect call.'
   - - 3064
     - asm
@@ -154,15 +154,15 @@ segments:
     - func_801F0B8C
   - - 8248
     - c
-    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic06403_801F0C38
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic06403_801F0C38.c'
+    - callDispatchSharedByte0
+    - '@source: src/bof3/bmagic/callDispatchSharedByte0.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044 before creating the 0x28-byte frame, copies the three-entry work byte 2 handler table at 0x801EEC70 (0x801F0CBC, 0x801F0D14, 0x801F0D34) into the frame at 0x10, and invokes the entry selected by the unsigned work-object byte at offset 2 with no arguments and no bounds test. After the handler returns it re-reads the pointer cell and, when the work-object byte at offset 0 is non-zero, invokes the shared main-executable service func_8014D290. The frame keeps $ra at 0x20; it reads and writes no other state.'
   - - 8380
     - asm
     - func_801F0CBC
   - - 8468
     - c
-    - incrementWorkByte2BmagicMagic06403_801F0D14
+    - stateIncrementByte2
   - - 8500
     - c
     - submitObjectInvokeHelper

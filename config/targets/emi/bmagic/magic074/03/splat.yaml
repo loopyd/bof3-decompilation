@@ -56,13 +56,13 @@ segments:
     - decrementSubmitSelectedStore
   - - 1984
     - c
-    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07403_801EF3C0
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07403_801EF3C0.c'
+    - stateCountersAdvanceByte2
+    - '@source: src/bof3/bmagic/stateCountersAdvanceByte2.c'
     - '@behavior: Increments the three counter bytes of the 12-byte record selected by work byte 0xA, then decrements work byte 9 and advances work byte 2 only when it reaches zero.'
   - - 2256
     - c
-    - setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07403_801EF4D0
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07403_801EF4D0.c'
+    - stateByte9Below5Byte2
+    - '@source: src/bof3/bmagic/stateByte9Below5Byte2.c'
     - '@behavior: Sets work byte 9 to 8 and increments work byte 2 at byte width while work byte 0xB is below five.'
   - - 2328
     - asm
@@ -87,8 +87,8 @@ segments:
     - func_801EFA50
   - - 3840
     - c
-    - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07403_801EFB00
-    - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07403_801EFB00.c'
+    - mathAccumulateSampleFourth
+    - '@source: src/bof3/bmagic/mathAccumulateSampleFourth.c'
     - '@behavior: Advances record halfword C, accumulates sample and movement into halfwords 20 and 22, and decrements byte countdowns before clearing the record at zero.'
   - - 4068
     - asm

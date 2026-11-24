@@ -4,9 +4,9 @@ typedef void (*Boss00816Handler)(void);
 
 /* Overlay entrypoints this installer publishes; the first two return void,
  * the third is the overlay's zero-result accessor. */
-void initModeTuple510Or520ByFlagBitTwoSetScenarioProgress11BossBoss00816_800C1FDC(void);
+void initModeProgress11(void);
 void setupOwnerCopyHalfword(void);
-s32  zeroResultBossBoss00816_800C1FD4(void);
+s32  zeroResult4(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -30,7 +30,7 @@ extern Boss00816Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss00816_800C1F9C(void) {
-  D_801463A4 = initModeTuple510Or520ByFlagBitTwoSetScenarioProgress11BossBoss00816_800C1FDC;
+  D_801463A4 = initModeProgress11;
   D_801463A8 = setupOwnerCopyHalfword;
-  D_801463AC = (Boss00816Handler)zeroResultBossBoss00816_800C1FD4;
+  D_801463AC = (Boss00816Handler)zeroResult4;
 }

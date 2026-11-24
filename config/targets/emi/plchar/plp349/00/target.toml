@@ -12,9 +12,9 @@ support_sources = [
     "src/bof3/plchar/callWorkTablef5.c",
     "src/bof3/plchar/claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18.c",
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184.c",
-    "src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp34900_801CE9F4.c",
+    "src/bof3/plchar/passResourceReportsWork.c",
     "src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue10bPlcharPlp34900_801CEFCC.c",
-    "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp34900_801CEB24.c",
+    "src/bof3/plchar/requestResourceHelperWork.c",
     "src/bof3/plchar/clearStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp34900_801CF0EC.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp34900_801CEB84.c",
     "src/bof3/plchar/callWorkTablef620.c",
@@ -34,6 +34,6 @@ support_sources = [
     "src/bof3/support/plp349_00_psyq.c",
     "src/bof3/plchar/dispatchByte2Tablef5f8.c",
     "src/bof3/plchar/callWorkTablef62.c",
-    "src/bof3/plchar/selectArrivalSequence41ForRouteThreeAnd40ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp34900_801CE514.c",
+    "src/bof3/plchar/selectArrivalFiveSequence41.c",
 ]
 psyq_source = "src/bof3/support/plp349_00_psyq.c"

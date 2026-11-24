@@ -1,6 +1,6 @@
 stateSelectionCounter = 0x80144DF2;
 stateSelectionCounter2 = 0x80144DF5;
-sharedFieldHalfword_80144DF8 = 0x80144DF8;
+sharedFieldHalfword = 0x80144DF8;
 sharedFieldHalfword_80144E00 = 0x80144E00;
 sharedFieldHalfword_80144E04 = 0x80144E04;
 sharedFieldHalfword_80144E06 = 0x80144E06;

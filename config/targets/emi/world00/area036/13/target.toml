@@ -8,7 +8,7 @@ splat = "config/targets/emi/world00/area036/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld00Area03613_801F2C30.c",
+    "src/bof3/world/stateClearByte48Submit.c",
     "src/bof3/world/renderCursorQuad.c",
     "src/bof3/world/stateStoreCursorDistance.c",
     "src/bof3/world/requestFrontSelectorSeed.c",

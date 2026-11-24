@@ -37,7 +37,7 @@ sources = [
 support_sources = [
     "src/bof3/bmagic/stateInvokeHelperIs.c",
     "src/bof3/bmagic/stateHelperReady.c",
-    "src/bof3/bmagic/stateHelperAdvanceBmagic.c",
+    "src/bof3/bmagic/stateHelperAdvanceRun.c",
     "src/bof3/bmagic/seedByteFromHelper.c",
     "src/bof3/bmagic/raiseInvokeHelperZero.c",
     "src/bof3/bmagic/raiseFlag4CallHelper3.c",

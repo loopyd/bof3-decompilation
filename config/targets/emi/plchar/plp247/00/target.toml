@@ -13,19 +13,19 @@ sources = [
     "src/bof3/plchar/callWorkTablefb10.c",
 ]
 support_sources = [
-    "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp24700_801CF090.c",
-    "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp24700_801CF85C.c",
-    "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp24700_801CF664.c",
+    "src/bof3/plchar/adjustEvenSampleProbe2.c",
+    "src/bof3/plchar/claimStoreDistanceRecord.c",
+    "src/bof3/plchar/claimSizeItemRecord.c",
     "src/bof3/plchar/clearOrPickNearer.c",
     "src/bof3/plchar/callWorkTablefb1.c",
     "src/bof3/plchar/callWorkTablefb28.c",
     "src/bof3/plchar/callWorkTablefb34.c",
     "src/bof3/plchar/callWorkHalfword2Tablefb40.c",
-    "src/bof3/plchar/getAndClearPlcharPlp24700_801CEE08.c",
+    "src/bof3/plchar/queryClear2.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp24700_801CF3DC.c",
-    "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp24700_801CEF50.c",
-    "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp24700_801CF578.c",
-    "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp24700_801CF940.c",
+    "src/bof3/plchar/selectArrivalFiveThree.c",
+    "src/bof3/plchar/stepClearReportsB.c",
+    "src/bof3/plchar/checkAgainstMapCode2.c",
     "src/bof3/support/plp247_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp247_00_psyq.c"

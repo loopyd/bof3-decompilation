@@ -3,12 +3,12 @@
 typedef void (*Boss00216Handler)(void);
 
 /* Overlay entrypoints this installer publishes. The first is the
- * mode-transition handler initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48,
+ * mode-transition handler initModeFlagBit,
  * which tests the 0x2 mask of D_80146328 and either stores 0x5 into D_80146875
  * and calls func_801DDED8, or calls func_801DDF00.
  * The second takes no argument and touches no state. The third returns a zero
  * result, which the void slot type drops. */
-void initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48(void);
+void initModeFlagBit(void);
 void noopHandler9(void);
 s32 zeroResult2(void);
 
@@ -36,7 +36,7 @@ extern Boss00216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooks3(void) {
-  D_801463A4 = initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48;
+  D_801463A4 = initModeFlagBit;
   D_801463A8 = noopHandler9;
   D_801463AC = (Boss00216Handler)zeroResult2;
 }

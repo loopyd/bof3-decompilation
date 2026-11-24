@@ -14,7 +14,7 @@ extern u8* D_1F800044;
  * the step test row at 0x801CF99C was still `asm`; that row's own lift declares
  * the same prototype.
  */
-u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp26700_801CF99C(
+u8 checkAgainstMapPosition(
     void);
 
 /* Layer refresh of this payload. The original calls it through a plain `jal`
@@ -72,10 +72,10 @@ void adjustNeighbourLayers(
     void) {
   if (!(D_1F800044[8] & 1)) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp26700_801CF99C() ==
+    if (checkAgainstMapPosition() ==
         0) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp26700_801CF99C() ==
+      if (checkAgainstMapPosition() ==
           0) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }

@@ -18,7 +18,7 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF564.c",
     "src/bof3/bmagic/decrementSubmitStoreEffect.c",
     "src/bof3/bmagic/callProjectTrianglesPop.c",
-    "src/bof3/bmagic/workByteAdvanceBmagic.c",
+    "src/bof3/bmagic/stateWorkByteAdvance.c",
     "src/bof3/support/magic041_03_psyq.c",
     "src/bof3/bmagic/magic04103DispatchTables.c",
     "src/bof3/bmagic/addByteTallyAdvance.c",

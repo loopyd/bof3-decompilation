@@ -43,13 +43,13 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is zero, stores 0x5E into the shared status halfword D_801490A8; while the gate byte is nonzero it stores 0x60 into D_801490A8 and then 6 into the shared mode byte at 0x801D4285.'
   - - 2216
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld00Area03713_801F34A8
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld00Area03713_801F34A8.c'
+    - stateStatusHandler3Gate
+    - '@source: src/bof3/world/stateStatusHandler3Gate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 3 into the handler index byte at 0x801D4286; the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 2264
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld00Area03713_801F34D8
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld00Area03713_801F34D8.c'
+    - stateStatusHandler5Gate
+    - '@source: src/bof3/world/stateStatusHandler5Gate.c'
     - '@behavior: Loads the shared gate byte D_801490C7; while that byte is nonzero the handler index byte at 0x801D4286 is set to 5, and the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 2312
     - c
@@ -88,8 +88,8 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x88 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2788
     - c
-    - setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36E4
-    - '@source: src/bof3/world/setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36E4.c'
+    - stateStatus88Mode6Gate
+    - '@source: src/bof3/world/stateStatus88Mode6Gate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x88 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2856
     - c
@@ -124,8 +124,8 @@ segments:
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xB into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3692
     - c
-    - initFrontendStateSelector4AndSecondStateByte0CWorld00Area03713_801F3A6C
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte0CWorld00Area03713_801F3A6C.c'
+    - menuInitFrontendSelector
+    - '@source: src/bof3/world/menuInitFrontendSelector.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xC into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3748
     - c

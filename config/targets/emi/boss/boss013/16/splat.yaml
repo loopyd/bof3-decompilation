@@ -46,12 +46,12 @@ segments:
     - func_800C1934
   - - 516
     - c
-    - raiseWorkHalfword94BossBoss01316_800C1A04
-    - '@source: src/bof3/boss/raiseWorkHalfword94BossBoss01316_800C1A04.c'
+    - raiseWorkHalfword
+    - '@source: src/bof3/boss/raiseWorkHalfword.c'
     - '@behavior: Entry 1 of the handler run the byte-indexed dispatcher dispatchIndexedHandlerBossBoss01316_800C18FC selects from, its base the run interior word 0x800C2650 of this payload D_800C25D8 data row: entry 0 is 0x800C1934, this body is entry 1, entry 2 is the inert handler 0x800C1A2C and entry 3 is the next payload body 0x800C1A78. Only the one word at 0x800C2654 holds this address and no jal in the payload names it, so the overlay dispatcher is what reaches it. It raises the unsigned halfword +0x94 of the current enemy work record published at 0x801EB4E8 from zero to 1 and leaves that halfword untouched when it is already nonzero; the 0x801EB4E8 cell is read once and the loaded pointer is reused for the store, so the body is a leaf with no frame that takes no arguments, returns nothing and keeps no state across the single store. Roles of the halfword are not established here.'
   - - 556
     - c
-    - noopHandlerBossBoss01316_800C1A2C
+    - noopHandler39
   - - 564
     - c
     - callStateTable265Boss
@@ -75,7 +75,7 @@ segments:
     - '@behavior: Step handler named by the data word at 0x800C2690 of this payload row: when the battle mode byte 0x801462EA is 0x10 and the acting battler byte 0x80146374 is 8 it raises the signed halfword +0xF8 of the current enemy work record published at 0x801EB4E8 from zero to 1, then on every path raises that record unsigned halfword +0x94 from zero to 1; the 0x801EB4E8 cell is re-read for the second store on the paths that stored, and no jal in the payload names this function.'
   - - 1212
     - c
-    - noopHandlerBossBoss01316_800C1CBC
+    - noopHandler40
   - - 1220
     - c
     - callStateTable2698Boss
@@ -120,11 +120,11 @@ segments:
     - publishBattleHooksBossBoss01316_800C200C
   - - 2116
     - c
-    - zeroResultBossBoss01316_800C2044
+    - zeroResult8
   - - 2124
     - c
-    - initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_800C204C
-    - '@source: src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_800C204C.c'
+    - initModeProgress32
+    - '@source: src/bof3/boss/initModeProgress32.c'
     - '@behavior: First member of this overlay battle hook trio: loads the shared battle flag byte 0x80146328 and tests bit 0x2; while the bit is set it stores 0x32 into the shared scenario progress byte 0x80146864 and runs initModeTuple510 (0x801DDED8), and when the bit is clear it stores the same 0x32 into 0x80146864, runs initModeTuple530 (0x801DDF28) and then stores the mode byte 3 into 0x80146255. The installer publishBattleHooksBossBoss01316_800C200C stores this address into the shared battle hook slot 0x801463A4, which the battle step loads and calls through jalr; no jal in the payload names this function.'
   - - 2224
     - c

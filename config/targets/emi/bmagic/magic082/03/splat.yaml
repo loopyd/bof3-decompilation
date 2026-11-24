@@ -49,8 +49,8 @@ segments:
     - '@behavior: Read the scratchpad work-object pointer at 0x1F800044; when work byte 0xB is below two, store 8 into work byte 9, re-read the pointer and increment work byte 1.'
   - - 1292
     - c
-    - decrementWorkByteARecordCountersThenQueueActionOnCountdownZeroBmagicMagic08203_801EF10C
-    - '@source: src/bof3/bmagic/decrementWorkByteARecordCountersThenQueueActionOnCountdownZeroBmagicMagic08203_801EF10C.c'
+    - stateCountersQueueZero
+    - '@source: src/bof3/bmagic/stateCountersQueueZero.c'
     - '@behavior: Decrement work-byte-A record counters and countdown; on zero submit record, queue action slot and advance work bytes B and 1.'
   - - 1876
     - asm
@@ -76,8 +76,8 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08203_801EF630.c'
   - - 2688
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic08203_801EF680
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic08203_801EF680.c'
+    - stateIncrementByte2Below3
+    - '@source: src/bof3/bmagic/stateIncrementByte2Below3.c'
   - - 2756
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic08203_801EF6C4

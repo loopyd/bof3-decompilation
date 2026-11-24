@@ -118,6 +118,6 @@ void func_801F305C(void);
 void stateFlagBit29Clear(void);
 void stateFlagBit29(void);
 void stateFlagBit28(void);
-void clearScenarioFlagBit28(void);
+void stateClearFlag28(void);
 
 #endif

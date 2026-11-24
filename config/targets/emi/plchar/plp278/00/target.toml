@@ -16,8 +16,8 @@ sources = [
     "src/bof3/plchar/callWorkTablefce0.c",
     "src/bof3/plchar/callWorkTablefcf4.c",
     "src/bof3/plchar/callWorkTablefd00.c",
-    "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp27800_801CFBC0.c",
-    "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27800_801CF89C.c",
+    "src/bof3/plchar/stateSelectedUnseededB.c",
+    "src/bof3/plchar/pickNearerSignStore.c",
 ]
 support_sources = [
     "src/bof3/support/plp278_00_psyq.c",

@@ -13,7 +13,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * word further in, from 0x801F03DC, so its index 0 reaches 0x801EFE80, index 1
  * reaches 0x801EFF88 and index 2 reaches the zero word at 0x801F03E0. The words
  * from 0x801F03E4 onward are zero. Splat places the run as the single
- * `dispatchHandlerTable801F03BC` read-only block and already emits the
+ * `callHandlerTable` read-only block and already emits the
  * address-anchored label for this base word. */
 extern void (*D_801F03DC[])(void); /* @source 0x801F03DC @kind data */
 

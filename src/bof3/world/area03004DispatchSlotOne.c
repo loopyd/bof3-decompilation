@@ -10,7 +10,7 @@ extern void (*D_801E1CD4[])(void); /* @source 0x801E1CD4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table1d20World00Area03004, D_801E1D20);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchCursorModeTable, D_801E1D20);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * third local handler table at 0x801E1D78.

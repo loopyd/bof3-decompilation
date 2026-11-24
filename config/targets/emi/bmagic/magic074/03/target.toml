@@ -8,8 +8,8 @@ splat = "config/targets/emi/bmagic/magic074/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07403_801EF4D0.c",
-    "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07403_801EF3C0.c",
+    "src/bof3/bmagic/stateByte9Below5Byte2.c",
+    "src/bof3/bmagic/stateCountersAdvanceByte2.c",
 ]
 support_sources = [
     "src/bof3/bmagic/decrementSubmitSelectedStore.c",
@@ -19,6 +19,6 @@ support_sources = [
     "src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic07403_801F0440.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic07403_801EEFE0.c",
     "src/bof3/bmagic/callRunFlaggedCallbacks.c",
-    "src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07403_801EFB00.c",
+    "src/bof3/bmagic/mathAccumulateSampleFourth.c",
 ]
 psyq_source = "src/bof3/support/magic074_03_psyq.c"

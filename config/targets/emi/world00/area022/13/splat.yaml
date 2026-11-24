@@ -27,18 +27,18 @@ segments:
   subsegments:
   - - 4
     - c
-    - stateScenario1eGate
-    - '@source: src/bof3/world/stateScenario1eGate.c'
+    - stateProgress1eGate
+    - '@source: src/bof3/world/stateProgress1eGate.c'
     - '@behavior: Reads the signed shared byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x1E into g_ScenarioProgress when that byte reads 0 and 0x32 when it reads 1, leaving the progress byte untouched otherwise.'
   - - 68
     - c
-    - stateScenario3cGate
-    - '@source: src/bof3/world/stateScenario3cGate.c'
+    - stateProgress3cGate
+    - '@source: src/bof3/world/stateProgress3cGate.c'
     - '@behavior: Reads the signed shared gate byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x3C into g_ScenarioProgress when that byte reads 0 and 0x46 when it reads 1, leaving the progress byte untouched for any other gate value.'
   - - 132
     - c
-    - stateScenario0bGate
-    - '@source: src/bof3/world/stateScenario0bGate.c'
+    - stateProgress0bGate
+    - '@source: src/bof3/world/stateProgress0bGate.c'
     - '@behavior: Reads the signed shared gate byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x0B into g_ScenarioProgress when that byte reads 0 and 0x14 when it reads 1, leaving the progress byte untouched for any other gate value.'
   - - 196
     - c

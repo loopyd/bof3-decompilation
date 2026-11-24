@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell shared by this overlay's dispatchers and
  * handlers. Declared as the same volatile u8 pointer the exact bmagic siblings
- * use (copyRecordAdvanceBmagic and
+ * use (stateCopyRecordAdvance and
  * decrementWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2When
  * ChannelIs80BmagicMagic05603_801F00C8 read the same cell): the original reads
  * the cell again before each of the three channel stores and again before the

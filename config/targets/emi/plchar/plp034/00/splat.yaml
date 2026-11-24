@@ -83,7 +83,7 @@ segments:
     - c
     - probeNeighbourCueSign
     - '@source: src/bof3/plchar/probeNeighbourCueSign.c'
-    - '@behavior: Overlay step reached through the code-pointer word 0x801CF3C0 at 0x801D0320, entry 11 of this overlay handler run at 0x801D02F4 and index 0 of the run based at 0x801D0320 that the byte-3 dispatcher callWorkTable0320 indexes from that base with work byte 3 scaled by four. It settles the work record byte 8, the index the payload probe testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC uses to pick the two-word neighbour offset it adds to record words 0x34 and 0x38: when that byte reads even it stores byte 8 minus one masked to three bits, calls the probe, and only while the probe answer reads zero stores byte 8 plus two masked the same way, calls the probe again, and only while that answer reads zero stores that value minus two, restoring the minus-one candidate. It then queues the cue taken from record unsigned halfword 0x2C plus 0x100 through func_8015DF18, selects the shared work sequence ((record byte 8 - 1) / 2 + 0x42) truncated to a byte through func_8014D8D4, clears the step-sign byte 0x0B and the front-end record selection byte 6, arms the countdown byte 0x0A with 8 and sets dispatch byte 3 to 1. No jal in this payload names it, it takes no arguments and returns nothing, and the 0x18-byte frame only keeps the return address at 0x10 across its four calls.'
+    - '@behavior: Overlay step reached through the code-pointer word 0x801CF3C0 at 0x801D0320, entry 11 of this overlay handler run at 0x801D02F4 and index 0 of the run based at 0x801D0320 that the byte-3 dispatcher callWorkTable0320 indexes from that base with work byte 3 scaled by four. It settles the work record byte 8, the index the payload probe checkAgainstMapProjected uses to pick the two-word neighbour offset it adds to record words 0x34 and 0x38: when that byte reads even it stores byte 8 minus one masked to three bits, calls the probe, and only while the probe answer reads zero stores byte 8 plus two masked the same way, calls the probe again, and only while that answer reads zero stores that value minus two, restoring the minus-one candidate. It then queues the cue taken from record unsigned halfword 0x2C plus 0x100 through func_8015DF18, selects the shared work sequence ((record byte 8 - 1) / 2 + 0x42) truncated to a byte through func_8014D8D4, clears the step-sign byte 0x0B and the front-end record selection byte 6, arms the countdown byte 0x0A with 8 and sets dispatch byte 3 to 1. No jal in this payload names it, it takes no arguments and returns nothing, and the 0x18-byte frame only keeps the return address at 0x10 across its four calls.'
   - - 4320
     - c
     - tickFoundSearchMark
@@ -94,21 +94,21 @@ segments:
     - func_801CF71C
   - - 5196
     - c
-    - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp03400_801CF84C
-    - '@source: src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp03400_801CF84C.c'
+    - requestResourceHelperAdvance
+    - '@source: src/bof3/plchar/requestResourceHelperAdvance.c'
     - '@behavior: Overlay step reached through the code-pointer word 0x801CF84C at 0x801D032C, entry 14 of this overlay''s twenty-eight-word handler run at 0x801D02F4 that the byte-3 dispatcher callWorkTable0320 indexes from its base word 0x801D0320 with work-record byte 3 scaled by four, so the body runs as that dispatcher''s step 3; no jal in this payload names it, so it is reached through the run alone. It calls the shared readiness helper func_8014DAEC and keeps only that helper''s returned byte as a ready test, so while the helper reports not ready the handler writes nothing. Once ready it passes the work record''s unsigned byte 8 to the shared main-executable resource request helper func_8014D6B8, then re-loads the scratchpad pointer cell 0x1F800044 and advances the record''s unsigned byte 3, the work-step index, by one, so the next dispatch reaches the word 0x801CF8AC at 0x801D0330. Takes no arguments and returns nothing, reads or writes no other state, and the 0x18-byte frame only keeps the return address at 0x10 across its two calls. The roles of record byte 8 and of the requested resource are not established here, so the name describes the effect.'
   - - 5292
     - c
-    - dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp03400_801CF8AC
-    - '@source: src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp03400_801CF8AC.c'
+    - dropEndSelectionBack2
+    - '@source: src/bof3/plchar/dropEndSelectionBack2.c'
     - '@behavior: Drops the front-end record selection the scratchpad work record at the pointer cell 0x1F800044 carries. It reads work byte 6 as the index of the shared 0x74-byte front-end record table at 0x80143FC8 and, when the selected row reads free at row byte 0 or already at row byte 1 value 1 and the shared gate byte 0x80149332 reads zero, stores zero in work byte 6 and then re-loads the pointer cell and steps the work byte 3 dispatch index back by two. Its address is published at the pointer word 0x801D0330 of the code-pointer run based at 0x801D02F4.'
   - - 5440
     - asm
     - func_801CF940
   - - 5964
     - c
-    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp03400_801CFB4C
-    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp03400_801CFB4C.c'
+    - claimStoreDistanceFront
+    - '@source: src/bof3/plchar/claimStoreDistanceFront.c'
     - '@behavior: Claims one free front-end record and seeds it from a caller-supplied position pair. It asks the shared main-executable allocator func_8019601C for a row index, masks the answer to a byte and, unless that byte is 0xFF, scales it by the 0x74-byte row stride and seeds the row of the shared front-end record table at 0x80143FC8: row byte 0 takes the occupancy flag 1, row byte 5 takes the handler selector 0x34, row byte 1 takes the caller state byte, row word 0x34 takes the first coordinate shifted left 16 and row word 0x38 takes the second the same way, so the pair lands in signed 16.16 form. It then re-reads row word 0x34 and passes it with the shifted second coordinate to the shared distance helper func_8015477C, stores that answer plus 0x200 in row halfword 0x3E, and writes 1 into row byte 0x0B, while a full table leaves every row untouched. No jal in this payload and no word of its twenty-eight-word code-pointer run at 0x801D02F4 holds 0x801CFB4C, so the body is an overlay entry reached from outside every extracted payload and its three argument roles stay structural. The roles of row byte 0x0B, of the plus 0x200 bias and of the caller state byte are not established, so the name describes the effect.'
   - - 6200
     - c
@@ -129,8 +129,8 @@ segments:
     - '@behavior: Overlay step reached from outside this payload at the pointer word 0x801D033C of the twenty-eight-word code-pointer run based at 0x801D02F4, index 2 of the run based at 0x801D0334 that callWorkTable0334 indexes from work byte 3. It reads work byte 0x0B of the record published at the scratchpad pointer cell 0x1F800044 as the index of the shared 0x74-byte front-end record table at 0x80143FC8 and, when the selected row reads free at row byte 0 or already at row byte 1 value 1 and the shared gate byte 0x80149332 reads zero, clears the state byte 0x12B of the record published at 0x80146250, and both paths then run the shared no-argument update helper func_8014D978.'
   - - 6828
     - c
-    - testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC
-    - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC.c'
+    - checkAgainstMapProjected
+    - '@source: src/bof3/plchar/checkAgainstMapProjected.c'
     - '@behavior: Step test of the front-end work object read through the scratchpad pointer cell 0x1F800044, run by this payload step handler 0x801CF3C0 with work byte 8 moved one back and again with it moved two forward. It projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, and hands that pair to the slot search func_801BDE14 at range 0, so the answer starts at one when the search reports any slot rather than -1. The no-argument test func_801B5AE4 raises that answer to one again when it reports anything other than -1. The body then probes the map code of the projected cell through func_80166CB0 and raises the answer to one when a code reads 0xF0, 0xF1, 0xF4, 0xF6 or 0xF7: the projected cell always, the cell one column further whenever the low half of the first projected word is nonzero, and the cell one row further whenever the low half of the second projected word is nonzero. It returns that answer as an unsigned byte and takes no arguments.'
   - - 7248
     - c
@@ -138,13 +138,13 @@ segments:
     - '@source: src/bof3/plchar/callWorkTable0340.c'
   - - 7316
     - c
-    - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0094
-    - '@source: src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0094.c'
+    - pickNearerSignRoute
+    - '@source: src/bof3/plchar/pickNearerSignRoute.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044. It takes the unsigned route index byte 0x08 and compares its distance from the two candidate route indices 3 and 5: when the distance to 5 is the smaller one it asks the shared helper func_801B2D00 for the step sign towards 5 and stores that answer in byte 0x0B, otherwise it asks for the sign towards 3 and stores that. Both paths then store the chosen candidate index in byte 0x03, so the two branches share one store and differ only in the argument and in the constant they hand to it. The body then sets the countdown byte 0x09 to 2 and increments the step counter byte 0x02, which re-arms the work object for the selected route. It takes no arguments, returns nothing and answers no value. The route byte is loaded once and both distances are computed from it; the pointer cell is re-read before every store; the first pointer load precedes frame creation and the 0x18-byte frame only keeps the return address at 0x10 across the calls. The address of this body is the word 0x801D0340, entry 19 of the twenty-eight-word handler run at 0x801D02F4 and index 0 of the tail that callWorkTable0340 indexes from work byte 2, so no jal in this payload names it and the overlays reach it through that run alone.'
   - - 7520
     - c
-    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp03400_801D0160
-    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp03400_801D0160.c'
+    - selectArrivalFiveSequence40
+    - '@source: src/bof3/plchar/selectArrivalFiveSequence40.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload through the code-pointer word 0x801D0344 at index 1 of the nine-word handler run based at 0x801D0340 that callWorkTable0340 indexes with work byte 2 scaled by four, so no jal in this payload names it. Byte 0x08 is the current route index of the eight-entry route window, byte 0x03 the chosen candidate index, byte 0x09 the countdown, byte 0x02 the step counter and byte 0x0B the step sign of that route walk. When the current route index already equals the chosen index the walk has arrived, so the body selects the route arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 3 and sequence 0x41 for route 5 and none for any other route, which is why the lookup is a two-case route switch, and then increments the step counter byte 0x02 so the next dispatch of the run based at 0x801D0340 reaches its entry 2. Otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks that index into the eight-entry window with 7 and selects the sequence of the new route index through the same selector. It takes no arguments, returns nothing and answers no value. The 0x18-byte frame only keeps the return address at 0x10 across the calls, the increment of byte 0x02 issues in the delay slot of the jump to the epilogue, the countdown store reuses the pointer load of the first comparison, and the constant 2 is materialised in the delay slot of the branch that skips the expiry path. The first pointer load precedes frame creation.'
   - - 7772
     - c

@@ -170,7 +170,7 @@ void func_80178804(VECTOR* arg0, SVECTOR* arg1);
 void func_80178818(void* arg0, void* arg1);
 s32  dispatchWorkStates(void);
 void advanceWorkDoubleVelocity(void);
-void advanceWorkStateUntilExpired(void);
+void stateAdvanceUntilExpired(void);
 void func_801F362C(void);
 void func_801F3708(void* arg0, void* arg1, s16* arg2);
 void func_801F3944(World00Area024SpinWork* arg0);

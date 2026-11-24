@@ -53,8 +53,8 @@ segments:
     - func_801EF010
   - - 1668
     - c
-    - raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801EF284
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801EF284.c'
+    - stateRaiseFlag4Helper
+    - '@source: src/bof3/bmagic/stateRaiseFlag4Helper.c'
     - '@behavior: When work byte 0xB is zero, raises mask 0x4 in the halfword at 0x801462E8 and invokes 0x801E5988.'
   - - 1744
     - c
@@ -144,12 +144,12 @@ segments:
     - '@behavior: Clears work bytes 0xB and 9, invokes 0x8014D6B8 with 3, then increments work byte 2, reloading the scratchpad work pointer for each operation.'
   - - 6204
     - c
-    - callAdvanceSetBmagic
-    - '@source: src/bof3/bmagic/callAdvanceSetBmagic.c'
+    - callAdvanceSet
+    - '@source: src/bof3/bmagic/callAdvanceSet.c'
     - '@behavior: Invokes the shared main-executable helpers at 0x8014D978 and 0x8014D4E0 in that order with no arguments, then reads the shared battle halfword at 0x801462E8 once and, only when bit 0x0004 of it is set, reloads the scratchpad work pointer from cell 0x1F800044 and increments work byte 2. Entry 1 of the three-word code pointer run at 0x801EEC18 that the dispatcher at 0x801F038C indexes with work-object byte 2.'
   - - 6296
     - c
-    - invokeHelperBmagicMagic06703_801F0498
+    - callHelperWrapper
   - - 6328
     - textbin
     - func_801F04B8

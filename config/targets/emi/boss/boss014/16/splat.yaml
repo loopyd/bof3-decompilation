@@ -40,13 +40,13 @@ segments:
     - '@behavior: Byte-indexed overlay dispatcher: it masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B74 handler table, so the selected handler''s result stays in the return register'
   - - 216
     - c
-    - noopHandlerBossBoss01416_800C18D8
+    - noopHandler42
   - - 224
     - c
     - noopHandlerBossBoss01416_800C18E0
   - - 232
     - c
-    - noopHandlerBossBoss01416_800C18E8
+    - noopHandler44
   - - 240
     - c
     - dispatchStateByte1Table1b80BossBoss01416_800C18F0
@@ -60,18 +60,18 @@ segments:
     - dispatchIndexedHandlerBossBoss01416_800C1998
   - - 464
     - c
-    - noopHandlerBossBoss01416_800C19D0
+    - noopHandler45
   - - 472
     - c
-    - noopHandlerBossBoss01416_800C19D8
+    - noopHandler46
   - - 480
     - c
-    - noopHandlerBossBoss01416_800C19E0
+    - noopHandler47
   - - 488
     - c
     - publishBattleHooksBossBoss01416_800C19E8
     - '@source: src/bof3/boss/publishBattleHooksBossBoss01416_800C19E8.c'
-    - '@behavior: Publishes this overlay handler trio into the shared hook slots: func_800C1A28 into 0x801463A4, invokeZeroArgBossBoss01416_800C1A74 into 0x801463A8 and zeroResultBossBoss01416_800C1A20 into 0x801463AC'
+    - '@behavior: Publishes this overlay handler trio into the shared hook slots: func_800C1A28 into 0x801463A4, invokeZeroArgOverlay into 0x801463A8 and zeroResultBossBoss01416_800C1A20 into 0x801463AC'
   - - 544
     - c
     - zeroResultBossBoss01416_800C1A20
@@ -80,21 +80,21 @@ segments:
     - func_800C1A28
   - - 628
     - c
-    - invokeZeroArgBossBoss01416_800C1A74
+    - invokeZeroArgOverlay
   - - 660
     - c
     - publishBattleHooksBossBoss01416_800C1A94
   - - 716
     - c
-    - zeroResultBossBoss01416_800C1ACC
+    - zeroResult10
   - - 724
     - c
-    - initModeTuple510Or520ByFlagBitTwoBossBoss01416_800C1AD4
-    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoBossBoss01416_800C1AD4.c'
+    - initModeByFlag
+    - '@source: src/bof3/boss/initModeByFlag.c'
     - '@behavior: Overlay mode-transition handler: while the 0x2 bit of the shared battle flag byte D_80146328 is set it stores 5 into the shared mode byte D_80146875 and runs initModeTuple510, and otherwise it runs initModeTuple520'
   - - 800
     - c
-    - noopHandlerBossBoss01416_800C1B20
+    - noopHandler48
   - - 808
     - asm
     - func_800C1B28

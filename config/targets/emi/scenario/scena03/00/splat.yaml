@@ -111,7 +111,7 @@ segments:
     - dispatchClaimHandler
   - - 4660
     - c
-    - queueAdvanceWorkScenario
+    - queueAdvanceWork
   - - 4716
     - c
     - claimFiveEndRecords

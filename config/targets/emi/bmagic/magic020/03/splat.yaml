@@ -60,20 +60,20 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1Stride.c'
   - - 2012
     - c
-    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC.c'
+    - callDispatchSharedEight
+    - '@source: src/bof3/bmagic/callDispatchSharedEight.c'
   - - 2200
     - c
     - copyRecordSeedTriplet
     - '@source: src/bof3/bmagic/copyRecordSeedTriplet.c'
-    - '@behavior: Work byte 2 state 0 of this overlay, entry 0 of the eight-word work byte 2 handler table at 0x801EEC1C that dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC copies into its frame and indexes with the scratchpad work object byte 2. Copies the shared battle work record byte 0x27 into work byte 0x27, sets work byte 0x2B to 1, copies the record word triplet 0x34/0x38/0x3C into the work object, sets work byte 9 to 0x10 and advances work byte 2. Leaf, no frame, no arguments.'
+    - '@behavior: Work byte 2 state 0 of this overlay, entry 0 of the eight-word work byte 2 handler table at 0x801EEC1C that callDispatchSharedEight copies into its frame and indexes with the scratchpad work object byte 2. Copies the shared battle work record byte 0x27 into work byte 0x27, sets work byte 0x2B to 1, copies the record word triplet 0x34/0x38/0x3C into the work object, sets work byte 9 to 0x10 and advances work byte 2. Leaf, no frame, no arguments.'
   - - 2328
     - asm
     - func_801EF518
   - - 2468
     - c
-    - invokeHelperThenDecrementWorkByte9AndAdvanceWorkByte2WhenZeroBmagicMagic02003_801EF5A4
-    - '@source: src/bof3/bmagic/invokeHelperThenDecrementWorkByte9AndAdvanceWorkByte2WhenZeroBmagicMagic02003_801EF5A4.c'
+    - callHelperDecrementStep
+    - '@source: src/bof3/bmagic/callHelperDecrementStep.c'
   - - 2568
     - asm
     - func_801EF608
@@ -81,22 +81,22 @@ segments:
     - c
     - decrementSeedColorTriplet
     - '@source: src/bof3/bmagic/decrementSeedColorTriplet.c'
-    - '@behavior: Work byte 2 state 4 of this overlay, entry 4 of the eight-word handler table at 0x801EEC1C that dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC copies into its frame and indexes with the scratchpad work object byte 2. This target''s entry 0 handler copyRecordSeedTriplet belongs to the same run. Decrements work byte 9 and, only on zero, raises bit 0x20 of work byte 0, sets mode byte 0x5C to 1, sets the work colour triplet at 0x5D/0x5E/0x5F to -0x40, which is 0xC0 at byte width, and advances work byte 2. Leaf, no frame, no arguments, no return value.'
+    - '@behavior: Work byte 2 state 4 of this overlay, entry 4 of the eight-word handler table at 0x801EEC1C that callDispatchSharedEight copies into its frame and indexes with the scratchpad work object byte 2. This target''s entry 0 handler copyRecordSeedTriplet belongs to the same run. Decrements work byte 9 and, only on zero, raises bit 0x20 of work byte 0, sets mode byte 0x5C to 1, sets the work colour triplet at 0x5D/0x5E/0x5F to -0x40, which is 0xC0 at byte width, and advances work byte 2. Leaf, no frame, no arguments, no return value.'
   - - 2848
     - c
-    - subtractWorkColorTripletBy8ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic02003_801EF720
-    - '@source: src/bof3/bmagic/subtractWorkColorTripletBy8ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic02003_801EF720.c'
+    - mathSubtractTriplet80
+    - '@source: src/bof3/bmagic/mathSubtractTriplet80.c'
   - - 3024
     - c
-    - addWorkColorTripletBy16ThenSetGlobalWorkByteBToFFAndAdvanceWorkByte2WhenChannelIsZeroBmagicMagic02003_801EF7D0
-    - '@source: src/bof3/bmagic/addWorkColorTripletBy16ThenSetGlobalWorkByteBToFFAndAdvanceWorkByte2WhenChannelIsZeroBmagicMagic02003_801EF7D0.c'
+    - mathAddTripletZero
+    - '@source: src/bof3/bmagic/mathAddTripletZero.c'
   - - 3188
     - c
-    - invokeHelperBmagicMagic02003_801EF874
+    - callHelper1
   - - 3220
     - c
-    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF894
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF894.c'
+    - callDispatchSharedThree
+    - '@source: src/bof3/bmagic/callDispatchSharedThree.c'
   - - 3368
     - c
     - decrementSeedTintRefresh
@@ -107,7 +107,7 @@ segments:
     - '@source: src/bof3/bmagic/stateBattleRecordRecord.c'
   - - 3796
     - c
-    - invokeHelperBmagicMagic02003_801EFAD4
+    - callHelper2
   - - 3828
     - asm
     - func_801EFAF4

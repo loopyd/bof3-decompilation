@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic063/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic06303_801EEC18.c",
+    "src/bof3/bmagic/callPublishPoolRecords.c",
     "src/bof3/bmagic/checkDownGlobalGlobal.c",
     "src/bof3/bmagic/call801ByteIsZero.c",
 ]
@@ -19,14 +19,14 @@ support_sources = [
     "src/bof3/bmagic/callWorkHandlerBmagic.c",
     "src/bof3/support/magic063_03_psyq.c",
     "src/bof3/bmagic/magic06303DispatchTables.c",
-    "src/bof3/bmagic/callRecordHandlerBmagic.c",
+    "src/bof3/bmagic/callRecordHandler.c",
     "src/bof3/bmagic/stateRecordBytes0Through4.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic06303_801F0354.c",
     "src/bof3/bmagic/stepAngleProjectSixteen.c",
     "src/bof3/bmagic/stepSixtyThirtyDown.c",
     "src/bof3/bmagic/stateFortyComplementCounting.c",
     "src/bof3/bmagic/statePoolPerEligible.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic06303_801EF994.c",
+    "src/bof3/bmagic/stateProjectTransform.c",
     "src/bof3/bmagic/renderPhasedOriginLifetime.c",
 ]
 psyq_source = "src/bof3/support/magic063_03_psyq.c"

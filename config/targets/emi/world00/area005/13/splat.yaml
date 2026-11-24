@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 4
     - c
-    - stateScenario64Gate
-    - '@source: src/bof3/world/stateScenario64Gate.c'
+    - stateProgress64Gate
+    - '@source: src/bof3/world/stateProgress64Gate.c'
     - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword at 0x801490A8, then stores 0x64 into the shared scenario progress byte at 0x80146864 when the gate byte reads 0 and 0x65 when it reads 1, leaving that byte untouched for any other gate value.'
   - - 68
     - c
-    - stateScenarioC8Gate
-    - '@source: src/bof3/world/stateScenarioC8Gate.c'
+    - stateProgressC8Gate
+    - '@source: src/bof3/world/stateProgressC8Gate.c'
     - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword at 0x801490A8, then stores 0xC8 into the shared scenario progress byte at 0x80146864 when the gate byte reads 0 and 0xC9 when it reads 1, leaving that byte untouched for any other gate value.'
   - - 132
     - c

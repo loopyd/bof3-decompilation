@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/publishModeStatusTable3634.c",
     "src/bof3/world/stateStatusProgress64Gate.c",
-    "src/bof3/world/setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area01013_801F2C44.c",
+    "src/bof3/world/stateProgressC8C9.c",
 ]
 support_sources = [
     "src/bof3/world/seedFrontEndRecord.c",

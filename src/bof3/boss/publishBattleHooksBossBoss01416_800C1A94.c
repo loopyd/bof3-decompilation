@@ -7,9 +7,9 @@ typedef void (*Boss01416Handler)(void);
  * 0x5 into the byte at 0x80146875 and calls func_801DDED8, and otherwise calls
  * func_801DDF00. The second is an inert handler; the third returns a zero
  * result, which the void slot type drops. */
-void initModeTuple510Or520ByFlagBitTwoBossBoss01416_800C1AD4(void);
-void noopHandlerBossBoss01416_800C1B20(void);
-s32  zeroResultBossBoss01416_800C1ACC(void);
+void initModeByFlag(void);
+void noopHandler48(void);
+s32  zeroResult10(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -20,11 +20,11 @@ extern Boss01416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C1A94
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
- * initModeTuple510Or520ByFlagBitTwoBossBoss01416_800C1AD4 (state switch: tests
+ * initModeByFlag (state switch: tests
  * the 0x2 bit of D_80146328 and, while it is set, stores 0x5 into the byte at
  * 0x80146875 and calls func_801DDED8, and otherwise calls func_801DDF00) into
- * 0x801463A4, the inert noopHandlerBossBoss01416_800C1B20 into 0x801463A8, and
- * the zero-result accessor zeroResultBossBoss01416_800C1ACC into 0x801463AC;
+ * 0x801463A4, the inert noopHandler48 into 0x801463A8, and
+ * the zero-result accessor zeroResult10 into 0x801463AC;
  * the accessor's s32 result is dropped by the void slot type. Same trio shape
  * as the sibling installers of this archive family, which write the same three
  * slots in the same order. No in-payload caller: this function's address
@@ -35,7 +35,7 @@ extern Boss01416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss01416_800C1A94(void) {
-  D_801463A4 = initModeTuple510Or520ByFlagBitTwoBossBoss01416_800C1AD4;
-  D_801463A8 = noopHandlerBossBoss01416_800C1B20;
-  D_801463AC = (Boss01416Handler)zeroResultBossBoss01416_800C1ACC;
+  D_801463A4 = initModeByFlag;
+  D_801463A8 = noopHandler48;
+  D_801463AC = (Boss01416Handler)zeroResult10;
 }

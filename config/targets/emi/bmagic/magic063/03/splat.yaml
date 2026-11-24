@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 24
     - c
-    - dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic06303_801EEC18
-    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic06303_801EEC18.c'
+    - callPublishPoolRecords
+    - '@source: src/bof3/bmagic/callPublishPoolRecords.c'
     - '@behavior: Per-frame entry of this overlay. Seeds a two-word local handler table in its own 0x28-byte frame with the overlay code bodies at 0x801EECF8 and 0x801EEEE4 and calls the entry selected by the unsigned byte 0x01 of the work object published at 0x1F800044, with no bound on the index. It then walks the 0x60 records of the flags pool at 0x801F0454 with stride 0x20 and, for each record whose flags byte has bit 0 set, publishes the record into the pointer cell at 0x801F1054, saves the shared work pointer at 0x801EB4E0, publishes that record word 0x1C into the shared cell, runs the record byte 1 step through the dispatcher at 0x801EF340 and restores the shared cell. Takes no arguments and returns nothing.'
   - - 248
     - c
@@ -75,8 +75,8 @@ segments:
     - '@behavior: Step handler entry 4 of the five-word code pointer run at 0x801EEC04, invoked with no arguments by the dispatcher at 0x801EEF74. It reads the scratchpad work-object pointer cell at 0x1F800044 once, before its 0x18-byte frame, and tests that object unsigned byte 0x0B; only when that byte is zero does it pass the object unsigned byte 0x04 to the main-executable helper at 0x800A9820, load the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0x0B by one at byte width and invoke the shared helper at 0x801E5988 with the store filling the call delay slot.'
   - - 1856
     - c
-    - callRecordHandlerBmagic
-    - '@source: src/bof3/bmagic/callRecordHandlerBmagic.c'
+    - callRecordHandler
+    - '@source: src/bof3/bmagic/callRecordHandler.c'
     - '@behavior: Reads the work-record pointer cell at 0x801F1054, scales that record''s unsigned byte at offset 1 by four, and invokes the selected entry of the code-pointer table based at 0x801F0404 with no arguments; it keeps only $ra in a 0x18-byte frame and writes no state.'
   - - 1924
     - asm
@@ -96,8 +96,8 @@ segments:
     - func_801EF880
   - - 3476
     - c
-    - projectWorkRecordPositionAndInstallTransformBmagicMagic06303_801EF994
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic06303_801EF994.c'
+    - stateProjectTransform
+    - '@source: src/bof3/bmagic/stateProjectTransform.c'
     - '@behavior: Pushes the GTE matrix stack, reads the work record through the pointer cell at 0x801F1054 once, builds a zeroed translation triplet whose third element is record byte 0x03 shifted left seven minus the sum of record halfword 0x0E and 0x800 within 0x1000, and a rotation triplet whose first two elements are record words 0x10 and 0x14 shifted right nine and biased by minus 0x4000 and whose third element is half the negated record signed halfword 0x1A. It projects the rotation through RotTrans into a scratch matrix translation field, builds that matrix with RotMatrix, composes the shared matrix at 0x801492E8 under it with MulMatrix2, and publishes it through SetRotMatrix and SetTransMatrix.'
   - - 3676
     - c

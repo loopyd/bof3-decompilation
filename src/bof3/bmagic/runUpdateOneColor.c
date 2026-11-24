@@ -5,7 +5,7 @@
  * pointer spelling as the exact bmagic siblings
  * raiseFlag20SetByte5CToOneClearWorkColorTripletThenAdvanceWorkByte2WhenHelper
  * ReadyBmagicMagic05603_801F0024 and
- * copyRecordAdvanceBmagic: every
+ * stateCopyRecordAdvance: every
  * statement that goes through it re-reads the cell, because a store through the
  * pointer it supplied may alias the cell itself. The named symbol lets the
  * assembler fold the constant address into each load (lui $vN,0x1F80 / lw

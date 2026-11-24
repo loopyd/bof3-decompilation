@@ -217,7 +217,7 @@ void emitSemiTransparentSprite(s16 arg0, s16 arg1, u8 arg2);
 void func_801F3B00(s16 arg0, s16 arg1);
 void appendTransformedG4Panel(s16 arg0, s16 arg1);
 void func_801F40C4(s16 arg0, s16 arg1);
-void dispatchArea016ScratchMode(void);
+void dispatchScratchModeSelect(void);
 void func_801F45CC(void);
 
 #define WORLD00_AREA016_SCRATCH_PTR                                            \

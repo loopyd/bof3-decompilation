@@ -66,19 +66,19 @@ segments:
     - '@behavior: Per-frame handler of this overlay work state machine, entry 11 of the fifteen-word run based at 0x800C2690 that callStateTable2690Boss indexes with work byte 2: runs the overlay ring renderer at 0x800C236C with work byte 9 as its scale, subtracts 4 from that byte and 0x2000 from each of the words at 0x40 and 0x44, clamping a word that is not positive to 0; once work byte 9 reaches 0 it clears work byte 0x48, applies main lookup record 0x83, requests resource 0, runs the shared accumulation pass at 0x801E54EC, clears bit 0x40 of work byte 0, stores 6 into work byte 1 and 4 into work byte 2, which hand the record to this overlay byte-2 dispatcher 0x800C18A0 and its handler 0x800C18E4, and advances work byte 3 to 1 while clearing work byte 4.'
   - - 1128
     - c
-    - invokeHelperBossBoss00816_800C1C68
+    - invokeHelperOverlay
   - - 1160
     - c
     - dispatchIndexedHandlerBossBoss00816_800C1C88
   - - 1216
     - c
-    - noopHandlerBossBoss00816_800C1CC0
+    - noopHandler27
   - - 1224
     - c
-    - noopHandlerBossBoss00816_800C1CC8
+    - noopHandler28
   - - 1232
     - c
-    - noopHandlerBossBoss00816_800C1CD0
+    - noopHandler29
   - - 1240
     - c
     - dispatchStateByte1Table26ccBossBoss00816_800C1CD8
@@ -93,13 +93,13 @@ segments:
     - dispatchIndexedHandlerBossBoss00816_800C1D74
   - - 1452
     - c
-    - noopHandlerBossBoss00816_800C1DAC
+    - noopHandler30
   - - 1460
     - c
-    - noopHandlerBossBoss00816_800C1DB4
+    - noopHandler31
   - - 1468
     - c
-    - noopHandlerBossBoss00816_800C1DBC
+    - noopHandler32
   - - 1476
     - c
     - callStateTable2708Boss
@@ -114,13 +114,13 @@ segments:
     - callIndexedHandler3
   - - 1688
     - c
-    - noopHandlerBossBoss00816_800C1E98
+    - noopHandler33
   - - 1696
     - c
     - noopHandler8
   - - 1704
     - c
-    - noopHandlerBossBoss00816_800C1EA8
+    - noopHandler34
   - - 1712
     - c
     - callStateTable2744Boss
@@ -147,11 +147,11 @@ segments:
     - publishBattleHooksBossBoss00816_800C1F9C
   - - 2004
     - c
-    - zeroResultBossBoss00816_800C1FD4
+    - zeroResult4
   - - 2012
     - c
-    - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress11BossBoss00816_800C1FDC
-    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress11BossBoss00816_800C1FDC.c'
+    - initModeProgress11
+    - '@source: src/bof3/boss/initModeProgress11.c'
     - '@behavior: Battle-flag state switch this overlay publishes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x11 into the shared scenario progress byte 0x80146864 and calls func_801DDED8, and otherwise calls func_801DDF00.'
   - - 2088
     - c
@@ -180,8 +180,8 @@ segments:
     - zeroResult3
   - - 2500
     - c
-    - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C4
-    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C4.c'
+    - initModeProgress30
+    - '@source: src/bof3/boss/initModeProgress30.c'
     - '@behavior: Battle-flag state switch of this overlay and first member of the third hook trio its installer publishBattleHooksBossBoss00816_800C2184 writes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x30 into the shared scenario progress byte 0x80146864 and calls initModeTuple510, and otherwise calls initModeTuple520.'
   - - 2576
     - c
@@ -193,11 +193,11 @@ segments:
     - publishBattleHooks4
   - - 2744
     - c
-    - zeroResultBossBoss00816_800C22B8
+    - zeroResult6
   - - 2752
     - c
-    - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress44BossBoss00816_800C22C0
-    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress44BossBoss00816_800C22C0.c'
+    - initModeProgress44
+    - '@source: src/bof3/boss/initModeProgress44.c'
     - '@behavior: Battle-flag state switch of this overlay and first member of the fourth hook trio its installer publishBattleHooks4 writes into shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x44 into the shared scenario progress byte 0x80146864 and calls initModeTuple510, and otherwise calls initModeTuple520.'
   - - 2828
     - c

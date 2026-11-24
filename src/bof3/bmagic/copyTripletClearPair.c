@@ -14,7 +14,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 /* Scratchpad work-object pointer cell, bound at 0x1F800044 by this target's map
  * and shared by this overlay's dispatchers and handlers. Declared as a named
  * cell symbol, the form the exact sibling
- * copyRecordAdvanceBmagic uses: the
+ * stateCopyRecordAdvance uses: the
  * symbolic address folds into each load (lui $vN,0x1F80 / lw $vN,68($vN)) and
  * the original re-reads the cell before every later store group, because a
  * store through the loaded pointer may alias the cell. */

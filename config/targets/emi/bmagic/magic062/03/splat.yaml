@@ -41,13 +41,13 @@ segments:
     - func_801EEEC0
   - - 872
     - c
-    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic06203_801EEF68
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic06203_801EEF68.c'
+    - stateCountersAdvanceByte1
+    - '@source: src/bof3/bmagic/stateCountersAdvanceByte1.c'
     - '@behavior: Handler at entry 2, zero-based, of the six-entry code pointer table at 0x801EEC04 that this overlay''s work-byte-1 dispatcher at 0x801EEC1C indexes. It reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group and, for each of the record''s three counter bytes, re-reads the work object''s unsigned byte 0xA, scales it by the 12-byte record stride into a byte offset and increments the selected 0x80145BD6 record''s bytes 0x0, 0x1 and 0x2 with a byte-width read-modify-write. It then re-reads the cell, and the work object''s unsigned byte 9 with it, decrements that byte in the same byte-width form and tests the stored value against zero; only on zero it re-reads the cell and increments the object''s byte 1, advancing the handler index the dispatcher selects on. Leaf, 0x10-byte unused frame, no arguments and no return value.'
   - - 1144
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow2BmagicMagic06203_801EF078
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow2BmagicMagic06203_801EF078.c'
+    - stateByte9Below2
+    - '@source: src/bof3/bmagic/stateByte9Below2.c'
   - - 1216
     - asm
     - func_801EF0C0
@@ -91,8 +91,8 @@ segments:
     - '@source: src/bof3/bmagic/magic06203DispatchTables.c'
   - - 4096
     - c
-    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06203_801EFC00
-    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06203_801EFC00.c'
+    - mathByteDecrementZero
+    - '@source: src/bof3/bmagic/mathByteDecrementZero.c'
   - - 4172
     - asm
     - func_801EFC4C

@@ -28,7 +28,7 @@ segments:
     - T_801F2C00
   - - 4
     - c
-    - dispatchArea026ScratchMode
+    - dispatchScratchModeLocal
     - '@source: src/bof3/world/area02613DispatchTables.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table at 0x801F33EC.'
   - - 72
@@ -88,8 +88,8 @@ segments:
     - '@behavior: sets bit 0x28 in the active scenario flags.'
   - - 1316
     - c
-    - clearScenarioFlagBit28
-    - '@source: src/bof3/world/clearScenarioFlagBit28.c'
+    - stateClearFlag28
+    - '@source: src/bof3/world/stateClearFlag28.c'
     - '@behavior: clears bit 0x28 in the active scenario flags.'
   - - 1356
     - c
@@ -98,18 +98,18 @@ segments:
     - '@behavior: sets bit 0x2B in the active scenario flags.'
   - - 1396
     - c
-    - clearScenarioFlagBit2B
-    - '@source: src/bof3/world/clearScenarioFlagBit2B.c'
+    - stateClearFlag2B
+    - '@source: src/bof3/world/stateClearFlag2B.c'
     - '@behavior: clears bit 0x2B in the active scenario flags.'
   - - 1436
     - c
-    - setScenarioFlagBit2C
-    - '@source: src/bof3/world/setScenarioFlagBit2C.c'
+    - stateSetFlag2C
+    - '@source: src/bof3/world/stateSetFlag2C.c'
     - '@behavior: sets bit 0x2C in the active scenario flags.'
   - - 1476
     - c
-    - clearScenarioFlagBit2C
-    - '@source: src/bof3/world/clearScenarioFlagBit2C.c'
+    - stateClearFlag2C
+    - '@source: src/bof3/world/stateClearFlag2C.c'
     - '@behavior: clears bit 0x2C in the active scenario flags.'
   - - 1516
     - c

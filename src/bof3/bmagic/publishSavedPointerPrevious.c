@@ -6,7 +6,7 @@
  * original re-materialises the cell address with its own lui for each of the
  * two stores, so the cell is reached through the named pointer rather than a
  * folded constant base. The plain declaration is the one the exact siblings
- * decrementGlobalWorkByteBAndClearWorkBytes0Through4BmagicMagic08103_801EF614
+ * mathClearGlobalBytes
  * and reserveRecordEveryFourthTickPublishWorkPointerCopyWorkByte9SeedByteAStep
  * ThenAdvanceWorkByteBAndByte9AndByte2AtLeast81BmagicMagic08103_801EF18C use. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */

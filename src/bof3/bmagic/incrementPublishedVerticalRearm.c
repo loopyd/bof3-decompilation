@@ -5,7 +5,7 @@
  * load, which is how the original reaches it once per store group; the original
  * re-reads it after every call and after every store through the loaded pointer
  * because a store may alias the cell itself. The exact siblings of this run
- * setWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic01703_801EF694
+ * stateByte9To8Advance
  * and invokeHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvance
  * WorkByte2OnZeroWhenGlobalWorkByteBIs1BmagicMagic01703_801EF5FC read the same
  * cell the same way. */

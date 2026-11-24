@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/callEachOccupiedIts.c",
-    "src/bof3/bmagic/decrementWorkAdvanceBmagic.c",
+    "src/bof3/bmagic/mathWorkAdvance.c",
     "src/bof3/bmagic/callPairDecrementRearm.c",
     "src/bof3/bmagic/renderDecimalPairDecrement.c",
     "src/bof3/bmagic/renderGlyphMatchDpad.c",

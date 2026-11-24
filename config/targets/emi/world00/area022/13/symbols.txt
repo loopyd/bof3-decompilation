@@ -1,4 +1,4 @@
-stateScenario1eGate = 0x801F2C04;
-stateScenario3cGate = 0x801F2C44;
-stateScenario0bGate = 0x801F2C84;
+stateProgress1eGate = 0x801F2C04;
+stateProgress3cGate = 0x801F2C44;
+stateProgress0bGate = 0x801F2C84;
 queueWorldMarkerZero = 0x801F2CC4;

@@ -57,8 +57,8 @@ segments:
     - '@behavior: Calls helper 0x801F07B0 with 4 and draws work byte 0xB as a grey glyph, then matches the pressed-pad d-pad nibble against the byte table at 0x801F0A98 indexed by work byte 0xB; on a match it increments work byte 0xA and advances work byte 1 to 3 below 0x20, otherwise rearming work byte 9 to 6 and advancing byte 1 to 5.'
   - - 1100
     - c
-    - decrementWorkAdvanceBmagic
-    - '@source: src/bof3/bmagic/decrementWorkAdvanceBmagic.c'
+    - mathWorkAdvance
+    - '@source: src/bof3/bmagic/mathWorkAdvance.c'
     - '@behavior: Decrements unsigned work byte 9 through the scratchpad pointer cell at 0x1F800044; when the decremented byte is zero it rearms byte 9 to 30 and then advances work byte 1.'
   - - 1192
     - c

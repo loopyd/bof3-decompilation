@@ -67,7 +67,7 @@ s32 func_80154F78(s32 arg0, s32 arg1, u8 arg2);
 /* Work-sequence selector of the shared EXE image, outside this payload: it takes
  * a zero-extended byte sequence id and answers a word this body ignores. The
  * exact siblings selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CED34
- * and clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp27a00_801CEC40
+ * and statePickNearerState
  * of this target declare the same prototype. */
 u32 func_8014D8D4(u8 arg0);
 

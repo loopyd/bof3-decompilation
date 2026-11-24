@@ -8,18 +8,18 @@ splat = "config/targets/emi/bmagic/magic059/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/stateWorkAdvanceBmagic.c",
-    "src/bof3/bmagic/incrementWorkByte9Add1ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801F0070.c",
+    "src/bof3/bmagic/stateWorkAdvance.c",
+    "src/bof3/bmagic/mathIncrementByte9At20.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic05903_801F012C.c",
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic05903_801F04F4.c",
+    "src/bof3/bmagic/mathIncrementGlobalClear.c",
+    "src/bof3/bmagic/stateClearWorkBytes.c",
     "src/bof3/bmagic/copyTripletStepClear.c",
     "src/bof3/support/magic059_03_psyq.c",
     "src/bof3/bmagic/magic05903DispatchTables.c",
     "src/bof3/bmagic/incrementReachA0.c",
     "src/bof3/bmagic/incrementPairReachTwenty.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801F00DC.c",
+    "src/bof3/bmagic/mathIncrementByteAdvance.c",
     "src/bof3/bmagic/incrementGlobalInvokeZero.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05903_801F0490.c",
     "src/bof3/bmagic/dispatchByte2DrawSpokes.c",

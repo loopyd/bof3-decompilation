@@ -16,7 +16,7 @@ extern u8 D_801D4285;
  * script handler reached only through that table and the blob carries no
  * prototype, which keeps the argument roles structural.
  * Shape: the 68 bytes at 0x801F376C were compared word by word with the lifted
- * sibling setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36E4 and
+ * sibling stateStatus88Mode6Gate and
  * differed in two words only - the status literal stored on the gated arm (0x88
  * there, 0x9C here) and the internal `j` immediate, which moved by 0x88 bytes,
  * exactly the delta between the two spans - so every relative branch, cell

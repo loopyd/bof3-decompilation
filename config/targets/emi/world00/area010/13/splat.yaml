@@ -32,8 +32,8 @@ segments:
     - '@behavior: Reads the signed shared byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x64 into g_ScenarioProgress when that byte reads 0 and 0x65 when it reads 1, leaving the progress byte untouched otherwise.'
   - - 68
     - c
-    - setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area01013_801F2C44
-    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area01013_801F2C44.c'
+    - stateProgressC8C9
+    - '@source: src/bof3/world/stateProgressC8C9.c'
     - '@behavior: Reads the signed shared byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0xC8 into g_ScenarioProgress when that byte reads 0 and 0xC9 when it reads 1, leaving the progress byte untouched otherwise.'
   - - 132
     - c

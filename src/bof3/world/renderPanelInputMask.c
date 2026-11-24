@@ -1,7 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @behavior draws the AREA030 panel combination for the shared 0x44/0x4E
- * origin through drawArea030Panel; when the shared pad state word D_80145AA8
+ * origin through renderInsetPanel; when the shared pad state word D_80145AA8
  * shares a bit with the pressed-button masks D_80145AC2 / D_80145AC4 it
  * advances byte 3 of the work record published at the scratchpad cursor
  * 0x1F800044; then appends the dim tile through appendDimTile.
@@ -11,7 +11,7 @@
  * @residual none
  */
 void renderPanelInputMask(void) {
-    drawArea030Panel(0x44, 0x4E);
+    renderInsetPanel(0x44, 0x4E);
     if (D_80145AA8 & (D_80145AC2 | D_80145AC4)) {
         u8 *work = D_1F800044;
         work[3]++;

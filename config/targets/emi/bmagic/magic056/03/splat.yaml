@@ -95,8 +95,8 @@ segments:
     - '@source: src/bof3/bmagic/incrementByteTwo.c'
   - - 4004
     - c
-    - incrementWorkAdvanceBmagic
-    - '@source: src/bof3/bmagic/incrementWorkAdvanceBmagic.c'
+    - mathIncrementWorkAdvance
+    - '@source: src/bof3/bmagic/mathIncrementWorkAdvance.c'
   - - 4084
     - c
     - incrementUpGlobalZero
@@ -113,8 +113,8 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2Wide.c'
   - - 5096
     - c
-    - copyRecordAdvanceBmagic
-    - '@source: src/bof3/bmagic/copyRecordAdvanceBmagic.c'
+    - stateCopyRecordAdvance
+    - '@source: src/bof3/bmagic/stateCopyRecordAdvance.c'
   - - 5156
     - c
     - raiseOneColorTriplet

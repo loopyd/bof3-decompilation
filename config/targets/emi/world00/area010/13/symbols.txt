@@ -1,5 +1,5 @@
 stateStatusProgress64Gate = 0x801F2C04;
-setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area01013_801F2C44 = 0x801F2C44;
+stateProgressC8C9 = 0x801F2C44;
 publishModeStatusTable362 = 0x801F2C84;
 publishModeStatusTable3634 = 0x801F2CB0;
 seedFrontEndRecord = 0x801F2CDC;

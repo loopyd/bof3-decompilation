@@ -24,5 +24,5 @@ func_801EFF88 = 0x801EFF88;
 projectInstallTransformAngle = 0x801F00A8;
 func_801F0164 = 0x801F0164;
 reserveFirstFreeFlag = 0x801F0358;
-dispatchHandlerTable801F03BC = 0x801F03BC;
+callHandlerTable = 0x801F03BC;
 recordFlagTable = 0x801F03E4;

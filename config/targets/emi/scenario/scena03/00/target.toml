@@ -49,7 +49,7 @@ support_sources = [
     "src/bof3/scenario/callWorkReset.c",
     "src/bof3/scenario/noopCallbackSlot.c",
     "src/bof3/scenario/noopPrimarySlot.c",
-    "src/bof3/scenario/queueAdvanceWorkScenario.c",
+    "src/bof3/scenario/queueAdvanceWork.c",
     "src/bof3/scenario/queueFrontEndPrimary.c",
     "src/bof3/scenario/stateFlagInvokeHelper.c",
     "src/bof3/scenario/stateFlagSetBit11.c",

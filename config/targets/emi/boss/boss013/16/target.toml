@@ -10,11 +10,11 @@ load_address = 0x800C1800
 sources = []
 support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C18FC.c",
-    "src/bof3/boss/zeroResultBossBoss01316_800C2044.c",
-    "src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_800C204C.c",
+    "src/bof3/boss/zeroResult8.c",
+    "src/bof3/boss/initModeProgress32.c",
     "src/bof3/boss/noopHandlerBossBoss01316_800C2004.c",
-    "src/bof3/boss/noopHandlerBossBoss01316_800C1CBC.c",
-    "src/bof3/boss/noopHandlerBossBoss01316_800C1A2C.c",
+    "src/bof3/boss/noopHandler40.c",
+    "src/bof3/boss/noopHandler39.c",
     "src/bof3/boss/dispatchStateByte2Table26c8BossBoss01316_800C1D58.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C1E58.c",
     "src/bof3/boss/callStateTable2698Boss.c",
@@ -29,7 +29,7 @@ support_sources = [
     "src/bof3/boss/setupUiBattlerName.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C1B14.c",
     "src/bof3/boss/callStateTable265Boss.c",
-    "src/bof3/boss/raiseWorkHalfword94BossBoss01316_800C1A04.c",
+    "src/bof3/boss/raiseWorkHalfword.c",
     "src/bof3/boss/callStateTable2620Boss.c",
     "src/bof3/boss/stateOneBitBit.c",
 ]

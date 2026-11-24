@@ -1,5 +1,5 @@
 requestFrontSelectorSeed = 0x801F2C04;
-clearWorkByte48ThenSubmitRecordWorld00Area03613_801F2C30 = 0x801F2C30;
+stateClearByte48Submit = 0x801F2C30;
 func_801F2C64 = 0x801F2C64;
 callStateTable3304World00 = 0x801F2D18;
 stateStoreCursorDistance = 0x801F2D5C;

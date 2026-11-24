@@ -53,7 +53,7 @@ u8 func_801CEFF8(void);
 /* Screen-space position routine of the shared EXE image, outside this payload:
  * it takes the two coordinate words and answers the signed halfword sample the
  * claim arm compares with the work reference halfword 0x3E. The exact
- * stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp02500_801CFB74
+ * stepBackPlusHalf2
  * lift of this target declares the same word-returning prototype and narrows
  * the answer at the call site, which is what this body does too. */
 s32 func_80154F28(s32 x, s32 y);

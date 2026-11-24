@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - invokeZeroArgWorld00Area01413_801F2C04
+    - invokeZeroArgShared
   - - 36
     - textbin
     - D_801F2C24

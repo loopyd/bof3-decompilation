@@ -43,7 +43,7 @@ void initModeTuple520(void); /* @source 0x801DDF00 */
  * body carries the statement order of the still-asm sibling at 0x800C1DD4 of
  * this same overlay, which stores 0x24 and 0x1B and reaches a one-argument
  * helper, and of the exact sibling
- * initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48, which reads the same
+ * initModeFlagBit, which reads the same
  * flag as a byte and tests bit 0x2. Prologue and return path place the
  * boundary.
  * @status exact

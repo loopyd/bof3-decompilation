@@ -42,7 +42,7 @@ void func_801E5988(void);
  *           cell spellings and the decrement-then-helper tail were taken from
  *           the siblings whose own gates measured exact when this body was
  *           written,
- *           callRecordHandlerBmagic,
+ *           callRecordHandler,
  *           incrementWorkByteAThenSetGlobalWorkByteBToFFAt80AndInvokeHelper
  *           BmagicMagic10803_801EF130 and
  *           decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01200_801EF670.

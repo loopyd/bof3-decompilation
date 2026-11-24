@@ -58,19 +58,19 @@ segments:
     - func_800C1A4C
   - - 924
     - c
-    - invokeHelperBossBoss00413_800C1B9C
+    - invokeOverlayHelper
   - - 956
     - c
     - dispatchIndexedHandlerBossBoss00413_800C1BBC
   - - 1012
     - c
-    - noopHandlerBossBoss00413_800C1BF4
+    - noopHandler19
   - - 1020
     - c
-    - noopHandlerBossBoss00413_800C1BFC
+    - noopHandler20
   - - 1028
     - c
-    - noopHandlerBossBoss00413_800C1C04
+    - noopHandler21
   - - 1036
     - c
     - publishBattleHooksBossBoss00413_800C1C0C

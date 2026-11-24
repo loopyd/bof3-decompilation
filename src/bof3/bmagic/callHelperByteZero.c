@@ -15,7 +15,7 @@ void func_800AEF98(s32 event, s32 value);
  * named fixed address the exact siblings
  * addWorkColorTripletBy8ThenDecrementWorkByte9ThenDecrementGlobalWorkByteB
  * AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF8B4 and
- * setWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic01703_801EF694
+ * stateByte9To8Advance
  * use. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 

@@ -12,7 +12,7 @@ typedef void (*Boss00216Handler)(void);
 void setupFlagOwnerFields(
     void);
 void invokeZeroArgHelper(void);
-s32 zeroResultBossBoss00216_800C1E74(void);
+s32 zeroResult1(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -25,7 +25,7 @@ extern Boss00216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @behavior Publishes this overlay's handler trio into the shared hook slots
  * in slot order: the progress hook at 0x800C1E7C into 0x801463A4, the
  * zero-argument wrapper invokeZeroArgHelper into 0x801463A8,
- * and the zero-result accessor zeroResultBossBoss00216_800C1E74 into
+ * and the zero-result accessor zeroResult1 into
  * 0x801463AC, the last one through the void slot type. No payload word names
  * this function and no jal reaches it, so the main program enters it through
  * the overlay entry point, as it does the sibling installers 0x800C1B0C of
@@ -40,5 +40,5 @@ void publishBattleHooksBossBoss00216_800C1E3C(void) {
   D_801463A4 =
       setupFlagOwnerFields;
   D_801463A8 = invokeZeroArgHelper;
-  D_801463AC = (Boss00216Handler)zeroResultBossBoss00216_800C1E74;
+  D_801463AC = (Boss00216Handler)zeroResult1;
 }

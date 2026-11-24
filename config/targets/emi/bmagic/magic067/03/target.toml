@@ -13,7 +13,7 @@ sources = [
     "src/bof3/bmagic/callHelperOneIncrement.c",
     "src/bof3/bmagic/decrementRaiseBattleTarget.c",
     "src/bof3/bmagic/forwardBattleByteZero.c",
-    "src/bof3/bmagic/callAdvanceSetBmagic.c",
+    "src/bof3/bmagic/callAdvanceSet.c",
     "src/bof3/bmagic/stateGlobalWordsGlobal.c",
     "src/bof3/bmagic/stateMotionOffsetFields.c",
     "src/bof3/bmagic/stateBandsActingHead.c",
@@ -22,7 +22,7 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06703_801EEC24.c",
     "src/bof3/bmagic/callHandlerPopNonzero.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801F033C.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801EF284.c",
+    "src/bof3/bmagic/stateRaiseFlag4Helper.c",
     "src/bof3/bmagic/stateBytesAdvance.c",
     "src/bof3/bmagic/callHandlerNonzero.c",
     "src/bof3/bmagic/stateDecrementGlobalTwo.c",
@@ -31,7 +31,7 @@ support_sources = [
     "src/bof3/bmagic/stateSetByteIncrement.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06703_801F038C.c",
     "src/bof3/bmagic/magic06703DispatchTables.c",
-    "src/bof3/bmagic/invokeHelperBmagicMagic06703_801F0498.c",
+    "src/bof3/bmagic/callHelperWrapper.c",
     "src/bof3/support/magic067_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic067_03_psyq.c"

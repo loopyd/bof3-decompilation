@@ -83,8 +83,8 @@ segments:
     - '@behavior: advances the current work entry by twice its three velocity components, decrements its byte timer, advances its halfword phase, and moves to the next state with a reset timer when the timer expires.'
   - - 1616
     - c
-    - advanceWorkStateUntilExpired
-    - '@source: src/bof3/world/advanceWorkStateUntilExpired.c'
+    - stateAdvanceUntilExpired
+    - '@source: src/bof3/world/stateAdvanceUntilExpired.c'
     - '@behavior: advances the current work entry by its three velocity fields, decrements its byte-3 timer, then decrements its byte-2 timer and clears its active byte 0 when that timer reaches zero.'
   - - 1748
     - c

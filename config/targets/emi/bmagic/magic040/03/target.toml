@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/dispatchWorkByte1Base.c",
-    "src/bof3/bmagic/incrementAdvanceByteBmagic.c",
+    "src/bof3/bmagic/mathIncrementAdvanceByte.c",
 ]
 support_sources = [
     "src/bof3/bmagic/renderGreyCircleLines.c",
