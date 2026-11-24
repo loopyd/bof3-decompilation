@@ -19,6 +19,7 @@ from harness.domain.identity import (
 from harness.domain.layout import parse_splat_layout
 from harness.domain.symbols import MapSymbol
 from harness.match._asm_resolve import extract_original_bytes
+from harness.domain.claims import manifest_source_paths
 from harness.domain.manifests import load_target_manifests
 from harness.domain.sources import (
     LiftMetadataError,
@@ -55,7 +56,7 @@ def _sdk_symbols(root: Path, manifest) -> list[MapSymbol]:
 _ORDINAL = re.compile(r"^(?P<stem>.*?[a-z])(?P<number>\d{1,3})$")
 
 
-def ordinal_findings(root: Path, target: str, manifest) -> list[str]:
+def ordinal_findings(root: Path, target: str, manifest, manifests) -> list[str]:
     """An ordinal is licensed only when the bodies it separates share a shape.
 
     A name that ends in a digit token is admitted when some row carrying the same
@@ -72,6 +73,23 @@ def ordinal_findings(root: Path, target: str, manifest) -> list[str]:
     if not binary.is_file():
         return findings
     rows = load_map(map_path(root, target))
+    # The licence is family-wide: a same-shape sibling in another target of the
+    # same source parent licenses the ordinal just as one in this target does.
+    parent_dirs = {path.parent for path in manifest_source_paths(root, manifest)}
+    family: list[tuple[str, MapSymbol]] = []
+    layouts: dict[str, object] = {}
+    for owner, other in manifests.items():
+        other_dirs = {path.parent for path in manifest_source_paths(root, other)}
+        if not (other_dirs & parent_dirs):
+            continue
+        try:
+            layouts[owner] = parse_splat_layout(
+                root / other.splat, other.load_address
+            )
+        except (OSError, ValueError):
+            layouts[owner] = None
+        for symbol in load_map(map_path(root, owner)):
+            family.append((owner, symbol))
     own = {
         symbol.name: symbol.address
         for symbol in rows
@@ -101,19 +119,26 @@ def ordinal_findings(root: Path, target: str, manifest) -> list[str]:
             continue
         licensed = False
         sibling_seen = False
-        for other in rows:
-            if other.address == address or not other.name.startswith(stem):
+        for owner, other in family:
+            if owner == target and other.address == address:
+                continue
+            if not other.name.startswith(stem):
                 continue
             sibling_seen = True
-            other_size = sizes.get(other.address)
+            other_manifest = manifests[owner]
+            other_layout = layouts.get(owner)
+            boundary = None if other_layout is None else other_layout.find_boundary_at(other.address)
+            if boundary is None or boundary.virtual_end is None:
+                continue
+            other_size = boundary.virtual_end - boundary.virtual_start
             if other_size != size:
                 continue
             try:
                 sibling = extract_original_bytes(
-                    binary,
+                    root / other_manifest.binary,
                     address=other.address,
                     size=other_size,
-                    load_address=manifest.load_address,
+                    load_address=other_manifest.load_address,
                 )
             except (OSError, ValueError):
                 continue
@@ -369,5 +394,5 @@ def symbol_findings(
                 for finding in composed_map_findings(layers)
                 if finding.verdict == "reject"
             )
-            errors.extend(ordinal_findings(root, target, manifest))
+            errors.extend(ordinal_findings(root, target, manifest, manifests))
     return errors

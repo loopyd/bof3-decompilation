@@ -8,16 +8,40 @@ register operands with a differing immediate field.
 
 from __future__ import annotations
 
-# Instructions whose immediate field is an address or constant the name may omit.
-_IMMEDIATE_OPCODES = frozenset({0x09, 0x0C, 0x0D, 0x0F, 0x18, 0x19})
+# Opcodes whose difference may be nothing but an address or constant: the
+# immediate arithmetic family, the loads and stores that carry a table base or a
+# record offset, and the jumps that carry a code address.
+_IMMEDIATE_OPCODES = frozenset(
+    {
+        0x08,  # addi
+        0x09,  # addiu
+        0x0A,  # slti
+        0x0B,  # sltiu
+        0x0C,  # andi
+        0x0D,  # ori
+        0x0E,  # xori
+        0x0F,  # lui
+        0x18,  # daddi
+        0x19,  # daddiu
+        0x20, 0x21, 0x23, 0x24, 0x25,  # lb..lhu
+        0x28, 0x29, 0x2B,  # sb, sh, sw
+    }
+)
+# Jumps carry a code address; two bodies that share one may sit at different
+# addresses, so their target fields differ without a behavioural difference.
+_JUMP_OPCODES = frozenset({0x02, 0x03})
+_LOADS_AND_STORES = frozenset({0x20, 0x21, 0x23, 0x24, 0x25, 0x28, 0x29, 0x2B})
 
 
 def _register_fields(word: int, opcode: int) -> tuple[int, ...]:
-    if opcode == 0x0F:  # lui: rt only
+    """The register operands a differing immediate must leave untouched."""
+    if opcode in _JUMP_OPCODES:
+        return ()
+    if opcode == 0x0F:  # lui: rt only, the rest is the immediate
         return ((word >> 16) & 0x1F,)
-    if opcode in {0x20, 0x21, 0x23, 0x24, 0x25, 0x28, 0x29}:  # loads/stores
-        return ((word >> 21) & 0x1F, (word >> 16) & 0x1F)
-    return ((word >> 21) & 0x1F, (word >> 16) & 0x1F, (word >> 11) & 0x1F)
+    # Every other licensed opcode is I-type: rs at 21-25, rt at 16-20, and the
+    # immediate occupies 0-15. Bits 11-15 belong to the immediate, not to a `rd`.
+    return ((word >> 21) & 0x1F, (word >> 16) & 0x1F)
 
 
 def same_shape(left: bytes, right: bytes) -> bool:
@@ -38,7 +62,11 @@ def same_shape(left: bytes, right: bytes) -> bool:
         if a == b:
             continue
         op_a, op_b = a >> 26, b >> 26
-        if op_a != op_b or op_a not in _IMMEDIATE_OPCODES:
+        if op_a != op_b:
+            return False
+        if op_a in _JUMP_OPCODES:
+            continue
+        if op_a not in _IMMEDIATE_OPCODES:
             return False
         if _register_fields(a, op_a) != _register_fields(b, op_b):
             return False
