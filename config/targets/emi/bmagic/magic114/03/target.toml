@@ -16,7 +16,7 @@ support_sources = [
     "src/bof3/bmagic/renderGouraudQuadOffsets.c",
     "src/bof3/bmagic/stateAxisQuarterTurn.c",
     "src/bof3/bmagic/renderEightScaledEndpoint.c",
-    "src/bof3/bmagic/call801ReadyOtherwiseBmagic.c",
+    "src/bof3/bmagic/call801ReadyOtherwise.c",
     "src/bof3/bmagic/stateHeaderSelectParity.c",
     "src/bof3/bmagic/decrementWorkAdvanceWork.c",
     "src/bof3/bmagic/decrementOffsetChannelRearm.c",

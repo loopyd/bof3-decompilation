@@ -25,7 +25,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * @match 100.00
  * @residual none
  */
-void incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50(void) {
+void incrementWorkGlobalWork(void) {
   if (D_801EB4E0[0x2] == 0xA) {
     SPAD_PTR_SLOT(u8, 0x44u)[2]++;
   }

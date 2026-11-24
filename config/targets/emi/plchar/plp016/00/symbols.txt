@@ -35,5 +35,5 @@ clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpd
 checkProjectedMapCodes = 0x801D02A0;
 claimWorkByte2B = 0x801D0444;
 callWorkTable0690 = 0x801D05A8;
-callWorkTable069Plchar = 0x801D05EC;
+callWorkTable069 = 0x801D05EC;
 codePointerTable0630 = 0x801D0630;

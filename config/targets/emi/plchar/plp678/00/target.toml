@@ -25,7 +25,7 @@ support_sources = [
     "src/bof3/plchar/callWorkByte2Table05.c",
     "src/bof3/plchar/dispatchWorkByte2Table05b0PlcharPlp67800_801D0108.c",
     "src/bof3/plchar/dispatchWorkByte2Table05bcPlcharPlp67800_801D0314.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTable05c4PlcharPlp67800_801D04DC.c",
+    "src/bof3/plchar/callWorkHalfword2Table05.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable05d0PlcharPlp67800_801D0520.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp67800_801CEF64.c",
     "src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp67800_801CEFD0.c",

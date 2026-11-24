@@ -123,7 +123,7 @@ segments:
     - callWorkTablefb34
   - - 5816
     - c
-    - dispatchWorkHalfword2cTablefb40PlcharPlp24700_801CFAB8
+    - callWorkHalfword2Tablefb40
   - - 5884
     - textbin
     - codePointerTablefafc

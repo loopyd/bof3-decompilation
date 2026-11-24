@@ -71,7 +71,7 @@ support_sources = [
     "src/bof3/scenario/findFreeWorkRecordScenarioScena0800_801F8B14.c",
     "src/bof3/scenario/tickCountdownReload.c",
     "src/bof3/scenario/stateProgressRequestPrimary.c",
-    "src/bof3/scenario/clearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE800.c",
+    "src/bof3/scenario/stateRecordsEffectSlots.c",
     "src/bof3/scenario/callWorkByte2Handler.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0800_801F95D4.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0800_801F9DBC.c",

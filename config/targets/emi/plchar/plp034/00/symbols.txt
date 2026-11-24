@@ -30,5 +30,5 @@ pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0
 selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp03400_801D0160 = 0x801D0160;
 queryClearRow = 0x801D025C;
 callWorkTable034 = 0x801D026C;
-dispatchWorkHalfword2cTable0358PlcharPlp03400_801D02B0 = 0x801D02B0;
+callWorkHalfword2Table0358 = 0x801D02B0;
 codePointerTable02f4 = 0x801D02F4;

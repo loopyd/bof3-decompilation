@@ -23,7 +23,7 @@ void func_801C1630(void);
  * armEffectGroupEffect
  * (0x801FE698), which uses the same call set to arm the ids 7, 2 and 0x0A and
  * tear down only 0x0A, and of entry 8
- * clearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE800 (0x801FE800)
+ * stateRecordsEffectSlots (0x801FE800)
  * and entry 9 armEffectGroupSlots
  * (0x801FE840), which handle the group 7, 8 and 4.
  * @status exact

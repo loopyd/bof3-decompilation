@@ -21,7 +21,7 @@ void func_801C1630(void);
  * dispatchRecordCallbackScenarioScena0800_801FE018 selects with the record's
  * unsigned byte at offset 0x7A. It is the immediate neighbour of the two other
  * callbacks in that table that both arm an overlay effect group and then clear
- * D_80146254: entry 8 clearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE800
+ * D_80146254: entry 8 stateRecordsEffectSlots
  * (0x801FE800) tears down ids 7, 8 and 4, and entry 9
  * armEffectGroupSlots (0x801FE840) arms
  * those same three ids through func_80166E88(7, 8, 4, 0); entries 6 and 7 of the

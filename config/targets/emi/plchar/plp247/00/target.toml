@@ -20,7 +20,7 @@ support_sources = [
     "src/bof3/plchar/callWorkTablefb1.c",
     "src/bof3/plchar/callWorkTablefb28.c",
     "src/bof3/plchar/callWorkTablefb34.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablefb40PlcharPlp24700_801CFAB8.c",
+    "src/bof3/plchar/callWorkHalfword2Tablefb40.c",
     "src/bof3/plchar/getAndClearPlcharPlp24700_801CEE08.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp24700_801CF3DC.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp24700_801CEF50.c",

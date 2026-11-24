@@ -23,7 +23,7 @@ support_sources = [
     "src/bof3/plchar/callWorkByte3Table03.c",
     "src/bof3/plchar/dispatchWorkByte3Table03e0PlcharPlp46700_801CF13C.c",
     "src/bof3/plchar/callWorkTable0404.c",
-    "src/bof3/plchar/callWorkTable0410Plchar.c",
+    "src/bof3/plchar/callWorkTable0410.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp46700_801CEDB0.c",
     "src/bof3/plchar/queryClear.c",
     "src/bof3/plchar/invokeHelperPlcharPlp46700_801CE82C.c",

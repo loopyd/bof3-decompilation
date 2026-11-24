@@ -1,22 +1,23 @@
 #include "bof3/emi/dispatchers.h"
 
-/* This overlay's handler run at 0x801D02F4: twenty-eight code pointers, entry 0
- * = 0x801CE448 through entry 27 = 0x801D025C, holding this payload's functions
- * plus the shared main-executable handler 0x801B2D54 at entries 2, 8 and 21.
- * The Splat `textbin` row codePointerTable02f4 places the words, so the run is only
- * referenced here. This dispatcher indexes it from 0x801D0358, so its base is
- * entry 25 (0x801CE72C) and the entries it can reach inside the run are entries
- * 25 through 27: 0x801CE72C, 0x801CF338 and 0x801D025C. The neighbouring base
- * 0x801D034C used by the sibling dispatcher at 0x801D026C is entry 22 of the
+/* This overlay's handler run at 0x801CFEDC: twenty-three code pointers spanning
+ * the two `textbin` rows that follow this dispatcher, `codePointerTablefedc`
+ * (0x801CFEDC through 0x801CFF18) and `T_801CFF1C` (0x801CFF1C through
+ * 0x801CFF34), holding entry 0 = 0x801CE448 through entry 22 = 0x801CF42C: this
+ * payload's own functions plus the shared main-executable handler 0x801B2D54 at
+ * entries 2, 7 and 13. Those rows are only referenced here. This dispatcher
+ * indexes the run from 0x801CFF2C, so its base is entry 20 and the three entries
+ * it reaches are 0x801CE610, 0x801CEE08 and 0x801CF42C. The neighbouring base
+ * 0x801CFF20 used by the sibling dispatcher at 0x801CFE54 is entry 17 of the
  * same run. */
-extern void (*D_801D0358[])(void); /* @source 0x801D0358 @kind data */
+extern void (*D_801CFF2C[])(void); /* @source 0x801CFF2C @kind data */
 
-/* @source 0x801D02B0
+/* @source 0x801CFE98
  * @behavior Overlay step dispatch on the work record's halfword at offset 0x2C:
  *           loads the work-record pointer published at the scratchpad pointer
  *           cell 0x1F800044 once, takes that record's unsigned halfword at offset
  *           0x2C, scales it by four and calls the matching entry of this
- *           overlay's handler run based at 0x801D0358 with no arguments,
+ *           overlay's handler run based at 0x801CFF2C with no arguments,
  *           discarding any result. The original does not bound the index before
  *           the scaled table load. It reads no other state and writes none; the
  *           pointer-cell load precedes frame creation, the 0x18-byte frame only
@@ -29,6 +30,6 @@ extern void (*D_801D0358[])(void); /* @source 0x801D0358 @kind data */
  * @match 100.00
  * @residual none
  */
-void dispatchWorkHalfword2cTable0358PlcharPlp03400_801D02B0(void) {
-  D_801D0358[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
+void callWorkHalfword2Tableff2(void) {
+  D_801CFF2C[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
 }

@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte3HandlerBmagicMagic15103_801EF318.c",
     "src/bof3/bmagic/incrementByteZero.c",
     "src/bof3/bmagic/magic15103DispatchTables.c",
-    "src/bof3/bmagic/stateWorkIncrementBmagic.c",
+    "src/bof3/bmagic/stateWorkIncrement.c",
     "src/bof3/bmagic/incrementWorkGlobal.c",
     "src/bof3/bmagic/stateGlobalHelperZero.c",
     "src/bof3/support/magic151_03_psyq.c",

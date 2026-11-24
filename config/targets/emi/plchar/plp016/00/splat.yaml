@@ -177,7 +177,7 @@ segments:
     - callWorkTable0690
   - - 8684
     - c
-    - callWorkTable069Plchar
+    - callWorkTable069
   - - 8752
     - textbin
     - codePointerTable0630

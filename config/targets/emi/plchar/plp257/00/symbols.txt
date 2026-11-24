@@ -26,6 +26,6 @@ claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWork
 claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp25700_801CFC3C = 0x801CFC3C;
 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp25700_801CFD20 = 0x801CFD20;
 callWorkTableff20 = 0x801CFE54;
-dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98 = 0x801CFE98;
+callWorkHalfword2Tableff2 = 0x801CFE98;
 codePointerTablefedc = 0x801CFEDC;
 T_801CFF1C = 0x801CFF1C;

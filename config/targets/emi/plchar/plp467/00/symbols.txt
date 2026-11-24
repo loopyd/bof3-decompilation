@@ -33,5 +33,5 @@ func_801CFF14 = 0x801CFF14;
 claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp46700_801D010C = 0x801D010C;
 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp46700_801D01F0 = 0x801D01F0;
 callWorkTable0404 = 0x801D0324;
-callWorkTable0410Plchar = 0x801D0368;
+callWorkTable0410 = 0x801D0368;
 T_801D03AC = 0x801D03AC;

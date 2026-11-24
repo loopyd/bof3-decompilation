@@ -21,7 +21,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Shared battle work record pointer, outside this payload. This target's
  * generated undefined-symbol table binds 0x801EB4E0 and the exact same-target
- * lifts incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50 and
+ * lifts incrementWorkGlobalWork and
  * stateInvokeHelperNo
  * declare it the same way. The original reads the record's halfword at 0x2C
  * and its byte at 0x8, once each per branch block. */

@@ -104,7 +104,7 @@ segments:
     - callWorkTablef710
   - - 4756
     - c
-    - dispatchWorkHalfword2cTablef71cPlcharPlp47800_801CF694
+    - callWorkHalfword2Tablef71
   - - 4824
     - textbin
     - T_801CF6D8

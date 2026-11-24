@@ -238,8 +238,8 @@ segments:
     - '@behavior: Copies shared work words 0x34, 0x38 and 0x3C, sets work byte 9 to 0x10 and word 0x14 to 0x100, then reloads the scratchpad pointer and increments work byte 2.'
   - - 12584
     - c
-    - stateWorkIncrementBmagic
-    - '@source: src/bof3/bmagic/stateWorkIncrementBmagic.c'
+    - stateWorkIncrement
+    - '@source: src/bof3/bmagic/stateWorkIncrement.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, advances the work-object word at offset 0x14 by 0x80 and stores it back unconditionally, then increments the byte at offset 0x2 when that new word equals 0x400.'
   - - 12640
     - c

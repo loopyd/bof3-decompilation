@@ -500,8 +500,8 @@ segments:
     - '@behavior: Overlay per-record callback (entry 7 of the eleven-entry callback table at 0x801FE9C0): re-arms the overlay effect group for ids 7, 2 and 8 through func_80166E88(7, 2, 8, 0), clears the shared live-local work-record count byte D_80146254, runs the per-id effect teardown func_801C187C for those same ids 7, 2 and 8 and finishes with the helper func_801C1630. Ignores its arguments, reads no other memory, writes none and keeps $ra across the five calls in its 0x18-byte frame.'
   - - 31744
     - c
-    - clearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE800
-    - '@source: src/bof3/scenario/clearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE800.c'
+    - stateRecordsEffectSlots
+    - '@source: src/bof3/scenario/stateRecordsEffectSlots.c'
     - '@behavior: Overlay per-record callback (entry 8 of the eleven-entry callback table at 0x801FE9C0): clears the shared live-local work-record count byte D_80146254 and then runs the per-id teardown func_801C187C for ids 7, 8 and 4 in that order, finishing with the helper func_801C1630. It ignores its arguments, reads no other memory, writes none and keeps $ra across the four calls in its 0x18-byte frame; the three ids are the effect group its neighbour at 0x801FE840 (entry 9) arms before calling this address, its only in-image jal.'
   - - 31808
     - c

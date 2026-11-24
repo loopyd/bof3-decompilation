@@ -185,8 +185,8 @@ segments:
     - '@behavior: Handler step 1 of the four-word handler run at 0x801F1394 that the dispatcher at 0x801F0D64 selects with the scratchpad work object''s byte 0x2. Reads the work-object pointer cell at 0x1F800044 and decrements that object''s byte at offset 0x9 with a byte-width add (lbu, addiu $v1,$v1,-1, sb), then, only when the decremented value read back as a signed byte equals -6, re-reads the cell and increments the work object''s byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb through the same base). Finally re-reads the cell a third time, loads byte 0x9 through a signed byte view (lb) and passes it to the shared function at 0x80155AF8; the 0x18-byte frame only keeps $ra across that call, whose delay slot is a nop, and nothing is returned.'
   - - 8784
     - c
-    - incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50.c'
+    - incrementWorkGlobalWork
+    - '@source: src/bof3/bmagic/incrementWorkGlobalWork.c'
     - '@behavior: One handler step reached as entry 2 of the four-word handler run at 0x801F1394 that the dispatcher at 0x801F0D64 selects with the scratchpad work object''s byte 0x2. Reads the shared battle work record pointer at 0x801EB4E0 once and, only while that record''s byte at offset 0x2 equals 0xA, reads the scratchpad work-object pointer cell at 0x1F800044 and increments the work object''s byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb through the same base). The compare constant is materialized in $v0 after the record-byte load, so that load delay stays a nop, and the cell is only touched on the taken path. Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state.'
   - - 8848
     - asm

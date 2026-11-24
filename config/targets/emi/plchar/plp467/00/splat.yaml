@@ -171,7 +171,7 @@ segments:
     - callWorkTable0404
   - - 8040
     - c
-    - callWorkTable0410Plchar
+    - callWorkTable0410
   - - 8108
     - textbin
     - T_801D03AC

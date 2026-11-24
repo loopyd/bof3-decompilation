@@ -96,7 +96,7 @@ void func_8017AA80(void *primitive);
  *   valid initialization. Register allocation and access scheduling remain
  *   unresolved; byte equality has not been established.
  */
-void drawFortySevenSemiTransDashesAlongPerpendicularWorkAngleFromDriftingScreenPairTintedByWorkByte4ShadeBmagicMagic12103_801F06E8(
+void renderDashesPerpendicularDrifting(
     u32 arg0) {
   volatile Magic12103Pair *anchor;
   volatile Magic12103Pair *outer;

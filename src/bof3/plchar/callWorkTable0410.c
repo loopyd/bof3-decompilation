@@ -1,19 +1,21 @@
 #include "bof3/emi/dispatchers.h"
 
-/* This overlay's handler run at 0x801D0564: thirty code pointers, 0x801D0564
- * through 0x801D05D8, holding this payload's functions plus the shared
- * main-executable handler 0x801B2D54 at entries 15 and 21. The Splat `textbin`
- * row T_801D0564 places the words, so the run is only referenced here. This
- * dispatcher indexes it from 0x801D05C4, so its base is entry 24 and the entries
- * it can reach are 0x801D05C4 through 0x801D05D8. */
-extern void (*D_801D05C4[])(void); /* @source 0x801D05C4 @kind data */
+/* This overlay's handler run at 0x801D03AC: twenty-eight code pointers,
+ * 0x801D03AC through 0x801D0418, holding this payload's own functions plus the
+ * shared main-executable handler 0x801B2D54 at entries 2 and 18. The Splat
+ * `textbin` row T_801D03AC places the words, so the run is only referenced here.
+ * This dispatcher indexes it from 0x801D0410, so its base is entry 25 of that
+ * run and the entries it reaches are 0x801CE610, 0x801CE84C and 0x801CF8FC, the
+ * last three of the run. The neighbouring base 0x801D0404, entry 22 of the same
+ * run, is indexed by the sibling dispatcher at 0x801D0324. */
+extern void (*D_801D0410[])(void); /* @source 0x801D0410 @kind data */
 
-/* @source 0x801D04DC
+/* @source 0x801D0368
  * @behavior Overlay step dispatch on the work record's halfword at offset 0x2C:
  *           loads the work-record pointer published at the scratchpad pointer
  *           cell 0x1F800044 once, takes that record's unsigned halfword at offset
  *           0x2C, scales it by four and calls the matching entry of this
- *           overlay's handler run based at 0x801D05C4 with no arguments,
+ *           overlay's handler run based at 0x801D0410 with no arguments,
  *           discarding any result. The original does not bound the index before
  *           the scaled table load. It reads no other state and writes none; the
  *           pointer-cell load precedes frame creation, the 0x18-byte frame only
@@ -26,6 +28,6 @@ extern void (*D_801D05C4[])(void); /* @source 0x801D05C4 @kind data */
  * @match 100.00
  * @residual none
  */
-void dispatchWorkHalfword2cTable05c4PlcharPlp67800_801D04DC(void) {
-  D_801D05C4[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
+void callWorkTable0410(void) {
+  D_801D0410[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
 }

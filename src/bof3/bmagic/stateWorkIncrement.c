@@ -11,7 +11,7 @@
  * @match 100.00
  * @residual none
  */
-void stateWorkIncrementBmagic(void) {
+void stateWorkIncrement(void) {
   u8 *work = SPAD_PTR_SLOT(u8, 0x44u);
   s32 value;
 

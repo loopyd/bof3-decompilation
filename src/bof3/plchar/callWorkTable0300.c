@@ -33,7 +33,7 @@ extern void (*D_801D0300[])(void); /* @source 0x801D0300 @kind data */
  *           0x801D0358, entry 25 of the twenty-eight-word run and index 22 of the
  *           run based at 0x801D0300, so no jal in this payload names it; the
  *           sibling halfword dispatcher
- *           dispatchWorkHalfword2cTable0358PlcharPlp03400_801D02B0 indexes that
+ *           callWorkHalfword2Table0358 indexes that
  *           interior word with the work halfword at offset 0x2C and so reaches
  *           this body as its entry 0, while the overlays enter the body itself
  *           from outside the payload. It takes no arguments and returns no value.

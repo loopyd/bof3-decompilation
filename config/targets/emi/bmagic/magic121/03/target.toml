@@ -15,7 +15,7 @@ support_sources = [
     "src/bof3/bmagic/workByte4AdvanceAt10.c",
     "src/bof3/bmagic/decrementWorkByteBIfNonZeroThenDecrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic12103_801EF3A8.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic12103_801EEE08.c",
-    "src/bof3/bmagic/drawFortySevenSemiTransDashesAlongPerpendicularWorkAngleFromDriftingScreenPairTintedByWorkByte4ShadeBmagicMagic12103_801F06E8.c",
+    "src/bof3/bmagic/renderDashesPerpendicularDrifting.c",
     "src/bof3/bmagic/renderDriftingSizedCounted.c",
 ]
 psyq_source = "src/bof3/support/magic121_03_psyq.c"

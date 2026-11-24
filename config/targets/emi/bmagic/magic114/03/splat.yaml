@@ -129,8 +129,8 @@ segments:
     - '@behavior: Seeds work header and parity, clears counters, advances byte 2, and calls resident helpers.'
   - - 8780
     - c
-    - call801ReadyOtherwiseBmagic
-    - '@source: src/bof3/bmagic/call801ReadyOtherwiseBmagic.c'
+    - call801ReadyOtherwise
+    - '@source: src/bof3/bmagic/call801ReadyOtherwise.c'
     - '@behavior: Calls helper 0x801E5988 when the shared readiness byte is nonzero, otherwise helper 0x8014D290.'
   - - 8848
     - c

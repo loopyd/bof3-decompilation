@@ -28,7 +28,7 @@ void func_801C1630(void);
  * @match 100.00
  * @residual none
  */
-void clearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE800(void) {
+void stateRecordsEffectSlots(void) {
   D_80146254 = 0;
   func_801C187C(7);
   func_801C187C(8);

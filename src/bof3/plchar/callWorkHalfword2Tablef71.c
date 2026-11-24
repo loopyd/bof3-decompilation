@@ -29,6 +29,6 @@ extern void (*D_801CF71C[])(void); /* @source 0x801CF71C @kind data */
  * @match 100.00
  * @residual none
  */
-void dispatchWorkHalfword2cTablef71cPlcharPlp47800_801CF694(void) {
+void callWorkHalfword2Tablef71(void) {
   D_801CF71C[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
 }

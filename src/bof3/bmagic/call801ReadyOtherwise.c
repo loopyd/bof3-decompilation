@@ -15,7 +15,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
  * @match 100.00
  * @residual none
  */
-void call801ReadyOtherwiseBmagic(void) {
+void call801ReadyOtherwise(void) {
   if (func_8014DAEC() != 0u) {
     func_801E5988();
   } else {

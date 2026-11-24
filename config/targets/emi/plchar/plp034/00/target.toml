@@ -18,7 +18,7 @@ support_sources = [
     "src/bof3/plchar/callWorkTable0340.c",
     "src/bof3/plchar/queryClearRow.c",
     "src/bof3/plchar/callWorkTable034.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTable0358PlcharPlp03400_801D02B0.c",
+    "src/bof3/plchar/callWorkHalfword2Table0358.c",
     "src/bof3/plchar/callWorkTable0320.c",
     "src/bof3/plchar/callWorkTable0334.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp03400_801CF8AC.c",

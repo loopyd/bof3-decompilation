@@ -32,7 +32,7 @@ support_sources = [
     "src/bof3/support/magic064_03_psyq.c",
     "src/bof3/bmagic/callWorkRecordHandler.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EF78C.c",
-    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50.c",
+    "src/bof3/bmagic/incrementWorkGlobalWork.c",
     "src/bof3/bmagic/stateRecordMotionRecord.c",
     "src/bof3/bmagic/decrementInvokeHelper.c",
     "src/bof3/bmagic/publishSelectedHelperReady.c",
