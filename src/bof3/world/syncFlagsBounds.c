@@ -20,7 +20,7 @@ void func_801C2538(void);
 void func_801C2710(void);
 void func_801B0DFC(void);
 void stateSharedSetFlag3(void);
-u8 findWorkPositionBoundsIndexWorld01Area04914_801F2D00(u8 index);
+u8 queryPositionBounds(u8 index);
 
 /* @source 0x801F2DCC
  * @behavior Per-frame work-record sync for this area. When D_80143BB0 holds 5
@@ -88,7 +88,7 @@ void syncFlagsBounds(void) {
     D_1F800044 = record;
     if (func_8015B5D4((u32)bank, 0x25) != 0 ||
         func_8015B5D4((u32)(bank - 0x20), 0x3A) != 0 ||
-        (bounds = findWorkPositionBoundsIndexWorld01Area04914_801F2D00(
+        (bounds = queryPositionBounds(
              (u8)index)) == 0xFF) {
       if (((saved[0xB] >> index) & 1) != 0) {
         saved[0xB] &= ~(1 << index);

@@ -92,7 +92,7 @@ segments:
     - func_801EF7F8
   - - 3196
     - c
-    - incrementWorkByte2BmagicMagic06403_801EF87C
+    - stateAdvanceWorkStep
   - - 3228
     - c
     - callWorkByte3Handler

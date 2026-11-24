@@ -8,7 +8,7 @@ splat = "config/targets/emi/world01/area051/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/copyAreaStoreDistance.c",
+    "src/bof3/world/copyPositionDistance.c",
 ]
 support_sources = [
     "src/bof3/support/area051_13_psyq.c",

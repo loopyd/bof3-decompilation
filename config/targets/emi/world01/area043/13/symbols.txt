@@ -1,7 +1,7 @@
 callWorkByte4Table37 = 0x801F2C04;
 initWorkModeTint = 0x801F2C48;
 func_801F2D0C = 0x801F2D0C;
-seedFrontEndRecord37 = 0x801F2E28;
+seedFrontEndSelector = 0x801F2E28;
 submitSeedPairTint = 0x801F2FBC;
 func_801F3070 = 0x801F3070;
 D_801F30AC = 0x801F30AC;

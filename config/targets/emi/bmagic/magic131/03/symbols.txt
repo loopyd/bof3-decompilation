@@ -52,9 +52,9 @@ advanceRecordByte6By2AndHalfwordCBy20AccumulateScaledSampleIntoPositionPairThenA
 advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5By2ClearRecordAtZeroBmagicMagic13103_801F1748 = 0x801F1748;
 renderPlusFourteenPlus = 0x801F1844;
 reserveFirstFreeRecord = 0x801F1A58;
-stateRecordThrough4 = 0x801F1AC4;
+stateClearThroughFour = 0x801F1AC4;
 projectStoreScreenPair = 0x801F1B14;
-callHandlerTable801 = 0x801F1BC4;
+twelveStepHandlerTable = 0x801F1BC4;
 dispatchHandlerTable801F1BF4 = 0x801F1BF4;
 dispatchHandlerTable801F1C24 = 0x801F1C24;
 dispatchHandlerTable801F1C30 = 0x801F1C30;

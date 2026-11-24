@@ -4,7 +4,7 @@
  * with its own `lui` before each of the three reads, so the source keeps the
  * named symbol form rather than SPAD_PTR_SLOT, whose bare constant address is
  * hoisted once into a base register. The exact sibling
- * dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp02600_801D00B4
+ * dropFrontSelectionBack2
  * binds the same cell the same way.
  * @source 0x1F800044 @kind data
  */

@@ -7,7 +7,7 @@
  * armWorkAdvanceState.c and
  * seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4.c. */
 /* @source 0x1F800044 @kind unknown */
-extern u8* area04713WorkCursor_1F800044;
+extern u8* scratchWorkCursor;
 
 /* Overlay draw step of the same work record, still on its `asm` row at
  * 0x801F34A0. It loads the record words 0x34, 0x38 and 0x3C into the RotTrans
@@ -61,7 +61,7 @@ void statePositionClearDraw(
     void) {
   u8* work;
 
-  work = area04713WorkCursor_1F800044;
+  work = scratchWorkCursor;
   if (FIELD_REF(u8, work, 0x2) == 0) {
     FIELD_REF(u32, work, 0x34) = 0xFFFFC700;
     FIELD_REF(u32, work, 0x38) = 0xFFFFC780;

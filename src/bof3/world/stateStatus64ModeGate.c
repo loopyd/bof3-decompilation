@@ -17,7 +17,7 @@ extern u8 D_801D4285;
  * @residual none
  *
  * Naming evidence: the .text body is the same 0x44-byte body as the exact
- * sibling setStatus64AndModeIndex6IfGateElseFFFFWorld01Area04113_801F3D78.
+ * sibling stateStatusModeGate.
  * One cmp of the two payload spans (offsets 4404 and 4472, 0x44 bytes each)
  * shows every word equal except the absolute `j` word, whose value differs by
  * exactly the 0x44 span delta; the relative branches, the literal 0x64, the

@@ -4,7 +4,7 @@ typedef void (*Boss00816Handler)(void);
 
 /* Overlay entrypoints this installer publishes; the first two return void,
  * the third is the overlay's zero-result accessor. */
-void setupModeFlagProgress2(void);
+void setupModeSecondTuple(void);
 void func_800C2114(void);
 s32  zeroResultBossBoss00816_800C20C0(void);
 
@@ -28,7 +28,7 @@ extern Boss00816Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooks5(void) {
-  D_801463A4 = setupModeFlagProgress2;
+  D_801463A4 = setupModeSecondTuple;
   D_801463A8 = func_800C2114;
   D_801463AC = (Boss00816Handler)zeroResultBossBoss00816_800C20C0;
 }

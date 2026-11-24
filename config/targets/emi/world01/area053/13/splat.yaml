@@ -30,7 +30,7 @@ segments:
     - func_801F2C04
   - - 92
     - c
-    - noopHandlerWorld01Area05313_801F2C5C
+    - emptyHandler2
   - - 100
     - c
     - noopEmptyHandler

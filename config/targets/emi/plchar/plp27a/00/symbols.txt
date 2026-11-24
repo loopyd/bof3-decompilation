@@ -1,7 +1,7 @@
 func_8015477C = 0x8015477C;
 matchesProjectedWorkBounds = 0x801BDD58;
 callWorkTablef900 = 0x801CE404;
-pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27a00_801CE448 = 0x801CE448;
+pickNearerSignChosen3 = 0x801CE448;
 selectArrivalRouteReached = 0x801CE514;
 callWorkTablef90 = 0x801CE610;
 func_801CE654 = 0x801CE654;
@@ -15,12 +15,12 @@ selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReac
 callWorkTablef920 = 0x801CEE30;
 adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp27a00_801CEE74 = 0x801CEE74;
 markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp27a00_801CF1C0 = 0x801CF1C0;
-stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp27a00_801CF35C = 0x801CF35C;
-claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448 = 0x801CF448;
+stepClearReportsDone3 = 0x801CF35C;
+claimSizeItemName3 = 0x801CF448;
 claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640 = 0x801CF640;
-testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp27a00_801CF724 = 0x801CF724;
-queryClearPlchar = 0x801CF858;
+checkAgainstMapCode3 = 0x801CF724;
+queryClear4 = 0x801CF858;
 queryClear3 = 0x801CF868;
 callWorkTablef92 = 0x801CF878;
 callWorkHalfword2Tablef938 = 0x801CF8BC;
-codePointerTablef900 = 0x801CF900;
+codePointerTable = 0x801CF900;

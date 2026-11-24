@@ -1,7 +1,7 @@
 dispatchWorkByte1Slot = 0x801EEC64;
 stateSelectedBattlerRaise = 0x801EECC4;
 callAFC54ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZero = 0x801EEF34;
-stateRaiseFlag4 = 0x801EEFA4;
+stateRaiseFlagStep = 0x801EEFA4;
 callStateTable04 = 0x801EEFD8;
 func_801EF01C = 0x801EF01C;
 callActingEnemyScript = 0x801EF0E8;
@@ -30,4 +30,4 @@ subtractFadeCountdownTriplet = 0x801EFFCC;
 func_801F00A8 = 0x801F00A8;
 func_801F014C = 0x801F014C;
 func_801F0238 = 0x801F0238;
-callHandlerTable801 = 0x801F04B4;
+pairStepHandlerTable = 0x801F04B4;

@@ -22,7 +22,7 @@ support_sources = [
     "src/bof3/plchar/callWorkTablefb34.c",
     "src/bof3/plchar/callWorkHalfword2Tablefb40.c",
     "src/bof3/plchar/queryClear2.c",
-    "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp24700_801CF3DC.c",
+    "src/bof3/plchar/markAnimationBitExpires2.c",
     "src/bof3/plchar/selectArrivalFiveThree.c",
     "src/bof3/plchar/stepClearReportsB.c",
     "src/bof3/plchar/checkAgainstMapCode2.c",

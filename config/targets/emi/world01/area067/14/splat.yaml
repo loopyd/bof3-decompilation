@@ -116,8 +116,8 @@ segments:
     - '@behavior: publishes the mode-indexed halfword from the table at 0x801F5390 into the shared status halfword at 0x801490A8'
   - - 4732
     - c
-    - publishModeStatusTable539
-    - '@source: src/bof3/world/publishModeStatusTable539.c'
+    - publishModeStatusStep
+    - '@source: src/bof3/world/publishModeStatusStep.c'
     - '@behavior: publishes the mode-indexed halfword from the table at 0x801F539C into the shared status halfword and stores scenario progress 5 while the mode is 0 or 1'
   - - 4804
     - c

@@ -28,7 +28,7 @@ void func_801C1630(void);
  * clearIndexedFlagBit0AndWorkCountThenResetEffect7ScenarioScena0800_801FE6DC
  * (emi/scenario/scena08/00, one index block and a different tail), and the
  * two-helper tail is the shape of the exact entry 28
- * invokeHelperArgThenHelperScenarioScena0200_801FE198 in this target, so every
+ * callHelperArgPair in this target, so every
  * literal and index cell here comes from this span's own bytes.
  * @status exact
  * @match 100.00

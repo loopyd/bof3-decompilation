@@ -41,8 +41,8 @@ segments:
     - '@source: src/bof3/world/appendCurrentBufferChain.c'
   - - 1808
     - c
-    - raiseWorldFlag2000World01Area06013_801F3310
-    - '@source: src/bof3/world/raiseWorldFlag2000World01Area06013_801F3310.c'
+    - raiseWorldFlag
+    - '@source: src/bof3/world/raiseWorldFlag.c'
   - - 1840
     - textbin
     - D_801F3330

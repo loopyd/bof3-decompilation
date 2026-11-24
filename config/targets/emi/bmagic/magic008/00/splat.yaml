@@ -316,5 +316,5 @@ segments:
     - invokeSharedHelper6
   - - 12268
     - rodata
-    - callHandlerTable801
+    - sixStepHandlerTable
 - - 12316

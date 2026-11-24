@@ -16,7 +16,7 @@ sources = [
     "src/bof3/bmagic/magic13103DispatchTables.c",
     "src/bof3/bmagic/callRecordByte1Handler.c",
     "src/bof3/bmagic/callRecordDrawActive.c",
-    "src/bof3/bmagic/stateRecordThrough4.c",
+    "src/bof3/bmagic/stateClearThroughFour.c",
     "src/bof3/bmagic/stateWordTripletSet.c",
     "src/bof3/bmagic/stateSetByte.c",
     "src/bof3/bmagic/workAdvanceAt40.c",

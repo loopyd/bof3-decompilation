@@ -53,8 +53,8 @@ segments:
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp45700_801CE664
   - - 816
     - c
-    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CE730
-    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CE730.c'
+    - selectArrivalFiveReached5
+    - '@source: src/bof3/plchar/selectArrivalFiveReached5.c'
     - '@behavior: Overlay step of the front-end work object: when the current route index byte 0x08 equals the chosen index byte 0x03 it selects arrival sequence 0x40 for route 3 and 0x41 for route 5 and advances the step byte 0x02, else it ticks the countdown byte 0x09 and, when that expires, re-arms it to 2 and steps the route index byte 0x08 by the sign byte 0x0B masked to the eight-entry window before reselecting.'
   - - 1068
     - c
@@ -63,8 +63,8 @@ segments:
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay''s handler run based at 0x801CF918 with no arguments, discarding any result. The original does not bound the index before the scaled table load. Its only in-image reference is the word 0x801CE82C at 0x801CF94C, entry 13 of that run and entry 19 of the twenty-one-entry code-pointer run at 0x801CF900, so the overlay loader that steps that run enters it.'
   - - 1136
     - c
-    - stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp45700_801CE870
-    - '@source: src/bof3/plchar/stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp45700_801CE870.c'
+    - stepBackPlusHalf3
+    - '@source: src/bof3/plchar/stepBackPlusHalf3.c'
     - '@behavior: Sixth entry of the front-end work handler run based at 0x801CF900, the word at 0x801CF918 and the only word of this payload that names the span, which no jal of the payload reaches. Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: byte 0x08 is the route index of the eight-entry route window, byte 0x2B the claim byte, byte 0x02 the step counter, halfword 0x3E the reference sample and words 0x34 and 0x38 the work position. While the route index is even the body steps it one back inside the window by storing ((index - 1) & 7), stores 1 into the claim byte and probes two candidate layer positions: it adds the layer offsets 0x80181BAC and 0x80181BB0 to the work position and asks the route-parameterised position routine func_80154F78 for that point with route 3, then does the same with 0x80181BBC and 0x80181BC0 and route 5. For each probe, while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed sample is at least 0x41, it asks the screen-space routine func_80154F28 for the same point and clears the claim byte when the signed reference halfword 0x3E is below that answer, so the two probes only ever clear it. It finishes by selecting the shared work sequence 0x42 plus the route index halved, truncated to a byte, through func_8014D8D4, and increments the step counter byte 0x02.'
   - - 1596
     - c
@@ -73,8 +73,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as word 0x801CF91C, index 7 of the sixteen-word handler run based at 0x801CF900: it runs the shared update helper func_8014D978 and returns while the work halfword 0x58 does not read 0x0A, and when it does it claims a front-end record through the allocator func_8019601C, stores the answer in work byte 0x0B and, unless that byte reads 0xFF, seeds the 0x74-byte row at 0x80143FC8 the byte indexes with the occupancy flag 1 in row byte 0 and the handler selector 0x3A in row byte 5, then hands the cue id 0x100 plus the work halfword 0x2C to the cue dispatcher func_8015DF18, clears work byte 0x07 and increments the work step counter byte 0x02'
   - - 1864
     - c
-    - selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp45700_801CEB48
-    - '@source: src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp45700_801CEB48.c'
+    - selectArrivalSequenceUnoccupied3
+    - '@source: src/bof3/plchar/selectArrivalSequenceUnoccupied3.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as word 0x801CF920, index 8 of the code-pointer run that starts at 0x801CF900 and ends with this payload: while the work pending-request flag byte 0x07 is nonzero it runs the shared readiness helper func_8014DAEC, returns while the helper reports not-ready and, once it reports ready, hands the work route byte 0x08 to the shared arrival-sequence selector func_8014D8D4 and clears the flag; while the flag reads zero it runs the same helper and, once ready, clears work byte 0x2B and the state byte 0x12B of the front-end record published at 0x80146250 only while the 0x74-byte front-end row selected by work byte 0x0B still has its occupancy byte 0 clear'
   - - 2076
     - c
@@ -83,12 +83,12 @@ segments:
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CF924.'
   - - 2144
     - c
-    - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp45700_801CEC60
-    - '@source: src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp45700_801CEC60.c'
+    - statePickNearerRearm3
+    - '@source: src/bof3/plchar/statePickNearerRearm3.c'
   - - 2388
     - c
-    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CED54
-    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CED54.c'
+    - selectArrivalFiveReached6
+    - '@source: src/bof3/plchar/selectArrivalFiveReached6.c'
     - '@behavior: Overlay step of the front-end work object: when the current route index byte 0x08 equals the chosen index byte 0x03 it selects arrival sequence 0x40 for route 3 and 0x41 for route 5 through the shared selector and advances the step byte 0x02, else it ticks the countdown byte 0x09 and, when that expires, re-arms it to 2 and steps the route index byte 0x08 by the sign byte 0x0B masked to the eight-entry window before reselecting.'
   - - 2640
     - c

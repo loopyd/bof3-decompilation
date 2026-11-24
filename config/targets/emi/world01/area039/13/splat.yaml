@@ -47,7 +47,7 @@ segments:
     - '@behavior: stores the signed halfword -0x100 (0xFF00) into 0x8014932C and then the constant 0x02 into the byte at 0x80149333.'
   - - 312
     - c
-    - setTwoWorld01Area03913_801F2D38
+    - stateCounterReset
   - - 340
     - c
     - claimEndRowLower
@@ -65,12 +65,12 @@ segments:
     - '@behavior: Queues the two shared UI elements at x = 0x58 and x = 0x59 with y = 0xD, both at size 0x51, through the shared marker queue func_801A4BC0; takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the two calls.'
   - - 596
     - c
-    - queueSharedUiElementBlock58To59xDSize50World01Area03913_801F2E54
-    - '@source: src/bof3/world/queueSharedUiElementBlock58To59xDSize50World01Area03913_801F2E54.c'
+    - queueSharedRowPair
+    - '@source: src/bof3/world/queueSharedRowPair.c'
     - '@behavior: Queues the two shared UI elements at x = 0x58 and x = 0x59 with y = 0xD, both at size 0x50, through the shared marker queue func_801A4BC0; takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the two calls.'
   - - 652
     - c
-    - noopHandlerWorld01Area03913_801F2E8C
+    - emptyHandler
   - - 660
     - c
     - noopOverlayHandlerTwo

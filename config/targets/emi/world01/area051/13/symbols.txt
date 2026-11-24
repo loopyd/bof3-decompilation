@@ -1,6 +1,6 @@
 workCursorPointer = 0x1F800044;
 func_801F2C04 = 0x801F2C04;
-copyAreaStoreDistance = 0x801F2C7C;
+copyPositionDistance = 0x801F2C7C;
 stateStatus1GateElse14 = 0x801F2CD8;
 func_801F2D00 = 0x801F2D00;
 D_801F2DB8 = 0x801F2DB8;

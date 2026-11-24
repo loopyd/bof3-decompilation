@@ -17,7 +17,7 @@ decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic
 func_801EF330 = 0x801EF330;
 dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic11103_801EF7F8 = 0x801EF7F8;
 stateAdvanceGlobalByte = 0x801EF870;
-workByte9AdvanceAt10 = 0x801EF8C4;
+mathAdvanceStepAt10 = 0x801EF8C4;
 decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF914 = 0x801EF914;
 func_801EF970 = 0x801EF970;
 T_801EFA9C = 0x801EFA9C;

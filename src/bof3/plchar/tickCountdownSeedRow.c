@@ -79,7 +79,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * third argument register, so the two coordinates are its whole argument list,
  * and this body tests only the low byte of its answer.
  */
-u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18(
+u8 claimCodesItemName2(
     s16 col, s16 row);
 
 /* @source 0x801CE7B8
@@ -109,7 +109,7 @@ u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStrea
  *           record stride and queues the same cue 0x10B. It then claims a
  *           front-end row at the projected point through this payload's own map
  *           cell claim
- *           claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18,
+ *           claimCodesItemName2,
  *           passing the high half of each projected word: when that claim
  *           answers zero and the first word has a nonzero
  *           low half it retries one unit further on that axis, and when the
@@ -182,16 +182,16 @@ void tickCountdownSeedRow(
         cx = x >> 16;
         cy = y >> 16;
         claimed =
-            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18(
+            claimCodesItemName2(
                 cx, cy);
         if ((claimed & 0xFF) == 0) {
           if ((x & 0xFFFF) != 0) {
             claimed =
-                claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18(
+                claimCodesItemName2(
                     cx + 1, cy);
           }
           if ((claimed & 0xFF) == 0 && (y & 0xFFFF) != 0) {
-            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18(
+            claimCodesItemName2(
                 cx, cy + 1);
           }
         }

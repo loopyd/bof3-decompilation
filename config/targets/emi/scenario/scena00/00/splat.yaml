@@ -97,15 +97,15 @@ segments:
     - brightenObjectColorCommit
     - '@source: src/bof3/scenario/brightenObjectColorCommit.c'
     - '@behavior: Takes no arguments and returns nothing: seeds the scratchpad work object''s sprite through renderObjectTintSprite(1), then brightens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each, and once the channel at 0x5D reads exactly 0x80 commits the fade: writes 0x14 into the scenario progress byte g_ScenarioProgress, sets the object''s state byte at 0x01 to 2 and its byte at 0x09 to 0xFF.'
-- name: drawWorkObjectTintSpriteAndTickCountdown
+- name: renderSpriteTickCountdown
   type: code
   start: 1872
   vram: 2149544784
   subsegments:
   - - 1872
     - c
-    - drawWorkObjectTintSpriteAndTickCountdown
-    - '@source: src/bof3/scenario/drawWorkObjectTintSpriteAndTickCountdown.c'
+    - renderSpriteTickCountdown
+    - '@source: src/bof3/scenario/renderSpriteTickCountdown.c'
     - '@behavior: Advances the per-frame work-object countdown after reseeding the scratchpad work object''s sprite through renderObjectTintSprite(1): while the object''s byte at 0x09 is non-zero it is decremented by one, and when it reads zero the object''s state byte at 0x01 is incremented and byte 0x09 is re-armed to 0xFF so the same handler runs again. Takes no arguments and returns nothing.'
 - name: func_801F73A8
   type: code
@@ -407,15 +407,15 @@ segments:
     - func_801F913C
     - '@source: src/bof3/scenario/func_801F913C.c'
     - '@behavior: Dispatches one frame of the overlay''s state machine from the signed main-RAM state byte D_80146872: that byte selects an entry of the overlay-local handler table at 0x801FCA10 (entries 0 through 14 are this overlay''s state handlers 0x801F9178 through 0x801FB924) and the selected entry is invoked; no other state is read and none is written. Takes no arguments and returns nothing.'
-- name: bootScenarioState
+- name: bootState
   type: code
   start: 9592
   vram: 2149552504
   subsegments:
   - - 9592
     - c
-    - bootScenarioState
-    - '@source: src/bof3/scenario/bootScenarioState.c'
+    - bootState
+    - '@source: src/bof3/scenario/bootState.c'
     - '@behavior: Boots state 0 of the overlay''s own state machine (the entry the code-span dispatcher func_801F913C selects from the main-RAM state byte D_80146872): it runs the front-end scene init func_801C1DF0(0), seeds the front selector bundle (selection seed 0x18, the channel pair 0x630000/0xC0000 and kind 3, both published in D_801448FC/D_801448FF/D_80144900/D_80144904 and handed to func_8019FA28), clears the two route work-area slot tables (6 four-byte slots at 0x80145500 and 12 at 0x80145518) to 0xFF, raises flag 0x40 in the mode word D_80146258, requests primary scene state 5 in D_80146874 with secondary state 0 in D_80146875, yields with func_8014B87C(1) until the EMI loader reports ready through func_80162D00, and finally clears the scenario progress word and advances D_80146872 to 1. Takes no arguments and returns nothing.'
 - name: func_801F92DC
   type: code

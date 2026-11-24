@@ -100,7 +100,7 @@ segments:
     - stateWorldFlagWork
   - - 2148
     - c
-    - noopHandlerWorld01Area05613_801F3464
+    - emptyHandler3
   - - 2156
     - c
     - stateFlag6SetSet

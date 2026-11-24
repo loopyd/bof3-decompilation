@@ -35,7 +35,7 @@ support_sources = [
     "src/bof3/world/stateStatus5PtrGate.c",
     "src/bof3/world/stateStatus5Byte801448Gate.c",
     "src/bof3/world/stateStepGateStep.c",
-    "src/bof3/world/stateStatusGateElse1.c",
+    "src/bof3/world/stateStatusGateObject.c",
     "src/bof3/world/audioWorkCountdownMode1.c",
     "src/bof3/world/stateWorkClearTint.c",
     "src/bof3/world/stateStatusGateElse3.c",

@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic009/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/workAdvanceAt16.c",
+    "src/bof3/bmagic/mathIncrementByteNine.c",
     "src/bof3/bmagic/dispatchWorkByte1Nine.c",
     "src/bof3/bmagic/incrementCountdownGlobal.c",
     "src/bof3/bmagic/dispatchWorkByte2Reset.c",

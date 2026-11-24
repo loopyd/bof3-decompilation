@@ -186,7 +186,7 @@ segments:
     - noopHandlerWorld04Area17513_801F3C9C
   - - 4260
     - c
-    - stateStatusGateElse9
+    - stateStatusA0Gate
     - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xA0 into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0x9F when the gate byte is zero.'
   - - 4300
@@ -199,8 +199,8 @@ segments:
     - func_801F3D18
   - - 4448
     - c
-    - stateStatusGateElse1
-    - '@source: src/bof3/world/stateStatusGateElse1.c'
+    - stateStatusGateObject
+    - '@source: src/bof3/world/stateStatusGateObject.c'
     - '@behavior: Loads the shared gate byte D_801490C7, stores 2 into the byte at 0x801F294C while the gate byte is nonzero and 1 when the gate byte is zero, then stores 0xEF into the shared status halfword D_801490A8.'
   - - 4500
     - c

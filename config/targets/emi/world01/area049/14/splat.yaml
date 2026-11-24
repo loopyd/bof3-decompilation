@@ -47,8 +47,8 @@ segments:
     - '@behavior: Overlay dispatch handler: when its argument word is exactly 0x4D8000 and the shared front-side byte 0x80143F03 reads 0 it runs the target-local flag transition at 0x801F2C80, which clears bit 2 and sets bit 3 of the shared flag bank 0x80144F28, and every path returns 0.'
   - - 256
     - c
-    - findWorkPositionBoundsIndexWorld01Area04914_801F2D00
-    - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld01Area04914_801F2D00.c'
+    - queryPositionBounds
+    - '@source: src/bof3/world/queryPositionBounds.c'
   - - 460
     - c
     - syncFlagsBounds
@@ -85,11 +85,11 @@ segments:
     - '@behavior: Retreats the shared 16-bit overlay counter at 0x8014932A by 0x14 and marks the shared area status byte at 0x80149333 with the constant 2. Takes no arguments and returns nothing.'
   - - 2104
     - c
-    - setTwoWorld01Area04914_801F3438
+    - stateCounterReset2
   - - 2132
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3454
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3454.c'
+    - publishBaseSeedRecord
+    - '@source: src/bof3/world/publishBaseSeedRecord.c'
     - '@behavior: Publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte D_80144F5A of this payload''s mode table at 0x801F398C and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2260
     - c
@@ -103,8 +103,8 @@ segments:
     - '@behavior: Publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte of this payload''s mode table at 0x801F398C and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2516
     - c
-    - queueSharedUiElementBlockBToCx55Size0World01Area04914_801F35D4
-    - '@source: src/bof3/world/queueSharedUiElementBlockBToCx55Size0World01Area04914_801F35D4.c'
+    - queueSharedUiRow
+    - '@source: src/bof3/world/queueSharedUiRow.c'
     - '@behavior: Queues the two shared UI elements at x = 0xB and x = 0xC of the single row y = 0x55 with size 0 through the shared marker queue 0x801A4BC0. Takes no arguments, uses its 0x18-byte frame only to keep $ra across the two calls, and returns nothing.'
   - - 2572
     - c
@@ -125,7 +125,7 @@ segments:
     - '@behavior: Overlay counter step: marks the shared counter active by storing 2 into the area status byte at 0x80149333, then advances the halfword counter at 0x8014932A by 0x04.'
   - - 2896
     - c
-    - setTwoWorld01Area04914_801F3750
+    - stateCounterReset3
   - - 2924
     - c
     - publishThirdWorkKind3
@@ -137,12 +137,12 @@ segments:
     - '@source: src/bof3/world/queueUiBlockEight.c'
   - - 3204
     - c
-    - clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884
-    - '@source: src/bof3/world/clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884.c'
+    - stateStartupRequestFive
+    - '@source: src/bof3/world/stateStartupRequestFive.c'
   - - 3336
     - c
-    - clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate6IfPartyByte6World01Area04914_801F3908
-    - '@source: src/bof3/world/clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate6IfPartyByte6World01Area04914_801F3908.c'
+    - stateStartupRequestSix
+    - '@source: src/bof3/world/stateStartupRequestSix.c'
     - '@behavior: Clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884, then, when the party byte of local work record 0 at 0x80145F09 holds 6, runs the shared front-end startup helper 0x8015C088 and requests primary state 4 and substate 6 through the shared bytes 0x80146874 and 0x80146875; otherwise it only performs the masked store. Takes no arguments and returns nothing.'
   - - 3468
     - textbin

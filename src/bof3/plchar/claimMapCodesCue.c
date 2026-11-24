@@ -76,7 +76,7 @@ void func_8016813C(s32 arg0, u8 arg1);
  * inside this body, which also passes the masked map cell code in the fourth
  * argument register; that claim body does not read it, so the parameter stays
  * unnamed in the row that owns it and carries no role here. */
-void claimRecordDistance200(
+void claimRecordDistanceMarked(
     u8 state, s16 x, s16 y, u8 masked);
 
 /* @source 0x801CFD24
@@ -144,21 +144,21 @@ u8 claimMapCodesCue(
   row = y;
   code = func_80166CB0(col, row);
   if (((code + 0x10) & 0xFF) < 2 || (u8)code == 0xF4) {
-    claimRecordDistance200(
+    claimRecordDistanceMarked(
         0, col, row, code & 0xFF);
     if ((rand() & 7) >= 6) {
-      claimRecordDistance200(
+      claimRecordDistanceMarked(
           4, col, row, code & 0xFF);
     }
     func_8015DF18(0x10B);
     return 1;
   } else if (((code + 0xA) & 0xFF) < 2) {
-    claimRecordDistance200(
+    claimRecordDistanceMarked(
         0, col, row, code & 0xFF);
     func_8015DF18(0x10B);
     roll = rand() & 0xF;
     if (roll < 7) {
-      claimRecordDistance200(
+      claimRecordDistanceMarked(
           3, col, row, code & 0xFF);
       name = func_80165D48(0, 0x29);
       for (i = 0; i < 12; i++) {
@@ -174,7 +174,7 @@ u8 claimMapCodesCue(
       func_80150284(mode);
       D_1F800044[0xB] = 2;
     } else if (roll >= 0xC) {
-      claimRecordDistance200(
+      claimRecordDistanceMarked(
           2, col, row, code & 0xFF);
       func_801C308C(0);
       func_8016813C(1, D_80146250[0x79]);

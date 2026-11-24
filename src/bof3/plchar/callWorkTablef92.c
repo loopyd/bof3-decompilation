@@ -3,7 +3,7 @@
 /* This overlay's handler run at 0x801CF900: seventeen code pointers, entry 0 =
  * 0x801CE448 through entry 16 = 0x801CF868, holding this payload's functions and
  * two entries of a companion overlay at 0x801B2D54. That run currently sits
- * inside the `textbin codePointerTablef900` boundary, so it is only referenced here. This
+ * inside the `textbin codePointerTable` boundary, so it is only referenced here. This
  * dispatcher indexes it from 0x801CF92C, so its base is entry 11 of that run, and
  * the three entries it reaches are 0x801CE404, 0x801CEBFC and 0x801CF858. The
  * neighbouring base 0x801CF938 used by the sibling dispatcher at 0x801CF8BC holds

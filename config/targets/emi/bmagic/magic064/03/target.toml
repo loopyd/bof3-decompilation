@@ -24,7 +24,7 @@ support_sources = [
     "src/bof3/bmagic/magic06403DispatchTables.c",
     "src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic06403_801F0DA8.c",
     "src/bof3/bmagic/stateIncrementByte2.c",
-    "src/bof3/bmagic/incrementWorkByte2BmagicMagic06403_801EF87C.c",
+    "src/bof3/bmagic/stateAdvanceWorkStep.c",
     "src/bof3/bmagic/incrementWorkByte1.c",
     "src/bof3/bmagic/callHelper.c",
     "src/bof3/bmagic/noopHandlerTwo.c",

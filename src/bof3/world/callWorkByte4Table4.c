@@ -3,7 +3,7 @@
 /* @source 0x801F4C10
  * @kind data
  */
-extern void (*workByte4HandlersWorld01Area03913[])(void);
+extern void (*workByte4Handlers[])(void);
 
 /* @source 0x801F2C04
  * @behavior Overlay step dispatch: reads the handler byte at +4 of the work
@@ -33,4 +33,4 @@ extern void (*workByte4HandlersWorld01Area03913[])(void);
  */
 EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4,
                       callWorkByte4Table4,
-                      workByte4HandlersWorld01Area03913);
+                      workByte4Handlers);

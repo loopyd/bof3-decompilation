@@ -12,7 +12,7 @@ sources = [
     "src/bof3/world/initWorkModeTint.c",
 ]
 support_sources = [
-    "src/bof3/world/seedFrontEndRecord37.c",
+    "src/bof3/world/seedFrontEndSelector.c",
     "src/bof3/world/submitSeedPairTint.c",
     "src/bof3/support/area043_13_psyq.c",
 ]

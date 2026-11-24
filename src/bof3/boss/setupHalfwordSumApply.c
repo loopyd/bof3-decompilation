@@ -59,7 +59,7 @@ void func_8014D6B8(u32 resource); /* @source 0x8014D6B8 */
  * address at 0x10 across the chosen mode-tuple call, the 0x50 constant load
  * fills the delay slot of the nested test, and the slots after the flag byte
  * load, after the cell load and after the halfword load stay nops. Same flag
- * byte, bit and mode-tuple pair as the exact sibling initModeProgress32
+ * byte, bit and mode-tuple pair as the exact sibling setupModeThirdTuple
  * one stage earlier in this payload; this body differs in the scenario progress
  * value it stores on both paths, the halfword sum it stores on the set path, the
  * nested 0x801462ED test and the record setup it runs on the clear path, and the

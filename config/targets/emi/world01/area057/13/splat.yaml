@@ -38,13 +38,13 @@ segments:
     - func_801F2CB0
   - - 304
     - c
-    - invokeHelperByteArgWorld01Area05713_801F2D30
-    - '@source: src/bof3/world/invokeHelperByteArgWorld01Area05713_801F2D30.c'
+    - callHelperByteArg2
+    - '@source: src/bof3/world/callHelperByteArg2.c'
     - '@behavior: Thin overlay wrapper passing the shared main-RAM byte D_80145029, loaded unsigned, as the single argument of the shared EXE helper at 0x80161D20.'
   - - 344
     - c
-    - invokeHelperByteArgWorld01Area05713_801F2D58
-    - '@source: src/bof3/world/invokeHelperByteArgWorld01Area05713_801F2D58.c'
+    - callHelperByteArg3
+    - '@source: src/bof3/world/callHelperByteArg3.c'
     - '@behavior: Thin overlay wrapper passing the shared main-RAM byte D_80145029, loaded unsigned, as the single argument of the shared EXE helper at 0x80161D74.'
 - - 384
   - bin

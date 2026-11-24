@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/stateWorkAdvance.c",
-    "src/bof3/bmagic/mathIncrementByte9At20.c",
+    "src/bof3/bmagic/mathIncrementByteA.c",
 ]
 support_sources = [
     "src/bof3/bmagic/mathIncrementGlobalClear.c",

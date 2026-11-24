@@ -1,2 +1,2 @@
-initArea05413State = 0x801F2C04;
+setupStateEntryTen = 0x801F2C04;
 D_801F2C44 = 0x801F2C44;

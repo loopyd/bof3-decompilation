@@ -31,7 +31,7 @@ sources = [
     "src/bof3/world/dispatchStateByte4Table4de4World01Area06813_801F3C2C.c",
     "src/bof3/world/armRecordedPadMatch.c",
     "src/bof3/world/armLiveWithinRecorded.c",
-    "src/bof3/world/publishModeStatusProgress0.c",
+    "src/bof3/world/publishModeStatusClear.c",
     "src/bof3/world/stepAccumulatorsPhaseConsume.c",
     "src/bof3/world/stepPadCountersAttempt.c",
     "src/bof3/world/stepCounterArmAttempt.c",

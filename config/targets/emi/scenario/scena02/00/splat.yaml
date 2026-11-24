@@ -45,13 +45,13 @@ segments:
     - func_801F7A9C
   - - 4144
     - c
-    - noopHandlerScenarioScena0200_801F7C30
+    - noopInertHandler
   - - 4152
     - asm
     - func_801F7C38
   - - 5224
     - c
-    - noopHandlerScenarioScena0200_801F8068
+    - noopInertHandler2
   - - 5232
     - c
     - runSelectorContextsRelease
@@ -293,7 +293,7 @@ segments:
       chain.'
   - - 17640
     - c
-    - noopHandlerScenarioScena0200_801FB0E8
+    - noopInertHandler3
   - - 17648
     - c
     - runCueBankRelease
@@ -319,7 +319,7 @@ segments:
       shared helper func_801A78F8. Slots 2, 3 and 4 fall to the epilogue.'
   - - 18168
     - c
-    - noopHandlerScenarioScena0200_801FB2F8
+    - noopInertHandler4
   - - 18176
     - c
     - stateFlagQueueReturn
@@ -372,20 +372,20 @@ segments:
     - requestIndexedOffsetBounds
   - - 21748
     - c
-    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC0F4
+    - checkUpperBand18000
   - - 21924
     - c
-    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC1A4
+    - checkLowerBand18000
   - - 22108
     - c
-    - requestPrimaryState7OnIndexedBoundsScenarioScena0200_801FC25C
+    - checkForwardBand20000
   - - 22280
     - c
-    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC308
+    - checkBackwardBand10000
   - - 22452
     - c
-    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC3B4
-    - '@source: src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC3B4.c'
+    - checkBackwardBand18000
+    - '@source: src/bof3/scenario/checkBackwardBand18000.c'
     - '@behavior: One of three consecutive indexed bounds gates the caller
       func_801F7A9C calls this span from 0x801F7BD0 with index 6, the span at
       0x801FC46C with index 7 and the span at 0x801FC688 with index 8. When the
@@ -395,8 +395,8 @@ segments:
       requests primary state 7.'
   - - 22636
     - c
-    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC46C
-    - '@source: src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC46C.c'
+    - checkForwardBand10000
+    - '@source: src/bof3/scenario/checkForwardBand10000.c'
     - '@behavior: One of three consecutive indexed bounds gates the caller
       func_801F7A9C runs from 0x801F7BD0, which calls func_801FC3B4 with index 6,
       this span with index 7 and the span at 0x801FC688 with index 8. When the
@@ -406,14 +406,14 @@ segments:
       requests primary state 7.'
   - - 22808
     - c
-    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC518
+    - checkSkewedBand40000
   - - 22992
     - c
-    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC5D0
+    - checkSkewedBand30000
   - - 23176
     - c
-    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC688
-    - '@source: src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC688.c'
+    - checkForwardBand50000
+    - '@source: src/bof3/scenario/checkForwardBand50000.c'
     - '@behavior: The last of the consecutive indexed bounds gates func_801F7A9C
       runs from 0x801F7BD0, which calls this span with index 8. When the shared
       front-end flag D_80143F03 is zero it reads the indexed words of the
@@ -422,7 +422,7 @@ segments:
       0x1F and requests primary state 7.'
   - - 23348
     - c
-    - requestPrimaryState7OnIndexedBoundsScenarioScena0200_801FC734
+    - checkForwardBand40000
   - - 23524
     - c
     - runStartupCellMatch
@@ -449,7 +449,7 @@ segments:
     - callRecordCallbackTable
   - - 25796
     - c
-    - noopHandlerScenarioScena0200_801FD0C4
+    - noopInertHandler5
   - - 25804
     - c
     - stateSharedRequestPrimary
@@ -458,7 +458,7 @@ segments:
     - requestState11Sub2
   - - 25948
     - c
-    - noopHandlerScenarioScena0200_801FD15C
+    - noopInertHandler6
   - - 25956
     - c
     - waitToggleRequestPrimary
@@ -491,7 +491,7 @@ segments:
     - requestState11Sub5
   - - 26556
     - c
-    - setProgress14Substate14ClearSharedBytes6566AndRequestPrimaryState2ScenarioScena0200_801FD3BC
+    - stateProgressArm
   - - 26636
     - c
     - requestState15Clear
@@ -500,10 +500,10 @@ segments:
     - requestPrimaryQueue
   - - 26768
     - c
-    - clearProgressAndSharedStateBytesThenRequestPrimaryState12ScenarioScena0200_801FD490
+    - stateClearProgress
   - - 26852
     - c
-    - noopHandlerScenarioScena0200_801FD4E4
+    - noopInertHandler7
   - - 26860
     - c
     - stateBytesRequestPrimary
@@ -530,7 +530,7 @@ segments:
     - requestPrimarySubstate5
   - - 27380
     - c
-    - zeroResultScenarioScena0200_801FD6F4
+    - zeroResultAccessor
   - - 27388
     - c
     - stateSkillAfterAbility
@@ -539,10 +539,10 @@ segments:
     - func_801FD780
   - - 30072
     - c
-    - invokeHelperArgScenarioScena0200_801FE178
+    - callHelperArg4Constant
   - - 30104
     - c
-    - invokeHelperArgThenHelperScenarioScena0200_801FE198
+    - callHelperArgPair
   - - 30144
     - c
     - stateIndexedBitsTwice

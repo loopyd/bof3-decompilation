@@ -16,7 +16,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkHalfwordHandler.c",
 ]
 support_sources = [
-    "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp02500_801CE770.c",
+    "src/bof3/plchar/adjustEvenProbeLayers2.c",
     "src/bof3/plchar/claimEndQueuePlus2.c",
     "src/bof3/plchar/claimSizeItemName2.c",
     "src/bof3/plchar/stateWorldFlagExpires.c",

@@ -32,13 +32,13 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x84 into the shared status halfword D_801490A8 while that byte is nonzero; when the gate byte is zero it stores 0x83 into D_801490A8 while the Fahl battle counter D_801454F3 is below 30, and 0x82 when that counter is 30 or more and leaves every other cell alone. The 0x84 and 0x83 paths join and then store 6 into the shared mode index byte D_801D4285.'
   - - 96
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05013_801F2C60
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05013_801F2C60.c'
+    - stateGateThree2
+    - '@source: src/bof3/world/stateGateThree2.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 3 into the shared handler index byte D_801D4286; the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 144
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05013_801F2C90
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05013_801F2C90.c'
+    - stateGateFive2
+    - '@source: src/bof3/world/stateGateFive2.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 5 into the shared handler index byte D_801D4286; the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 192
     - c
@@ -55,8 +55,8 @@ segments:
     - func_801F2D48
   - - 416
     - c
-    - initFrontendByte04
-    - '@source: src/bof3/world/initFrontendByte04.c'
+    - setupFrontendStateFour
+    - '@source: src/bof3/world/setupFrontendStateFour.c'
     - '@behavior: Runs the shared front-end startup helper D_8015C088 and then stores 4 into the shared front-end state selector byte D_801448EB and 4 into the shared second state byte D_801448ED, leaving the middle byte D_801448EC untouched, and returns 0.'
 - - 468
   - bin

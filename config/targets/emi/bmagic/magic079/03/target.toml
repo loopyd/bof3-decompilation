@@ -14,7 +14,7 @@ support_sources = [
     "src/bof3/bmagic/magic07903DispatchTables.c",
     "src/bof3/bmagic/copyWordTripletSet.c",
     "src/bof3/bmagic/copyRecordTripletSet.c",
-    "src/bof3/bmagic/mathIncrementByte9At10.c",
+    "src/bof3/bmagic/mathIncrementByte9At16.c",
     "src/bof3/bmagic/mathIncrementSecondStep.c",
     "src/bof3/bmagic/decrementIncrementGlobalMatches.c",
     "src/bof3/bmagic/incrementByteGlobalMatches.c",

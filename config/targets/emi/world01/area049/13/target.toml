@@ -11,7 +11,7 @@ sources = [
     "src/bof3/world/mathRedBlueHalf.c",
     "src/bof3/world/claimEveryFourthFrame.c",
     "src/bof3/world/lowerMirrorEveryFourth.c",
-    "src/bof3/world/stateClearWorkFlag40.c",
+    "src/bof3/world/stateResetClearFlag.c",
     "src/bof3/world/stateFramesComplementShade.c",
 ]
 support_sources = [

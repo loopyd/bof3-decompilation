@@ -15,14 +15,14 @@ sources = [
     "src/bof3/world/claimFirstSlotFour.c",
     "src/bof3/world/queueUiPairZero.c",
     "src/bof3/world/queueUiElementX.c",
-    "src/bof3/world/queueSharedUiElementBlock58To59xDSize50World01Area03913_801F2E54.c",
+    "src/bof3/world/queueSharedRowPair.c",
 ]
 support_sources = [
     "src/bof3/world/stateSharedFourOne.c",
     "src/bof3/world/stateHalfwordFF00Two.c",
-    "src/bof3/world/setTwoWorld01Area03913_801F2D38.c",
+    "src/bof3/world/stateCounterReset.c",
     "src/bof3/world/noopOverlayHandlerTwo.c",
-    "src/bof3/world/noopHandlerWorld01Area03913_801F2E8C.c",
+    "src/bof3/world/emptyHandler.c",
     "src/bof3/world/callHelperWithByte.c",
     "src/bof3/world/raiseWorldFlag8.c",
     "src/bof3/world/stateArmWorkPhase40.c",

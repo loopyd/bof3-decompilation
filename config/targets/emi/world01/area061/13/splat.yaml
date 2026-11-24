@@ -32,17 +32,17 @@ segments:
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is zero it clears the main-RAM word at 0x80144F50 and then stores 2 into the shared status halfword D_801490A8, and while it is nonzero it stores 3 into D_801490A8 and then 6 into the shared mode index byte at 0x801D4285.'
   - - 80
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06113_801F2C50
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06113_801F2C50.c'
+    - stateGateThree5
+    - '@source: src/bof3/world/stateGateThree5.c'
   - - 128
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld01Area06113_801F2C80
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area06113_801F2C80.c'
+    - stateGateFive5
+    - '@source: src/bof3/world/stateGateFive5.c'
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it sets the handler index byte at 0x801D4286 to 5, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 176
     - c
-    - setStatus4AndModeIndex6IfGateElseFFFFWorld01Area06113_801F2CB0
-    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area06113_801F2CB0.c'
+    - stateStatusModeGate4
+    - '@source: src/bof3/world/stateStatusModeGate4.c'
     - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 4 into the shared status halfword D_801490A8 and then 6 into the shared mode index byte D_801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 244
     - c

@@ -28,7 +28,7 @@ support_sources = [
     "src/bof3/plchar/requestResourceHelperAdvance.c",
     "src/bof3/plchar/claimStoreDistanceFront.c",
     "src/bof3/plchar/probeNeighbourCueSign.c",
-    "src/bof3/plchar/selectArrivalFiveSequence40.c",
+    "src/bof3/plchar/selectArrivalSequenceAscending.c",
     "src/bof3/plchar/tickFoundSearchMark.c",
     "src/bof3/plchar/checkAgainstMapProjected.c",
 ]

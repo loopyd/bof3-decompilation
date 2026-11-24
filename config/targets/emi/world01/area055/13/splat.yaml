@@ -30,13 +30,13 @@ segments:
     - func_801F2C04
   - - 136
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05513_801F2C88
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05513_801F2C88.c'
+    - stateGateThree3
+    - '@source: src/bof3/world/stateGateThree3.c'
     - '@behavior: reads the shared gate byte D_801490C7; while that byte is nonzero it stores 3 into the handler index byte at 0x801D4286, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 184
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05513_801F2CB8
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05513_801F2CB8.c'
+    - stateGateFive3
+    - '@source: src/bof3/world/stateGateFive3.c'
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it sets the handler index byte at 0x801D4286 to 5, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 232
     - c
@@ -50,8 +50,8 @@ segments:
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it stores 0x24 into the shared status halfword D_801490A8 and then 6 into the shared mode byte at 0x801D4285, and when the byte is zero it stores 0xFFFF into D_801490A8 instead.'
   - - 368
     - c
-    - initFrontendStateSelector4AndSecondStateByte2World01Area05513_801F2D70
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte2World01Area05513_801F2D70.c'
+    - setupFrontendStateTwo
+    - '@source: src/bof3/world/setupFrontendStateTwo.c'
     - '@behavior: runs the shared front-end startup helper at 0x8015C088, then writes 4 into the shared front-end state selector at 0x801448EB and 2 into the shared byte at 0x801448ED, leaving the middle byte 0x801448EC untouched, and returns 0.'
   - - 424
     - textbin

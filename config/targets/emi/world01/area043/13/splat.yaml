@@ -40,8 +40,8 @@ segments:
     - func_801F2D0C
   - - 552
     - c
-    - seedFrontEndRecord37
-    - '@source: src/bof3/world/seedFrontEndRecord37.c'
+    - seedFrontEndSelector
+    - '@source: src/bof3/world/seedFrontEndSelector.c'
   - - 956
     - c
     - submitSeedPairTint

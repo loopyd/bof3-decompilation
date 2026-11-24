@@ -4,7 +4,7 @@ typedef void (*ScenarioScena0200RecordCallback)(u8* record, u8* work);
 
 /* Overlay-local record-callback table, indexed by a record's unsigned byte
  * field at offset 0x7A: its thirty in-image code-pointer words run from the
- * inert noopHandlerScenarioScena0200_801FD0C4 (0x801FD0C4, entry 0) through
+ * inert noopInertHandler5 (0x801FD0C4, entry 0) through
  * stateIndexedBitsTwice
  * (0x801FE1C0, entry 29), and entry 16 holds
  * requestPrimaryQueue

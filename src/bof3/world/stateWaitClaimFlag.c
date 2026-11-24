@@ -35,8 +35,8 @@ void func_8015B580(u32 arg0, s32 arg1);
  * image bytes at that address are the two halfwords 0x0054 and 0xFFFF followed
  * by the next, pointer-shaped table, so the span is exactly the status pair
  * selected by the gate byte. That gate polarity matches the sibling
- * setStatus64AndModeIndex6IfGateElseFFFFWorld01Area04113_801F3D78 and
- * setStatusFFFFAndStateEntryWhenGateClearWorld01Area04113_801F3B08, which use
+ * stateStatusModeGate and
+ * stateEntryZero2, which use
  * the same shared status halfword and gate byte, so the name follows their
  * setStatus<values>ByGate grammar and adds the table source. The three calls
  * on the clear-gate arm are the shared flag test func_8015B5D4 (read with

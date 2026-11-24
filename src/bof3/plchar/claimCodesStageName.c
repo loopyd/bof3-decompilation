@@ -48,7 +48,7 @@ u8 func_80166CB0(s16 col, s16 row);
  * fourth argument, yet every call site of this body sets $a3 to the probed cell
  * code, so the caller-side declaration keeps that fourth word.
  */
-void claimStoreDistanceRow2(
+void claimStoreDistanceMarked(
     u8 state, s16 x, s16 y, u8 code);
 
 /* Local name helper of the shared EXE image, outside this payload: it answers
@@ -150,22 +150,22 @@ u8 claimCodesStageName(
   row = y;
   code = func_80166CB0(col, row);
   if ((u8)(code + 0x10) < 2 || (u8)code == 0xF4) {
-    claimStoreDistanceRow2(
+    claimStoreDistanceMarked(
         0, col, row, (u8)code);
     if ((rand() & 7) >= 6) {
-      claimStoreDistanceRow2(
+      claimStoreDistanceMarked(
           4, col, row, (u8)code);
     }
     func_8015DF18(0x10B);
     return 1;
   }
   if ((u8)(code + 0xA) < 2) {
-    claimStoreDistanceRow2(
+    claimStoreDistanceMarked(
         0, col, row, (u8)code);
     func_8015DF18(0x10B);
     roll = rand() & 0xF;
     if (roll < 7) {
-      claimStoreDistanceRow2(
+      claimStoreDistanceMarked(
           3, col, row, (u8)code);
       name = func_80165D48(0, 0x29);
       for (i = 0; i < 12; i++) {
@@ -181,7 +181,7 @@ u8 claimCodesStageName(
       func_80150284(mode);
       D_1F800044[0xB] = 2;
     } else if (roll >= 0xC) {
-      claimStoreDistanceRow2(
+      claimStoreDistanceMarked(
           2, col, row, (u8)code);
       func_801C308C(0);
       func_8016813C(1, D_80146250[0x79]);

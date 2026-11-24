@@ -15,7 +15,7 @@ sources = [
     "src/bof3/world/stateFacingStepResource.c",
     "src/bof3/world/stateStatusMode2Gate.c",
     "src/bof3/world/stateHalfword2eAdvance.c",
-    "src/bof3/world/stateAdvanceHalfword30.c",
+    "src/bof3/world/stateAdvanceHalfwordReset.c",
     "src/bof3/world/stateSetGatedDraw.c",
     "src/bof3/world/statePrepareRecord15.c",
 ]

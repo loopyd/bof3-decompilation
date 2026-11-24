@@ -22,7 +22,7 @@ sources = [
     "src/bof3/plchar/queueFoundSearchCell2.c",
     "src/bof3/plchar/requestResourceHelperResource.c",
     "src/bof3/plchar/claimStoreDistanceRow3.c",
-    "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp26700_801CF62C.c",
+    "src/bof3/plchar/claimStoreDistanceRow4.c",
     "src/bof3/plchar/statePickNearerRearm2.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp26700_801CFDDC.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp26700_801D0268.c",

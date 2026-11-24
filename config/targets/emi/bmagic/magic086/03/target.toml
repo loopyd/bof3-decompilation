@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/decrementSeedZero.c",
     "src/bof3/bmagic/renderSegmentsOscillatingDepth.c",
-    "src/bof3/bmagic/stateForwardFlagCall2.c",
+    "src/bof3/bmagic/stateForwardBattleFF.c",
     "src/bof3/bmagic/callByte2ProjectDraw.c",
     "src/bof3/bmagic/stateCountdownCallHelper.c",
     "src/bof3/bmagic/decrementSetGlobalByte.c",

@@ -14,9 +14,9 @@ sources = [
     "src/bof3/plchar/callWorkTablef920.c",
 ]
 support_sources = [
-    "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448.c",
+    "src/bof3/plchar/claimSizeItemName3.c",
     "src/bof3/plchar/queryClear3.c",
-    "src/bof3/plchar/queryClearPlchar.c",
+    "src/bof3/plchar/queryClear4.c",
     "src/bof3/plchar/callWorkTablef92.c",
     "src/bof3/plchar/callWorkHalfword2Tablef938.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640.c",
@@ -24,14 +24,14 @@ support_sources = [
     "src/bof3/plchar/checkProjectedAgainstRecords.c",
     "src/bof3/plchar/queryIndexProjectedFront.c",
     "src/bof3/plchar/tickCountdownClearFlag.c",
-    "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27a00_801CE448.c",
+    "src/bof3/plchar/pickNearerSignChosen3.c",
     "src/bof3/plchar/statePickNearerState.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CED34.c",
     "src/bof3/plchar/selectArrivalRouteReached.c",
     "src/bof3/support/plp27a_00_psyq.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp27a00_801CF1C0.c",
-    "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp27a00_801CF724.c",
-    "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp27a00_801CF35C.c",
+    "src/bof3/plchar/checkAgainstMapCode3.c",
+    "src/bof3/plchar/stepClearReportsDone3.c",
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp27a00_801CEE74.c",
 ]
 psyq_source = "src/bof3/support/plp27a_00_psyq.c"

@@ -15,7 +15,7 @@ sources = [
     "src/bof3/world/queueIsFlagNonzero.c",
     "src/bof3/world/stateIsNonzeroWrap.c",
     "src/bof3/world/stateScaledViewFacing.c",
-    "src/bof3/world/setWorkByte8Level1PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F49C8.c",
+    "src/bof3/world/stateScaledViewLevel.c",
     "src/bof3/world/queueSelectorReleaseSelectors.c",
     "src/bof3/world/renderPointsSquaresConnector.c",
 ]

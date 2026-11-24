@@ -98,8 +98,8 @@ segments:
     - '@source: src/bof3/bmagic/copyWordTripletSet.c'
   - - 4316
     - c
-    - mathIncrementByte9At10
-    - '@source: src/bof3/bmagic/mathIncrementByte9At10.c'
+    - mathIncrementByte9At16
+    - '@source: src/bof3/bmagic/mathIncrementByte9At16.c'
     - '@behavior: Advances the scratchpad work object byte at 0x9 by one through one load of the pointer cell 0x1F800044, tests the truncated byte it just stored against 0x10, and only then re-reads the cell and increments work byte 0x2.'
   - - 4396
     - c

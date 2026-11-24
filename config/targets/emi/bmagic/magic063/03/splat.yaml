@@ -46,8 +46,8 @@ segments:
     - '@source: src/bof3/bmagic/magic06303DispatchTables.c'
   - - 884
     - c
-    - callWorkHandler2
-    - '@source: src/bof3/bmagic/callWorkHandler2.c'
+    - callCopiedStepTable
+    - '@source: src/bof3/bmagic/callCopiedStepTable.c'
   - - 996
     - c
     - copyBattlerPoolCount

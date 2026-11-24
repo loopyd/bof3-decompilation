@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/boss/callIndexedHandler6.c",
     "src/bof3/boss/zeroResult8.c",
-    "src/bof3/boss/initModeProgress32.c",
+    "src/bof3/boss/setupModeThirdTuple.c",
     "src/bof3/boss/noopHandlerBossBoss01316_800C2004.c",
     "src/bof3/boss/noopHandler40.c",
     "src/bof3/boss/noopHandler39.c",

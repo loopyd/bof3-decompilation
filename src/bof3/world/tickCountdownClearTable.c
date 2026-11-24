@@ -7,7 +7,7 @@
  * armWorkAdvanceState.c and
  * stateChannelPairWorld.c. */
 /* @source 0x1F800044 @kind unknown */
-extern u8* area04713WorkCursor_1F800044;
+extern u8* scratchWorkCursor;
 
 /* Release step of the shared 0x18-byte-stride work table at 0x800E4800: it
  * zeroes byte 0x14 of each of its 0x10 records, takes no arguments and returns
@@ -68,11 +68,11 @@ void tickCountdownClearTable(
     void) {
   u8* work;
 
-  work = area04713WorkCursor_1F800044;
+  work = scratchWorkCursor;
   if (--FIELD_REF(u32, work, 0xC) == 0) {
     FIELD_REF(u32, work, 0xC) = 0x230;
     stateWorkTableByte14();
-    work = area04713WorkCursor_1F800044;
+    work = scratchWorkCursor;
     FIELD_REF(u8, work, 0x1) = FIELD_REF(u8, work, 0x1) + 1;
   }
 }

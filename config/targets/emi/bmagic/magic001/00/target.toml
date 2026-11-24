@@ -11,7 +11,7 @@ sources = [
     "src/bof3/bmagic/workAccumulateIntoZero.c",
     "src/bof3/bmagic/workAccumulateIsAdjust.c",
     "src/bof3/bmagic/subtractFadeCountdownTriplet.c",
-    "src/bof3/bmagic/stateRaiseFlag4.c",
+    "src/bof3/bmagic/stateRaiseFlagStep.c",
     "src/bof3/bmagic/raiseFlag4InvokeHelper.c",
     "src/bof3/bmagic/callActingEnemyScript.c",
     "src/bof3/bmagic/callAFC54ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic00100_801EEF34.c",

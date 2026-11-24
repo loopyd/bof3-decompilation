@@ -23,7 +23,7 @@ void func_8015C088(void);
 /* @source 0x801FD788
  * @behavior Entry 8 of this overlay's 18-entry record callback table at
  * 0x801FE308, whose pointer word sits at 0x801FE328; the overlay dispatcher
- * callRecordCallbackScenario (0x801FD444)
+ * callSelectedRecordCallback (0x801FD444)
  * selects it with unsigned byte 0x7A of a record, handing that record in $a0
  * and the address of D_80144E90 in $a1, so the overlay reaches this handler
  * only indirectly and only the record argument is read. It runs the shared

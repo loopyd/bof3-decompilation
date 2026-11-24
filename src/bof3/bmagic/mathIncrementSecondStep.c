@@ -22,7 +22,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           reviewed textbin row D_801F02A4, and no in-image jal reaches it, so
  *           it is published for a consumer outside the demonstrated set. The
  *           reviewed range is byte-identical to the exact sibling
- *           mathIncrementByte9At10,
+ *           mathIncrementByte9At16,
  *           which is entry 1 of the same run.
  * @status exact
  * @match 100.00

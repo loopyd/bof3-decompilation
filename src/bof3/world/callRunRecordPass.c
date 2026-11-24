@@ -6,7 +6,7 @@
  * reachable entries begin with
  * raiseFlagReseedRecords,
  * followed by claimEveryFourthFrame, lowerMirrorEveryFourth,
- * stateClearWorkFlag40,
+ * stateResetClearFlag,
  * mathRedBlueHalf, func_80117ACC, func_80117C38, func_80117C58 and
  * stateFramesComplementShade, the last word of the run. The run stays one row, so this
  * declaration binds the interior word through the generated

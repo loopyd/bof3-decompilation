@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - initArea05413State
-    - '@source: src/bof3/world/initArea05413State.c'
+    - setupStateEntryTen
+    - '@source: src/bof3/world/setupStateEntryTen.c'
     - '@behavior: runs the shared overlay startup helper at 0x8015C088 and then writes 0x2C, 0 and 0x0A to the three consecutive shared state bytes at 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 68
     - textbin

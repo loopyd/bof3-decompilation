@@ -1,5 +1,5 @@
 D_8014932A = 0x8014932A;
-callResetSelector0 = 0x801F2C04;
+callResetSelectorZero = 0x801F2C04;
 callResetSelector1 = 0x801F2C24;
 callResetSelector2 = 0x801F2C44;
 callResetSelector3 = 0x801F2C64;

@@ -12,6 +12,6 @@ support_sources = [
     "src/bof3/support/area060_13_psyq.c",
     "src/bof3/world/appendCurrentBufferChain.c",
     "src/bof3/world/area06013DispatchTables.c",
-    "src/bof3/world/raiseWorldFlag2000World01Area06013_801F3310.c",
+    "src/bof3/world/raiseWorldFlag.c",
 ]
 psyq_source = "src/bof3/support/area060_13_psyq.c"

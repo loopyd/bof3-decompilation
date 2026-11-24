@@ -125,8 +125,8 @@ segments:
     - '@behavior: Entry 8 of the ten-entry work-byte-1 handler table based at 0x801F4F78 in this overlay, entry 6 of the work-byte-2 table at 0x801F4F80 and entry 2 of the four-entry work-byte-3 run at 0x801F4F90, for the work record published at the scratchpad pointer cell 0x1F800044. While work byte 0x0B is still zero it increments work byte 0x09 and, once that byte re-read through the pointer cell reaches 0x5A, increments work byte 0x0B as well. When the shared mode byte 0x801454F2 is nonzero and work byte 0x0B is nonzero, byte 0x80143BB0 reads 2, or bit 0x100 of halfword 0x80146258 is set, it then increments work byte 0x03 through a further read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the overlay emitter 0x801F3FF8. Takes no arguments and returns nothing.'
   - - 3164
     - c
-    - stateAdvanceHalfword30
-    - '@source: src/bof3/world/stateAdvanceHalfword30.c'
+    - stateAdvanceHalfwordReset
+    - '@source: src/bof3/world/stateAdvanceHalfwordReset.c'
     - '@behavior: Entry 9 of the work-byte-1 handler table based at 0x801F4F78 in this overlay, entry 7 of the work-byte-2 table at 0x801F4F80 and entry 3 of the four-entry work-byte-3 run at 0x801F4F90, for the work record published at the scratchpad pointer cell 0x1F800044. Adds 0x0A to record halfword 0x30, stores the truncated halfword, and clears work state byte 0x03 once that stored signed value reaches 0xF0. Unless the shared mode byte 0x801454F2 is set, byte 0x80143BB0 reads 2, or bit 0x100 of halfword 0x80146258 is set, it writes 1 to work byte 0x03 through a second read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the overlay emitter 0x801F3FF8. Takes no arguments and returns nothing.'
   - - 3340
     - c

@@ -45,7 +45,7 @@ support_sources = [
     "src/bof3/boss/publishBattleHooks4.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1D1C.c",
     "src/bof3/boss/initModeProgress11.c",
-    "src/bof3/boss/setupModeFlagProgress2.c",
+    "src/bof3/boss/setupModeSecondTuple.c",
     "src/bof3/boss/initModeProgress30.c",
     "src/bof3/boss/initModeProgress44.c",
     "src/bof3/support/boss008_16_psyq.c",

@@ -51,8 +51,8 @@ segments:
     - func_801EF024
   - - 1384
     - c
-    - stateForwardFlagCall2
-    - '@source: src/bof3/bmagic/stateForwardFlagCall2.c'
+    - stateForwardBattleFF
+    - '@source: src/bof3/bmagic/stateForwardBattleFF.c'
     - '@behavior: When scratchpad work byte B is FF, forward the shared battle byte, set mask 0x4 in the shared battle halfword and invoke the shared helper.'
   - - 1480
     - asm

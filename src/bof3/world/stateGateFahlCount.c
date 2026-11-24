@@ -26,7 +26,7 @@ extern u8 D_801D4285;
  *           reads that same $v0.
  *           Name evidence: 0x801490C7/0x801490A8/0x801D4285 are the shared gate
  *           byte, status halfword and mode index this target's own exact lifts
- *           (setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05013_801F2C60 and
+ *           (stateGateThree2 and
  *           stateStatus84ModeSix)
  *           already read and write at those addresses. 0x801454F3 is the Fahl
  *           battle-encounter counter that the shipped EU address register ties

@@ -29,7 +29,7 @@ support_sources = [
     "src/bof3/plchar/requestResourceHelperReady.c",
     "src/bof3/plchar/clearFreeRowState.c",
     "src/bof3/plchar/clearGatedRowState.c",
-    "src/bof3/plchar/claimRecordDistance200.c",
+    "src/bof3/plchar/claimRecordDistanceMarked.c",
     "src/bof3/plchar/selectArrivalFiveReached2.c",
     "src/bof3/plchar/stepClearReportsDone.c",
     "src/bof3/support/plp016_00_psyq.c",

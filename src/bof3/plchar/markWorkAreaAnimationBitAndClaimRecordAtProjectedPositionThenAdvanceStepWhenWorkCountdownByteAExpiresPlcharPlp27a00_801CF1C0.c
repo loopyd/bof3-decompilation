@@ -42,7 +42,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
 /* Record claim of this same payload: it takes a signed sixteen-bit cell pair,
  * sign-extends both through `sll` plus `sra` in its own prologue and answers one
  * when it claimed a front-end record and zero when it did not. */
-u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448(
+u8 claimSizeItemName3(
     s16 x, s16 y);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
@@ -63,7 +63,7 @@ u8 func_8014DAEC(void);
  *           animation byte 0x74 of the found work record through the column base
  *           0x801468FC and the slot stride 0x98. It then claims a front-end
  *           record at the projected point through
- *           claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448, passing the
+ *           claimSizeItemName3, passing the
  *           high half of each projected word: when that claim fails and the
  *           first word has a nonzero low half it retries one unit further on
  *           that axis, and when the retry also fails and the second word has a
@@ -89,5 +89,5 @@ PLCHAR_DEFINE_COUNTDOWN_PROJECTED_CELL_CLAIM(
     markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp27a00_801CF1C0,
     D_1F800044, D_80181B94, D_80181B98, D_801468FC,
     func_801BDE14,
-    claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448,
+    claimSizeItemName3,
     func_8014DAEC)

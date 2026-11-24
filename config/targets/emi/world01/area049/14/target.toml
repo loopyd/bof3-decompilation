@@ -8,25 +8,25 @@ splat = "config/targets/emi/world01/area049/14/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3454.c",
+    "src/bof3/world/publishBaseSeedRecord.c",
     "src/bof3/world/publishSecondWorkKind4.c",
     "src/bof3/world/publishThirdWorkKind3.c",
-    "src/bof3/world/queueSharedUiElementBlockBToCx55Size0World01Area04914_801F35D4.c",
+    "src/bof3/world/queueSharedUiRow.c",
     "src/bof3/world/stateSharedSetFlag3.c",
 ]
 support_sources = [
     "src/bof3/world/stateCounterRetreat4.c",
-    "src/bof3/world/setTwoWorld01Area04914_801F3750.c",
-    "src/bof3/world/setTwoWorld01Area04914_801F3438.c",
+    "src/bof3/world/stateCounterReset3.c",
+    "src/bof3/world/stateCounterReset2.c",
     "src/bof3/world/noopOverlayHandlerOne.c",
     "src/bof3/world/stateSharedOneFour.c",
     "src/bof3/world/stateSharedByteOne.c",
     "src/bof3/world/stateAdvanceCounter.c",
     "src/bof3/support/area049_14_psyq.c",
-    "src/bof3/world/findWorkPositionBoundsIndexWorld01Area04914_801F2D00.c",
+    "src/bof3/world/queryPositionBounds.c",
     "src/bof3/world/publishThirdWorkKind4.c",
-    "src/bof3/world/clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884.c",
-    "src/bof3/world/clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate6IfPartyByte6World01Area04914_801F3908.c",
+    "src/bof3/world/stateStartupRequestFive.c",
+    "src/bof3/world/stateStartupRequestSix.c",
     "src/bof3/world/stateQueueAnimParty.c",
     "src/bof3/world/queueUiBlockEight.c",
     "src/bof3/world/syncFlagsBounds.c",

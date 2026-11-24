@@ -8,7 +8,7 @@
  * tickCountdownClearTable.c
  * and stateChannelPairWorld.c. */
 /* @source 0x1F800044 @kind unknown */
-extern u8* area04713WorkCursor_1F800044;
+extern u8* scratchWorkCursor;
 
 /* Shared main-RAM frame word at 0x80143E6C, bound by
  * config/targets/shared/symbols.txt for every target that composes it, so this
@@ -103,7 +103,7 @@ void renderDiscSpawnPeriod(
   if ((D_80143E6C & 7) == 0) {
     claimFreeSubPhase();
   }
-  work = area04713WorkCursor_1F800044;
+  work = scratchWorkCursor;
   if (--FIELD_REF(u32, work, 0xC) == 0) {
     state = FIELD_REF(u8, work, 0x1);
     FIELD_REF(u32, work, 0xC) = 0x10;

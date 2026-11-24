@@ -32,33 +32,33 @@ segments:
     - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is zero it stores 2 into the shared status halfword D_801490A8, and while it is nonzero it stores 4 into D_801490A8 and then 6 into the shared mode index byte D_801D4285.'
   - - 72
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05913_801F2C48
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05913_801F2C48.c'
+    - stateGateThree4
+    - '@source: src/bof3/world/stateGateThree4.c'
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it sets the handler index byte at 0x801D4286 to 3, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 120
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05913_801F2C78
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05913_801F2C78.c'
+    - stateGateFive4
+    - '@source: src/bof3/world/stateGateFive4.c'
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it sets the handler index byte at 0x801D4286 to 5, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 168
     - c
-    - setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CA8
-    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CA8.c'
+    - stateStatusModeGate2
+    - '@source: src/bof3/world/stateStatusModeGate2.c'
     - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 4 into the shared status halfword D_801490A8 and 6 into the shared mode index byte at 0x801D4285, and while the byte is zero it stores 0xFFFF into D_801490A8 instead.'
   - - 236
     - c
-    - setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CEC
-    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CEC.c'
+    - stateStatusModeGate3
+    - '@source: src/bof3/world/stateStatusModeGate3.c'
     - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 4 into the shared status halfword D_801490A8 and 6 into the shared mode index byte at 0x801D4285, and while the byte is zero it stores 0xFFFF into D_801490A8 instead.'
   - - 304
     - c
-    - requestFrontSelectorContextWorld01Area05913_801F2D30
-    - '@source: src/bof3/world/requestFrontSelectorContextWorld01Area05913_801F2D30.c'
+    - requestFrontContext
+    - '@source: src/bof3/world/requestFrontContext.c'
     - '@behavior: requests the shared front selector context through func_8019FA28 with the fixed tuple of selection seed 0x64, context pair 0x460000/0x340000 and kind 0x81; takes no arguments and returns nothing.'
   - - 348
     - c
-    - clearWorkByte48ThenSubmitRecordWorld01Area05913_801F2D5C
-    - '@source: src/bof3/world/clearWorkByte48ThenSubmitRecordWorld01Area05913_801F2D5C.c'
+    - stateSubmitRecord
+    - '@source: src/bof3/world/stateSubmitRecord.c'
     - '@behavior: clears byte 0x48 of the work record published through the scratchpad pointer cell 0x1F800044, then reloads that cell and passes the record to the shared submitter func_80196718.'
   - - 400
     - asm
@@ -78,8 +78,8 @@ segments:
     - '@source: src/bof3/world/area05913DispatchTables.c'
   - - 1044
     - c
-    - storeWorkCursorDistanceAt3cAndAdvanceStateByte1World01Area05913_801F3014
-    - '@source: src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World01Area05913_801F3014.c'
+    - stateCursorDistance
+    - '@source: src/bof3/world/stateCursorDistance.c'
     - '@behavior: loads the work-object pointer published at the scratchpad cell 0x1F800044, passes that object''s two position words at +0x34 and +0x38 to the shared distance helper func_8015477C, stores the answer shifted left 16 into the object''s third triple word at +0x3C, and advances the object''s state byte at +1 by one, which hands the step to entry 1 of the same state-byte-1 handler table at 0x801F3824.'
   - - 1120
     - c

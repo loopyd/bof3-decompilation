@@ -6,7 +6,7 @@
  * displacement; the same cell is declared in
  * stateChannelPairWorld.c. */
 /* @source 0x1F800044 @kind unknown */
-extern u8* area04713WorkCursor_1F800044;
+extern u8* scratchWorkCursor;
 
 /* @source 0x801F2C48
  * @behavior Overlay step handler at index 0 of the local handler table based at
@@ -42,7 +42,7 @@ void armWorkAdvanceState(void) {
   u8* work;
   u8 state;
 
-  work = area04713WorkCursor_1F800044;
+  work = scratchWorkCursor;
   state = FIELD_REF(u8, work, 0x1);
   FIELD_REF(u32, work, 0xC) = 0x3c;
   FIELD_REF(u8, work, 0x1) = state + 1;

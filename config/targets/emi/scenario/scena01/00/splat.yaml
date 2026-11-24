@@ -90,7 +90,7 @@ segments:
     - dispatchProgressHandler
   - - 7900
     - c
-    - noopHandlerScenarioScena0100_801F8ADC
+    - noopOverlayHandler
   - - 7908
     - asm
     - func_801F8AE4
@@ -102,7 +102,7 @@ segments:
     - func_801F8F34
   - - 11372
     - c
-    - noopHandlerScenarioScena0100_801F986C
+    - noopOverlayHandler2
   - - 11380
     - asm
     - func_801F9874
@@ -111,7 +111,7 @@ segments:
     - func_801F9AA0
   - - 13892
     - c
-    - noopHandlerScenarioScena0100_801FA244
+    - noopOverlayHandler3
   - - 13900
     - asm
     - func_801FA24C
@@ -138,7 +138,7 @@ segments:
     - func_801FC6B4
   - - 23696
     - c
-    - noopHandlerScenarioScena0100_801FC890
+    - noopOverlayHandler4
   - - 23704
     - asm
     - func_801FC898
@@ -147,7 +147,7 @@ segments:
     - func_801FCC24
   - - 24820
     - c
-    - noopHandlerScenarioScena0100_801FCCF4
+    - noopOverlayHandler5
   - - 24828
     - asm
     - func_801FCCFC
@@ -165,10 +165,10 @@ segments:
     - publishBaseSeedEnd
   - - 26692
     - c
-    - callRecordCallbackScenario
+    - callSelectedRecordCallback
   - - 26756
     - c
-    - noopHandlerScenarioScena0100_801FD484
+    - noopOverlayHandler6
   - - 26764
     - asm
     - func_801FD48C
@@ -222,7 +222,7 @@ segments:
     - requestPrimarySubstate0
   - - 28260
     - c
-    - zeroResultScenarioScena0100_801FDA64
+    - returnZeroResult
   - - 28268
     - asm
     - func_801FDA6C

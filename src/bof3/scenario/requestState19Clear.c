@@ -17,7 +17,7 @@
  * clearing stores, so the store order 0x80146864, 0x80146865, 0x80146866,
  * 0x80146867, D_80146875, D_80146874 is the source statement order. Its 84
  * bytes are instruction-for-instruction identical to the exact same-target
- * sibling clearProgressAndSharedStateBytesThenRequestPrimaryState12ScenarioScena0200_801FD490
+ * sibling stateClearProgress
  * (0x801FD490), differing only in the requested primary-state constant.
  * @status exact
  * @match 100.00

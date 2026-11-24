@@ -9,7 +9,7 @@ typedef void (*Boss01316Handler)(void);
  * at 0x80146255. The second clears the 0x40 flag of the battle records owned by
  * id 0 and id 1. The third returns a zero result, which the void slot type
  * drops. */
-void initModeProgress32(void);
+void setupModeThirdTuple(void);
 void stateOwnerOwnerOwner(void);
 s32  zeroResult8(void);
 
@@ -22,7 +22,7 @@ extern Boss01316Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C200C
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
- * the state switch initModeProgress32
+ * the state switch setupModeThirdTuple
  * (tests the 0x2 bit of D_80146328 and stores 0x32 into the byte at
  * g_ScenarioProgress, then calls func_801DDED8 while the bit is set and
  * otherwise calls func_801DDF28 and writes 0x3 into the byte at 0x80146255)
@@ -41,7 +41,7 @@ extern Boss01316Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss01316_800C200C(void) {
   D_801463A4 =
-      initModeProgress32;
+      setupModeThirdTuple;
   D_801463A8 = stateOwnerOwnerOwner;
   D_801463AC = (Boss01316Handler)zeroResult8;
 }

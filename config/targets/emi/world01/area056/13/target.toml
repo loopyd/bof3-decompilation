@@ -15,7 +15,7 @@ support_sources = [
     "src/bof3/world/armBankOneUnless.c",
     "src/bof3/world/stateStatusScrollFlag.c",
     "src/bof3/world/stateOneMotionConsume.c",
-    "src/bof3/world/noopHandlerWorld01Area05613_801F3464.c",
+    "src/bof3/world/emptyHandler3.c",
     "src/bof3/world/stateWorldFlagWork.c",
     "src/bof3/world/area05613_gate_status.c",
     "src/bof3/world/callWorkByte4Table3898.c",

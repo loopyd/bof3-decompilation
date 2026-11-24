@@ -11,7 +11,7 @@ extern u8* D_1F800044;
 /* Work-sequence selector of the shared EXE image, outside this payload: it takes
  * a zero-extended byte sequence id and answers a word this body ignores. This
  * target's generated undefined_funcs_auto.txt binds the address, and the exact
- * sibling selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CED54
+ * sibling selectArrivalFiveReached6
  * of this target declares the same prototype. */
 u32 func_8014D8D4(u8 arg0);
 

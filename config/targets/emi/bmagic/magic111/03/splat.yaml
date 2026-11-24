@@ -103,8 +103,8 @@ segments:
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once, compares that record''s byte 0xB against three with an unsigned bound and, only when it is below three, clears the scratchpad work object''s byte 9, re-reads the work pointer cell at 0x1F800044 and advances work byte 2 modulo 256.'
   - - 3268
     - c
-    - workByte9AdvanceAt10
-    - '@source: src/bof3/bmagic/workByte9AdvanceAt10.c'
+    - mathAdvanceStepAt10
+    - '@source: src/bof3/bmagic/mathAdvanceStepAt10.c'
     - '@behavior: Adds two modulo 256 to work byte 9 and, when it equals 0x10, re-reads the scratchpad work pointer and increments work byte 2.'
   - - 3348
     - c

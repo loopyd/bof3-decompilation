@@ -9,7 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
-    "src/bof3/world/callResetSelector0.c",
+    "src/bof3/world/callResetSelectorZero.c",
     "src/bof3/world/stateCounterClearActive.c",
     "src/bof3/world/callSelectionEffectZero.c",
     "src/bof3/world/stateCounterRetreat0a.c",

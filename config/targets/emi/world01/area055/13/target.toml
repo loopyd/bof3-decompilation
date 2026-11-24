@@ -10,10 +10,10 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/support/area055_13_psyq.c",
-    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte2World01Area05513_801F2D70.c",
+    "src/bof3/world/setupFrontendStateTwo.c",
     "src/bof3/world/stateStatus24ModeClone.c",
     "src/bof3/world/stateStatus24ModeGate.c",
-    "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05513_801F2C88.c",
-    "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05513_801F2CB8.c",
+    "src/bof3/world/stateGateThree3.c",
+    "src/bof3/world/stateGateFive3.c",
 ]
 psyq_source = "src/bof3/support/area055_13_psyq.c"

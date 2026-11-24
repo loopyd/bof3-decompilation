@@ -225,8 +225,8 @@ segments:
     - '@behavior: Rejects a nonzero front-side byte D_80143F03, a first argument other than 0x248000, a packed second argument whose high half lies outside 0x35..0x37, and a game-mode byte D_80145E98 outside {0,6,7}; on pass it runs func_8015C088 and stores state entry 0x23 with progress 0, returning 1 from that arm and 0 from every reject.'
   - - 8536
     - c
-    - queueSharedUiElement9
-    - '@source: src/bof3/world/queueSharedUiElement9.c'
+    - queueSharedMarkerElement
+    - '@source: src/bof3/world/queueSharedMarkerElement.c'
     - '@behavior: Queues the shared world-marker element at (0x9, 0x3) with size 0x50 through the shared marker queue func_801A4BC0; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 8576
     - c

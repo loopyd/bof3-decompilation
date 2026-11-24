@@ -6,7 +6,7 @@
  * pseudo that the compiler hoists into a call-saved register across the
  * resident call at 0x801F3924. */
 /* @source 0x1F800044 @kind unknown */
-extern u8* area04713WorkCursor_1F800044;
+extern u8* scratchWorkCursor;
 
 /* Shared view channel pair at 0x80149308/0x8014930C. The bmagic siblings add
  * this pair to work words 0x34/0x38 (work[13]/work[14]), so the pair is the
@@ -72,13 +72,13 @@ void stateChannelPairWorld(
     void) {
   u8* work;
 
-  work = area04713WorkCursor_1F800044;
+  work = scratchWorkCursor;
   FIELD_REF(u32, work, 0x34) = 0x120000u;
   D_80149308 = 0x120000u;
   FIELD_REF(u32, work, 0x38) = 0x240000u;
   D_8014930C = 0x240000u;
   func_80153DE8();
-  work = area04713WorkCursor_1F800044;
+  work = scratchWorkCursor;
   FIELD_REF(u16, work, 0x3E) = 0x1220u;
   func_80154FD8(0x1220u);
   D_801492D8 = -0x48a;

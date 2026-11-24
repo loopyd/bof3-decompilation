@@ -69,8 +69,8 @@ segments:
     - '@behavior: Counts down work byte 9, copies the record halfword pair, sets a jittered heading, rearms work and advances byte 2.'
   - - 2440
     - c
-    - workByteAdvanceAt16
-    - '@source: src/bof3/bmagic/workByteAdvanceAt16.c'
+    - mathAdvanceByteAt16
+    - '@source: src/bof3/bmagic/mathAdvanceByteAt16.c'
     - '@behavior: Advances the scratchpad work-object byte at offset 0xA by four modulo 256 through one load of the pointer cell at 0x1F800044, then tests the truncated byte it just stored against 0x10 by equality; only when that byte equals 0x10 does it re-read the pointer cell and increment the object byte at offset 0x2, the overlay work byte 2 handler step.'
   - - 2520
     - asm

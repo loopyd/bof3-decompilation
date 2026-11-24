@@ -10,14 +10,14 @@
 extern u8* D_1F800044;
 
 /* Neighbour probe of this payload, now lifted at 0x801CF184 as
- * testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184.
+ * checkAgainstMapCodes3.
  * It reads work-record byte 8 as the index of the two direction-vector word
  * tables at 0x80181B94 and 0x80181B98, adds the selected word pair to the record
  * position held at work +0x34 and classifies the tile the pair lands on,
  * answering through $v0 with the byte the original call sites test, so the
  * declared return type is that unsigned byte and the caller owes no callee lift.
  */
-u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184(
+u8 checkAgainstMapCodes3(
     void);
 
 /* Cue queue routine of the shared EXE image, outside this payload. The original
@@ -56,7 +56,7 @@ u32 func_8014D8D4(u8 arg0);
  *           run alone. When work byte 8 is even it first rewrites that byte: it
  *           stores the decremented direction ((byte 8 - 1) & 7), calls the
  *           payload neighbour probe
- *           testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184
+ *           checkAgainstMapCodes3
  *           and, only while that call reads
  *           zero, stores the neighbour two steps the other way ((byte 8 + 2) & 7)
  *           and calls the same probe again; if that answer reads zero too the byte
@@ -92,9 +92,9 @@ void probeNeighbourCue(
     void) {
   if ((D_1F800044[8] & 1) == 0) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (!testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184()) {
+    if (!checkAgainstMapCodes3()) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (!testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184()) {
+      if (!checkAgainstMapCodes3()) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }
     }

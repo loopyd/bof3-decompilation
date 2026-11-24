@@ -82,7 +82,7 @@ WORLD_DEFINE_GATE_STATUS(setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74, D_8
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(stateStatusGateElse9, D_801490C7, D_801490A8, 0xA0, 0x9F)
+WORLD_DEFINE_GATE_STATUS(stateStatusA0Gate, D_801490C7, D_801490A8, 0xA0, 0x9F)
 
 /* @source 0x801F3E28
  * @behavior Loads the shared gate byte D_801490C7 and stores 0xF8 into the

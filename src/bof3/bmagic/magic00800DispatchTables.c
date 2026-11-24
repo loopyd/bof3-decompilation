@@ -1,6 +1,6 @@
 #include "bof3/emi/dispatchers.h"
 
-extern void (*callHandlerTable801[])(void); /* @source 0x801F1BEC @kind data */
+extern void (*sixStepHandlerTable[])(void); /* @source 0x801F1BEC @kind data */
 
 /* @source 0x801F0250
  * @behavior Dispatches one frame of the overlay's work handler from the
@@ -14,4 +14,4 @@ extern void (*callHandlerTable801[])(void); /* @source 0x801F1BEC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerBmagicMagic00800_801F0250, callHandlerTable801);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerBmagicMagic00800_801F0250, sixStepHandlerTable);

@@ -5,7 +5,7 @@
  * stateWorldFlagWork at 0x801F3440. The Splat
  * `textbin` row D_801F34DC places the words, so the table is only referenced
  * here. */
-extern void (*workByte4HandlersWorld01Area05613[])(void); /* @source 0x801F3898 @kind data */
+extern void (*workByte4Dispatch[])(void); /* @source 0x801F3898 @kind data */
 
 /* @source 0x801F3284
  * @behavior Overlay step dispatch: reads the work-record pointer published at
@@ -19,4 +19,4 @@ extern void (*workByte4HandlersWorld01Area05613[])(void); /* @source 0x801F3898 
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4Table3898, workByte4HandlersWorld01Area05613);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4Table3898, workByte4Dispatch);

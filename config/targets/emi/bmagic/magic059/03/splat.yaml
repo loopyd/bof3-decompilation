@@ -85,8 +85,8 @@ segments:
     - '@source: src/bof3/bmagic/copyTripletStepClear.c'
   - - 5232
     - c
-    - mathIncrementByte9At20
-    - '@source: src/bof3/bmagic/mathIncrementByte9At20.c'
+    - mathIncrementByteA
+    - '@source: src/bof3/bmagic/mathIncrementByteA.c'
     - '@behavior: Per-frame step of an overlay work-object handler. Reads the scratchpad work-object pointer cell at 0x1F800044 once and advances the object unsigned byte 0x9 by one with a byte-width add, then re-reads the cell and adds one to the object byte 0xA, tests the truncated byte it just stored against 0x20, and only on that equality re-reads the pointer cell and increments the object byte 0x2 to advance to the next handler step.'
   - - 5340
     - c
