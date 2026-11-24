@@ -47,7 +47,7 @@ void func_801F1BC8(void) {
     func_80150224(0x52);
     activeRecordBytes[*slot].progress_anchor = D_8014502C;
     activeRecordBytes[*slot].record_state = 0;
-    currentCommu00Task->label_id = 0x51;
+    currentTask->label_id = 0x51;
   } else if (state == 2) {
     value = rand() & 0x7F;
     if (value > 100) {
@@ -87,7 +87,7 @@ void func_801F1BC8(void) {
       fresh = &fairySlotIndex;
       activeRecordBytes[*fresh].progress_anchor = D_8014502C;
       activeRecordBytes[*fresh].record_state = 0;
-      currentCommu00Task->label_id = 0x51;
+      currentTask->label_id = 0x51;
     }
   }
 

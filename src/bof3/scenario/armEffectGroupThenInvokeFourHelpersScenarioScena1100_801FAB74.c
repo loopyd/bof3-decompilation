@@ -17,7 +17,7 @@ void func_801C1630(void);
  * reads no memory of its own and writes none; the 0x18-byte frame only keeps
  * $ra across the five calls and each later constant is materialised in the
  * delay slot of its own call. The dispatcher
- * dispatchRecordCallbackScenarioScena1100_801FA5B8 invokes it indirectly
+ * callRecordCallback3 invokes it indirectly
  * through word 15 of the 29-entry overlay callback run at 0x801FAF24
  * (0x801FAF60 holds 0x801FAB74), so the record byte at offset 0x7A selects it
  * with the value 0x0F; the record pointer and second argument that dispatcher

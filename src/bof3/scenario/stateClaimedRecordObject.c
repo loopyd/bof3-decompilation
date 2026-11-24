@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 #include <rand.h>
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 
 /* @source 0x801F8B50
  * @behavior Seeds the work record it receives in $a0: it stores 1 in the
@@ -21,7 +21,7 @@ extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
  * 0x20-byte frame saves $ra and $s0 for the record pointer plus $s1 for the
  * -0x40000 constant both scatter arms add. No other memory is read or written.
  *
- * Name evidence: this target's findFreeWorkRecordScenarioScena0800_801F8B14
+ * Name evidence: this target's querySharedWorkSlot
  * scans the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800 for
  * the first entry whose lead byte reads zero, and the only call site of this
  * address in the payload - jal 0x801F8B50 at 0x801F7A44 inside func_801F79EC -
@@ -66,10 +66,10 @@ void stateClaimedRecordObject(u8* record) {
   *(u32*)(record + 0x8) = 0;
   record[4] = 0x40;
   scatter = (rand() & 0xFF) << 11;
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   *(u32*)(record + 0xC) = *(u32*)(work + 0x34) + scatter - 0x40000;
   scatter = (rand() & 0xFF) << 11;
-  next = scenarioScena0800Work;
+  next = workObjectPointer;
   *(u32*)(record + 0x10) = *(u32*)(next + 0x38) + scatter - 0x40000;
   *(u32*)(record + 0x14) = *(u32*)(next + 0x3C);
 }

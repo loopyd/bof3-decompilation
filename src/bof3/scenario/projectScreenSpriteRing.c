@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);
 void emitMovesCursorCell(s32 arg0, s32 arg1);
@@ -42,21 +42,21 @@ void projectScreenSpriteRing(void) {
   u16 screenY;
 
   func_801AFE18(scratch);
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   point.vx = *(s32*)(work + 0x34);
   point.vy = *(s32*)(work + 0x38);
   point.vz = *(s32*)(work + 0x3C);
   func_801AFF04(&point, sxy);
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   *(u16*)(work + 0x2E) = sxy[0];
   screenY = sxy[1];
   *(u16*)(work + 0x30) = screenY;
   emitMovesCursorCell(
       *(s16*)(work + 0x2E), (s16)screenY);
-  ringWork = scenarioScena0800Work;
+  ringWork = workObjectPointer;
   mathEntriesInsertHead(
       *(u16*)(ringWork + 0x58));
-  ringWork = scenarioScena0800Work;
+  ringWork = workObjectPointer;
   renderRotatingCircleStrips(
       *(s16*)(ringWork + 0x2E), *(s16*)(ringWork + 0x30),
       *(s16*)(ringWork + 0x32), *(s16*)(ringWork + 0x2C));

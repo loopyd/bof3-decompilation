@@ -10,8 +10,8 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/stateModeGateClear44.c",
     "src/bof3/world/stateStatusModeGate4.c",
-    "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area06113_801F2CF4.c",
-    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte1World01Area06113_801F2D38.c",
+    "src/bof3/world/stateStatus4ModeGate1.c",
+    "src/bof3/world/setupFrontendMode4Slot1.c",
 ]
 support_sources = [
     "src/bof3/world/stateGateThree5.c",

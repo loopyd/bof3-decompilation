@@ -59,7 +59,7 @@ void countdownIdentityQueueEvent(void) {
   func_8015D71C(0x206u);
 
   if (D_80146329 == 0u) {
-    initUiBundleSlot0();
+    initUiBundleFixed();
     texture = func_801502D0(D_1F800044->unk_03 == 5u ? 0x2Eu : 0x3Bu);
     func_801DE560(2u, 0u, 0u, 0x2Du, texture);
   }

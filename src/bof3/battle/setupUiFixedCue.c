@@ -17,7 +17,7 @@ void setupUiFixedCue(void) {
     func_8015D5D8();
     func_8015D300(0u, 2u, 0x64u, 0x64u);
   }
-  initUiBundleSlot0();
+  initUiBundleFixed();
   cue = func_801502D0(0x11u);
   func_801DE60C(0u, 2u, 0u, 0u, 0xffu, cue);
   BATTLE_GLOBAL_BYTE_62E2 += 1;

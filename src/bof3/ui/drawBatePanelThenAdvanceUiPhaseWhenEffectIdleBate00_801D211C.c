@@ -52,7 +52,7 @@ extern void seedSixSlotRampLimitsFromWorkCountersBate00_801D259C(void);
 
 /* @source 0x801D211C
  * @behavior Second handler of the BATE overlay sub-step table D_801D8770,
- *           which dispatchUiSubStepTableBate00_801D20AC indexes with the shared
+ *           which callUiSubStep indexes with the shared
  *           UI sub-step byte, and the same drawing pair its sibling handler
  *           func_801D2190 opens with. Every visit first redraws the shared
  *           screen: it passes the shared sprite-grid index byte D_80144953 to

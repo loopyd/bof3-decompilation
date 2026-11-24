@@ -5,7 +5,7 @@ extern u8 D_8014933B; /* @source 0x8014933B @kind data */
 void func_801C16B8(void);
 
 /* @behavior Entry 5 of the overlay progress-handler table at D_801FE970 that
- * dispatchProgressHandlerScenarioScena0800_801FAB5C indexes with the signed
+ * callProgressHandler2 indexes with the signed
  * byte D_80146874: it drives the shared sub-state byte D_80146875 through six
  * steps. Sub-state 0 seeds the front selector context through
  * func_8019FA28(2, 0x4E0000, 0x340000, 0x85), stores 0xFF in D_80143F1F and

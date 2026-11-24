@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-u8* findFreeWorkRecordAt800E515CScenarioScena0700_801F9DD4(void);
+u8* queryFreeEffectRecord(void);
 void func_801F9E10(u8* record);
 s32 func_801F9EFC(void);
 
@@ -104,7 +104,7 @@ void claimRampBoundSixteenth(
 
     if (gate < D_801FDD84[work[9]]) {
       do {
-        record = findFreeWorkRecordAt800E515CScenarioScena0700_801F9DD4();
+        record = queryFreeEffectRecord();
         if (record != 0) {
           func_801F9E10(record);
         }

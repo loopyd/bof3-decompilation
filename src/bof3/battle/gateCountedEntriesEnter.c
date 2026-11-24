@@ -31,7 +31,7 @@ u8 func_801650B4(u8 arg0, u8 arg1, u8 arg2, u8 arg3); /* @source 0x801650B4 */
  * @match 100.00
  * @residual none
  * 0x801EF870 is entry 13, the last one, of the substate table based at
- * 0x801F0C98 that dispatchSubstateTable0c98BatlEnd00_801EEC58 indexes with the
+ * 0x801F0C98 that callStateByteHandler indexes with the
  * byte at 0x801462E3, so this body is the tail of that run. The mode byte it
  * stores is the one the shared battle dispatcher takes as its handler-table
  * index (D_801EACD4 read at 0x801D6774).

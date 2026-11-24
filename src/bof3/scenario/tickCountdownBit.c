@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 #include "bof3/core/slus_variables.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void claimFreeAngleVector(void);
 u32 func_801F7E14(void);
 
@@ -25,11 +25,11 @@ void tickCountdownBit(void) {
     claimFreeAngleVector();
   }
   func_801F7E14();
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
   *(u32*)(work + 0x0C) = (*(u32*)(work + 0x0C) + 0x80u) & 0xFFFu;
   if (countdown == 0) {
-    scenarioScena0800Work[1]++;
+    workObjectPointer[1]++;
   }
 }

@@ -49,13 +49,13 @@ void drawBattleCommandStrip(u32 arg0) {
   func_801D9C80(x, (s16)(y + 2), 5, 1);
   func_801D9AB4(x, (s16)y, 0x0a, 1);
   func_801D9AB4(x, (s16)(y + 0x11), 0x0b, 1);
-  drawSpritePrimTpage1((s16)(x + 2), (s16)(y + 2), (s16)(x + 0x25),
+  drawSpriteAbrFull((s16)(x + 2), (s16)(y + 2), (s16)(x + 0x25),
                        (s16)(y + 2), red, green, blue);
-  drawSpritePrimTpage1((s16)(x + 2), (s16)(y + 3), (s16)(x + 2),
+  drawSpriteAbrFull((s16)(x + 2), (s16)(y + 3), (s16)(x + 2),
                        (s16)(y + 0x10), red, green, blue);
-  drawSpritePrimTpage0((s16)(x + 0x25), (s16)(y + 2), (s16)(x + 0x25),
+  drawSpriteAbrHalf((s16)(x + 0x25), (s16)(y + 2), (s16)(x + 0x25),
                        (s16)(y + 0x10), red, green, blue);
-  drawSpritePrimTpage0((s16)(x + 2), (s16)(y + 0x10), (s16)(x + 0x25),
+  drawSpriteAbrHalf((s16)(x + 2), (s16)(y + 0x10), (s16)(x + 0x25),
                        (s16)(y + 0x10), red, green, blue);
   func_8014F800((s16)(x + 8), (s16)(y + 3), 0, 8,
                 (u32)(D_801EAEB0 + offset));

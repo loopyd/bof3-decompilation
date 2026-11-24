@@ -31,7 +31,7 @@ void func_8015C088(void);
  *
  * Table evidence: the address is entry 2 (the word at 0x801FE9C8 reading
  * 0x801FE0E0) of the eleven-entry callback-pointer table at 0x801FE9C0 that
- * dispatchRecordCallbackScenarioScena0800_801FE018 (0x801FE018) selects with the
+ * callRecordCallback2 (0x801FE018) selects with the
  * record's unsigned byte at offset 0x7A; no jal in the image targets it, so the
  * table word is its only entry. It is the immediate sibling of entry 0
  * stateProgressPrimaryArm and

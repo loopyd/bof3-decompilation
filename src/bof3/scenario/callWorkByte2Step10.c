@@ -5,11 +5,11 @@ typedef void (*ScenarioScena0700WorkSubStateHandler)(void);
 /* Overlay-local run of in-image code pointers based at 0x801FDDD0, eight words
  * (0x801FDDD0..0x801FDDEC) ending at the next data label 0x801FDDF0: its words
  * are 0x801F7E68, 0x801F7EF8, 0x801F7FA4, 0x801F805C, 0x801F80F0,
- * incrementWorkByte2ScenarioScena0700_801F8174,
- * incrementWorkByte2ScenarioScena0700_801F8194 and
- * invokeHelperScenarioScena0700_801F81B4 (the word at 0x801FDDEC), and the
+ * incrementWorkHandlerIndex,
+ * incrementWorkHandlerIndex2 and
+ * callOverlayHelper5 (the word at 0x801FDDEC), and the
  * separate label D_801FDDF0 at 0x801FDDF0 - the work-table callback row the
- * exact countdownAdvanceHandlerScenario belongs
+ * exact countdownAdvanceHandler belongs
  * to - closes it. The address is word 4 of the twelve-word code-pointer run
  * based at 0x801FDDC0 that the exact sibling
  * callWorkByte2Step8 indexes, so this table is

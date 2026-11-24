@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void renderTranslucentLineBetween(
     void* first, void* second);
 
@@ -18,11 +18,11 @@ void subtractWorkAdvanceState(void) {
   u8* work;
   u8* nextWork;
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   *(u32*)(work + 0x0C) -= 0x20000u;
   renderTranslucentLineBetween(
       work + 0x34, work + 0x0C);
-  nextWork = scenarioScena0800Work;
+  nextWork = workObjectPointer;
   if (*(u32*)(nextWork + 0x0C) == 0x98000u) {
     nextWork[1]++;
   }

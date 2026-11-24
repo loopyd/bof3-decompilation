@@ -35,12 +35,12 @@ s32 func_801DD59C(s32 arg0); /* @source 0x801DD59C */
  * @match 100.00
  * @residual none
  * 0x801EEF14 is entry 6 of the pointer run based at 0x801F0C98 that
- * dispatchSubstateTable0c98BatlEnd00_801EEC58 indexes with the byte at
+ * callStateByteHandler indexes with the byte at
  * 0x801462E3, and the substate byte it advances is the one the run-local
  * dispatchers scale into the handler runs based at 0x801F0CA4/0x801F0CB8.
  * The amount at 0x8014632C is the pool accumulateEnemyHalfwordsAndResetScratch
  * accumulates the enemy work halfwords +0x86 and +0x84 into and
- * func_801EECD0 divides by countEligibleBattlersBatlEnd00_801EEDA8; the step at
+ * func_801EECD0 divides by countEligibleBattlers; the step at
  * 0x801463B0 is what the entry before this one, func_801EEE4C, publishes as
  * that amount divided by 0x1E with a floor of one.
  */

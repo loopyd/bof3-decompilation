@@ -8,7 +8,7 @@
  * @residual none
  */
 s32 func_801F1538(Commu00TaskSlot *task) {
-  currentCommu00Task = task;
+  currentTask = task;
   uiMode = 0x17;
   fairySlotIndex = 3;
   func_8015C088();

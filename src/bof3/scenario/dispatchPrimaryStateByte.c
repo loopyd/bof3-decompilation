@@ -27,7 +27,7 @@ extern void (*D_801FE3EC[])(void);
  * word 2 of the twenty-word state-handler table at 0x801FE3E0 whose entry 0 is
  * stateStart and whose word at 0x801FE430 (0xFF000100) is not
  * a pointer, so the overlay reaches this dispatcher only indirectly, through the
- * same-overlay state dispatcher dispatchScenarioStateHandler
+ * same-overlay state dispatcher callStateHandler2
  * (0x801F78D0) that indexes that table with D_80146872. Its 60 bytes are
  * instruction-for-instruction identical to that dispatcher and to the exact
  * sibling dispatchPrimaryStateHandlerScenarioScena0600_801F7A00 (0x801F7A00),

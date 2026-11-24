@@ -8,7 +8,7 @@ void func_801C1630(void);
 /* @source 0x801FADAC
  * @behavior Overlay per-record callback reached only indirectly: the address is
  * word 23 (the word stored at 0x801FAF80) of the 29-entry overlay callback run
- * based at 0x801FAF24 that dispatchRecordCallbackScenarioScena1100_801FA5B8
+ * based at 0x801FAF24 that callRecordCallback3
  * (0x801FA5B8) indexes with the record unsigned byte at offset 0x7A and calls
  * with jalr, so a record byte reading 0x17 selects it, and no jal or j in the
  * payload reaches the address. It first re-arms the overlay effect group for

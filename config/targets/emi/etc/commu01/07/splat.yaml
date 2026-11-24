@@ -33,12 +33,12 @@ segments:
     - func_801D0C68
   - - 172
     - c
-    - confirmCommuEntryRequest
-    - '@source: src/bof3/ui/confirmCommuEntryRequest.c'
+    - confirmEntryRequest
+    - '@source: src/bof3/ui/confirmEntryRequest.c'
     - '@behavior: confirm path of the commu01/07 commu request handler run at 0x801D4BCC. The cancel mask reports result 0xFFFF through the request result halfword and advances the shared fairy progress byte, the confirm mask snapshots the current request bytes, clears the request step byte and the request ordinal byte, and accepts the request only when the request mode passes either its world commu entry count check or its active record count check, queueing resident cue 0x104 and advancing the overlay step byte or else queueing cue 0x107, no mask moves the commu list row, and every path then redraws the commu list row'
   - - 580
     - c
-    - dispatchByte4e08Table4bd8Commu0107_801D0E44
+    - callScreenStepTable
   - - 640
     - c
     - callByte1Table4
@@ -54,11 +54,11 @@ segments:
     - '@behavior: handler at entry 7 of the handler run at 0x801D4BCC, the dispatch shape of the entry list handler at 0x801D1630. Reads the shared pad-state word 0x80145AA8 once: while it shares a bit with the cancel mask 0x80145AC4 it queues resident sound cue 0x106 through the shared cue dispatcher at 0x8015DF18, publishes the list row text id of 0x801448ED through publishTextId and closes the request through restoreSavedBack; while it shares a bit with the confirm mask 0x80145AC2 it commits the request row through commitCommuIntoActive with offset 0 and stores result code 0xB5 into the halfword 0x801D4E0C when the returned low byte is nonzero; when neither mask matches it moves the request row byte 0x801D4E28 through movePadDirection and publishes that row text id through publishEntryTextId. Every path draws the entry list through func_801D3038 and draws the list row 0x801448ED with selected flag 1 and the request row 0x801D4E28 with 0 through drawRowMarkerOutlineCommu0107_801D36FC, and while nothing was committed draws the marker through drawMarkerTriangleCommu0107_801D3984 with selected flag 1 at 0x28 plus 8 times the signed ordinal byte 0x801D4E24 on x and 0x39 on y while the list row cursor is zero, otherwise at 0xFA plus 8 times that byte modulo 5 on x and 0x44 plus 54 times the cursor minus 9 plus 7 times that byte divided by 5 on y, and draws the record slot cursor box at (0xA0, 0x3E) with selected flag 1 through renderSlotChannelBox for the slot queryActiveSlotKind returns for the cursor and that byte'
   - - 1832
     - c
-    - dispatchByte1f294dTable4becCommu0107_801D1328
+    - callRequestStepTable
   - - 1892
     - c
-    - handleCommuRowInput
-    - '@source: src/bof3/ui/handleCommuRowInput.c'
+    - handleRowInput
+    - '@source: src/bof3/ui/handleRowInput.c'
     - '@behavior: entry zero of the dispatch table at 0x801D4BEC that the dispatcher at 0x801D1328 indexes with the commu request step byte 0x801F294D, and entry eight of the handler run at 0x801D4BCC. It reads the shared pad-state word 0x80145AA8 once: while it shares a bit with the cancel mask 0x80145AC4 it queues resident sound cue 0x106, reports result code 0xB5 through the request result halfword 0x801D4E0C and rolls the shared overlay step byte 0x801F294C back by one; while it shares a bit with the confirm mask 0x80145AC2 it queues resident cue 0x103 and either reports result code 0x44, copies the shared list row 0x801448ED into the request row byte 0x801D4E28 and advances the commu request step byte 0x801F294D by one when the request ordinal byte 0x801D4E24 is nonzero, or takes the kind byte of the record slot at 8 times the list row minus one from the stride-8 slot run at 0x801457A8 as the request row byte less 4, clears the kind-grid selector bytes 0x801D4E1C and 0x801D4E20 to 0xFF, clears the grid line offsets 0x801D4E2C and 0x801D4E30 and selects commu request step 2 when it is zero; and when neither mask matches it decodes the 0xA000 bits of the pad word through the shared decoder at 0x8014E640, takes the record count of the list row kind through checkActiveRecordsKind and steps the ordinal byte inside that count, bit 0x8000 subtracting one and wrapping to the count itself when the signed byte goes negative, bit 0x2000 adding one and wrapping to zero when the signed byte passes the count, and an ordinal byte landing on a different value queueing resident cue 0x100. Every path then runs func_801D3038, draws the list row marker with the selected flag 1 through drawRowMarkerOutlineCommu0107_801D36FC, computes the slot origin of the list row kind at the ordinal byte through computeKindSlotOrigin and, for a nonzero ordinal byte, draws the marker triangle at that origin advanced by 4 on x with the selected flag 0 through drawMarkerTriangleCommu0107_801D3984 and the record slot cursor box of the active record slot at that ordinal byte less one through renderSlotChannelBox at 0x10 right of the origin on x and 8 less than it on y, while a zero ordinal byte draws only the marker triangle at the origin'
   - - 2608
     - c

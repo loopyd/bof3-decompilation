@@ -112,8 +112,8 @@ segments:
     - '@behavior: reads the work pointer from the non-volatile scratchpad cell 0x1F800044 and, whenever the signed countdown word at offset 0x0C is a multiple of 30, dispatches the front-end cue 0x20B through func_8015DF18; reloads the work pointer and, while that countdown modulo 30 stays below 15, runs the overlay draw helper at 0x801F4B80; reloads the work pointer once more, decrements the countdown and calls func_80196070 to reset the scratchpad work area when it reaches zero.'
   - - 5556
     - c
-    - seedWorkTable64World02Area07714_801F41B4
-    - '@source: src/bof3/world/seedWorkTable64World02Area07714_801F41B4.c'
+    - seedWorkTable64
+    - '@source: src/bof3/world/seedWorkTable64.c'
     - '@behavior: clears the shared halfword at 0x800E5500 and byte at 0x800E5502, then seeds 64 records of stride 0x34 at 0x800E4800 with scratch work words +0x34/+0x38/+0x3C and clears each record halfword +0x30.'
   - - 5664
     - c
@@ -176,8 +176,8 @@ segments:
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, copies palette block (byte +9 / 5) + 2 to block 0 of the table-0x801F627D row on a zero five-tick remainder, increments byte +9, copies the block list 0x801F62A0 entry at byte +10 halved to block 0 of the table-0x801F6278 row while byte +10 is even and below nine, increments byte +10, then clears bytes +9/+10 and sets byte +2 to 1 once byte +9 reaches 0x1F.'
   - - 9884
     - c
-    - copyPaletteBlock32World02Area07714_801F529C
-    - '@source: src/bof3/world/copyPaletteBlock32World02Area07714_801F529C.c'
+    - copyPaletteBlock32
+    - '@source: src/bof3/world/copyPaletteBlock32.c'
     - '@behavior: copies eight words forward within palette staging RAM at 0x80037800 using source and destination row/block coordinates with 0x200/0x20 byte strides, then sets the shared palette-stage byte at 0x80145988 to 1.'
   - - 9976
     - c
@@ -214,7 +214,7 @@ segments:
     - '@behavior: reads the scratchpad work-record pointer cell 0x1F800044, shifts its word 0x34 and word 0x38 right by nine bits as the quad centre and takes its unsigned halfword 0x3E as the depth centre; stamps the shared cursor g_PrimCursor as a POLY_FT4 with the shade texture off, fills the four scratchpad vectors at 0x1F800014 with the corners (x lane word 0x34 less 0x4040 for the first and third vectors and less 0x3F40 for the second and fourth, y lane word 0x38 less 0x4030 and less 0x3FD0, z lane halfword 0x3E less 0x30 and plus 0x30), projects them with RotTransPers4 into the primitive vertex words at +0x08, +0x10, +0x18 and +0x20, then passes the packed texture state 0x21800133 through 0x80155560 with mode 1 and queues the primitive through 0x80155A08 at the fixed grid cell 0x5D by 0x34 with mode 0 and size 0x28.'
   - - 10760
     - c
-    - dispatchStateByte2Table62bcWorld02Area07714_801F5608
+    - callWorkByte2Table1
     - '@source: src/bof3/world/area07714DispatchTables.c'
   - - 10828
     - asm
@@ -241,12 +241,12 @@ segments:
     - '@behavior: gates on bit 0x2C of the shared main-RAM flag bank 0x80144EB8 through the shared tester 0x8015B5D4, matches the two byte arguments and the game-mode byte 0x80145E98 against the two 4-byte trigger records of the payload table at 0x801F6B14, and on the accepted record whose flag bit 0x1C of the bank 0x80144F28 is still clear sets that record''s fourth byte as the bank bit, queues sound cue 0x201 through 0x8015DF18 and calls 0x8019ABB0 with 0xF before returning 1.'
   - - 11676
     - c
-    - initArea07714State
-    - '@source: src/bof3/world/initArea07714State.c'
+    - setupFrontendMode44Slot7
+    - '@source: src/bof3/world/setupFrontendMode44Slot7.c'
     - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 7 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 11740
     - c
-    - publishModeStatusWorld02Area07714_801F59DC
+    - publishModeStatus
   - - 11784
     - c
     - stateStatusMapProgress
@@ -254,10 +254,10 @@ segments:
     - '@behavior: resets the shared status halfword to 0xFFFF and maps shared mode 0/1 to scenario progress 1/0, leaving progress unchanged for other modes.'
   - - 11864
     - c
-    - setStateQueueCue202World02Area07714_801F5A58
+    - stateOverlayCue202
   - - 11908
     - c
-    - clearStateQueueCue202World02Area07714_801F5A84
+    - stateClearOverlayCue202
   - - 11948
     - c
     - publishBaseSeedFront
@@ -265,8 +265,8 @@ segments:
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F6B28 and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 12076
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5B2C
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5B2C.c'
+    - publishFirstKind4World02
+    - '@source: src/bof3/world/publishFirstKind4World02.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F6B30 and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 12204
     - c
@@ -278,18 +278,18 @@ segments:
     - stateSharedFlagBit4
   - - 12288
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area07714_801F5C00
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area07714_801F5C00.c'
+    - publishFirstKind2World02
+    - '@source: src/bof3/world/publishFirstKind2World02.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 2 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F6B38 and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 12416
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F5C80
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F5C80.c'
+    - publishSecondKind3World02
+    - '@source: src/bof3/world/publishSecondKind3World02.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F6B40 (indexed by the second shared party-id byte D_80144F5B) and halfwords +0x2E/+0x30 from 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 12544
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F5D00
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F5D00.c'
+    - publishThirdKind3World02
+    - '@source: src/bof3/world/publishThirdKind3World02.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F6B48 (indexed by the third shared party-id byte D_80144F5C) and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 12672
     - c
@@ -298,20 +298,20 @@ segments:
     - '@behavior: reads the shared halfword counter at 0x8014932A, sets the shared area status byte at 0x80149333 to 2, retreats that counter by 0x14 and then queues the fixed cue 0x200 through the main-exe cue dispatcher at 0x8015DF18.'
   - - 12736
     - c
-    - advanceCounterWorld02Area07714_801F5DC0
-    - '@source: src/bof3/world/advanceCounterWorld02Area07714_801F5DC0.c'
+    - advanceCounter20State
+    - '@source: src/bof3/world/advanceCounter20State.c'
   - - 12776
     - c
-    - setTwoWorld02Area07714_801F5DE8
+    - resetCounterSet2
   - - 12804
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5E04
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5E04.c'
+    - publishSecondKind4World02
+    - '@source: src/bof3/world/publishSecondKind4World02.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte of the mode table at 0x801F62EC and halfwords +0x2E/+0x30 from 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 12932
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5E84
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5E84.c'
+    - publishThirdKind4World02
+    - '@source: src/bof3/world/publishThirdKind4World02.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the third party-id-indexed byte of the mode table at 0x801F62EC and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 13060
     - c
@@ -320,20 +320,20 @@ segments:
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the first party-id-indexed byte of the mode table at 0x801F62EC and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 13188
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area07714_801F5F84
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area07714_801F5F84.c'
+    - publishFirstKind1World02
+    - '@source: src/bof3/world/publishFirstKind1World02.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 1 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the first party-id-indexed byte of the mode table at 0x801F6B50 and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 13316
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F6004
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F6004.c'
+    - publishFirstKind3World02
+    - '@source: src/bof3/world/publishFirstKind3World02.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the first party-id-indexed byte of the mode table at 0x801F6B58 and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 13444
     - c
-    - invokeHelperArgWorld02Area07714_801F6084
+    - callSelectedActive74
   - - 13476
     - c
-    - invokeHelperArgWorld02Area07714_801F60A4
+    - callSelectedActive76
   - - 13508
     - c
     - callSelectedOffsetDistance
@@ -341,7 +341,7 @@ segments:
     - '@behavior: state handler reached only through the code pointer word at 0x801F6AC8 of the payload textbin run; selects the world record table entry 0x8017F974[0x80143F00], indexes that record''s offset-0x10 pointer table with work byte 0x03 of the record published at pointer cell 0x80148210, offsets by that record''s halfword 0x0A, reads the byte at plus 0x02 as an index into the twelve signed-byte offset pairs at 0x801F6B60, dispatches the pair with attribute 0x40 and fixed arguments (-0x400, 4, 0) through the resident dispatcher 0x801FD34C, and then steps the halfword 0x0A back by two on a nonzero answer or forward by one otherwise, storing the func_8015477C distance between the scratch work position words at 0x34/0x38 into halfword 0x3E and queueing id 0 through func_8014D6B8 when the selected entry index is 4.'
   - - 13788
     - c
-    - setWorld02Area07714_801F61DC
+    - stateOverlayTwo
   - - 13808
     - c
     - markSelectedActiveValue

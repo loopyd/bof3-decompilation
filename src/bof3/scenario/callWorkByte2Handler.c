@@ -11,7 +11,7 @@ extern ScenarioScena0800WorkStateHandler D_801FE8D8[];
  * that entry of the overlay-local handler-pointer table D_801FE8D8 with no
  * arguments. D_801FE8D8 is entry 17 of the 51-entry per-frame handler-pointer run
  * at 0x801FE894 (entries 0 through 50, ending at 0x801FE960) and its two entries
- * are 0x801F79B0 (clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0800_801F79B0)
+ * are 0x801F79B0 (stateTableIncrementCountdown2)
  * and 0x801F79EC. It reads no other state and writes none: the pointer slot is
  * loaded before the 0x18-byte frame is created, and that frame only keeps $ra
  * across the indirect call while the callee's return value in $v0 is discarded.

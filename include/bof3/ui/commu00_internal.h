@@ -128,7 +128,7 @@ extern u16          taskLabelBandTable[3][3];
 /* @source 0x1F800044 @kind bss: scratchpad current task pointer cell. */
 extern Commu00TaskSlot *commu00ScratchTask;
 /* @source 0x801F2948 @kind bss: current commu00 task pointer. */
-extern Commu00TaskSlot *currentCommu00Task;
+extern Commu00TaskSlot *currentTask;
 /* @source 0x80143BB0 @kind unknown: shared frontend mode byte; func_801F1AFC
  * settles the UI selection state while it is clear.
  */

@@ -9,42 +9,42 @@ load_address = 0x801D0C00
 
 sources = [
     "src/bof3/ui/buildEquipStatComparison.c",
-    "src/bof3/ui/drawSpriteWithScenarioKindSubstitutionBate00_801D3664.c",
+    "src/bof3/ui/drawSpriteKindSubstitute.c",
     "src/bof3/ui/emitIconKindTile.c",
     "src/bof3/ui/drawSpritePrimTpageFromAbrBate00_801D36B8.c",
-    "src/bof3/ui/drawPartyMemberAttributesAndExpPanelBate00_801D37AC.c",
+    "src/bof3/ui/renderPartyAttributeExp.c",
     "src/bof3/ui/publishBateMaskSnapshot.c",
-    "src/bof3/ui/dispatchUiPhaseTableBate00_801D2070.c",
-    "src/bof3/ui/dispatchUiSubStepTableBate00_801D20AC.c",
-    "src/bof3/ui/drawBatePanelOrResetUiPhaseStateWhenEffectIdleBate00_801D2298.c",
+    "src/bof3/ui/callUiPhaseTable.c",
+    "src/bof3/ui/callUiSubStep.c",
+    "src/bof3/ui/updateUiPhaseState.c",
     "src/bof3/ui/drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C.c",
     "src/bof3/ui/stepSixRampPad.c",
     "src/bof3/ui/stateLocalUiSubstep.c",
-    "src/bof3/ui/emitPanelIconPrimBate00_801D4678.c",
+    "src/bof3/ui/emitPanelIconPrimitive.c",
     "src/bof3/ui/commitBateSnapshotField.c",
     "src/bof3/ui/renderSemiGreyCross.c",
-    "src/bof3/ui/emitFlatLineRectangleBorderBate00_801D3384.c",
-    "src/bof3/ui/drawEquipPanelBate00_801D2F64.c",
-    "src/bof3/ui/drawEquipSlotRowsBate00_801D3B4C.c",
-    "src/bof3/ui/drawRotatingIconSlotPanelBate00_801D3E18.c",
-    "src/bof3/ui/drawExpRowPanelBate00_801D31B0.c",
+    "src/bof3/ui/emitRectangleBorderMask.c",
+    "src/bof3/ui/renderEquipPanel.c",
+    "src/bof3/ui/renderEquipSlotRows.c",
+    "src/bof3/ui/renderRotatingIconPanel.c",
+    "src/bof3/ui/renderExpRowPanel.c",
     "src/bof3/ui/renderTpageGraphType.c",
-    "src/bof3/ui/drawPanelFrameBate00_801D78A8.c",
-    "src/bof3/ui/drawTwoRowNumberedPanelBate00_801D8508.c",
-    "src/bof3/ui/drawPartyMemberStatusBoxBate00_801D27C4.c",
-    "src/bof3/ui/drawPartyMemberParameterPanelBate00_801D2C2C.c",
-    "src/bof3/ui/drawThreeIconStatusRowPanelBate00_801D8208.c",
-    "src/bof3/ui/drawEquipCategoryListPanelBate00_801D7AD0.c",
+    "src/bof3/ui/renderTileFrame.c",
+    "src/bof3/ui/renderTwoRowPanel.c",
+    "src/bof3/ui/renderPartyStatusBox.c",
+    "src/bof3/ui/renderPartyParameter.c",
+    "src/bof3/ui/renderThreeIconPanel.c",
+    "src/bof3/ui/renderEquipCategoryPanel.c",
     "src/bof3/ui/stateSixRampLimits.c",
 ]
 support_sources = [
-    "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",
+    "src/bof3/ui/sumLevelExp.c",
     "src/bof3/ui/initializeBateUiState.c",
     "src/bof3/support/bate_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/bate_00_psyq.c"
 
-# drawEquipCategoryListPanelBate00_801D7AD0 dispatches on the task state byte
+# renderEquipCategoryPanel dispatches on the task state byte
 # through a six-entry `.rodata` jump table the compiler emits, and the original
 # overlay keeps that table at 0x801D0D68 inside the payload's leading data blob
 # (offset 0x168, the words 0x801D7B24, 0x801D7B2C three times and 0x801D7B34

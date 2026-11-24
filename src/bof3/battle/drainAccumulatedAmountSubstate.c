@@ -37,7 +37,7 @@ void func_8016666C(s32 arg0, s32 arg1); /* @source 0x8016666C */
  * @residual none
  * 0x801EF7B4 is entry 13 (index 12) of the fourteen-pointer run based at
  * 0x801F0C98 (textbin D_801F0C98); the payload's own word at 0x801F0CC8 names
- * it, and dispatchSubstateTable0c98BatlEnd00_801EEC58 indexes that run with the
+ * it, and callStateByteHandler indexes that run with the
  * byte at 0x801462E3. The substate index byte this body advances, 0x801462E4,
  * is the one the run-local dispatchers scale into the handler runs based at
  * 0x801F0CA4/0x801F0CB8, so the drain is the last step of that run before

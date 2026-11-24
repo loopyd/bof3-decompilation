@@ -18,7 +18,7 @@ void func_801C1630(void);
  * jal and the last one in that jal's delay slot. The address is entry 6 - the
  * word at 0x801FE9D8, payload offset 0x7DD8, reading 0x801FE760 - of the
  * eleven-entry callback-pointer table at 0x801FE9C0 that
- * dispatchRecordCallbackScenarioScena0800_801FE018 selects with the record's
+ * callRecordCallback2 selects with the record's
  * unsigned byte at offset 0x7A. It is the nearest sibling of entry 3
  * armEffectGroupEffect
  * (0x801FE698), which uses the same call set to arm the ids 7, 2 and 0x0A and

@@ -14,10 +14,10 @@ extern u8 D_801462E4;
  * @residual none
  * 0x801EEEE0 is the word at 0x801F0CAC, entry 2 of the handler run based at
  * 0x801F0CA4 (entry 5 of the fourteen-pointer run beginning at 0x801F0C98), so
- * dispatchSubstateTable0ca4BatlEnd00_801EEC94 reaches it with the substate index
+ * callSubstateByteHandler reaches it with the substate index
  * it then advances. The no-argument, no-frame shape and the pointer-held store
  * are this span's own; the guard and statement order follow the exact sibling
- * advanceSubstateWhenPadActiveBatlEnd00_801EF77C in this target, which adds the
+ * advanceSubstatePad in this target, which adds the
  * state-byte clear at 0x801462E5 this body does not have.
  */
 void stateSubstatePadActive(void) {

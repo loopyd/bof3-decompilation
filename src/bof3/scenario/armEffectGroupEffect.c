@@ -18,7 +18,7 @@ void func_801C1630(void);
  * the last one in that jal's delay slot. The address is entry 3 - the word at
  * 0x801FE9CC, payload offset 0x7DCC, reading 0x801FE698 - of the eleven-entry
  * callback-pointer table at 0x801FE9C0 that
- * dispatchRecordCallbackScenarioScena0800_801FE018 selects with the record's
+ * callRecordCallback2 selects with the record's
  * unsigned byte at offset 0x7A. It is the immediate neighbour of the two other
  * callbacks in that table that both arm an overlay effect group and then clear
  * D_80146254: entry 8 stateRecordsEffectSlots

@@ -46,13 +46,13 @@ segments:
     - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 4 into the shared status halfword D_801490A8 and then 6 into the shared mode index byte D_801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 244
     - c
-    - setStatus4AndModeIndex6IfGateElseFFFFWorld01Area06113_801F2CF4
-    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area06113_801F2CF4.c'
+    - stateStatus4ModeGate1
+    - '@source: src/bof3/world/stateStatus4ModeGate1.c'
     - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 4 into the shared status halfword D_801490A8 and then 6 into the shared mode index byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 312
     - c
-    - initFrontendStateSelector4AndSecondStateByte1World01Area06113_801F2D38
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte1World01Area06113_801F2D38.c'
+    - setupFrontendMode4Slot1
+    - '@source: src/bof3/world/setupFrontendMode4Slot1.c'
     - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then stores 4 into the shared front-end state selector byte at 0x801448EB and 1 into the shared second state byte at 0x801448ED, leaving the middle byte 0x801448EC untouched, and returns 0.'
 - - 368
   - bin

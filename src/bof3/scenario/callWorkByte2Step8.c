@@ -5,11 +5,11 @@ typedef void (*ScenarioScena0700WorkSubStateHandler)(void);
 /* Overlay-local run of in-image code pointers based at 0x801FDDC0, selected by
  * the work object's byte at offset 0x02. Its first words are 0x801F7BE0,
  * 0x801F7C9C, 0x801F7D6C, 0x801F7DDC, 0x801F7E68, 0x801F7EF8, 0x801F7FA4,
- * 0x801F805C, 0x801F80F0, incrementWorkByte2ScenarioScena0700_801F8174,
- * incrementWorkByte2ScenarioScena0700_801F8194 and
- * invokeHelperScenarioScena0700_801F81B4 (the word at 0x801FDDEC), and the
+ * 0x801F805C, 0x801F80F0, incrementWorkHandlerIndex,
+ * incrementWorkHandlerIndex2 and
+ * callOverlayHelper5 (the word at 0x801FDDEC), and the
  * separate label D_801FDDF0 at 0x801FDDF0 - the work-table callback row the
- * exact countdownAdvanceHandlerScenario belongs
+ * exact countdownAdvanceHandler belongs
  * to - closes it. The address sits inside the overlay's final Splat asm block
  * (the code-shaped boundary func_801FDD14), which defines the label; the target
  * map does not own it. */

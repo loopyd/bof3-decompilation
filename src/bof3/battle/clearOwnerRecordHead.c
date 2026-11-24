@@ -11,7 +11,7 @@
  * Matching note: the u8 parameter's zero-extension lands in the findOwnerRecord
  * `jal` delay slot and the returned pointer stays in $v0, so each clear is a
  * direct `sb $zero` with no address temporary (same shape as
- * clearOwnerRecordFlag40); the last store fills the `jr` delay slot after the
+ * clearOwnerRecordFlag); the last store fills the `jr` delay slot after the
  * $ra restore.
  */
 void clearOwnerRecordHead(u8 id)

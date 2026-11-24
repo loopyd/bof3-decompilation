@@ -22,7 +22,7 @@ void func_8015C088(void);
  * No jal or j in the payload reaches the address (a word scan of the 17304-byte
  * image finds none); its only image word is 0x801FAF34, entry 4 of the 29-word
  * overlay callback table D_801FAF24 that
- * dispatchRecordCallbackScenarioScena1100_801FA5B8 (0x801FA5B8) indexes with a
+ * callRecordCallback3 (0x801FA5B8) indexes with a
  * record's byte field 0x7A, so the record byte value 4 selects this handler.
  * Its 80 bytes match the span of
  * setSubstate1EClearSharedStateBytesAndRequestPrimaryState8ScenarioScena1200_801FC784

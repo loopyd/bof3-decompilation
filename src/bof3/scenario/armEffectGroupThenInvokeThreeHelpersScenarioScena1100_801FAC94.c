@@ -12,7 +12,7 @@ void func_801C1630(void);
  * per-id helper func_801C187C with the constant argument 5, and finally
  * func_801C1630. It takes no arguments, returns nothing, reads no memory of its
  * own and writes none; the 0x18-byte frame only keeps $ra across the four
- * calls. The dispatcher dispatchRecordCallbackScenarioScena1100_801FA5B8
+ * calls. The dispatcher callRecordCallback3
  * invokes it indirectly through word 19 of the 29-entry overlay callback run at
  * 0x801FAF24 (0x801FAF70 holds 0x801FAC94), so the overlay selects it with the
  * record byte at offset 0x7A reading 0x13; the record pointer and second

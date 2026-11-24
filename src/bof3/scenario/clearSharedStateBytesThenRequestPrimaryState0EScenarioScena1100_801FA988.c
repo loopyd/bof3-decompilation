@@ -20,7 +20,7 @@ void func_8015C088(void);
  * materialised once in $v0 (`addiu $v0,$zero,0xE` immediately after the call)
  * and the four zero stores use $zero, so the store order 0x80146865,
  * 0x80146866, 0x80146867, D_80146875, D_80146874 is the source statement
- * order. The dispatcher dispatchRecordCallbackScenarioScena1100_801FA5B8
+ * order. The dispatcher callRecordCallback3
  * invokes it indirectly through word 12 of the 29-entry overlay callback run at
  * 0x801FAF24 (0x801FAF54 holds 0x801FA988), so the record byte at offset 0x7A
  * selects it with the value 0x0C; the record pointer and second argument that

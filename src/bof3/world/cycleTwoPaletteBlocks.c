@@ -3,7 +3,7 @@
 /* @source 0x1F800044 @kind unknown */
 extern u8* workRecordCursor1F800044;
 
-void copyPaletteBlock32World02Area07714_801F529C(u32 sourceRow, u32 sourceBlock,
+void copyPaletteBlock32(u32 sourceRow, u32 sourceBlock,
                                                u32 destinationRow, u32 destinationBlock);
 
 /* @source 0x801F5710
@@ -19,9 +19,9 @@ void copyPaletteBlock32World02Area07714_801F529C(u32 sourceRow, u32 sourceBlock,
 void cycleTwoPaletteBlocks(void) {
   u8* work;
 
-  copyPaletteBlock32World02Area07714_801F529C(
+  copyPaletteBlock32(
       3, (workRecordCursor1F800044[9] >> 1) + 5, 3, 3);
-  copyPaletteBlock32World02Area07714_801F529C(
+  copyPaletteBlock32(
       6, (workRecordCursor1F800044[9] >> 1) + 11, 6, 9);
   work = workRecordCursor1F800044;
   work[9]++;

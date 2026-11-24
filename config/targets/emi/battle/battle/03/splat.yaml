@@ -257,8 +257,8 @@ segments:
     - '@source: src/bof3/battle/initUiBundleSlot4.c'
   - - 34948
     - c
-    - initUiBundleSlot0
-    - '@source: src/bof3/battle/initUiBundleSlot0.c'
+    - initUiBundleFixed
+    - '@source: src/bof3/battle/initUiBundleFixed.c'
   - - 35028
     - c
     - drawDecimalGlyphRun
@@ -323,10 +323,10 @@ segments:
     - '@source: src/bof3/battle/drawFlatLinePrim.c'
   - - 39092
     - c
-    - drawSpritePrimTpage0
+    - drawSpriteAbrHalf
   - - 39336
     - c
-    - drawSpritePrimTpage1
+    - drawSpriteAbrFull
   - - 39580
     - c
     - func_801DA69C
@@ -1119,8 +1119,8 @@ segments:
     - dispatchByte3TableB424
   - - 77844
     - c
-    - resolveEnemySelectionDamageAndSubmitPendingEffects
-    - '@source: src/bof3/battle/resolveEnemySelectionDamageAndSubmitPendingEffects.c'
+    - resolveDamageSubmit
+    - '@source: src/bof3/battle/resolveDamageSubmit.c'
     - '@behavior: Enemy selection pass entry 0 of the scratch work-byte-3 table 0x801EB424: publishes the scratch work and enemy work subject cells, copies the enemy work block +0xA0, resolves the mode-selected damage, replays the pending halves and advances scratch work byte +0x03.'
   - - 79108
     - c
@@ -1270,8 +1270,8 @@ segments:
     - '@source: src/bof3/battle/submitEffectUnlessNeg1.c'
   - - 83740
     - c
-    - collectRandomEnemyEntries_battle03_801E531C
-    - '@source: src/bof3/battle/collectRandomEnemyEntries_battle03_801E531C.c'
+    - collectRandomEnemyEntries
+    - '@source: src/bof3/battle/collectRandomEnemyEntries.c'
     - '@behavior: Samples two current-enemy entries against byte thresholds and merges accepted IDs into the counted list.'
   - - 84204
     - c
@@ -1329,8 +1329,8 @@ segments:
     - '@behavior: Copies a 110-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86044
     - c
-    - callSlotByte5Table2
-    - '@source: src/bof3/battle/callSlotByte5Table2.c'
+    - callSlotTableEight
+    - '@source: src/bof3/battle/callSlotTableEight.c'
     - '@behavior: Copies an eight-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86180
     - c

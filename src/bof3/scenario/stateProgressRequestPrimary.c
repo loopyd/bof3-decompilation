@@ -18,7 +18,7 @@ void func_8015C088(void);
  * stored constants are materialised in $v0 (`addiu $v0,$zero,imm` feeding each
  * `sb`), not consumed directly as store immediates. The address is entry 1 (the word reading 0x801FE0A0 at 0x801FE9C4) of
  * the eleven-entry callback-pointer table at 0x801FE9C0 that
- * dispatchRecordCallbackScenarioScena0800_801FE018 selects with the record's
+ * callRecordCallback2 selects with the record's
  * unsigned byte at offset 0x7A; no in-image jal targets it, so the table word is
  * its only entry. Its shape is the exact sibling
  * requestPrimaryState6Substate10ScenarioScena0700_801FDAFC at 0x801FDAFC, which

@@ -36,12 +36,12 @@ void func_801D8090(s32 arg0, s32 arg1) {
   func_801D9C80((s16)arg0, (s16)(arg1 + 2), 6, 1);
   func_801D9AB4((s16)arg0, (s16)arg1, 4, 1);
   func_801D9AB4((s16)arg0, (s16)(arg1 + 0x11), 5, 1);
-  drawSpritePrimTpage1((s16)(arg0 + 2), (s16)(arg1 + 2), (s16)(arg0 + 0x45),
+  drawSpriteAbrFull((s16)(arg0 + 2), (s16)(arg1 + 2), (s16)(arg0 + 0x45),
                        (s16)(arg1 + 2), red, green, blue);
-  drawSpritePrimTpage1((s16)(arg0 + 2), (s16)(arg1 + 3), (s16)(arg0 + 2),
+  drawSpriteAbrFull((s16)(arg0 + 2), (s16)(arg1 + 3), (s16)(arg0 + 2),
                        (s16)(arg1 + 0x10), red, green, blue);
-  drawSpritePrimTpage0((s16)(arg0 + 0x45), (s16)(arg1 + 2), (s16)(arg0 + 0x45),
+  drawSpriteAbrHalf((s16)(arg0 + 0x45), (s16)(arg1 + 2), (s16)(arg0 + 0x45),
                        (s16)(arg1 + 0x10), red, green, blue);
-  drawSpritePrimTpage0((s16)(arg0 + 2), (s16)(arg1 + 0x10), (s16)(arg0 + 0x45),
+  drawSpriteAbrHalf((s16)(arg0 + 2), (s16)(arg1 + 0x10), (s16)(arg0 + 0x45),
                        (s16)(arg1 + 0x10), red, green, blue);
 }

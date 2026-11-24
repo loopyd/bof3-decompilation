@@ -56,7 +56,7 @@ u8 func_801D5BC0(void) {
   if (count != 0u) {
     u32 event_id;
 
-    initUiBundleSlot0();
+    initUiBundleFixed();
     event_id = func_801502D0(0x18u);
     func_801DE560(2u, 0u, 0u, 0x2du, event_id);
     return 1u;

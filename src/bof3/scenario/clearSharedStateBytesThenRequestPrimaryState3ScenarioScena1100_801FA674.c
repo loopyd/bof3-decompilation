@@ -20,7 +20,7 @@ void func_8015C088(void);
  * $v0,$zero,0x3` immediately after the call) to feed the last `sb`, so the
  * store order 0x80146865, 0x80146866, 0x80146867, D_80146875, D_80146874 is the
  * source statement order. The dispatcher
- * dispatchRecordCallbackScenarioScena1100_801FA5B8 invokes it indirectly
+ * callRecordCallback3 invokes it indirectly
  * through word 2 of the 29-entry overlay callback run at 0x801FAF24 (0x801FAF2C
  * holds 0x801FA674), so the record byte at offset 0x7A selects it with the value
  * 0x02; the record pointer and second argument that dispatcher passes are

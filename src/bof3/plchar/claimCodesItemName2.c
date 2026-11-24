@@ -93,7 +93,7 @@ extern void func_8016813C(s32 arg0, u8 arg1);
  * the original call shape needs while the row that owns the body keeps the three
  * it uses.
  */
-extern void claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp34900_801CEE24(
+extern void claimStoreDistanceRow2(
     u8 state, s16 x, s16 y, u8 masked);
 
 /* @source 0x801CEC18
@@ -168,21 +168,21 @@ u8 claimCodesItemName2(
   row = y;
   code = func_80166CB0(col, row);
   if (((code + 0x10) & 0xFF) < 2 || (u8)code == 0xF4) {
-    claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp34900_801CEE24(
+    claimStoreDistanceRow2(
         0, col, row, code & 0xFF);
     if ((rand() & 7) >= 6) {
-      claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp34900_801CEE24(
+      claimStoreDistanceRow2(
           4, col, row, code & 0xFF);
     }
     func_8015DF18(0x10B);
     return 1;
   } else if (((code + 0xA) & 0xFF) < 2) {
-    claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp34900_801CEE24(
+    claimStoreDistanceRow2(
         0, col, row, code & 0xFF);
     func_8015DF18(0x10B);
     roll = rand() & 0xF;
     if (roll < 7) {
-      claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp34900_801CEE24(
+      claimStoreDistanceRow2(
           3, col, row, code & 0xFF);
       name = func_80165D48(0, 0x29);
       for (i = 0; i < 12; i++) {
@@ -198,7 +198,7 @@ u8 claimCodesItemName2(
       func_80150284(mode);
       D_1F800044[0xB] = 2;
     } else if (roll >= 0xC) {
-      claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp34900_801CEE24(
+      claimStoreDistanceRow2(
           2, col, row, code & 0xFF);
       func_801C308C(0);
       func_8016813C(1, D_80146250[0x79]);

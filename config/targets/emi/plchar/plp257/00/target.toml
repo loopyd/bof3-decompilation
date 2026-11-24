@@ -22,7 +22,7 @@ support_sources = [
     "src/bof3/plchar/claimStoreDistanceHandler34.c",
     "src/bof3/plchar/selectArrivalFiveReached4.c",
     "src/bof3/support/plp257_00_psyq.c",
-    "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp25700_801CF7BC.c",
+    "src/bof3/plchar/markAnimationProjectedExpires6.c",
     "src/bof3/plchar/claimEndQueueFront.c",
     "src/bof3/plchar/selectArrivalSequenceUnoccupied2.c",
     "src/bof3/plchar/checkAgainstMapWork.c",

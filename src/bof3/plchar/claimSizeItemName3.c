@@ -49,7 +49,7 @@ u8 func_8019601C(void);
 /* Record claim of this same payload: it seeds one front-end record from the
  * caller's state byte and signed cell pair and ignores the result.
  */
-void claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640(
+void claimStoreDistanceRow7(
     u8 state, s16 x, s16 y);
 
 /* Local name helper of the shared EXE image, outside this payload: it answers
@@ -157,7 +157,7 @@ u8 claimSizeItemName3(
   if (code == 0xF2) {
     index = func_8019601C();
     if (index != 0xFF) {
-      claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640(
+      claimStoreDistanceRow7(
           0, col, row);
       roll = rand() & 0xF;
       if (roll >= 0xD) {
@@ -171,7 +171,7 @@ u8 claimSizeItemName3(
           }
         }
         func_801B5E58(size);
-        claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640(
+        claimStoreDistanceRow7(
             1, x, y);
       }
       D_1F800044[0xB] = 1;
@@ -179,7 +179,7 @@ u8 claimSizeItemName3(
     func_801553B8(x, y);
     return 1;
   } else if (code == 0xF8) {
-    claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640(
+    claimStoreDistanceRow7(
         0, col, row);
     name = func_80165D48(0, 0x56);
     for (i = 0; i < 12; i++) {

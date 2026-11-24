@@ -38,7 +38,7 @@ void accumulateEnemyHalfwordsReset(void) {
   BATTLE_ENEMY_HALF_84(enemy) = 0u;
   enemy->unk_82 = half | 0x4000u;
   clearBattlerActionFlags(D_1F800044->unk_05);
-  collectRandomEnemyEntries_battle03_801E531C();
+  collectRandomEnemyEntries();
   if (--D_801462F3 == 0) {
     D_80146328 |= 2;
   }

@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 u8* findFreeWorkRecordScenarioScena0800_801F7DAC(void);
 s32 func_801782FC(s32 arg0); /* @source 0x801782FC */
 s32 func_801783C8(s32 arg0); /* @source 0x801783C8 */
@@ -65,12 +65,12 @@ void claimFreeAngleVector(void) {
   if (record != 0) {
     record[0] = 1;
     record[2] = 0;
-    work = scenarioScena0800Work;
+    work = workObjectPointer;
     *(u32*)(record + 0x04) = *(u32*)(work + 0x34);
     *(u32*)(record + 0x08) = *(u32*)(work + 0x38);
     *(s32*)(record + 0x0C) = *(s32*)(work + 0x3C) >> 8;
     angle = (u32)func_801782FC(*(s32*)(work + 0x0C)) >> 4;
-    work = scenarioScena0800Work;
+    work = workObjectPointer;
     if (work[6] == 7) {
       angle = angle & 0xFFFF;
       angle += 0x800;

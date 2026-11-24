@@ -9,7 +9,7 @@ extern u8 paletteRows801F627D[];
 /* @source 0x80144F28 @kind unknown */
 extern s32 D_80144F28;
 
-void copyPaletteBlock32World02Area07714_801F529C(u32 sourceRow, u32 sourceBlock,
+void copyPaletteBlock32(u32 sourceRow, u32 sourceBlock,
                                                u32 destinationRow, u32 destinationBlock);
 
 /* @source 0x801F4D20
@@ -38,12 +38,12 @@ void selectPaletteBlocksMatch(void) {
   if ((((condition >> 4) & 15) & flags) == (condition & 15)) {
     work[2] = 3;
     row = paletteRows801F6278[*(s16*)(workRecordCursor1F800044 + 0x36)];
-    copyPaletteBlock32World02Area07714_801F529C(row, 9, row, 0);
+    copyPaletteBlock32(row, 9, row, 0);
   } else {
     work[2]++;
     row = paletteRows801F6278[*(s16*)(workRecordCursor1F800044 + 0x36)];
-    copyPaletteBlock32World02Area07714_801F529C(row, 1, row, 0);
+    copyPaletteBlock32(row, 1, row, 0);
   }
   row = paletteRows801F627D[*(s16*)(workRecordCursor1F800044 + 0x36)];
-  copyPaletteBlock32World02Area07714_801F529C(row, 8, row, 0);
+  copyPaletteBlock32(row, 8, row, 0);
 }

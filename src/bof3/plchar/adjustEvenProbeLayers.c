@@ -48,7 +48,7 @@ extern s32 D_80181BC0;
  * set up in the argument registers, so it takes no arguments, and it masks the
  * answer to a byte before the branch.
  */
-u8 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp45700_801CF744(
+u8 checkProjectedAgainstCode3(
     void);
 
 /* Screen-space position routine of the shared EXE image, outside this payload:
@@ -140,10 +140,10 @@ void adjustEvenProbeLayers(
 
   if (!(D_1F800044[8] & 1)) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp45700_801CF744() ==
+    if (checkProjectedAgainstCode3() ==
         0) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp45700_801CF744() ==
+      if (checkProjectedAgainstCode3() ==
           0) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }

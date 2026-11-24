@@ -10,7 +10,7 @@
 void callCurrentTaskVariant(void) {
   Commu00TaskSlot *task;
 
-  task = currentCommu00Task;
+  task = currentTask;
   commu00ScratchTask = task;
   task->resource_id = task->variant_state;
   func_8015BAC4(commu00ScratchTask->resource_id);

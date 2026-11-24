@@ -30,21 +30,21 @@ segments:
   subsegments:
   - - 88
     - c
-    - dispatchSubstateTable0c98BatlEnd00_801EEC58
-    - '@source: src/bof3/battle/dispatchSubstateTable0c98BatlEnd00_801EEC58.c'
+    - callStateByteHandler
+    - '@source: src/bof3/battle/callStateByteHandler.c'
     - '@behavior: Battle substate dispatch: reads the unsigned byte at 0x801462E3, scales it by four and calls the handler pointer at that index of the table based at 0x801F0C98 with no arguments; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 148
     - c
-    - dispatchSubstateTable0ca4BatlEnd00_801EEC94
-    - '@source: src/bof3/battle/dispatchSubstateTable0ca4BatlEnd00_801EEC94.c'
+    - callSubstateByteHandler
+    - '@source: src/bof3/battle/callSubstateByteHandler.c'
     - '@behavior: Battle handler-run dispatch: reads the unsigned byte at 0x801462E4, scales it by four and calls the handler pointer at that index of this overlay''s handler run based at 0x801F0CA4 with no arguments; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 208
     - asm
     - func_801EECD0
   - - 424
     - c
-    - countEligibleBattlersBatlEnd00_801EEDA8
-    - '@source: src/bof3/battle/countEligibleBattlersBatlEnd00_801EEDA8.c'
+    - countEligibleBattlers
+    - '@source: src/bof3/battle/countEligibleBattlers.c'
     - '@behavior: Counts the party slots below the volatile count byte at 0x801462F0 that pass both eligibility tests: the per-slot availability test at 0x801DB524 reports the slot available (zero), and bit 0x400 of the flags word at the start of that slot''s 0x140-byte record in D_80145FB8 is clear; the count byte is re-read on every loop test, so the loop stops as soon as it shrinks below the running index, and the 0x20-byte frame keeps $ra and $s0-$s2 across the per-slot call.'
   - - 588
     - asm
@@ -90,8 +90,8 @@ segments:
     - '@behavior: Local battler identity scan: walks the slots below the volatile count byte at 0x801462F0, skips each slot whose availability test func_801DB524 reports nonzero, and returns 1 as soon as identity byte +0x86 or +0x87 of that slot''s 0x140-byte work record (0x80145F16/0x80145F17 plus slot*0x140) reads 7; returns 0 when the count byte is zero or no walked slot matches, and the 0x20-byte frame keeps $ra and $s0-$s2 across the per-slot call.'
   - - 2940
     - c
-    - advanceSubstateWhenPadActiveBatlEnd00_801EF77C
-    - '@source: src/bof3/battle/advanceSubstateWhenPadActiveBatlEnd00_801EF77C.c'
+    - advanceSubstatePad
+    - '@source: src/bof3/battle/advanceSubstatePad.c'
     - '@behavior: Battle substate advance on input: while the shared pad state word at 0x80145AA4 reads nonzero, clears the battle state byte at 0x801462E5 and increments the substate index byte at 0x801462E4; leaf function, no frame and no arguments.'
   - - 2996
     - c
@@ -108,8 +108,8 @@ segments:
     - func_801EF928
   - - 4504
     - c
-    - dispatchPanelTaskTableEc28BatlEnd00_801EFD98
-    - '@source: src/bof3/battle/dispatchPanelTaskTableEc28BatlEnd00_801EFD98.c'
+    - callPanelTaskTable
+    - '@source: src/bof3/battle/callPanelTaskTable.c'
     - '@behavior: Battle-end panel task dispatch through a copy of the overlay''s panel handler run: copies the six handler words at 0x801EEC28 into the frame at 0x10($sp), then reads the object published at 0x80148648, takes its byte +0x02 (the PanelTask task byte), scales it by four and calls the entry at that index of the copy with no arguments; the index is unbounded, so the two zero entries of the run are reachable exactly as in the original, and the 0x30-byte frame only holds the copy and $ra.'
   - - 4624
     - c
@@ -121,24 +121,24 @@ segments:
     - func_801EFE5C
   - - 6044
     - c
-    - drawPanelFrameBatlEnd00_801F039C
-    - '@source: src/bof3/battle/drawPanelFrameBatlEnd00_801F039C.c'
+    - renderPanelFrame
+    - '@source: src/bof3/battle/renderPanelFrame.c'
     - '@behavior: Battle-end panel frame drawer: opens the panel draw mode for the texture page GetTPage(0, 0, 0x3C0, 0), fills the window rectangle with one tile at the primitive cursor and borders it with a quadrangle and four flat lines in one palette colour. The tile takes the arguments as its x origin, its width, its y origin plus two and its height, and its three colour bytes are the red, green and blue channels of the first colour entry of the 16-colour sub-palette row the shared CLUT bank byte 0x80144952 selects in 0x80033A08, each channel read with its own palette access; the tile is marked semi-transparent and appended at slot 1 as 0x10 bytes. The same colour is expanded once into three bytes and reused: the quadrangle uses template rows 8 and 9 at the origin, the first pair of lines runs from (x + 2, y + 2) and (x + 2, y + 3) to the window edges inset by three and one, and the second pair closes the right and bottom edges. The three calls that reach this body come from the panel handlers 0x801EFE5C, 0x801F0650 and 0x801F07E0, which all pass a panel origin, the window width 0x118 and a byte height.'
   - - 6736
     - c
-    - drawCountedListPanelBatlEnd00_801F0650
-    - '@source: src/bof3/battle/drawCountedListPanelBatlEnd00_801F0650.c'
+    - renderCountedListPanel
+    - '@source: src/bof3/battle/renderCountedListPanel.c'
     - '@behavior: Battle-end panel task handler 1 of the overlay handler run at 0x801EEC28: draws the counted-list panel by calling the overlay frame drawer 0x801F039C with the signed halfwords +0x04 and +0x06 of the object published at 0x80148648, the width 0x118 and byte +0x09 as the height, then walks the counted list (length byte at 0x80146327, halfword ids at 0x80146334, per-id counts at 0x80146354) and draws every non-zero id through 0x801F0A74 in two columns: column (index & 1) steps 138 pixels with a 5-pixel inset and row (index >> 1) steps 13 pixels with a 4-pixel inset, passing the id split into its high byte and its low byte plus the per-id count. The length byte is re-read every iteration and a zero id is skipped without drawing.'
   - - 7016
     - c
-    - dispatchPanelStateLocalTableBatlEnd00_801F0768
-    - '@source: src/bof3/battle/dispatchPanelStateLocalTableBatlEnd00_801F0768.c'
+    - callPanelLocalPair
+    - '@source: src/bof3/battle/callPanelLocalPair.c'
     - '@behavior: Battle-end panel state dispatch through a two-entry local handler table on the stack: seeds entry 0 with the overlay handler at 0x801F07C0, which advances the shared panel state byte, and entry 1 with the overlay handler at 0x801F07E0, then calls the entry indexed by byte +0x03 of the object published at 0x80148648 with no arguments; the index is unbounded exactly as in the original.'
   - - 7104
     - c
-    - advanceStateByte3BatlEnd00_801F07C0
-    - '@source: src/bof3/battle/advanceStateByte3BatlEnd00_801F07C0.c'
-    - '@behavior: Advances the shared panel state byte: increments byte +0x03 of the object published at 0x80148648 and returns nothing; byte-identical twin of advanceStateByte3BatlEnd00_801F09D4.'
+    - advanceTaskState
+    - '@source: src/bof3/battle/advanceTaskState.c'
+    - '@behavior: Advances the shared panel state byte: increments byte +0x03 of the object published at 0x80148648 and returns nothing; byte-identical twin of advanceTaskState2.'
   - - 7136
     - c
     - renderBattlerExpList
@@ -146,28 +146,28 @@ segments:
     - '@behavior: Draws the battler experience list: each of the local battler count rows prints its battler name from the 0x140-byte work records at 0x80145E90 and the accumulated amount published through 0x80148648, advancing the row cursor by the list line height.'
   - - 7548
     - c
-    - dispatchPanelStateLocalTableBatlEnd00_801F097C
-    - '@source: src/bof3/battle/dispatchPanelStateLocalTableBatlEnd00_801F097C.c'
-    - '@behavior: Battle-end panel state dispatch through a two-entry local handler table: seeds a two-word table on the stack at 0x10($sp) with entry 0 = advanceStateByte3BatlEnd00_801F09D4 and entry 1 = drawAmountStripBatlEnd00_801F09F4, then reads the object published at 0x80148648, takes its byte +0x03, scales it by four and calls the entry at that index with no arguments; the index is unbounded and this span is the word at 0x801EEC3C, the last of the six panel handler pointers that dispatchPanelTaskTableEc28BatlEnd00_801EFD98 copies from 0x801EEC28 and indexes by byte +0x02 of the same object.'
+    - callPanelStripPair
+    - '@source: src/bof3/battle/callPanelStripPair.c'
+    - '@behavior: Battle-end panel state dispatch through a two-entry local handler table: seeds a two-word table on the stack at 0x10($sp) with entry 0 = advanceTaskState2 and entry 1 = renderAmountStrip, then reads the object published at 0x80148648, takes its byte +0x03, scales it by four and calls the entry at that index with no arguments; the index is unbounded and this span is the word at 0x801EEC3C, the last of the six panel handler pointers that callPanelTaskTable copies from 0x801EEC28 and indexes by byte +0x02 of the same object.'
   - - 7636
     - c
-    - advanceStateByte3BatlEnd00_801F09D4
-    - '@source: src/bof3/battle/advanceStateByte3BatlEnd00_801F09D4.c'
-    - '@behavior: Advances the shared panel state byte: increments byte +0x03 of the object published at 0x80148648 and returns nothing; byte-identical twin of advanceStateByte3BatlEnd00_801F07C0.'
+    - advanceTaskState2
+    - '@source: src/bof3/battle/advanceTaskState2.c'
+    - '@behavior: Advances the shared panel state byte: increments byte +0x03 of the object published at 0x80148648 and returns nothing; byte-identical twin of advanceTaskState.'
   - - 7668
     - c
-    - drawAmountStripBatlEnd00_801F09F4
-    - '@source: src/bof3/battle/drawAmountStripBatlEnd00_801F09F4.c'
+    - renderAmountStrip
+    - '@source: src/bof3/battle/renderAmountStrip.c'
     - '@behavior: Battle-end amount strip: draws the narrow message-panel strip at (0x6E, 0x28) through the EXE drawer 0x801D8270, formats the shared main-RAM money word 0x80144F50 through the overlay format 0x801EEC4C ("%7d") into the shared 0x80149118 text buffer, submits that buffer at (0x7E, 0x2A) through the shared text drawer 0x8014FF0C, then submits the overlay one-character run at 0x801F0CD0 at (0xB6, 0x2A) with a zero third argument and 0xFF as the shading value through 0x8014F800. The 0x20-byte frame keeps $ra and $s0 across the four calls and holds the fifth argument of the last call at 0x10($sp).'
   - - 7796
     - c
-    - drawCountedListEntryBatlEnd00_801F0A74
-    - '@source: src/bof3/battle/drawCountedListEntryBatlEnd00_801F0A74.c'
+    - renderCountedListEntry
+    - '@source: src/bof3/battle/renderCountedListEntry.c'
     - '@behavior: Battle-end counted-list entry drawer: refuses to draw unless both the item index and the per-id count are non-zero, then draws one entry of the counted list. The palette byte the overlay table 0x801F0CD4 holds for the entry (indexed by 0x80165E04 over the id split into its high byte and its low byte) is handed to 0x801AEA80 together with the entry anchor, the anchor''s row stepped down by two and the caller''s last byte; the name 0x80165D48 answers for the same split id is submitted at the anchor stepped right by ten through 0x8014F800, with the id''s high byte as the alignment and 0x801AF20C of the name as the shading value. When the count is two or more it is formatted through the overlay "*%2d" at 0x801EEC50 into the shared text buffer 0x80145AD4 and that buffer is submitted at the anchor stepped right by 0x6D on the row stepped down by two through 0x80150098, once more with the id''s high byte as the alignment; the 0x40-byte frame keeps $ra and $s0-$s7 across the six calls and carries no stack arguments of its own.'
   - - 8112
     - c
-    - sumRemainingLevelExpBatlEnd00_801F0BB0
-    - '@source: src/bof3/battle/sumRemainingLevelExpBatlEnd00_801F0BB0.c'
+    - sumRemainingLevelExp
+    - '@source: src/bof3/battle/sumRemainingLevelExp.c'
     - '@behavior: Battle-end remaining-experience readout for one local battler: maps byte +0x79 of the battler''s 0x140-byte battle work record through the EXE state-byte lookup 0x801DD7AC (value seven becomes zero), sums the u16 thresholds of the shared level table 0x801CB8DC from index zero through N inclusive, where N is byte +0x06 of the row''s 164-byte record re-read every iteration from 0x8014496E, and returns the sum minus the row''s u32 experience word 0x80144970 when the sum is the larger, otherwise zero; the 0x18-byte frame keeps $ra and $s0 across the lookup call.'
   - - 8344
     - textbin

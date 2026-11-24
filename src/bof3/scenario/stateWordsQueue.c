@@ -8,7 +8,7 @@ extern void dispatchSoundCue(u32 cue_id);
 /* @source 0x801F9C00
  * @behavior Per-frame work-state handler for work byte 1 == 8: it is entry 8
  * of the overlay handler sub-table at 0x801FE908 that
- * dispatchWorkByte1HandlerScenarioScena0800_801F95D4 indexes with that byte
+ * callByte1RunHandler4 indexes with that byte
  * (entry 37 of the handler run at 0x801FE894). It reads the work pointer from
  * scratchpad slot 0x44, seeds work words 0x34/0x38/0x3C with
  * 0x270000/0x80000/0x8000000, clears word 0x14, advances byte 1 modulo 256 so

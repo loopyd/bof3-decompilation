@@ -815,7 +815,7 @@ void statePendingPairsExcept(void);
 void initUiBundleSlot2(u8 arg0);
 void initUiBundleSlot3(u8 arg0);
 void initUiBundleSlot4(u8 arg0);
-void initUiBundleSlot0(void);
+void initUiBundleFixed(void);
 u8   resolveLocalFlag800Countdown(void);
 u8   advanceLocalFlag40Countdown(void);
 u8   func_801D57AC(void);
@@ -957,7 +957,7 @@ void func_801E2314(u32 arg0);
 void setupEnemyCueLoader(void);
 void stateEnemyScratchBit4(void);
 void initializeFlippedWorkDecay(void);
-void collectRandomEnemyEntries_battle03_801E531C(void);
+void collectRandomEnemyEntries(void);
 void submitEffectUnlessNeg1(u16 arg0);
 void countdownWorkByte9Submit(void);
 void decrementWorkByte9Submit(void);
@@ -980,9 +980,9 @@ void queueScriptEvent(u32 arg0, u32 arg1);
 void drawIconStrip24x8(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void drawFullscreenFadeTile(void);
 void drawScratchColorTile(s16 arg0, s16 arg1, s32 arg2);
-void drawSpritePrimTpage0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
+void drawSpriteAbrHalf(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
-void drawSpritePrimTpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
+void drawSpriteAbrFull(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
 void renderSpritePrim8X8(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u8 arg4);
 void renderSpritePrimFt4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);

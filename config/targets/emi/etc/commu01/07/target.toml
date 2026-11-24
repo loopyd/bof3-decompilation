@@ -9,7 +9,7 @@ load_address = 0x801D0C00
 
 sources = [
     "src/bof3/ui/func_801D0C68.c",
-    "src/bof3/ui/confirmCommuEntryRequest.c",
+    "src/bof3/ui/confirmEntryRequest.c",
     "src/bof3/ui/computeListOriginY.c",
     "src/bof3/ui/publishTextId.c",
     "src/bof3/ui/publishEntryTextId.c",
@@ -32,7 +32,7 @@ sources = [
     "src/bof3/ui/drawRowMarkerOutlineCommu0107_801D36FC.c",
     "src/bof3/ui/handleOrdinalInput.c",
     "src/bof3/ui/handleCommuGridInput.c",
-    "src/bof3/ui/handleCommuRowInput.c",
+    "src/bof3/ui/handleRowInput.c",
     "src/bof3/ui/renderSlotChannelBox.c",
     "src/bof3/ui/handleCommuKindInput.c",
     "src/bof3/ui/handleLineInput.c",
@@ -42,9 +42,9 @@ sources = [
     "src/bof3/ui/renderCommuListScreen.c",
 ]
 support_sources = [
-    "src/bof3/ui/dispatchByte4e08Table4bd8Commu0107_801D0E44.c",
+    "src/bof3/ui/callScreenStepTable.c",
     "src/bof3/ui/callByte1Table4.c",
-    "src/bof3/ui/dispatchByte1f294dTable4becCommu0107_801D1328.c",
+    "src/bof3/ui/callRequestStepTable.c",
     "src/bof3/support/commu01_07_psyq.c",
 ]
 psyq_source = "src/bof3/support/commu01_07_psyq.c"

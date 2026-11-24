@@ -38,8 +38,8 @@ segments:
     - '@behavior: Clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884.'
   - - 660
     - c
-    - initFrontendStateSelector4AndSecondStateByte7World01Area07413_801F2E94
-    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte7World01Area07413_801F2E94.c'
+    - setupFrontendMode4Slot7
+    - '@source: src/bof3/world/setupFrontendMode4Slot7.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector byte at 0x801448EB and 7 into the shared second state byte at 0x801448ED, leaving the byte at 0x801448EC untouched, and returns 0.'
   - - 716
     - textbin

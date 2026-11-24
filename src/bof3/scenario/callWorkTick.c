@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void func_801F85F0(s32 arg0, s32 arg1, s16 arg2);
 void func_80196070(void);
 
@@ -24,10 +24,10 @@ void callWorkTick(void) {
   u16 countdown;
   u16 value;
 
-  before = scenarioScena0800Work;
+  before = workObjectPointer;
   func_801F85F0(*(s16*)(before + 0x2E), *(s16*)(before + 0x30),
                 *(s16*)(before + 0x32));
-  after = scenarioScena0800Work;
+  after = workObjectPointer;
   do {
     do {
       countdown = *(u16*)(after + 0x5A) - 1;

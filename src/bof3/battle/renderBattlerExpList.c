@@ -27,12 +27,12 @@ extern u8 D_801EEC48[];
 extern int sprintf(char *buffer, const char *format, ...);
 
 /* The overlay panel frame drawer at 0x801F039C, lifted as
- * drawPanelFrameBatlEnd00_801F039C: opens the panel draw mode, fills the window
+ * renderPanelFrame: opens the panel draw mode, fills the window
  * rectangle with one palette-coloured tile and borders it with a quadrangle and
  * four flat lines. Its own tile stores place the first argument at tile +0x08,
  * the third at +0x0C, the second plus two at +0x0A and the fourth at +0x0E, so
  * the call passes the panel origin, its width and its height. */
-extern void drawPanelFrameBatlEnd00_801F039C(s32 x, s32 y, s32 width,
+extern void renderPanelFrame(s32 x, s32 y, s32 width,
                                              s32 height);
 
 /* Shared text submitter of the main executable at 0x8014F800. It draws the
@@ -51,16 +51,16 @@ extern void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 extern u32 func_801502D0(u32 row);
 
 /* The overlay remaining-experience readout at 0x801F0BB0, lifted as
- * sumRemainingLevelExpBatlEnd00_801F0BB0: it takes a local battler index byte
+ * sumRemainingLevelExp: it takes a local battler index byte
  * and answers that battler's experience short of the next level, or zero once
  * the level table is exhausted. */
-extern s32 sumRemainingLevelExpBatlEnd00_801F0BB0(u8 battler);
+extern s32 sumRemainingLevelExp(u8 battler);
 
 /* @source 0x801F07E0
  * @behavior Battle-end panel state handler 1 of the two-entry local handler
- *   table built by dispatchPanelStateLocalTableBatlEnd00_801F0768: it draws
+ *   table built by callPanelLocalPair: it draws
  *   the per-battler experience panel. It opens the panel frame at (0x14, 0x28)
- *   through the overlay frame drawer drawPanelFrameBatlEnd00_801F039C with the
+ *   through the overlay frame drawer renderPanelFrame with the
  *   width 0x118 and byte +0x09 of the object published at 0x80148648 as the
  *   height, then walks
  *   the local battlers below the volatile count byte at 0x801462F0 and draws
@@ -69,7 +69,7 @@ extern s32 sumRemainingLevelExpBatlEnd00_801F0BB0(u8 battler);
  *   record selected by the row index, through func_8014F800 at (0x19, y) with
  *   the mask 5. When the row's byte +0x06 reads 0x63 the row draws only the
  *   overlay texture row 0x41 at (0x55, y) with the mask 0xFF; otherwise it
- *   prints the remaining experience sumRemainingLevelExpBatlEnd00_801F0BB0
+ *   prints the remaining experience sumRemainingLevelExp
  *   answers for that battler through the overlay format "%6d" at 0x801EEC44
  *   into the shared text buffer 0x80149118 and submits it at (0x50, y), draws
  *   the texture row 0x15 at (0x85, y) with the mask 0xFF, prints that row byte
@@ -85,7 +85,7 @@ extern s32 sumRemainingLevelExpBatlEnd00_801F0BB0(u8 battler);
  * @residual The candidate stops at 79 of 104 instructions with four extra bytes;
  *           the first difference is at +0x0004, in the panel setup where the
  *           row cursor and list-height stores differ from the original.
- * 0x801F07E0 is entry 1 of the state table at dispatchPanelStateLocalTableBatlEnd00_801F0768,
+ * 0x801F07E0 is entry 1 of the state table at callPanelLocalPair,
  * printed by the amount strip of the same overlay run as the per-battler
  * experience panel: its rows sit on the frame that the counted-list panel
  * drawer func_801F0650 of the same handler run draws above. The row offset
@@ -101,7 +101,7 @@ void renderBattlerExpList(void) {
   s32 offset;
 
   y = 0x2c;
-  drawPanelFrameBatlEnd00_801F039C(0x14, 0x28, 0x118, ((u8 *)D_80148648)[9]);
+  renderPanelFrame(0x14, 0x28, 0x118, ((u8 *)D_80148648)[9]);
   if (localBattlerCount != 0) {
     i = 0;
     buffer = D_80149118;
@@ -112,7 +112,7 @@ void renderBattlerExpList(void) {
         func_8014F800(0x55, y, 0, 0xff, func_801502D0(0x41));
       } else {
         sprintf((char *)buffer, (const char *)D_801EEC44,
-                sumRemainingLevelExpBatlEnd00_801F0BB0(i));
+                sumRemainingLevelExp(i));
         func_8014FF0C(0x50, y, 0, buffer);
         func_8014F800(0x85, y, 0, 0xff, func_801502D0(0x15));
         sprintf((char *)buffer, (const char *)D_801EEC48,

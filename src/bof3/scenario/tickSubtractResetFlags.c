@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 extern u16 scenarioHalfword800; /* @source 0x800E4C1E @kind unknown */
 void func_80196070(void);
 
@@ -21,7 +21,7 @@ void tickSubtractResetFlags(void) {
   u8 countdown;
 
   value = scenarioHalfword800;
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   scenarioHalfword800 = (u16)(value - 24);
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;

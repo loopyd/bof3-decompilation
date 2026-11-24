@@ -40,7 +40,7 @@ u8 func_801D5A60(void) {
   if (count != 0u) {
     u32 event_id;
 
-    initUiBundleSlot0();
+    initUiBundleFixed();
     event_id = 0x2au;
     if (count == 1u) {
       submitEnemyScriptBlock(last_index);

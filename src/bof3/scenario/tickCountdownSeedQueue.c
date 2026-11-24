@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 /* @source 0x8015DF18 @kind unknown
  * Resident executable sound-cue dispatcher; consumes one u32 cue ID.
  */
@@ -14,7 +14,7 @@ extern s16 func_8015477C(s32 arg0, s32 arg1);
 /* @source 0x801F9AC0
  * @behavior Per-frame work-state handler for work byte 1 == 6: entry 6 of the
  * overlay handler sub-table at 0x801FE908 that
- * dispatchWorkByte1HandlerScenarioScena0800_801F95D4 indexes with that byte
+ * callByte1RunHandler4 indexes with that byte
  * (entry 35 of the 51-entry handler run at 0x801FE894). It decrements work byte
  * 9 modulo 256 and returns while that countdown is non-zero; on expiry it
  * re-reads the scratchpad work pointer from slot 0x44, seeds work words 0x34 and
@@ -45,15 +45,15 @@ void tickCountdownSeedQueue(
   u32 state;
   s16 distance;
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
   if (countdown == 0) {
-    next = scenarioScena0800Work;
+    next = workObjectPointer;
     *(u32*)(next + 0x34) = 0x4B0000;
     *(u32*)(next + 0x38) = 0x4B0000;
     distance = func_8015477C(*(s32*)(next + 0x34), 0x4B0000);
-    later = scenarioScena0800Work;
+    later = workObjectPointer;
     *(u32*)(later + 0x0C) = 0xFFFF4925u;
     state = later[1];
     *(u32*)(later + 0x3C) = distance << 16;

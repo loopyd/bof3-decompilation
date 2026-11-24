@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 #include <rand.h>
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 /* @source 0x8015DF18 @kind unknown
  * Resident executable sound-cue dispatcher; consumes one u32 cue ID.
  */
@@ -37,16 +37,16 @@ void randomByteQueueTick(void) {
 
   projectScreenSpriteRing();
   random = rand();
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   *(u16*)(work + 0x58) += random & 0xFF;
   if ((*(u16*)(work + 0x5A) & 3) == 0) {
     *(u16*)(work + 0x2C) -= 1;
   }
-  cue = scenarioScena0800Work;
+  cue = workObjectPointer;
   if (*(u16*)(cue + 0x5A) == 2) {
     dispatchSoundCue(0x20C);
   }
-  next = scenarioScena0800Work;
+  next = workObjectPointer;
   countdown = *(u16*)(next + 0x5A) - 1;
   *(u16*)(next + 0x5A) = countdown;
   if (countdown == 0) {

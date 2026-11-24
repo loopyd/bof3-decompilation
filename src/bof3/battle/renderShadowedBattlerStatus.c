@@ -72,9 +72,9 @@ void renderShadowedBattlerStatus(s32 arg0, s32 arg1, s32 arg2) {
   }
   func_8014FC90((s16)(x + 4), (s16)(y + 3), 0, 8,
                 &D_801EB6A4[index * 0x118]);
-  drawSpritePrimTpage1((s16)(x + 2), (s16)(y + 2), (s16)(x + 0x49),
+  drawSpriteAbrFull((s16)(x + 2), (s16)(y + 2), (s16)(x + 0x49),
                        (s16)(y + 2), red, green, blue);
-  drawSpritePrimTpage1((s16)(x + 2), (s16)(y + 3), (s16)(x + 2),
+  drawSpriteAbrFull((s16)(x + 2), (s16)(y + 3), (s16)(x + 2),
                        (s16)(y + 0x12), red, green, blue);
   red -= 0x10;
   green -= 0x10;

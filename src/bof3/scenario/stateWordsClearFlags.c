@@ -1,13 +1,13 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void func_801F9F8C(void* words, s32 unused, s32 offset, s32 mode);
 void func_80196070(void);
 
 /* @source 0x801F9B68
  * @behavior Per-frame work-state handler for work byte 1 == 7: it is entry 7
  * of the overlay handler sub-table at 0x801FE908 that
- * dispatchWorkByte1HandlerScenarioScena0800_801F95D4 indexes with that byte
+ * callByte1RunHandler4 indexes with that byte
  * (entry 36 of the 51-entry handler run at 0x801FE894). It adds work word 0x0C
  * to work word 0x34, work word 0x10 to work word 0x38 and work word 0x14 to
  * work word 0x3C, subtracts 0x100000 from word 0x14, and calls the overlay
@@ -27,7 +27,7 @@ void stateWordsClearFlags(void) {
   u32 second;
   u32 third;
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   first = *(u32*)(work + 0x34) + *(u32*)(work + 0x0C);
   second = *(u32*)(work + 0x10);
   third = *(u32*)(work + 0x14);
@@ -36,7 +36,7 @@ void stateWordsClearFlags(void) {
   *(u32*)(work + 0x3C) += third;
   *(u32*)(work + 0x14) -= 0x100000u;
   func_801F9F8C(work + 0x34, 32, 8, 0);
-  nextWork = scenarioScena0800Work;
+  nextWork = workObjectPointer;
   if (*(u32*)(nextWork + 0x38) == 0x360000u) {
     func_80196070();
   }

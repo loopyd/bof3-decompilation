@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 
 /* @source 0x801F7CF8
  * @behavior Decrement the scratchpad work object's byte-9 countdown modulo
@@ -16,10 +16,10 @@ extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
 void tickCountdownAdvanceWork(void) {
   u8 countdown;
 
-  countdown = (u8)(scenarioScena0800Work[9] - 1);
-  scenarioScena0800Work[9] = countdown;
+  countdown = (u8)(workObjectPointer[9] - 1);
+  workObjectPointer[9] = countdown;
   if (countdown == 0) {
-    scenarioScena0800Work[9] = 8;
-    scenarioScena0800Work[2]++;
+    workObjectPointer[9] = 8;
+    workObjectPointer[2]++;
   }
 }

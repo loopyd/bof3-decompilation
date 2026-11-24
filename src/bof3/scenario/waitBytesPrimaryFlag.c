@@ -27,7 +27,7 @@ void func_8015C088(void);
  * jal delay slot as `addiu $a1,$zero,0x5`. The constant 2 is materialised once
  * in $v0 (`addiu $v0,$zero,0x2` immediately after the startup call) to feed the
  * last byte store, and each of the five byte stores materialises the 0x8014
- * page in $at on its own. The dispatcher dispatchRecordCallbackScenarioScena1100_801FA5B8
+ * page in $at on its own. The dispatcher callRecordCallback3
  * invokes it indirectly through word 1 of the 29-entry overlay callback run at
  * 0x801FAF24 (0x801FAF28 holds 0x801FA600), so the record byte at offset 0x7A
  * selects it with the value 1; neither a jal nor a j in the image reaches the

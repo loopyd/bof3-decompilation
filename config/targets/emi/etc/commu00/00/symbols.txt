@@ -132,5 +132,5 @@ D_801F2708 = 0x801F2708;
 variantRotation = 0x801F2928;
 taskLabelBandTable = 0x801F2930;
 D_801F2944 = 0x801F2944;
-currentCommu00Task = 0x801F2948;
+currentTask = 0x801F2948;
 D_801F294C = 0x801F294C;

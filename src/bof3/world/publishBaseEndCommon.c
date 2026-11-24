@@ -34,7 +34,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * @residual none
  *
  * Shape notes from the original bytes: this body is instruction-identical to
- * the exact sibling publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5B2C
+ * the exact sibling publishFirstKind4World02
  * at 0x801F5B2C except for one word, the %lo displacement of the mode-row load
  * at 0x801F5F40 (0x801F62EC here, 0x801F6B30 there; the %hi word matches
  * because both rows sit in the 0x801F page), so statement order, operand forms

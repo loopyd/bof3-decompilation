@@ -57,7 +57,7 @@ segments:
     - func_801F2E68
   - - 796
     - c
-    - noopHandlerWorld01Area06813_801F2F1C
+    - noopOverlayHandler7
   - - 804
     - c
     - stepPadCountersAttempt
@@ -68,19 +68,19 @@ segments:
     - func_801F2F98
   - - 1100
     - c
-    - noopHandlerWorld01Area06813_801F304C
+    - noopOverlayHandler8
   - - 1108
     - c
-    - noopHandlerWorld01Area06813_801F3054
+    - noopOverlayHandler9
   - - 1116
     - c
-    - noopHandlerWorld01Area06813_801F305C
+    - noopOverlayHandler10
   - - 1124
     - c
-    - noopHandlerWorld01Area06813_801F3064
+    - noopOverlayHandler11
   - - 1132
     - c
-    - noopHandlerWorld01Area06813_801F306C
+    - noopOverlayHandler12
   - - 1140
     - c
     - armRecordedPadMatch
@@ -101,7 +101,7 @@ segments:
     - '@behavior: Overlay state handler at index 17 of the local handler table at 0x801F3FF4 and index 13 of the table at 0x801F4004, both selected with the work record byte at +1: it advances this overlay''s own pan-frame byte D_801F4E10 and, while the truncated new value is below 8, repeats the pan direction cached in D_801F4E14 by the entry handler at 0x801F30B0 - republishing D_80145E90 as both D_80146250 and the scratchpad work cursor at 0x1F800044, stepping the party coordinate pair D_80145EC4/D_80145EC8 by 0x800 in that direction with every direction inverted from that handler, restoring the previously published cursor and arming the record byte at +1 with 0xB, index 11 of the 0x801F4004 table, the pan handler itself. Once the frame byte reaches 8 it instead masks the low twelve bits off both party coordinates, clearing their low bits to a 0x1000 boundary, clears the pad-match counter D_801F4E04 and the frame byte D_801F4E10, and arms that record byte with 0xF, index 15 of the 0x801F4004 table, the pad-count step at 0x801F3538, returning without the pan store. Leaf, no frame.'
   - - 2352
     - c
-    - noopHandlerWorld01Area06813_801F3530
+    - noopOverlayHandler13
   - - 2360
     - c
     - incrementPadMatchCount
@@ -124,7 +124,7 @@ segments:
     - '@behavior: Counts the overlay gate byte 0x801F4E00 down by one, writes the truncated byte back, then selects the state byte at +1 of the work record at the scratchpad pointer cell 0x1F800044: 0x14 when the countdown reaches zero (and clears the gate byte), 0x10 when the shared pad halfword 0x80145AA8 reads 0x40 while advancing the overlay counter 0x801F4E04 by one and clearing 0x801F4E0C, and 0x11 otherwise. Leaf, no frame.'
   - - 2908
     - c
-    - noopHandlerWorld01Area06813_801F375C
+    - noopOverlayHandler14
   - - 2916
     - c
     - armLiveWithinRecorded
@@ -153,10 +153,10 @@ segments:
     - '@behavior: Publishes the shared status halfword 0x801490A8 and the shared mode index byte 0x801D4285: while the gate byte 0x801490C7 is nonzero it stores 0x84 into the status and 6 into the mode index; otherwise it takes the main-executable lookup 0x80166438 of index 1 and stores 0x83 into the status and 6 into the mode index when that byte is below 0xF, or 0x82 into the status alone when it is 0xF or above. The 0x18-byte frame only keeps $ra across the lookup call.'
   - - 3376
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06813_801F3930
+    - stateHandler3Gate
   - - 3424
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld01Area06813_801F3960
+    - stateHandler5Gate
   - - 3472
     - c
     - stateStatus84ModeGate
@@ -164,8 +164,8 @@ segments:
     - '@behavior: Publishes the shared status halfword 0x801490A8 and the shared mode index byte 0x801D4285: while the gate byte 0x801490C7 is nonzero it stores 0x84 into the status and 6 into the mode index; when the gate byte is zero it stores 0xFFFF into the status instead and touches nothing else. Takes no arguments and returns nothing. Leaf, no frame; the 0x84 constant is materialised in $v0 and fills the branch delay slot of the gate test, and each arm stores the status at its own site.'
   - - 3540
     - c
-    - setStatus84AndModeIndex6IfGateElseFFFFWorld01Area06813_801F39D4
-    - '@source: src/bof3/world/setStatus84AndModeIndex6IfGateElseFFFFWorld01Area06813_801F39D4.c'
+    - stateStatus84ModeGate1
+    - '@source: src/bof3/world/stateStatus84ModeGate1.c'
     - '@behavior: Publishes the shared status halfword 0x801490A8 and the shared mode index byte 0x801D4285: while the gate byte 0x801490C7 is nonzero it stores 0x84 into the status and 6 into the mode index; when the gate byte is zero it stores 0xFFFF into the status instead and touches nothing else. Takes no arguments and returns nothing. Leaf, no frame; the 0x84 constant is materialised in $v0 and fills the branch delay slot of the gate test, and each arm stores the status at its own site.'
   - - 3608
     - c
@@ -179,7 +179,7 @@ segments:
     - '@behavior: Publishes the third shared work base 0x80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-indexed byte of this payload''s byte table at 0x801F4060 and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 3864
     - c
-    - dispatchStateByte4Table4dccWorld01Area06813_801F3B18
+    - callWorkByte4Table1
     - '@source: src/bof3/world/area06813DispatchTables.c'
   - - 3932
     - c
@@ -193,36 +193,36 @@ segments:
     - '@behavior: Phase mover at index 1 of the byte-4 dispatch table at 0x801F4DCC, whose index 0 names the armer at 0x801F3B5C: it reads the work record published through the scratchpad pointer cell 0x1F800044 and tests its phase byte at 0x0A, and if that byte is nonzero adds the signed entry that byte low nibble selects from the local phase table at 0x801F4DD4, whose sixteen bytes repeat -1, 0, 1, 0, scaled by 0x800, to the record word at 0x34, subtracts the same scaled entry from the word at 0x38, stores the phase byte minus one and consumes two units of the halfword at 0x122 of the shared work record published at 0x80146250; if the phase byte reads zero it instead clears the handler byte at 0x04 so the next dispatch of the same table reaches the armer at index 0 again. Leaf, no call, takes no arguments and returns nothing.'
   - - 4140
     - c
-    - dispatchStateByte4Table4de4World01Area06813_801F3C2C
-    - '@source: src/bof3/world/dispatchStateByte4Table4de4World01Area06813_801F3C2C.c'
+    - callWorkByte4Table2
+    - '@source: src/bof3/world/callWorkByte4Table2.c'
     - '@behavior: Overlay step dispatch through the byte-4 handler table at 0x801F4DE4, whose index 0 names the phase armer at 0x801F3C70 and index 1 the phase mover at 0x801F3CB0: reads the work record published at the scratchpad pointer cell 0x1F800044, takes its byte at 0x04 as the table index, scales that byte by four and calls the resulting table entry with no arguments, reaching the handler only through the indexed pointer word. Keeps a 0x18 frame to hold $ra across that call, takes no arguments and returns nothing, so the value left in $v0 comes from that callee. The payload publishes this routine itself as entry 4 of the eight-entry step pointer run at 0x801F4D3C.'
   - - 4208
     - c
-    - armPhase16AndHandlerIndex1InTable4de4ThenConsumeSharedCountdownWorld01Area06813_801F3C70
-    - '@source: src/bof3/world/armPhase16AndHandlerIndex1InTable4de4ThenConsumeSharedCountdownWorld01Area06813_801F3C70.c'
+    - armConsumeSharedCountdown1
+    - '@source: src/bof3/world/armConsumeSharedCountdown1.c'
     - '@behavior: Entry handler at index 0 of the byte-4 dispatch table at 0x801F4DE4, whose index 1 names the phase mover at 0x801F3CB0 and which the local dispatcher at 0x801F3C2C selects from with the work record byte at 0x04: it reads the work record published at the scratchpad pointer cell 0x1F800044 once per store without keeping a base in a local, stores 0x10 into the record phase byte at 0x0A and then 1 into that record byte at 0x04, so the next dispatch of the same table reaches the phase mover. Finally it reads the shared work record published at 0x80146250 and subtracts two units from its halfword at 0x122. Takes no arguments, makes no call, keeps no frame and returns nothing; the value left in $v0 is the halfword it just stored as a side effect.'
   - - 4272
     - c
-    - stepWorkAccumulatorsByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area06813_801F3CB0
-    - '@source: src/bof3/world/stepWorkAccumulatorsByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area06813_801F3CB0.c'
+    - stepPhaseTableConsume
+    - '@source: src/bof3/world/stepPhaseTableConsume.c'
     - '@behavior: Steps the work record published through the scratchpad pointer cell 0x1F800044 by the signed 16-entry phase table at 0x801F4DEC, whose values repeat -1, 0, 1, 0 then -2, 0, 2, 0: while the record phase byte 0x0A is nonzero it adds the entry selected by that byte''s low nibble, scaled by 0x800, to the record word 0x34, subtracts the same scaled entry from the word 0x38, decrements the phase byte, and consumes two units of the halfword 0x122 of the record published through the global pointer cell 0x80146250. Once the phase byte reads zero it instead clears the handler byte 0x04. Leaf, no frame.'
   - - 4416
     - asm
     - func_801F3D40
   - - 4544
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06813_801F3DC0
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06813_801F3DC0.c'
+    - publishThirdKind1
+    - '@source: src/bof3/world/publishThirdKind1.c'
   - - 4672
     - c
-    - noopHandlerWorld01Area06813_801F3E40
+    - noopOverlayHandler15
   - - 4680
     - asm
     - func_801F3E48
   - - 4808
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06813_801F3EC8
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06813_801F3EC8.c'
+    - publishThirdKind3
+    - '@source: src/bof3/world/publishThirdKind3.c'
     - '@behavior: Publishes the third shared work base 0x80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-indexed byte of this payload''s byte table at 0x801F406C and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 4936
     - c

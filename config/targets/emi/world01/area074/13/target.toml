@@ -8,7 +8,7 @@ splat = "config/targets/emi/world01/area074/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte7World01Area07413_801F2E94.c",
+    "src/bof3/world/setupFrontendMode4Slot7.c",
 ]
 support_sources = [
     "src/bof3/support/area074_13_psyq.c",

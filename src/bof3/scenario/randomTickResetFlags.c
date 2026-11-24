@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 #include <rand.h>
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void func_801F85F0(s32 arg0, s32 arg1, s16 arg2);
 void func_80196070(void);
 
@@ -42,16 +42,16 @@ void randomTickResetFlags(void) {
   u16 countdown;
   u16 value;
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   func_801F85F0(*(s16*)(work + 0x2E), *(s16*)(work + 0x30),
                 *(s16*)(work + 0x32));
   random = rand();
-  next = scenarioScena0800Work;
+  next = workObjectPointer;
   *(u16*)(next + 0x58) += random & 0xFF;
   if ((*(u16*)(next + 0x5A) & 3) == 0) {
     *(u16*)(next + 0x2C) -= 1;
   }
-  after = scenarioScena0800Work;
+  after = workObjectPointer;
   do {
     do {
       value = *(u16*)(after + 0x32) - 1;

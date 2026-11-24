@@ -19,7 +19,7 @@ void func_8015C088(void);
  * constant 7 is materialised once in $v0 (`addiu $v0,$zero,0x7` immediately
  * after the call) to feed the last `sb`, so the store order 0x80146865,
  * 0x80146866, 0x80146867, D_80146875, D_80146874 is the source statement order.
- * The dispatcher dispatchRecordCallbackScenarioScena1100_801FA5B8 invokes it
+ * The dispatcher callRecordCallback3 invokes it
  * indirectly through word 6 of the 29-entry overlay callback run at 0x801FAF24
  * (0x801FAF3C holds 0x801FA7A8), so the record byte at offset 0x7A selects it
  * with the value 6; neither a jal nor a j anywhere in the image reaches the

@@ -8,15 +8,15 @@ splat = "config/targets/emi/world02/area078/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/setStatusFFFFAndScenarioProgress0AOr2ByGateWorld02Area07813_801F2CF8.c",
+    "src/bof3/world/stateProgress0aGate.c",
     "src/bof3/world/setStatusFFFFAndScenarioProgress0AOr2ByGateWorld02Area07813_801F2D38.c",
     "src/bof3/world/claimFrontEndRecordAndSetHandler44World02Area07813_801F2E1C.c",
 ]
 support_sources = [
     "src/bof3/world/stateStatusProgress2Gate.c",
-    "src/bof3/world/noopHandlerWorld02Area07813_801F2C70.c",
-    "src/bof3/world/noopHandlerWorld02Area07813_801F2C68.c",
-    "src/bof3/world/setStatusFFFFAndScenarioProgress2BOr2CByGateWorld02Area07813_801F2CB8.c",
+    "src/bof3/world/noopOverlayHandler17.c",
+    "src/bof3/world/noopOverlayHandler16.c",
+    "src/bof3/world/stateProgress2bGate.c",
     "src/bof3/support/area078_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area078_13_psyq.c"

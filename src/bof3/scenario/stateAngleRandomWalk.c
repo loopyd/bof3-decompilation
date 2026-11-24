@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 #include <rand.h>
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void mathEntriesInsertHead(u16 arg0);
 
 /* @source 0x8015DF18 @kind unknown
@@ -40,7 +40,7 @@ void stateAngleRandomWalk(void) {
   u16 value;
   u8 i;
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   *(u16*)(work + 0x5A) = 0x20;
   *(u16*)(work + 0x32) = 0;
   *(u16*)(work + 0x58) = 0;
@@ -48,14 +48,14 @@ void stateAngleRandomWalk(void) {
   do {
     i++;
     random = rand();
-    loopWork = scenarioScena0800Work;
+    loopWork = workObjectPointer;
     value = *(u16*)(loopWork + 0x58) + (random & 0xFF);
     *(u16*)(loopWork + 0x58) = value;
     mathEntriesInsertHead(value);
   } while (i < 0x40);
-  cueWork = scenarioScena0800Work;
+  cueWork = workObjectPointer;
   *(u16*)(cueWork + 0x2C) = 0;
   dispatchSoundCue(0x208);
-  stateWork = scenarioScena0800Work;
+  stateWork = workObjectPointer;
   stateWork[1]++;
 }

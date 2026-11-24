@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 /* @source 0x8015DF18 @kind unknown
  * Resident executable sound-cue dispatcher; consumes one u32 cue ID.
  */
@@ -51,17 +51,17 @@ void tickDistancePairArm(void) {
   u8 countdown;
   s16 distance;
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
   if (countdown == 0) {
-    work = scenarioScena0800Work;
+    work = workObjectPointer;
     *(u32*)(work + 0x34) = 0x640000;
     *(u32*)(work + 0x38) = 0x760000;
     distance = func_8015477C(*(s32*)(work + 0x34), 0x760000);
-    next = scenarioScena0800Work;
+    next = workObjectPointer;
     next[9] = 0x20;
-    state = scenarioScena0800Work;
+    state = workObjectPointer;
     *(u32*)(next + 0x3C) = distance << 16;
     state[2]++;
     dispatchSoundCue(0x202);

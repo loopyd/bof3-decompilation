@@ -48,8 +48,8 @@ extern IconTile D_801D8B54[];
  *           primitive. Both appends are func_8014E5A0 and the other callees are
  *           PsyQ helpers. The payload names this span only from the two jal
  *           sites 0x801D36A0 inside
- *           drawSpriteWithScenarioKindSubstitutionBate00_801D3664 and 0x801D833C
- *           inside drawThreeIconStatusRowPanelBate00_801D8208, which pass the
+ *           drawSpriteKindSubstitute and 0x801D833C
+ *           inside renderThreeIconPanel, which pass the
  *           two coordinates, the sprite kind byte and the drawing mode byte. Its
  *           0x30-byte frame keeps $s0 through $s4 and $ra across those calls.
  *           One payload cmp proved its 0x14C bytes equal three twins apart from

@@ -4,7 +4,7 @@
  * plain view is folded and loses the third `lui`/`lw` pair. Declared with the
  * same volatile pointer cell the byte-exact bmagic siblings use for 0x1F800044.
  */
-extern u8* volatile scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* volatile workObjectPointer; /* @source 0x1F800044 @kind unknown */
 /* @source 0x8015DF18 @kind unknown
  * Resident executable sound-cue dispatcher; consumes one u32 cue ID.
  */
@@ -34,19 +34,19 @@ void callDecrementTickQueue(void) {
   u8* armed;
   u16 countdown;
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   func_801F85F0(*(s16*)(work + 0x2E), *(s16*)(work + 0x30),
                 *(s16*)(work + 0x32));
-  next = scenarioScena0800Work;
+  next = workObjectPointer;
   if ((*(u16*)(next + 0x5A) & 3) == 0) {
     *(u16*)(next + 0x32) -= 1;
-    next = scenarioScena0800Work;
+    next = workObjectPointer;
   }
   countdown = *(u16*)(next + 0x5A) - 1;
   *(u16*)(next + 0x5A) = countdown;
   if (countdown == 0) {
     dispatchSoundCue(0x209);
-    armed = scenarioScena0800Work;
+    armed = workObjectPointer;
     *(u16*)(armed + 0x5A) = 0x14;
     armed[1]++;
   }

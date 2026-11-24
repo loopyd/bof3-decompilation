@@ -11,7 +11,7 @@ extern u8 paletteSourceBlocks801F6298[];
 /* @source 0x80144F28 @kind unknown */
 extern s32 D_80144F28;
 
-void copyPaletteBlock32World02Area07714_801F529C(u32 sourceRow, u32 sourceBlock,
+void copyPaletteBlock32(u32 sourceRow, u32 sourceBlock,
                                                u32 destinationRow, u32 destinationBlock);
 
 /* @source 0x801F4FFC
@@ -48,12 +48,12 @@ void stepPaletteCadenceMismatch(
   ticks = work[9];
   if ((ticks & 3) == 0) {
     row = paletteRows801F627D[*(s16*)(work + 0x36)];
-    copyPaletteBlock32World02Area07714_801F529C(
+    copyPaletteBlock32(
         row, paletteSourceBlocks801F6298[(u8)((ticks >> 2) % 6)], row, 0);
   }
   blockCursor = workRecordCursor1F800044;
   row = paletteRows801F6278[*(s16*)(blockCursor + 0x36)];
-  copyPaletteBlock32World02Area07714_801F529C(row, 9, row, 0);
+  copyPaletteBlock32(row, 9, row, 0);
   flagCursor = workRecordCursor1F800044;
   flags = D_80144F28;
   condition = *(u16*)(flagCursor + 0x3A);

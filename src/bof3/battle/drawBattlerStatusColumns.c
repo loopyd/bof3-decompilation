@@ -81,13 +81,13 @@ void drawBattlerStatusColumns(s32 arg0, s32 arg1) {
                     D_8014833B[((u8)index + 0x0d) * 0x24],
                     D_8014833D[((u8)index + 0x0d) * 0x24], 0);
       if (*(u16*)&D_80145F22[(u8)index * 0x140] != 0) {
-        drawSpritePrimTpage1(
+        drawSpriteAbrFull(
             (s16)(arg0 + index * 0x5e + 0x14), (s16)y,
             (s16)(arg0 + index * 0x5e +
                   (D_8014833C[((u8)index + 0x0d) * 0x24] + 0x14)),
             (s16)y, 0x64, 0, 0xc8);
         if (D_8014833E[((u8)index + 0x0d) * 0x24] != 0) {
-          drawSpritePrimTpage1(
+          drawSpriteAbrFull(
               (s16)(arg0 + index * 0x5e +
                     (D_8014833C[((u8)index + 0x0d) * 0x24] + 0x14)),
               (s16)y,
@@ -117,16 +117,16 @@ void drawBattlerStatusColumns(s32 arg0, s32 arg1) {
       }
       drawDecimalGlyphRun((s16)(arg0 + index * 0x5e + 0x48), (s16)(arg1 + 8),
                           style, *(volatile u16*)&D_80145F1A[(u8)index * 0x140]);
-      drawSpritePrimTpage1((s16)(arg0 + index * 0x5e + 2), (s16)(arg1 + 2),
+      drawSpriteAbrFull((s16)(arg0 + index * 0x5e + 2), (s16)(arg1 + 2),
                            (s16)(arg0 + index * 0x5e + 0x5d),
                            (s16)(arg1 + 2), red, green, blue);
-      drawSpritePrimTpage1((s16)(arg0 + index * 0x5e + 2), (s16)(arg1 + 3),
+      drawSpriteAbrFull((s16)(arg0 + index * 0x5e + 2), (s16)(arg1 + 3),
                            (s16)(arg0 + index * 0x5e + 2),
                            (s16)(arg1 + 0x17), red, green, blue);
-      drawSpritePrimTpage0((s16)(arg0 + index * 0x5e + 0x5d), (s16)(arg1 + 2),
+      drawSpriteAbrHalf((s16)(arg0 + index * 0x5e + 0x5d), (s16)(arg1 + 2),
                            (s16)(arg0 + index * 0x5e + 0x5d),
                            (s16)(arg1 + 0x17), red, green, blue);
-      drawSpritePrimTpage0((s16)(arg0 + index * 0x5e + 2), (s16)(arg1 + 0x17),
+      drawSpriteAbrHalf((s16)(arg0 + index * 0x5e + 2), (s16)(arg1 + 0x17),
                            (s16)(arg0 + index * 0x5e + 0x5d),
                            (s16)(arg1 + 0x17), red, green, blue);
       index++;

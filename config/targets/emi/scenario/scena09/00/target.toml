@@ -24,7 +24,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/scenario/callClearUnless.c",
-    "src/bof3/scenario/callCoordinateLookupScenario.c",
+    "src/bof3/scenario/callCoordinateLookup2.c",
     "src/bof3/scenario/initializeRecordBankArm.c",
     "src/bof3/scenario/stateSelectedBankLead.c",
     "src/bof3/scenario/signedTableStep.c",
@@ -60,7 +60,7 @@ support_sources = [
     "src/bof3/scenario/requestPrimaryState8.c",
     "src/bof3/scenario/requestPrimarySubstate14.c",
     "src/bof3/scenario/requestPrimarySubstate28.c",
-    "src/bof3/scenario/dispatchScenarioStateHandler.c",
+    "src/bof3/scenario/callStateHandler2.c",
     "src/bof3/scenario/dispatchRecordFieldCallback.c",
     "src/bof3/scenario/stateRequest5BothBytes.c",
     "src/bof3/scenario/dispatchWorkObjectByte1.c",

@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 /* @source 0x8015DF18 @kind unknown
  * Resident executable sound-cue dispatcher; consumes one u32 cue ID.
  */
@@ -27,11 +27,11 @@ void tickSeedWordsQueue(
   u8 countdown;
   u32 state;
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
   if (countdown == 0) {
-    next = scenarioScena0800Work;
+    next = workObjectPointer;
     *(u32*)(next + 0x34) = 0x510000;
     *(u32*)(next + 0x38) = 0x420000;
     *(u32*)(next + 0x3C) = 0x2C00000;

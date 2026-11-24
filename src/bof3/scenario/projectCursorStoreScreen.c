@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);
 void emitMovesCursorCell(s32 arg0, s32 arg1);
@@ -39,22 +39,22 @@ void projectCursorStoreScreen(void) {
   u16 screenY;
 
   func_801AFE18(scratch);
-  pointWork = scenarioScena0800Work;
+  pointWork = workObjectPointer;
   point.vx = *(s32*)(pointWork + 0x34);
   point.vy = *(s32*)(pointWork + 0x38);
   point.vz = *(s32*)(pointWork + 0x3C);
   func_801AFF04(&point, sxy);
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   *(u16*)(work + 0x2E) = sxy[0];
   screenY = sxy[1];
   *(u16*)(work + 0x32) = 0x140;
   work[1]++;
-  drawWork = scenarioScena0800Work;
+  drawWork = workObjectPointer;
   *(u16*)(work + 0x5A) = 0x14;
   *(u16*)(work + 0x30) = screenY;
   emitMovesCursorCell(
       *(s16*)(drawWork + 0x2E), *(s16*)(drawWork + 0x30));
-  ringWork = scenarioScena0800Work;
+  ringWork = workObjectPointer;
   func_801F85F0(*(s16*)(ringWork + 0x2E), *(s16*)(ringWork + 0x30),
                 *(s16*)(ringWork + 0x32));
 }

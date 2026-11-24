@@ -19,7 +19,7 @@ void func_801BE1B0(u32 arg0);
 
 /* @source 0x801FB8A0
  * @behavior Entry 4 of the overlay progress-handler table at D_801FE970 that
- * dispatchProgressHandlerScenarioScena0800_801FAB5C indexes with the signed
+ * callProgressHandler2 indexes with the signed
  * byte D_80146874: it drives the shared sub-state byte D_80146875 through six
  * steps. Sub-state 0 raises the shared progress byte g_ScenarioProgress to
  * 0xA, runs func_801BE1B0(1) and advances to 1. Sub-state 1 waits for that

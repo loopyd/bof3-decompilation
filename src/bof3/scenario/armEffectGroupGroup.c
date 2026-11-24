@@ -20,7 +20,7 @@ void func_801C1630(void);
  * call carries a nop there. The address is entry 7 - the word at 0x801FE9DC,
  * payload offset 0x7DDC, reading 0x801FE7AC - of the eleven-entry
  * callback-pointer table at 0x801FE9C0 that
- * dispatchRecordCallbackScenarioScena0800_801FE018 selects with the record's
+ * callRecordCallback2 selects with the record's
  * unsigned byte at offset 0x7A. It is the arm-clear-teardown sibling of entry 6
  * armGroupRecordsSlots
  * (0x801FE760), which uses the same call set for the group 7, 2 and 4 and tears

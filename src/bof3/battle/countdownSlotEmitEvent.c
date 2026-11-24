@@ -46,7 +46,7 @@ void countdownSlotEmitEvent(void) {
   func_8015D71C(0x206u);
 
   if (D_80146329 == 0u) {
-    initUiBundleSlot0();
+    initUiBundleFixed();
     func_801DE9A8(D_1F800044->unk_05);
     queueScriptEvent(0u, D_80146250->unk_79);
   }

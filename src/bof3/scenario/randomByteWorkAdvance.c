@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 #include <rand.h>
 
-extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
+extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
 extern u8 g_ScenarioProgress;
 void projectScreenSpriteRing(void);
 
@@ -22,7 +22,7 @@ void randomByteWorkAdvance(void) {
 
   projectScreenSpriteRing();
   random = rand();
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   *(u16*)(work + 0x58) += random & 0xFF;
   if (g_ScenarioProgress == 11) {
     *(u16*)(work + 0x5A) = 32;

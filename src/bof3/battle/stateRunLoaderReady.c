@@ -19,7 +19,7 @@ extern u8 D_801462E5;
  * 0x801EEFCC is the last entry (index 4) of the handler run based at
  * 0x801F0CA4, so this body is what moves the selection byte on to the next run
  * once that run's handlers are done. D_801462E3 is read as the index of the
- * table at 0x801F0C98 by dispatchSubstateTable0c98BatlEnd00_801EEC58, and
+ * table at 0x801F0C98 by callStateByteHandler, and
  * D_801462E4 is the index the 0x801F0CA4 dispatcher scales into that run.
  */
 void stateRunLoaderReady(void) {

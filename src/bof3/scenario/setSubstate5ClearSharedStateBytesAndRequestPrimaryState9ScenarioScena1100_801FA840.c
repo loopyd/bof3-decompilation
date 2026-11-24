@@ -21,7 +21,7 @@ void func_8015C088(void);
  * 0x80146866, 0x80146867, D_80146874 is the source statement order. No jal and
  * no j anywhere in the payload reaches the address; its only image word is
  * 0x801FAF44, entry 8 of the 29-word overlay callback run at 0x801FAF24 that
- * dispatchRecordCallbackScenarioScena1100_801FA5B8 (0x801FA5B8) indexes with a
+ * callRecordCallback3 (0x801FA5B8) indexes with a
  * record byte field at offset 0x7A, so the record byte value 8 selects this
  * handler. A payload comparison of the 80 bytes at 0x801FA840 against the span
  * of setSubstate0AClearSharedStateBytesAndRequestPrimaryState3ScenarioScena1100_801FA70C

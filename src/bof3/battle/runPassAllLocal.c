@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  * The name follows the pass-then-flag family already exact in this target
- * (runSelectionPassThenSetSelectedRecordFlag100 at 0x800A1704,
+ * (runSelectionCellFlag at 0x800A1704,
  * runSelectionPassSetSelectedFlag1000ThenCallA9BD8 at 0x800A2120): this body
  * raises the flag on every local battler and then clears it on the selected
  * one. Flag 0x400's role is unestablished here - battle/03's testFlag400WhenEligible

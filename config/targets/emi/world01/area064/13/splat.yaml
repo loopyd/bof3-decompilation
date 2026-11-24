@@ -30,7 +30,7 @@ segments:
     - func_801F2C04
   - - 300
     - c
-    - enterArea064Overlay
+    - callOverlayEntry2
     - func_801F2D2C
   - - 332
     - rodata

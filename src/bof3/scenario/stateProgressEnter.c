@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x80144EC8 @kind data */
-extern u8 scenarioScena0800StateBytes[];
+extern u8 scenarioStateBytes[];
 extern u32 g_ScenarioProgress;
 extern s8 D_80146872;
 
@@ -21,7 +21,7 @@ void func_8015B580(void* bitmap, u8 bit_index);
  * @residual none
  */
 void stateProgressEnter(void) {
-  u8* state = scenarioScena0800StateBytes;
+  u8* state = scenarioStateBytes;
 
   state[0] = 0;
   g_ScenarioProgress = 0;

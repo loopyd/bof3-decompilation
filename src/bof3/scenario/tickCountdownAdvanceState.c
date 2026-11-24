@@ -8,7 +8,7 @@
  * the decrement left them. It reads and writes no other memory, makes no call
  * and returns nothing, so its 0x34 bytes carry no frame and no saved register.
  * The address is entry 27 of this overlay's 51-entry per-frame handler run at
- * 0x801FE894, the table that dispatchWorkByte1HandlerScenarioScena0800_801F6F48
+ * 0x801FE894, the table that callByte1RunHandler
  * indexes with the scratch work object's byte 1, and it is also the eighth
  * entry of the sub-run at 0x801FE8E4 that func_801F7AD0 indexes with that
  * object's byte 2, so the byte it increments is the state byte those two

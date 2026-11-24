@@ -34,7 +34,7 @@ u8 advanceLocalFlag20Countdown(void) {
   if (count != 0u) {
     u32 event_id;
 
-    initUiBundleSlot0();
+    initUiBundleFixed();
     event_id = 0x29u;
     if (count == 1u) {
       func_801DE9A8(last_index);

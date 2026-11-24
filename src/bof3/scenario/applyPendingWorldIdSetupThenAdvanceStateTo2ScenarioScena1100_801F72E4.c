@@ -50,7 +50,7 @@ u8 func_8019601C(void);
 
 /* @source 0x801F72E4
  * @behavior Word 1 of the overlay progress handler run at 0x801FAEF0, the word
- * the dispatcher dispatchProgressHandlerScenarioScena1100_801F7288 (0x801F7288)
+ * the dispatcher callProgressHandler3 (0x801F7288)
  * reads through the shared scenario state byte D_80146872 (word 0 is the
  * armEffectBank address that stores 1,
  * word 1 is this address, word 2 is callSecondaryState),

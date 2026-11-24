@@ -100,9 +100,9 @@ void renderShadowedBattlerHp(s32 arg0, s32 arg1, u32 arg2) {
   func_80150098((s16)(x + 0x28), (s16)(y + 0xa), (u8)style, D_80145AD4);
   drawDecimalGlyphRun((s16)(x + 0x30), (s16)(y + 0xc), (u8)style,
                       *(volatile u16*)&D_80145F20[offset]);
-  drawSpritePrimTpage1((s16)(x + 2), (s16)(y + 2), (s16)(x + 0x49),
+  drawSpriteAbrFull((s16)(x + 2), (s16)(y + 2), (s16)(x + 0x49),
                        (s16)(y + 2), red, spriteGreen, spriteBlue);
-  drawSpritePrimTpage1((s16)(x + 2), (s16)(y + 3), (s16)(x + 2),
+  drawSpriteAbrFull((s16)(x + 2), (s16)(y + 3), (s16)(x + 2),
                        (s16)(y + 0x12), red, spriteGreen, spriteBlue);
   red -= 0x10;
   red = red < 0 ? 0 : red < 0x100 ? red : 0xff;

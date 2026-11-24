@@ -22,25 +22,25 @@ extern u8 stateSelectionCounter2;
 /* @source 0x80144DF8 @kind data */
 extern u16 sharedFieldHalfword;
 /* @source 0x80144E00 @kind data */
-extern u16 sharedFieldHalfword_80144E00;
+extern u16 sharedFieldHalfword2;
 /* @source 0x80144E04 @kind data */
-extern u16 sharedFieldHalfword_80144E04;
+extern u16 sharedFieldHalfword3;
 /* @source 0x80144E06 @kind data */
-extern u16 sharedFieldHalfword_80144E06;
+extern u16 sharedFieldHalfword4;
 /* @source 0x80144E08 @kind data */
-extern u16 sharedFieldHalfword_80144E08;
+extern u16 sharedFieldHalfword5;
 /* @source 0x80144E0A @kind data */
-extern u16 sharedFieldHalfword_80144E0A;
+extern u16 sharedFieldHalfword6;
 /* @source 0x80144E20 @kind data */
 extern u16 sharedFieldHalfword_80144E20;
 /* @source 0x80144E24 @kind data */
-extern u16 sharedFieldHalfword_80144E24;
+extern u16 sharedFieldHalfword8;
 /* @source 0x80144E26 @kind data */
-extern u16 sharedFieldHalfword_80144E26;
+extern u16 sharedFieldHalfword9;
 /* @source 0x80144E28 @kind data */
-extern u16 sharedFieldHalfword_80144E28;
+extern u16 sharedFieldHalfword10;
 /* @source 0x80144E2A @kind data */
-extern u16 sharedFieldHalfword_80144E2A;
+extern u16 sharedFieldHalfword11;
 
 /* @source 0x801FD29C
  * @behavior Load the eight overlay seed bytes at 0x801FE464..0x801FE46B
@@ -75,14 +75,14 @@ void stateSharedFieldSeed(void) {
   sharedFieldHalfword = seed0;
   stateSelectionCounter = seed6;
   stateSelectionCounter2 = seed7;
-  sharedFieldHalfword_80144E00 = seed1;
+  sharedFieldHalfword2 = seed1;
   sharedFieldHalfword_80144E20 = seed1;
-  sharedFieldHalfword_80144E04 = seed2;
-  sharedFieldHalfword_80144E24 = seed2;
-  sharedFieldHalfword_80144E06 = seed3;
-  sharedFieldHalfword_80144E26 = seed3;
-  sharedFieldHalfword_80144E08 = seed4;
-  sharedFieldHalfword_80144E28 = seed4;
-  sharedFieldHalfword_80144E0A = seed5;
-  sharedFieldHalfword_80144E2A = seed5;
+  sharedFieldHalfword3 = seed2;
+  sharedFieldHalfword8 = seed2;
+  sharedFieldHalfword4 = seed3;
+  sharedFieldHalfword9 = seed3;
+  sharedFieldHalfword5 = seed4;
+  sharedFieldHalfword10 = seed4;
+  sharedFieldHalfword6 = seed5;
+  sharedFieldHalfword11 = seed5;
 }

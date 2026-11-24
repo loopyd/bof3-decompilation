@@ -121,31 +121,31 @@ segments:
     - '@behavior: publishes the mode-indexed halfword from the table at 0x801F539C into the shared status halfword and stores scenario progress 5 while the mode is 0 or 1'
   - - 4804
     - c
-    - setWorkByte24Bit4World01Area06714_801F3EC4
-    - '@source: src/bof3/world/setWorkByte24Bit4World01Area06714_801F3EC4.c'
+    - stateByte24Bit4Set
+    - '@source: src/bof3/world/stateByte24Bit4Set.c'
     - '@behavior: sets bit 4 of the scratchpad work byte at pointer-slot 0x44 + 0x24'
   - - 4836
     - c
-    - advanceCounterWorld01Area06714_801F3EE4
-    - '@source: src/bof3/world/advanceCounterWorld01Area06714_801F3EE4.c'
+    - advanceCounterBy800
+    - '@source: src/bof3/world/advanceCounterBy800.c'
     - '@behavior: increments the shared 32-bit work counter at 0x801468BC by 0x800'
   - - 4864
     - c
-    - seedFrontEndRecordHandler2DFromWorkPositionWorld01Area06714_801F3F00
-    - '@source: src/bof3/world/seedFrontEndRecordHandler2DFromWorkPositionWorld01Area06714_801F3F00.c'
+    - seedFrontEndHandler45
+    - '@source: src/bof3/world/seedFrontEndHandler45.c'
     - '@behavior: seeds the front-end record claimed by func_8019601C with occupancy byte 1, handler selector 0x2D at +5 and the scratch work object position pair at +0x34/+0x38'
   - - 4992
     - asm
     - func_801F3F80
   - - 5132
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F400C
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F400C.c'
+    - publishSecondKind3Word
+    - '@source: src/bof3/world/publishSecondKind3Word.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through the extended allocator/seeder func_8015CC00 with the mode-indexed byte of the payload byte table at 0x801F4644, that base word pair D_80145FFE/D_80146000 and the word at +0x3C of the same base, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5272
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F4098
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F4098.c'
+    - publishThirdKind3Word
+    - '@source: src/bof3/world/publishThirdKind3Word.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through the extended allocator/seeder func_8015CC00 with the party-indexed byte of the payload byte table at 0x801F4644, that base word pair D_8014613E/D_80146140 and the word at +0x3C of the same base, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5412
     - c
@@ -154,18 +154,18 @@ segments:
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through func_8015CB18 with the mode-indexed byte of the payload byte table at 0x801F4644 and the halfwords D_80145EBE/D_80145EC0, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5540
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F41A4
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F41A4.c'
+    - publishSecondKind3World01
+    - '@source: src/bof3/world/publishSecondKind3World01.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through func_8015CB18 with the mode-indexed byte of the payload byte table at 0x801F4644 and the halfwords D_80145FFE/D_80146000, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5668
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F4224
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F4224.c'
+    - publishThirdKind3World01
+    - '@source: src/bof3/world/publishThirdKind3World01.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through func_8015CB18 with the party-indexed byte of the payload byte table at 0x801F4644 and the halfwords D_8014613E/D_80146140, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5796
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06714_801F42A4
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06714_801F42A4.c'
+    - publishFirstKind1World01
+    - '@source: src/bof3/world/publishFirstKind1World01.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and seeds one kind-1 front-end record through func_8015CB18 with the mode-indexed byte of the payload mode table at 0x801F464C and the halfwords D_80145EBE/D_80145EC0, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5924
     - asm
@@ -175,18 +175,18 @@ segments:
     - func_801F43A4
   - - 6180
     - c
-    - retreatCounterWorld01Area06714_801F4424
-    - '@source: src/bof3/world/retreatCounterWorld01Area06714_801F4424.c'
+    - retreatCounterBy800
+    - '@source: src/bof3/world/retreatCounterBy800.c'
     - '@behavior: decrements the shared 32-bit work counter at 0x801468BC by 0x800 in place'
   - - 6208
     - c
-    - advanceCounter2World01Area06714_801F4440
-    - '@source: src/bof3/world/advanceCounter2World01Area06714_801F4440.c'
+    - advanceCounter2By800
+    - '@source: src/bof3/world/advanceCounter2By800.c'
     - '@behavior: increments the shared 32-bit work counter at 0x80146954 by 0x800'
   - - 6236
     - c
-    - retreatCounter2World01Area06714_801F445C
-    - '@source: src/bof3/world/retreatCounter2World01Area06714_801F445C.c'
+    - retreatCounter2By800
+    - '@source: src/bof3/world/retreatCounter2By800.c'
     - '@behavior: decrements the shared 32-bit work counter at 0x80146954 by 0x800'
   - - 6264
     - c
@@ -208,8 +208,8 @@ segments:
     - '@behavior: queues the shared UI element at (0x25, 0xB) with size 0 through the shared marker queue func_801A4BC0'
   - - 6628
     - c
-    - initArea06714State
-    - '@source: src/bof3/world/initArea06714State.c'
+    - setupFrontendMode44Slot1
+    - '@source: src/bof3/world/setupFrontendMode44Slot1.c'
     - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 1 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED'
   - - 6692
     - textbin

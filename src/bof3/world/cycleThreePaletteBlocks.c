@@ -3,11 +3,11 @@
 /* @source 0x1F800044 @kind unknown */
 extern u8* workRecordCursor1F800044;
 /* @source 0x801F62CC @kind data */
-extern u32 paletteSourceBlocks801F62CC[4];
+extern u32 paletteSourceRow3Table[4];
 /* @source 0x801F62DC @kind data */
-extern u32 paletteSourceBlocks801F62DC[4];
+extern u32 paletteSourceRow7Table[4];
 
-void copyPaletteBlock32World02Area07714_801F529C(u32 sourceRow, u32 sourceBlock,
+void copyPaletteBlock32(u32 sourceRow, u32 sourceBlock,
                                                u32 destinationRow, u32 destinationBlock);
 
 /* @source 0x801F57BC
@@ -24,12 +24,12 @@ void copyPaletteBlock32World02Area07714_801F529C(u32 sourceRow, u32 sourceBlock,
 void cycleThreePaletteBlocks(void) {
   u8* work;
 
-  copyPaletteBlock32World02Area07714_801F529C(
-      3, paletteSourceBlocks801F62CC[workRecordCursor1F800044[9] & 3], 3, 3);
-  copyPaletteBlock32World02Area07714_801F529C(
-      7, paletteSourceBlocks801F62DC[workRecordCursor1F800044[9] & 3], 6, 9);
-  copyPaletteBlock32World02Area07714_801F529C(
-      7, paletteSourceBlocks801F62DC[workRecordCursor1F800044[9] & 3] + 1, 6, 10);
+  copyPaletteBlock32(
+      3, paletteSourceRow3Table[workRecordCursor1F800044[9] & 3], 3, 3);
+  copyPaletteBlock32(
+      7, paletteSourceRow7Table[workRecordCursor1F800044[9] & 3], 6, 9);
+  copyPaletteBlock32(
+      7, paletteSourceRow7Table[workRecordCursor1F800044[9] & 3] + 1, 6, 10);
   work = workRecordCursor1F800044;
   work[9]++;
 }

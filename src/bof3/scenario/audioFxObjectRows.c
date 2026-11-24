@@ -31,7 +31,7 @@ void func_801C7A54(s32 arg0);
 
 /* @source 0x801FBCA4
  * @behavior Entry 6 of the overlay progress-handler table at D_801FE970 that
- * dispatchProgressHandlerScenarioScena0800_801FAB5C indexes with the signed
+ * callProgressHandler2 indexes with the signed
  * byte D_80146874, so no in-image jal targets this address and that table word
  * is its only reference in this payload. It switches the shared sub-state byte
  * D_80146875 through the nine-entry absolute jump table at 0x801F6CBC in this

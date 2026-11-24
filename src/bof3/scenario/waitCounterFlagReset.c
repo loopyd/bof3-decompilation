@@ -15,7 +15,7 @@ void func_8015B580(u32 arg0, s32 arg1);
 
 /* @source 0x801FB168
  * @behavior Overlay frame handler and entry 2 of the handler-pointer table at
- * D_801FE970, which dispatchProgressHandlerScenarioScena0800_801FAB5C indexes
+ * D_801FE970, which callProgressHandler2 indexes
  * with the signed shared byte D_80146874; it drives the shared sub-state byte
  * D_80146875 through a three-step sequence. Sub-state 0 stores 3 in
  * D_80147ACF, clears the shared halfword D_80147AD6 and advances to 1.
@@ -33,7 +33,7 @@ void func_8015B580(u32 arg0, s32 arg1);
  * 0x8014/0x8015 page in $at per access.
  *
  * Name evidence: entry 2 of the table at D_801FE970 is this address (the word
- * at 0x801FE978 reads 0x801FB168) and dispatchProgressHandlerScenarioScena0800_801FAB5C
+ * at 0x801FE978 reads 0x801FB168) and callProgressHandler2
  * selects it from D_80146874, so the function runs as that byte's value-2
  * handler. "waitForSharedCounter" is the accepted wording of the exact
  * func_801F394C lift in world/area027 for the same D_80146867 test ("waits for
@@ -41,7 +41,7 @@ void func_8015B580(u32 arg0, s32 arg1);
  * D_80146876 = 0x10, "SetFlagBit3" covers the func_8015B580(D_8014686C, 3) call
  * that the exact scena08 siblings describe as a scenario flag bit, and
  * "ResetHandler" covers the closing D_80146874 = 0 that reselects entry 0
- * (noopHandlerScenarioScena0800_801FAB98) plus the D_80146875 clear.
+ * (noopProgressHandler) plus the D_80146875 clear.
  * @status exact
  * @match 100.00
  * @residual none

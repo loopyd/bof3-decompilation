@@ -10,7 +10,7 @@ void func_8015C088(void);
 /* @source 0x801FDC1C
  * @behavior Overlay handler reached only indirectly: the address is word 12
  * (the word stored at 0x801FE4EC) of the 38-entry in-image code-pointer table
- * at 0x801FE4BC that callCoordinateLookupScenario
+ * at 0x801FE4BC that callCoordinateLookup2
  * (0x801FD280) indexes with the signed byte returned by func_801A7AD8
  * (0x801FE474, 14) and calls with jalr, and that dispatcher returns this
  * handler's signed low byte, so no in-image jal targets this address. It first

@@ -34,7 +34,7 @@ u8 resolveLocalFlag800Countdown(void) {
   if (count != 0u) {
     u32 event_id;
 
-    initUiBundleSlot0();
+    initUiBundleFixed();
     event_id = 0x2cu;
     if (count == 1u) {
       func_801DE9A8(last_index);

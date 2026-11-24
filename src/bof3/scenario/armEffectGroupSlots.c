@@ -13,7 +13,7 @@ void func_801FE800(void);
  * its own and writes none; the 0x18-byte frame only keeps $ra across the two
  * calls. The address is entry 9 (the word reading 0x801FE840 at 0x801FE9E4) of
  * the eleven-entry callback table at 0x801FE9C0 that
- * dispatchRecordCallbackScenarioScena0800_801FE018 selects from the record's
+ * callRecordCallback2 selects from the record's
  * byte at offset 0x7A, and it is the immediate neighbour of func_801FE800,
  * which is entry 8 and which tears down the same three effect ids this function
  * arms.

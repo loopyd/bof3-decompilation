@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8 *scenarioScena0800Work;
+extern u8 *workObjectPointer;
 
 /* 0x801AFE18 — shared projection setup consuming a 0x20-byte stack scratch
  * area; only a0 is live at the call site. */
@@ -85,7 +85,7 @@ void stateHeadingsAverageAngles(
     buffer->records[i + 1] = buffer->records[i];
   }
 
-  work = scenarioScena0800Work;
+  work = workObjectPointer;
   buffer->records[0].x_00 = *(s32 *)(work + 0x34);
   buffer->records[0].y_04 = *(s32 *)(work + 0x38);
   buffer->records[0].z_08 = *(s32 *)(work + 0x3C);
