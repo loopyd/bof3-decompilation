@@ -50,7 +50,7 @@ void func_8015C088(void);
  * stateMirrorFacingPrimary
  * (0x801FD84C, table entry 9), and the shared progress/state-byte clear run
  * comes from
- * stateMirrorFacing13
+ * stateFacingSub13Request
  * (0x801FD6CC, table entry 7); every literal, store offset and the clear-run
  * position ahead of the state request are written from this span's own bytes.
  * The two anchor values 0x0D and 0x10 are request parameters, so the name
@@ -59,7 +59,7 @@ void func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-void stateMirrorFacing16(
+void stateFacingSub16Request(
     u8* record) {
   func_8015C088();
   record[1] = 4;

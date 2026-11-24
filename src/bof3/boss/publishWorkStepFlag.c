@@ -60,7 +60,7 @@ void func_8014D978(void);
  * @match 100.00
  * @residual none
  */
-void publishWorkStepSetup3(
+void publishWorkStepFlag(
     void) {
   Boss00216PublishWork *work = (Boss00216PublishWork *)D_801EB4E8;
   u8 *state;

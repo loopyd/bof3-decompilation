@@ -169,7 +169,7 @@ void func_8015C058(void);
  * the fourteen-word jump table emitted into .rodata measures byte-identical to
  * jtbl_801F6DE4_main.
  */
-void runPrimaryState7(void) {
+void runPrimaryState7Countdown(void) {
   u8 *slot;
   u8 index;
   s8 *signedSlot;

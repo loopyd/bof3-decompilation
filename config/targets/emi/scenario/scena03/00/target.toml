@@ -19,10 +19,10 @@ support_sources = [
     "src/bof3/scenario/tickCountdownIndexedRect.c",
     "src/bof3/scenario/renderShrinkHalfwords.c",
     "src/bof3/scenario/tickCountdownHalfwords.c",
-    "src/bof3/scenario/tickCountdownReload8.c",
+    "src/bof3/scenario/tickCountdownReload8Advance.c",
     "src/bof3/scenario/tickCountdownIncrement.c",
     "src/bof3/scenario/renderGrowAdvance.c",
-    "src/bof3/scenario/tickCountdownReload128.c",
+    "src/bof3/scenario/tickCountdownReload128Step.c",
     "src/bof3/scenario/renderTickWork.c",
     "src/bof3/scenario/tickCountdownSelectedBytes.c",
     "src/bof3/scenario/tickCountdownTwoBytes.c",
@@ -83,8 +83,8 @@ support_sources = [
     "src/bof3/scenario/setupVerticesCentreAngles.c",
     "src/bof3/scenario/queueEndWaitTransition.c",
     "src/bof3/scenario/claimActivateBothTemplate.c",
-    "src/bof3/scenario/runPrimaryState7.c",
-    "src/bof3/scenario/runPrimaryState4.c",
+    "src/bof3/scenario/runPrimaryState7Countdown.c",
+    "src/bof3/scenario/runPrimaryState4Selector.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"
 

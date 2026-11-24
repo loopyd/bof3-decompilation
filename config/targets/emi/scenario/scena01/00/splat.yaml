@@ -189,10 +189,10 @@ segments:
     - stateMirrorFacingProgress
   - - 27340
     - c
-    - stateMirrorFacing13
+    - stateFacingSub13Request
   - - 27528
     - c
-    - stateMirrorFacing16
+    - stateFacingSub16Request
   - - 27724
     - c
     - stateMirrorFacingPrimary

@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - callWorkTable03
-    - '@source: src/bof3/plchar/callWorkTable03.c'
+    - dispatchWorkByte2Handler
+    - '@source: src/bof3/plchar/dispatchWorkByte2Handler.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the run at 0x801D03AC.'
   - - 72
     - asm

@@ -8,7 +8,7 @@ splat = "config/targets/emi/plchar/plp467/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/callWorkTable03.c",
+    "src/bof3/plchar/dispatchWorkByte2Handler.c",
 ]
 support_sources = [
     "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp46700_801CE8D4.c",

@@ -88,13 +88,13 @@ segments:
     - '@behavior: Calls two local helpers, increments captured work halfword 0x5E, and ticks byte 9; at zero reloads 8 and advances work byte 1.'
   - - 4016
     - c
-    - tickCountdownReload8
-    - '@source: src/bof3/scenario/tickCountdownReload8.c'
+    - tickCountdownReload8Advance
+    - '@source: src/bof3/scenario/tickCountdownReload8Advance.c'
     - '@behavior: Calls two local helpers, adds 4 to captured work halfword 0x58, and ticks byte 9; at zero reloads 8 and advances work byte 1.'
   - - 4176
     - c
-    - tickCountdownReload128
-    - '@source: src/bof3/scenario/tickCountdownReload128.c'
+    - tickCountdownReload128Step
+    - '@source: src/bof3/scenario/tickCountdownReload128Step.c'
     - '@behavior: Calls two local helpers with work plus 0x0C, decrements work byte 9, and reloads 128 and advances work byte 1 at zero.'
   - - 4320
     - c
@@ -235,8 +235,8 @@ segments:
     - func_801F9880
   - - 13476
     - c
-    - runPrimaryState4
-    - '@source: src/bof3/scenario/runPrimaryState4.c'
+    - runPrimaryState4Selector
+    - '@source: src/bof3/scenario/runPrimaryState4Selector.c'
     - '@behavior: Word 4 (0x801FCFB0) of the nine-word primary-state handler table at 0x801FCFE0 that dispatchPrimaryStateHandler indexes with the signed shared primary state byte D_80146874, so no in-image jal targets it: switches on the shared sub-state byte D_80146875 through the eleven-entry absolute jump table jtbl_801F6CF4_main at 0x801F6CF4 in the payload leading table data, bounded by sltiu against 0xB. Sub-state 0 runs func_801BE1B0(0) and advances to 1; sub-state 1 waits for g_ScenarioProgress 4, runs func_8014ECAC(0), arms the countdown D_80146876 with 0x3C and advances to 2; sub-state 2 waits for the gate halfword D_80143C40 to clear, runs func_80150224(0x20), parks the mode byte D_80143BB0 at 2, clears the effect bank byte D_8014832E and advances to 3; sub-state 3 keeps off mode 2 and otherwise requests selector context seed 0x25 with 0x2D0000 and 0x280000 and kind 0x81, saturates D_80143F1E and advances to 4; sub-state 4, once the gate halfword clears, adds one to the progress byte and runs func_8015C058 before advancing to 5; sub-state 5 waits for mode 2 and D_801490A8 0x33 and jumps to sub-state 10; sub-state 6 ticks the countdown and, at zero, runs func_8015C088, sets flag bit 0x15 of D_8014686C through func_8015B580, stores 1 in the progress byte, requests seed 0x25 with kind 0x82 and advances to 7; sub-state 7, once the gate halfword clears, advances to 8 and adds one to the progress byte; sub-state 8 waits for progress 0x0F, clears it, runs func_8015C058 and resets the primary state and sub-state bytes; sub-state 9 does nothing; sub-state 10 returns to sub-state 5 and clears bit 0x100 of D_80146258 while the mode byte reads anything but 2. Any other value returns without a store; the 0x18-byte frame only keeps $ra.'
   - - 14156
     - asm
@@ -246,8 +246,8 @@ segments:
     - func_801FABA8
   - - 18024
     - c
-    - runPrimaryState7
-    - '@source: src/bof3/scenario/runPrimaryState7.c'
+    - runPrimaryState7Countdown
+    - '@source: src/bof3/scenario/runPrimaryState7Countdown.c'
     - '@behavior: Word 7 of the nine-word primary state handler table at 0x801FCFE0 that dispatchPrimaryStateHandler indexes with the shared primary state byte D_80146874: runs the sub-state sequence of primary state 7 from the shared sub-state byte D_80146875 through the fourteen-entry absolute jump table jtbl_801F6DE4_main, gating each step on the shared progress byte g_ScenarioProgress and on the shared countdown halfword D_80146876, claiming two front-end rows through the shared allocator func_8019601C and seeding them at the 0x74-byte stride of the table at 0x80143FC8, and closing by releasing the overlay through func_8015C058, raising flag bit 0x1D and clearing the progress, sub-state and primary state bytes plus bit 0x80 of the shared mode halfword D_80146258.'
   - - 19620
     - asm

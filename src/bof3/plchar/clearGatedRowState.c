@@ -68,7 +68,7 @@ void func_8014D978(void);
  * @match 100.00
  * @residual none
  */
-void stateSelectedUnseededUpdate3(
+void clearGatedRowState(
     void) {
   u8* work;
   u32 index;

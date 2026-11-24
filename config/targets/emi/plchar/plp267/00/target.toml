@@ -11,7 +11,7 @@ sources = [
     "src/bof3/plchar/callWorkTable0988.c",
     "src/bof3/plchar/dropEndSelectionFront.c",
     "src/bof3/plchar/stateSelectedUnseededWork.c",
-    "src/bof3/plchar/callWorkTable09.c",
+    "src/bof3/plchar/dispatchWorkByte3Handler.c",
     "src/bof3/plchar/refreshLayersSelectSequence2.c",
     "src/bof3/plchar/selectSequenceReadyRow2.c",
     "src/bof3/plchar/dispatchByte2Table09d0.c",

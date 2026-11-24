@@ -13,7 +13,7 @@ sources = [
     "src/bof3/plchar/callWorkTableffc0.c",
     "src/bof3/plchar/callWorkTableffcc.c",
     "src/bof3/plchar/callWorkTableffd4.c",
-    "src/bof3/plchar/callWorkTableffe0.c",
+    "src/bof3/plchar/dispatchWorkHalfwordHandler.c",
 ]
 support_sources = [
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp02500_801CE770.c",

@@ -9,7 +9,7 @@ load_address = 0x801F6C00
 
 sources = [
     "src/bof3/scenario/stateMirrorFacingProgress.c",
-    "src/bof3/scenario/stateMirrorFacing16.c",
+    "src/bof3/scenario/stateFacingSub16Request.c",
     "src/bof3/scenario/audioLatchPhaseRelease.c",
     "src/bof3/scenario/audioStartAction34.c",
 ]
@@ -53,6 +53,6 @@ support_sources = [
     "src/bof3/scenario/bootProgressState.c",
     "src/bof3/scenario/stateIndexedEffectGroup.c",
     "src/bof3/scenario/stateMirrorFacingPrimary.c",
-    "src/bof3/scenario/stateMirrorFacing13.c",
+    "src/bof3/scenario/stateFacingSub13Request.c",
 ]
 psyq_source = "src/bof3/support/scena01_00_psyq.c"

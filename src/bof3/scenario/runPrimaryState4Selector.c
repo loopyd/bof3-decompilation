@@ -78,7 +78,7 @@ void func_801BE1B0(u32 arg0);
  * only occurrence, and the body also embeds this payload's own jump-table base
  * 0x801F6CF4, so the clone lever is declined and every literal here was written
  * from this span's own bytes. The nearest shape donor is the same target's word
- * 7 handler runPrimaryState7
+ * 7 handler runPrimaryState7Countdown
  * (0x801FB268): its jump-table switch, gate-halfword waits, countdown tick,
  * mode-byte guards and closing flag clear supplied the statement order and
  * operand spelling of the arms here, and its per-arm base materialisation
@@ -87,7 +87,7 @@ void func_801BE1B0(u32 arg0);
  * @match 100.00
  * @residual none
  */
-void runPrimaryState4(void) {
+void runPrimaryState4Selector(void) {
   u8 *progress;
   u16 *countdown;
   u8 value;

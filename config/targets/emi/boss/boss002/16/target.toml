@@ -34,7 +34,7 @@ support_sources = [
     "src/bof3/boss/publishBattleHooks3.c",
     "src/bof3/boss/callStateTable2054Boss.c",
     "src/bof3/boss/publishWorkStepSetup2.c",
-    "src/bof3/boss/publishWorkStepSetup3.c",
+    "src/bof3/boss/publishWorkStepFlag.c",
     "src/bof3/boss/accumulateEnemyRearmScratch.c",
     "src/bof3/boss/initModeFlagBit.c",
     "src/bof3/boss/setupFlagOwnerFields.c",

@@ -56,7 +56,7 @@ void func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-void stateMirrorFacing13(
+void stateFacingSub13Request(
     u8* record) {
   func_8015C088();
   record[1] = 4;

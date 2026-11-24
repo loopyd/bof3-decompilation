@@ -38,7 +38,7 @@ void func_8014D978(void);
  * @match 100.00
  * @residual none
  */
-void stateSelectedUnseededUpdate2(
+void clearFreeRowState(
     void) {
   u8* work;
 

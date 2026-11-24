@@ -11,7 +11,7 @@ extern u8* D_1F800044;
 /* Work-sequence selector of the shared EXE image, outside this payload: it takes
  * a zero-extended byte sequence id and answers a word this body ignores. The
  * exact sibling
- * selectArrivalRoute17
+ * selectArrivalSeamPair
  * of this target declares the same prototype, and this target's generated
  * undefined_funcs_auto.txt binds the address. */
 u32 func_8014D8D4(u8 arg0);
@@ -65,7 +65,7 @@ u32 func_8014D8D4(u8 arg0);
  * @match 100.00
  * @residual none
  */
-void selectArrivalRoute35(
+void selectArrivalCentralPair(
     void) {
   if (D_1F800044[8] == D_1F800044[3]) {
     if (D_1F800044[8] != 3) {

@@ -18,7 +18,7 @@ void renderTranslucentTrianglesFour(
  * @match 100.00
  * @residual none
  */
-void tickCountdownReload8(void) {
+void tickCountdownReload8Advance(void) {
   u8 *work;
   u8 *helper_work;
   u8 *countdown_work;

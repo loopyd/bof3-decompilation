@@ -16,7 +16,7 @@ void renderTranslucentTrianglesFour(
  * @match 100.00
  * @residual none
  */
-void tickCountdownReload128(void) {
+void tickCountdownReload128Step(void) {
   u8 *work;
 
   work = D_1F800044 + 0x0C;

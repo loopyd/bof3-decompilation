@@ -35,8 +35,8 @@ segments:
     - func_801CE448
   - - 552
     - c
-    - requestResource50
-    - '@source: src/bof3/plchar/requestResource50.c'
+    - requestArrivalResource
+    - '@source: src/bof3/plchar/requestArrivalResource.c'
     - '@behavior: Overlay entry over the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from the shared EXE because no word or jump of this payload names it. Byte 0x08 is the current route index of the eight-entry window, byte 0x03 the chosen candidate index, byte 0x02 the step counter, byte 0x09 the countdown, byte 0x0B the step sign and byte 0x04 the record resource id. When the route index already equals the chosen index the body requests that resource again, as the pair (0x50, 2) through func_8014D6DC when the id reads 0x50 and as the bare id through func_8014D6B8 otherwise, and increments the step counter. Otherwise it stores the countdown one lower and, when that reaches zero, puts it back to 2, adds the step sign into the route index, masks the index with 7 and selects the resulting sequence through func_8014D8D4. It takes no arguments, returns nothing, and the 0x18-byte frame only keeps the return address at 0x10 across the calls.'
   - - 812
     - c
@@ -86,8 +86,8 @@ segments:
     - func_801CF37C
   - - 4244
     - c
-    - stateSelectedUnseededUpdate2
-    - '@source: src/bof3/plchar/stateSelectedUnseededUpdate2.c'
+    - clearFreeRowState
+    - '@source: src/bof3/plchar/clearFreeRowState.c'
     - '@behavior: Overlay step: reads the front-end record index from work byte 0x0B of the record published at scratchpad pointer cell 0x1F800044, looks it up in the shared 0x74-byte front-end record table at 0x80143FC8 and, while row byte 0 reads 0, clears the state byte at 0x12B of the record published at 0x80146250; both paths then run the shared no-argument update helper func_8014D978.'
   - - 4352
     - c
@@ -159,8 +159,8 @@ segments:
     - '@behavior: Work byte 3 == 1 step, the second handler of the work-byte-3 run based at 0x801D0684: runs the shared readiness helper func_8014DAEC and, while it reports ready, passes work byte 8 to the shared work-sequence selector func_8014D8D4 and writes 2 into work byte 3, advancing the dispatch to the 0x801D0204 handler. Otherwise it decrements work byte 0x0A, the counter the 0x801D0060 step armed with 0xB, and leaves the record untouched while that counter still reads nonzero; when the countdown reaches zero it queues the cue computed from work halfword 0x2C plus 0x100, copies work byte 8 into field 0x08 of the 0x74-byte front-end row selected by work byte 0x0B, copies work byte 7 into that row field 0x0A after defaulting work byte 7 to 1 when it reads zero, and closes by queueing cue 0x10B.'
   - - 7684
     - c
-    - stateSelectedUnseededUpdate3
-    - '@source: src/bof3/plchar/stateSelectedUnseededUpdate3.c'
+    - clearGatedRowState
+    - '@source: src/bof3/plchar/clearGatedRowState.c'
     - '@behavior: Work byte 3 == 2 step: reads the front-end record index from work byte 0x0B of the record published at scratchpad pointer cell 0x1F800044, looks that row up by byte offset in the shared 0x74-byte front-end record table at 0x80143FC8 and, while row byte 0 reads 0 or row byte 1 reads 1 and the shared gate byte 0x80149332 reads 0, clears work byte 0x2B and the state byte at 0x12B of the record published at 0x80146250; both paths then run the shared no-argument update helper func_8014D978.'
   - - 7840
     - c

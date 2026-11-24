@@ -69,7 +69,7 @@ extern u32 func_8014D8D4(u8 arg0);
  * @match 100.00
  * @residual none
  */
-void requestResource50(
+void requestArrivalResource(
     void) {
   if (D_1F800044[8] == D_1F800044[3]) {
     if (D_1F800044[4] == 0x50) {
