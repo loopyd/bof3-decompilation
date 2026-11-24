@@ -118,7 +118,7 @@ void func_801C601C(u32 arg0);
  * @match 100.00
  * @residual none
  */
-void runSecondarySequence7(void) {
+void runPrimaryState7Phases(void) {
   switch (D_80146875) {
     case 0:
       if (D_80143BB0 == 2u) {

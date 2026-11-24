@@ -31,7 +31,7 @@ void func_801C1630(void);
  * (0x801FDD7C), differing only in the effect-group ids (0, 1, 5 here, 7, 8, 5
  * there) and the first per-id argument (0 here, 8 there), and they are the
  * three-helper body of the adjacent in-image entry 2
- * armGroup015Arg1 with the extra
+ * armEffectThreeHelpers with the extra
  * func_801C187C(0) call inserted before its func_801C187C(5).
  * @status exact
  * @match 100.00

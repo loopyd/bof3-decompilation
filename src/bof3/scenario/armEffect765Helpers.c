@@ -31,7 +31,7 @@ void func_801C1630(void);
  * @match 100.00
  * @residual none
  */
-void armEffect65Tear6(void) {
+void armEffect765Helpers(void) {
   func_80166E88(7, 6, 5, 0);
   func_801C1400(0);
   func_801C187C(6);

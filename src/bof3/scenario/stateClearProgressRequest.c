@@ -27,7 +27,7 @@ void func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-void requestState5Substate0(
+void stateClearProgressRequest(
     void) {
   func_8015C088();
   g_ScenarioProgress = 0;

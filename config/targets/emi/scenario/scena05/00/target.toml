@@ -8,7 +8,7 @@ splat = "config/targets/emi/scenario/scena05/00/splat.yaml"
 load_address = 0x801F6C00
 
 sources = [
-    "src/bof3/scenario/audioStartAction84.c",
+    "src/bof3/scenario/audioStartAction84Phase.c",
     "src/bof3/scenario/querySettingFiveSix.c",
     "src/bof3/scenario/renderCursorTickProgress.c",
     "src/bof3/scenario/stateClearSharedRequest16.c",
@@ -23,7 +23,7 @@ sources = [
     "src/bof3/scenario/audioActionLatchRelease.c",
     "src/bof3/scenario/callSecondStepHandler.c",
     "src/bof3/scenario/stateClearProgressRequest12.c",
-    "src/bof3/scenario/audioStartAction26.c",
+    "src/bof3/scenario/audioStartAction26Phase.c",
     "src/bof3/scenario/audioStartAction4C.c",
 ]
 support_sources = [

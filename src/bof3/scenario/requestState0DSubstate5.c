@@ -24,7 +24,7 @@ void func_8015C088(void);
  * independent byte store through an already-loaded pointer, the same sinking
  * the battle overlay's exact initScratchWorkState (0x801E3334) shows. Its 0x40
  * bytes keep the request shape of the exact per-record sibling
- * requestState5Substate0
+ * stateClearProgressRequest
  * (0x801FC62C, table entry 1), which clears the shared progress byte
  * g_ScenarioProgress instead of a work byte and requests state 5 with sub-state
  * 0.

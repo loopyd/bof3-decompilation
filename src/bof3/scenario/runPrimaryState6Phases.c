@@ -132,7 +132,7 @@ u8 func_8019601C(void);
  * @match 100.00
  * @residual none
  */
-void runSecondarySequence6(void) {
+void runPrimaryState6Phases(void) {
   switch (D_80146875) {
     case 0:
       func_801BE1B0(3u);

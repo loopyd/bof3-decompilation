@@ -21,7 +21,7 @@ void func_8015C088(void);
  * (addiu $v0,$zero,5) ahead of the zero store, which is how the psyq compiler
  * schedules that constant while it keeps the store order. Its 0x3C bytes keep
  * the progress-clear-then-request shape of the exact sibling
- * requestState5Substate0
+ * stateClearProgressRequest
  * (0x801FC62C, the table's entry 1), which clears the same progress byte and
  * requests state 5 with sub-state 0 after the same helper call; the two
  * handlers differ only in the sub-state constant, so the two stores share the
@@ -30,7 +30,7 @@ void func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-void requestState5Substate5(
+void stateRequest5BothBytes(
     void) {
   func_8015C088();
   g_ScenarioProgress = 0;

@@ -56,7 +56,7 @@ void func_8015B580(u32 arg0, s32 arg1);
  * @match 100.00
  * @residual none
  */
-void runSecondarySequence11(
+void runPrimaryState11Phases(
     void) {
   s32 mode;
 

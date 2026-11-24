@@ -30,7 +30,7 @@ void func_801C1630(void);
  * armGroupFourHelpers in exactly one
  * word, the immediate of the first per-id func_801C187C argument (1 here, 0
  * there), and they are the adjacent word-6 body
- * armGroup015Arg1 with the extra
+ * armEffectThreeHelpers with the extra
  * func_801C187C(5) call inserted before its func_801C1630 tail.
  * @status exact
  * @match 100.00

@@ -29,7 +29,7 @@ void func_801C1630(void);
  * @match 100.00
  * @residual none
  */
-void armGroup015Arg1(void) {
+void armEffectThreeHelpers(void) {
   func_80166E88(0, 1, 5, 0);
   func_801C1400(0);
   func_801C187C(1);

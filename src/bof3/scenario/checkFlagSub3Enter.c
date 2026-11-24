@@ -31,7 +31,7 @@ void func_8015C088(void);
  * no other byte, and its 0x18-byte frame only keeps $ra across the calls; each
  * byte store materialises the 0x8014 page in $at on its own. Its 140 bytes
  * differ from the preceding table word
- * waitFlag3DSubstate2
+ * checkFlagSub2Enter
  * (0x801FDA04) only in the stored sub-state constant (2 there against 3 here)
  * and the armed flag bit (0x1A there against 0x1B here), which is shape
  * evidence only: no shipped overlay payload holds a byte-identical copy of
@@ -40,7 +40,7 @@ void func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-s32 waitFlag3DSubstate3(void) {
+s32 checkFlagSub3Enter(void) {
   if (func_8015B5D4(D_8014686C, 0x3D) == 0) {
     func_8015C088();
     D_80146875 = 5;

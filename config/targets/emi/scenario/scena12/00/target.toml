@@ -32,7 +32,7 @@ sources = [
     "src/bof3/scenario/stepRequestingGreyingArming.c",
     "src/bof3/scenario/stateSharedBytesPrimary.c",
     "src/bof3/scenario/requestState5Substate20.c",
-    "src/bof3/scenario/armEffect65Tear6.c",
+    "src/bof3/scenario/armEffect765Helpers.c",
     "src/bof3/scenario/armEffect65TearBoth.c",
 ]
 support_sources = [
@@ -70,9 +70,9 @@ support_sources = [
     "src/bof3/scenario/armEffect85Tear8.c",
     "src/bof3/scenario/armEffect85Tear5.c",
     "src/bof3/scenario/armEffect25Tear5.c",
-    "src/bof3/scenario/requestState8Substate0.c",
+    "src/bof3/scenario/stateClearRequest8Sub.c",
     "src/bof3/scenario/requestState4Substate20.c",
-    "src/bof3/scenario/requestState8Substate30.c",
+    "src/bof3/scenario/stateRequest30SubClear.c",
     "src/bof3/scenario/stateProgressBytesPrimary.c",
 ]
 psyq_source = "src/bof3/support/scena12_00_psyq.c"

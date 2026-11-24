@@ -118,7 +118,7 @@ void func_8015C058(void);
  * @match 100.00
  * @residual none
  */
-void runSecondarySequence12(
+void runPrimaryState12Phases(
     void) {
   switch (D_80146875) {
     case 0:

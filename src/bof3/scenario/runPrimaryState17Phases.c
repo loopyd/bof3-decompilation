@@ -79,7 +79,7 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
  * @match 100.00
  * @residual none
  */
-void runSecondarySequence17(
+void runPrimaryState17Phases(
     void) {
   switch (D_80146875) {
     case 0:

@@ -31,7 +31,7 @@ void func_8015C088(void);
  * the statement order, operand forms and declaration style while the constants
  * come from this span's own bytes. The neighbouring word 12 of the same table,
  * the exact
- * requestState8Substate0
+ * stateClearRequest8Sub
  * (0x801FC738), clears D_80146875 instead of requesting sub-state 0x1E. The
  * name records the proven behavior and the address anchor keeps it
  * target-qualified.
@@ -39,7 +39,7 @@ void func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-void requestState8Substate30(void) {
+void stateRequest30SubClear(void) {
   func_8015C088();
   D_80146875 = 0x1E;
   D_80146865 = 0;

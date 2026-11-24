@@ -99,8 +99,8 @@ segments:
       case table sits in the overlay rodata slot at 0x801F6C3C.'
   - - 4204
     - c
-    - runSecondarySequence2
-    - '@source: src/bof3/scenario/runSecondarySequence2.c'
+    - runPrimaryState2Phases
+    - '@source: src/bof3/scenario/runPrimaryState2Phases.c'
     - '@behavior: Word 2 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -125,8 +125,8 @@ segments:
       at 0x801F6C6C.'
   - - 5512
     - c
-    - runSecondarySequence3
-    - '@source: src/bof3/scenario/runSecondarySequence3.c'
+    - runPrimaryState3Phases
+    - '@source: src/bof3/scenario/runPrimaryState3Phases.c'
     - '@behavior: Word 3 (0-based) of the eighteen-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -172,8 +172,8 @@ segments:
     - func_801F8B50
   - - 8984
     - c
-    - runSecondarySequence5
-    - '@source: src/bof3/scenario/runSecondarySequence5.c'
+    - runPrimaryState5Phases
+    - '@source: src/bof3/scenario/runPrimaryState5Phases.c'
     - '@behavior: Word 5 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -195,8 +195,8 @@ segments:
       0x801F6D7C.'
   - - 9408
     - c
-    - runSecondarySequence6
-    - '@source: src/bof3/scenario/runSecondarySequence6.c'
+    - runPrimaryState6Phases
+    - '@source: src/bof3/scenario/runPrimaryState6Phases.c'
     - '@behavior: Word 6 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -245,8 +245,8 @@ segments:
       0x801F6D94.'
   - - 11200
     - c
-    - runSecondarySequence7
-    - '@source: src/bof3/scenario/runSecondarySequence7.c'
+    - runPrimaryState7Phases
+    - '@source: src/bof3/scenario/runPrimaryState7Phases.c'
     - '@behavior: Word 7 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -314,8 +314,8 @@ segments:
     - func_801F9DF4
   - - 14288
     - c
-    - runSecondarySequence9
-    - '@source: src/bof3/scenario/runSecondarySequence9.c'
+    - runPrimaryState9Phases
+    - '@source: src/bof3/scenario/runPrimaryState9Phases.c'
     - '@behavior: Word 9 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -352,8 +352,8 @@ segments:
       table sits in the overlay rodata slot at 0x801F6FC4.'
   - - 15200
     - c
-    - runSecondarySequence10
-    - '@source: src/bof3/scenario/runSecondarySequence10.c'
+    - runPrimaryState10Phases
+    - '@source: src/bof3/scenario/runPrimaryState10Phases.c'
     - '@behavior: Word 10 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -369,8 +369,8 @@ segments:
       secondary and primary state bytes.'
   - - 15596
     - c
-    - runSecondarySequence11
-    - '@source: src/bof3/scenario/runSecondarySequence11.c'
+    - runPrimaryState11Phases
+    - '@source: src/bof3/scenario/runPrimaryState11Phases.c'
     - '@behavior: Word 11 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -398,8 +398,8 @@ segments:
       at 0x801F7044.'
   - - 16136
     - c
-    - runSecondarySequence12
-    - '@source: src/bof3/scenario/runSecondarySequence12.c'
+    - runPrimaryState12Phases
+    - '@source: src/bof3/scenario/runPrimaryState12Phases.c'
     - '@behavior: Word 12 (0-based) of the eighteen-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -426,8 +426,8 @@ segments:
       case table sits in the overlay rodata slot at 0x801F706C.'
   - - 17428
     - c
-    - runSecondarySequence13
-    - '@source: src/bof3/scenario/runSecondarySequence13.c'
+    - runPrimaryState13Phases
+    - '@source: src/bof3/scenario/runPrimaryState13Phases.c'
     - '@behavior: Word 13 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -461,8 +461,8 @@ segments:
       the overlay table data at 0x801F70BC.'
   - - 18188
     - c
-    - runSecondarySequence14
-    - '@source: src/bof3/scenario/runSecondarySequence14.c'
+    - runPrimaryState14Phases
+    - '@source: src/bof3/scenario/runPrimaryState14Phases.c'
     - '@behavior: Word 14 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -491,8 +491,8 @@ segments:
     - func_801FBC88
   - - 20872
     - c
-    - runSecondarySequence15
-    - '@source: src/bof3/scenario/runSecondarySequence15.c'
+    - runPrimaryState15Phases
+    - '@source: src/bof3/scenario/runPrimaryState15Phases.c'
     - '@behavior: Word 15 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -542,8 +542,8 @@ segments:
       table data at 0x801F7174.'
   - - 22680
     - c
-    - runSecondarySequence16
-    - '@source: src/bof3/scenario/runSecondarySequence16.c'
+    - runPrimaryState16Phases
+    - '@source: src/bof3/scenario/runPrimaryState16Phases.c'
     - '@behavior: Word 16 (0-based) of the 18-word primary state table at
       0x801FE3E4, which dispatchPrimaryStateTable
       indexes with the shared primary scene state byte D_80146874. It steps the
@@ -573,7 +573,7 @@ segments:
       payload leading table data at 0x801F71F4.'
   - - 23320
     - c
-    - runSecondarySequence17
+    - runPrimaryState17Phases
   - - 24448
     - c
     - publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80
@@ -746,7 +746,7 @@ segments:
     - armGroupThreeHelpers
   - - 29836
     - c
-    - armGroup015Arg1
+    - armEffectThreeHelpers
   - - 29904
     - c
     - armGroup015Args15

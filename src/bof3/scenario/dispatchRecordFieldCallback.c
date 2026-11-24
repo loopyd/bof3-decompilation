@@ -25,7 +25,7 @@ extern ScenarioScena0900RecordCallback D_801FE434[];
  * 0x801FC624 (word 0, the inert stateNoopHandler4) through
  * 0x801FC8E4 (word 15), so the dispatch reaches the whole run of the overlay's
  * record callbacks, among them this target's
- * requestState5Substate5
+ * stateRequest5BothBytes
  * (0x801FC668, word 2). It reads no other state and writes none; the 0x18-byte
  * frame only keeps $ra across the indirect call, and the word load of
  * D_8014686C is scheduled between the record byte load and the index shift, so

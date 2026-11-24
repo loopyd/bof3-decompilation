@@ -59,7 +59,7 @@ void func_801C16B8(void);
  * @match 100.00
  * @residual none
  */
-void runSecondarySequence5(void) {
+void runPrimaryState5Phases(void) {
   switch (D_80146875) {
     case 0:
       func_8014ECAC(0xDu);

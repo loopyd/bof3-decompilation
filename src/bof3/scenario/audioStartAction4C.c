@@ -33,12 +33,12 @@ void func_8015C058(void);
  * sub-state 1 materialise the 0x8014 page in $at on their own, so the store order
  * D_80143BB0 then D_80146875 in sub-state 0 and D_80146875 then D_80146874 in
  * sub-state 1 is the source statement order. The seed is the exact in-target
- * sibling audioStartAction84
+ * sibling audioStartAction84Phase
  * (0x801FC2F0): these 36 words differ from that body at exactly three of them,
  * the action id immediate passed to func_80150224 (0x4C here, 0x84 there) and
  * the two absolute `j` words, each shifted by the -0x488 delta between the two
  * spans, so this was a relocation-different twin and not a clone. The same three
- * differences hold against audioStartAction26
+ * differences hold against audioStartAction26Phase
  * (0x801F8C1C, delta -0x3B5C) and
  * audioActionLatchRelease
  * (0x801F92EC, delta -0x348C).

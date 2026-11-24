@@ -112,7 +112,7 @@ void func_8015DF18(u32 cue_id);
  * @match 100.00
  * @residual none
  */
-void runSecondarySequence16(void) {
+void runPrimaryState16Phases(void) {
   switch (D_80146875) {
     case 0:
       if (D_80143BB0 == 2u) {

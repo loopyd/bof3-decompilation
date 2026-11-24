@@ -26,7 +26,7 @@ void func_8015C088(void);
  * dispatcher passes are ignored, and no in-image jal reaches the address. The
  * only in-image reference to this address is that table word. Its 76 bytes are
  * the same helper-and-clear shape as its callback-run neighbour
- * requestState8Substate0
+ * stateClearRequest8Sub
  * (0x801FC738), whose own live gate measured exact; comparing those two payload
  * spans, the only differing word is the immediate of that one $v0 load (1 here,
  * 8 there). The name records that proven behavior and the address anchor keeps

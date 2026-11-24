@@ -39,7 +39,7 @@ void func_8015C088(void);
  * siblings
  * stateProgressBytesPrimary
  * (0x801FC6E0) and
- * requestState8Substate30
+ * stateRequest30SubClear
  * (0x801FC784) of this overlay, and the party-test-then-request shape with the
  * answer 1 of
  * waitFlag0CForParty5ThenRequestPrimaryState6Substate0Or14Or5ScenarioScena0900_801FD2E8

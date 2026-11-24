@@ -136,9 +136,9 @@ void publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80(u8 step);
  * Clone lever declined: a scan of the 398 extracted payloads under
  * out/binaries for this span's own prologue and dispatch words found the bytes
  * only in this payload at offset 0x470C, so no byte-identical twin exists. The
- * exact siblings runSecondarySequence11,
- * runSecondarySequence16 and
- * runSecondarySequence17 carry a
+ * exact siblings runPrimaryState11Phases,
+ * runPrimaryState16Phases and
+ * runPrimaryState17Phases carry a
  * different case set each, so they are shape evidence only.
  *
  * Shape evidence: the claim-and-seed statement run is the exact sibling
@@ -152,7 +152,7 @@ void publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80(u8 step);
  * @match 100.00
  * @residual none
  */
-void runSecondarySequence14(void) {
+void runPrimaryState14Phases(void) {
   switch (D_80146875) {
     case 0:
       func_801BE1B0(3u);

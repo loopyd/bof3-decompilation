@@ -102,8 +102,8 @@ segments:
     - '@behavior: Primary state 6 handler of this overlay, reached through word 6 of the thirty-two-word primary handler table at 0x801FD5E8: while the shared sub-state byte D_80146875 reads zero and the shared scenario progress byte g_ScenarioProgress reads 0x18 it sets flag bit 0xA of the shared scenario flag word D_8014686C through the shared bit-set helper func_8015B580 (0x8015B580), runs the shared front-end release helper func_8015C058 (0x8015C058), clears the three shared main-RAM state bytes 0x80146865, 0x80146866 and 0x80146867 and the shared sub-state byte D_80146875, and requests primary scene state 0 in the shared primary state byte D_80146874, leaving the progress byte unchanged; on any other sub-state or progress value it returns without touching anything. It takes no arguments and returns nothing, its 0x18-byte frame keeps $ra across the two calls and $s0 across the body, which holds the D_80146875 address because that cell is both read and written, the three state bytes and the primary state byte materialise the 0x8014 page in $at on their own while the sub-state store uses that saved pointer, the constant 0x18 is materialised into $v0 in the delay slot of the sub-state test, no in-image jal targets the address and its only image word is 0x801FD600.'
   - - 8220
     - c
-    - audioStartAction26
-    - '@source: src/bof3/scenario/audioStartAction26.c'
+    - audioStartAction26Phase
+    - '@source: src/bof3/scenario/audioStartAction26Phase.c'
     - '@behavior: Primary state 7 handler of this overlay, reached through word 7 (0x801FD604) of the thirty-two-word primary handler table at 0x801FD5E8 that callPrimaryRunHandler (0x801F83EC) indexes with the shared primary state byte D_80146874, so no in-image jal targets it and that table word is its only image reference. It drives the shared sub-state byte D_80146875 through two steps and returns without touching anything for any other sub-state value: sub-state 0 starts action 0x26 through the shared action helper func_80150224 (0x80150224), latches the shared phase byte D_80143BB0 (0x80143BB0) to 2 and advances the sub-state byte to 1, while sub-state 1 waits while that phase byte reads 2 and, once it changes, runs the shared front-end release helper func_8015C058 (0x8015C058), clears the sub-state byte and requests primary scene state 0 in the shared primary state byte D_80146874 (0x80146874). It takes no arguments and returns nothing, its 0x18-byte frame keeps $ra across the two calls and $s0 for the sub-state pointer, the sub-state byte is read once into $v1 for the two-case test, the constants 1 and 2 are materialised into $v0 in the delay slots of that test, and the phase byte stores through $at while the sub-state byte stores through $s0.'
   - - 8364
     - asm
@@ -142,8 +142,8 @@ segments:
     - func_801FBDBC
   - - 22256
     - c
-    - audioStartAction84
-    - '@source: src/bof3/scenario/audioStartAction84.c'
+    - audioStartAction84Phase
+    - '@source: src/bof3/scenario/audioStartAction84Phase.c'
     - '@behavior: Primary state 19 handler of this overlay, reached through word 19 (0x801FD634) of the thirty-two-word primary handler table at 0x801FD5E8 that callPrimaryRunHandler indexes with the shared primary state byte D_80146874, so no in-image jal targets it and that table word is its only image reference. It drives the shared sub-state byte D_80146875 through two steps: sub-state 0 starts action 0x84 through func_80150224, latches the shared phase byte D_80143BB0 to 2 and advances the sub-state byte to 1; sub-state 1 waits while that phase byte reads 2 and then, once it changes, runs the shared front-end release helper func_8015C058, clears the sub-state byte and requests primary scene state 0 in D_80146874. Any other sub-state value returns untouched, and it takes no arguments.'
   - - 22400
     - asm
