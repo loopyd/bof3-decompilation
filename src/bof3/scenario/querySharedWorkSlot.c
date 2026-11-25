@@ -18,7 +18,7 @@
  * seeds bytes 1/2/3/4 with 0/8/0/0x40 and its words at 0x08/0x0C/0x10/0x14 from
  * the scratch work object published at pointer slot 0x1F800044 + 0x44. The
  * shape is the 0x8-entry/0x1C-stride sibling of
- * findFreeWorkRecordScenarioScena0800_801F7DAC (0x40 entries, 0x28 stride) in
+ * queryFreeSlot (0x40 entries, 0x28 stride) in
  * this same target, which is not byte-identical to it.
  * @status exact
  * @match 100.00

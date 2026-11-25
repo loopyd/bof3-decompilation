@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-u8* findFreeWorkRecordScenarioScena0700_801F8394(void);
+u8* querySharedWorkSlot2(void);
 void func_801F83D0(u8* record);
 s32 func_801F85D8(void);
 
@@ -38,7 +38,7 @@ void claimFreeEveryEighth(
   u8* work;
 
   if ((*(s32*)(SPAD_PTR_SLOT(u8, 0x44u) + 0xC) & 7) == 0) {
-    record = findFreeWorkRecordScenarioScena0700_801F8394();
+    record = querySharedWorkSlot2();
     if (record != 0) {
       func_801F83D0(record);
     }

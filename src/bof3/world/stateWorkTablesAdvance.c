@@ -37,7 +37,7 @@ extern void func_801F3070(void);
  *           Boundary and caller: the word 0x801F2C48 is entry 0 of this
  *           overlay's handler run at 0x801F3658, whose three words are
  *           0x801F2C48, 0x801F2CAC and 0x801F2D28. The target's exact
- *           dispatcher callStateTable3658World02
+ *           dispatcher callWorkByte2Table5
  *           indexes that run with the record state byte at +0x02, so the
  *           overlay loader reaches this body and no jal names it; the body
  *           itself ends at the jr $ra of the 0x64-byte row, which is the entry

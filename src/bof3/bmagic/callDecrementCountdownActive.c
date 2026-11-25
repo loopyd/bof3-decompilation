@@ -3,7 +3,7 @@
 extern u8 *workRecord801F24E0; /* @source 0x801F24E0 @kind data */
 
 /* Three-entry overlay handler table for work-record byte 2. */
-extern void (*dispatchHandlerTable801F1C94[])(void); /* @source 0x801F1C94 @kind data */
+extern void (*countStepHandlerTable[])(void); /* @source 0x801F1C94 @kind data */
 
 /* Projects the work record's position and stores the screen pair. */
 extern void projectStoreScreenPair(void);
@@ -35,7 +35,7 @@ void callDecrementCountdownActive(void) {
     s16 countdown;
 
     step_record = workRecord801F24E0;
-    dispatchHandlerTable801F1C94[step_record[2]]();
+    countStepHandlerTable[step_record[2]]();
     countdown_record = workRecord801F24E0;
     countdown = *(s16 *)(countdown_record + 0x26);
     if (countdown != 0) {

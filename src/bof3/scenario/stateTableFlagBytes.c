@@ -27,7 +27,7 @@
  * loop is that body instruction for instruction with only those immediates
  * changed; the two trailing flag clears are this span's own bytes. The
  * claim-flag reading of the lead byte is anchored on the already-exact
- * sibling findFreeWorkRecordScenarioScena0700_801F8394, which walks the same
+ * sibling querySharedWorkSlot2, which walks the same
  * table with the same counter and pointer advance. The clone lever was
  * declined: no byte-identical twin of this span exists, because the two flag
  * stores name addresses inside this payload's own range.

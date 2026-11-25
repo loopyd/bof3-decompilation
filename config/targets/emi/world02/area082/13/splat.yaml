@@ -99,8 +99,8 @@ segments:
     - func_801F387C
   - - 3344
     - c
-    - clearWorkTableAt800E4800World02Area08213_801F3910
-    - '@source: src/bof3/world/clearWorkTableAt800E4800World02Area08213_801F3910.c'
+    - stateWorkTableClear
+    - '@source: src/bof3/world/stateWorkTableClear.c'
     - '@behavior: clears the lead byte of each of the 0x80 entries of the 0x14-byte-stride work table at 0x800E4800, walking the table with an unsigned byte counter in a bottom-tested loop; takes no arguments and returns nothing.'
   - - 3388
     - asm
@@ -112,7 +112,7 @@ segments:
     - '@behavior: overlay per-frame helper, walks the 0x80 entries of the 0x14-byte-stride work table at 0x800E4800 and, for each entry whose lead byte is non-zero, subtracts the signed halfword at record +0x02 shifted left by eight from the record +0x0C word, stores the difference back, calls the per-record draw helper at 0x801F387C with the entry pointer and clears the lead byte once the updated +0x0C word is below the +0x3C word of the scratch work record published through 0x1F800044; it then returns 1 when at least one entry was active this frame and 0 when none was, whether or not any entry was retired.'
   - - 3932
     - c
-    - callStateTable576World02
+    - callWorkByte2Table3
     - '@source: src/bof3/world/area08213DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the record dispatch byte at offset 0x02 as the index and calls the handler at that index of the overlay-local handler table based at 0x801F576C (eight shipped entries, 0x801F3BA0 through 0x801F4334, ending where the overlay byte data begins at 0x801F578C); takes no arguments and forwards none.'
   - - 4000
@@ -159,13 +159,13 @@ segments:
     - func_801F46C8
   - - 7636
     - c
-    - callStateTable57World02
+    - callWorkByte2Table4
     - '@source: src/bof3/world/area08213DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the record dispatch byte at offset 0x02 as the index and calls the handler at that index of the overlay-local handler table based at 0x801F57D0 (sixteen shipped entries, 0x801F4A18 through 0x801F52D8, ending where the following byte data begins at 0x801F5810); takes no arguments and forwards none.'
   - - 7704
     - c
-    - initializeWorkFieldsWorld02Area08213_801F4A18
-    - '@source: src/bof3/world/initializeWorkFieldsWorld02Area08213_801F4A18.c'
+    - setupWorkFields
+    - '@source: src/bof3/world/setupWorkFields.c'
     - '@behavior: initializes scratch work fields, transforms saved words +0x0C/+0x10 into +0x34/+0x38 and advances byte +0x02; takes no arguments and returns nothing.'
   - - 7824
     - c
@@ -232,8 +232,8 @@ segments:
     - func_801F51BC
   - - 9852
     - c
-    - fillScreenGradientAdvanceWorkByte2AtScenarioProgress3bWorld02Area08213_801F527C
-    - '@source: src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress3bWorld02Area08213_801F527C.c'
+    - renderGradientAdvance
+    - '@source: src/bof3/world/renderGradientAdvance.c'
     - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, and, only when the shared scenario progress byte at 0x80146864 is 0x3B, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record byte +0x02 by one.'
   - - 9944
     - c
@@ -242,8 +242,8 @@ segments:
     - '@behavior: draws a white full-screen flat quad, queues cue 0x202, sets byte 0x8014933A, restores palette scale 0x80, clears the three shared channel-bias bytes and clears scratch work-header flags through 0x80196070.'
   - - 10120
     - c
-    - scalePaletteChannelsWorld02Area08213_801F5388
-    - '@source: src/bof3/world/scalePaletteChannelsWorld02Area08213_801F5388.c'
+    - mathPaletteChannelScale
+    - '@source: src/bof3/world/mathPaletteChannelScale.c'
     - '@behavior: multiplies each 5-bit colour channel of all 0x100 entries of the palette window at 0x80034000 by the signed caller scale, shifts every product right by 7 (0x80 is the unity scale), packs the three channels back with bit 15 of the source word preserved and stores the result into the palette window at 0x80038000; it then stores 1 into the shared palette-stage byte at 0x80145988 and returns.'
   - - 10280
     - asm
@@ -255,8 +255,8 @@ segments:
     - '@behavior: reads the +0x79 byte of the work record published through the global pointer cell 0x80146250 and advances the halfword at offset 0x0A of the record published through 0x80148210 by 0x0A when that byte is 4 and by 0x16 for every other value, leaving the halfword untouched when it is 8; each arm reloads the 0x80148210 cell and the two arms share one trailing halfword store.'
   - - 10740
     - c
-    - setWorkWord5World02Area08213_801F55F4
-    - '@source: src/bof3/world/setWorkWord5World02Area08213_801F55F4.c'
+    - stateWorkFieldFive
+    - '@source: src/bof3/world/stateWorkFieldFive.c'
     - '@behavior: loads the scratch work record cursor from scratchpad pointer-slot 0x1F800044 and writes the word 5 to the record +0x70 field.'
   - - 10760
     - c

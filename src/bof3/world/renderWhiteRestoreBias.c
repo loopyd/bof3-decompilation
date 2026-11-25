@@ -10,7 +10,7 @@ extern void func_8017A9A4(u32 primitive); /* @source 0x8017A9A4 */
 extern void func_8014E5A0(u32 order, u32 size); /* @source 0x8014E5A0 */
 extern void func_8015DF18(u16 cue); /* @source 0x8015DF18 */
 extern void func_80196070(void); /* @source 0x80196070 */
-extern void scalePaletteChannelsWorld02Area08213_801F5388(s32 scale);
+extern void mathPaletteChannelScale(s32 scale);
 
 /* @source 0x801F52D8
  * @behavior Final handler of the step table at 0x801F57D0. Initializes a
@@ -46,7 +46,7 @@ void renderWhiteRestoreBias(
   func_8014E5A0(4, 0x18);
   func_8015DF18(0x202);
   D_8014933A = 1;
-  scalePaletteChannelsWorld02Area08213_801F5388(0x80);
+  mathPaletteChannelScale(0x80);
   D_80145EEF = 0;
   D_80145EEE = 0;
   D_80145EED = 0;

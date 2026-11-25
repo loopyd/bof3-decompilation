@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell. This target's map binds it at
  * 0x1F800044 as g_battle_work, the name its lifted sources
- * clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0
+ * stateByteResetAdvance
  * and decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZero
  * BmagicMagic13703_801EFD9C already used. The original re-materialises the cell
  * before each access group because a store through the pointer it supplied may

@@ -3,5 +3,5 @@ stateStatusOr2Gate = 0x801F2C04;
 stateStatusGateGate = 0x801F2C44;
 func_801F2C94 = 0x801F2C94;
 stateRetreatHalfword2 = 0x801F2D14;
-advanceCounter2By15World02Area08113_801F2D3C = 0x801F2D3C;
-setTwoWorld02Area08113_801F2D64 = 0x801F2D64;
+stateCounterAdvance = 0x801F2D3C;
+stateStatusSelectTwo = 0x801F2D64;

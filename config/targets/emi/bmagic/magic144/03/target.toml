@@ -9,20 +9,20 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/renderFanTrianglesCapped.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic14403_801EF1E4.c",
+    "src/bof3/bmagic/projectPositionTransform.c",
     "src/bof3/bmagic/callShiftBetweenHelpers.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EF554.c",
+    "src/bof3/bmagic/callHandlerInvokeBoth.c",
     "src/bof3/bmagic/stateCopyTripletSet.c",
-    "src/bof3/bmagic/decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738.c",
-    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134.c",
+    "src/bof3/bmagic/stateFrameParityStep.c",
+    "src/bof3/bmagic/stateAdvanceFlagTest.c",
+    "src/bof3/bmagic/stateCountdownGlobalClear.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic14403_801F046C.c",
     "src/bof3/bmagic/decrementSubmitForwardGlobal.c",
     "src/bof3/bmagic/incrementWorkByteSet.c",
     "src/bof3/bmagic/workByte9AdvanceAt10.c",
     "src/bof3/bmagic/workByte9AdvanceAt11.c",
     "src/bof3/bmagic/incrementByteGlobalByte.c",
-    "src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic14403_801EEC04.c",
+    "src/bof3/bmagic/callPoolRecordStep.c",
 ]
 support_sources = [
     "src/bof3/support/magic144_03_psyq.c",

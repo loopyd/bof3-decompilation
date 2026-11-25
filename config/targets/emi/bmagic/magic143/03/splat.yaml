@@ -33,8 +33,8 @@ segments:
     - func_801EEC5C
   - - 292
     - c
-    - raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic14303_801EED24
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic14303_801EED24.c'
+    - stateRaiseFlagInvoke
+    - '@source: src/bof3/bmagic/stateRaiseFlagInvoke.c'
   - - 368
     - c
     - callStateTablefee8

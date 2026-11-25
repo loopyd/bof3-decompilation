@@ -30,13 +30,13 @@ segments:
     - dispatchProgressHandler_scena18
   - - 64
     - c
-    - advanceScenarioProgressToOne_scena18
+    - stateProgressOne2
   - - 84
     - c
-    - advanceScenarioProgressTo2_scena18
+    - stateProgressTwo
   - - 104
     - c
-    - dispatchProgressHandler_scena18_801F6C68
+    - callProgressHandler6
   - - 164
     - c
     - noopProgressHandler_scena18
@@ -45,19 +45,19 @@ segments:
     - dispatchRecordCallback_scena18
   - - 236
     - c
-    - noopRecordCallbackByByte7A_scena18
+    - noopRecordSlot
   - - 244
     - c
-    - noopCallbackReturningZero_scena18_801F6CF4
+    - noopZeroResult2
   - - 252
     - c
-    - noopCallbackReturningZero_scena18
+    - noopZeroResult3
   - - 260
     - c
-    - clearWorkRecordsAndResetEffectSlots_scena18
+    - stateResetWorkRecords
   - - 336
     - c
-    - noopProgressHandler_scena18_801F6D50
+    - noopProgressSlot
   - - 344
     - rodata
     - scena18HandlerTable

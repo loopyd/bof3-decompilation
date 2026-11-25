@@ -32,7 +32,7 @@ void func_801F5428(s32 color);
  * by 7 (so 0x80 is the unity scale) and stores the packed result into the
  * destination palette window. Splat binds the address through this target's
  * map row. */
-void scalePaletteChannelsWorld02Area08213_801F5388(s32 scale);
+void mathPaletteChannelScale(s32 scale);
 
 /* @source 0x801F4DC8
  * @behavior Overlay step handler, entry index 7 of the sixteen-pointer step
@@ -82,7 +82,7 @@ void renderRampDimBias(
   func_801F5428((s32)color);
   scaleCell = workRecordCursor1F800044;
   bias = (u8)((u32)scaleCell[9] / 3);
-  scalePaletteChannelsWorld02Area08213_801F5388(0x80 - bias);
+  mathPaletteChannelScale(0x80 - bias);
   incCell = workRecordCursor1F800044;
   dim = -incCell[9] / 3;
   D_80145EEF = dim;

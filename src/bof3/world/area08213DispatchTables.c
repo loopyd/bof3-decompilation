@@ -19,7 +19,7 @@ extern void (*D_801F57D0[])(void); /* @source 0x801F57D0 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable576World02, D_801F576C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkByte2Table3, D_801F576C);
 
 /* @source 0x801F49D4
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -37,4 +37,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable576World02, D_801F
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable57World02, D_801F57D0);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkByte2Table4, D_801F57D0);

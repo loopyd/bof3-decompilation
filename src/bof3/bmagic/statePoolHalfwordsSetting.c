@@ -3,13 +3,13 @@
 /* Record pool of this overlay at 0x801F1CA0: 48 records of stride 0x2C, the
  * 0x840-byte span that ends exactly at the record pointer cell 0x801F24E0. The
  * target map binds the flags byte of every record through
- * magic13103RecordFlags, and the sibling lift
+ * recordFlagsTable, and the sibling lift
  * reserveFirstFreeRecord walked the same pool with the
  * same 0x30 count and 0x2C stride. The original addresses byte 0 and the two
  * bytes that follow it with their own `lui` / `addu` / `sb` triple, so the two
  * trailing bytes keep the address-anchored names the payload's own asm used and
  * the generated undefined_syms_auto.txt binds them. */
-extern u8 magic13103RecordFlags[]; /* @source 0x801F1CA0 @kind data */
+extern u8 recordFlagsTable[]; /* @source 0x801F1CA0 @kind data */
 extern u8 D_801F1CA1[]; /* @source 0x801F1CA1 @kind data */
 extern u8 D_801F1CA2[]; /* @source 0x801F1CA2 @kind data */
 
@@ -111,7 +111,7 @@ void statePoolHalfwordsSetting(
 
   for (index = 0; index < 0x30; index++) {
     offset = index * 0x2C;
-    magic13103RecordFlags[offset] = 0;
+    recordFlagsTable[offset] = 0;
     D_801F1CA1[offset] = 0;
     D_801F1CA2[offset] = 0;
   }

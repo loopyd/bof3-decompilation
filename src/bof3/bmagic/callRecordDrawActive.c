@@ -3,7 +3,7 @@
 extern u8 *workRecord801F24E0; /* @source 0x801F24E0 @kind data */
 
 /* Three-entry overlay handler table for work-record byte 2. */
-extern void (*dispatchHandlerTable801F1C48[])(void); /* @source 0x801F1C48 @kind data */
+extern void (*drawStepHandlerTable[])(void); /* @source 0x801F1C48 @kind data */
 
 /* Projects the work record's position and stores the screen pair. */
 extern void projectStoreScreenPair(void);
@@ -31,7 +31,7 @@ void callRecordDrawActive(void) {
     u8 *gate_record;
 
     step_record = workRecord801F24E0;
-    dispatchHandlerTable801F1C48[step_record[2]]();
+    drawStepHandlerTable[step_record[2]]();
     gate_record = workRecord801F24E0;
     if (gate_record[0] != 0 && gate_record[2] != 0) {
         projectStoreScreenPair();

@@ -43,10 +43,10 @@ segments:
     - stateRetreatHalfword2
   - - 316
     - c
-    - advanceCounter2By15World02Area08113_801F2D3C
+    - stateCounterAdvance
   - - 356
     - c
-    - setTwoWorld02Area08113_801F2D64
+    - stateStatusSelectTwo
 - - 384
   - bin
   - tail

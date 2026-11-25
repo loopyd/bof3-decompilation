@@ -2,7 +2,7 @@
 
 /* Work-table tick helper, the overlay's own routine at 0x801F3AAC. Its body
  * walks the 0x80 entries of the 0x14-byte-stride work table at 0x800E4800 that
- * the exact sibling clearWorkTableAt800E4800World02Area08213_801F3910 names,
+ * the exact sibling stateWorkTableClear names,
  * reloads the scratch work record through 0x1F800044 inside the loop and
  * reports through a zero-extended byte whether any entry still carried a
  * non-zero lead byte this frame. Splat binds the address through this target's

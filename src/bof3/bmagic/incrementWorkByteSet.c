@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell, bound at 0x1F800044 by this target's map
  * row g_battle_work. The exact lift
- * decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134
+ * stateCountdownGlobalClear
  * reads the same cell through the same declaration. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 

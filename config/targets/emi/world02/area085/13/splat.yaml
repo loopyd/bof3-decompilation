@@ -51,7 +51,7 @@ segments:
     - '@behavior: Entry 3 of the byte-1 handler run of this overlay based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: increments that record sub-state byte +0x02 and reads it back, so when the incremented byte reads 5 it increments the scenario progress byte at 0x80146864 and sets the dispatch byte +0x01 to 4, and for every other value it sets that dispatch byte to (value & 1) + 1, then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
   - - 688
     - c
-    - invokeTwoHelpersWorld02Area08513_801F2EB0
+    - callActiveRecordsBase
   - - 728
     - asm
     - func_801F2ED8
@@ -62,7 +62,7 @@ segments:
     - '@behavior: Overlay work-record teardown: walks the 30 shared 0x98-byte work records based at 0x80146888, publishes each record through the scratchpad pointer cell 0x1F800044 and, for a record whose byte 0 has bit 0 set, stores 5 in its state byte 0x29 and runs the shared service at 0x8014D290; it then publishes the base record at 0x80145E90 unconditionally, stores 5 in that base byte 0x29, runs the shared service once more and restores the pointer cell incoming value.'
   - - 1180
     - c
-    - dispatchStateByte1Table3d40World02Area08513_801F309C
+    - callWorkByte1Table
     - '@source: src/bof3/world/area08513DispatchTables.c'
   - - 1248
     - c
@@ -87,7 +87,7 @@ segments:
     - '@behavior: Overlay step: reads the shared primary-state and sub-state byte pair at 0x80146874 as one halfword and, when it is 0x0C06, clears bit 0x40 of work byte 0 of the record behind scratchpad cell 0x1F800044, runs the transition helper 0x801C1254 with 2 and 2 and requests resource 1 through 0x8014D6B8; otherwise it walks the 0x140-byte work records counted by 0x80146254 and copies the word triplet 0x34, 0x38, 0x3C of every record whose state byte 0x79 reads 2 into the scratch work record, then lowers halfword 0x0A of the record at 0x80148210 by 2.'
   - - 3280
     - c
-    - setWorkByte6ClearWorkByte92World02Area08513_801F38D0
+    - stateWorkByte6Clear
   - - 3312
     - asm
     - func_801F38F0
@@ -106,10 +106,10 @@ segments:
     - func_801F3B5C
   - - 4004
     - c
-    - invokeHelperWithWorkWorld02Area08513_801F3BA4
+    - callHelperWithWork
   - - 4044
     - c
-    - advanceWorkHalfwordWorld02Area08513_801F3BCC
+    - stateWorkHalfwordStep
   - - 4076
     - c
     - queueFrontEndMode
@@ -117,11 +117,11 @@ segments:
     - '@behavior: Overlay front-end cue gate: reads the shared front-end mode byte D_80143BB0 and, unless that byte reads exactly 5, queues sound cue 0x201 through the main-executable dispatcher 0x8015DF18; the compared constant 5 is materialised before the test and the return-address save fills that branch delay slot, so the 0x18-byte frame holds only that save; takes no arguments and returns nothing.'
   - - 4124
     - c
-    - invokeHelperArgWorld02Area08513_801F3C1C
+    - callPaletteOffsetDim
   - - 4156
     - c
-    - offsetPaletteChannelsWorld02Area08513_801F3C3C
-    - '@source: src/bof3/world/offsetPaletteChannelsWorld02Area08513_801F3C3C.c'
+    - mathPaletteChannelClamp
+    - '@source: src/bof3/world/mathPaletteChannelClamp.c'
   - - 4396
     - textbin
     - D_801F3D2C

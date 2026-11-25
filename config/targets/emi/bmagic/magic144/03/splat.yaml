@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic14403_801EEC04
-    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic14403_801EEC04.c'
+    - callPoolRecordStep
+    - '@source: src/bof3/bmagic/callPoolRecordStep.c'
     - '@behavior: Calls the handler that unsigned work byte 1 selects from a local pair seeded with 0x801EED04 and 0x801EEE50, then publishes each occupied record of the 48-record pool at 0x801F050C as the work object and the record word 0x74 into 0x801EB4E0, runs its byte-1 step through 0x801EF510 and restores both cells.'
   - - 260
     - asm
@@ -61,8 +61,8 @@ segments:
     - '@behavior: Decrements nonzero work byte 9, then when work byte 0xB equals 0x80 submits the published record, forwards the battle byte, decrements global work byte 0xB and invokes 0x801E5988.'
   - - 1508
     - c
-    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic14403_801EF1E4
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic14403_801EF1E4.c'
+    - projectPositionTransform
+    - '@source: src/bof3/bmagic/projectPositionTransform.c'
     - '@behavior: Projects the work-record position, builds zero rotation, composes the shared matrix and installs the transform.'
   - - 1684
     - c
@@ -75,8 +75,8 @@ segments:
     - '@source: src/bof3/bmagic/magic14403DispatchTables.c'
   - - 2388
     - c
-    - dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EF554
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EF554.c'
+    - callHandlerInvokeBoth
+    - '@source: src/bof3/bmagic/callHandlerInvokeBoth.c'
     - '@behavior: Dispatches the handler indexed by work byte 2 at 0x801F04EC, then re-reads the work pointer and calls 0x800AF764 and 0x801EF818 when work bytes 0 and 2 are nonzero.'
   - - 2516
     - c
@@ -94,8 +94,8 @@ segments:
     - '@behavior: Increments scratchpad work-object bytes 9 and 0xA modulo 256 through the work pointer cell at 0x1F800044 and, only when the reloaded byte 9 equals 0x19, sets bit 0x80 of the shared record byte 0xB at 0x801EB4E0 and increments work-object byte 2.'
   - - 2872
     - c
-    - decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738
-    - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738.c'
+    - stateFrameParityStep
+    - '@source: src/bof3/bmagic/stateFrameParityStep.c'
   - - 3096
     - asm
     - func_801EF818
@@ -115,12 +115,12 @@ segments:
     - '@behavior: Adds two to scratchpad work-object byte 9 modulo 256 through the pointer cell at 0x1F800044, then re-reads the cell and the stored byte and increments work-object byte 2 only when that byte equals 0x10. Entry 13 of the handler-pointer run based at 0x801F04D0.'
   - - 5360
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0.c'
+    - stateAdvanceFlagTest
+    - '@source: src/bof3/bmagic/stateAdvanceFlagTest.c'
   - - 5428
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134.c'
+    - stateCountdownGlobalClear
+    - '@source: src/bof3/bmagic/stateCountdownGlobalClear.c'
     - '@behavior: Entry 14 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F04D0, whose word 0x801F0508 is the only word in this payload that holds this address, so no jal names this body. It decrements work byte 9 through the pointer cell at 0x1F800044 and tests the stored byte truncated to eight bits; only when that countdown reaches zero does it decrement byte 0xB of the shared record at 0x801EB4E0 and then clear work bytes 0x00 through 0x04, each clear re-reading the pointer cell. Leaf with no frame that takes no arguments and returns nothing through the jr $ra at 0x801F01C8; work bytes 9 and 0x00..0x04 and record byte 0xB stay offset-anchored.'
   - - 5584
     - asm

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 *workRecord801F24E0; /* @source 0x801F24E0 @kind data */
-extern void (*dispatchHandlerTable801F1C30[])(void); /* @source 0x801F1C30 @kind data */
+extern void (*recordStepHandlerTable[])(void); /* @source 0x801F1C30 @kind data */
 
 /* @source 0x801F10F4
  * @behavior Reads the record pointer at 0x801F24E0, uses its unsigned byte at
@@ -12,5 +12,5 @@ extern void (*dispatchHandlerTable801F1C30[])(void); /* @source 0x801F1C30 @kind
  * @residual none
  */
 void callRecordByte1Handler(void) {
-  dispatchHandlerTable801F1C30[workRecord801F24E0[1]]();
+  recordStepHandlerTable[workRecord801F24E0[1]]();
 }

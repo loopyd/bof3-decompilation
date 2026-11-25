@@ -14,7 +14,7 @@ extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind data */
  * signed caller scale, shifts each product right by 7 and preserves bit 15 of
  * the source word, so 0x80 is the unity scale. Splat binds the address through
  * this target's map row. */
-void scalePaletteChannelsWorld02Area08213_801F5388(s32 scale);
+void mathPaletteChannelScale(s32 scale);
 
 /* Screen-gradient fill helper, the overlay's own routine at 0x801F5428. Its
  * body splits the packed word it is handed into two five-bit-per-channel
@@ -51,7 +51,7 @@ void func_801F5428(s32 color);
 void mathHalfFillWhite(
     void) {
   if (g_ScenarioProgress == 0x26) {
-    scalePaletteChannelsWorld02Area08213_801F5388(0x40);
+    mathPaletteChannelScale(0x40);
     D_8014933A = 0;
     func_801F5428(-1);
     workRecordCursor1F800044[9] = 0;

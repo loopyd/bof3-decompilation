@@ -30,7 +30,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
 
 /* @source 0x801F2FCC
  * @behavior Overlay work-record teardown, the second half of
- *           invokeTwoHelpersWorld02Area08513_801F2EB0: walks the 30 shared
+ *           callActiveRecordsBase: walks the 30 shared
  *           0x98-byte work records based at 0x80146888, publishes each record
  *           through the scratchpad pointer cell 0x1F800044 and, for a record
  *           whose byte 0 has bit 0 set, stores 5 in that record's state byte

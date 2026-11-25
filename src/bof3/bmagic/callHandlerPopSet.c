@@ -6,8 +6,8 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Three-entry overlay step-handler table for work-object byte 2. The run ends
- * at 0x801F1C30, which this target already names dispatchHandlerTable801F1C30. */
-extern void (*dispatchHandlerTable801F1C24[])(void); /* @source 0x801F1C24 @kind data */
+ * at 0x801F1C30, which this target already names recordStepHandlerTable. */
+extern void (*workPopHandlerTable[])(void); /* @source 0x801F1C24 @kind data */
 
 /* In-payload helpers called once work byte 0 and work byte 2 are both set.
  * 0x801F0DF4 draws the sixteen-quad translucent grey textured ring band of the
@@ -31,7 +31,7 @@ extern void
  * @residual none
  */
 void callHandlerPopSet(void) {
-    dispatchHandlerTable801F1C24[g_battle_work[2]]();
+    workPopHandlerTable[g_battle_work[2]]();
     if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
         func_801F0D44();
         renderGreyTexPage();

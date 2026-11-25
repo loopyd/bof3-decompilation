@@ -10,7 +10,7 @@ typedef void (*ScenarioScena0400WorkByte1Handler)(void);
  * non-pointer data that follows the run.
  * @source 0x801FA180 @kind table
  */
-extern ScenarioScena0400WorkByte1Handler T_801FA180[];
+extern ScenarioScena0400WorkByte1Handler workByte1StepTable[];
 
 /* @source 0x801F6D00
  * @behavior Per-frame step dispatcher of this overlay: it loads the work-object
@@ -39,4 +39,4 @@ extern ScenarioScena0400WorkByte1Handler T_801FA180[];
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkStepHandler, T_801FA180);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkStepHandler, workByte1StepTable);

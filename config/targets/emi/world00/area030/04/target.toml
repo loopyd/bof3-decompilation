@@ -83,7 +83,7 @@ sources = [
     "src/bof3/world/callStateByte3Table20.c",
     "src/bof3/world/stateMenuScratchByte.c",
     "src/bof3/world/renderEntryStripEntry.c",
-    "src/bof3/world/drawWidePanelFrameWorld00Area03004_801D7784.c",
+    "src/bof3/world/renderWidePanelFrame.c",
     "src/bof3/world/renderIndexedQuadHeight.c",
     "src/bof3/world/renderGroupedCellSprites.c",
     "src/bof3/world/renderLabeledStatusCells.c",

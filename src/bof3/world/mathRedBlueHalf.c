@@ -28,7 +28,7 @@ extern u8* D_1F800044;
 /* @source 0x80117A74
  * @behavior Step handler 0 of the thirteen in-image pointers the Splat textbin
  * row D_8011818C places: word 8 at 0x801181AC, the base
- * callWorkTable81World01 indexes from the
+ * callWorkByte2Table8 indexes from the
  * published work record's byte at offset 2, so this is the handler the overlay
  * runs while that byte still reads 0. It probes flag 0x3E of the shared flag
  * bank 0x80144ED0 through the resident tester func_8015B5D4 and, when the flag
@@ -40,7 +40,7 @@ extern u8* D_1F800044;
  * emi/etc/game/00), which zeroes work-object bytes 0x00-0x04 and so returns the
  * overlay to work state 0. Every frame, taken or not, it then re-reads the
  * pointer cell and increments the record's byte at offset 2, the byte
- * callWorkTable81World01 scales by four, so the
+ * callWorkByte2Table8 scales by four, so the
  * overlay moves on to entry 1 (func_80117ACC) from the next frame on. The
  * flag-bank address is materialized before the frame is created, the 0x18-byte
  * frame only keeps $ra at 0x10 across the three calls, the slot after the

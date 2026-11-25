@@ -240,8 +240,8 @@ segments:
     - '@behavior: Overlay table-clearing helper, a leaf with no frame: zeroes the lead byte of each of the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800 in a bottom-tested walk whose record-pointer advance sits in the back edge delay slot, then zeroes the two payload flag bytes at 0x801FDFC4 and 0x801FDFC8; the lead byte is the claim flag the same-table scan at 0x801F8394 tests. Two in-payload calls name it, jal 0x801F8358 at 0x801F6E5C and 0x801F7A6C, and no image word holds its address.'
   - - 6036
     - c
-    - findFreeWorkRecordScenarioScena0700_801F8394
-    - '@source: src/bof3/scenario/findFreeWorkRecordScenarioScena0700_801F8394.c'
+    - querySharedWorkSlot2
+    - '@source: src/bof3/scenario/querySharedWorkSlot2.c'
     - '@behavior: Work-record claim scan: walks the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800 with an unsigned byte counter and returns the address of the first entry whose lead byte reads zero, or zero when all 0x8 entries are claimed; reads only each entry lead byte, makes no call and has no frame.'
   - - 6096
     - asm

@@ -9,7 +9,7 @@ typedef void (*ScenarioScena0400CoordinateLookupHandler)(void);
 extern s32 func_801A7AD8(u8 *records, s32 count, u16 coordA, u16 coordB);
 
 /* One five-byte lookup record at 0x801FA228, inside the overlay data blob
- * T_801FA180: route key 0x30, coordinates 0x83 and 0x06, flags 0x05 (raised-span
+ * workByte1StepTable: route key 0x30, coordinates 0x83 and 0x06, flags 0x05 (raised-span
  * direction clear, category nibble 5) and span count 2.
  * @source 0x801FA228 @kind table
  */

@@ -9,20 +9,20 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic13703_801EF21C.c",
-    "src/bof3/bmagic/advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic13703_801EF174.c",
+    "src/bof3/bmagic/stateAdvanceIncrement.c",
     "src/bof3/bmagic/stateBytesRequestInvoke.c",
     "src/bof3/bmagic/decrementRaiseTargetZero.c",
-    "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13703_801EFD50.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF3B0AndF4C4AndPopWhenWorkByte0NonzeroBmagicMagic13703_801EF018.c",
+    "src/bof3/bmagic/stateCountdownZeroStep.c",
+    "src/bof3/bmagic/callStepTablePop.c",
     "src/bof3/bmagic/forwardBattleByteSetWorkByte9To30RaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13703_801EEF64.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic13703_801EFD00.c",
+    "src/bof3/bmagic/stateCountdownIncrement.c",
     "src/bof3/bmagic/callAdvanceWorkSet.c",
     "src/bof3/bmagic/stateOffsetRearmFields.c",
     "src/bof3/bmagic/stateSlotsActingHead.c",
 ]
 support_sources = [
     "src/bof3/bmagic/stateWordsPositionPair.c",
-    "src/bof3/bmagic/clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0.c",
+    "src/bof3/bmagic/stateByteResetAdvance.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13703_801EFD9C.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic13703_801EEC1C.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic13703_801EFFBC.c",

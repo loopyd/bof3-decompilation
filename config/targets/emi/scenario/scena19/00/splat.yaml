@@ -30,31 +30,31 @@ segments:
     - dispatchProgressHandler_scena19
   - - 64
     - c
-    - advanceScenarioProgressToOne_scena19
+    - stateProgressOne3
   - - 84
     - c
-    - advanceScenarioProgressTo2_scena19
+    - stateProgressTwo2
   - - 104
     - c
-    - dispatchProgressHandler_scena19_801F6C68
+    - callProgressHandler7
   - - 164
     - c
-    - seedRecordWhenFlag8Set_scena19
+    - stateSeedRecord
   - - 272
     - c
     - dispatchRecordCallback_scena19
   - - 336
     - c
-    - noopProgressHandler_scena19_801F6D50
+    - noopProgressSlot2
   - - 344
     - c
-    - noopCallbackReturningZero_scena19_801F6D58
+    - noopZeroResult4
   - - 352
     - c
-    - noopCallbackReturningZero_scena19_801F6D60
+    - noopZeroResult5
   - - 360
     - c
-    - clearWorkRecordsAndResetEffectSlots_scena19
+    - stateResetWorkRecords2
   - - 436
     - c
     - noopReturn_scena19

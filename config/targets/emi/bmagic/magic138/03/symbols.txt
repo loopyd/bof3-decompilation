@@ -12,5 +12,5 @@ invokeHelperBmagicMagic13803_801EF50C = 0x801EF50C;
 callDispatchFlagService = 0x801EF52C;
 stateHeaderSelectorParity = 0x801EF5D0;
 func_801EF6A4 = 0x801EF6A4;
-decrementGlobalWorkByteBAndInvokeHelperBmagicMagic13803_801EF6F8 = 0x801EF6F8;
+stateDecrementGlobalDirect = 0x801EF6F8;
 func_801EF72C = 0x801EF72C;

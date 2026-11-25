@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8 magic13103RecordFlags[]; /* @source 0x801F1CA0 @kind data */
+extern u8 recordFlagsTable[]; /* @source 0x801F1CA0 @kind data */
 
 /* @source 0x801F1A58
  * @behavior Reserves the first of 48 records in the pool at 0x801F1CA0 whose
@@ -22,9 +22,9 @@ u8 reserveFirstFreeRecord(void) {
 
     for (index = 0; index < 0x30; index++) {
         offset = index * 0x2C;
-        flags = magic13103RecordFlags[offset];
+        flags = recordFlagsTable[offset];
         if (!(flags & 1)) {
-            magic13103RecordFlags[offset] = flags | 1;
+            recordFlagsTable[offset] = flags | 1;
             return index;
         }
     }

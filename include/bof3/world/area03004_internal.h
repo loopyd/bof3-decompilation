@@ -593,7 +593,7 @@ u32 sumValuesNonzeroAmounts(void);
 extern u8 D_801454EC; /* @source 0x801454EC @kind unknown */
 u8*  appendIndexedSprite(s32 spriteIndex, s32 drawMode, s16 x, s16 y);
 void renderIndexedQuadHeight(s16 x, s16 y, u8 height, u8 recordIndex);
-void drawWidePanelFrameWorld00Area03004(s16 x, s16 y);
+void renderWidePanelFrame(s16 x, s16 y);
 /* Target-local stretched panel column at 0x801D8248: emits one 8-pixel-wide
  * grey quad of the requested height from the 8 by 4 texel slice at (0x58,
  * 0x9A) of the panel texture page. The AREA030 status panel drawer at

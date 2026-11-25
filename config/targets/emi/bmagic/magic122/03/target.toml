@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/bmagic/magic12203DispatchTables.c",
     "src/bof3/bmagic/incrementWorkAdvanceWork3.c",
     "src/bof3/bmagic/decrementByteIncrementRaise2.c",
-    "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic12203_801EEDFC.c",
+    "src/bof3/bmagic/forwardBattleRaiseLast.c",
     "src/bof3/bmagic/decrementRefreshHeadingRearm.c",
 ]
 psyq_source = "src/bof3/support/magic122_03_psyq.c"

@@ -12,8 +12,8 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * Splat binds the address through this target's generated
  * undefined_syms_auto.txt, so no target-map row or WEAK_SYMBOL_AT binding is
  * needed. The sibling bodies
- * decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738
- * and incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0
+ * stateFrameParityStep
+ * and stateAdvanceFlagTest
  * read and test the same record byte 0xB through this pointer. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 

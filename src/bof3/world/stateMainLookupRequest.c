@@ -20,7 +20,7 @@ void func_8014D6B8(u32 resource); /* @source 0x8014D6B8 */
  * +0x2A store with no call in between, so each access names the cell instead of
  * keeping a pointer in a local. The exact siblings
  * stateUntilExpiresSelected
- * and invokeHelperWithWorkWorld02Area08513_801F3BA4 of this target use the same
+ * and callHelperWithWork of this target use the same
  * spelling. */
 extern u8* D_1F800044;
 

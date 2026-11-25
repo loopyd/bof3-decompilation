@@ -20,7 +20,7 @@ support_sources = [
     "src/bof3/world/stateFlagsNoHandled.c",
     "src/bof3/world/queryFreeWorkSlot.c",
     "src/bof3/world/incrementWorkByte2.c",
-    "src/bof3/world/callWorkTable81World01.c",
+    "src/bof3/world/callWorkByte2Table8.c",
     "src/bof3/world/dispatchByte2Table81b4.c",
     "src/bof3/world/mathKeepGreenUnscaled.c",
     "src/bof3/support/area049_13_psyq.c",

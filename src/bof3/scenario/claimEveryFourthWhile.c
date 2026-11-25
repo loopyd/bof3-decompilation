@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-u8* findFreeWorkRecordScenarioScena0700_801F8394(void);
+u8* querySharedWorkSlot2(void);
 void func_801F8478(u8* record);
 s32 func_801F85D8(void);
 void func_801F9330(u8* p);
@@ -46,7 +46,7 @@ void claimEveryFourthWhile(
   func_801F9330(*PSX_PTR(u8*, 0x801FDFC0u));
 
   if (*(s32*)(workPointerCell + 0xC) >= 9) {
-    record = findFreeWorkRecordScenarioScena0700_801F8394();
+    record = querySharedWorkSlot2();
     if ((*(s32*)(workPointerCell + 0xC) & 3) == 0 && record != 0) {
       func_801F8478(record);
     }

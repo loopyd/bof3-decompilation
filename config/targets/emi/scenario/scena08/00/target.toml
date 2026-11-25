@@ -67,7 +67,7 @@ support_sources = [
     "src/bof3/scenario/tickCountdownAdvanceState.c",
     "src/bof3/scenario/armEffectGroupSlots.c",
     "src/bof3/scenario/stateClearTableStep.c",
-    "src/bof3/scenario/findFreeWorkRecordScenarioScena0800_801F7DAC.c",
+    "src/bof3/scenario/queryFreeSlot.c",
     "src/bof3/scenario/querySharedWorkSlot.c",
     "src/bof3/scenario/tickCountdownReload.c",
     "src/bof3/scenario/stateProgressRequestPrimary.c",

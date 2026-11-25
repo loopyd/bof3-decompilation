@@ -49,20 +49,20 @@ segments:
     - '@behavior: Entry 3 of the work-byte-1 handler table 0x801F58DC that the overlay step dispatch 0x801F2C04 indexes with work byte 0x01: rebuilds the 0x800E4800 trail buffer through the overlay walk at 0x801F2F28, renders it through 0x801F3258, shrinks the trail size seed halfword at 0x800E4B3E - the element 0x1F of the size run the walk copies into every record, seeded with 0x60 by entry 0 at 0x801F2C48 - by 6, then decrements work-record byte 0x09 modulo 256 and, when it reads zero, advances work byte 0x01 by one without the 0x10 rearm entry 2 writes.'
   - - 648
     - c
-    - incrementWorkByte1World02Area08813_801F2E88
+    - stateIncrementStateByte
   - - 680
     - c
-    - incrementWorkByte1World02Area08813_801F2EA8
+    - stateIncrementStateByte2
   - - 712
     - c
-    - incrementWorkByte1World02Area08813_801F2EC8
+    - stateIncrementStateByte3
   - - 744
     - c
-    - incrementWorkByte1World02Area08813_801F2EE8
+    - stateIncrementStateByte4
   - - 776
     - c
-    - invokeHelperWorld02Area08813_801F2F08
-    - '@source: src/bof3/world/invokeHelperWorld02Area08813_801F2F08.c'
+    - stateWorkReset
+    - '@source: src/bof3/world/stateWorkReset.c'
   - - 808
     - c
     - stateHeadingsAverageAngles
@@ -73,8 +73,8 @@ segments:
     - func_801F3258
   - - 2480
     - c
-    - average12BitValuesWorld02Area08813_801F35B0
-    - '@source: src/bof3/world/average12BitValuesWorld02Area08813_801F35B0.c'
+    - mathAverageAngles
+    - '@source: src/bof3/world/mathAverageAngles.c'
   - - 2560
     - c
     - renderGivenFadingBlack
@@ -82,21 +82,21 @@ segments:
     - '@behavior: Eight-iteration translucent POLY_G3 fan emitter. Each iteration re-reads the primitive published at g_PrimCursor, stamps it through 0x8017A97C, marks it semi-transparent through SetSemiTrans with one, and writes the caller centre pair (two unsigned halfwords read through the first argument pointer) into the first vertex at +0x08 and +0x0A; the second vertex pair at +0x10 and +0x12 is that centre offset by the radius-scaled samples of the running phase, x through 0x801783C8 and y through 0x801782FC, each product with the signed halfword scale shifted right 12, and the third pair at +0x18 and +0x1A repeats it with the phase advanced by 0x100, so neighbouring triangles share a rim sample and the eight span 0x800 of the 0x1000 phase circle. The centre vertex carries the tint byte in all three channels and both arc vertices carry black. Each 0x1C-byte packet is appended through 0x8014E5A0 with allocation class 1; the body keeps a 0x30-byte frame and returns nothing.'
   - - 2916
     - c
-    - setStatusFFFFAndSelectMode2IfGateClearWorld02Area08813_801F3764
-    - '@source: src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld02Area08813_801F3764.c'
+    - stateStatusResetGate2
+    - '@source: src/bof3/world/stateStatusResetGate2.c'
     - '@behavior: Reads the shared gate byte 0x801490C7 with a signed byte load and, when that byte is zero, writes 2 to the shared mode byte 0x801448EC before storing 0xFFFF into the shared status halfword 0x801490A8; the 0xFFFF store sits on both arms, so the status halfword is written on every path and the gate byte only decides the mode write. The body is a leaf with no frame and no call, and the 0xFFFF constant is materialised in the branch delay slot and again after the mode store.'
   - - 2968
     - asm
     - func_801F3798
   - - 3664
     - c
-    - projectScrollIntoScratchSelectByte0BThenDispatchModeWorld02Area08813_801F3A50
-    - '@source: src/bof3/world/projectScrollIntoScratchSelectByte0BThenDispatchModeWorld02Area08813_801F3A50.c'
+    - stateProjectScroll
+    - '@source: src/bof3/world/stateProjectScroll.c'
     - '@behavior: Projects the shared scroll offsets at 0x80145E9C and 0x80145EA0, scaled by the shared byte at 0x80145E99, onto the scratch words at offsets 0x0C and 0x10 of the work record published at the scratchpad pointer cell 0x1F800044, selects record byte 0x0B from three successive readings of the map probe 0x80166CB0 at that projected position (0xA1, 0xA0 and 0xAE), otherwise 4 when bit 0x1000 of the shared halfword 0x8014625A is set, otherwise 0, and finally dispatches record byte 0x01 through the local handler table 0x801F61A0; every record access follows a fresh read of the pointer cell.'
   - - 4036
     - c
-    - prepareWorkRecordForLookup157AndArmState1World02Area08813_801F3BC4
-    - '@source: src/bof3/world/prepareWorkRecordForLookup157AndArmState1World02Area08813_801F3BC4.c'
+    - statePrepareRecordLookup2
+    - '@source: src/bof3/world/statePrepareRecordLookup2.c'
     - '@behavior: stores 0x80 in work byte 0x24 of the record published at the scratchpad pointer cell 0x1F800044, applies main lookup entry 0x157 through the resident 0x8014DD3C helper, stores 5 in work byte 0x29, clears work byte 0x2A and the triplet at 0x5D through 0x5F, then arms work byte 0x01 with 1 so the next dispatch through the table at 0x801F61A0 runs the 0x801F3C50 handler; the pointer cell is re-read before every store.'
   - - 4176
     - c
@@ -114,7 +114,7 @@ segments:
     - func_801F3EC4
   - - 4964
     - c
-    - setWorkHalfwordsWorld02Area08813_801F3F64
+    - stateSeedHalfwordGauges2
     - '@source: src/bof3/world/area08813_work_state.c'
   - - 4992
     - c
@@ -126,28 +126,28 @@ segments:
     - '@source: src/bof3/world/area08813_work_state.c'
   - - 5124
     - c
-    - invokeTwoHelpersWorld02Area08813_801F4004
+    - invokeLocalHandlerPair3
   - - 5164
     - c
-    - dispatchStateByte2Table61bcWorldWorld02Area08813_801F402C
+    - callWorkByte2Table7
     - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 5232
     - c
-    - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08813_801F4070
-    - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08813_801F4070.c'
+    - stateHalfword2eArm2
+    - '@source: src/bof3/world/stateHalfword2eArm2.c'
   - - 5312
     - c
-    - advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld02Area08813_801F40C0
-    - '@source: src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld02Area08813_801F40C0.c'
+    - stateAdvanceHalfword2e3
+    - '@source: src/bof3/world/stateAdvanceHalfword2e3.c'
   - - 5404
     - c
-    - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08813_801F411C
-    - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08813_801F411C.c'
+    - stateHalfword2eGate2
+    - '@source: src/bof3/world/stateHalfword2eGate2.c'
     - '@behavior: when the shared byte at 0x801454F2 is 2, writes 3 to state byte 0x02 of the work record published at scratchpad pointer slot 0x44, then reloads that cell and calls the local 0x801F4664 drawer with 0x10 and the signed halfword at record offset 0x2E.'
   - - 5484
     - c
-    - decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld02Area08813_801F416C
-    - '@source: src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld02Area08813_801F416C.c'
+    - stateHalfword2eDecrement2
+    - '@source: src/bof3/world/stateHalfword2eDecrement2.c'
     - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044, subtracts 0x10 from its signed halfword at offset 0x2E, clears state byte 0x02 while the stored value stays below -0x2F, writes 1 to that byte unless the shared byte 0x801454F2 is 2, then reloads the cell and calls the local drawer 0x801F4664 with 0x10 and the signed halfword at offset 0x2E.'
   - - 5616
     - c
@@ -155,8 +155,8 @@ segments:
     - '@source: src/bof3/world/callStateByte3Table61.c'
   - - 5684
     - c
-    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08813_801F4234
-    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08813_801F4234.c'
+    - stateHalfword30Arm2
+    - '@source: src/bof3/world/stateHalfword30Arm2.c'
   - - 5812
     - c
     - decrementBelowGatedDraw
@@ -164,26 +164,26 @@ segments:
     - '@behavior: subtracts 0xA from work-record halfword 0x30 and increments work byte 0x03 while the stored value stays below 0xC9; when the gate holds (shared byte 0x801454F2 set and record byte 0x0B nonzero, or byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 set) it writes 3 to work byte 0x03 through a second read of the scratchpad pointer cell 0x1F800044, then reloads that cell and calls the local 0x801F4C28 with 0x5C and the signed halfword at record offset 0x30.'
   - - 6028
     - c
-    - advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World02Area08813_801F438C
-    - '@source: src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World02Area08813_801F438C.c'
+    - stateAdvanceByte9Gate2
+    - '@source: src/bof3/world/stateAdvanceByte9Gate2.c'
     - '@behavior: while work-record byte 0x0B of the record published at scratchpad pointer cell 0x1F800044 is zero, increments record byte 0x09 and, once that stored byte reaches 0x5A, increments record byte 0x0B through a second read of the cell; then increments state byte 0x03 through another read of the cell when shared byte 0x801454F2 is nonzero and record byte 0x0B is nonzero, or byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set; finally reloads the cell and calls the local 0x801F4C28 with 0x5C and the signed halfword at record offset 0x30.'
   - - 6284
     - c
-    - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World02Area08813_801F448C
-    - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World02Area08813_801F448C.c'
+    - stateHalfword30Reset2
+    - '@source: src/bof3/world/stateHalfword30Reset2.c'
     - '@behavior: adds 0x0A to the halfword at work-record offset 0x30 of the record published at scratchpad pointer cell 0x1F800044 and stores the truncated halfword, clears work byte 0x03 once that value read back as a signed halfword has reached 0xF0, otherwise writes 1 to work byte 0x03 through a second read of the cell unless shared byte 0x801454F2 is nonzero, byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, then reloads the cell and calls the local 0x801F4C28 with 0x5C and the signed halfword at record offset 0x30.'
   - - 6460
     - asm
     - func_801F453C
   - - 6756
     - c
-    - drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664
-    - '@source: src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664.c'
+    - renderMapMarkerLayers2
+    - '@source: src/bof3/world/renderMapMarkerLayers2.c'
     - '@behavior: returns immediately unless the shared byte 0x8014832E has any of the bits 0x1B set; then picks tpage 0x22C when the graph type reads 1 or 2 and 0x9C otherwise, opens that drawing mode on the primitive cursor, reserves twelve bytes and draws the first sprite layer at the two signed arguments; unless the map byte probed at the shared coordinates 0x8014930A and 0x8014930E reads 0xA0, 0xA1 or 0xAE or bit 0x1000 of the shared halfword 0x8014625A is set, it also draws a second layer 0x30 to the right with the incremented record index, while those three cases take the plain index; the same split repeats for a third layer 0x10 below over eight entries against the shared mask 0x80145AC0, all layers walking the local four-byte table at 0x801F6234 with the shared mask word 0x80145AB4 for the first pair; a fourth layer 0x30 right and 0x18 below follows when the map probe still reads zero or bit 0x1000 of 0x8014625A, the masked byte 0x80145024 equal to 0x0C or bit 0x4000 of 0x80146258 is set, and the local panel 0x801F4A30 is always appended from 0x18 right and 0x18 below.'
   - - 7728
     - c
-    - appendTransformedPanelWorld02
-    - '@source: src/bof3/world/appendTransformedPanelWorld02.c'
+    - appendTransformedPanel
+    - '@source: src/bof3/world/appendTransformedPanel.c'
     - '@behavior: pushes the GTE matrix stack and composes a rotation-only matrix from the shared angle triplet 0x801492D8 with the translation field cleared, installing it through SetRotMatrix and SetTransMatrix; seeds the four eight-byte scratchpad vertices at 0x1F800014 with the cross offsets (-10,0,0), (0,-4,0), (0,4,0) and (10,0,0), opens the four-corner Gouraud quad on the primitive cursor cell 0x8014598C, and projects those vertices into its corners with RotTransPers4, homing the depth and flag words in the frame; paints corner 0 (0xFF,0,0), corners 1 and 2 (0x80,0,0x80) and corner 3 (0,0,0xFF), then moves every projected coordinate by minus 0x9E horizontally and 0x76 vertically and adds the two signed arguments, so the panel lands at the point they name; queues the 0x24-byte primitive through the shared append helper under ordering-table index 1 and pops the matrix stack.'
   - - 8232
     - asm
@@ -218,11 +218,11 @@ segments:
     - '@behavior: State handler 0 of the two-word handler table 0x801F6270 that the local dispatcher 0x801F512C reads by work byte 0x01; calls the shared 0x80196070 helper and returns when shared byte 0x8014496D reads 9 or bit 0 of shared byte 0x80146871 is set, otherwise calls the shared 0x8019A194 helper, requests resource 0x205 through the shared 0x8014DD3C helper, clears work bytes 0x48, 0x24, 0x2A and 0x5D through 0x5F of the record published at the scratchpad pointer cell 0x1F800044 through a fresh read of that cell per store, stamps 0xA0 into the map byte at map base word 0x8014931C plus the row times width byte 0x80104000 plus the column held by the four-byte record at 0x801F591C that work byte 0x0B selects, calls the shared 0x8014D6B8 helper with 0 and sets work byte 0x01 to 1.'
   - - 9888
     - c
-    - invokeTwoHelpersWorld02Area08813_801F52A0
+    - callSharedRoutinePair2
   - - 9928
     - c
-    - drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld02Area08813_801F52C8
-    - '@source: src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld02Area08813_801F52C8.c'
+    - renderPulsingCellGrid
+    - '@source: src/bof3/world/renderPulsingCellGrid.c'
     - '@behavior: Draws the pulsing textured panel of the focus area and then the scrolling grid of semitransparent textured cells around it. Initializes work byte 0x02 and adds the low nibble of the shared frame counter 0x80143E6C to work halfword 0x3A, returns while bit 4 of the shared byte 0x8014832E is clear, advances work word 0x38 by 0x800 plus work byte 0x0B minus two shifted left ten, wraps halfword 0x3A to -8 above the map height byte 0x80104001 plus eight, and returns unless a shared focus halfword 0x8014930A or 0x8014930E lies within 0x1A of work halfword 0x36 or 0x3A. It projects one textured quad at depth -0x300 over the scratchpad vectors 0x1F800014 through RotTransPers4 with a half extent of the layer width plus the frame counter low five bits mirrored around 0xF, hands it to the shared 0x80155560 with the layer byte out of 0xBB509100 and reserves it through GpuAppendPrim(4, 0x28), then walks a (2 - layer) * 4 + 1 by (2 - layer) * 4 grid whose cells come from the shared 0x801559AC lookup and take their texture window from this payload trailing byte tables 0x801F6278, 0x801F627C and 0x801F6280 at index layer before being queued through the shared 0x80155A08 with both coordinates shifted left by 16.'
   - - 11484
     - textbin

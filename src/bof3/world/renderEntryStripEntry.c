@@ -24,7 +24,7 @@
  * table at the 0x80010000 base. Finally it paints the 0xF2 by 0xE header bar
  * at y + 6 and the 0xF2 by 0xB footer bar at y + 0x94 (shade 0x30), draws the
  * selected step icon - sprite D_801E2114[step word 0x3C] - at (x + 0x3D, y +
- * 6), draws the status icon row through drawWidePanelFrameWorld00Area03004,
+ * 6), draws the status icon row through renderWidePanelFrame,
  * and formats the selected step word 0x3C plus one through the "%d/6" rodata
  * string D_801D0C08 into the shared 0x80145AD4 buffer, submitting it at (x +
  * 0xCA, y + 0x92) through func_80150098.
@@ -167,7 +167,7 @@ void renderEntryStripEntry(s32 x,
                 0x80010000u +
                     PSX_PTR(u16, 0x80010000u)[D_801E2114[FIELD_REF(
                         u16, D_1F800044, 0x3C)]]);
-  drawWidePanelFrameWorld00Area03004(x, y);
+  renderWidePanelFrame(x, y);
   sprintf((char*)D_80145AD4, (const char*)D_801D0C08,
           FIELD_REF(u16, D_1F800044, 0x3C) + 1);
   func_80150098((s16)(x + 0xCA), (s16)(y + 0x92), 0, D_80145AD4);

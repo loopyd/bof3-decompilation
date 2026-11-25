@@ -1,4 +1,4 @@
-callStateTable3330World01 = 0x801F2C04;
+callWorkByte2Table2 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2C90 = 0x801F2C90;
 appendCurrentBufferChain = 0x801F3288;

@@ -20,7 +20,7 @@
  * is the 0x20-byte record layout this scan strides over). The sibling clear at
  * 0x801F9DA8 empties the same 0x40x0x20 pool with the identical
  * counter-bounded stride loop, and the 0x3C-byte shape here is
- * instruction-for-instruction identical to findFreeWorkRecordScenarioScena0700_801F8394
+ * instruction-for-instruction identical to querySharedWorkSlot2
  * at 0x801F8394 (same scan over the 0x8 entries of the 0x1C-byte-stride pool
  * at 0x800E4800); only the base, stride and bound immediates differ.
  * @status exact

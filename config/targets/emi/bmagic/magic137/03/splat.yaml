@@ -54,8 +54,8 @@ segments:
     - '@source: src/bof3/bmagic/magic13703DispatchTables.c'
   - - 1048
     - c
-    - dispatchWorkByte2HandlerThenCallF3B0AndF4C4AndPopWhenWorkByte0NonzeroBmagicMagic13703_801EF018
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF3B0AndF4C4AndPopWhenWorkByte0NonzeroBmagicMagic13703_801EF018.c'
+    - callStepTablePop
+    - '@source: src/bof3/bmagic/callStepTablePop.c'
     - '@behavior: Dispatches one frame of the overlay work object through the work byte 2 step table at 0x801F0104: the work-object pointer cell at 0x1F800044 is read before the frame adjustment, its unsigned byte at offset 2 is scaled by four and selects the code pointer at 0x801F0104 plus that offset, which is invoked with no arguments. The table is indexed where it lives, so no table word is copied into the frame, and the selector is not bounds-checked. After the handler returns the pointer cell is read a second time and, when the work object byte 0 is non-zero, the helper at 0x801EF3B0, the helper at 0x801EF4C4 and then PopMatrix at 0x80178C18 run in that order, each call delay slot a nop. It takes no arguments and returns nothing; its 0x18-byte frame keeps only $ra at 0x10, and it writes no state. It is entry 0 of the in-image code pointer run at 0x801F00F8 that the byte-1 dispatcher at 0x801EEFD4 indexes, so no jal in the payload reaches it.'
   - - 1168
     - c
@@ -64,8 +64,8 @@ segments:
     - '@behavior: Seeds the scratchpad work object for the opening step of a battle-magic animation. The pointer cell at 0x1F800044 is read once, work word 0xC takes 0xFFFD8000 and work word 0x10 takes zero, and the transform helper 0x801DD350 runs on that pointer. The cell is re-read, work word 0x34 takes shared channel word 0x80149308 plus work word 0xC and work word 0x38 takes shared channel word 0x8014930C plus work word 0x10, publishing the transformed offset as an absolute position pair. The halfword at 0x3E takes the shared distance helper 0x8015477C applied to the two channel words plus 0x200. Cue 0x100 is then dispatched through 0x8015DF18. Finally work byte 0xB takes 0x34, work word 0x14 takes 0x2FFF, work byte 9 is cleared, work byte 0xA takes 0x10 and work byte 2, the work-byte-2 step counter of the overlay dispatchers at 0x801EF018 and 0x801EFC58, increments. It takes no arguments, returns nothing, keeps only $ra in a 0x18-byte frame and writes no state outside the work object.'
   - - 1396
     - c
-    - advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic13703_801EF174
-    - '@source: src/bof3/bmagic/advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic13703_801EF174.c'
+    - stateAdvanceIncrement
+    - '@source: src/bof3/bmagic/stateAdvanceIncrement.c'
     - '@behavior: Advances the scratchpad work object one frame. The pointer cell at 0x1F800044 is read once, then work bytes 0xB and 9 are read through that pointer, one plus work byte 9 shifted right by six is added to byte 0xB and the sum stored at byte width. When bit 0 of the frame counter at 0x80143E6C is set the cell is re-read and work byte 0xA increments. The cell is re-read again, two is added to work byte 9 at byte width, and only when the stored byte truncated to eight bits equals 0xC0 does the body re-read the cell once more and increment work byte 2, the work-byte-2 step counter of the overlay dispatcher at 0x801EFC58. It takes no arguments, returns nothing, keeps no frame and writes no state outside the work object.'
   - - 1564
     - c
@@ -90,16 +90,16 @@ segments:
     - '@behavior: Dispatches one frame of the overlay work object through its work byte 2 step table at 0x801F0114: the work-object pointer cell at 0x1F800044 is read before the frame adjustment, its unsigned byte 2 selects the code pointer at that table base plus the scaled offset, and that entry is invoked with no arguments. The table is indexed in place and the selector is not bounds-checked. After the handler returns the pointer cell is read again and, when work byte 0 is non-zero, the overlay quad-drawing routine at 0x801EFDF8 runs. It takes no arguments, returns nothing and its 0x18-byte frame keeps only $ra.'
   - - 4288
     - c
-    - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0
+    - stateByteResetAdvance
   - - 4352
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic13703_801EFD00
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic13703_801EFD00.c'
+    - stateCountdownIncrement
+    - '@source: src/bof3/bmagic/stateCountdownIncrement.c'
     - '@behavior: Adds one to the scratchpad work object byte 9 reached through the pointer cell at 0x1F800044 (lbu, addiu 1, sb) and tests the stored byte truncated to eight bits against 0x10. Only when that byte is 0x10 does it read the cell a second time and increment the object byte 2 with a byte-width add, advancing the dispatcher at 0x801EFC58 to the next work-byte-2 handler step. It is entry index 1 of the four-word work-byte-2 step table at 0x801F0114, takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
   - - 4432
     - c
-    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13703_801EFD50
-    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13703_801EFD50.c'
+    - stateCountdownZeroStep
+    - '@source: src/bof3/bmagic/stateCountdownZeroStep.c'
     - '@behavior: Decrements the unsigned byte 0xA of the scratchpad work object read through the pointer cell at 0x1F800044 (lbu, addiu -1, sb) and tests the stored byte truncated to eight bits against zero. Only when that byte reaches zero does it read the cell a second time and increment the object byte 2 with a byte-width add, advancing the dispatcher at 0x801EFC58 to the next work-byte-2 handler step. It is entry index 2 of the four-word work-byte-2 step table at 0x801F0114, takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
   - - 4508
     - c

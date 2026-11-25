@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8* workObjectPointer; /* @source 0x1F800044 @kind unknown */
-u8* findFreeWorkRecordScenarioScena0800_801F7DAC(void);
+u8* queryFreeSlot(void);
 s32 func_801782FC(s32 arg0); /* @source 0x801782FC */
 s32 func_801783C8(s32 arg0); /* @source 0x801783C8 */
 
@@ -27,7 +27,7 @@ s32 func_801783C8(s32 arg0); /* @source 0x801783C8 */
  * returns nothing, and its 0x20-byte frame keeps $ra plus $s1 for the record
  * and $s0 for the biased angle, both of which survive the three calls.
  *
- * Name evidence: this target's exact lift findFreeWorkRecordScenarioScena0800_801F7DAC
+ * Name evidence: this target's exact lift queryFreeSlot
  * records itself as the work-record claim scan over the 0x40 entries of the
  * 0x28-byte-stride table at 0x800E4800 and records its only caller - this
  * address at 0x801F8038 - as testing the returned pointer for zero and then
@@ -61,7 +61,7 @@ void claimFreeAngleVector(void) {
   u8* work;
   u32 angle;
 
-  record = findFreeWorkRecordScenarioScena0800_801F7DAC();
+  record = queryFreeSlot();
   if (record != 0) {
     record[0] = 1;
     record[2] = 0;

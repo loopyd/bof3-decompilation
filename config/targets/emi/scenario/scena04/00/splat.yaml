@@ -224,5 +224,5 @@ segments:
     - noopStepHandler2
   - - 13696
     - textbin
-    - T_801FA180
+    - workByte1StepTable
 - - 14176
