@@ -21,6 +21,9 @@ TOKEN_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z]|$)|[A-Z]?[a-z]+[0-9]*|[0-9]+")
 DENIED_CATEGORIES = frozenset({"func", "helper", "sub", "temp", "misc", "unknown"})
 # Camel tokens that only exist because a harvested name was cut off mid-target:
 # the family or index spelling of an overlay, never a word a description needs.
+# A family word carrying its index (`World04`, `Battle15`) is the target token cut
+# short, even though the bare word (`World`, `Battle`) is a word a description needs.
+FAMILY_INDEX_RE = re.compile(r"^(?:World|Battle|Boss|Magic|Area|Scena|Plchar|Plp|Bmagic|Commu)\d{2,}$")
 ARTIFACT_ROOTS = (
     "Bmagic",
     "Scena",
@@ -142,7 +145,9 @@ def name_report(
         found.add("category")
     if ADDRESS_SUFFIX_RE.search(name):
         found.add("address")
-    if any(token.startswith(ARTIFACT_ROOTS) for token in tokens):
+    if any(token.startswith(ARTIFACT_ROOTS) for token in tokens) or any(
+        FAMILY_INDEX_RE.match(token) for token in tokens
+    ):
         found.add("family-fragment")
     folded = name.casefold()
     for owner, composition in sorted((tokens_by_target or {}).items()):
