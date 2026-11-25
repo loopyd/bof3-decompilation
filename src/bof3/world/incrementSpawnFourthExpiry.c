@@ -6,7 +6,7 @@
  * cell is read through this target's map name rather than the constant-address
  * accessor, whose shared base would stay live across the calls in a saved
  * register and widen the frame. */
-extern u8* scratchWorkPointerAt1f800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
 /* Free-record scan of the shared 0x1C-byte-stride work table at 0x800E4800:
  * walks the sixteen records, returns the first one whose lead byte reads zero,
@@ -109,7 +109,7 @@ void incrementSpawnFourthExpiry(
   u8* tail;
   s16 remaining;
 
-  work = scratchWorkPointerAt1f800044;
+  work = scratchWorkPointerAt1;
   *(u16*)(work + 0x30) += 1;
   if ((*(u16*)(work + 0x2E) & 3) == 0) {
     record = func_801F4D80();
@@ -118,10 +118,10 @@ void incrementSpawnFourthExpiry(
     }
   }
   func_801F4E7C();
-  tail = scratchWorkPointerAt1f800044;
+  tail = scratchWorkPointerAt1;
   remaining = --*(u16*)(tail + 0x2E);
   if (remaining == 0) {
     tail[9] = 0;
-    scratchWorkPointerAt1f800044[1]++;
+    scratchWorkPointerAt1[1]++;
   }
 }

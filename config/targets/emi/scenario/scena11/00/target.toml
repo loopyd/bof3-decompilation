@@ -20,7 +20,7 @@ sources = [
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FAD1C.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FADAC.c",
     "src/bof3/scenario/runPrimarySubstateSequence4.c",
-    "src/bof3/scenario/applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1100_801F72E4.c",
+    "src/bof3/scenario/statePendingWorldId.c",
     "src/bof3/scenario/runPrimarySubstateSequence2.c",
     "src/bof3/scenario/runPrimarySubstateSequence6.c",
     "src/bof3/scenario/runPrimarySubstateSequence5.c",

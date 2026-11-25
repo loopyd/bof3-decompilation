@@ -99,7 +99,7 @@ u8 func_8019601C(void);
  * @match 100.00
  * @residual none
  */
-void applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1100_801F72E4(void) {
+void statePendingWorldId(void) {
   u8 *sub;
   u8 index;
   u8 *record;

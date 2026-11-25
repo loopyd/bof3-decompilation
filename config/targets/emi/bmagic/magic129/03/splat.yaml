@@ -52,8 +52,8 @@ segments:
     - func_801EF058
   - - 1932
     - c
-    - add2ToWorkByteAAndAdvanceWorkByte2At10BmagicMagic12903_801EF38C
-    - '@source: src/bof3/bmagic/add2ToWorkByteAAndAdvanceWorkByte2At10BmagicMagic12903_801EF38C.c'
+    - workByteAdvanceDeadline
+    - '@source: src/bof3/bmagic/workByteAdvanceDeadline.c'
   - - 2012
     - asm
     - func_801EF3DC

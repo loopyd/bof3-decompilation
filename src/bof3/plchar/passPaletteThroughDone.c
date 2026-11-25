@@ -104,7 +104,7 @@ extern void func_80166C48(u8* row, s32 mode);
  * @match 100.00
  * @residual none
  */
-void passWorkByte5PaletteRowThenStepWorkByteBThroughResourceRequestAndClearWorkByte2BWithRecordState12BWhenDonePlcharPlp46700_801CEC20(
+void passPaletteThroughDone(
     void) {
   u8 step;
   u8 done;

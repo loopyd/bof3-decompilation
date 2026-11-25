@@ -14,7 +14,7 @@ extern u8 D_801D4285;
  *           fills the branch delay slot.
  *           Shape: a payload cmp of the 68 bytes at 0x801F2D04 against the
  *           recorded-exact sibling
- *           setStatus4AndModeIndex6IfGateElseFFFFWorld02Area11313_801F2CC0 in
+ *           stateModeIndex6Gate in
  *           the same payload came back equal from the first word to the
  *           `jr $ra` nop except byte 40, the low byte of this span's `j` word at
  *           0x801F2D2C (0x50 here against 0x3F there), and that displacement

@@ -5,7 +5,7 @@
  * the cell is read through this target's map name rather than a constant-address
  * accessor, whose shared base would stay live across the call in a saved
  * register and widen the frame. */
-extern u8* scratchWorkPointerAt1f800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
 /* State-entry reset of the shared work table: clears the lead byte of each of
  * the 0x10 records of the 0x1C-byte-stride table at 0x800E4800 and zeroes the
@@ -85,7 +85,7 @@ void statePhaseFrameCounter(
   u8 state;
 
   stateOneShotLatches();
-  work = scratchWorkPointerAt1f800044;
+  work = scratchWorkPointerAt1;
   state = work[1];
   *(u16*)(work + 0x2E) = 0x40;
   *(u16*)(work + 0x30) = 0;

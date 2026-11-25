@@ -28,7 +28,7 @@ support_sources = [
     "src/bof3/plchar/queryClear.c",
     "src/bof3/plchar/invokeHelperPlcharPlp46700_801CE82C.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp46700_801CFC8C.c",
-    "src/bof3/plchar/passWorkByte5PaletteRowThenStepWorkByteBThroughResourceRequestAndClearWorkByte2BWithRecordState12BWhenDonePlcharPlp46700_801CEC20.c",
+    "src/bof3/plchar/passPaletteThroughDone.c",
     "src/bof3/plchar/queueFoundSearchCell3.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp46700_801CF180.c",
     "src/bof3/plchar/requestResourceHelperReady3.c",

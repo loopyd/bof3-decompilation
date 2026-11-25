@@ -6,7 +6,7 @@
  * read through the map name rather than a constant-address accessor, whose
  * shared base would stay live across the two calls in a saved register and
  * widen the frame. */
-extern u8* scratchWorkPointerAt1f800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
 /* Record claim and seed at 0x801F40D0: it walks the lead bytes of the records of
  * the shared table at 0x800E4800, takes the first free one and seeds it from
@@ -115,25 +115,25 @@ void spawnShrinkingIntervalMatch(
   u8 progress;
   u8 interval;
 
-  work = scratchWorkPointerAt1f800044;
+  work = scratchWorkPointerAt1;
   progress = work[0x0A];
   interval = work[0x06];
   if (progress == interval) {
     func_801F40D0();
-    work = scratchWorkPointerAt1f800044;
+    work = scratchWorkPointerAt1;
     interval = work[0x06];
     if (interval != 0) {
       work[0x06] = interval - 2;
     }
-    scratchWorkPointerAt1f800044[0x0A] = 0;
+    scratchWorkPointerAt1[0x0A] = 0;
   } else {
     work[0x0A] = progress + 1;
   }
   func_801F42E8();
   if (D_80143BB0 != 2 && D_801490A8 == 0x12 && D_80146875 == 0x0C) {
-    base = scratchWorkPointerAt1f800044;
+    base = scratchWorkPointerAt1;
     base[0x09] = 0;
-    last = scratchWorkPointerAt1f800044;
+    last = scratchWorkPointerAt1;
     *(s32*)(base + 0x0C) = 0xA000;
     *(s32*)(base + 0x10) = 0xB000;
     *(u32*)(base + 0x18) = 0;

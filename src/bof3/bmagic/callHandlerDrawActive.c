@@ -6,7 +6,7 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Five-entry overlay step-handler table for work-object byte 2. */
-extern void (*dispatchHandlerTable801F1BF4[])(void); /* @source 0x801F1BF4 @kind data */
+extern void (*callHandlerTable801[])(void); /* @source 0x801F1BF4 @kind data */
 
 /* Entry drawing routine of this overlay. */
 extern void func_801F030C(void);
@@ -28,7 +28,7 @@ void callHandlerDrawActive(void) {
     u8 *gate_work;
 
     step_work = g_battle_work;
-    dispatchHandlerTable801F1BF4[step_work[2]]();
+    callHandlerTable801[step_work[2]]();
     gate_work = g_battle_work;
     if (gate_work[0] != 0 && gate_work[2] != 0) {
         func_801F030C();

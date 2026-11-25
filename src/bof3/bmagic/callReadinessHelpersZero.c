@@ -63,7 +63,7 @@ void func_800A9820(u8 arg0);
  * @match 100.00
  * @residual none
  */
-void invokeReadinessHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroBmagicMagic16103_801EF06C(void) {
+void callReadinessHelpersZero(void) {
   func_8014DAEC();
   if (--g_battle_work[9] == 0) {
     func_800AFC98(2, 4);

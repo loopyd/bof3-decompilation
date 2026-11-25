@@ -6,7 +6,7 @@
  * the cell is read through the map name rather than a constant-address accessor,
  * whose shared base would stay live across the two calls in a saved register and
  * widen the frame. */
-extern u8* scratchWorkPointerAt1f800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
 /* Work-table reset at 0x801F40A4: clears the lead byte of each of the 0x18
  * entries of the 0x38-byte-stride work table at 0x800E4800. That lift is exact
@@ -73,7 +73,7 @@ void func_8015DF18(u16 cue);
  *           bytes.
  *
  *           Representation: each of the four cell groups is its own statement
- *           reading scratchWorkPointerAt1f800044, which is why the original emits
+ *           reading scratchWorkPointerAt1, which is why the original emits
  *           a lui/lw pair per group rather than keeping one base live; the three
  *           arming stores are u8 literals and the state advance is written as a
  *           read-modify-write through the fourth read, which is the lbu/addiu/sb
@@ -89,9 +89,9 @@ void func_8015DF18(u16 cue);
 void stateSpawnIntervalSpawn(
     void) {
   clearWorkTableAt800E4800World02Area09813_801F40A4();
-  scratchWorkPointerAt1f800044[9] = 0xFF;
-  scratchWorkPointerAt1f800044[0xA] = 0;
-  scratchWorkPointerAt1f800044[6] = 0x10;
-  scratchWorkPointerAt1f800044[1] = scratchWorkPointerAt1f800044[1] + 1;
+  scratchWorkPointerAt1[9] = 0xFF;
+  scratchWorkPointerAt1[0xA] = 0;
+  scratchWorkPointerAt1[6] = 0x10;
+  scratchWorkPointerAt1[1] = scratchWorkPointerAt1[1] + 1;
   func_8015DF18(0x204);
 }

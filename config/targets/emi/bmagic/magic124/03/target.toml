@@ -14,9 +14,9 @@ sources = [
     "src/bof3/bmagic/mathAdvanceByteAt16.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12403_801F0828.c",
     "src/bof3/bmagic/stateTintTripletCountdown.c",
-    "src/bof3/bmagic/add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC.c",
+    "src/bof3/bmagic/workByteAdvanceThreshold.c",
     "src/bof3/bmagic/incrementWorkByteAThenSubtract4FromByte9AndDecrementGlobalByteBAndClearWhenZeroBmagicMagic12403_801F0368.c",
-    "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic12403_801EF050.c",
+    "src/bof3/bmagic/forwardRaiseInvokeZero.c",
     "src/bof3/bmagic/renderQuadsScaledRadii.c",
 ]
 support_sources = [

@@ -16,7 +16,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * @match 100.00
  * @residual none
  */
-void add2ToWorkByteAAndAdvanceWorkByte2At10BmagicMagic12903_801EF38C(void) {
+void workByteAdvanceDeadline(void) {
     g_battle_work[0xA] += 2;
     if (g_battle_work[0xA] == 0x10) {
         g_battle_work[2]++;

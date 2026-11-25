@@ -78,8 +78,8 @@ segments:
     - '@behavior: Loads the shared gate byte at 0x801490C7 with a signed byte read and stores 3 into the shared status halfword at 0x801490A8 while that byte reads nonzero, and 2 when it reads zero. Takes no arguments, calls nothing and returns nothing.'
   - - 2040
     - c
-    - setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8
-    - '@source: src/bof3/world/setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8.c'
+    - stateStatusRequestPrimary
+    - '@source: src/bof3/world/stateStatusRequestPrimary.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is clear, runs the shared front-end startup helper and requests primary scene state 5 with secondary state 0.'
   - - 2120
     - c

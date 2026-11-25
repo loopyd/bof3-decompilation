@@ -19,7 +19,7 @@ sources = [
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic14403_801F046C.c",
     "src/bof3/bmagic/decrementSubmitForwardGlobal.c",
     "src/bof3/bmagic/incrementWorkByteSet.c",
-    "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic14403_801F00A0.c",
+    "src/bof3/bmagic/workByte9AdvanceAt10.c",
     "src/bof3/bmagic/workByte9AdvanceAt11.c",
     "src/bof3/bmagic/incrementByteGlobalByte.c",
     "src/bof3/bmagic/dispatchWorkByte1LocalPairThenPublishEachOccupiedPoolRecordAndRunItsStepBmagicMagic14403_801EEC04.c",

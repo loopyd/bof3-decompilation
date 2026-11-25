@@ -40,7 +40,7 @@ void func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-void setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8(void) {
+void stateStatusRequestPrimary(void) {
   D_801490A8 = 0xFFFFu;
   if (D_801490C7 == 0) {
     func_8015C088();

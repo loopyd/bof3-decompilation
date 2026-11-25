@@ -5,7 +5,7 @@
  * groups below, so the cell is read through this target's map name rather than
  * the constant-address accessor, whose shared base would stay live across the
  * calls in a saved register and widen the frame. */
-extern u8* scratchWorkPointerAt1f800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
 void claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C(void);
 
@@ -93,14 +93,14 @@ void stateOriginWordsExpires(
   u8* work;
   u8 tick;
 
-  tick = scratchWorkPointerAt1f800044[6]++;
+  tick = scratchWorkPointerAt1[6]++;
   if ((tick & 3) == 0) {
     claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C();
   }
   func_801F5940();
   func_801F5308();
-  if (--scratchWorkPointerAt1f800044[9] == 0) {
-    work = scratchWorkPointerAt1f800044;
+  if (--scratchWorkPointerAt1[9] == 0) {
+    work = scratchWorkPointerAt1;
     *(s32*)(work + 0xC) = -0x1000;
     *(s32*)(work + 0x10) = -0x400;
     *(u32*)(work + 0x18) = *(u32*)(work + 0x64);

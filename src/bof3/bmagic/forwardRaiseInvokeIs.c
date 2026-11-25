@@ -45,7 +45,7 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  * @match 100.00
  * @residual none
  */
-void forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic12103_801EEE08(void) {
+void forwardRaiseInvokeIs(void) {
   u8 *work = SPAD_PTR_SLOT(u8, 0x44u);
 
   if (work[0xB] == 0xFF) {

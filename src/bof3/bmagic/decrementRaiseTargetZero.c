@@ -44,7 +44,7 @@ extern void func_800A9610(u8 target, s32 flags); /* @source 0x800A9610 @kind fun
  * @match 100.00
  * @residual none
  */
-void decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic13703_801EEEFC(void) {
+void decrementRaiseTargetZero(void) {
   if (--g_battle_work[9] == 0) {
     func_800A9610(D_80146384, 0x20);
     g_battle_work[1]++;

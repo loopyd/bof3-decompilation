@@ -6,7 +6,7 @@
  * reload arm, so the cell is read through this target's map name rather than
  * through a constant-address accessor, whose shared base would stay live across
  * the call in a saved register and widen the frame. */
-extern u8* scratchWorkPointerAt1f800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
 /* Overlay draw helper: keeps its first argument in $s1 and hands that block to
  * the transform calls at 0x801AFF04 and 0x801AFFD8, stores its second argument
@@ -84,10 +84,10 @@ void func_801F46EC(u8* block, s16 value, s32 channel_mask);
 void callBlockTickCountdown(void) {
   u8* work;
 
-  work = scratchWorkPointerAt1f800044;
+  work = scratchWorkPointerAt1;
   func_801F46EC(work + 0x64, *(s16*)(work + 0x2E), 6);
-  if (--scratchWorkPointerAt1f800044[9] == 0) {
-    scratchWorkPointerAt1f800044[9] = 0x20;
-    scratchWorkPointerAt1f800044[1]++;
+  if (--scratchWorkPointerAt1[9] == 0) {
+    scratchWorkPointerAt1[9] = 0x20;
+    scratchWorkPointerAt1[1]++;
   }
 }

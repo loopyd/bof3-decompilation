@@ -7,7 +7,7 @@ extern u32 D_80145EC8;
 /* @source 0x80145ECC @kind unknown */
 extern u32 D_80145ECC;
 /* @source 0x1F800044 @kind data */
-extern u8 *scratchWorkPointerAt1f800044;
+extern u8 *scratchWorkPointerAt1;
 
 /* @source 0x801F3814
  * @behavior Copies the shared words at 0x80145EC4 and 0x80145EC8 into
@@ -24,12 +24,12 @@ void stateWorkWords64Advance(void) {
     u8 *next;
     u32 third;
 
-    work = scratchWorkPointerAt1f800044;
+    work = scratchWorkPointerAt1;
     FIELD_REF(u32, work, 0x64) = D_80145EC4;
     FIELD_REF(u32, work, 0x68) = D_80145EC8;
     third = D_80145ECC;
     work[9] = 8;
-    next = scratchWorkPointerAt1f800044;
+    next = scratchWorkPointerAt1;
     FIELD_REF(u16, work, 0x2E) = 0;
     FIELD_REF(u32, work, 0x6C) = third + 0x800000u;
     next[1] += 1;

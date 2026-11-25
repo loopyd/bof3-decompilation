@@ -14,7 +14,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * @match 100.00
  * @residual none
  */
-void add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC(void) {
+void workByteAdvanceThreshold(void) {
   u8 *work;
   u8 counter;
 

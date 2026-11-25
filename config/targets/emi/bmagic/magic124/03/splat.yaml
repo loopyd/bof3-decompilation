@@ -42,8 +42,8 @@ segments:
     - func_801EEFF0
   - - 1104
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic12403_801EF050
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic12403_801EF050.c'
+    - forwardRaiseInvokeZero
+    - '@source: src/bof3/bmagic/forwardRaiseInvokeZero.c'
     - '@behavior: When work byte 0xB is zero, forwards battle byte 0x80146384, sets mask 0x4 in battle halfword 0x801462E8, and invokes helper 0x801E5988.'
   - - 1200
     - c
@@ -90,8 +90,8 @@ segments:
     - '@source: src/bof3/bmagic/stateTintTripletCountdown.c'
   - - 5884
     - c
-    - add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC
-    - '@source: src/bof3/bmagic/add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC.c'
+    - workByteAdvanceThreshold
+    - '@source: src/bof3/bmagic/workByteAdvanceThreshold.c'
     - '@behavior: Adds two to work byte 0xA and four to work byte 9, then advances work byte 2 when byte 9 equals 0x10.'
   - - 5992
     - c

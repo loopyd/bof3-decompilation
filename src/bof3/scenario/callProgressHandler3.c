@@ -15,7 +15,7 @@ extern u32 D_801FAEF0[];
  * reaches it indirectly and no in-image jal targets it. Entry 0 of its table
  * (armEffectBank, 0x801F72C4) stores 1
  * into D_80146872 and entry 1
- * (applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1100_801F72E4,
+ * (statePendingWorldId,
  * 0x801F72E4) ends by storing 2
  * into it, so the byte walks 0 -> 1 -> 2 through a state chain. The 60 bytes
  * are instruction-for-instruction identical to the exact progress dispatchers of

@@ -61,7 +61,7 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C @kind function */
  * @match 100.00
  * @residual none
  */
-void decrementWorkByte9InvokeHelper101AndRaiseBattleTargetFlag10ThenAdvanceWorkByte1BmagicMagic21903_801EEF54(void) {
+void decrementInvokeRaiseTarget(void) {
     if (--g_battle_work[9] == 0) {
         func_8015D71C(0x101);
         func_800A9610(D_80146384, 0x10);

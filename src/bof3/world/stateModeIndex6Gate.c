@@ -31,7 +31,7 @@ extern u8 D_801D4285;
  * @match 100.00
  * @residual none
  */
-void setStatus4AndModeIndex6IfGateElseFFFFWorld02Area11313_801F2CC0(void) {
+void stateModeIndex6Gate(void) {
   if (D_801490C7 != 0) {
     D_801490A8 = 4;
     D_801D4285 = 6;
