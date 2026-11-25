@@ -7,7 +7,7 @@ extern s8 D_80146874;
  * scenario-state dispatcher callStateHandler3
  * at 0x801F7D14 indexes with the signed state byte D_80146872) read from that
  * run's +0x0C entry, so its own entries are nine: it starts with the inert slot
- * noopHandlerScenarioScena1300_801F84B0 (0x801F84B0), then 0x801F84B8,
+ * noopPrimaryStateFirst (0x801F84B0), then 0x801F84B8,
  * 0x801F873C, 0x801F8DFC, 0x801F9570, 0x801F9A44, 0x801F9F18, 0x801FA844 and
  * 0x801FB1B4 as its last entry, and it ends immediately before the halfword
  * script data at 0x801FBF78. The embedding run's word 2 (0x801FBF50) holds this
@@ -22,7 +22,7 @@ extern void (*D_801FBF54[])(void);
  * loaded with a signed byte load, scaled by four onto the overlay-local
  * code-pointer table at 0x801FBF54, and the selected word is called with `jalr`
  * and no arguments. The table's entry 0 is the inert handler
- * noopHandlerScenarioScena1300_801F84B0 (0x801F84B0) and its last entry is
+ * noopPrimaryStateFirst (0x801F84B0) and its last entry is
  * 0x801FB1B4, so the signed byte selects which of the overlay's nine primary
  * states runs this frame. It reads no state other than that byte and writes
  * none, takes no arguments and returns nothing of its own; the 0x18-byte frame

@@ -29,7 +29,7 @@ void func_801C1630(void);
  * in-image jal reaches the address; its only image word is 0x801FC4B8, entry
  * 20 of the twenty-two-word overlay callback run at 0x801FC468 (0x801FC468
  * through 0x801FC4BC) that
- * dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C (0x801FB37C)
+ * callRecordCallbackByte73 (0x801FB37C)
  * indexes with the unsigned record byte at offset 0x7A, so the overlay selects
  * this entry for the record kind 0x14. Its statement order, operand forms and
  * declaration style come from the exact scena09 sibling

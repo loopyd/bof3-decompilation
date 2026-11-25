@@ -2,7 +2,7 @@
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
-extern void clearWorkBytesBmagicMagic12903_801F0564(void); /* @source 0x801F0564 */
+extern void stateWorkBytes5(void); /* @source 0x801F0564 */
 
 /* @source 0x801F029C
  * @behavior Decrements work byte 0xA modulo 256, adds work word 0x20 to
@@ -24,6 +24,6 @@ void decrementIntegrateGlobalZero(void) {
     FIELD_REF(u32, work, 0x3C) = word3C;
     if (count == 0) {
         D_801EB4E0[0xB]--;
-        clearWorkBytesBmagicMagic12903_801F0564();
+        stateWorkBytes5();
     }
 }

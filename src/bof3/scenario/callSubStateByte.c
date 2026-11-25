@@ -143,7 +143,7 @@ void signedTableStepScaled(
 /* @source 0x801F7FB8
  * @behavior Primary-state handler of this scenario overlay and entry 2 of the
  *           ten-word handler table at 0x801FC424 that
- *           dispatchPrimaryStateHandlerScenarioScena1400_801F7B5C indexes with
+ *           callPrimaryStateHandler4 indexes with
  *           the shared primary state byte D_80146874, so a primary state
  *           reading 2 runs it; the table word at 0x801FC42C is its only image
  *           word and no in-image jal names 0x801F7FB8. It steps the shared

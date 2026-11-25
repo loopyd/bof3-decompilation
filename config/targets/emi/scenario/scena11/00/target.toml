@@ -11,7 +11,7 @@ headers = ["include/bof3/scenario/scena11_state.h"]
 
 sources = [
     "src/bof3/scenario/waitBytesPrimaryFlag.c",
-    "src/bof3/scenario/requestPrimaryBSub2.c",
+    "src/bof3/scenario/requestProgressClearState11.c",
     "src/bof3/scenario/claimEndPointerReset.c",
     "src/bof3/scenario/raisePanelUntilSelect.c",
     "src/bof3/scenario/armUnlessWaitFlag.c",
@@ -60,7 +60,7 @@ support_sources = [
     "src/bof3/scenario/statePanelAccumulatorsSelect.c",
     "src/bof3/scenario/requestPrimary9Sub5.c",
     "src/bof3/scenario/requestPrimaryASub14.c",
-    "src/bof3/scenario/requestPrimaryBSub14.c",
+    "src/bof3/scenario/requestState11Substate20.c",
     "src/bof3/scenario/requestPrimary5Sub28.c",
     "src/bof3/scenario/statePrimary9Stages.c",
     "src/bof3/scenario/statePrimary3Stages.c",

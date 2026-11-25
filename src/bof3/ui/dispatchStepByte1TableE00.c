@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Overlay-wide step cell group. Byte 0 indexes the five-entry handler run at
- * 0x801DADEC through dispatchStepByte0TableDec; byte 1 selects a handler of the
+ * 0x801DADEC through callStepByte0Table; byte 1 selects a handler of the
  * run entered at 0x801DAE00. */
 extern u8 D_801F294C[]; /* @source 0x801F294C @kind data */
 

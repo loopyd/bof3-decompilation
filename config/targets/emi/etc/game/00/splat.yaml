@@ -340,7 +340,7 @@ segments:
     - func_8019977C
   - - 16364
     - c
-    - retreatPanelXToNeg170B
+    - retreatPanelXNeg1702
     - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: retreats panel x with the template clamp behavior.'
   - - 16428
@@ -405,8 +405,8 @@ segments:
     - '@behavior: calls handler 3 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index queryCurrentWorldIndex returns for the current world state ID.'
   - - 19248
     - c
-    - dispatchAreaOverlayStateByte1ForPendingWorld_game00_8019A330
-    - '@source: src/bof3/ui/dispatchAreaOverlayStateByte1ForPendingWorld_game00_8019A330.c'
+    - callOverlayByWorld
+    - '@source: src/bof3/ui/callOverlayByWorld.c'
     - '@behavior: Overlay trampoline selected by the pending world id D_80143F00: when that u16 reads 0x68 it calls the concurrently resident per-area overlay routine at 0x801F53D4, otherwise the one at 0x801F5918; both resident routines dispatch their overlay work-state-byte-1 handler table.'
   - - 19312
     - c
@@ -888,8 +888,8 @@ segments:
     - '@behavior: initializes the next free entity slot from one packed spawn record, applies its saved-state gate, and advances the entity count.'
   - - 73476
     - c
-    - loadScenario
-    - '@source: src/bof3/ui/loadScenario.c'
+    - loadScene
+    - '@source: src/bof3/ui/loadScene.c'
     - '@behavior: stores a scenario index, clears adjacent state, requests SCENA[index], waits for loader readiness, then dispatches into the scenario-local jump table.'
   - - 73732
     - c
@@ -898,8 +898,8 @@ segments:
     - '@behavior: requests the scenario overlay selected by the signed scenario ID.'
   - - 73772
     - c
-    - callScenarioHandlerState
-    - '@source: src/bof3/ui/callScenarioHandlerState.c'
+    - callSceneHandlerState
+    - '@source: src/bof3/ui/callSceneHandlerState.c'
     - '@behavior: calls the scenario handler selected by scenarioState.scenario_id through the handler-pointer table at D_801C8454 (entries point at records in a companion overlay whose first field is the handler), then dispatches the main state machine.'
   - - 73848
     - asm
@@ -1070,8 +1070,8 @@ segments:
     - '@behavior: Dispatches the handler table (0x801C8904) indexed by the work-area mode byte (work+0x04) through a tail-style jalr call.'
   - - 95240
     - c
-    - initializeWorkModeWithTintMinus128
-    - '@source: src/bof3/ui/initializeWorkModeWithTintMinus128.c'
+    - initializeWorkTint
+    - '@source: src/bof3/ui/initializeWorkTint.c'
     - '@behavior: Calls func_8019651C with the scratch work pointer and arguments 0, 0, 0, 1, then stores its low return byte at D_80146884 + 0x93. Sets scratch flag bit 0x20, clears bit 0x40, sets the three signed tint channels at 0x5D-0x5F to -0x80, flag byte 0x5C and handler byte 0x04 to 1, and decrements the D_80146884 countdown halfword at 0x7E. The helper and return byte have no proven further role.'
   - - 95448
     - asm
@@ -1129,8 +1129,8 @@ segments:
     - func_801AD4DC
   - - 97948
     - c
-    - clearWorkAnimBit0_2
-    - '@source: src/bof3/ui/clearWorkAnimBit0_2.c'
+    - clearWorkAnimBit
+    - '@source: src/bof3/ui/clearWorkAnimBit.c'
     - '@behavior: clears bit 0 of the byte at offset 0x74 in the current work area.'
   - - 97980
     - c
@@ -1193,8 +1193,8 @@ segments:
     - func_801B0DA0
   - - 112124
     - c
-    - advanceWorkThenConditionalSharedUpdate_game00_801B0DFC
-    - '@source: src/bof3/ui/advanceWorkThenConditionalSharedUpdate_game00_801B0DFC.c'
+    - advanceWorkAndUpdate
+    - '@source: src/bof3/ui/advanceWorkAndUpdate.c'
     - '@behavior: advances the work record position by its current delta step (func_801C57B4 adds the work-area words at 0x0C and 0x10 and the packed word at 0x14 into the coordinate words at 0x34 / 0x38 and the counter halfword at 0x3E) and then runs the shared no-argument update func_8014D978 only when the shared-work mode byte at D_80146250 + 0x11C is at least 4 under an unsigned compare.'
   - - 112196
     - asm
@@ -1251,18 +1251,18 @@ segments:
     - '@behavior: runs the shared work-area service func_801C4E14 and, when it reports success, publishes handler index 2 into the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 121796
     - c
-    - advanceHandlerIndexTo3WhenReady
-    - '@source: src/bof3/ui/advanceHandlerIndexTo3WhenReady.c'
+    - publishHandlerIndexThree
+    - '@source: src/bof3/ui/publishHandlerIndexThree.c'
     - '@behavior: runs the shared work-area service func_801C4EC4 and, when it reports success, publishes handler index 3 into the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 121856
     - c
-    - advanceHandlerIndexTo4WhenReady
-    - '@source: src/bof3/ui/advanceHandlerIndexTo4WhenReady.c'
+    - publishHandlerIndexFour
+    - '@source: src/bof3/ui/publishHandlerIndexFour.c'
     - '@behavior: runs the shared work-area service func_801C4F88 and, when it reports success, publishes handler index 4 into the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 121916
     - c
-    - advanceStateToTwoAndResetHandlerIndexWhenReady_game00_801B343C
-    - '@source: src/bof3/ui/advanceStateToTwoAndResetHandlerIndexWhenReady_game00_801B343C.c'
+    - stateResetHandlerIndex
+    - '@source: src/bof3/ui/stateResetHandlerIndex.c'
     - '@behavior: runs the shared work-area service func_801C4FE0 and, when it reports success, publishes state 2 into the work-area byte at offset 0x02, the index of the D_801CD130 dispatch table, and clears the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 121992
     - asm
@@ -1279,8 +1279,8 @@ segments:
     - '@behavior: runs the shared work-area scratchpad service func_801C51B0, then advances the work-area byte at offset 0x03 (the handler index of the D_801CD140/D_801CD154 dispatch tables) to 1.'
   - - 122288
     - c
-    - advanceHandlerIndexTo2WhenReady_game00_801B35B0
-    - '@source: src/bof3/ui/advanceHandlerIndexTo2WhenReady_game00_801B35B0.c'
+    - publishHandlerIndexTwo
+    - '@source: src/bof3/ui/publishHandlerIndexTwo.c'
     - '@behavior: runs the shared work-area service func_801C520C and, when it reports success, publishes handler index 2 into the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 122348
     - asm
@@ -1448,8 +1448,8 @@ segments:
     - '@behavior: runs the shared tint step func_801C29A0 with the 4-unit delta and, when that step reports the three signed tint channels have reached the -0x80 floor (non-zero byte result), clears bit 0x02 of the record byte at D_80146250 + 0x118 and publishes handler index 1 into the work-area handler index byte at 0x03.'
   - - 137340
     - c
-    - clearStatusBit2AndAdvanceHandlerIndexTo1WhenTintFadeCompletes
-    - '@source: src/bof3/ui/clearStatusBit2AndAdvanceHandlerIndexTo1WhenTintFadeCompletes.c'
+    - publishFadeIndexOne
+    - '@source: src/bof3/ui/publishFadeIndexOne.c'
     - '@behavior: runs the shared tint-fade ramp func_801C27E0 with the 4-unit delta and, when that step reports the fade complete (non-zero byte result), clears bit 0x04 of the record byte at D_80146250 + 0x118 and publishes handler index 1 into the work-area handler index byte at 0x03.'
   - - 137428
     - asm
@@ -1518,13 +1518,13 @@ segments:
     - func_801B7B54
   - - 140304
     - c
-    - advanceWorkHandlerIndexWhenReady
-    - '@source: src/bof3/ui/advanceWorkHandlerIndexWhenReady.c'
+    - advanceFirstGateIndex
+    - '@source: src/bof3/ui/advanceFirstGateIndex.c'
     - '@behavior: runs the shared work-area readiness service func_801C520C and, when it reports success, advances the work-state handler index byte at g_game_work + 0x04 by one.'
   - - 140376
     - c
-    - advanceWorkHandlerIndexWhenReady_game00_801B7C58
-    - '@source: src/bof3/ui/advanceWorkHandlerIndexWhenReady_game00_801B7C58.c'
+    - advanceSecondGateIndex
+    - '@source: src/bof3/ui/advanceSecondGateIndex.c'
     - '@behavior: runs the shared work-area readiness service func_801C539C and, when it reports success, advances the work-state handler index byte at g_game_work + 0x04 by one.'
   - - 140448
     - asm
@@ -1541,23 +1541,23 @@ segments:
     - '@behavior: Entry 0 of the work-state table D_801CD330: runs the shared work-area reset service func_801C4D58, raises bit 3 of the world-flags halfword D_8014625A and advances the scratchpad work area handler index (g_game_work + 0x04) to state 1.'
   - - 140676
     - c
-    - advanceWorkHandlerIndexTo2WhenReady
-    - '@source: src/bof3/ui/advanceWorkHandlerIndexTo2WhenReady.c'
+    - publishWorkIndexTwo
+    - '@source: src/bof3/ui/publishWorkIndexTwo.c'
     - '@behavior: runs the shared work-area service func_801C4E14 and, when it reports success, publishes handler index 2 into the work-area byte at offset 0x04, the handler index of the D_801CD330 work-state dispatch table.'
   - - 140736
     - c
-    - advanceWorkHandlerIndexTo3WhenReady
-    - '@source: src/bof3/ui/advanceWorkHandlerIndexTo3WhenReady.c'
+    - publishWorkIndexThree
+    - '@source: src/bof3/ui/publishWorkIndexThree.c'
     - '@behavior: runs the shared work-area service func_801C4EC4 and, when it reports success, publishes handler index 3 into the work-area byte at offset 0x04, the handler index of the D_801CD330 work-state dispatch table.'
   - - 140796
     - c
-    - advanceWorkHandlerIndexTo4WhenReady
-    - '@source: src/bof3/ui/advanceWorkHandlerIndexTo4WhenReady.c'
+    - publishWorkIndexFour
+    - '@source: src/bof3/ui/publishWorkIndexFour.c'
     - '@behavior: runs the shared work-area service func_801C4F88 and, when it reports success, publishes handler index 4 into the work-area byte at offset 0x04, the handler index of the D_801CD330 work-state dispatch table.'
   - - 140856
     - c
-    - advanceWorkHandlerIndexTo5WhenReady
-    - '@source: src/bof3/ui/advanceWorkHandlerIndexTo5WhenReady.c'
+    - publishWorkIndexFive
+    - '@source: src/bof3/ui/publishWorkIndexFive.c'
     - '@behavior: Runs the shared work-area service func_801C4FE0 and, when it reports success, publishes handler index 5 into the work-area byte at offset 0x04, the handler index of the D_801CD330 work-state dispatch table (entry 4).'
   - - 140916
     - asm
@@ -1573,8 +1573,8 @@ segments:
     - func_801B80B4
   - - 141804
     - c
-    - advanceWorkHandlerIndexWhenTintFadeCompletes
-    - '@source: src/bof3/ui/advanceWorkHandlerIndexWhenTintFadeCompletes.c'
+    - advanceWorkOnFade
+    - '@source: src/bof3/ui/advanceWorkOnFade.c'
     - '@behavior: runs the shared tint-fade step func_801C27E0 with the +8 ramp delta and, when it reports the fade complete, advances the work-area handler index byte at 0x04 (the index byte of the D_801CD310 / D_801CD330 dispatch tables) by one.'
   - - 141876
     - c
@@ -1592,8 +1592,8 @@ segments:
     - func_801B8394
   - - 142712
     - c
-    - advanceHandlerIndexWhenTintFadeCompletes
-    - '@source: src/bof3/ui/advanceHandlerIndexWhenTintFadeCompletes.c'
+    - advanceHandlerOnFade
+    - '@source: src/bof3/ui/advanceHandlerOnFade.c'
     - '@behavior: runs the shared tint-fade step func_801C27E0 with the +8 ramp delta and, when it reports the fade complete, advances the work-area handler index byte at 0x03 (the index byte of the D_801CD140 / D_801CD154 dispatch tables) by one.'
   - - 142784
     - asm
@@ -1645,8 +1645,8 @@ segments:
     - func_801B9478
   - - 146840
     - c
-    - dispatchWorkRoutineBySpeedByte_game00_801B9598
-    - '@source: src/bof3/ui/dispatchWorkRoutineBySpeedByte_game00_801B9598.c'
+    - callSpeedRoutine
+    - '@source: src/bof3/ui/callSpeedRoutine.c'
     - '@behavior: selects one of two sibling argument-less work routines by the work-area speed byte at 0x70 (speed_70) reached through the scratchpad pointer slot 0x1F800044: a zero speed byte calls func_801B95E0 and a non-zero speed byte calls func_801BA678, and the byte status returned by the selected routine is returned.'
   - - 146912
     - asm

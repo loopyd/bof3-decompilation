@@ -9,14 +9,14 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/bmagic/drawThirtyTwoTranslucentGouraudQuadsBetweenRadii128And192TintingInnerEdgeByWorkByte9TimesSixBmagicMagic11803_801EF6BC.c",
+    "src/bof3/bmagic/renderTintedEdgeRing.c",
     "src/bof3/bmagic/renderThirtyFanTriangles.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic11803_801EF60C.c",
+    "src/bof3/bmagic/projectInstallTransformRotation2.c",
     "src/bof3/bmagic/copyEightSlotsBands.c",
     "src/bof3/support/magic118_03_psyq.c",
-    "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBIs1BmagicMagic11803_801EEE8C.c",
+    "src/bof3/bmagic/incrementWorkWorkByte2.c",
     "src/bof3/bmagic/decrementWorkIncrementZero.c",
     "src/bof3/bmagic/workIntoTwoSixteen.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenWhenZeroCopyWorkWordTripletSetWord20To8ByteATo2Word14To0ByteBTo10Byte9To20AndAdvanceWorkByte1BmagicMagic11803_801EEFF4.c",
+    "src/bof3/bmagic/decrementCopyTripletReset.c",
 ]
 psyq_source = "src/bof3/support/magic118_03_psyq.c"

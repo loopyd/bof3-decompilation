@@ -11,7 +11,7 @@ void func_801C1630(void);
 /* @source 0x801FBF18
  * @behavior Overlay per-record callback: its only image word is 0x801FC498,
  * entry 12 of the twenty-two-word callback run at 0x801FC468 (0x801FC468
- * through 0x801FC4BC) that dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C
+ * through 0x801FC4BC) that callRecordCallbackByte73
  * (0x801FB37C) indexes with the unsigned record byte at offset 0x7A, so the
  * overlay selects this entry for the record kind 0x0C, and no in-image jal
  * reaches the address. In source statement order it reads the unsigned byte

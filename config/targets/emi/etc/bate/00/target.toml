@@ -11,7 +11,7 @@ sources = [
     "src/bof3/ui/buildEquipStatComparison.c",
     "src/bof3/ui/drawSpriteKindSubstitute.c",
     "src/bof3/ui/emitIconKindTile.c",
-    "src/bof3/ui/drawSpritePrimTpageFromAbrBate00_801D36B8.c",
+    "src/bof3/ui/renderSemiSpritePair.c",
     "src/bof3/ui/renderPartyAttributeExp.c",
     "src/bof3/ui/publishBateMaskSnapshot.c",
     "src/bof3/ui/callUiPhaseTable.c",

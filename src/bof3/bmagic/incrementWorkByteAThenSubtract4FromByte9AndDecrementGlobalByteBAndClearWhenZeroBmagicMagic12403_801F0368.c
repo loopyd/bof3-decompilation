@@ -2,7 +2,7 @@
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
-extern void clearWorkBytesBmagicMagic12403_801F088C(void); /* @source 0x801F088C @kind function */
+extern void stateWorkBytes4(void); /* @source 0x801F088C @kind function */
 
 /* @source 0x801F0368
  * @behavior Increments work byte 0xA modulo 256, reloads the scratchpad
@@ -20,6 +20,6 @@ void incrementWorkByteAThenSubtract4FromByte9AndDecrementGlobalByteBAndClearWhen
     g_battle_work[0xA]++;
     if ((g_battle_work[9] -= 4) == 0) {
         D_801EB4E0[0xB] -= 1;
-        clearWorkBytesBmagicMagic12403_801F088C();
+        stateWorkBytes4();
     }
 }

@@ -10,7 +10,7 @@ extern u8 D_801F294D; /* @source 0x801F294D @kind data */
 /* @source 0x801D50AC
  * @behavior First handler of the overlay's byte-1 step group: word three of the
  *           ten-entry handler run at 0x801DAD68, reached as entry zero of the
- *           byte-1 view that dispatchStepByte1TableD74 indexes at 0x801DAD74.
+ *           byte-1 view that callStepByte1Table indexes at 0x801DAD74.
  *           It requests frontend-local mode 0 through the main-exe setter
  *           func_8014ECAC and then advances the byte-1 step index at 0x801F294D
  *           by one. The call is made before the increment, nothing is returned,

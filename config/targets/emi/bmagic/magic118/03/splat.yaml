@@ -41,7 +41,7 @@ segments:
     - func_801EEE20
   - - 652
     - c
-    - incrementWorkByte1WhenWorkByteBIs1BmagicMagic11803_801EEE8C
+    - incrementWorkWorkByte2
   - - 704
     - c
     - decrementWorkIncrementZero
@@ -55,8 +55,8 @@ segments:
     - func_801EEF6C
   - - 1012
     - c
-    - decrementWorkByte9ThenWhenZeroCopyWorkWordTripletSetWord20To8ByteATo2Word14To0ByteBTo10Byte9To20AndAdvanceWorkByte1BmagicMagic11803_801EEFF4
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenWhenZeroCopyWorkWordTripletSetWord20To8ByteATo2Word14To0ByteBTo10Byte9To20AndAdvanceWorkByte1BmagicMagic11803_801EEFF4.c'
+    - decrementCopyTripletReset
+    - '@source: src/bof3/bmagic/decrementCopyTripletReset.c'
     - '@behavior: Decrements work byte 9 and, only when it reaches zero, copies the shared battle record words 0x34, 0x38 and 0x3C into the work object, stores 8 to work word 0x20, 2 to work byte 0xA and 0 to work word 0x14, re-reads the scratchpad cell and stores 0x10 to work byte 0xB and 0x20 to work byte 0x9, then increments work byte 1.'
   - - 1188
     - c
@@ -71,13 +71,13 @@ segments:
     - func_801EF194
   - - 2572
     - c
-    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic11803_801EF60C
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic11803_801EF60C.c'
+    - projectInstallTransformRotation2
+    - '@source: src/bof3/bmagic/projectInstallTransformRotation2.c'
     - '@behavior: Projects the work record position, builds a zero-angle rotation, composes the shared matrix and installs the transform.'
   - - 2748
     - c
-    - drawThirtyTwoTranslucentGouraudQuadsBetweenRadii128And192TintingInnerEdgeByWorkByte9TimesSixBmagicMagic11803_801EF6BC
-    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudQuadsBetweenRadii128And192TintingInnerEdgeByWorkByte9TimesSixBmagicMagic11803_801EF6BC.c'
+    - renderTintedEdgeRing
+    - '@source: src/bof3/bmagic/renderTintedEdgeRing.c'
     - '@behavior: Draws thirty-two translucent Gouraud quads between radii 128 and 192 with the inner edge tinted by work byte 9 times six, linked at slot 5 between draw-mode packets.'
   - - 3612
     - c

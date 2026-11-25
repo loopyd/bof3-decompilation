@@ -169,35 +169,35 @@ void func_801AD3B4(void);
 void stateHandlerIndexReady(void);
 /* Publishes handler index 3 into the work-area handler index at 0x03 once the
  * shared work-area service func_801C4EC4 reports success. */
-void advanceHandlerIndexTo3WhenReady(void);
+void publishHandlerIndexThree(void);
 /* Publishes handler index 4 into the work-area handler index at 0x03 once the
  * shared work-area service func_801C4F88 reports success. */
-void advanceHandlerIndexTo4WhenReady(void);
+void publishHandlerIndexFour(void);
 /* Publishes state 2 into the work-area byte at 0x02, the index of the
  * D_801CD130 dispatch table, and clears the work-area handler index at 0x03
  * once the shared work-area service func_801C4FE0 reports success; the closing
  * handler of the D_801CD140 pad_03 dispatch chain. */
-void advanceStateToTwoAndResetHandlerIndexWhenReady_game00_801B343C(void);
+void stateResetHandlerIndex(void);
 /* Publishes handler index 2 into the work-area handler index at 0x03 once the
  * shared work-area service func_801C520C reports success; the second of the
  * two pad_03 dispatch chains (D_801CD154). */
-void advanceHandlerIndexTo2WhenReady_game00_801B35B0(void);
+void publishHandlerIndexTwo(void);
 /* Publishes handler index 2 into the work-area handler index at 0x04, the
  * index of the D_801CD330 work-state table, once the shared work-area service
  * func_801C4E14 reports success. */
-void advanceWorkHandlerIndexTo2WhenReady(void);
+void publishWorkIndexTwo(void);
 /* Publishes handler index 3 into the work-area handler index at 0x04, the
  * index of the D_801CD330 work-state table, once the shared work-area service
  * func_801C4EC4 reports success. */
-void advanceWorkHandlerIndexTo3WhenReady(void);
+void publishWorkIndexThree(void);
 /* Publishes handler index 4 into the work-area handler index at 0x04, the
  * index of the D_801CD330 work-state table, once the shared work-area service
  * func_801C4F88 reports success. */
-void advanceWorkHandlerIndexTo4WhenReady(void);
+void publishWorkIndexFour(void);
 /* Publishes handler index 5 into the work-area handler index at 0x04, the
  * index of the D_801CD330 work-state table, once the shared work-area service
  * func_801C4FE0 reports success. */
-void advanceWorkHandlerIndexTo5WhenReady(void);
+void publishWorkIndexFive(void);
 
 /* Shared signed tint step of this overlay, the -0x80-floor counterpart of the
  * tint-fade ramp func_801C27E0: the signed byte argument is subtracted from
@@ -399,7 +399,7 @@ extern GameEntry0StateHandler D_801CD120[];
  * handler, whose entries are the sibling update routines 0x801B3768 and
  * 0x801B3A3C. */
 /* @source 0x801CD1B0 @kind table */
-extern GameEntry0StateHandler workFlags02HandlerPairTable[];
+extern GameEntry0StateHandler workHandlerPairTable[];
 /* @source 0x801CD130 @kind table */
 extern GameEntry0StateHandler D_801CD130[];
 /* @source 0x801CD330 @kind table */
@@ -1071,7 +1071,7 @@ void requestOverlay(void);
 /* @source 0x801C8454 @kind table */
 extern GameEntry0StateHandler* D_801C8454[];
 
-void callScenarioHandlerState(void);
+void callSceneHandlerState(void);
 void dispatchStateHandler(void);
 
 /* @behavior ticks the shared world/front waiting path while the scenario loader is
@@ -1202,7 +1202,7 @@ void func_8016728C(u32 slot_id, u32 mode);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 void startSelectionFx(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
 void stopSelectionFx(u8 arg0, u8 arg1);
-void loadScenario(u8 scenario_index);
+void loadScene(u8 scenario_index);
 void func_801651DC(s32 ability_id, s32 character_id, s32 arg2, s32 arg3);
 void func_80164A44(volatile void* character_state);
 
@@ -1240,7 +1240,7 @@ void stateActiveGameRecords(void);
 void func_801B3CCC(u32 arg0);
 void advancePanelXTo320(void);
 void retreatPanelXNeg170(void);
-void retreatPanelXToNeg170B(void);
+void retreatPanelXNeg1702(void);
 void advancePanelXTo17(void);
 void retreatPanelField6Neg20(void);
 

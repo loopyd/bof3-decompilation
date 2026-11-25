@@ -24,7 +24,7 @@ sources = [
     "src/bof3/bmagic/motionPairIntoHalfwords.c",
     "src/bof3/bmagic/reserveFirstFreeRecord.c",
     "src/bof3/bmagic/callDecrementCountdownActive.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13103_801EF61C.c",
+    "src/bof3/bmagic/raiseInvokeHelperZero3.c",
     "src/bof3/bmagic/stateAdvanceHelperReady.c",
     "src/bof3/bmagic/decrementForwardMotionPair.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F02B0.c",

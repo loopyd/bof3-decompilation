@@ -7,7 +7,7 @@ extern void func_80150224(s32 action_id); /* @source 0x80150224 */
 extern u8 D_80143BB0; /* @source 0x80143BB0 @kind data */
 
 /* Byte 0 of this overlay's step cell group: it indexes the five-entry handler
- * run at 0x801DADEC through dispatchStepByte0TableDec. */
+ * run at 0x801DADEC through callStepByte0Table. */
 extern u8 D_801F294C; /* @source 0x801F294C @kind data */
 
 /* @source 0x801D5D98

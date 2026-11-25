@@ -4,7 +4,7 @@
  * address by this target's map as g_battle_work, the name its exact lifts
  * incrementBytesZeroInvoke,
  * decrementGlobalWorkByteBThenClearWorkBytesBmagicMagic12303_801EF550 and
- * clearWorkBytesBmagicMagic12303_801EFD04 use. The cell is re-read once per
+ * stateWorkBytes2 use. The cell is re-read once per
  * access group because every byte store through the pointer may republish the
  * cell itself, so the original re-materializes `lui $vN,0x1F80` /
  * `lw $vN,0x44($vN)` at 0x801EF28C, 0x801EF2B0, 0x801EF2D8, 0x801EF31C,

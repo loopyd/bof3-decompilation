@@ -40,12 +40,12 @@ extern s32 func_8014E640(u32 mask);
  */
 extern void dispatchSoundCue(u32 cue_id);
 
-extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
+extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void renderCommuListScreen(void);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
  * is declared wide here and the constant x arguments keep their bare `addiu`
  * form; the selected flag is the byte the emitter masks on entry. */
-extern void drawMarkerTriangleCommu0107_801D3984(s32 x, s16 y, u8 selected);
+extern void renderMarkerTriangle(s32 x, s16 y, u8 selected);
 extern void renderSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected);
 extern u8 checkActiveRecordsKind(s32 kind);
 extern u8 queryActiveSlotKind(u8 kind, u8 ordinal);
@@ -70,9 +70,9 @@ extern u8 queryActiveSlotKind(u8 kind, u8 ordinal);
  * no other bit moves it, and the ordinal byte landing on a different value
  * queues resident cue 0x100. Every path then runs renderCommuListScreen and draws the
  * list row 0x801448ED with the selected flag 1 through
- * drawRowMarkerOutlineCommu0107_801D36FC, and then draws the record of the
+ * renderRowMarkerOutline, and then draws the record of the
  * ordinal byte: while the list row is zero through
- * drawMarkerTriangleCommu0107_801D3984 at 0x28 plus 8 times the signed ordinal on
+ * renderMarkerTriangle at 0x28 plus 8 times the signed ordinal on
  * x and 0x39 on y, and the slot box through renderSlotChannelBox at 0x30 plus that same
  * sum on x and 0x42 on y; otherwise through the same pair at 0xFA plus 8 times
  * the ordinal modulo 5 on x and 0x44 plus 54 times the list row minus 9 plus 7
@@ -132,12 +132,12 @@ void handleOrdinalInput(void) {
   }
   renderCommuListScreen();
   row = &D_801448ED;
-  drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
+  renderRowMarkerOutline(*row, 1);
   if (*row == 0) {
     /* 8 times the signed ordinal byte, sign extended before the scale. */
     ordinal = D_801D4E24;
     ordOffset = ((s32)ordinal << 24) >> 21;
-    drawMarkerTriangleCommu0107_801D3984(ordOffset + 0x28, 0x39, 0);
+    renderMarkerTriangle(ordOffset + 0x28, 0x39, 0);
     renderSlotChannelBox(ordOffset + 0x30, 0x42,
                               queryActiveSlotKind(*row, D_801D4E24), 0);
   } else {
@@ -145,7 +145,7 @@ void handleOrdinalInput(void) {
     line = (s8)D_801D4E24 / 5;
     x = col * 8;
     y = (*row - 9) * 54 + line * 7;
-    drawMarkerTriangleCommu0107_801D3984(x + 0xFA, y + 0x44, 0);
+    renderMarkerTriangle(x + 0xFA, y + 0x44, 0);
     renderSlotChannelBox(x + 0xA8, y + 0x4C,
                               queryActiveSlotKind(*row, D_801D4E24), 0);
   }

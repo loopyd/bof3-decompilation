@@ -67,12 +67,12 @@ segments:
     - '@behavior: Draws four translucent Gouraud ribbon layers per work-byte-A segment along work velocity with sampled widths and phase offsets.'
   - - 4928
     - c
-    - dispatchStateByte1Table05c8BmagicMagic12903_801EFF40
+    - callWorkByte1Handler31
     - '@source: src/bof3/bmagic/magic12903DispatchTables.c'
   - - 4996
     - c
-    - dispatchWorkByte2HandlerThenDrawFanBetweenGraphTypeDrawModesWhenActiveBmagicMagic12903_801EFF84
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawFanBetweenGraphTypeDrawModesWhenActiveBmagicMagic12903_801EFF84.c'
+    - callByte2DrawFan
+    - '@source: src/bof3/bmagic/callByte2DrawFan.c'
     - '@behavior: Dispatches work byte 2, then draws the fan between graph-type draw modes when work bytes 0 and 2 are nonzero.'
   - - 5332
     - c
@@ -94,13 +94,13 @@ segments:
     - '@behavior: Draws eight translucent Gouraud fan triangles of radius 32 with signed work-byte tint products at the centre and RGB 1 at the rim.'
   - - 6400
     - c
-    - reserveFirstFreeRecordBmagicMagic12903_801F0500
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12903_801F0500.c'
+    - resourceReserveFreeRecord11
+    - '@source: src/bof3/bmagic/resourceReserveFreeRecord11.c'
     - '@behavior: Reserves the first free record among 64 records with stride 0x78, returning its index or 0xFF.'
   - - 6500
     - c
-    - clearWorkBytesBmagicMagic12903_801F0564
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic12903_801F0564.c'
+    - stateWorkBytes5
+    - '@source: src/bof3/bmagic/stateWorkBytes5.c'
   - - 6580
     - textbin
     - T_801F05B4

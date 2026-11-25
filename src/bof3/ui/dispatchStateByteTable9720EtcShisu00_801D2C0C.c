@@ -8,7 +8,7 @@
 extern void (*D_801D9720[])(void); /* @source 0x801D9720 @kind data */
 
 /* The overlay's state byte, part of the work block 0x801DA028..0x801DA12D:
- * initializeShisuUiRecords clears it while setting up that
+ * initializeUiRecords clears it while setting up that
  * block, and this dispatcher turns its value into a handler index. No other
  * code of this payload writes it, so the steps that advance it live outside
  * the overlay. */

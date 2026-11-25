@@ -7,7 +7,7 @@ extern u32 D_8014686C;
 /* Overlay-local per-record callback table at 0x801FBFB8: thirteen code-pointer
  * words running from incrementWorkHalfword7
  * (0x801FB390, word 0) and requestPrimaryState3Substate5
- * (0x801FB3A4, word 1) through noopHandlerScenarioScena1300_801FBEE8
+ * (0x801FB3A4, word 1) through noopRecordCallback9
  * (0x801FBEE8, word 12), indexed by byte 0x7A of a record. It begins
  * immediately after the data word 0x020AFFFF at 0x801FBFB4 and ends immediately
  * before the zero word at 0x801FBFEC; every entry is reached only through this
@@ -39,8 +39,8 @@ extern ScenarioScena1300RecordCallback D_801FBFB8[];
  * callPartyPartyGroup,
  * word 10
  * stateTearEffect4,
- * word 11 invokeHelperArgThenHelperScenarioScena1300_801FBEC0 and word 12
- * noopHandlerScenarioScena1300_801FBEE8), passing the record pointer unchanged
+ * word 11 stateTearEffect2 and word 12
+ * noopRecordCallback9), passing the record pointer unchanged
  * as the first argument and the word held in the shared main-RAM scenario flag
  * cell D_8014686C as the second. It reads no other state and writes none: the
  * 0x18-byte frame exists only to keep $ra across the indirect call and the

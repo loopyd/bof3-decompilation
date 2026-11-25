@@ -23,7 +23,7 @@ extern u8 D_80146254;
 /* @source 0x801FBE10
  * @behavior Overlay per-record callback (entry 11 of the twenty-two-word
  * callback run at 0x801FC468, 0x801FC468 through 0x801FC4BC, which
- * dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C selects with the
+ * callRecordCallbackByte73 selects with the
  * unsigned record byte at offset 0x7A; the word at 0x801FC494 holds this
  * address, its only image word). It snapshots the party byte of the first three
  * 0x140-byte-stride local work records into an eight-byte stack array and, for

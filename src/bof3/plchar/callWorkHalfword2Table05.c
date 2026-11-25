@@ -3,7 +3,7 @@
 /* This overlay's handler run at 0x801D0564: thirty code pointers, 0x801D0564
  * through 0x801D05D8, holding this payload's functions plus the shared
  * main-executable handler 0x801B2D54 at entries 15 and 21. The Splat `textbin`
- * row T_801D0564 places the words, so the run is only referenced here. This
+ * row workStepTable places the words, so the run is only referenced here. This
  * dispatcher indexes it from 0x801D05C4, so its base is entry 24 and the entries
  * it can reach are 0x801D05C4 through 0x801D05D8. */
 extern void (*D_801D05C4[])(void); /* @source 0x801D05C4 @kind data */

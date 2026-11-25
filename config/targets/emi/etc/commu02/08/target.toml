@@ -15,7 +15,7 @@ sources = [
     "src/bof3/ui/renderFlaggedFieldList.c",
     "src/bof3/ui/drawThreeCardRow.c",
     "src/bof3/ui/dispatchStepHandler.c",
-    "src/bof3/ui/dispatchStepByte1TableD74.c",
+    "src/bof3/ui/callStepByte1Table.c",
     "src/bof3/ui/renderCardRaisedCard.c",
     "src/bof3/ui/dealNineUniqueIds.c",
     "src/bof3/ui/renderThreeCardStates.c",
@@ -28,17 +28,17 @@ sources = [
     "src/bof3/ui/queueStartLatchFrontend.c",
     "src/bof3/ui/renderGreyHorizontalLine.c",
     "src/bof3/ui/renderOpaqueSpriteSheet.c",
-    "src/bof3/ui/drawMarkerTriangleCommu0208_801D269C.c",
-    "src/bof3/ui/drawMarkerTriangleCommu0208_801D88A4.c",
+    "src/bof3/ui/renderWideMarkerTriangle.c",
+    "src/bof3/ui/renderMarkerTriangle2.c",
     "src/bof3/ui/setupRandomPartText.c",
     "src/bof3/ui/renderComposedLabelRows.c",
-    "src/bof3/ui/dispatchStepByte0TableDec.c",
+    "src/bof3/ui/callStepByte0Table.c",
     "src/bof3/ui/audioLatchAlreadyBusy.c",
     "src/bof3/ui/dispatchStepByte1TableE00.c",
 ]
 support_sources = [
-    "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",
-    "src/bof3/ui/countActiveRecords_commu02_08.c",
+    "src/bof3/ui/countFlaggedFieldRecords.c",
+    "src/bof3/ui/renderActiveRecordBar.c",
     "src/bof3/support/commu02_08_psyq.c",
 ]
 psyq_source = "src/bof3/support/commu02_08_psyq.c"

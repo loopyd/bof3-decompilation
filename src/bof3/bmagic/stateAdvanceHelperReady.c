@@ -15,7 +15,7 @@ u8 func_8014DAEC(void);
 /* @source 0x801EFEF0
  * @behavior Entry index 9 (the word at 0x801F1BE8) of the twelve-entry code
  * pointer run at 0x801F1BC4 that
- * dispatchWorkByte1HandlerBmagicMagic13103_801EF668 indexes with scratchpad
+ * callWorkByte1Handler30 indexes with scratchpad
  * work-object byte 1, so it runs as the step handler for that selector while
  * work byte 2 is still zero. Per call it runs the shared readiness helper
  * func_8014DAEC and tests the returned byte zero-extended (andi 0xff, beqz);

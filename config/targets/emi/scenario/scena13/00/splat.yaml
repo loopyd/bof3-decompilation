@@ -113,7 +113,7 @@ segments:
     - callPrimaryStateHandler3
   - - 6320
     - c
-    - noopHandlerScenarioScena1300_801F84B0
+    - noopPrimaryStateFirst
   - - 6328
     - c
     - claimSelectorContextBank
@@ -236,10 +236,10 @@ segments:
     - stateTearEffect4
   - - 21184
     - c
-    - invokeHelperArgThenHelperScenarioScena1300_801FBEC0
+    - stateTearEffect2
   - - 21224
     - c
-    - noopHandlerScenarioScena1300_801FBEE8
+    - noopRecordCallback9
   - - 21232
     - textbin
     - D_801FBEF0

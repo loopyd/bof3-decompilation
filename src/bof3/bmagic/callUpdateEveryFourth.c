@@ -10,7 +10,7 @@ extern u8 D_801F092E[]; /* @source 0x801F092E @kind data */
 extern u8 D_801F0930[]; /* @source 0x801F0930 @kind data */
 extern u8 D_801F0974[]; /* @source 0x801F0974 @kind data */
 extern void func_801EF6E8(void); /* @source 0x801EF6E8 */
-extern u8 reserveFirstFreeRecordBmagicMagic12403_801F0828(void); /* @source 0x801F0828 */
+extern u8 resourceReserveFreeRecord9(void); /* @source 0x801F0828 */
 
 /* @source 0x801EF2B4
  * @behavior Dispatches work byte 2 through the table at 0x801F08E4. Reloads
@@ -44,7 +44,7 @@ void callUpdateEveryFourth(void) {
         func_801EF6E8();
         updatedWork = g_battle_work;
         if ((updatedWork[0xB] & 3) == 0 && updatedWork[2] == 1 && updatedWork[0xA] != 0) {
-            slot = reserveFirstFreeRecordBmagicMagic12403_801F0828();
+            slot = resourceReserveFreeRecord9();
             if (slot != 0xFF) {
                 offset = slot * 0x78;
                 record = D_801EB4E0;

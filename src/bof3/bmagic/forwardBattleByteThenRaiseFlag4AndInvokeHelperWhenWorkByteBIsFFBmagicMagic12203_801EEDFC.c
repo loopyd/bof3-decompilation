@@ -6,7 +6,7 @@ void func_801E5988(void);
 /* Scratchpad work-object pointer cell. The original re-materialises its address
  * in the load itself (lui $v0,0x1F80 / lw $v0,0x44($v0)), so it stays a named
  * cell bound at 0x1F800044 by this target's map, the same row the exact siblings
- * incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12203_801EF24C and
+ * incrementWorkAdvanceWork3 and
  * decrementWorkByteBIncrementByte9RaiseFlag10At18ThenAdvanceWorkByte2
  * BmagicMagic12203_801EF1C4 use. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */

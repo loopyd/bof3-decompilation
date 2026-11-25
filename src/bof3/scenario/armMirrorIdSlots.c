@@ -35,12 +35,12 @@ extern u8 D_80146254;
  *           j reaches the address; its only image word is 0x801FC4A8, entry 16
  *           of the twenty-two-word overlay callback run at 0x801FC468
  *           (0x801FC468 through 0x801FC4BC) that
- *           dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C
+ *           callRecordCallbackByte73
  *           (0x801FB37C) indexes with the unsigned record byte at offset 0x7A,
  *           so the overlay selects this entry for the record kind 0x10. Its
  *           statement order, operand forms and declaration style come from the
  *           exact neighbour
- *           armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FC074
+ *           stateArmEffect728Tail
  *           (0x801FC074), which runs the same arm, clear, three teardowns and
  *           helper tail for the fixed ids 7, 2 and 8; this body differs by
  *           taking its third arm id and third teardown id from the mirror slot

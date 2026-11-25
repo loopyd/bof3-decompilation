@@ -22,11 +22,11 @@ extern u8 D_801D4E24; /* @source 0x801D4E24 @kind data */
 extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
 
 extern void restoreSavedCommuBack(void);
-extern s32 commitCommuIntoActive(s32 offset);
+extern s32 commitIntoActive(s32 offset);
 extern void moveCommuPadDirection(u8 *rowPtr);
-extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
+extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void renderCommuListScreen(void);
-extern void drawMarkerTriangleCommu0107_801D3984(s16 x, s16 y, u8 selected);
+extern void renderMarkerTriangle(s16 x, s16 y, u8 selected);
 extern void renderSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected);
 void publishCommuTextId(void);
 void publishCommuEntryTextIdForRow(u8 *rowPtr);
@@ -41,17 +41,17 @@ u8 queryActiveSlotKind(u8 kind, u8 ordinal);
  * text id of 0x801448ED through publishCommuTextId into the result
  * halfword 0x801D4E0C. While it
  * shares a bit with the confirm mask 0x80145AC2 it commits the request row
- * through commitCommuIntoActive with offset 1 and stores
+ * through commitIntoActive with offset 1 and stores
  * result code 0xB5 into
  * 0x801D4E0C when the returned low byte is nonzero. When neither mask matches it
  * moves the request row byte 0x801D4E28 through
  * moveCommuPadDirection and publishes that row text id through
  * publishCommuEntryTextIdForRow. Every path then runs
  * renderCommuListScreen, draws the list row 0x801448ED with the selected flag 1 and the
- * request row 0x801D4E28 with 0 through drawRowMarkerOutlineCommu0107_801D36FC, and when no commit
+ * request row 0x801D4E28 with 0 through renderRowMarkerOutline, and when no commit
  * happened computes the slot origin of the list row kind at ordinal 0x801D4E24
  * through computeKindSlotOrigin, draws the marker at that origin advanced by 4
- * on x with the selected flag 1 through drawMarkerTriangleCommu0107_801D3984,
+ * on x with the selected flag 1 through renderMarkerTriangle,
  * and draws the record slot cursor box at (0xA0, 0x3E) with the selected flag 1
  * through renderSlotChannelBox for
  * the slot queryActiveSlotKind returns for that kind and ordinal minus
@@ -74,7 +74,7 @@ void handleCommuEntryListInputThenDraw(void) {
     restoreSavedCommuBack();
     publishCommuTextId();
   } else if (pad & D_80145AC2) {
-    committed = commitCommuIntoActive(1);
+    committed = commitIntoActive(1);
     if (committed & 0xFF) {
       D_801D4E0C = 0xB5;
     }
@@ -85,11 +85,11 @@ void handleCommuEntryListInputThenDraw(void) {
   }
   renderCommuListScreen();
   row = &D_801448ED;
-  drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
-  drawRowMarkerOutlineCommu0107_801D36FC(D_801D4E28, 0);
+  renderRowMarkerOutline(*row, 1);
+  renderRowMarkerOutline(D_801D4E28, 0);
   if ((committed & 0xFF) == 0) {
     computeKindSlotOrigin(&x, &y, *row, D_801D4E24);
-    drawMarkerTriangleCommu0107_801D3984(x + 4, y, 1);
+    renderMarkerTriangle(x + 4, y, 1);
     renderSlotChannelBox(0xA0, 0x3E,
                               queryActiveSlotKind(*row, D_801D4E24 - 1),
                               1);

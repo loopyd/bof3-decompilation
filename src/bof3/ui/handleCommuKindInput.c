@@ -59,12 +59,12 @@ extern void dispatchSoundCue(u32 cue_id);
 
 extern void renderCommuListScreen(void);
 extern void publishCommuTextId(void);
-extern void saveCommuRequestSelect(void);
-extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
+extern void saveRequestSelect(void);
+extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
  * is declared wide here. */
-extern void drawMarkerTriangleCommu0107_801D3984(s32 x, s16 y, u8 selected);
+extern void renderMarkerTriangle(s32 x, s16 y, u8 selected);
 extern s16 computeListOriginY(void);
 extern void drawEntryListPanel(s16 x, s16 y, u8 mode);
 extern void func_801647C4(u16 x, u16 y, s32 mode);
@@ -81,7 +81,7 @@ extern void func_801647C4(u16 x, u16 y, s32 mode);
  * 0x80145AC2 it takes the kind grid of the request row by indexing the
  * row-to-kind table at 0x801D4C04 with the signed request row byte 0x801D4E28: a
  * 0xFF entry marks a row that has no target kind grid and saves the request
- * state through saveCommuRequestSelect, while any other entry
+ * state through saveRequestSelect, while any other entry
  * records that kind into 0x801D4E1C, queues resident cue 0x103, reports the
  * kind's text id from the halfword table at 0x801D4C10 through the request
  * result halfword 0x801D4E0C and advances the commu request step byte by one;
@@ -97,7 +97,7 @@ extern void func_801647C4(u16 x, u16 y, s32 mode);
  * queues resident cue 0x100; that arm reports the new row's text id from the
  * halfword table at 0x801D4BB8 through the same result halfword. Every path then
  * runs renderCommuListScreen, draws the list row marker of 0x801448ED with selected flag
- * 1 through drawRowMarkerOutlineCommu0107_801D36FC, computes the slot origin of
+ * 1 through renderRowMarkerOutline, computes the slot origin of
  * that row kind at ordinal 0 through computeKindSlotOrigin, draws the marker
  * triangle at that origin with selected flag 1, draws the entry-list panel in
  * mode 0 at 0x42 plus 52 times the quarter index of the list row on the origin
@@ -131,7 +131,7 @@ void handleCommuKindInput(void) {
     srow = D_801D4E28;
     kind = D_801D4C04[srow];
     if (kind == 0xFF) {
-      saveCommuRequestSelect();
+      saveRequestSelect();
     } else {
       if (srow == D_801457A8[D_801448ED - 1][0] - 4) {
         D_801D4E2C = D_801457A8[D_801448ED - 1][1];
@@ -169,9 +169,9 @@ void handleCommuKindInput(void) {
   }
   renderCommuListScreen();
   cursor = &D_801448ED;
-  drawRowMarkerOutlineCommu0107_801D36FC(*cursor, 1);
+  renderRowMarkerOutline(*cursor, 1);
   computeKindSlotOrigin(&x, &y, *cursor, 0);
-  drawMarkerTriangleCommu0107_801D3984(x, y, 1);
+  renderMarkerTriangle(x, y, 1);
   y = computeListOriginY();
   drawEntryListPanel((s16)(52 * ((*cursor - 1) % 4) + 0x42), y, 0);
   func_801647C4((u16)((52 * ((*cursor - 1) % 4) + 0x44) & 0xFFFC),

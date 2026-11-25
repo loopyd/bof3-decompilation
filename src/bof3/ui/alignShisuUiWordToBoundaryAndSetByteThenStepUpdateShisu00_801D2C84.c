@@ -10,7 +10,7 @@
 extern void clampByteDeltaSelectFixedPointWordThenRampChannelsAndDrawShisu00_801D2978(void);
 
 /* The overlay's step accumulator, part of the work block 0x801DA028..0x801DA12D:
- * initializeShisuUiRecords clears it while setting up that
+ * initializeUiRecords clears it while setting up that
  * block, the handler at 0x801D2C50 raises it by 0x20 per step, and this handler
  * reads it back and keeps only its low twelve bits. Those three bodies are its
  * only references in this payload. */

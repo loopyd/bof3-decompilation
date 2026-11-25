@@ -54,9 +54,9 @@ extern s32 func_8014E640(u32 mask);
 extern void dispatchSoundCue(u32 cue_id);
 
 extern void renderCommuListScreen(void);
-extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
+extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
-extern void drawMarkerTriangleCommu0107_801D3984(s16 x, s16 y, u8 selected);
+extern void renderMarkerTriangle(s16 x, s16 y, u8 selected);
 extern void renderSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected);
 extern u8 checkActiveRecordsKind(s32 kind);
 extern u8 queryActiveSlotKind(u8 kind, u8 ordinal);
@@ -95,10 +95,10 @@ extern u8 queryActiveSlotKind(u8 kind, u8 ordinal);
  * the signed byte passes the count, no other bit moves it, and an ordinal byte
  * landing on a different value queues resident cue 0x100. Every path then runs
  * renderCommuListScreen and draws the list row 0x801448ED with the selected flag 1
- * through drawRowMarkerOutlineCommu0107_801D36FC, then computes the slot origin
+ * through renderRowMarkerOutline, then computes the slot origin
  * of that list row kind at the ordinal byte through computeKindSlotOrigin and, for
  * a nonzero ordinal byte, draws the marker triangle at that origin advanced by 4
- * on x with the selected flag 0 through drawMarkerTriangleCommu0107_801D3984 and
+ * on x with the selected flag 0 through renderMarkerTriangle and
  * the record slot cursor box of the stride-8 active record slot at that ordinal
  * byte less one through renderSlotChannelBox at 0x10 right of that origin on x and 8
  * less than it on y, while a zero ordinal byte draws only the marker triangle at
@@ -169,13 +169,13 @@ void handleRowInput(void) {
   }
   renderCommuListScreen();
   row = &D_801448ED;
-  drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
+  renderRowMarkerOutline(*row, 1);
   computeKindSlotOrigin(&x, &y, *row, D_801D4E24);
   ord = D_801D4E24;
   if (ord == 0) {
-    drawMarkerTriangleCommu0107_801D3984(x, y, 0);
+    renderMarkerTriangle(x, y, 0);
   } else {
-    drawMarkerTriangleCommu0107_801D3984(x + 4, y, 0);
+    renderMarkerTriangle(x + 4, y, 0);
     renderSlotChannelBox(
         x + 0x10, y - 8, queryActiveSlotKind(*row, D_801D4E24 - 1), 0);
   }

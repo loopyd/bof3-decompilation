@@ -6,7 +6,7 @@ extern u8 D_80146384; /* @source 0x80146384 @kind unknown */
 extern u8 D_801F0604[]; /* @source 0x801F0604 @kind data */
 extern void func_800A9610(u8 arg0, s32 arg1); /* @source 0x800A9610 */
 extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
-extern u8 reserveFirstFreeRecordBmagicMagic12503_801F0524(void); /* @source 0x801F0524 */
+extern u8 resourceReserveFreeRecord10(void); /* @source 0x801F0524 */
 extern int rand(void);
 
 /* @source 0x801EF960
@@ -43,7 +43,7 @@ void subtractSixtyFourRecords(void) {
         func_800A9610(D_80146384, 0x10);
         func_8015D71C(0x101);
         for (index = 0; index < 0x40; index++) {
-            claimed = reserveFirstFreeRecordBmagicMagic12503_801F0524();
+            claimed = resourceReserveFreeRecord10();
             offset = claimed * 0x78;
             owner = D_801EB4E0;
             D_801F0604[offset + 1] = 0;

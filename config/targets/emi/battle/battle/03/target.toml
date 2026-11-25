@@ -250,7 +250,7 @@ sources = [
     "src/bof3/battle/setupStateEnemyFlag2.c",
     "src/bof3/battle/initUiBundleFixed.c",
     "src/bof3/battle/initUiBundleSlot2.c",
-    "src/bof3/battle/initUiBundleSlot3.c",
+    "src/bof3/battle/initUiBundleBytes.c",
     "src/bof3/battle/initUiBundleSlot4.c",
     "src/bof3/battle/integrateMotionOrResetState_battle03.c",
     "src/bof3/battle/integrateMotionOrSet2.c",

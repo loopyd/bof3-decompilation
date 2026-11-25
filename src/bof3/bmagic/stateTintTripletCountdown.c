@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell, shared by this overlay's dispatchers and
  * handlers and bound at 0x1F800044 by this target's map. It is the named cell
- * symbol the exact sibling clearWorkBytesBmagicMagic12403_801F088C uses: the
+ * symbol the exact sibling stateWorkBytes4 uses: the
  * symbolic address lets the assembler fold it into each load (lui $vN,0x1F80 /
  * lw $vN,68($vN)). The plain cell is kept rather than the volatile one several
  * siblings use: the original re-reads it before every store group because the

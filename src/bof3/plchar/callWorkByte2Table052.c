@@ -2,7 +2,7 @@
 
 /* This overlay's handler table: thirty code pointers, 0x801D0564 through
  * 0x801D05D8, holding this payload's functions plus the shared main-executable
- * handler 0x801B2D54 at entries 15 and 21. The Splat `textbin` row T_801D0564
+ * handler 0x801B2D54 at entries 15 and 21. The Splat `textbin` row workStepTable
  * places the words, so the table is only referenced here. This dispatcher
  * indexes it from 0x801D05B0, so the base is entry 19 and the reachable entries
  * are 0x801D05B0 through 0x801D05D8. */

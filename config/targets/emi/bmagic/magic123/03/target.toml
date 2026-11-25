@@ -12,7 +12,7 @@ sources = [
     "src/bof3/bmagic/incrementSampledPlaySound.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic12303_801EFD04.c",
+    "src/bof3/bmagic/stateWorkBytes2.c",
     "src/bof3/support/magic123_03_psyq.c",
     "src/bof3/bmagic/magic12303DispatchTables.c",
     "src/bof3/bmagic/decrementGlobalClearBytes.c",

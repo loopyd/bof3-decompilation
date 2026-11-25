@@ -39,7 +39,7 @@ WEAK_SYMBOL_AT(game_start_selection_fx, 0x8015d4f8);
 WEAK_SYMBOL_AT(game_stop_selection_fx, 0x8015d404);
 WEAK_SYMBOL_AT(emi_stream_init_slot, 0x80161fdc);
 WEAK_SYMBOL_AT(func_80161C20, 0x80161c20);
-WEAK_SYMBOL_AT(game_stage_shared_palette_bank, 0x8014e284);
+WEAK_SYMBOL_AT(gameStagePaletteBank, 0x8014e284);
 WEAK_SYMBOL_AT(game_queue_frontend_cue, 0x8015df18);
 WEAK_SYMBOL_AT(stateHandlerTable, 0x801d1c4c);
 WEAK_SYMBOL_AT(glyphGeometryTable, 0x801d1c6c);

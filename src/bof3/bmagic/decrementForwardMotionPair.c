@@ -19,7 +19,7 @@ extern u8 D_801462EC; /* @source 0x801462EC @kind unknown */
 /* @source 0x801EFF48
  * @behavior Entry index 10 (the word at 0x801F1BEC) of the twelve-entry code
  *           pointer run at 0x801F1BC4 that
- *           dispatchWorkByte1HandlerBmagicMagic13103_801EF668 indexes with the
+ *           callWorkByte1Handler30 indexes with the
  *           scratchpad work object's byte 1, so it runs as that step handler
  *           while work byte 2 is still zero. Reads the work-object pointer cell
  *           at 0x1F800044 once and decrements work byte 9 at byte width (lbu /

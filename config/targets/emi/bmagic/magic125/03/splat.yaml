@@ -105,13 +105,13 @@ segments:
     - func_801F020C
   - - 6436
     - c
-    - reserveFirstFreeRecordBmagicMagic12503_801F0524
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12503_801F0524.c'
+    - resourceReserveFreeRecord10
+    - '@source: src/bof3/bmagic/resourceReserveFreeRecord10.c'
     - '@behavior: Reserves the first of 64 stride-0x78 records with bit 0 clear, sets the bit and returns its index or 0xFF.'
   - - 6536
     - c
-    - clearWorkBytesBmagicMagic12503_801F0588
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic12503_801F0588.c'
+    - stateWorkBytes3
+    - '@source: src/bof3/bmagic/stateWorkBytes3.c'
   - - 6616
     - textbin
     - T_801F05D8

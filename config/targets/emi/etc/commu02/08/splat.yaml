@@ -30,8 +30,8 @@ segments:
     - D_801D0C04
   - - 6812
     - c
-    - drawMarkerTriangleCommu0208_801D269C
-    - '@source: src/bof3/ui/drawMarkerTriangleCommu0208_801D269C.c'
+    - renderWideMarkerTriangle
+    - '@source: src/bof3/ui/renderWideMarkerTriangle.c'
     - '@behavior: stamps the shared primitive cursor through the POLY_F3 initialiser 0x8017A954, writes the apex (x, y) and the base corners (x - 6, y - 6) and (x + 6, y - 6) of one opaque flat-shaded marker triangle, tints its green byte from bits 1 and 2 of the shared frame counter 0x80143E6C scaled by 32 and offset by 0x3F while inverting them whenever bit 3 is clear, and appends the 0x14-byte primitive as size class 1'
   - - 6992
     - c
@@ -94,7 +94,7 @@ segments:
     - dispatchStepHandler
   - - 17520
     - c
-    - dispatchStepByte1TableD74
+    - callStepByte1Table
   - - 17580
     - c
     - stateFrontLocalStep
@@ -113,8 +113,8 @@ segments:
     - '@behavior: writes 0x2A into the first byte of the shared text run at 0x80145AD4 and copies the text that the halfword offset selected by the name id at 0x801DB0AD from the table on the fixed 0x80010200 main-RAM address points at in the 0x80010000 pool, one byte per pass while also copying the byte after a 0x12 or 0x13, repeats that walk for the id at 0x801DB0AE unless it reads 0xFF, writes 0x2B and 0xFF into the run, appends the five bytes of the name table row that byte 5 of the commu task at 0x801F2948 selects, terminates the run and submits it through func_8014F800 at (0x32, 0x1E) with colour 0 and mask 0xFF before submitting the text the signed byte at 0x801DB0B4 selects from the table at 0x800101C6 at (0x32, 0x42)'
   - - 20828
     - c
-    - dispatchStepByte0TableDec
-    - '@source: src/bof3/ui/dispatchStepByte0TableDec.c'
+    - callStepByte0Table
+    - '@source: src/bof3/ui/callStepByte0Table.c'
     - '@behavior: reads the unsigned byte at 0x801F294C, scales it by four and calls the handler the five-entry run at 0x801DADEC selects, discarding any result, without bounding the index and without reading or writing any other state'
   - - 20888
     - c
@@ -131,7 +131,7 @@ segments:
     - func_801D5E30
   - - 29284
     - c
-    - countActiveRecords_commu02_08
+    - renderActiveRecordBar
   - - 29344
     - c
     - findActiveRecordSlot
@@ -142,7 +142,7 @@ segments:
     - c
     - renderActiveSlotBar
     - '@source: src/bof3/ui/renderActiveSlotBar.c'
-    - '@behavior: draws the 0xAC by 0x1A active-record slot bar at (x, y) through func_801AE3F0 with shade 0x80 and the main-RAM clut-bank byte D_80144952, frames it through drawWindowFrame at the same origin, then draws the eight-wide sixteen-high slot tile piece 1 of the six-byte sprite rect table at 0x801DAE88 at (x + 7, y + 9) once per active record countActiveRecords_commu02_08 counts'
+    - '@behavior: draws the 0xAC by 0x1A active-record slot bar at (x, y) through func_801AE3F0 with shade 0x80 and the main-RAM clut-bank byte D_80144952, frames it through drawWindowFrame at the same origin, then draws the eight-wide sixteen-high slot tile piece 1 of the six-byte sprite rect table at 0x801DAE88 at (x + 7, y + 9) once per active record renderActiveRecordBar counts'
   - - 29996
     - c
     - renderStripSubmitImage
@@ -162,8 +162,8 @@ segments:
     - func_801D875C
   - - 31908
     - c
-    - drawMarkerTriangleCommu0208_801D88A4
-    - '@source: src/bof3/ui/drawMarkerTriangleCommu0208_801D88A4.c'
+    - renderMarkerTriangle2
+    - '@source: src/bof3/ui/renderMarkerTriangle2.c'
     - '@behavior: emits one flat-shaded marker triangle at the shared primitive cursor through the POLY_F3 initialiser 0x8017A954, writes the apex (x, y) and the base corners (x - 4, y - 4) and (x + 4, y - 4) of the 0x14-byte packet, takes its green byte as the full 0xFF when the third byte argument is nonzero and otherwise from bits 1 and 2 of the shared frame counter 0x80143E6C scaled by 32 and offset by 0x3F while inverting them whenever bit 3 is clear, and appends the packet as size class 1'
   - - 32104
     - c
@@ -184,7 +184,7 @@ segments:
     - renderFlaggedFieldList
   - - 34480
     - c
-    - countFlaggedFieldRecords_commu02_08
+    - countFlaggedFieldRecords
   - - 34548
     - c
     - queryFlaggedFieldSlot

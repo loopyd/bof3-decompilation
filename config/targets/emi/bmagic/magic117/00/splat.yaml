@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 36
     - c
-    - dispatchWorkByte1HandlerBmagicMagic11700_801EEC24
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11700_801EEC24.c'
+    - callWorkByte1Handler29
+    - '@source: src/bof3/bmagic/callWorkByte1Handler29.c'
     - '@behavior: Per-frame step dispatcher of this overlay, its first code span; no jal and no table word inside the payload names it, so the overlay loader is its only caller. It reads the scratchpad work-object pointer cell at 0x1F800044 once, takes that object''s byte 0x01 as an unchecked index, copies the four-word step run at 0x801EEC04 (0x801EEC90, 0x801EED2C, 0x801EEE40, 0x801EEFB8) into the 0x10($sp) record of its 0x28-byte frame and calls the entry at the scaled selector with no arguments. The epilogue reloads only $ra, so nothing of the selected step''s result is returned.'
   - - 144
     - c
@@ -40,13 +40,13 @@ segments:
     - '@behavior: Loads the battle record pointer published at 0x8014638C once per call through a cell-address local, submits that record through func_80196718, then submits its positional effect through func_8019651C with the 0/0/0 offsets and mode 1 and stores the low return byte in the scratchpad work object''s byte 0xB at 0x1F800044. It then clears the work object''s countdown byte 9, sets its mode byte 0xA to 2 and advances its state byte 1, re-reading the work-object pointer cell for all four stores.'
   - - 300
     - c
-    - incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic11700_801EED2C
-    - '@source: src/bof3/bmagic/incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic11700_801EED2C.c'
+    - incrementByteRecordCounters2
+    - '@source: src/bof3/bmagic/incrementByteRecordCounters2.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per access and increments the +0, +1 and (via 0x80145BD8) +2 counter bytes of the 12-byte record at 0x80145BD6 selected by the work object''s byte 0xB, then increments the work object''s byte at offset 0x9 and its byte at offset 0x1 when the truncated result reaches 0x10.'
   - - 576
     - c
-    - decrementWorkByteBRecordCountersAndWorkByte9ThenSubmitRecordOnWorkByteAZeroAndStepWorkByte1BmagicMagic11700_801EEE40
-    - '@source: src/bof3/bmagic/decrementWorkByteBRecordCountersAndWorkByte9ThenSubmitRecordOnWorkByteAZeroAndStepWorkByte1BmagicMagic11700_801EEE40.c'
+    - decrementCountersSubmitStep
+    - '@source: src/bof3/bmagic/decrementCountersSubmitStep.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per access group and decrements the +0, +1 and (via 0x80145BD8) +2 counter bytes of the 12-byte record at 0x80145BD6 selected by the work object''s byte 0xB, then decrements the work object''s byte 0x9 and, when that truncated byte reaches 0, decrements its byte 0xA: a byte 0xA that reaches 0 submits the record published at 0x8014638C through func_80196718, forwards the battle byte at 0x80146384 to func_800AF814 and advances the state byte 0x1, while a surviving byte 0xA steps the state byte 0x1 back. Both arms share one byte store.'
   - - 952
     - asm

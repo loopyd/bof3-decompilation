@@ -11,11 +11,11 @@ sources = []
 support_sources = [
     "src/bof3/bmagic/renderEightTranslucentGouraud.c",
     "src/bof3/bmagic/callDispatchIndexService.c",
-    "src/bof3/bmagic/decrementWorkByte9RaiseBattleTargetFlag10AndAdvanceWorkByte1OnZeroBmagicMagic13003_801EEE0C.c",
-    "src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF42C.c",
+    "src/bof3/bmagic/decrementRaiseTargetZero2.c",
+    "src/bof3/bmagic/decrementWorkAdvanceZero3.c",
     "src/bof3/support/magic130_03_psyq.c",
     "src/bof3/bmagic/magic13003DispatchTables.c",
     "src/bof3/bmagic/stateHalfwordsSlotStride.c",
-    "src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF194.c",
+    "src/bof3/bmagic/decrementWorkAdvanceZero2.c",
 ]
 psyq_source = "src/bof3/support/magic130_03_psyq.c"

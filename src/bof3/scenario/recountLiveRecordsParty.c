@@ -30,7 +30,7 @@ extern u8 D_80146254;
  *           jal reaches the address; its only image word is 0x801FC4BC, entry
  *           21 of the twenty-two-word overlay callback run at 0x801FC468
  *           (0x801FC468 through 0x801FC4BC) that
- *           dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C indexes
+ *           callRecordCallbackByte73 indexes
  *           with the unsigned record byte at offset 0x7A, so the overlay
  *           selects this entry for the record kind 0x15. The three-slot
  *           snapshot with the != 7 helper tail is the shape the exact scena09

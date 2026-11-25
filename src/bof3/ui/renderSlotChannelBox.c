@@ -39,7 +39,7 @@ extern u8 D_801F2706[]; /* @source 0x801F2706 @kind data */
 extern u8 D_801F2707[]; /* @source 0x801F2707 @kind data */
 extern u8 D_801F2708[]; /* @source 0x801F2708 @kind data */
 
-void drawSmallWindowFrameCommu0107_801D273C(s16 x, s16 y);
+void renderSmallWindowFrame(s16 x, s16 y);
 void renderChannelGradientBar(s16 x, s16 y, s32 width,
                                                      u8 channel, u8 blink);
 
@@ -92,7 +92,7 @@ void renderSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected) {
     block = &D_80144952;
     func_801AE3F0((u16)(x + 4), (u16)(y + 4), 0x48, 0x28, 0x81, block[0]);
     func_801AE3F0((u16)x, (u16)y, 0x48, 0x26, 0x80, block[0]);
-    drawSmallWindowFrameCommu0107_801D273C(x, y);
+    renderSmallWindowFrame(x, y);
     offset = slot * 5;
     names = block + 0xE96;
     func_8014F800((s16)(x + 6), (s16)(y + 4), 0, 5, (u32)&names[offset]);

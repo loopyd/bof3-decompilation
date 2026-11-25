@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void clearWorkBytesBmagicMagic12303_801EFD04(void);
+void stateWorkBytes2(void);
 
 /* Shared battle work record pointer in main RAM, outside this overlay's image.
  * This target's generated undefined-syms map already binds the address because
@@ -23,5 +23,5 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  */
 void decrementGlobalClearBytes(void) {
   D_801EB4E0[0xB]--;
-  clearWorkBytesBmagicMagic12303_801EFD04();
+  stateWorkBytes2();
 }

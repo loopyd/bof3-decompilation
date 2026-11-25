@@ -213,7 +213,7 @@ WEAK_SYMBOL_AT(D_801C80EC, 0x801c80ec);
 WEAK_SYMBOL_AT(D_801CD120, 0x801cd120);
 /* ---- Two-entry work-flag handler table dispatched by
  * callHandlerReadyUpdate ---- */
-WEAK_SYMBOL_AT(workFlags02HandlerPairTable, 0x801cd1b0);
+WEAK_SYMBOL_AT(workHandlerPairTable, 0x801cd1b0);
 WEAK_SYMBOL_AT(D_801CD140, 0x801cd140);
 WEAK_SYMBOL_AT(D_801CD1C8, 0x801cd1c8);
 WEAK_SYMBOL_AT(D_801CD47C, 0x801cd47c);

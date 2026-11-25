@@ -7,7 +7,7 @@
  * than written as a bare scratchpad constant. The exact siblings of this target
  * decrementWorkByteBIncrementByte9RaiseFlag10At18ThenAdvanceWorkByte2Bmagic
  * Magic12203_801EF1C4 and
- * incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12203_801EF24C declare it
+ * incrementWorkAdvanceWork3 declare it
  * the same way. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 

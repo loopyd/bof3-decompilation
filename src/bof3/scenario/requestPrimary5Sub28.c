@@ -25,7 +25,7 @@ void func_8015C088(void);
  * (0x801FA5B8) indexes with a record byte field at offset 0x7A, so a record byte
  * reading 14 selects this handler. A payload comparison of the 80 bytes here
  * against the span of the exact sibling
- * requestPrimaryBSub14
+ * requestState11Substate20
  * (0x801FA8E0) found every word equal except the two addiu immediates that
  * materialise 0x28 and 5 here against 0x14 and 0xB there, so that sibling
  * supplied the statement order, operand forms and declaration style while both

@@ -2,10 +2,10 @@
 
 /* This overlay's handler table: thirty code pointers, 0x801D0564 through
  * 0x801D05D8, holding this payload's functions plus the shared main-executable
- * handler 0x801B2D54 at entries 15 and 21. The Splat `textbin` row T_801D0564
+ * handler 0x801B2D54 at entries 15 and 21. The Splat `textbin` row workStepTable
  * places the words, so the table is only referenced here. This dispatcher
  * indexes it from that row's own base, so every entry of the run is reachable. */
-extern void (*T_801D0564[])(void); /* @source 0x801D0564 @kind data */
+extern void (*workStepTable[])(void); /* @source 0x801D0564 @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step dispatch on work-record byte 2: loads the work-record
@@ -25,4 +25,4 @@ extern void (*T_801D0564[])(void); /* @source 0x801D0564 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable0564, T_801D0564);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable0564, workStepTable);

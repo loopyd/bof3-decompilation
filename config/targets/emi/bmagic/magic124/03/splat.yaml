@@ -52,7 +52,7 @@ segments:
     - '@behavior: Emits eight translucent Gouraud triangles around the work screen pair, with jittered radius and centre tint from work byte 0xA times fifteen.'
   - - 1640
     - c
-    - noopHandlerBmagicMagic12403_801EF268
+    - noopStepEntry
   - - 1648
     - c
     - dispatchStateByte1Table08dcBmagicMagic12403_801EF270
@@ -108,12 +108,12 @@ segments:
     # @behavior Emits eight translucent Gouraud ring quads with work-scaled radii and tint.
   - - 7208
     - c
-    - reserveFirstFreeRecordBmagicMagic12403_801F0828
+    - resourceReserveFreeRecord9
     # @source 0x801F0828
     # @behavior Reserves the first free record flag among 64 records of stride 0x78, or returns 0xFF.
   - - 7308
     - c
-    - clearWorkBytesBmagicMagic12403_801F088C
+    - stateWorkBytes4
   - - 7388
     - textbin
     - T_801F08DC

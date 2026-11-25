@@ -93,4 +93,4 @@ PANEL_RETREAT_X_CLAMP(retreatPanelXTo152, 0x98)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg170B, -0xAA)
+PANEL_RETREAT_X(retreatPanelXNeg1702, -0xAA)

@@ -81,11 +81,11 @@ extern s32 func_8014E640(u32 mask);
 extern void dispatchSoundCue(u32 cue_id);
 
 extern void renderCommuListScreen(void);
-extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
+extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
  * is declared wide here. */
-extern void drawMarkerTriangleCommu0107_801D3984(s32 x, s16 y, u8 selected);
+extern void renderMarkerTriangle(s32 x, s16 y, u8 selected);
 extern s16 computeListOriginY(void);
 extern void drawEntryListPanel(s16 x, s16 y, u8 mode);
 extern s16 drawKindGridPanel(s16 x, s16 y, u8 kind, u8 mode);
@@ -118,7 +118,7 @@ extern void func_801647C4(u16 x, u16 y, s32 mode);
  * word through the shared decoder at 0x8014E640 and, when one of those bits
  * comes back, queues resident cue 0x100 and flips the toggle byte 0x801D4E18.
  * Every path then runs renderCommuListScreen, draws the list row marker of 0x801448ED
- * with selected flag 1 through drawRowMarkerOutlineCommu0107_801D36FC, computes
+ * with selected flag 1 through renderRowMarkerOutline, computes
  * the slot origin of that row kind at ordinal 0 through computeKindSlotOrigin,
  * draws the marker triangle at that origin with selected flag 1 and stacks its
  * panels with an x of 52 times the quarter index of the list row plus a fixed
@@ -213,9 +213,9 @@ void handleCommitInput(void) {
   }
   renderCommuListScreen();
   row = &D_801448ED;
-  drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
+  renderRowMarkerOutline(*row, 1);
   computeKindSlotOrigin(&x, &y, *row, 0);
-  drawMarkerTriangleCommu0107_801D3984(x, y, 1);
+  renderMarkerTriangle(x, y, 1);
   y = computeListOriginY();
   if (D_801D4E1C == 0xFF) {
     drawEntryListPanel((s16)(52 * ((*row - 1) % 4) + 0x42), y, 0);

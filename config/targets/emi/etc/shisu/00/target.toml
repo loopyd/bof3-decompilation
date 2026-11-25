@@ -18,10 +18,10 @@ sources = [
     "src/bof3/ui/alignShisuUiWordToBoundaryAndSetByteThenStepUpdateShisu00_801D2C84.c",
     "src/bof3/ui/renderSpriteKindSubstitution.c",
     "src/bof3/ui/rampShisuChannelsDraw.c",
-    "src/bof3/ui/initializeShisuUiRecords.c",
+    "src/bof3/ui/initializeUiRecords.c",
     "src/bof3/ui/advanceShisuUiDistanceRampClampAndSetByteThenStepUpdateShisu00_801D2CE4.c",
     "src/bof3/ui/emitPanelIconPrimShisu00_801D5620.c",
-    "src/bof3/ui/initializeShisuBlockHead.c",
+    "src/bof3/ui/initializeHeadCodes.c",
     "src/bof3/ui/drawSpritePrimTpageFromAbrShisu00_801D4660.c",
     "src/bof3/ui/drawMenuCommandRowShisu00_801D5C7C.c",
     "src/bof3/ui/readKindRecordValueShisu00_801D5EC4.c",
@@ -46,7 +46,7 @@ support_sources = [
     "src/bof3/ui/stateSetThreeBytes.c",
     "src/bof3/ui/dispatchStateByteTable9720EtcShisu00_801D2C0C.c",
     "src/bof3/ui/dispatchStateByteTable9734EtcShisu00_801D2DA8.c",
-    "src/bof3/ui/initializeShisuUiState.c",
+    "src/bof3/ui/initializeUiRecordState.c",
     "src/bof3/support/shisu_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/shisu_00_psyq.c"

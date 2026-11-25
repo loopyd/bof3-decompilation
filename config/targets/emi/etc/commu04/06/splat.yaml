@@ -36,13 +36,13 @@ segments:
     - func_801D0C98
   - - 244
     - c
-    - initializeCommuUnlessFrontend
-    - '@source: src/bof3/ui/initializeCommuUnlessFrontend.c'
-    - '@behavior: Reads the shared frontend mode byte at 0x80143BB0 and returns while it equals 2; otherwise begins one shared front-end frame/update slice through func_80158E50, initialises the commu UI work block through initializeCommuUiState, stores 4 into the state byte at 0x801D1774 and advances the overlay step byte at 0x801F294D by one without returning a value. Word 1 of this overlay''s handler run based at 0x801D1758.'
+    - initializeUnlessFrontend
+    - '@source: src/bof3/ui/initializeUnlessFrontend.c'
+    - '@behavior: Reads the shared frontend mode byte at 0x80143BB0 and returns while it equals 2; otherwise begins one shared front-end frame/update slice through func_80158E50, initialises the commu UI work block through initializeUiWorkBlock, stores 4 into the state byte at 0x801D1774 and advances the overlay step byte at 0x801F294D by one without returning a value. Word 1 of this overlay''s handler run based at 0x801D1758.'
   - - 332
     - c
-    - renderCommuBankEntry
-    - '@source: src/bof3/ui/renderCommuBankEntry.c'
+    - menuBankSelectHandler
+    - '@source: src/bof3/ui/menuBankSelectHandler.c'
     - '@behavior: Draws the commu panel, steps the four-bank paged cursor, and publishes a nonzero selected entry and bank to the current eight-byte slot.'
   - - 1500
     - c
@@ -66,7 +66,7 @@ segments:
     - stateFairyUnlessFrontend
   - - 2724
     - c
-    - initializeCommuUiState
+    - initializeUiWorkBlock
   - - 2896
     - textbin
     - T_801D1750

@@ -38,34 +38,34 @@ segments:
     - func_801D0D4C
   - - 820
     - c
-    - advanceFairyProgressCommu0507_801D0F34
-    - '@source: src/bof3/ui/advanceFairyProgressCommu0507_801D0F34.c'
+    - stateFairyProgress
+    - '@source: src/bof3/ui/stateFairyProgress.c'
     - '@behavior: Advances the shared fairy progress byte at 0x801448EC by one through the array base; word 2 of this overlay''s run at 0x801D1950.'
   - - 848
     - c
-    - drawRowIconSpriteCommu0507
-    - '@source: src/bof3/ui/drawRowIconSpriteCommu0507.c'
+    - renderRowIconSprite
+    - '@source: src/bof3/ui/renderRowIconSprite.c'
     - '@behavior: Draws one 0xC-by-0xC icon sprite of this overlay''s fairy-list rows at (arg0, arg1) with the graph-type texture page 0x2E for graph types 1 and 2 and 0x1E otherwise, the icon index arg2 selecting texture column arg2 * 12 - 0x38 at row 0xF0 with CLUT 0x7849 and the neutral gray 0x80 on all three channels; the two in-image rows at 0x801D1048 and 0x801D129C pass icon 1 and icon 0 at (x + 8, y + 0x14).'
   - - 1096
     - asm
     - func_801D1048
   - - 1692
     - c
-    - drawFairySectionRowsCommu0507
-    - '@source: src/bof3/ui/drawFairySectionRowsCommu0507.c'
-    - '@behavior: Submits the header and entry grid of the second of this overlay''s three list sections: the section image and a second header image through func_8014F800 with the 0x80010000 table halfwords at 0x8001006E and 0x80010076, icon 0 through drawRowIconSpriteCommu0507, the count byte at 0x80145E5C printed through the overlay format at 0x801D0C0C into 0x80145AD4 and submitted through func_8014FF0C, and the title at 0x801D196C (plural "faeries") or 0x801D1974 (singular "fairy") with mask 7; then walks up to 0x14 entries in three columns of seven rows, stopping at the first position arg2 * 20 + i the count does not reach, each entry submitted with mask 5 carrying the 0x801457E8 label its byte at 0x80145E48 + arg2 * 15 + i selects.'
+    - renderFairySectionRows
+    - '@source: src/bof3/ui/renderFairySectionRows.c'
+    - '@behavior: Submits the header and entry grid of the second of this overlay''s three list sections: the section image and a second header image through func_8014F800 with the 0x80010000 table halfwords at 0x8001006E and 0x80010076, icon 0 through renderRowIconSprite, the count byte at 0x80145E5C printed through the overlay format at 0x801D0C0C into 0x80145AD4 and submitted through func_8014FF0C, and the title at 0x801D196C (plural "faeries") or 0x801D1974 (singular "fairy") with mask 7; then walks up to 0x14 entries in three columns of seven rows, stopping at the first position arg2 * 20 + i the count does not reach, each entry submitted with mask 5 carrying the 0x801457E8 label its byte at 0x80145E48 + arg2 * 15 + i selects.'
   - - 2248
     - c
-    - drawPendingNotificationRowsCommu0507
-    - '@source: src/bof3/ui/drawPendingNotificationRowsCommu0507.c'
+    - renderPendingNotificationRows
+    - '@source: src/bof3/ui/renderPendingNotificationRows.c'
     - '@behavior: Submits the panel and the eight pending-notification rows of this overlay''s fairy list. Submits the panel image through 0x8014F800 at (arg0 + 0x52, arg1) with colour 0 and flag 0xFF, the handle being the 0x80010000 main-RAM base plus the fixed table halfword at 0x800101D8, then walks up to eight queue entries starting at arg2 * 8 and stops at the first entry the pending append index at 0x80145E5D does not reach. Per row it reads the notification kind from 0x80145E60 and looks it up in the local eight-entry table at 0x801D197C, copies eight bytes of the five-byte-stride label run at 0x801457E8 selected by the notification second byte into the name buffer at 0x801490D8 and clears that buffer byte 5 when the entry flag is set, and submits the row image at (arg0 + 0x14, arg1 + i * 0x10 + 0x1C) with the handle taken from the 0x80010000 table entry the row text id names.'
   - - 2672
     - asm
     - func_801D1670
   - - 2852
     - c
-    - drawPanelBackgroundTilesCommu0507
-    - '@source: src/bof3/ui/drawPanelBackgroundTilesCommu0507.c'
+    - renderPanelBackgroundTiles
+    - '@source: src/bof3/ui/renderPanelBackgroundTiles.c'
     - '@behavior: Paints the 0x100-by-0xC0 panel background of this overlay as three bands of sprite cells at the origin its only in-image caller func_801D0D4C passes as (0x20, 0x18): it selects the draw-mode texture page 0x2D when the shared graphic type is 1 or 2 and 0x1D otherwise, installs it at g_PrimCursor with dfe 0 and dtd 0, links a 0xC-byte draw-mode packet, then draws sixteen 0x10-wide cells at y = arg1 and sixteen more at y = arg1 + 0xB0 from the sixteen-entry origin runs at 0x801D199C and 0x801D19BC and a middle band of ten rows from 0x801D19DC at 0x10 pitch from arg1 + 0x10, two 0x20-wide cells per row on a 0x40 column pitch, the second cell of each pair packed into u = (byte & 1) << 5 and v = (byte << 3) & 0xF0.'
   - - 3408
     - textbin

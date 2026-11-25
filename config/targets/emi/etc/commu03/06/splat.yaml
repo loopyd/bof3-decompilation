@@ -33,7 +33,7 @@ segments:
     - renderSoundStereoMeter
   - - 2836
     - c
-    - drawGlyphStringQuadsCommu03_06
+    - renderGlyphStringQuads
   - - 3244
     - textbin
     - T_801D18AC

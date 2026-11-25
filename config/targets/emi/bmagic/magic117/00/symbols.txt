@@ -1,8 +1,8 @@
 g_battle_work = 0x1F800044;
-dispatchWorkByte1HandlerBmagicMagic11700_801EEC24 = 0x801EEC24;
+callWorkByte1Handler29 = 0x801EEC24;
 submitRecordStoreEffectByteBClearWorkByte9SetByteATo2ThenAdvanceWorkByte1BmagicMagic11700_801EEC90 = 0x801EEC90;
-incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic11700_801EED2C = 0x801EED2C;
-decrementWorkByteBRecordCountersAndWorkByte9ThenSubmitRecordOnWorkByteAZeroAndStepWorkByte1BmagicMagic11700_801EEE40 = 0x801EEE40;
+incrementByteRecordCounters2 = 0x801EED2C;
+decrementCountersSubmitStep = 0x801EEE40;
 func_801EEFB8 = 0x801EEFB8;
 func_801EF000 = 0x801EF000;
 func_801EF06C = 0x801EF06C;

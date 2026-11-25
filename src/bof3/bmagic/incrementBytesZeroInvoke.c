@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell at 0x1F800044, already bound at that
  * address by this target's map as g_battle_work, the name its exact lifts
- * clearWorkBytesBmagicMagic12303_801EFD04 and
+ * stateWorkBytes2 and
  * decrementGlobalClearBytes use. The
  * cell is evaluated once per access group because each byte store goes through
  * the pointer the cell supplied, so the compiler re-materializes
@@ -16,7 +16,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * byte-addressed, so the local declaration keeps the byte view only. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
-void clearWorkBytesBmagicMagic12303_801EFD04(void);
+void stateWorkBytes2(void);
 extern void func_801EF9E0(void); /* @source 0x801EF9E0 @kind function */
 
 /* @source 0x801EF4AC
@@ -57,7 +57,7 @@ void incrementBytesZeroInvoke(void) {
   g_battle_work[9]++;
   if (--g_battle_work[0xA] == 0) {
     D_801EB4E0[0xB]--;
-    clearWorkBytesBmagicMagic12303_801EFD04();
+    stateWorkBytes2();
   } else {
     func_801EF9E0();
   }

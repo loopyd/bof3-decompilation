@@ -21,7 +21,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           return address across the call. The pointer word at 0x801F0CD8,
  *           index 12 of the handler run based at 0x801F0CA8, names this span.
  *           The statement order, operand forms, offsets and declaration style
- *           follow the exact sibling incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374,
+ *           follow the exact sibling incrementWorkAdvanceWork4,
  *           whose byte span this body repeats except for the compared literal
  *           (0x78 there, 0x10 here); the frame and leading call follow the
  *           exact siblings at 0x801F01C0 and 0x801F0224. A byte scan of the

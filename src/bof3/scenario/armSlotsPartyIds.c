@@ -29,11 +29,11 @@ void func_801C1630(void);
  * the 0x8014 page in $at. No in-image jal reaches the address; its only image
  * word is 0x801FC49C, entry 13 of the twenty-two-word overlay callback run at
  * 0x801FC468 (0x801FC468 through 0x801FC4BC) that
- * dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C (0x801FB37C) indexes
+ * callRecordCallbackByte73 (0x801FB37C) indexes
  * with the unsigned record byte at offset 0x7A, so the overlay selects this
  * entry for the record kind 0x0D. Its statement order, operand forms and frame
  * come from the exact neighbour
- * armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FC020
+ * stateArmEffect726Tail
  * (0x801FC020): a payload cmp of the two spans finds the six arm and teardown
  * immediates as the only differing words in the shorter body, so this body is
  * that one shape carrying its own 0, 1 and 5 where the neighbour carries 7, 2

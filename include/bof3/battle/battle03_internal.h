@@ -813,7 +813,7 @@ void func_801D9304(u8 arg0);
 u8   resolveKindResultMode(void);
 void statePendingPairsExcept(void);
 void initUiBundleSlot2(u8 arg0);
-void initUiBundleSlot3(u8 arg0);
+void initUiBundleBytes(u8 arg0);
 void initUiBundleSlot4(u8 arg0);
 void initUiBundleFixed(void);
 u8   resolveLocalFlag800Countdown(void);

@@ -8,14 +8,14 @@ splat = "config/targets/emi/etc/commu05/07/splat.yaml"
 load_address = 0x801D0C00
 
 sources = [
-    "src/bof3/ui/drawPendingNotificationRowsCommu0507.c",
-    "src/bof3/ui/drawFairySectionRowsCommu0507.c",
-    "src/bof3/ui/drawPanelBackgroundTilesCommu0507.c",
-    "src/bof3/ui/drawRowIconSpriteCommu0507.c",
+    "src/bof3/ui/renderPendingNotificationRows.c",
+    "src/bof3/ui/renderFairySectionRows.c",
+    "src/bof3/ui/renderPanelBackgroundTiles.c",
+    "src/bof3/ui/renderRowIconSprite.c",
 ]
 support_sources = [
     "src/bof3/ui/initializeRowCountsCursor.c",
-    "src/bof3/ui/advanceFairyProgressCommu0507_801D0F34.c",
+    "src/bof3/ui/stateFairyProgress.c",
     "src/bof3/support/commu05_07_psyq.c",
 ]
 psyq_source = "src/bof3/support/commu05_07_psyq.c"

@@ -10,13 +10,13 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/bmagic/renderLayerRibbonAlong.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawFanBetweenGraphTypeDrawModesWhenActiveBmagicMagic12903_801EFF84.c",
+    "src/bof3/bmagic/callByte2DrawFan.c",
     "src/bof3/bmagic/renderFanTrianglesTinted.c",
     "src/bof3/bmagic/decrementRandomizedPositionTint.c",
     "src/bof3/bmagic/decrementIntegrateGlobalZero.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12903_801F0500.c",
+    "src/bof3/bmagic/resourceReserveFreeRecord11.c",
     "src/bof3/bmagic/workByteAdvanceDeadline.c",
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic12903_801F0564.c",
+    "src/bof3/bmagic/stateWorkBytes5.c",
     "src/bof3/support/magic129_03_psyq.c",
     "src/bof3/bmagic/magic12903DispatchTables.c",
 ]

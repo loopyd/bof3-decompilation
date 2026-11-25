@@ -10,7 +10,7 @@
 void updateStateMachine(void) {
   u32* counter;
 
-  callScenarioHandlerState();
+  callSceneHandlerState();
   func_801991B8();
 
   switch (D_80143BB0) {

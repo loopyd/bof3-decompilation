@@ -17,7 +17,7 @@ void titleSetup(void) {
     func_8014B87C(1u);
   }
 
-  game_stage_shared_palette_bank();
+  gameStagePaletteBank();
   func_80161C20(0x8du, 100u,
                                 (GAME_FRONT_PALETTE_STAGE_SERIAL += 1u, 8u));
 

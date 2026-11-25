@@ -14,7 +14,7 @@ extern u8 D_801462E5;
  * @residual none
  * The state byte cleared here is the value the substate table dispatchers use as
  * a per-entry latch, and 0x801462E4 is the index they scale into the handler run
- * (dispatchSubstateTable0cc0BatlEnd00_801EF30C).
+ * (callSubstateByteHandler3).
  */
 void advanceSubstatePad(void) {
   if (D_80145AA4 != 0) {

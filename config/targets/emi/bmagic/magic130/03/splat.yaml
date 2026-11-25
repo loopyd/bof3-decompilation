@@ -36,8 +36,8 @@ segments:
     - func_801EEC70
   - - 524
     - c
-    - decrementWorkByte9RaiseBattleTargetFlag10AndAdvanceWorkByte1OnZeroBmagicMagic13003_801EEE0C
-    - '@source: src/bof3/bmagic/decrementWorkByte9RaiseBattleTargetFlag10AndAdvanceWorkByte1OnZeroBmagicMagic13003_801EEE0C.c'
+    - decrementRaiseTargetZero2
+    - '@source: src/bof3/bmagic/decrementRaiseTargetZero2.c'
     - '@behavior: Decrement work byte 9; on zero raise battle target flag 0x10 and advance work byte 1.'
   - - 628
     - asm
@@ -59,8 +59,8 @@ segments:
     - func_801EF10C
   - - 1428
     - c
-    - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF194
-    - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF194.c'
+    - decrementWorkAdvanceZero2
+    - '@source: src/bof3/bmagic/decrementWorkAdvanceZero2.c'
   - - 1504
     - asm
     - func_801EF1E0
@@ -76,8 +76,8 @@ segments:
     - func_801EF3DC
   - - 2092
     - c
-    - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF42C
-    - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF42C.c'
+    - decrementWorkAdvanceZero3
+    - '@source: src/bof3/bmagic/decrementWorkAdvanceZero3.c'
     - '@behavior: Decrement work byte 9 and advance work byte 2 when it reaches zero.'
   - - 2168
     - asm

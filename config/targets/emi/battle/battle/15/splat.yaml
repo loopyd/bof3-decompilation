@@ -432,7 +432,7 @@ segments:
     - func_8009E184
   - - 31200
     - c
-    - forwardSelector0
+    - forwardSelectorZero
   - - 31232
     - c
     - stateRecordFlag8Field6
@@ -447,7 +447,7 @@ segments:
     - func_8009E500
   - - 32708
     - c
-    - forwardSelector1
+    - forwardSelectorOne
   - - 32740
     - c
     - func_8009E7E4
@@ -786,8 +786,8 @@ segments:
     - '@behavior: Runs selection pass func_800A3F28, raises flag 0x40 in the flag word of the selected record - the 0x140-stride party record at 0x80145FB8 for indices below three, the 0x118-stride reserve record at 0x801EB734 at index minus three otherwise - then reloads the selection and advances that record''s byte at +0x10, which stops at 2.'
   - - 44508
     - c
-    - runSelectionPassSetSelectedFlag80ThenAdvanceByte11
-    - '@source: src/bof3/battle/runSelectionPassSetSelectedFlag80ThenAdvanceByte11.c'
+    - advanceDamageMultiplier
+    - '@source: src/bof3/battle/advanceDamageMultiplier.c'
     - '@behavior: Runs selection pass func_800A3F28, raises flag 0x80 in the flag word of the selected record - the 0x140-stride party record at 0x80145FB8 for indices below three, the 0x118-stride reserve record at 0x801EB734 at index minus three otherwise - then reloads the selection and advances that record''s byte at +0x11, which stops at 2.'
   - - 44804
     - c
@@ -830,7 +830,7 @@ segments:
     - func_800A1D84
   - - 47392
     - c
-    - runSelectionPassSetSelectedFlag1000ThenCallA9BD8
+    - setSelectedFlagTwelve
   - - 47568
     - c
     - runSelectionRollReject
@@ -838,8 +838,8 @@ segments:
     - '@behavior: Runs the battle selection roll func_800A3A10 for the acting battler byte D_80146374 and selected battler byte D_80146394; a nonzero roll stores 1 in byte +0x08 of the selection record pointer D_8014639C.record and calls func_800AAC88 with effect kind 0 and the selected battler byte, while a zero roll raises bit 0x800 in the flag word at 0x80145FB8 (stride 0x140) below index 3 or at 0x801EB734 (stride 0x118) rebased by -3 and calls func_800A9BD8 with the selected battler byte; both paths finish with the selection refresh pass func_800A3F28.'
   - - 47820
     - c
-    - runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8
-    - '@source: src/bof3/battle/runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8.c'
+    - clearSelectedRecordByte
+    - '@source: src/bof3/battle/clearSelectedRecordByte.c'
     - '@behavior: Runs selection pass func_800A3F28, sets selected flag 0x4000, reloads the selection to clear the byte at word +0x0E, then calls func_800A9BD8 with D_80146394.'
   - - 48076
     - c

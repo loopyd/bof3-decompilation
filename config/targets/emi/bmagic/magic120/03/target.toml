@@ -9,23 +9,23 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/workIncrementGlobalOne.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic12003_801EEC10.c",
+    "src/bof3/bmagic/callWorkByte1Handler27.c",
     "src/bof3/bmagic/callDecrementByteZero.c",
     "src/bof3/bmagic/callIncrementAdvance.c",
     "src/bof3/bmagic/callGlobalByteNot.c",
     "src/bof3/bmagic/runSlotGridHelper.c",
-    "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByte4ThenIncrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperAt88BmagicMagic12003_801EF3C4.c",
+    "src/bof3/bmagic/incrementStepSetGlobal.c",
     "src/bof3/bmagic/decrementByteIncrementRaise.c",
 ]
 support_sources = [
     "src/bof3/bmagic/renderUpSixGrey.c",
     "src/bof3/bmagic/projectInstallAxisTurn.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic12003_801F0BF8.c",
+    "src/bof3/bmagic/projectInstallTransformRotation3.c",
     "src/bof3/bmagic/stateDrawModeHandler.c",
     "src/bof3/support/magic120_03_psyq.c",
     "src/bof3/bmagic/callInvokeHelperZero.c",
     "src/bof3/bmagic/magic12003DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374.c",
+    "src/bof3/bmagic/incrementWorkAdvanceWork4.c",
     "src/bof3/bmagic/runSlotGridDraw.c",
     "src/bof3/bmagic/callDecrementHelperZero.c",
 ]

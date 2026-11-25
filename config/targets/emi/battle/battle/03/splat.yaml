@@ -249,8 +249,8 @@ segments:
     - '@source: src/bof3/battle/initUiBundleSlot2.c'
   - - 34788
     - c
-    - initUiBundleSlot3
-    - '@source: src/bof3/battle/initUiBundleSlot3.c'
+    - initUiBundleBytes
+    - '@source: src/bof3/battle/initUiBundleBytes.c'
   - - 34856
     - c
     - initUiBundleSlot4

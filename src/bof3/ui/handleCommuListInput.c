@@ -29,14 +29,14 @@ extern void dispatchSoundCue(u32 cue_id);
 extern void restoreSavedCommuBack(void);
 extern void publishCommuTextId(void);
 extern void publishCommuEntryTextIdForRow(u8 *rowPtr);
-extern s32 commitCommuIntoActive(s32 offset);
+extern s32 commitIntoActive(s32 offset);
 extern void moveCommuPadDirection(u8 *rowPtr);
-extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
+extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void renderCommuListScreen(void);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
  * is declared wide here and the constant x arguments keep their bare `addiu`
  * form; the selected flag is the byte the emitter masks on entry. */
-extern void drawMarkerTriangleCommu0107_801D3984(s32 x, s16 y, u8 selected);
+extern void renderMarkerTriangle(s32 x, s16 y, u8 selected);
 extern void renderSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected);
 extern u8 queryActiveSlotKind(u8 kind, u8 ordinal);
 
@@ -49,15 +49,15 @@ extern u8 queryActiveSlotKind(u8 kind, u8 ordinal);
  * text id of 0x801448ED through publishCommuTextId and then closes the
  * request through restoreSavedCommuBack. While it shares a
  * bit with the confirm mask 0x80145AC2 it commits the request row through
- * commitCommuIntoActive with offset 0 and stores result code
+ * commitIntoActive with offset 0 and stores result code
  * 0xB5 into the halfword
  * 0x801D4E0C when the returned low byte is nonzero. When neither mask matches
  * it moves the request row byte 0x801D4E28 through
  * moveCommuPadDirection and publishes that row text id through
  * publishCommuEntryTextIdForRow. Every path then runs
  * renderCommuListScreen, draws the list row 0x801448ED with the selected flag 1 and the
- * request row 0x801D4E28 with 0 through drawRowMarkerOutlineCommu0107_801D36FC, and while no commit
- * happened draws the marker through drawMarkerTriangleCommu0107_801D3984 with the selected flag 1: at
+ * request row 0x801D4E28 with 0 through renderRowMarkerOutline, and while no commit
+ * happened draws the marker through renderMarkerTriangle with the selected flag 1: at
  * 0x28 plus 8 times the signed ordinal byte 0x801D4E24 on x and 0x39 on y while
  * the list row cursor is zero, otherwise at 0xFA plus 8 times that byte modulo 5
  * on x and 0x44 plus 54 times the cursor minus 9 plus 7 times that byte divided
@@ -85,7 +85,7 @@ void handleCommuListInput(void) {
     publishCommuTextId();
     restoreSavedCommuBack();
   } else if (pad & D_80145AC2) {
-    committed = commitCommuIntoActive(0);
+    committed = commitIntoActive(0);
     if (committed & 0xFF) {
       D_801D4E0C = 0xB5;
     }
@@ -96,11 +96,11 @@ void handleCommuListInput(void) {
   }
   renderCommuListScreen();
   row = &D_801448ED;
-  drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
-  drawRowMarkerOutlineCommu0107_801D36FC(D_801D4E28, 0);
+  renderRowMarkerOutline(*row, 1);
+  renderRowMarkerOutline(D_801D4E28, 0);
   if ((committed & 0xFF) == 0) {
     if (*row == 0) {
-      drawMarkerTriangleCommu0107_801D3984(*(s8 *)&D_801D4E24 * 8 + 0x28, 0x39,
+      renderMarkerTriangle(*(s8 *)&D_801D4E24 * 8 + 0x28, 0x39,
                                            1);
     } else {
       /* The 0x44 inset reaches the line term as a value the front end cannot
@@ -109,7 +109,7 @@ void handleCommuListInput(void) {
       lineInset = 0x44;
       col = (s8)D_801D4E24 % 5;
       line = (s8)D_801D4E24 / 5;
-      drawMarkerTriangleCommu0107_801D3984(
+      renderMarkerTriangle(
           col * 8 + 0xFA, (*row - 9) * 54 + (line * 7 + lineInset), 1);
     }
     renderSlotChannelBox(

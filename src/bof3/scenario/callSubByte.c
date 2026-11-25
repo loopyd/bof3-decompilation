@@ -100,7 +100,7 @@ void func_801F7A18(u32 arg0, s16 arg1, s16 arg2, s32 arg3, u8 arg4, u32 arg5);
 
 /* @source 0x801F7BA0
  * @behavior Primary-state handler of this scenario overlay: the dispatcher
- *           dispatchPrimaryStateHandlerScenarioScena1400_801F7B5C runs it as
+ *           callPrimaryStateHandler4 runs it as
  *           entry 1 of the ten-word handler table at 0x801FC424, and it steps
  *           the shared secondary sub-state byte D_80146875 through this
  *           overlay's front-end entry chain, selecting the arm from the

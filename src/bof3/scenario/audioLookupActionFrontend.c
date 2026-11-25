@@ -19,7 +19,7 @@ extern void func_80150224(s32 action_id); /* @source 0x80150224 */
  * requester's delay slot. No in-image `jal` targets the address and no other
  * word of the payload holds it; its only image word is 0x801FC468, entry 0 of
  * the twenty-two-word callback run that
- * dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C (0x801FB37C)
+ * callRecordCallbackByte73 (0x801FB37C)
  * selects with the unsigned record byte at offset 0x7A.
  * @status exact
  * @match 100.00

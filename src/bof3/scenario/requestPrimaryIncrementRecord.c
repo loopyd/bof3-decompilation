@@ -19,7 +19,7 @@ void func_8015C088(void);
  * while both store constants and the incremented halfword share $v0. No
  * in-image jal reaches the address; its only image word is 0x801FC480, entry 6
  * of the twenty-two-word overlay callback run at 0x801FC468 (0x801FC468
- * through 0x801FC4BC) that dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C
+ * through 0x801FC4BC) that callRecordCallbackByte73
  * (0x801FB37C) indexes with the unsigned record byte at offset 0x7A. Its
  * neighbour requestPrimaryState5Substate5
  * (0x801FB574, entry 5) is the same startup-and-request shape for sub-state 5,

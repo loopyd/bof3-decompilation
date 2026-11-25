@@ -49,7 +49,7 @@ extern u8 D_80146254;
  *           call keeps a plain nop slot. The address is entry 17 - the word at
  *           0x801FC4AC, payload offset 0x58AC - of the twenty-two-entry
  *           callback-pointer run at 0x801FC468 (0x801FC468 through 0x801FC4BC)
- *           that dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C
+ *           that callRecordCallbackByte73
  *           selects with the record's unsigned byte at offset 0x7A, so this
  *           handler runs for a record whose 0x7A byte reads 0x11; that word is
  *           its only image word and no in-image jal reaches the address. The

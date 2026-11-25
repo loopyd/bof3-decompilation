@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/dispatchStepCopy.c",
     "src/bof3/bmagic/decrementRecordInvoke.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF888.c",
+    "src/bof3/bmagic/decrementGlobalInvokeHelper2.c",
     "src/bof3/bmagic/stateHeaderUnitMotion.c",
     "src/bof3/bmagic/stateHeaderTintGroup.c",
 ]

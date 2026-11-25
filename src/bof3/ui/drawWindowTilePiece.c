@@ -8,7 +8,7 @@ extern s32 GetGraphType(void);
 /* Six-byte entries of the commu01/07 tile atlas, one per piece: the atlas cell
  * u and v, the sprite width and height, the palette column scaled by 16 and the
  * palette row offset. Pieces 6 through 13 are the 8x8 window tiles that
- * drawWindowFrameCommu0107_801D3594, drawSmallWindowFrameCommu0107_801D273C and
+ * renderWindowFrame, renderSmallWindowFrame and
  * drawEntryListFrame repeat around their frames. */
 extern u8 D_801D4CE0[]; /* @source 0x801D4CE0 @kind data */
 
@@ -36,8 +36,8 @@ extern u8 D_801D4CE0[]; /* @source 0x801D4CE0 @kind data */
  *           column shifted down by four. All three colour bytes are the neutral
  *           gray 0x80 and the sprite is appended at slot 1 as 0x14 bytes. The
  *           0x30-byte frame keeps $s0 through $s3 and $ra across the five calls.
- *           Its three in-image callers drawWindowFrameCommu0107_801D3594,
- *           drawSmallWindowFrameCommu0107_801D273C and drawEntryListFrame pass
+ *           Its three in-image callers renderWindowFrame,
+ *           renderSmallWindowFrame and drawEntryListFrame pass
  *           pieces 6 through 13, the corner and edge tiles of their frames; no
  *           jal and no pointer word outside the payload names this span, so its
  *           argument roles are structural.

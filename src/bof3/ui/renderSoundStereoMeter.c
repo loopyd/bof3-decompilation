@@ -5,7 +5,7 @@
 extern void appendRenderPrim(u32 ot_index, u32 primitive_size);
 
 /* @source 0x801D1714 */
-extern void drawGlyphStringQuadsCommu03_06(s32 x, s32 y, u32 palette,
+extern void renderGlyphStringQuads(s32 x, s32 y, u32 palette,
                                            const u8* text);
 
 /* @source 0x801682E0 */
@@ -119,15 +119,15 @@ void renderSoundStereoMeter(s32 x, s32 y) {
   func_801AED54((s16)px + 0x48, (s16)py + 0x3C, 0x7C, 0x0E, 1);
 
   if (D_80144951 == 0) {
-    drawGlyphStringQuadsCommu03_06((s16)(px + 0x10), (s16)(py + 0x40), 0,
+    renderGlyphStringQuads((s16)(px + 0x10), (s16)(py + 0x40), 0,
                                    D_801D1904);
   } else {
-    drawGlyphStringQuadsCommu03_06((s16)(px + 0x10), (s16)(py + 0x40), 0,
+    renderGlyphStringQuads((s16)(px + 0x10), (s16)(py + 0x40), 0,
                                    D_801D1908);
   }
 
   sy = (s16)(py + 0x54);
-  drawGlyphStringQuadsCommu03_06((s16)(px + 0x20), sy, 0, D_801D190C);
+  renderGlyphStringQuads((s16)(px + 0x20), sy, 0, D_801D190C);
   func_8014FC90((s16)(px + 0x44), sy, 0, 3, D_801D18F4);
   func_8014FC90((s16)(px + 0x5C), sy, 3, 1, D_801D18F8);
   func_8014FC90((s16)(px + 0x94), sy, 0, 3, D_801D18F4);

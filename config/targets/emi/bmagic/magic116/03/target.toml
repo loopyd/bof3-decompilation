@@ -13,7 +13,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/bmagic/activateUpFreeRecords.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11603_801EEC14.c",
+    "src/bof3/bmagic/callWorkByte1Handler28.c",
     "src/bof3/bmagic/queryFreeRecord.c",
     "src/bof3/bmagic/raiseHelperNoActive.c",
     "src/bof3/support/magic116_03_psyq.c",

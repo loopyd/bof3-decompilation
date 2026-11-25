@@ -9,12 +9,12 @@ load_address = 0x801D0C00
 
 sources = []
 support_sources = [
-    "src/bof3/ui/renderCommuBankEntry.c",
+    "src/bof3/ui/menuBankSelectHandler.c",
     "src/bof3/ui/audioFairyUnlessFrontend.c",
     "src/bof3/ui/stateFairyUnlessFrontend.c",
     "src/bof3/ui/callByte1Table1758.c",
-    "src/bof3/ui/initializeCommuUnlessFrontend.c",
-    "src/bof3/ui/initializeCommuUiState.c",
+    "src/bof3/ui/initializeUnlessFrontend.c",
+    "src/bof3/ui/initializeUiWorkBlock.c",
     "src/bof3/ui/audioAction63SetFrontend.c",
     "src/bof3/ui/renderSlidingStartUnless.c",
     "src/bof3/support/commu04_06_psyq.c",

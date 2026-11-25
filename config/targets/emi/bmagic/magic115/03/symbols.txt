@@ -14,5 +14,5 @@ dispatchByte2Service = 0x801EF5F8;
 stateHeaderUnitMotion = 0x801EF690;
 func_801EF7A4 = 0x801EF7A4;
 decrementTintTripletFour = 0x801EF7F4;
-decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF888 = 0x801EF888;
+decrementGlobalInvokeHelper2 = 0x801EF888;
 T_801EF8BC = 0x801EF8BC;

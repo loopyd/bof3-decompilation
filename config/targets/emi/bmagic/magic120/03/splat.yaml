@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 16
     - c
-    - dispatchWorkByte1HandlerBmagicMagic12003_801EEC10
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic12003_801EEC10.c'
+    - callWorkByte1Handler27
+    - '@source: src/bof3/bmagic/callWorkByte1Handler27.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects an entry of the three-entry code pointer table at 0x801EEC04 (0x801EEC70, 0x801EEEC8, 0x801EEFB0), and that entry is invoked with no arguments. The three table words are copied into this function''s own 0x28-byte frame first, so the call target is read back from the copy; it reads no other state and writes none.'
   - - 112
     - asm
@@ -66,12 +66,12 @@ segments:
     - '@behavior: Decrements work-object byte B, increments work byte 9 and, when that stored byte reaches 0x18, passes the shared battle target byte at 0x80146384 with the constant 0x10 to func_800A9610 and then advances work byte 2.'
   - - 1908
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374.c'
+    - incrementWorkAdvanceWork4
+    - '@source: src/bof3/bmagic/incrementWorkAdvanceWork4.c'
   - - 1988
     - c
-    - incrementWorkByteBAndDecrementWorkByte4ThenIncrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperAt88BmagicMagic12003_801EF3C4
-    - '@source: src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByte4ThenIncrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperAt88BmagicMagic12003_801EF3C4.c'
+    - incrementStepSetGlobal
+    - '@source: src/bof3/bmagic/incrementStepSetGlobal.c'
     - '@behavior: Increments work-object byte B, decrements work-object byte 4 and increments work-object byte 9 through the scratchpad pointer cell at 0x1F800044 and, when that stored byte reaches 0x88, stores 0xFF into byte B of the shared record at 0x801EB4E0 and invokes the shared helper at 0x801E5988.'
   - - 2124
     - asm
@@ -138,8 +138,8 @@ segments:
     - func_801F0974
   - - 8184
     - c
-    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic12003_801F0BF8
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic12003_801F0BF8.c'
+    - projectInstallTransformRotation3
+    - '@source: src/bof3/bmagic/projectInstallTransformRotation3.c'
     - '@behavior: Projects the work-record position, builds zero rotation, composes the shared matrix, and installs the transform.'
   - - 8360
     - textbin

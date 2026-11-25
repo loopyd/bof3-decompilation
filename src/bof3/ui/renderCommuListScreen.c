@@ -71,7 +71,7 @@ extern u8 D_801D4C34[]; /* @source 0x801D4C34 @kind data */
 extern u8 D_801D4C39; /* @source 0x801D4C39 @kind data */
 
 extern void drawWindowTilePiece(s16 x, s16 y, u8 piece);
-extern void drawWindowFrameCommu0107_801D3594(s16 x, s16 y);
+extern void renderWindowFrame(s16 x, s16 y);
 extern void renderCommuKindIcon(s16 x, s16 y, u8 icon);
 extern u8 checkActiveRecordsKind(s32 kind);
 extern void computeKindSlotOrigin(s16* outX, s16* outY, s32 kind, s32 ordinal);
@@ -98,7 +98,7 @@ extern void computeKindSlotOrigin(s16* outX, s16* outY, s32 kind, s32 ordinal);
  *           counter is clear, so the highlight blinks. It then paints the list
  *           backing through func_801AE3F0 at (0x15, 0x2E) 0x114 by 0xAA with
  *           shade 0x80, draws the window frame through
- *           drawWindowFrameCommu0107_801D3594 at (0x14, 0x2D) and the header
+ *           renderWindowFrame at (0x14, 0x2D) and the header
  *           strip through func_801AED54 at (0x20, 0x38) 0xA8 by 0x10, and draws
  *           one tile piece per active record of kind 0 at x 0x24 plus 8 per
  *           record on y 0x3A. Three band rows follow at x 0xF2 and y 0x36 plus
@@ -192,7 +192,7 @@ void renderCommuListScreen(void) {
     }
   }
   func_801AE3F0(0x15, 0x2E, 0x114, 0xAA, 0x80, D_80144952);
-  drawWindowFrameCommu0107_801D3594(0x14, 0x2D);
+  renderWindowFrame(0x14, 0x2D);
   func_801AED54(0x20, 0x38, 0xA8, 0x10, 1);
 
   n = checkActiveRecordsKind(0);

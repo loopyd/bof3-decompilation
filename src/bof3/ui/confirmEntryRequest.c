@@ -53,7 +53,7 @@ extern void dispatchSoundCue(u32 cue_id);
 void publishTextId(void);
 u8 checkActiveRecordsKind(s32 kind);
 extern void movePadDirection(u8 *rowPtr);
-extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
+extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void renderCommuListScreen(void);
 
 /* @source 0x801D0CAC
@@ -77,7 +77,7 @@ extern void renderCommuListScreen(void);
  * neither mask matches it moves the commu list row through
  * movePadDirection. Every
  * path then runs renderCommuListScreen and draws the list row 0x801448ED with the
- * selected flag 0 through drawRowMarkerOutlineCommu0107_801D36FC. Its 0x18-byte frame only holds ra.
+ * selected flag 0 through renderRowMarkerOutline. Its 0x18-byte frame only holds ra.
  * @status exact
  * @match 100.00
  * @residual none
@@ -123,5 +123,5 @@ void confirmEntryRequest(void) {
     movePadDirection(&D_801448ED);
   }
   renderCommuListScreen();
-  drawRowMarkerOutlineCommu0107_801D36FC(D_801448ED, 0);
+  renderRowMarkerOutline(D_801448ED, 0);
 }

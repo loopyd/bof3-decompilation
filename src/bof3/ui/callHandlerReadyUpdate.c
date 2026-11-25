@@ -11,6 +11,6 @@
  */
 void NO_SIBLING_CALLS callHandlerReadyUpdate(void)
 {
-    workFlags02HandlerPairTable[g_game_work->flags_02]();
+    workHandlerPairTable[g_game_work->flags_02]();
     func_8014D978();
 }

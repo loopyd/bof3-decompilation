@@ -12,7 +12,7 @@ sources = [
     "src/bof3/bmagic/checkDownJitteredHeading.c",
     "src/bof3/bmagic/callUpdateEveryFourth.c",
     "src/bof3/bmagic/mathAdvanceByteAt16.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12403_801F0828.c",
+    "src/bof3/bmagic/resourceReserveFreeRecord9.c",
     "src/bof3/bmagic/stateTintTripletCountdown.c",
     "src/bof3/bmagic/workByteAdvanceThreshold.c",
     "src/bof3/bmagic/incrementWorkByteAThenSubtract4FromByte9AndDecrementGlobalByteBAndClearWhenZeroBmagicMagic12403_801F0368.c",
@@ -20,8 +20,8 @@ sources = [
     "src/bof3/bmagic/renderQuadsScaledRadii.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic12403_801F088C.c",
-    "src/bof3/bmagic/noopHandlerBmagicMagic12403_801EF268.c",
+    "src/bof3/bmagic/stateWorkBytes4.c",
+    "src/bof3/bmagic/noopStepEntry.c",
     "src/bof3/bmagic/magic12403DispatchTables.c",
     "src/bof3/support/magic124_03_psyq.c",
 ]

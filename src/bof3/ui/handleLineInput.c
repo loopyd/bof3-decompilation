@@ -57,12 +57,12 @@ extern s32 func_8014E640(u32 mask);
 extern void dispatchSoundCue(u32 cue_id);
 
 extern void renderCommuListScreen(void);
-extern void saveCommuRequestSelect(void);
-extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
+extern void saveRequestSelect(void);
+extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
  * is declared wide here. */
-extern void drawMarkerTriangleCommu0107_801D3984(s32 x, s16 y, u8 selected);
+extern void renderMarkerTriangle(s32 x, s16 y, u8 selected);
 extern s16 computeListOriginY(void);
 extern void drawEntryListPanel(s16 x, s16 y, u8 mode);
 extern s16 drawKindGridPanel(s16 x, s16 y, u8 kind, u8 mode);
@@ -79,7 +79,7 @@ extern void func_801647C4(u16 x, u16 y, s32 mode);
  * While it shares a bit with the confirm mask 0x80145AC2 it indexes the kind
  * grid and pair table at 0x801D4C18 with the kind grid byte: an entry whose
  * second byte is 0xFF marks a kind with no paired grid and saves the request
- * state through saveCommuRequestSelect, while any other entry has
+ * state through saveRequestSelect, while any other entry has
  * that second byte copied into the paired grid byte 0x801D4E20; either way the
  * grid line byte 0x801D4E30 takes the third byte of the record slot at 8 times
  * the shared list row 0x801448ED minus one from the stride-8 slot run at
@@ -94,7 +94,7 @@ extern void func_801647C4(u16 x, u16 y, s32 mode);
  * wraps to zero when the signed result reaches that first byte, no other bit
  * moves it, and a line landing on a different value queues resident cue 0x100.
  * Every path then runs renderCommuListScreen, draws the list row marker of 0x801448ED
- * with selected flag 1 through drawRowMarkerOutlineCommu0107_801D36FC, computes
+ * with selected flag 1 through renderRowMarkerOutline, computes
  * the slot origin of that row kind at ordinal 0 through computeKindSlotOrigin,
  * draws the marker triangle at that origin with selected flag 1, draws the
  * entry-list panel in mode 1 at 0x42 plus 52 times the quarter index of the list
@@ -126,7 +126,7 @@ void handleLineInput(void) {
     D_801F294D = D_801F294D - 1;
   } else if (pad & D_80145AC2) {
     if (D_801D4C18[D_801D4E1C][1] == 0xFF) {
-      saveCommuRequestSelect();
+      saveRequestSelect();
     } else {
       srow = D_801D4E28;
       if (srow == D_801457A8[D_801448ED - 1][0] - 4) {
@@ -161,9 +161,9 @@ void handleLineInput(void) {
   }
   renderCommuListScreen();
   cursor = &D_801448ED;
-  drawRowMarkerOutlineCommu0107_801D36FC(*cursor, 1);
+  renderRowMarkerOutline(*cursor, 1);
   computeKindSlotOrigin(&x, &y, *cursor, 0);
-  drawMarkerTriangleCommu0107_801D3984(x, y, 1);
+  renderMarkerTriangle(x, y, 1);
   y = computeListOriginY();
   drawEntryListPanel((s16)(52 * ((*cursor - 1) % 4) + 0x42), y, 1);
   if (D_801D4E1C != 0xFF) {

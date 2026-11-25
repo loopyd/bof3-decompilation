@@ -129,7 +129,7 @@ void game_stop_selection_fx(u32 effect_group, s32 effect_id);
  * upload path.
  * @source 0x8014E284
  */
-void game_stage_shared_palette_bank(void);
+void gameStagePaletteBank(void);
 
 /* @behavior queues one frontend cue/event id through the EXE-side dispatcher.
  * @source 0x8015DF18

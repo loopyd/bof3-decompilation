@@ -49,8 +49,8 @@ segments:
     - func_801EEF94
   - - 940
     - c
-    - copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic12603_801EEFAC
-    - '@source: src/bof3/bmagic/copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic12603_801EEFAC.c'
+    - copyWordTripletClear3
+    - '@source: src/bof3/bmagic/copyWordTripletClear3.c'
     - '@behavior: Copies the record words 0x34, 0x38 and 0x3C into the scratchpad work object, clears work bytes 9 and 0xA, then advances work byte 2.'
   - - 1036
     - c
@@ -64,8 +64,8 @@ segments:
     - '@behavior: Increments byte 2 of the scratchpad work object at 0x1F800044 when byte 0xB of the shared record reached through 0x801EB4E0 is below two.'
   - - 1212
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic12603_801EF0BC
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic12603_801EF0BC.c'
+    - decrementStepInvokeZero
+    - '@source: src/bof3/bmagic/decrementStepInvokeZero.c'
     - '@behavior: Decrements work byte 9, then decrements shared record byte B and calls helper 801E5988 when zero.'
   - - 1304
     - asm
@@ -91,8 +91,8 @@ segments:
     - '@behavior: Decrements work byte 9; on zero invokes helper at 0x100, copies record triplet, clears B, rearms 9, clears A and advances byte 2.'
   - - 4136
     - c
-    - incrementWorkBytes9AThenAdvanceWorkByte2WhenAIs10BmagicMagic12603_801EFC28
-    - '@source: src/bof3/bmagic/incrementWorkBytes9AThenAdvanceWorkByte2WhenAIs10BmagicMagic12603_801EFC28.c'
+    - incrementCountersAdvanceStep
+    - '@source: src/bof3/bmagic/incrementCountersAdvanceStep.c'
     - '@behavior: Increments work bytes 9 and 0xA, then increments byte 2 when the resulting byte 0xA is 0x10.'
   - - 4244
     - c

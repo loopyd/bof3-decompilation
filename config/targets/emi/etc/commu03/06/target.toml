@@ -9,7 +9,7 @@ load_address = 0x801D0C00
 
 sources = []
 support_sources = [
-    "src/bof3/ui/drawGlyphStringQuadsCommu03_06.c",
+    "src/bof3/ui/renderGlyphStringQuads.c",
     "src/bof3/ui/renderSoundStereoMeter.c",
     "src/bof3/support/commu03_06_psyq.c",
 ]
