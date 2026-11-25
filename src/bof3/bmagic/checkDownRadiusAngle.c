@@ -7,7 +7,7 @@ extern int rand(void);
  * function re-materialises the cell for every record access - one read before
  * the delay countdown and eleven reads inside the seed path - so the cell is
  * declared volatile, matching the exact bmagic siblings
- * dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24 and
+ * dispatchDrawPop and
  * stepWorkRecordAngleProjectPositionPairAndCountDownByte9OnFrameParityThenClear
  * RecordAtZeroBmagicMagic10603_801EF418. */
 extern u8 *volatile D_801F05F8; /* @source 0x801F05F8 @kind data */
@@ -49,7 +49,7 @@ extern s32 func_801783C8(s32 angle);
  * @behavior Overlay work-step handler of the record published at the pointer
  *           cell 0x801F05F8, reached as entry 0 of the four-word handler run at
  *           0x801EF9C4 that the overlay's byte-2 dispatcher
- *           dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24
+ *           dispatchDrawPop
  *           indexes with the record's byte 0x02, so it has no jal caller. It
  *           starts by decrementing the record's unsigned byte 0x0A and
  *           returning while the masked result is non-zero; the 0x18-byte frame

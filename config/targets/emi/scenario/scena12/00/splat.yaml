@@ -96,7 +96,7 @@ segments:
     - func_801F7C24
   - - 4628
     - c
-    - stateResetWorkArea
+    - stateResetWorkFlags
   - - 4660
     - asm
     - func_801F7E34

@@ -50,7 +50,7 @@ s32 func_8019651C(void *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 /* @source 0x801F763C
  * @behavior Work-byte-1 handler of this overlay, entry 8 (the word at
  *           0x801FBF10) of the twelve-word work-object handler table D_801FBEF0
- *           that dispatchWorkByte1HandlerScenarioScena1300_801F6EA4 selects
+ *           that dispatchWorkByte1Handler2 selects
  *           with byte 1 of the scratchpad work object published at 0x1F800044;
  *           that one data word is this body's only reference in the payload.
  *           It takes no arguments and returns nothing.

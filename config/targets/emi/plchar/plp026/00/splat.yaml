@@ -100,7 +100,7 @@ segments:
     - func_801CFA34
   - - 5936
     - c
-    - invokeHelperPlcharPlp02600_801CFB30
+    - callSharedUpdate4
   - - 5968
     - c
     - callStateByte2State

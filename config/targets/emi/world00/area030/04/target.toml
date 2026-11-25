@@ -141,7 +141,7 @@ sources = [
     "src/bof3/world/stateThreeFourText.c",
     "src/bof3/world/publishSelectedValuePad.c",
     "src/bof3/world/initializeDispatchCounterClear.c",
-    "src/bof3/world/callStateTable22World00.c",
+    "src/bof3/world/dispatchByte3Table22fc.c",
     "src/bof3/world/initializeCounterByteGate.c",
     "src/bof3/world/callStateByte3Table2304.c",
     "src/bof3/world/requestLocalModeGate.c",

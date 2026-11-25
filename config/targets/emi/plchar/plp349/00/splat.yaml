@@ -97,13 +97,13 @@ segments:
     - '@behavior: Overlay step dispatched on work-record byte 3 when it reads zero through the dispatcher based at 0x801CF614: loads the work record published at the scratchpad pointer cell 0x1F800044 and, in order, queues the cue taken from the record unsigned halfword 0x2C plus 0x100, selects the shared work sequence ((record byte 8 - 1) / 2 + 0x42) truncated to a byte, arms the countdown byte 0x0A with 8 and sets the dispatch byte 3 to 1. Both calls answer nothing it keeps; no index bound, no arguments, no jal caller, and the 0x18-byte frame keeps only $ra at 0x10. Its address is published at the pointer word 0x801CF614, entry 10 of the sixteen-word code-pointer run based at 0x801CF5EC.'
   - - 3020
     - c
-    - selectSequenceReadyRow3
-    - '@source: src/bof3/plchar/selectSequenceReadyRow3.c'
+    - selectReadyFixedCue
+    - '@source: src/bof3/plchar/selectReadyFixedCue.c'
     - '@behavior: Work byte 3 == 1 step of this overlay: the body address appears once in the payload bytes, at the pointer word 0x801CF618, entry 1 of the handler run based at 0x801CF614 that the work-byte-3 dispatcher at 0x801CEF10 indexes. It runs the shared readiness helper func_8014DAEC and keeps only the low byte of that answer as a ready test; while the helper reports ready it passes the work record unsigned byte 8 to the shared work-sequence selector func_8014D8D4 and writes 2 into work byte 3. Otherwise it reads the work countdown byte 0x0A, leaves every record field untouched while that byte reads zero, decrements a nonzero countdown and re-reads the same byte; only a countdown that reaches zero continues. That path copies work byte 8 into field 0x08 of the front-end row selected by work byte 0x0B at row stride 0x74, defaults work byte 7 to 1 when it reads zero and copies it into the same row field 0x0A, then queues the literal cue 0x10B through the shared cue dispatcher func_8015DF18. The roles of work byte 7, of row fields 0x08 and 0x0A, of the cue and of the ready answer stay address-anchored. No jal in this payload names the body, and the 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
   - - 3308
     - c
-    - stateSelectedUnseededUpdate2
-    - '@source: src/bof3/plchar/stateSelectedUnseededUpdate2.c'
+    - stateSharedRecordClear
+    - '@source: src/bof3/plchar/stateSharedRecordClear.c'
     - '@behavior: Overlay step selected from outside this payload: reads the front-end record index from work byte 0x0B of the record published at the scratchpad pointer cell 0x1F800044, looks that row up in the shared 0x74-byte front-end record table at 0x80143FC8, and when the selected row reads 0 at byte 0 or 1 at byte 1, and the shared gate byte 0x80149332 reads zero, stores zero in the state byte 0x12B of the record published at the pointer cell 0x80146250; both paths then call the shared no-argument update helper func_8014D978. No arguments, no result, no dispatch byte written; row byte 1, the gate byte and state byte 0x12B stay address-anchored. Its address is published at word 12 (0x801CF61C) of the sixteen-word code-pointer run at 0x801CF5EC that func_801CE404 indexes from work byte 2, and it has no jal caller.'
   - - 3460
     - c

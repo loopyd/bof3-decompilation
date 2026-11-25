@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/plchar/callWorkTable0670.c",
     "src/bof3/plchar/callWorkTable0668.c",
     "src/bof3/plchar/callWorkTable065.c",
-    "src/bof3/plchar/invokeHelperPlcharPlp01600_801CF70C.c",
+    "src/bof3/plchar/callSharedUpdate3.c",
     "src/bof3/plchar/dropFrontSelectionBack.c",
     "src/bof3/plchar/callWorkTable0690.c",
     "src/bof3/plchar/callWorkTable069.c",

@@ -31,7 +31,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           (same cell, same byte-9 add, same second cell load and byte-9
  *           reload, same incremented advancing byte; only the added constant,
  *           the compared constant and the advanced offset differ) and
- *           incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0
+ *           incrementAdvanceAt60
  *           (same target, same cell, same work-byte-0x01 advance). No
  *           byte-identical copy of this 0x50-byte span exists in the 396 EMI
  *           payloads under out/binaries/emi.

@@ -23,7 +23,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 /* @source 0x801EEEDC
  * @behavior Entry 2 of the six-word work-byte-1 handler run at 0x801EEC04
  *           (0x801EEC94, 0x801EEE68, 0x801EEEDC, 0x801EEF80, 0x801EF068,
- *           0x801EF114), which dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C
+ *           0x801EF114), which dispatchWorkByte1Copy
  *           copies into its frame and jalr's for the value of work byte 1, so
  *           this body runs while that byte holds 2 and no jal in the payload
  *           reaches this address. It first calls the overlay's draw helper at

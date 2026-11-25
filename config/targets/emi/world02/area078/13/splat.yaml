@@ -45,16 +45,16 @@ segments:
     - stateProgress0aGate
   - - 312
     - c
-    - setStatusFFFFAndScenarioProgress0AOr2ByGateWorld02Area07813_801F2D38
-    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress0AOr2ByGateWorld02Area07813_801F2D38.c'
+    - stateStatusProgress
+    - '@source: src/bof3/world/stateStatusProgress.c'
     - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword at 0x801490A8, then stores 0xA into the shared scenario progress byte at 0x80146864 when the gate byte reads 0 and 0x2 when it reads 1, leaving that byte untouched for any other gate value.'
   - - 376
     - asm
     - func_801F2D78
   - - 540
     - c
-    - claimFrontEndRecordAndSetHandler44World02Area07813_801F2E1C
-    - '@source: src/bof3/world/claimFrontEndRecordAndSetHandler44World02Area07813_801F2E1C.c'
+    - stateClaimFrontRecord
+    - '@source: src/bof3/world/stateClaimFrontRecord.c'
     - '@behavior: slot 9 of the overlay dispatch table based at 0x801F411C; asks the shared free-record selector func_8019601C for a record index, masks it to a byte and, unless that byte is 0xFF, marks the record selected from the 0x74-byte front-end table at 0x80143FC8 occupied and writes handler selector 0x44 into its byte +5; no arguments, no in-image caller, no pointer word names it'
   - - 632
     - textbin

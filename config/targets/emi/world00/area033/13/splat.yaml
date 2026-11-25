@@ -72,7 +72,7 @@ segments:
     - '@source: src/bof3/world/area03313_work_state.c'
   - - 1872
     - c
-    - callStateTable4World00
+    - dispatchByte1Table4f78
     - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 1940
     - c
@@ -144,7 +144,7 @@ segments:
     - func_801F3FF8
   - - 5292
     - c
-    - callStateTable5010World00
+    - dispatchByte1Table5010
     - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 5360
     - asm
@@ -159,7 +159,7 @@ segments:
     - func_801F445C
   - - 6400
     - c
-    - callStateTable5034World00
+    - dispatchByte1Table5034
     - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 6468
     - asm

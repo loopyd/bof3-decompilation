@@ -4,7 +4,7 @@
  * 0x801EF9C0 and the word just past the 96-record pool at 0x801EF9F8. The
  * original re-materialises the cell address for each of this function's four
  * reads, so the cell is declared volatile, matching the exact bmagic sibling
- * dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24. */
+ * dispatchDrawPop. */
 extern u8 *volatile D_801F05F8; /* @source 0x801F05F8 @kind data */
 
 /* Shared battle work pointer in main RAM, outside this overlay's image. Splat

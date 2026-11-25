@@ -40,7 +40,7 @@ segments:
     - func_801F2C64
   - - 280
     - c
-    - callStateTable3304World00
+    - dispatchByte1Table3304
     - '@source: src/bof3/world/area03613DispatchTables.c'
   - - 348
     - c

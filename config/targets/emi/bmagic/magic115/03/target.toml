@@ -8,8 +8,8 @@ splat = "config/targets/emi/bmagic/magic115/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11503_801EEC14.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF5C4.c",
+    "src/bof3/bmagic/dispatchStepCopy.c",
+    "src/bof3/bmagic/decrementRecordInvoke.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF888.c",
     "src/bof3/bmagic/stateHeaderUnitMotion.c",
     "src/bof3/bmagic/stateHeaderTintGroup.c",
@@ -17,10 +17,10 @@ sources = [
 support_sources = [
     "src/bof3/support/magic115_03_psyq.c",
     "src/bof3/bmagic/magic11503DispatchTables.c",
-    "src/bof3/bmagic/storeDoubleWorkByte9IntoWorkByteARecordTripletAndAdvanceWorkByte1WhenAtLeast6BmagicMagic11503_801EEDDC.c",
+    "src/bof3/bmagic/storeDoubleTriplet.c",
     "src/bof3/bmagic/decrementTintTripletFour.c",
     "src/bof3/bmagic/callStateByte2Tablef8.c",
-    "src/bof3/bmagic/dispatchStateByte2Tablef8d4BmagicMagic11503_801EF5F8.c",
+    "src/bof3/bmagic/dispatchByte2Service.c",
     "src/bof3/bmagic/decrementTintTimesTwelve.c",
 ]
 psyq_source = "src/bof3/support/magic115_03_psyq.c"

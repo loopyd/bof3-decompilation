@@ -7,7 +7,7 @@ extern u32 paletteSourceRow3Table[4];
 /* @source 0x801F62DC @kind data */
 extern u32 paletteSourceRow7Table[4];
 
-void copyPaletteBlock32(u32 sourceRow, u32 sourceBlock,
+void copyPaletteStageBlock(u32 sourceRow, u32 sourceBlock,
                                                u32 destinationRow, u32 destinationBlock);
 
 /* @source 0x801F57BC
@@ -24,11 +24,11 @@ void copyPaletteBlock32(u32 sourceRow, u32 sourceBlock,
 void cycleThreePaletteBlocks(void) {
   u8* work;
 
-  copyPaletteBlock32(
+  copyPaletteStageBlock(
       3, paletteSourceRow3Table[workRecordCursor1F800044[9] & 3], 3, 3);
-  copyPaletteBlock32(
+  copyPaletteStageBlock(
       7, paletteSourceRow7Table[workRecordCursor1F800044[9] & 3], 6, 9);
-  copyPaletteBlock32(
+  copyPaletteStageBlock(
       7, paletteSourceRow7Table[workRecordCursor1F800044[9] & 3] + 1, 6, 10);
   work = workRecordCursor1F800044;
   work[9]++;

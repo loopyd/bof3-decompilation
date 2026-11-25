@@ -33,7 +33,7 @@ extern u8 D_80144F5A[];
  *           func_801C187C jal. The address is entry 7 - the word at 0x801FBFD4,
  *           payload offset 0x53D4 - of the thirteen-entry callback-pointer
  *           table at 0x801FBFB8 that the dispatcher
- *           dispatchRecordCallbackScenarioScena1300_801FB350 selects with the
+ *           callRecordCallback4 selects with the
  *           record's unsigned byte at offset 0x7A and calls with the record
  *           pointer and the scenario flag word D_8014686C, so this handler runs
  *           for a record whose 0x7A byte reads 7 and no in-image jal reaches the

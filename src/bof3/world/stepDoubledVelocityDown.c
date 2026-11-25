@@ -13,7 +13,7 @@ extern u8* workRecordCursor; /* @source 0x801181DC @kind data */
 /* @source 0x80117514
  * @behavior Step handler 2 of this overlay's per-record handler run: word 2 of
  * the thirteen in-image pointers the Splat textbin row D_8011818C holds at
- * 0x80118194, reached through callWorkTable818World01
+ * 0x80118194, reached through dispatchByte1Table818c
  * when the work record's byte at offset 1 reads 2, and the counterweight of the
  * adjacent step handler 3 at 0x8011759C. It reads the work record published in
  * workRecordCursor once and adds twice its word at 0x14 to its word at 0x04 and twice

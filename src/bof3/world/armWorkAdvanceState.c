@@ -15,7 +15,7 @@ extern u8* scratchWorkCursor;
  *           the work record published by the scratchpad pointer cell
  *           0x1F800044, stores 0x3C into the record 32-bit countdown word at
  *           +0xC and writes the state byte back incremented by one, so the next
- *           dispatch of callStateTable39World01
+ *           dispatch of dispatchByte1Table39c8
  *           enters the following handler. It takes no arguments, returns
  *           nothing and uses no frame.
  *

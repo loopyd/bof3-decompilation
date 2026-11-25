@@ -47,7 +47,7 @@ sources = [
     "src/bof3/plchar/claimSizeItemName4.c",
 ]
 support_sources = [
-    "src/bof3/plchar/invokeHelperPlcharPlp05600_801CF934.c",
+    "src/bof3/plchar/callSharedUpdate5.c",
     "src/bof3/support/plp056_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp056_00_psyq.c"

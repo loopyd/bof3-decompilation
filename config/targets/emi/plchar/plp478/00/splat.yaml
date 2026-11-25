@@ -98,7 +98,7 @@ segments:
     - adjustEvenSequenceCue
   - - 4580
     - c
-    - stateSelectedUnseededUpdate4
+    - stateUnoccupiedRecordClear
   - - 4688
     - c
     - callWorkTablef710

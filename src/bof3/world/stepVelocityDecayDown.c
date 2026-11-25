@@ -13,7 +13,7 @@ extern u8* workRecordCursor; /* @source 0x801181DC @kind data */
 /* @source 0x8011759C
  * @behavior Step handler 3 of this overlay's per-record handler run, the
  * thirteen in-image pointers the Splat textbin row D_8011818C places, reachable
- * through callWorkTable818World01 when the
+ * through dispatchByte1Table818c when the
  * published work object's byte at offset 1 reads 3. It moves the work record
  * published in workRecordCursor by adding the record's word at 0x14 to its word at
  * 0x04 and its word at 0x18 to its word at 0x08: the position pair

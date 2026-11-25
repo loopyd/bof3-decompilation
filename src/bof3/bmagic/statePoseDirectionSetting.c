@@ -1,13 +1,13 @@
 #include "bof3/bof3.h"
 
 /* Record pool of this overlay at 0x801F00A0: 64 records of stride 0x78 whose
- * byte 0 is the flags byte that reserveFirstFreeRecordBmagicMagic10503_801EFC8C
+ * byte 0 is the flags byte that reserveFreeRecordIndex
  * tests for bit 0 and sets on reservation. Byte 0 plus the two bytes that follow
  * it are cleared here for every record. The map row naming the pool base is this
- * target's magic10503RecordFlags, and the two following bytes are bound by the
+ * target's stateRecordFlags4, and the two following bytes are bound by the
  * address-anchored names this target's generated undefined_syms_auto.txt already
  * carries for them, so no map row is added. */
-extern u8 magic10503RecordFlags[]; /* @source 0x801F00A0 @kind data */
+extern u8 stateRecordFlags4[]; /* @source 0x801F00A0 @kind data */
 extern u8 D_801F00A1[]; /* @source 0x801F00A1 @kind data */
 extern u8 D_801F00A2[]; /* @source 0x801F00A2 @kind data */
 
@@ -142,7 +142,7 @@ void statePoseDirectionSetting(
 
     for (index = 0; index < 0x40; index++) {
         offset = index * 0x78;
-        magic10503RecordFlags[offset] = 0;
+        stateRecordFlags4[offset] = 0;
         D_801F00A1[offset] = 0;
         D_801F00A2[offset] = 0;
     }

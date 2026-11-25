@@ -50,10 +50,10 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
 /* @source 0x801F84B8
  * @behavior Front-end departure sequence of this overlay, word 4 of the
  * twelve-word scenario state-handler run at 0x801FBF48 that
- * dispatchScenarioStateHandlerScenarioScena1300_801F7D14 (0x801F7D14) indexes
+ * callStateHandler3 (0x801F7D14) indexes
  * with the shared scenario state byte D_80146872, and at the same time word 1
  * (0x801FBF58) of the nine-entry primary-state table D_801FBF54 that
- * dispatchPrimaryStateHandlerScenarioScena1300_801F8474 (0x801F8474) indexes
+ * callPrimaryStateHandler3 (0x801F8474) indexes
  * with the progress byte D_80146874, so no `jal` of the payload names it. It
  * switches on the shared sub-state byte D_80146875 (read with `lbu`, bounded by
  * `sltiu` against 6) through the overlay-local six-word jump table at
@@ -88,7 +88,7 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
  * seed with the same fields; func_8019FA28 is the shared front-selector context
  * seeder of the exact lift func_8019FA28 (0x8019FA28, ui) that also owns the
  * D_80143BB0 phase-byte role; D_8014832E is the front-end effect bank the exact
- * lift bootScenarioStateScenarioScena1300_801F7D50 (0x801F7D50, this target)
+ * lift bootSceneState (0x801F7D50, this target)
  * arms with 0x1F; and func_8015C058 is the shared front-end release helper the
  * exact sibling
  * queueFrontEndMode6Or7ThenReleaseFrontEndOnSubstate33ScenarioScena1200_801F894C

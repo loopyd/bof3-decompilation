@@ -19,14 +19,14 @@ u8 checkProjectedAgainstCodes(
     void);
 
 /* Position refresh of this payload, lifted exact at 0x801CF944 as
- * claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944
+ * claimItBeyondReference2
  * when this declaration was re-pointed: it claims work byte 0x2B, offsets the
  * work position held at +0x34/+0x38 by the deltas at 0x80181BAC/0x80181BB0 and
  * re-projects that position through func_80154F78. The original calls it
  * through a plain `jal` with nothing set up in the argument registers, so it
  * takes no arguments and this caller reads no result from $v0.
  */
-void claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944(
+void claimItBeyondReference2(
     void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. Splat
@@ -78,7 +78,7 @@ void adjustEvenNeighbourReads(
       }
     }
   }
-  claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944();
+  claimItBeyondReference2();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xB] = 0;
   D_1F800044[0xA] = 0xB;

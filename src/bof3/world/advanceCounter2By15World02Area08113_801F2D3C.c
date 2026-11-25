@@ -7,7 +7,7 @@ extern u8 D_80149333;
  * @behavior Overlay counter step: reads the shared halfword counter at
  * 0x8014932A, marks the counter active by storing 2 into the area status byte
  * at 0x80149333, then writes the counter back advanced by 0x0F. Its retreat half,
- * the adjacent retreatCounter2By15World02Area08113_801F2D14 at 0x801F2D14 in this
+ * the adjacent stateRetreatHalfword2 at 0x801F2D14 in this
  * same payload, carries the identical 40-byte body with the step immediate
  * negated (0x000F against 0xFFF1), which was the only word the two spans differed
  * in.

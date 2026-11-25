@@ -15,7 +15,7 @@ sources = [
     "src/bof3/world/stateFramesComplementShade.c",
 ]
 support_sources = [
-    "src/bof3/world/callWorkTable818World01.c",
+    "src/bof3/world/dispatchByte1Table818c.c",
     "src/bof3/world/claimRecordSeedPosition.c",
     "src/bof3/world/stateFlagsNoHandled.c",
     "src/bof3/world/queryFreeWorkSlot.c",

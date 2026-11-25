@@ -9,8 +9,8 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/stateProgress0aGate.c",
-    "src/bof3/world/setStatusFFFFAndScenarioProgress0AOr2ByGateWorld02Area07813_801F2D38.c",
-    "src/bof3/world/claimFrontEndRecordAndSetHandler44World02Area07813_801F2E1C.c",
+    "src/bof3/world/stateStatusProgress.c",
+    "src/bof3/world/stateClaimFrontRecord.c",
 ]
 support_sources = [
     "src/bof3/world/stateStatusProgress2Gate.c",

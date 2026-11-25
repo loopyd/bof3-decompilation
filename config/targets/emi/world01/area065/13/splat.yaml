@@ -63,7 +63,7 @@ segments:
     - '@source: src/bof3/world/area06513_work_state.c'
   - - 2132
     - c
-    - callStateTable5288World01
+    - dispatchByte1Table5288
     - '@source: src/bof3/world/area06513DispatchTables.c'
   - - 2200
     - c
@@ -74,7 +74,7 @@ segments:
     - invokeStateHelperPair
   - - 2304
     - c
-    - callStateTable5290World01
+    - dispatchByte2Table5290
     - '@source: src/bof3/world/area06513DispatchTables.c'
   - - 2372
     - c
@@ -129,7 +129,7 @@ segments:
     - '@behavior: Draws the AREA065 sprite frame and its main-RAM texture row unless the shared display-enable byte 0x8014832E holds none of bits 0x1B. Through the overlay sprite-record emitter 0x801F3A10 it queues entry 4 at (x, y) and entry 5 at (x + 0x80, y), then submits the texture whose handle is the 0x80010000 main-RAM base plus the offset-table halfword D_80010004, the third entry of that halfword table, at (x + 4, y + 4) with colour 0 and flag 0xFF through func_8014F800. Both arguments are narrowed with sll/sra 16 in this body. The three state handlers that reach it pass x 0x5C and the animated work halfword 0x30 as y. Returns nothing.'
   - - 5552
     - c
-    - callStateTable5320World01
+    - dispatchByte1Table5320
     - '@source: src/bof3/world/area06513DispatchTables.c'
   - - 5620
     - c
@@ -148,7 +148,7 @@ segments:
     - '@behavior: Overlay state handler 2 of the local state-1 handler table 0x801F5320. It reads the work record published at the scratchpad pointer cell 0x1F800044 and, while work byte 0x0B is non-zero, calls the shared helper 0x80196070 and returns as soon as bit 0x80 of work byte 0x00 is set; while work byte 0x0B is zero it stores 1 there when that bit is clear. It then reads the cell again and adds the work word at 0x0C to the word at 0x34 and the work word at 0x10 to the word at 0x38, and finally calls the shared helpers 0x8014D978 and 0x8014D290 in that order. Takes no arguments and returns nothing.'
   - - 6660
     - c
-    - callStateTable5344World01
+    - dispatchByte1Table5344
     - '@source: src/bof3/world/area06513DispatchTables.c'
   - - 6728
     - c

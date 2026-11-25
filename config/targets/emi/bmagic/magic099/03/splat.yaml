@@ -138,5 +138,5 @@ segments:
     - workByte2HandlerTable2
   - - 7616
     - textbin
-    - workByte2HandlerTableC
+    - workByte2PopTable
 - - 7632

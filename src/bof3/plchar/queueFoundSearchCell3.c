@@ -82,7 +82,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
 /* Map-code claim handler of this same payload, the row at 0x801CEE44: it
  * sign-extends its two signed halves, probes the map cell code through the
  * shared func_80166CB0 and claims a front-end row for the codes it accepts
- * through claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp46700_801CF050,
+ * through claimStoreDistanceRow5,
  * comparing the probe against 0xF4 first. It answers one for the accepted codes
  * and zero otherwise, and this body tests only the low byte of that answer, so
  * the declared return is that byte. Both cell offsets are signed sixteen-bit
@@ -93,7 +93,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * PLP267 and PLP567 declare their own payload claim handler with the same
  * two-argument prototype and the same low-byte answer test.
  */
-u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44(
+u8 claimCodesItemName3(
     s16 col, s16 row);
 
 /* @source 0x801CE9D4
@@ -121,7 +121,7 @@ u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStrea
  *           base 0x801468FC and the stride 0x98 and queues the literal cue
  *           0x10B, then claims a front-end row at the projected point through
  *           this payload map-code claim handler
- *           claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44,
+ *           claimCodesItemName3,
  *           passing the high
  *           half of each projected word as a signed half, retrying one unit
  *           further on the first axis when that claim fails and the first word
@@ -197,15 +197,15 @@ void queueFoundSearchCell3(
         }
         cx = x >> 16;
         cy = y >> 16;
-        claimed = claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44(
+        claimed = claimCodesItemName3(
             cx, cy);
         if ((claimed & 0xFF) == 0) {
           if ((x & 0xFFFF) != 0) {
-            claimed = claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44(
+            claimed = claimCodesItemName3(
                 cx + 1, cy);
           }
           if ((claimed & 0xFF) == 0 && (y & 0xFFFF) != 0) {
-            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44(
+            claimCodesItemName3(
                 cx, cy + 1);
           }
         }

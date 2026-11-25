@@ -79,7 +79,7 @@ segments:
     - func_801EFA70
   - - 3796
     - c
-    - callHelperMagic004
+    - callLinkedHelper
   - - 3828
     - asm
     - func_801EFAF4

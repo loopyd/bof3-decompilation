@@ -18,7 +18,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/plchar/claimStoreDistanceRow10.c",
-    "src/bof3/plchar/stateSelectedUnseededUpdate4.c",
+    "src/bof3/plchar/stateUnoccupiedRecordClear.c",
     "src/bof3/plchar/callWorkHalfword2Tablef71.c",
     "src/bof3/plchar/callWorkTablef710.c",
     "src/bof3/plchar/callWorkTablef708.c",

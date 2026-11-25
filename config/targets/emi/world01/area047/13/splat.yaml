@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable39World01
+    - dispatchByte1Table39c8
     - '@source: src/bof3/world/area04713DispatchTables.c'
   - - 72
     - c
@@ -38,12 +38,12 @@ segments:
     - c
     - tickCountdownClearTable
     - '@source: src/bof3/world/tickCountdownClearTable.c'
-    - '@behavior: reads the 32-bit work countdown word at +0xC of the record published by the scratchpad pointer cell 0x1F800044, stores it back decremented by one and tests the decremented value; while that value reads zero it reloads the word with 0x230, calls stateWorkTableByte14 to release the shared work table at 0x800E4800, then re-reads the scratchpad cell and writes the record state byte at +0x1 back incremented by one, so the dispatcher callStateTable39World01 enters the next step handler of the run. Takes no arguments, returns nothing and reserves a 0x18-byte frame that holds only the return address.'
+    - '@behavior: reads the 32-bit work countdown word at +0xC of the record published by the scratchpad pointer cell 0x1F800044, stores it back decremented by one and tests the decremented value; while that value reads zero it reloads the word with 0x230, calls stateWorkTableByte14 to release the shared work table at 0x800E4800, then re-reads the scratchpad cell and writes the record state byte at +0x1 back incremented by one, so the dispatcher dispatchByte1Table39c8 enters the next step handler of the run. Takes no arguments, returns nothing and reserves a 0x18-byte frame that holds only the return address.'
   - - 200
     - c
     - renderDiscSpawnPeriod
     - '@source: src/bof3/world/renderDiscSpawnPeriod.c'
-    - '@behavior: overlay step handler at index 2 of the four-word handler run at 0x801F39C8: draws the soft radial disc at the fixed extent 0x80, runs the per-frame step over the shared work table at 0x800E4800 and discards its report, claims a free record of that table while the shared frame word D_80143E6C reads a multiple of 8, then decrements the record countdown word at +0xC published through the scratchpad pointer cell 0x1F800044 and, once it reads zero, reloads it with 0x10 and increments the record state byte at +0x1 so the dispatcher callStateTable39World01 enters the following handler. Takes no arguments, returns nothing and reserves a 0x18-byte frame that holds only the return address.'
+    - '@behavior: overlay step handler at index 2 of the four-word handler run at 0x801F39C8: draws the soft radial disc at the fixed extent 0x80, runs the per-frame step over the shared work table at 0x800E4800 and discards its report, claims a free record of that table while the shared frame word D_80143E6C reads a multiple of 8, then decrements the record countdown word at +0xC published through the scratchpad pointer cell 0x1F800044 and, once it reads zero, reloads it with 0x10 and increments the record state byte at +0x1 so the dispatcher dispatchByte1Table39c8 enters the following handler. Takes no arguments, returns nothing and reserves a 0x18-byte frame that holds only the return address.'
   - - 324
     - asm
     - func_801F2D44

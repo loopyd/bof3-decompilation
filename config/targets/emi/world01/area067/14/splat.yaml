@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable4624World01
+    - dispatchByte1Table4624
     - '@source: src/bof3/world/area06714DispatchTables.c'
   - - 72
     - asm
@@ -62,7 +62,7 @@ segments:
     - c
     - raiseDecisionReset
     - '@source: src/bof3/world/raiseDecisionReset.c'
-    - '@behavior: word 7 of the state-byte handler table D_801F4624 (its own word at 0x801F4640 holds this address), reached through the dispatcher callStateTable4624World01; reads the shared decision halfword D_801490A4, writes 0x32 to the shared scenario progress byte g_ScenarioProgress, ORs bit 0x2 into that halfword and stores it back, then calls the shared work-area reset func_80196070'
+    - '@behavior: word 7 of the state-byte handler table D_801F4624 (its own word at 0x801F4640 holds this address), reached through the dispatcher dispatchByte1Table4624; reads the shared decision halfword D_801490A4, writes 0x32 to the shared scenario progress byte g_ScenarioProgress, ORs bit 0x2 into that halfword and stores it back, then calls the shared work-area reset func_80196070'
   - - 1480
     - c
     - renderRadialLineBurst
@@ -131,8 +131,8 @@ segments:
     - '@behavior: increments the shared 32-bit work counter at 0x801468BC by 0x800'
   - - 4864
     - c
-    - seedFrontEndHandler45
-    - '@source: src/bof3/world/seedFrontEndHandler45.c'
+    - stateSeedFrontPosition
+    - '@source: src/bof3/world/stateSeedFrontPosition.c'
     - '@behavior: seeds the front-end record claimed by func_8019601C with occupancy byte 1, handler selector 0x2D at +5 and the scratch work object position pair at +0x34/+0x38'
   - - 4992
     - asm
@@ -154,18 +154,18 @@ segments:
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through func_8015CB18 with the mode-indexed byte of the payload byte table at 0x801F4644 and the halfwords D_80145EBE/D_80145EC0, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5540
     - c
-    - publishSecondKind3World01
-    - '@source: src/bof3/world/publishSecondKind3World01.c'
+    - publishSecondKind3Mode
+    - '@source: src/bof3/world/publishSecondKind3Mode.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through func_8015CB18 with the mode-indexed byte of the payload byte table at 0x801F4644 and the halfwords D_80145FFE/D_80146000, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5668
     - c
-    - publishThirdKind3World01
-    - '@source: src/bof3/world/publishThirdKind3World01.c'
+    - publishThirdKind3Party
+    - '@source: src/bof3/world/publishThirdKind3Party.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through func_8015CB18 with the party-indexed byte of the payload byte table at 0x801F4644 and the halfwords D_8014613E/D_80146140, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5796
     - c
-    - publishFirstKind1World01
-    - '@source: src/bof3/world/publishFirstKind1World01.c'
+    - publishFirstKind1Mode
+    - '@source: src/bof3/world/publishFirstKind1Mode.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and seeds one kind-1 front-end record through func_8015CB18 with the mode-indexed byte of the payload mode table at 0x801F464C and the halfwords D_80145EBE/D_80145EC0, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5924
     - asm
@@ -180,13 +180,13 @@ segments:
     - '@behavior: decrements the shared 32-bit work counter at 0x801468BC by 0x800 in place'
   - - 6208
     - c
-    - advanceCounter2By800
-    - '@source: src/bof3/world/advanceCounter2By800.c'
+    - stateAdvanceWorkCounter
+    - '@source: src/bof3/world/stateAdvanceWorkCounter.c'
     - '@behavior: increments the shared 32-bit work counter at 0x80146954 by 0x800'
   - - 6236
     - c
-    - retreatCounter2By800
-    - '@source: src/bof3/world/retreatCounter2By800.c'
+    - stateRetreatWorkCounter
+    - '@source: src/bof3/world/stateRetreatWorkCounter.c'
     - '@behavior: decrements the shared 32-bit work counter at 0x80146954 by 0x800'
   - - 6264
     - c

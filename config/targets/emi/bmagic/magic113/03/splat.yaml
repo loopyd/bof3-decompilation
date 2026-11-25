@@ -59,8 +59,8 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and, only when the work object byte at offset 0xB equals 6, stores 0x84 into that byte and then re-reads the cell and increments the work object byte at offset 0x1 by one.'
   - - 1952
     - c
-    - incrementWorkByte1WhenWorkByteBIs80BmagicMagic11303_801EF3A0
-    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBIs80BmagicMagic11303_801EF3A0.c'
+    - incrementState80Byte
+    - '@source: src/bof3/bmagic/incrementState80Byte.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and, only when the work object byte at offset 0xB equals 0x80, increments the byte at offset 0x1 by one.'
   - - 2004
     - asm
@@ -83,8 +83,8 @@ segments:
     - func_801EF844
   - - 3236
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801EF8A4
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801EF8A4.c'
+    - incrementGlobalAt84
+    - '@source: src/bof3/bmagic/incrementGlobalAt84.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record byte at offset 0xB equals 0x84, reads the scratchpad work-object pointer cell at 0x1F800044 once and increments its byte at offset 0x2 by one.'
   - - 3300
     - c
@@ -104,13 +104,13 @@ segments:
     - func_801EFCA0
   - - 4352
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801EFD00
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801EFD00.c'
+    - incrementGlobalAt84B
+    - '@source: src/bof3/bmagic/incrementGlobalAt84B.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record byte at offset 0xB equals 0x84, reads the scratchpad work-object pointer cell at 0x1F800044 once and increments its byte at offset 0x2 by one.'
   - - 4416
     - c
-    - incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EFD40
-    - '@source: src/bof3/bmagic/incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EFD40.c'
+    - incrementGlobalOnTwelve
+    - '@source: src/bof3/bmagic/incrementGlobalOnTwelve.c'
     - '@behavior: Increments scratchpad work byte 0xA modulo 256 and, when the stored byte equals 12, decrements shared battle work byte 0xB and calls the helper at 0x801E5988.'
   - - 4512
     - c
@@ -124,8 +124,8 @@ segments:
     - '@behavior: Dispatches unsigned work byte 2 through table 0x801F0BCC, reloads the work pointer and, when byte 0 is nonzero, calls 0x801EF440, 0x801F02CC and PopMatrix.'
   - - 5560
     - c
-    - incrementWorkByte9ThenSetGlobalWorkByteBTo5AndAdvanceWorkByte2At31BmagicMagic11303_801F01B8
-    - '@source: src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBTo5AndAdvanceWorkByte2At31BmagicMagic11303_801F01B8.c'
+    - incrementSetGlobal
+    - '@source: src/bof3/bmagic/incrementSetGlobal.c'
     - '@behavior: Increments work byte 9 modulo 256 and, at 0x31, stores 5 into shared battle work byte 0xB, reloads the scratchpad work pointer and increments byte 2.'
   - - 5656
     - c
@@ -145,8 +145,8 @@ segments:
     - '@behavior: Sets draw mode, dispatches the handler indexed by work byte 2, and restores draw mode.'
   - - 7272
     - c
-    - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11303_801F0868
-    - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11303_801F0868.c'
+    - decrementCountAdvanceZero
+    - '@source: src/bof3/bmagic/decrementCountAdvanceZero.c'
     - '@behavior: Decrements work byte 9 and, when the stored byte becomes zero, reloads the scratchpad work pointer and increments byte 2.'
   - - 7348
     - c

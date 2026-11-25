@@ -7,10 +7,10 @@
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* The 96-record work pool at 0x801EF9F8. This target's map row
- * magic10603RecordFlags = 0x801EF9F8 owns the address, and
- * reserveFirstFreeRecordBmagicMagic10603_801EF914 declares the same pool with
+ * stateRecordFlags5 = 0x801EF9F8 owns the address, and
+ * resourceReserveFreeRecord8 declares the same pool with
  * the same stride. The flags byte sits at offset 0x00 of each 0x20-byte record. */
-extern u8 magic10603RecordFlags[]; /* @source 0x801EF9F8 @kind data */
+extern u8 stateRecordFlags5[]; /* @source 0x801EF9F8 @kind data */
 
 /* Work-record pointer cell, the word just past the pool. The loop publishes
  * each active record here before calling the byte-1 dispatcher, which reads the
@@ -32,12 +32,12 @@ extern u32 D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * shared battle byte at 0x80146384, raises bit 0x04 of the halfword at
  * 0x801462E8 and invokes 0x801E5988. */
 void func_801EECE4(void);
-void forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80(void);
+void forwardBattleRaise(void);
 
 /* Re-runs the selected work record's own step handler, taken from the overlay
  * handler run at 0x801EF9C0 by the record's byte 0x01; it reads the cell this
  * loop publishes. */
-extern void dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0(void); /* @source 0x801EEEE0 @kind function */
+extern void dispatchInlineByte1(void); /* @source 0x801EEEE0 @kind function */
 
 /* @source 0x801EEC04
  * @behavior Entry of this overlay. It copies the two-word handler table
@@ -49,7 +49,7 @@ extern void dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0(void); /* @source 
  *           saves the shared word at 0x801EB4E0, loads the record word at
  *           offset 0x1C, publishes the record address to the work-record
  *           pointer cell at 0x801F05F8, installs that word into 0x801EB4E0,
- *           calls dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0 and
+ *           calls dispatchInlineByte1 and
  *           restores 0x801EB4E0. The index is a byte, masked to eight bits for the
  *           bound test and for the stride, and the walk reads no other state.
  *           Both handlers are this payload's own addresses. No jal and no
@@ -61,7 +61,7 @@ extern void dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0(void); /* @source 
  * @residual none
  */
 void callLocalHandlersActive(void) {
-  void (*handlers[2])(void) = {func_801EECE4, forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80};
+  void (*handlers[2])(void) = {func_801EECE4, forwardBattleRaise};
   u8 index;
   u32 offset;
   u32 saved;
@@ -71,12 +71,12 @@ void callLocalHandlersActive(void) {
 
   for (index = 0; index < 0x60; index++) {
     offset = index * 0x20;
-    if ((magic10603RecordFlags[offset] & 1) != 0) {
+    if ((stateRecordFlags5[offset] & 1) != 0) {
       saved = D_801EB4E0;
-      word = *(u32 *)&magic10603RecordFlags[offset + 0x1C];
-      D_801F05F8 = &magic10603RecordFlags[offset];
+      word = *(u32 *)&stateRecordFlags5[offset + 0x1C];
+      D_801F05F8 = &stateRecordFlags5[offset];
       D_801EB4E0 = word;
-      dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0();
+      dispatchInlineByte1();
       D_801EB4E0 = saved;
     }
   }

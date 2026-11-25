@@ -39,7 +39,7 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
  *           across the call; it takes no arguments, returns nothing and reads
  *           or writes no other state. Statement order, operand forms and
  *           declaration style follow the exact siblings
- *           incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0
+ *           incrementAdvanceAt60
  *           (same cell, same byte 0xA read-modify-write, different compared
  *           constant and different arm) and
  *           advanceWorkByte1Every16FramesAndPublishSignedRampToHalfword8014932A

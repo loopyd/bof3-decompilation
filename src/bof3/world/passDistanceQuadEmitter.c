@@ -22,7 +22,7 @@ extern void func_801F30A8(s32* position);
  * stack store, and the third store fills the call delay slot.
  *
  * Name evidence: this span is entry 1 of the overlay step table at 0x801F3824,
- * the same table the sibling dispatcher callStateTable3824World01
+ * the same table the sibling dispatcher dispatchByte1Table3824
  * indexes with the record byte at +1. Entry 0 of that table,
  * stateCursorDistance,
  * hands the record words +0x34 and +0x38 to the shared distance

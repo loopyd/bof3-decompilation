@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 4
     - c
-    - stateChannel932World00
-    - '@source: src/bof3/world/stateChannel932World00.c'
+    - stateAdvanceChannel
+    - '@source: src/bof3/world/stateAdvanceChannel.c'
     - '@behavior: Reads the shared 16-bit channel at 0x8014932C, publishes mode 2 at the shared status byte 0x80149333 and writes the channel back advanced by 0xA00; the adjacent 0x801F2C2C twin subtracts it.'
   - - 44
     - c
-    - retreatChannel932World00
-    - '@source: src/bof3/world/retreatChannel932World00.c'
+    - stateRetreatChannel
+    - '@source: src/bof3/world/stateRetreatChannel.c'
     - '@behavior: Reads the shared 16-bit channel at 0x8014932C, publishes mode 2 at the shared status byte 0x80149333 and writes the channel back retreated by 0xA00; the adjacent 0x801F2C04 twin adds it.'
   - - 84
     - c

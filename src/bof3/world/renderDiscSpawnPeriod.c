@@ -51,7 +51,7 @@ void claimFreeSubPhase(
  *           one and tests that decremented value; while it reads zero the
  *           handler reloads the same word with 0x10 and writes the record state
  *           byte at +0x1 back incremented by one, so the dispatcher
- *           callStateTable39World01 enters the
+ *           dispatchByte1Table39c8 enters the
  *           following handler of the run on its next dispatch. It takes no
  *           arguments, returns nothing and reserves a 0x18-byte frame that
  *           holds only the return address.

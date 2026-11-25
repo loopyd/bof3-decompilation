@@ -28,7 +28,7 @@ segments:
     - T_801F2C00
   - - 4
     - c
-    - callStateTable3World00
+    - dispatchByte1Handlers
     - '@source: src/bof3/world/area03213DispatchTables.c'
   - - 72
     - c

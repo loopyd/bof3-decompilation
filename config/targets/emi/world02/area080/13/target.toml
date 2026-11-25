@@ -15,12 +15,12 @@ sources = [
     "src/bof3/world/claimFrontEndSet.c",
     "src/bof3/world/renderFacingAroundPoint.c",
     "src/bof3/world/claimRotationHeadingTrail.c",
-    "src/bof3/world/advanceCounter2By20World02Area08013_801F3D0C.c",
+    "src/bof3/world/stateAdvanceHalfword.c",
     "src/bof3/world/publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48.c",
 ]
 support_sources = [
-    "src/bof3/world/setTwoWorld02Area08013_801F3D34.c",
-    "src/bof3/world/retreatCounter2By20World02Area08013_801F3CE4.c",
+    "src/bof3/world/stateClearHalfword.c",
+    "src/bof3/world/stateRetreatHalfword.c",
     "src/bof3/world/area08013DispatchTables.c",
     "src/bof3/world/stateClearCursorByte.c",
     "src/bof3/world/queryFreeRecordAt800.c",

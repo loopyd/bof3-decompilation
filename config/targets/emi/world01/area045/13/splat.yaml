@@ -57,7 +57,7 @@ segments:
     - '@source: src/bof3/world/area04513_work_state.c'
   - - 2076
     - c
-    - callStateTable534World01
+    - dispatchByte1Table534c
     - '@source: src/bof3/world/area04513DispatchTables.c'
   - - 2144
     - c
@@ -68,7 +68,7 @@ segments:
     - callTwoOverlaySteps
   - - 2248
     - c
-    - callStateTable5354World01
+    - dispatchByte2Table5354
     - '@source: src/bof3/world/area04513DispatchTables.c'
   - - 2316
     - c
@@ -118,7 +118,7 @@ segments:
     - func_801F40C4
   - - 5496
     - c
-    - callStateTable53World01
+    - dispatchByte1Table53e4
     - '@source: src/bof3/world/area04513DispatchTables.c'
   - - 5564
     - asm
@@ -131,7 +131,7 @@ segments:
     - func_801F4528
   - - 6604
     - c
-    - callStateTable5408World01
+    - dispatchByte1Table5408
     - '@source: src/bof3/world/area04513DispatchTables.c'
   - - 6672
     - asm

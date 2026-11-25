@@ -35,7 +35,7 @@ extern void func_80196070(void); /* @source 0x80196070 @kind function */
 /* @source 0x801F7C24
  * @behavior Work-record release handler of this overlay, entry 11 (the word at
  *           0x801FBF1C) of the twelve-word in-image pointer run D_801FBEF0 that
- *           dispatchWorkByte1HandlerScenarioScena1300_801F6EA4 indexes with the
+ *           dispatchWorkByte1Handler2 indexes with the
  *           scratchpad work object's byte 1; that one data word is this body's
  *           only reference in the payload, which encodes no `jal` to it. It
  *           takes no arguments and returns nothing.

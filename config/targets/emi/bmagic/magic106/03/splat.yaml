@@ -29,24 +29,24 @@ segments:
     - c
     - callLocalHandlersActive
     - '@source: src/bof3/bmagic/callLocalHandlersActive.c'
-    - '@behavior: Copies the two-word handler table {0x801EECE4, 0x801EEE80} into its frame, calls the entry that unsigned byte 0x01 of the scratchpad work object at 0x1F800044 selects, then walks the 96 records at 0x801EF9F8 in 0x20-byte strides and for every record whose flags byte has bit 0 set saves the shared word at 0x801EB4E0, loads the record word at offset 0x1C, publishes the record address to 0x801F05F8, installs that word into 0x801EB4E0, calls dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0 and restores 0x801EB4E0. Takes no arguments and returns nothing; the 0x28-byte frame keeps $ra and $s0 through $s2 across the calls.'
+    - '@behavior: Copies the two-word handler table {0x801EECE4, 0x801EEE80} into its frame, calls the entry that unsigned byte 0x01 of the scratchpad work object at 0x1F800044 selects, then walks the 96 records at 0x801EF9F8 in 0x20-byte strides and for every record whose flags byte has bit 0 set saves the shared word at 0x801EB4E0, loads the record word at offset 0x1C, publishes the record address to 0x801F05F8, installs that word into 0x801EB4E0, calls dispatchInlineByte1 and restores 0x801EB4E0. Takes no arguments and returns nothing; the 0x28-byte frame keeps $ra and $s0 through $s2 across the calls.'
   - - 228
     - asm
     - func_801EECE4
   - - 640
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80.c'
+    - forwardBattleRaise
+    - '@source: src/bof3/bmagic/forwardBattleRaise.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns when the work object''s byte at offset 0xB is non-zero; otherwise it passes the shared battle byte at 0x80146384 to func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes func_801E5988, keeping $ra in a 0x18-byte frame.'
   - - 736
     - c
-    - dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0.c'
+    - dispatchInlineByte1
+    - '@source: src/bof3/bmagic/dispatchInlineByte1.c'
     - '@behavior: Reads the work-record pointer cell at 0x801F05F8 once, scales the record byte at offset 0x1 by four and calls that entry of the overlay handler table based at 0x801EF9C0. It takes no arguments, returns nothing, stores nothing and reads no other state; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 804
     - c
-    - dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24.c'
+    - dispatchDrawPop
+    - '@source: src/bof3/bmagic/dispatchDrawPop.c'
   - - 940
     - c
     - checkDownRadiusAngle
@@ -65,8 +65,8 @@ segments:
     - '@behavior: Advances the work record angle halfword at offset 0x0E by 0x40 within 0x1000, projects the two position words at offsets 0x10 and 0x14 from the shared battle word offsets 0x34 and 0x38 plus the two rotator helper results scaled by the record signed halfword 0x0C, adds record byte 0x0A onto halfword 0x1A, increments byte 0x0B, and when bit 0 of the shared battle word at 0x80143E6C is set counts down byte 0x09 and on zero decrements byte 0x0B of the shared battle word and calls stateBytesThroughFour to clear the record.'
   - - 2348
     - c
-    - projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C.c'
+    - projectRecordTransform
+    - '@source: src/bof3/bmagic/projectRecordTransform.c'
     - '@behavior: Pushes the GTE matrix stack, reads the work record through the pointer cell at 0x801F05F8 once, builds a zeroed translation triplet whose third element is record byte 0x03 shifted left seven minus the sum of record halfword 0x0E and 0x800 within 0x1000, and a rotation triplet whose first two elements are record words 0x10 and 0x14 shifted right nine and biased by minus 0x4000 and whose third element is half the negated record signed halfword 0x1A. It projects the rotation through RotTrans into a scratch matrix translation field, builds that matrix with RotMatrix, composes the shared matrix at 0x801492E8 under it with MulMatrix2, and publishes it through SetRotMatrix and SetTransMatrix.'
   - - 2548
     - c
@@ -75,7 +75,7 @@ segments:
     - '@behavior: Picks the draw-mode tpage argument from GetGraphType (0xA5 for type 1 or 2, 0x35 otherwise), seeds SetDrawMode at g_PrimCursor with dfe 0 and dtd 1, links the 0xC-byte cell at work-record words 0x10 and 0x14 with kind 2, publishes the three products of record bytes 0x05, 0x06 and 0x07 with byte 0x09 into scratchpad halfwords 0x1F80000A, 0x1F80000C and 0x1F80000E, and fills the scratchpad scalar block at 0x1F800000 from four halfword phase tables plus record byte 0x0B added to a byte table and masked to four bits while the first triangle vertex at 0x1F800014 is cleared. It then runs four iterations, each seeding a fresh g_PrimCursor primitive through func_8017A97C, marking it semi-transparent, filling the two later vertices from the func_801782FC and func_801783C8 samples of the angle cells scaled by the radius cells and shifted right 12 with a shared z from the phase cell shifted right 7, projecting the vertices through RotTransPers3 into the primitive vertex pairs at 0x08, 0x10 and 0x18, writing the colour bytes and linking the 0x1C-byte cell at the same record words, keeping $ra and $s0 through $s3 in a 0x40-byte frame.'
   - - 3348
     - c
-    - reserveFirstFreeRecordBmagicMagic10603_801EF914
+    - resourceReserveFreeRecord8
   - - 3440
     - c
     - stateBytesThroughFour

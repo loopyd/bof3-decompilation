@@ -19,7 +19,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           indexes with work record byte 1 and calls indirectly, and the sixth
  *           and last word of the six-word work-byte-2 run at 0x801F048C, where
  *           it is entry 5; the two-word dispatch base 0x801F049C that
- *           dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8
+ *           dispatchProjectPop
  *           indexes holds this address as its index 1. The word at 0x801F04A0
  *           is the only word in the payload that holds this address and the
  *           payload contains no jal to it, so the entry is reached only through

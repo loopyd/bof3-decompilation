@@ -79,7 +79,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * before this one in the payload, so the symbol is defined inside this payload
  * and needs no foreign binding.
  */
-u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp56700_801CF224(
+u8 claimCodesItemName4(
     s16 col, s16 row);
 
 /* @source 0x801CEDB4
@@ -166,16 +166,16 @@ void queueFoundSearchCell(
         cx = x >> 16;
         cy = y >> 16;
         claimed =
-            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp56700_801CF224(
+            claimCodesItemName4(
                 cx, cy);
         if ((claimed & 0xFF) == 0) {
           if ((x & 0xFFFF) != 0) {
             claimed =
-                claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp56700_801CF224(
+                claimCodesItemName4(
                     cx + 1, cy);
           }
           if ((claimed & 0xFF) == 0 && (y & 0xFFFF) != 0) {
-            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp56700_801CF224(
+            claimCodesItemName4(
                 cx, cy + 1);
           }
         }

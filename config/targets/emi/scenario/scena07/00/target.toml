@@ -14,7 +14,7 @@ sources = [
     "src/bof3/scenario/tickEffectObjectRamp.c",
     "src/bof3/scenario/stateTrailBufferReload.c",
     "src/bof3/scenario/stateTrailRebuildTick.c",
-    "src/bof3/scenario/stateTrailBufferSubtract2.c",
+    "src/bof3/scenario/stateTrailRebuildTick2.c",
     "src/bof3/scenario/stateTrailBufferReload2.c",
     "src/bof3/scenario/stateTrailBufferTarget.c",
     "src/bof3/scenario/claimFreeEveryEighth.c",

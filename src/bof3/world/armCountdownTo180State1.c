@@ -3,7 +3,7 @@
 /* @source 0x801F2C48
  * @behavior Overlay step handler at index 0 of the local handler table based at
  *           0x801F3FF4, which the dispatcher
- *           callStateTable3World01 indexes with
+ *           dispatchByte1Table3ff4 indexes with
  *           the state byte at +0x01 of the work record published through the
  *           scratchpad pointer cell 0x1F800044: stores 0xB4 (180) into that
  *           record's byte at +0x09, then stores 1 into the state byte at +0x01,

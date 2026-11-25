@@ -13,7 +13,7 @@ sources = [
     "src/bof3/world/stateStatusGateGate.c",
 ]
 support_sources = [
-    "src/bof3/world/retreatCounter2By15World02Area08113_801F2D14.c",
+    "src/bof3/world/stateRetreatHalfword2.c",
     "src/bof3/world/setTwoWorld02Area08113_801F2D64.c",
     "src/bof3/support/area081_13_psyq.c",
 ]

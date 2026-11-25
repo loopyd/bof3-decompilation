@@ -1,10 +1,10 @@
 func_8015C088 = 0x8015C088;
-callStateTable3World01 = 0x801F2C04;
+dispatchByte1Table3ff4 = 0x801F2C04;
 armCountdownTo180State1 = 0x801F2C48;
 func_801F2C6C = 0x801F2C6C;
 func_801F2CF8 = 0x801F2CF8;
 stateStoryProgressArm = 0x801F2D88;
-callStateTable4004World01 = 0x801F2DA4;
+dispatchByte1Table4004 = 0x801F2DA4;
 func_801F2DE8 = 0x801F2DE8;
 func_801F2E68 = 0x801F2E68;
 noopOverlayHandler7 = 0x801F2F1C;

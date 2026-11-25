@@ -37,7 +37,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/scenario/stateChainStart.c",
-    "src/bof3/scenario/stateResetWorkArea.c",
+    "src/bof3/scenario/stateResetWorkFlags.c",
     "src/bof3/scenario/noopRecordCallback8.c",
     "src/bof3/scenario/noopRecordCallback7.c",
     "src/bof3/scenario/noopRecordCallback6.c",

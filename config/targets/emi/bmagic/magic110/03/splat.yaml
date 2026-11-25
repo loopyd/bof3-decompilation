@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 28
     - c
-    - dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C.c'
+    - dispatchWorkByte1Copy
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Copy.c'
     - '@behavior: Dispatches one frame of the overlay work handler: reads the scratchpad work pointer cell 0x1F800044, copies the six code pointers at 0x801EEC04 into its own 0x30-byte frame, indexes that copy with work byte 1 and invokes the selected entry with no arguments, returning whatever it leaves in the return register.'
   - - 148
     - asm
@@ -43,7 +43,7 @@ segments:
     - c
     - callDrawHelperIncrement
     - '@source: src/bof3/bmagic/callDrawHelperIncrement.c'
-    - '@behavior: Entry 2 of the six-word work-byte-1 handler run at 0x801EEC04, selected by dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C with work byte 1. Calls the draw helper at 0x801EF148, then on the per-frame phases where bit 0 of 0x80143E6C is set adds two to work byte 0xA while it is below 0x10, increments work byte 9 and increments work byte 1 when that count reaches 0x10, re-reading the scratchpad pointer cell at 0x1F800044 before each group.'
+    - '@behavior: Entry 2 of the six-word work-byte-1 handler run at 0x801EEC04, selected by dispatchWorkByte1Copy with work byte 1. Calls the draw helper at 0x801EF148, then on the per-frame phases where bit 0 of 0x80143E6C is set adds two to work byte 0xA while it is below 0x10, increments work byte 9 and increments work byte 1 when that count reaches 0x10, re-reading the scratchpad pointer cell at 0x1F800044 before each group.'
   - - 896
     - asm
     - func_801EEF80
@@ -52,9 +52,9 @@ segments:
     - func_801EF068
   - - 1300
     - c
-    - raiseFlag4AndInvokeHelperBmagicMagic11003_801EF114
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic11003_801EF114.c'
-    - '@behavior: The sixth and last word of the six-entry code pointer run at 0x801EEC04, which dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C copies into its own 0x30-byte frame and selects with scratchpad work byte 1; unconditionally raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments, with the halfword store filling the call delay slot.'
+    - raiseFlagInvoke
+    - '@source: src/bof3/bmagic/raiseFlagInvoke.c'
+    - '@behavior: The sixth and last word of the six-entry code pointer run at 0x801EEC04, which dispatchWorkByte1Copy copies into its own 0x30-byte frame and selects with scratchpad work byte 1; unconditionally raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments, with the halfword store filling the call delay slot.'
   - - 1352
     - asm
     - func_801EF148
@@ -111,13 +111,13 @@ segments:
     - '@behavior: Entry 9 of the fourteen-word work-byte-1 handler table at 0x801F046C and entry 1 of the six-word work-byte-2 run at 0x801F048C; reads the scratchpad work pointer cell 0x1F800044 once, adds 0x40 to work word 0x14 and stores the sum back with the store in the branch delay slot, and only when that sum equals 0xC00 increments work byte 2.'
   - - 3320
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11003_801EF8F8
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11003_801EF8F8.c'
+    - incrementGlobalBelowThree
+    - '@source: src/bof3/bmagic/incrementGlobalBelowThree.c'
     - '@behavior: Entry 2 of the six-word work-byte-2 handler run at 0x801F048C, which 0x801EF7B4 selects with scratchpad work byte 2; reads the shared battle work pointer 0x801EB4E0 once, and only while work record byte 0xB stays below three under an unsigned bound it reads the scratchpad work pointer cell 0x1F800044 once and increments work byte 2 by one.'
   - - 3388
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11003_801EF93C
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11003_801EF93C.c'
+    - decrementGlobalInvoke
+    - '@source: src/bof3/bmagic/decrementGlobalInvoke.c'
     - '@behavior: Entry 11 of the fourteen-word byte-1 handler table at 0x801F046C, index 3 of the six-word work-byte-2 run at 0x801F048C; reads the scratchpad work pointer cell 0x1F800044 once, decrements unsigned work byte 9 in place and tests the truncated stored byte, and only when it reaches zero reads the shared battle work pointer 0x801EB4E0, decrements record byte 0xB and invokes the shared helper 0x801E5988 with the store filling the call delay slot.'
   - - 3480
     - asm
@@ -134,13 +134,13 @@ segments:
     - '@behavior: Draws sixty-four translucent Gouraud quads between work word 0x14 radius and that radius plus 0x80, tinting the outer edge by work byte 9 times four and linking at ordering-table slot 2.'
   - - 5048
     - c
-    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8.c'
+    - dispatchProjectPop
+    - '@source: src/bof3/bmagic/dispatchProjectPop.c'
     - '@behavior: Dispatches work byte 2 through the table at 0x801F049C, re-reads the scratchpad work pointer, and only when work bytes 0 and 2 are nonzero invokes the transform installer at 0x801F0138, the draw pass at 0x801F01E8 and PopMatrix.'
   - - 5184
     - c
-    - offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040
-    - '@source: src/bof3/bmagic/offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040.c'
+    - offsetChannelPair
+    - '@source: src/bof3/bmagic/offsetChannelPair.c'
     - '@behavior: Entry 4 of the six-word work-byte-2 handler run at 0x801F048C, seeded from the shared channel pair 0x80149308/0x8014930C plus the offset pair in row 0xB of the table at 0x801F04A4, copies the shared battle record word 0x3C, sets work byte 9 to 0x60 and byte 0xA to 0x40, then advances work byte 2.'
   - - 5336
     - c

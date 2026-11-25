@@ -23,7 +23,7 @@ support_sources = [
     "src/bof3/world/stateGateThree.c",
     "src/bof3/world/stateGateStepStatus.c",
     "src/bof3/world/stateGateStepRecord.c",
-    "src/bof3/world/stateHalfwordTwoWorld01.c",
+    "src/bof3/world/statePresetChannel.c",
     "src/bof3/world/callResetSelectorEight.c",
     "src/bof3/world/queueSharedUiColumn.c",
     "src/bof3/world/stateEntryZero2.c",

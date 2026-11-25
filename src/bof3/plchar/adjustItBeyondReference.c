@@ -32,7 +32,7 @@ extern s32 D_80181BC0;
 /* Route-parameterised position routine of the shared EXE image, outside this
  * payload: it takes the two coordinate words and a zero-extended route byte and
  * answers the sample the body compares against 0x41. The lift
- * claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944
+ * claimItBeyondReference2
  * of this target declares the same prototype. */
 s32 func_80154F78(s32 arg0, s32 arg1, u8 arg2);
 
@@ -84,7 +84,7 @@ u32 func_8014D8D4(u8 arg0);
  *
  * Shape evidence: the statement order, operand forms, offset spelling and
  * declaration style of the two probe blocks come from the exact sibling
- * claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944
+ * claimItBeyondReference2
  * of this target, whose body differs from this one in the step-byte rewind
  * before it and the sequence selection and state advance after it; the rewind
  * block and the `(byte 0x08 >> 1) + 0x42` selector form follow the exact

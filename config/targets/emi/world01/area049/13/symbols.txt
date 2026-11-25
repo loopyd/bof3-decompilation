@@ -1,5 +1,5 @@
 D_1F800044 = 0x1F800044;
-callWorkTable818World01 = 0x80117004;
+dispatchByte1Table818c = 0x80117004;
 bootCoordinateTripleRecords = 0x80117048;
 stateFlagsNoHandled = 0x801170A4;
 func_801170D8 = 0x801170D8;

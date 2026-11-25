@@ -23,7 +23,7 @@ void func_80196070(void);
  * @behavior Work-record state handler of this overlay: word 7 of the state-byte
  *           handler table D_801F4624, whose own word at 0x801F4640 holds this
  *           address and which the overlay dispatcher
- *           callStateTable4624World01 indexes with
+ *           dispatchByte1Table4624 indexes with
  *           byte +1 of the record published at the scratchpad pointer cell
  *           0x1F800044. It reads the shared halfword D_801490A4 with `lhu`,
  *           writes 0x32 into the shared scenario progress byte

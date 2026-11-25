@@ -33,7 +33,7 @@ u8 func_8015CC00(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4, s32 arg5);
  * @residual none
  *
  * Shape notes from the original bytes: this 0x8C-byte body is the five-argument
- * exact sibling publishSecondKind3World01
+ * exact sibling publishSecondKind3Mode
  * at 0x801F41A4 plus one extra forwarded word, so its statement order, operand
  * forms, offset spelling and declaration style come from that sibling and only
  * this function's own bindings are written here. The sibling seeds through

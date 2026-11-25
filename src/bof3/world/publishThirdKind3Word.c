@@ -42,7 +42,7 @@ u8 func_8015CC00(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4, s32 arg5);
  * publishSecondKind3Word
  * at 0x801F400C in this same payload apart from which work base it publishes
  * and which cells it forwards, and its literal set is the one the five-argument
- * exact sibling publishThirdKind3World01
+ * exact sibling publishThirdKind3Party
  * at 0x801F4224 already binds: the third 0x140-byte-stride work base
  * D_80146110, the third shared party-id byte D_80144F5C and that base's own
  * +0x2E/+0x30 halfword pair D_8014613E/D_80146140. The extended seeder

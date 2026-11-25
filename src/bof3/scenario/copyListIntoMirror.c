@@ -47,7 +47,7 @@ extern u8 D_80146254;
  *           fills its own jal delay slot, and the final call keeps a plain nop
  *           slot. The address is entry 5 - the word at 0x801FBFCC, payload
  *           offset 0x53CC - of the thirteen-entry callback-pointer table at
- *           0x801FBFB8 that dispatchRecordCallbackScenarioScena1300_801FB350
+ *           0x801FBFB8 that callRecordCallback4
  *           selects with the record's unsigned byte at offset 0x7A and calls
  *           with the record pointer and D_8014686C, so this handler runs for a
  *           record whose 0x7A byte reads 5 and no in-image jal reaches the

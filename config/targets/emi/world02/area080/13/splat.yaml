@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable3World02
+    - dispatchByte1Table3dac
     - '@source: src/bof3/world/area08013DispatchTables.c'
   - - 72
     - c
     - publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48
     - '@source: src/bof3/world/publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48.c'
-    - '@behavior: area initializer, entry 0 of the six-word handler run based at 0x801F3DAC that this target dispatcher callStateTable3World02 indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; copies the shared saved triplet D_80146954, D_80146958 and D_8014695C into the words at +0x34, +0x38 and +0x3C of that scratch work record, primes the fixed work area at 0x800E4800 from those same three words with the height words at +0x08 and +0x18 biased by 0x08000000, publishes 0x800E4800 as the record base D_801F44A0, writes 0x20 at +0x22 and zero at +0x23, rewinds the 0x800E486C record cursor through 0x801F3834, then arms the countdown byte at +0x09 of the scratch work record with 0x10 and advances its state byte at +0x01; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the call'
+    - '@behavior: area initializer, entry 0 of the six-word handler run based at 0x801F3DAC that this target dispatcher dispatchByte1Table3dac indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; copies the shared saved triplet D_80146954, D_80146958 and D_8014695C into the words at +0x34, +0x38 and +0x3C of that scratch work record, primes the fixed work area at 0x800E4800 from those same three words with the height words at +0x08 and +0x18 biased by 0x08000000, publishes 0x800E4800 as the record base D_801F44A0, writes 0x20 at +0x22 and zero at +0x23, rewinds the 0x800E486C record cursor through 0x801F3834, then arms the countdown byte at +0x09 of the scratch work record with 0x10 and advances its state byte at +0x01; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the call'
   - - 308
     - asm
     - func_801F2D34
@@ -47,7 +47,7 @@ segments:
     - c
     - seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50
     - '@source: src/bof3/world/seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50.c'
-    - '@behavior: overlay step handler, entry 4 of the six-word handler run based at 0x801F3DAC that this target dispatcher callStateTable3World02 indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; loads the record base published in D_801F44A0, copies the three shared saved words D_80146954, D_80146958 and D_8014695C into the words at +0x10, +0x14 and +0x18 of that record, calls the overlay record helpers at 0x801F30B0, 0x801F31A0 and 0x801F33DC with the reloaded record base and then the eight-record table step loop at 0x801F3870 with no arguments, decrements the countdown byte at +0x09 of the scratch work record, and re-arms that byte with 0x10 and increments the state byte at +0x01 when the countdown reads zero; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the calls'
+    - '@behavior: overlay step handler, entry 4 of the six-word handler run based at 0x801F3DAC that this target dispatcher dispatchByte1Table3dac indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; loads the record base published in D_801F44A0, copies the three shared saved words D_80146954, D_80146958 and D_8014695C into the words at +0x10, +0x14 and +0x18 of that record, calls the overlay record helpers at 0x801F30B0, 0x801F31A0 and 0x801F33DC with the reloaded record base and then the eight-record table step loop at 0x801F3870 with no arguments, decrements the countdown byte at +0x09 of the scratch work record, and re-arms that byte with 0x10 and increments the state byte at +0x01 when the countdown reads zero; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the calls'
   - - 1048
     - asm
     - func_801F3018
@@ -99,15 +99,15 @@ segments:
     - '@behavior: publishes the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F449C into the shared status halfword D_801490A8, then stores 1 into the shared scenario progress byte g_ScenarioProgress while that mode reads 0 and 0xA while it reads 1, leaving it untouched for any other mode; no arguments, no call, no frame'
   - - 4324
     - c
-    - retreatCounter2By20World02Area08013_801F3CE4
+    - stateRetreatHalfword
   - - 4364
     - c
-    - advanceCounter2By20World02Area08013_801F3D0C
-    - '@source: src/bof3/world/advanceCounter2By20World02Area08013_801F3D0C.c'
+    - stateAdvanceHalfword
+    - '@source: src/bof3/world/stateAdvanceHalfword.c'
     - '@behavior: overlay counter step, entry 4 of the eight-word pointer run at 0x801F4434; reads the shared halfword counter D_8014932A, stores 2 into the shared status byte D_80149333 and writes the counter back advanced by 0x14; no arguments, no call, no frame'
   - - 4404
     - c
-    - setTwoWorld02Area08013_801F3D34
+    - stateClearHalfword
   - - 4432
     - c
     - claimFrontEndSet

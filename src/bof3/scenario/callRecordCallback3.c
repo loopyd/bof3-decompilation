@@ -11,7 +11,7 @@ extern u32 D_8014686C;
  * entries begin with noopCallbackHandler,
  * waitBytesPrimaryFlag,
  * func_801FA674 and func_801FA6C0 and end with
- * invokeHelperArgThenHelperScenarioScena1100_801FAE98), passing the
+ * tearEffectCommit8), passing the
  * record pointer unchanged as the first argument and the word held in the shared cell D_8014686C
  * as the second. Takes the record as its only argument and returns nothing; the 0x18-byte frame
  * saves $ra because the target callback is an ordinary indirect call rather than a sibling tail

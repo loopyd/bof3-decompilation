@@ -37,7 +37,7 @@ extern u8* D_1F800044;
  *           discarded: 0x801F7288 inside
  *           armWhileNotHelpers,
  *           0x801F7344 inside
- *           decrementWorkCountdownAndRampTintTripletBy2OrReload30AndAdvanceWorkByte3ThenInvokeTwoHelpersScenarioScena1300_801F72A0,
+ *           stateTintRampStep,
  *           0x801F742C inside the still-unlifted func_801F735C, and 0x801F746C
  *           inside stateAreaTwoHelpers,
  *           which runs it after func_801F7484. It takes no arguments and

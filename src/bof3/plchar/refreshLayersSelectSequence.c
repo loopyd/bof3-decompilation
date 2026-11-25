@@ -8,14 +8,14 @@
 extern u8* D_1F800044;
 
 /* Claim-byte refresh of this payload at 0x801CF944, lifted exact as
- * claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944
+ * claimItBeyondReference2
  * when this declaration was re-pointed. Its body claims work byte 0x2B, probes
  * two layer positions against the work reference halfword 0x3E and clears the
  * claim again when a probe reads above 64. The original calls it through a plain
  * `jal` with nothing set up in the argument registers, so it takes no arguments,
  * and this caller reads no result from $v0.
  */
-void claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944(
+void claimItBeyondReference2(
     void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. Splat
@@ -50,7 +50,7 @@ u32 func_8014D8D4(u8 arg0);
  */
 void refreshLayersSelectSequence(
     void) {
-  claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944();
+  claimItBeyondReference2();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xA] = 0xB;
   D_1F800044[3] = 1;

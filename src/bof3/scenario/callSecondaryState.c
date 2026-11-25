@@ -8,9 +8,9 @@ extern u32 D_801FAEFC[];
  * shared byte D_80146874: the byte is scaled by four and selects a word of the overlay-local
  * handler run at 0x801FAEFC (its ten entries are noopProgressHandler2,
  * func_801F778C, func_801F7BFC, func_801F7CC8, func_801F7F08, func_801F83C8,
- * runPrimarySubstateSequence6,
+ * statePrimary6Stages,
  * noopProgressHandler3,
- * runPrimarySubstateSequence7 and func_801FA3A4), and the
+ * statePrimary8Stages and func_801FA3A4), and the
  * entry is then invoked with `jalr` and no arguments. It reads no state other than that byte and
  * writes none; the 0x18-byte frame exists only to keep $ra across the indirect call. Word 2 of
  * the overlay's outer progress table at 0x801FAEF0 is this same address, so

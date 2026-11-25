@@ -1,7 +1,7 @@
 requestFrontSelectorSeed = 0x801F2C04;
 stateClearByte48Submit = 0x801F2C30;
 func_801F2C64 = 0x801F2C64;
-callStateTable3304World00 = 0x801F2D18;
+dispatchByte1Table3304 = 0x801F2D18;
 stateStoreCursorDistance = 0x801F2D5C;
 renderCursorQuad = 0x801F2DA8;
 func_801F2DF0 = 0x801F2DF0;

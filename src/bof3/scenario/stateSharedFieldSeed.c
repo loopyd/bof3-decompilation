@@ -32,7 +32,7 @@ extern u16 sharedFieldHalfword5;
 /* @source 0x80144E0A @kind data */
 extern u16 sharedFieldHalfword6;
 /* @source 0x80144E20 @kind data */
-extern u16 sharedFieldHalfword_80144E20;
+extern u16 stateSharedFieldHalfword;
 /* @source 0x80144E24 @kind data */
 extern u16 sharedFieldHalfword8;
 /* @source 0x80144E26 @kind data */
@@ -76,7 +76,7 @@ void stateSharedFieldSeed(void) {
   stateSelectionCounter = seed6;
   stateSelectionCounter2 = seed7;
   sharedFieldHalfword2 = seed1;
-  sharedFieldHalfword_80144E20 = seed1;
+  stateSharedFieldHalfword = seed1;
   sharedFieldHalfword3 = seed2;
   sharedFieldHalfword8 = seed2;
   sharedFieldHalfword4 = seed3;

@@ -35,7 +35,7 @@ void func_8015C088(void);
  * out/binaries entry found this 116-byte span at offset 0x3A00 only, so no
  * shipped payload holds a byte-identical copy. Its body is the clear-and-request
  * shape of the exact immediate neighbour
- * clearSharedStateBytesThenRequestPrimaryState3ScenarioScena1100_801FA674
+ * requestPrimary3Reset
  * (0x801FA674) behind the flag-5 gate of the exact
  * waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate7ScenarioScena0200_801FD1DC
  * (0x801FD1DC); the address anchor keeps the name target-qualified.

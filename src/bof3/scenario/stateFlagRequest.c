@@ -36,7 +36,7 @@ void func_8015C088(void);
  * executable. The payload names this body only from a table word: no in-image
  * `jal` reaches 0x801FB414, its only image word is 0x801FBFC4, entry 3 of the
  * thirteen-entry null-terminated code-pointer run at 0x801FBFB8 (0x801FBFB8
- * through 0x801FBFE8) that dispatchRecordCallbackScenarioScena1300_801FB350
+ * through 0x801FBFE8) that callRecordCallback4
  * (0x801FB350) indexes by record byte 0x7A, so this span is a record callback
  * and its argument roles stay structural.
  *

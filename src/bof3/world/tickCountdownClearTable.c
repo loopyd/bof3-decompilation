@@ -28,7 +28,7 @@ void stateWorkTableByte14(void);
  *           the shared work table at 0x800E4800, then re-reads the scratchpad
  *           cell and writes the record state byte at +0x1 back incremented by
  *           one, so the dispatcher
- *           callStateTable39World01 enters the next
+ *           dispatchByte1Table39c8 enters the next
  *           handler of the run on its next dispatch. It takes no arguments,
  *           returns nothing and reserves a 0x18-byte frame that holds only the
  *           return address.

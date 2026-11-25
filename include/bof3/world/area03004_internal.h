@@ -710,7 +710,7 @@ void runFrameServices(void);
 
 void publishPanelTemplateSelect(void);
 void callStateByte3Table1(void);
-void callStateTable21World00(void);
+void dispatchByte2Table21e0(void);
 void callStateByte3Table2210(void);
 void stateCounterIsFour(void);
 void callStateByte3Table221(void);
@@ -741,7 +741,7 @@ void clearFlagState10(void);
 void adjustClampCurrentRange(s8 delta);
 void stateSharedValuesGate(void);
 void dispatchCompanion(void);
-void callStateTable2340World00(void);
+void dispatchByte2Table2340(void);
 void callHandlerSelectorByte(void);
 void callStateByte4Table22(void);
 void stateThreeFourText(void); /* AREA030 handler-table entry 0 at 0x801E22F0 */

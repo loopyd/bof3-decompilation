@@ -9,7 +9,7 @@ extern u8 paletteRows801F627D[];
 /* @source 0x801F62A0 @kind data */
 extern u8 paletteSourceBlocks801[];
 
-void copyPaletteBlock32(u32 sourceRow, u32 sourceBlock,
+void copyPaletteStageBlock(u32 sourceRow, u32 sourceBlock,
                                                u32 destinationRow, u32 destinationBlock);
 
 /* @source 0x801F515C
@@ -46,7 +46,7 @@ void stepRampedBlocksCadence(
   ticks = work[9];
   if ((u8)(ticks % 5) == 0) {
     row = paletteRows801F627D[*(s16*)(work + 0x36)];
-    copyPaletteBlock32(row, (u8)(ticks / 5) + 2, row,
+    copyPaletteStageBlock(row, (u8)(ticks / 5) + 2, row,
                                                 0);
   }
   tickCursor = workRecordCursor1F800044;
@@ -57,7 +57,7 @@ void stepRampedBlocksCadence(
     count = (u8)block;
     if (count < 9) {
       row = paletteRows801F6278[*(s16*)(blockCursor + 0x36)];
-      copyPaletteBlock32(
+      copyPaletteStageBlock(
           row, paletteSourceBlocks801[count >> 1], row, 0);
     }
   }

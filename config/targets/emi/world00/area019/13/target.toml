@@ -8,7 +8,7 @@ splat = "config/targets/emi/world00/area019/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/stateChannel932World00.c",
+    "src/bof3/world/stateAdvanceChannel.c",
     "src/bof3/world/audioStopSelectionEffect.c",
 ]
 support_sources = [
@@ -16,7 +16,7 @@ support_sources = [
     "src/bof3/world/callWindowReset3.c",
     "src/bof3/world/callWindowReset2.c",
     "src/bof3/world/callWindowReset1.c",
-    "src/bof3/world/retreatChannel932World00.c",
+    "src/bof3/world/stateRetreatChannel.c",
     "src/bof3/support/area019_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area019_13_psyq.c"

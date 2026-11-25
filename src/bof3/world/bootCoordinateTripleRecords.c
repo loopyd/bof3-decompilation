@@ -20,7 +20,7 @@ typedef struct {
 /* @source 0x80117048
  * @behavior Boot handler of this overlay: word 0 of the thirteen in-image
  * handler pointers the textbin row D_8011818C places, selected by
- * callWorkTable818World01 while byte 1 of the work
+ * dispatchByte1Table818c while byte 1 of the work
  * object at the scratchpad pointer cell 0x1F800044 still reads 0. It stores the
  * spawn coordinate triple into that object, word 0x38 taking 0x548000, word
  * 0x34 taking 0x0B8000 and word 0x3C taking 0x01000000; those are the words

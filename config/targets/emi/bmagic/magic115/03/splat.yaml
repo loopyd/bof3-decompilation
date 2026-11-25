@@ -30,16 +30,16 @@ segments:
   subsegments:
   - - 20
     - c
-    - dispatchWorkByte1HandlerBmagicMagic11503_801EEC14
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11503_801EEC14.c'
+    - dispatchStepCopy
+    - '@source: src/bof3/bmagic/dispatchStepCopy.c'
     - '@behavior: Per-frame step dispatcher of this overlay, the first code span behind the four-word step run of the leading table segment; no jal and no table word inside this payload names it, so the overlay loader is its only caller. It reads the scratchpad work-object pointer cell at 0x1F800044 once and takes that object byte 0x01, the overlay step selector, as an unchecked index: it copies the whole step run at 0x801EEC04 (0x801EEC80, 0x801EEDDC, 0x801EEEB0, 0x801EEFF4) into the 0x10($sp) record of its 0x28-byte frame and calls the entry at the scaled selector with no arguments. The selector is not bounded, and nothing of the selected step result is returned: the epilogue reloads only $ra.'
   - - 128
     - asm
     - func_801EEC80
   - - 476
     - c
-    - storeDoubleWorkByte9IntoWorkByteARecordTripletAndAdvanceWorkByte1WhenAtLeast6BmagicMagic11503_801EEDDC
-    - '@source: src/bof3/bmagic/storeDoubleWorkByte9IntoWorkByteARecordTripletAndAdvanceWorkByte1WhenAtLeast6BmagicMagic11503_801EEDDC.c'
+    - storeDoubleTriplet
+    - '@source: src/bof3/bmagic/storeDoubleTriplet.c'
   - - 688
     - asm
     - func_801EEEB0
@@ -70,13 +70,13 @@ segments:
     - '@behavior: Step wrapper around one overlay work handler. It reads the scratchpad work-object pointer cell 0x1F800044, whose first load is issued before the 0x18-byte frame, steps the object tint bytes 0x5D, 0x5E and 0x5F down by four, and runs the shared no-argument update helper func_8014D978. It advances work byte 9 and publishes (byte 9 & 0x3F) << 6 into the scratchpad word 0x1F800000 through an address built once into $s0. Word 0x34 of the work object takes the shared record word 0x34 read through the 0x801EB4E0 cell plus twelve times the func_801782FC sample of that phase, written as the 12-bit fixed-point product sll 1 / addu / sll 14 / sra 12; word 0x38 takes the record word 0x38 plus twelve times the func_801783C8 sample of the same phase re-read from 0x1F800000. Between them it reads the record word 0x38 into a local and stores -0x80 into tint byte 0x5D through the signed byte view; that record load stays ahead of the tint store because a byte store and a record load may alias. After the tint store it re-reads the cell once more, and that pointer advances work byte 2 after the word 0x38 store. The 0x18-byte frame keeps $ra at 0x14 and $s0 at 0x10. Entry index 2 of the eight-word code pointer run based at 0x801EF8C4.'
   - - 2500
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF5C4
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF5C4.c'
+    - decrementRecordInvoke
+    - '@source: src/bof3/bmagic/decrementRecordInvoke.c'
     - '@behavior: Work-byte-2 handler, entry 3 of the eight-entry code pointer run based at 0x801EF8C4, reached through callStateByte2Tablef8, which scales byte 2 of the scratchpad work object at 0x1F800044 by four and calls the selected word with no arguments. It reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record byte 0xB by one at byte width, and then invokes the shared main-executable helper func_801E5988 with the store filling the call delay slot. The pointer load precedes frame creation because the decrement needs no stack; the 0x18-byte frame only keeps $ra across the call. It takes no arguments, returns nothing and touches no other state.'
   - - 2552
     - c
-    - dispatchStateByte2Tablef8d4BmagicMagic11503_801EF5F8
-    - '@source: src/bof3/bmagic/dispatchStateByte2Tablef8d4BmagicMagic11503_801EF5F8.c'
+    - dispatchByte2Service
+    - '@source: src/bof3/bmagic/dispatchByte2Service.c'
   - - 2704
     - c
     - stateHeaderUnitMotion

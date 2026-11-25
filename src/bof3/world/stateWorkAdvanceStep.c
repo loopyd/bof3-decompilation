@@ -9,7 +9,7 @@ extern u32 workSeedWord80146958;
 /* @source 0x8014695C @kind unknown */
 extern u32 workSeedWord8014695C;
 
-void seedWorkTable64(void);
+void stateSeedRecordTable(void);
 
 /* @source 0x801F3CB8
  * @behavior Copies the shared words at 0x80146954/0x80146958/0x8014695C
@@ -31,7 +31,7 @@ void stateWorkAdvanceStep(void) {
   *(u32*)(work + 0x38) = workSeedWord80146958;
   *(u32*)(work + 0x3C) = workSeedWord8014695C;
   *(u32*)(work + 0x0C) = 180;
-  seedWorkTable64();
+  stateSeedRecordTable();
   nextWork = workRecordCursor1F800044;
   nextWork[1]++;
 }

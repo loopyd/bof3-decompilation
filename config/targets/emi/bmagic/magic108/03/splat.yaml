@@ -56,12 +56,12 @@ segments:
     - '@source: src/bof3/bmagic/workByte9AdvanceAt80.c'
   - - 1248
     - c
-    - incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0
-    - '@source: src/bof3/bmagic/incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0.c'
+    - incrementAdvanceAt60
+    - '@source: src/bof3/bmagic/incrementAdvanceAt60.c'
   - - 1328
     - c
-    - incrementWorkByteAThenSetGlobalWorkByteBToFFAt80AndInvokeHelperBmagicMagic10803_801EF130
-    - '@source: src/bof3/bmagic/incrementWorkByteAThenSetGlobalWorkByteBToFFAt80AndInvokeHelperBmagicMagic10803_801EF130.c'
+    - incrementByteResetGlobal
+    - '@source: src/bof3/bmagic/incrementByteResetGlobal.c'
   - - 1408
     - asm
     - func_801EF180

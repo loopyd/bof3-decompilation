@@ -27,7 +27,7 @@ segments:
     - T_801D0C00
   - - 152
     - c
-    - callStateTable1World00
+    - dispatchByte1Table1cd4
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 220
     - rodata
@@ -511,7 +511,7 @@ segments:
     - '@behavior: draws one panel message token as a single flat textured quad from the shared primitive cursor: stamps a POLY_FT4, selects the texture page from the graphics type (0x8F when the query answers 1 or 2 and 0x2F otherwise, replaced by 0xAF or 0x3F on the table-cell path), derives the atlas cell of the token byte (the ASCII cell of byte - 0x30 on the 31-column 8-pixel table with a 0x48 row offset, the cell of byte + 0x5B for control code 0x15, and for control codes 0x12 and 0x13 the cell of the carried byte, plus 0x100 for 0x13, on the 21-column 12-pixel table), spans the requested x to x + (width byte 0x7F mask) at the rows D_80144154 + 3 and + 0xC, takes the mid grey 0x80, the CLUT row 0x1E0 with the low nibble of the first argument, shifts the horizontal texture coordinate right by 8 - width when bit 0x80 of the width byte is set, and appends the 0x28-byte packet at ordering-table slot 1.'
   - - 36628
     - c
-    - callStateTable21World00
+    - dispatchByte2Table21e0
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E21E0.'
   - - 36696
@@ -846,8 +846,8 @@ segments:
     - '@behavior: when the area gate is clear, advances its counter and initializes bytes 2 and 3 of the current scratch work record.'
   - - 52572
     - c
-    - callStateTable22World00
-    - '@source: src/bof3/world/callStateTable22World00.c'
+    - dispatchByte3Table22fc
+    - '@source: src/bof3/world/dispatchByte3Table22fc.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22FC.'
   - - 52640
     - c
@@ -958,7 +958,7 @@ segments:
     - '@behavior: updates the AREA030 work record''s signed offset, motion words, range and step mode using its countdown, selected scale record and random draws. Threshold transitions publish the shared mode bytes and advance handler byte 1. Other paths update the motion words and select the two-byte step-mode row from work byte 8. Preserves the separate scratch-pointer captures, signed clamps and guarded division.'
   - - 62376
     - c
-    - callStateTable2340World00
+    - dispatchByte2Table2340
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2340.'
   - - 62444
@@ -973,7 +973,7 @@ segments:
     - '@behavior: Add work motion words 0x0C and 0x10 to position words 0x34 and 0x38, then decrement byte 9. At zero, mask only the low halfwords of those positions with 0x8000, set handler byte 1, and clear both motion words and mode byte 2. Always step the pair sequence.'
   - - 62688
     - c
-    - callStateTable2348World00
+    - dispatchByte2Table2348
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2348.'
   - - 62756

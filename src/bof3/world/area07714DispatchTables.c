@@ -18,7 +18,7 @@ extern void (*D_801F62BC[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6250World02, D_801F6250);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table6250, D_801F6250);
 
 /* @source 0x801F3C74
  * @behavior Overlay step dispatch: reads the state byte at +1 of the work record published
@@ -29,7 +29,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6250World02, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6260World02, D_801F6260);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table6260, D_801F6260);
 
 /* @source 0x801F3E04
  * @behavior Overlay step dispatch: reads the non-volatile scratchpad work
@@ -47,7 +47,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6260World02, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6268World02, D_801F6268);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table6268, D_801F6268);
 
 /* @source 0x801F4034
  * @behavior Overlay step dispatch: reads the non-volatile scratchpad work
@@ -65,7 +65,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6268World02, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6270World02, D_801F6270);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table6270, D_801F6270);
 
 /* @source 0x801F4CDC
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -76,7 +76,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6270World02, D_801
  *           epilogue, so this shim's result is whatever that handler returns.
  *           Takes no arguments and forwards none. Same shape as the
  *           already-exact sibling
- *           callStateTable6268World02, which
+ *           dispatchByte1Table6268, which
  *           dispatches work byte +0x01 through the table based at 0x801F6268,
  *           and the twin of this target's 0x801F52F8, which dispatches the
  *           same work byte +0x02 through the table based at 0x801F62A8.
@@ -84,7 +84,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6270World02, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable6284World02, D_801F6284);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table6284, D_801F6284);
 
 /* @source 0x801F52F8
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -95,7 +95,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable6284World02, D_801
  *           epilogue, so this shim's result is whatever that handler returns.
  *           Takes no arguments and forwards none. Same shape as the
  *           already-exact sibling
- *           callStateTable6270World02, which
+ *           dispatchByte1Table6270, which
  *           dispatches work byte +0x01 through the table based at 0x801F6270,
  *           and the twin of this target's 0x801F4CDC, which dispatches the
  *           same work byte +0x02 through the table based at 0x801F6284.
@@ -103,7 +103,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable6284World02, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable62World02, D_801F62A8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table62a8, D_801F62A8);
 
 /* @source 0x801F5608
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record published
