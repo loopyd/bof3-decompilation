@@ -17,7 +17,7 @@ extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
  * 0x800C2B48, 0x800C2CD4, 0x800C2E74 and 0x800C2FFC. The Splat `textbin` row
  * T_800C35D4 places the words, so the run is only referenced here. The
  * neighbouring base 0x800C35EC (entry 6) belongs to the sibling dispatcher
- * dispatchIndexedHandlerBossBoss05516_800C22F0, which indexes the same run.
+ * callIndexedHandler31, which indexes the same run.
  */
 extern void (*D_800C35F8[])(void); /* @source 0x800C35F8 @kind data */
 

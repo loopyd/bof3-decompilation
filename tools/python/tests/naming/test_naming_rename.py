@@ -5,6 +5,8 @@ from __future__ import annotations
 import textwrap
 from pathlib import Path
 
+import pytest
+
 from harness.naming import rename
 
 
@@ -118,6 +120,34 @@ def test_cross_target_name_refuses_the_rename(tmp_path: Path) -> None:
     other.write_text("void stateRaiseFlag4(void) {}\n", encoding="utf-8")
     codes = [row["code"] for row in _plan(root, "stateRaiseFlag4")["refusals"]]
     assert codes == ["cross-target-name"]
+
+
+def test_batch_plan_names_every_row(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherRow",))
+    (root / "src" / "bof3" / "battle" / "other.c").write_text(
+        "void otherRow(void) {}\n", encoding="utf-8"
+    )
+    payload = rename.plan_batch(
+        root,
+        [
+            {"target": "exe/game", "old": OLD, "new": "stateRaiseFlag4"},
+            {"new": "sharedRow", "members": [
+                {"target": "exe/game", "old": OLD},
+                {"target": "exe/other", "old": "otherRow"},
+            ]},
+        ],
+    )
+    assert payload["action"] == "batch"
+    assert payload["applied"] is False
+    assert {record["scope"]["new"] for record in payload["records"]} == {"stateRaiseFlag4", "sharedRow"}
+    assert payload["passed"] is True, payload["refusals"]
+
+
+def test_batch_plan_refuses_a_malformed_row(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    with pytest.raises(ValueError):
+        rename.plan_batch(root, [{"target": "exe/game", "old": OLD}])
 
 
 def test_group_rename_dry_run_names_every_member(tmp_path: Path) -> None:

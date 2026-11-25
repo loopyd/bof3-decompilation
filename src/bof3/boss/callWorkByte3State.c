@@ -26,7 +26,7 @@ extern void (*D_800C1EBC[])(void); /* @source 0x800C1EBC @kind data */
  * returns whatever that handler returns. This function's only in-image
  * reference is the word 0x800C18F8 at 0x800C1EB4, word 40 of the same
  * code-pointer row, so the overlay loader that steps that row and the byte-2
- * dispatcher dispatchStateByte2Table1ea4BossBoss01216_800C18B4, whose table base
+ * dispatcher callByte2Table1ea4, whose table base
  * 0x800C1EA4 holds it as entry 4, reach it inside the payload.
  * @status exact
  * @match 100.00

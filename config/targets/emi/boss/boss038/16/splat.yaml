@@ -27,49 +27,49 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table1c24BossBoss03816_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table1c24BossBoss03816_800C1804.c'
+    - dispatchWorkByte1Table2
+    - '@source: src/bof3/boss/dispatchWorkByte1Table2.c'
     - '@behavior: Overlay state dispatch on work-record byte 1 of this overlay: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of this payload''s handler run based at 0x800C1C24, whose entry 0 is the installer 0x800C1848 and whose remaining entries are shared main-executable handlers, so the selected handler result stays in the return register; the original bounds nothing before the scaled load, its 0x18-byte frame keeps the return address at 0x10 across the indirect call, and no jal or pointer word in the payload names it.'
   - - 72
     - asm
     - func_800C1848
   - - 236
     - c
-    - dispatchIndexedHandlerBossBoss03816_800C18EC
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03816_800C18EC.c'
+    - dispatchIndexedHandler2
+    - '@source: src/bof3/boss/dispatchIndexedHandler2.c'
     - '@behavior: Byte-indexed overlay dispatcher of this payload: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1C54 handler run tail, whose four words are the inert handlers 0x800C1924, 0x800C192C and 0x800C1934 followed by the step setup 0x800C1980, so the selected handler result stays in the return register; its 0x18-byte frame keeps the return address at 0x10 across the indirect call.'
   - - 292
     - c
-    - noopHandlerBossBoss03816_800C1924
+    - noopHandler
   - - 300
     - c
-    - noopHandlerBossBoss03816_800C192C
+    - noopHandler2
   - - 308
     - c
-    - noopHandlerBossBoss03816_800C1934
+    - noopHandler3
   - - 316
     - c
     - callStateTable0Boss
     - '@source: src/bof3/boss/callStateTable0Boss.c'
   - - 384
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03816_800C1980
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03816_800C1980.c'
+    - publishStepSetup2
+    - '@source: src/bof3/boss/publishStepSetup2.c'
     - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C1C10 into +0xEC of the current enemy work record from 0x801EB4E8, the step dispatcher 0x800C19E4 into +0xE4 and the in-row pointer 0x800C1C1C into +0xE8, raises bit 0x8 of the record +0x104 flag word, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 484
     - c
-    - dispatchIndexedHandlerBossBoss03816_800C19E4
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03816_800C19E4.c'
+    - dispatchIndexedHandler3
+    - '@source: src/bof3/boss/dispatchIndexedHandler3.c'
     - '@behavior: Byte-indexed step dispatcher of this overlay work state machine: masks the index argument with 0xFF, scales it by four and calls the handler selected from the three-word run at 0x800C1C90, the inert handlers 0x800C1A1C, 0x800C1A24 and 0x800C1A2C, so every index reaches a no-op body and the selected handler result stays in the return register; its 0x18-byte frame keeps the return address at 0x10 across the indirect call and it reads and writes no other state.'
   - - 540
     - c
-    - noopHandlerBossBoss03816_800C1A1C
+    - noopHandler4
   - - 548
     - c
-    - noopHandlerBossBoss03816_800C1A24
+    - noopHandler5
   - - 556
     - c
-    - noopHandlerBossBoss03816_800C1A2C
+    - noopHandler6
   - - 564
     - c
     - publishHooksCenterChannel
@@ -77,29 +77,29 @@ segments:
     - '@behavior: Overlay entry that installs this overlay opening battle state: publishes the handler trio 0x800C1B10, 0x800C1B74 and 0x800C1B08 into the shared battle hook slots 0x801463A4, 0x801463A8 and 0x801463AC in slot order, writes 0x40 to the battle state byte 0x80146384, publishes this overlay work record 0x801EBDD8 into the scratchpad pointer cell 0x1F800044 and runs the shared helper 0x800AFD9C with no arguments; it then re-reads that cell and centres the shared fixed-point channel pair on the midpoint between the record position pair and the shared work position, storing 0x80143F24 plus half the signed difference to record word 0x34 into 0x80149308, 0x80143F28 plus half the signed difference to record word 0x38 into 0x8014930C, and writes 0x20 into the shared scale halfword 0x8014932E. No jal and no pointer word of the payload names it, its 0x18-byte frame keeps the return address at 0x10 across the one call, and the midpoint divisions truncate toward zero.'
   - - 776
     - c
-    - zeroResultBossBoss03816_800C1B08
+    - zeroResult
   - - 784
     - c
-    - initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss03816_800C1B10
-    - '@source: src/bof3/boss/initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss03816_800C1B10.c'
+    - stateFlagProgressSwitch
+    - '@source: src/bof3/boss/stateFlagProgressSwitch.c'
     - '@behavior: Battle-flag state switch of this overlay: loads the shared battle flag byte 0x80146328 once and tests bit 0x2; while the bit is set it stores 5 into the shared scenario progress byte 0x80146864, stores 0x20 into 0x80146875, stores 0x77 into 0x80145029 and then runs initModeTuple510 at 0x801DDED8, and when the bit is clear it runs initModeTuple520 at 0x801DDF00 instead. It does not write the flag byte back, reads no other state and its 0x18-byte frame keeps the return address at 0x10 across the chosen call.'
   - - 884
     - c
-    - noopHandlerBossBoss03816_800C1B74
+    - noopHandler7
   - - 892
     - c
-    - publishBattleHooksBossBoss03816_800C1B7C
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss03816_800C1B7C.c'
+    - publishFlagHooks2
+    - '@source: src/bof3/boss/publishFlagHooks2.c'
     - '@behavior: Publishes this overlay handler trio into the shared battle hook slots in slot order: the battle-flag state switch 0x800C1BBC into 0x801463A4, the inert handler 0x800C1C08 into 0x801463A8 and the zero-result accessor 0x800C1BB4 into 0x801463AC, each materialised in $v0 with lui/addiu and stored through $at; the body has no frame, no saved register and no call, and no jal or pointer word in the payload names it.'
   - - 948
     - c
-    - zeroResultBossBoss03816_800C1BB4
+    - zeroResult2
   - - 956
     - asm
     - func_800C1BBC
   - - 1032
     - c
-    - noopHandlerBossBoss03816_800C1C08
+    - noopHandler8
   - - 1040
     - textbin
     - D_800C1C10

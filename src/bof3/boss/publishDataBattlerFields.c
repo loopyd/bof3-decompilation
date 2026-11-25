@@ -24,14 +24,14 @@ extern u8 D_801462EA; /* @source 0x801462EA @kind data */
  * together with their +0x20 mirrors (seedSharedFieldsScenarioScena0600_801FD29C),
  * and this handler copies the run into the work record, so the same shared cell
  * names are used here. */
-extern u16 sharedFieldHalfword_80144E00; /* @source 0x80144E00 @kind data */
-extern u16 sharedFieldHalfword_80144E04; /* @source 0x80144E04 @kind data */
-extern u16 sharedFieldHalfword_80144E06; /* @source 0x80144E06 @kind data */
+extern u16 sharedFieldHalfword2; /* @source 0x80144E00 @kind data */
+extern u16 sharedFieldHalfword3; /* @source 0x80144E04 @kind data */
+extern u16 sharedFieldHalfword4; /* @source 0x80144E06 @kind data */
 
 /* This payload's byte-indexed overlay dispatcher at 0x800C1A68: it masks its
  * argument with 0xFF, scales it by four and calls the entry of the 0x800C31E4
  * handler table it selects. */
-void dispatchIndexedHandlerBossBoss02513_800C1A68(u8 index);
+void callIndexedHandler20(u8 index);
 
 /* Shared main-program helper the whole boss archive family calls at the end of
  * its step setup, for example 0x800C1E08, 0x800C1D1C and 0x800C1EF4 of
@@ -51,7 +51,7 @@ void func_800AC218(u8 index, u8 class_id);
  *           sibling dispatcher 0x800C1850 selects by work-record byte 2:
  *           publishes three words into the current enemy work record loaded
  *           from 0x801EB4E8 -- the data row pointer 0x800C3174 into +0xEC, the
- *           indexed dispatcher dispatchIndexedHandlerBossBoss02513_800C1A68
+ *           indexed dispatcher callIndexedHandler20
  *           into +0xE4 and the in-row pointer 0x800C318C (0x800C3174 + 0x18)
  *           into +0xE8 -- then stores 2 into the state byte at +1 of the work
  *           record the main program publishes at the scratchpad pointer cell
@@ -84,7 +84,7 @@ void publishDataBattlerFields(
   work = D_801EB4E8;
   FIELD_REF(void *, work, 0xECu) = &D_800C3174;
   FIELD_REF(Boss02513StepHandler, work, 0xE4u) =
-      dispatchIndexedHandlerBossBoss02513_800C1A68;
+      callIndexedHandler20;
   FIELD_REF(void *, work, 0xE8u) = &D_800C318C;
   SPAD_PTR_SLOT(u8, 0x44u)[1] = 2;
   func_8014D978();
@@ -93,12 +93,12 @@ void publishDataBattlerFields(
     D_801EB4E8[0x7F] = 1;
     D_801EB4E8[0xF0] = 0x1E;
     work = D_801EB4E8;
-    FIELD_REF(u16, work, 0x94u) = sharedFieldHalfword_80144E00;
-    FIELD_REF(u16, work, 0xC0u) = sharedFieldHalfword_80144E00;
-    FIELD_REF(u16, work, 0xA0u) = sharedFieldHalfword_80144E00;
-    FIELD_REF(u16, work, 0xC4u) = sharedFieldHalfword_80144E04;
-    FIELD_REF(u16, work, 0xA4u) = sharedFieldHalfword_80144E04;
-    FIELD_REF(u16, work, 0xC6u) = sharedFieldHalfword_80144E06;
-    FIELD_REF(u16, work, 0xA6u) = sharedFieldHalfword_80144E06;
+    FIELD_REF(u16, work, 0x94u) = sharedFieldHalfword2;
+    FIELD_REF(u16, work, 0xC0u) = sharedFieldHalfword2;
+    FIELD_REF(u16, work, 0xA0u) = sharedFieldHalfword2;
+    FIELD_REF(u16, work, 0xC4u) = sharedFieldHalfword3;
+    FIELD_REF(u16, work, 0xA4u) = sharedFieldHalfword3;
+    FIELD_REF(u16, work, 0xC6u) = sharedFieldHalfword4;
+    FIELD_REF(u16, work, 0xA6u) = sharedFieldHalfword4;
   }
 }

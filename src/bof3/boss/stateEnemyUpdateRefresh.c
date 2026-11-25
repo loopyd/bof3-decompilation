@@ -21,7 +21,7 @@ extern void refreshPositionModeScale(void); /* @source 0x800C3284 */
 
 /* @source 0x800C2E04
  * @behavior Overlay step body, entry 1 of the two-entry handler pair that
- * dispatchStateByte2LocalPairBossBoss05516_800C2CD4 seeds with 0x800C2D2C then
+ * callLocalPairBoss5 seeds with 0x800C2D2C then
  * this function: it calls the EXE-side readiness helper 0x801E3160 and, when
  * that helper unsigned byte result is nonzero, advances byte +1 of the shared
  * battle work record at 0x801EB4E0, clears that record byte +2 and calls the

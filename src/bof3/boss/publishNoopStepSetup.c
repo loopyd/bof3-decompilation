@@ -29,7 +29,7 @@ void func_8014D978(void);
 /* @source 0x800C1E08
  * @behavior Step-3 handler of this overlay's work state machine and entry 0 of
  * the 0x800C2708 run: index 3 of the 0x800C26FC run that the step dispatcher
- * dispatchIndexedHandlerBossBoss00816_800C1D74 selects from. It publishes three
+ * callIndexedTable26fc selects from. It publishes three
  * words into the current enemy work record loaded from 0x801EB4E8 -- the data
  * block pointer 0x800C264C into +0xEC, the no-op-run step handler
  * callIndexedHandler3 into +0xE4 and the in-row data

@@ -35,8 +35,8 @@ segments:
     - func_800C1848
   - - 180
     - c
-    - dispatchStateByte2Table1ea4BossBoss01216_800C18B4
-    - '@source: src/bof3/boss/dispatchStateByte2Table1ea4BossBoss01216_800C18B4.c'
+    - callByte2Table1ea4
+    - '@source: src/bof3/boss/callByte2Table1ea4.c'
   - - 248
     - c
     - callWorkByte3State
@@ -60,8 +60,8 @@ segments:
     - func_800C1A90
   - - 792
     - c
-    - dispatchIndexedHandlerBossBoss01216_800C1B18
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss01216_800C1B18.c'
+    - callIndexedTable1ecc
+    - '@source: src/bof3/boss/callIndexedTable1ecc.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1ECC handler table of this overlay, so the selected handler''s result stays in the return register.'
   - - 848
     - c

@@ -43,13 +43,13 @@ segments:
     - func_800C19C0
   - - 616
     - c
-    - dispatchIndexedHandlerBossBoss02513_800C1A68
+    - callIndexedHandler20
   - - 672
     - asm
     - func_800C1AA0
   - - 760
     - c
-    - noopHandlerBossBoss02513_800C1AF8
+    - noopHandler98
   - - 768
     - c
     - completeFrontendEntryGate
@@ -57,8 +57,8 @@ segments:
     - '@behavior: Pending frontend-mode entry retire of this overlay handler run at 0x800C1B00. Returns unless bit 0x2 of the shared battle flag halfword 0x801462E8 is set and the global gate halfword 0x80143C40 reads zero; then strips the 0x40 flag of owner record 0 through func_800AC844, clears the shared effect-bank byte 0x8014832E and clears bit 0x2 of 0x801462E8.'
   - - 876
     - c
-    - dispatchStateByte1Table31f0BossBoss02513_800C1B6C
-    - '@source: src/bof3/boss/dispatchStateByte1Table31f0BossBoss02513_800C1B6C.c'
+    - callStateByte1Table526
+    - '@source: src/bof3/boss/callStateByte1Table526.c'
   - - 944
     - asm
     - func_800C1BB0
@@ -72,16 +72,16 @@ segments:
     - func_800C1CB0
   - - 1324
     - c
-    - dispatchIndexedHandlerBossBoss02513_800C1D2C
+    - callIndexedHandler21
   - - 1380
     - c
-    - setBossBoss02513_800C1D64
+    - setBossStateFour
   - - 1400
     - c
-    - noopHandlerBossBoss02513_800C1D78
+    - noopHandler77
   - - 1408
     - c
-    - noopHandlerBossBoss02513_800C1D80
+    - noopHandler103
   - - 1416
     - c
     - callStateTable3244Boss
@@ -117,16 +117,16 @@ segments:
     - func_800C2074
   - - 2288
     - c
-    - dispatchIndexedHandlerBossBoss02513_800C20F0
+    - callIndexedHandler22
   - - 2344
     - c
     - stateThreeBitThree
   - - 2400
     - c
-    - raiseFlagBit20BossBoss02513_800C2160
+    - raiseFlagBit20
   - - 2428
     - c
-    - noopHandlerBossBoss02513_800C217C
+    - noopHandler79
   - - 2436
     - c
     - publishSaveHalfwordsActor
@@ -165,10 +165,10 @@ segments:
     - '@residual: none'
   - - 4908
     - c
-    - raiseFlagEnterFrontend
+    - raiseFlagEnterFrontend1
   - - 4960
     - c
-    - publishBattleHooksBossBoss02513_800C2B60
+    - publishBattleHooks28
   - - 5016
     - c
     - raiseFlagsStartHook

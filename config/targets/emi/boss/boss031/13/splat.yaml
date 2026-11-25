@@ -27,26 +27,26 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table1accBossBoss03113_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table1accBossBoss03113_800C1804.c'
+    - dispatchByte1Table1acc
+    - '@source: src/bof3/boss/dispatchByte1Table1acc.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler table based at 0x800C1ACC with no arguments, so the selected handler result stays in the return register.'
   - - 72
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03113_800C1848
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03113_800C1848.c'
+    - publishWorkStepHandler
+    - '@source: src/bof3/boss/publishWorkStepHandler.c'
     - '@behavior: Step-0 setup of this overlay state machine: loads the current enemy work record pointer published at 0x801EB4E8 and stores three words into it, the data row pointer 0x800C1AB8 at offset 0xEC, the byte-indexed handler dispatcher 0x800C1978 at offset 0xE4 and the in-row data word 0x800C1AC4 at offset 0xE8, then stores 2 into the state byte at offset 1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the shared boss step helper 0x8014D978.'
   - - 160
     - c
-    - dispatchStateByte2Table1afcBossBoss03113_800C18A0
-    - '@source: src/bof3/boss/dispatchStateByte2Table1afcBossBoss03113_800C18A0.c'
+    - dispatchByte2Table1afc
+    - '@source: src/bof3/boss/dispatchByte2Table1afc.c'
     - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that record byte at offset 0x02 as the index, scales it by four and calls the matching entry of the six-word code-pointer run based at 0x800C1AFC with no arguments, so the selected handler result stays in the return register.'
   - - 228
     - asm
     - func_800C18E4
   - - 376
     - c
-    - dispatchIndexedHandlerBossBoss03113_800C1978
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03113_800C1978.c'
+    - dispatchIndexTable1b14
+    - '@source: src/bof3/boss/dispatchIndexTable1b14.c'
     - '@behavior: Byte-indexed overlay dispatch: masks the index argument with 0xFF, scales it by four and calls the handler selected from this overlay handler table based at 0x800C1B14, leaving the selected handler result in the return register.'
   - - 432
     - c
@@ -59,8 +59,8 @@ segments:
     - noopHandlerBossBoss03113_800C19C0
   - - 456
     - c
-    - publishBattleHooksBossBoss03113_800C19C8
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss03113_800C19C8.c'
+    - publishHooksOwnerRequest
+    - '@source: src/bof3/boss/publishHooksOwnerRequest.c'
     - '@behavior: Publishes this overlay''s handler trio into the shared battle hook slots 0x801463A4/0x801463A8/0x801463AC: func_800C1A08, the battle setup hook publishOwnerRequestResource and the zero-result accessor zeroResultBossBoss03113_800C1A00, each materialized as an absolute address and stored through $at in slot order.'
   - - 512
     - c

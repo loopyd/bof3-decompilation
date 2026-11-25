@@ -36,7 +36,7 @@ extern u8 D_800C26E0; /* @source 0x800C26E0 @kind data */
  * across the rand() call; the three slot stores carry their own
  * lui $at/%hi pair, and the byte store materialises its own base the same way.
  * Same trio shape as the sibling installer
- * publishBattleHooksBossBoss01316_800C200C of this target, which writes the
+ * publishBattleHooksMode32 of this target, which writes the
  * same three slots in the same order and differs in the published addresses and
  * in having no countdown seed. No in-payload caller: no word of this payload
  * holds 0x800C20D8 and no jal reaches it, so the main program reaches it

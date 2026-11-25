@@ -30,50 +30,50 @@ segments:
     - D_800C1804
   - - 28
     - c
-    - dispatchStateByte1Table1cd8BossBoss02116_800C181C
-    - '@source: src/bof3/boss/dispatchStateByte1Table1cd8BossBoss02116_800C181C.c'
+    - callStateByte1Table524
+    - '@source: src/bof3/boss/callStateByte1Table524.c'
     - '@behavior: State dispatch on the work record byte at offset 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 before creating its 0x18-byte frame, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay''s handler run based at 0x800C1CD8, whose entry 0 is the step publisher 0x800C1860 and whose entries 1 through 11 are main-executable handlers. The original does not bound the index, writes no state and returns the selected handler''s value; no word and no jal of this payload names 0x800C181C, so the overlay entry is its caller.'
   - - 96
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02116_800C1860
+    - publishWorkStepHandler2
   - - 184
     - c
-    - dispatchStateByte2Table1d08BossBoss02116_800C18B8
-    - '@source: src/bof3/boss/dispatchStateByte2Table1d08BossBoss02116_800C18B8.c'
+    - callStateByte2Table6
+    - '@source: src/bof3/boss/callStateByte2Table6.c'
     - '@behavior: Second-level overlay dispatch on the work record byte at offset 2: reads the record pointer from the scratchpad cell 0x1F800044, scales that byte by four and calls the handler selected from word 12, 0x800C1D08, of the handler run that starts at 0x800C1CD8, whose entries there are 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, 0x800C18FC and 0x801E4928.'
   - - 252
     - asm
     - func_800C18FC
   - - 396
     - c
-    - dispatchIndexedHandlerBossBoss02116_800C198C
+    - callIndexedHandler23
   - - 452
     - c
-    - clearBossStateByteBossBoss02116_800C19C4
-    - '@source: src/bof3/boss/clearBossStateByteBossBoss02116_800C19C4.c'
+    - clearBossStateByte
+    - '@source: src/bof3/boss/clearBossStateByte2.c'
     - '@behavior: Overlay handler: writes zero to the shared battle state byte at 0x80146375, clearing it, and returns. Entry 0 of this overlay''s handler table at 0x800C1D20.'
   - - 468
     - c
     - noopHandlerBossBoss02116_800C19D4
   - - 476
     - c
-    - noopHandlerBossBoss02116_800C19DC
+    - noopHandler58
   - - 484
     - c
-    - dispatchStateByte1Table1d2cBossBoss02116_800C19E4
-    - '@source: src/bof3/boss/dispatchStateByte1Table1d2cBossBoss02116_800C19E4.c'
+    - callStateByte1Table521
+    - '@source: src/bof3/boss/callStateByte1Table521.c'
     - '@behavior: Second-level overlay dispatch on the work record byte at offset 1: reads the record pointer from the scratchpad cell 0x1F800044, scales that unsigned byte by four and calls the handler selected from word 31, 0x800C1D2C, of the handler run that starts at 0x800C1CD8, whose entries there are this overlay''s 0x800C1A28 and the main-executable handlers 0x801E52E8, 0x801E35D8, 0x801E3638, 0x801E3980, 0x801E3A00, 0x801E3B68, 0x801E4AE8, 0x801E4D8C, 0x801E4F64, 0x801E52E8 and 0x801E5288.'
   - - 552
     - c
     - publishNoopStepData
   - - 640
     - c
-    - dispatchIndexedHandlerBossBoss02116_800C1A80
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss02116_800C1A80.c'
+    - callIndexedHandler14
+    - '@source: src/bof3/boss/callIndexedHandler14.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1D5C handler table, whose three words are the inert handlers 0x800C1AB8, 0x800C1AC0 and 0x800C1AC8.'
   - - 696
     - c
-    - noopHandlerBossBoss02116_800C1AB8
+    - noopHandler59
   - - 704
     - c
     - noopHandlerBossBoss02116_800C1AC0
@@ -82,8 +82,8 @@ segments:
     - noopHandlerBossBoss02116_800C1AC8
   - - 720
     - c
-    - publishBattleHooksBossBoss02116_800C1AD0
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss02116_800C1AD0.c'
+    - publishBattleHooks16
+    - '@source: src/bof3/boss/publishBattleHooks16.c'
     - '@behavior: Publishes this overlay handler trio into the shared hook slots: the mode-transition handler 0x800C1C18 into 0x801463A4, the owner-zero battle entry 0x800C1C64 into 0x801463A8, and the index dispatcher 0x800C1B08 into 0x801463AC. It takes no arguments and returns nothing, and no in-payload word names it, so the main program reaches it through its overlay entry point.'
   - - 776
     - asm

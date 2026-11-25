@@ -6,7 +6,7 @@ typedef void (*Boss00816Handler)(void);
  * the third is the overlay's zero-result accessor. */
 void setupModeSecondTuple(void);
 void func_800C2114(void);
-s32  zeroResultBossBoss00816_800C20C0(void);
+s32  zeroResult19(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -30,5 +30,5 @@ extern Boss00816Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 void publishBattleHooks5(void) {
   D_801463A4 = setupModeSecondTuple;
   D_801463A8 = func_800C2114;
-  D_801463AC = (Boss00816Handler)zeroResultBossBoss00816_800C20C0;
+  D_801463AC = (Boss00816Handler)zeroResult19;
 }

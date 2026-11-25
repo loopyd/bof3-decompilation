@@ -23,7 +23,7 @@ extern void (*D_800C2744[])(void); /* @source 0x800C2744 @kind data */
  * naming 0x800C1EB0, so its caller is outside this overlay. Takes no arguments
  * and forwards none. Same shape as the already-exact siblings
  * callStateTable2660Boss,
- * dispatchStateByte1Table26ccBossBoss00816_800C1CD8 and
+ * callByte1Table26cc and
  * callStateTable2708Boss, which read the same
  * dispatch byte through their own tables.
  * @status exact

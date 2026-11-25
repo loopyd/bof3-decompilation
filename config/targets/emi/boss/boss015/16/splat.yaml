@@ -34,18 +34,18 @@ segments:
     - c
     - publishWorkStepHandler1
     - '@source: src/bof3/boss/publishWorkStepHandler1.c'
-    - '@behavior: Step-0 setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C199C into +0xEC, the step dispatcher dispatchIndexedHandlerBossBoss01516_800C18A0 into +0xE4 and the data pointer 0x800C19A8 (0x800C199C + 0xC, inside that same row) into +0xE8 -- then stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state byte is the value callStateTable19Boss indexes its twelve-word 0x800C19B0 run by, and this function is that run''s entry 0, so writing 2 selects its third entry, 0x801E35D8. No jal reaches this function and the 0x800C19B0 word is its only in-image reference, so it is an overlay entry reached from outside the payload.'
+    - '@behavior: Step-0 setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C199C into +0xEC, the step dispatcher callIndexedTable19e0 into +0xE4 and the data pointer 0x800C19A8 (0x800C199C + 0xC, inside that same row) into +0xE8 -- then stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state byte is the value callStateTable19Boss indexes its twelve-word 0x800C19B0 run by, and this function is that run''s entry 0, so writing 2 selects its third entry, 0x801E35D8. No jal reaches this function and the 0x800C19B0 word is its only in-image reference, so it is an overlay entry reached from outside the payload.'
   - - 160
     - c
-    - dispatchIndexedHandlerBossBoss01516_800C18A0
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss01516_800C18A0.c'
+    - callIndexedTable19e0
+    - '@source: src/bof3/boss/callIndexedTable19e0.c'
     - '@behavior: Byte-indexed overlay dispatcher: it masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C19E0 handler table, so the selected handler''s result stays in the return register'
   - - 216
     - c
     - noopHandler49
   - - 224
     - c
-    - noopHandlerBoss015_800C18E0
+    - noopHandler109
   - - 232
     - c
     - noopHandler51

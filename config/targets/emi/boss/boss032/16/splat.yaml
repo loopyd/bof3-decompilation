@@ -27,26 +27,26 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table1c40BossBoss03216_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table1c40BossBoss03216_800C1804.c'
+    - dispatchByte1Table1c40
+    - '@source: src/bof3/boss/dispatchByte1Table1c40.c'
     - '@behavior: Overlay state dispatcher of this payload, the first code word after its four-byte entry header: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 1, scales it by four and calls that entry of the code pointer run based at 0x800C1C40 with no arguments, leaving the selected handler result in the return register; slots 0 and 6 of that run are this payload''s own functions 0x800C1848 and 0x800C18AC, and the run from 0x800C1C2C is the neighboring reviewed textbin row. No word or jal site in the payload names this entry, so the overlay loader calls it.'
   - - 72
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03216_800C1848
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03216_800C1848.c'
-    - '@behavior: Step setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C1C2C into +0xEC, the indexed dispatcher dispatchIndexedHandlerBossBoss03216_800C1978 into +0xE4 and the in-row pointer 0x800C1C38 (0x800C1C2C + 0xC) into +0xE8 -- then raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. No jal names 0x800C1848: its only in-image reference is the word 0x800C1848 stored at 0x800C1C40, entry 0 of the run this payload''s 0x800C1804 state dispatcher indexes with that same state byte, so writing 2 moves the next dispatch to that run''s entry 2, the shared handler 0x801E35D8, instead of re-entering this installer.'
+    - publishWorkStepBit
+    - '@source: src/bof3/boss/publishWorkStepBit.c'
+    - '@behavior: Step setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C1C2C into +0xEC, the indexed dispatcher dispatchIndexTable1c88 into +0xE4 and the in-row pointer 0x800C1C38 (0x800C1C2C + 0xC) into +0xE8 -- then raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. No jal names 0x800C1848: its only in-image reference is the word 0x800C1848 stored at 0x800C1C40, entry 0 of the run this payload''s 0x800C1804 state dispatcher indexes with that same state byte, so writing 2 moves the next dispatch to that run''s entry 2, the shared handler 0x801E35D8, instead of re-entering this installer.'
   - - 172
     - c
-    - dispatchStateByte2Table1c70BossBoss03216_800C18AC
-    - '@source: src/bof3/boss/dispatchStateByte2Table1c70BossBoss03216_800C18AC.c'
+    - dispatchByte2Table1c70
+    - '@source: src/bof3/boss/dispatchByte2Table1c70.c'
     - '@behavior: Second-level overlay dispatch on the work record byte at offset 2: reads the work-record pointer from the scratchpad cell 0x1F800044, scales that byte by four and calls the handler selected from the pointer run based at 0x800C1C70, whose entries there are 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, 0x800C18F0, 0x801E4928, 0x800C19B0, 0x800C19B8 and 0x800C19C0, returning the selected handler result in the return register; slot 6 of the byte-1 run at 0x800C1C40, the word 0x800C1C58, names this span.'
   - - 240
     - asm
     - func_800C18F0
   - - 376
     - c
-    - dispatchIndexedHandlerBossBoss03216_800C1978
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03216_800C1978.c'
+    - dispatchIndexTable1c88
+    - '@source: src/bof3/boss/dispatchIndexTable1c88.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1C88 handler table, returning the selected handler result in the return register.'
   - - 432
     - c
@@ -59,9 +59,9 @@ segments:
     - noopHandlerBossBoss03216_800C19C0
   - - 456
     - c
-    - publishBattleHooksBossBoss03216_800C19C8
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss03216_800C19C8.c'
-    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the unlifted handler func_800C1A08 into 0x801463A4, the battle setup hook publishOwnerRecordAndRequestResourceZeroBossBoss03216_800C1BEC into 0x801463A8, and the zero-result accessor zeroResultBossBoss03216_800C1A00 into 0x801463AC.'
+    - publishHooksOwnerRecord
+    - '@source: src/bof3/boss/publishHooksOwnerRecord.c'
+    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the unlifted handler func_800C1A08 into 0x801463A4, the battle setup hook publishOwnerRecordResource into 0x801463A8, and the zero-result accessor zeroResultBossBoss03216_800C1A00 into 0x801463AC.'
   - - 512
     - c
     - zeroResultBossBoss03216_800C1A00
@@ -70,8 +70,8 @@ segments:
     - func_800C1A08
   - - 1004
     - c
-    - publishOwnerRecordAndRequestResourceZeroBossBoss03216_800C1BEC
-    - '@source: src/bof3/boss/publishOwnerRecordAndRequestResourceZeroBossBoss03216_800C1BEC.c'
+    - publishOwnerRecordResource
+    - '@source: src/bof3/boss/publishOwnerRecordResource.c'
     - '@behavior: Battle setup hook of this overlay: clears the 0x40 flag of owner record 0, publishes the pointer returned by findOwnerRecord into the shared battle-record cell 0x80146884 and into the scratchpad work-record cursor 0x1F800044, then requests resource 0; the installer at 0x800C19C8 publishes it into the shared hook slot 0x801463A8.'
   - - 1068
     - textbin

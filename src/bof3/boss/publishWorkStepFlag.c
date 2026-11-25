@@ -14,7 +14,7 @@ typedef struct Boss00216PublishWork {
 /* The data pointer this publisher installs at +0xEC is the start of this
  * payload's 0xF4-byte data row at 0x800C1F9C, the run the Splat `textbin` row
  * places at the end of the code segment; its +0xAC word 0x800C2048 is the
- * handler table dispatchIndexedHandlerBossBoss00216_800C1C08 dispatches
+ * handler table callIndexedTable2048 dispatches
  * through. The second pointer this
  * publisher installs, 0x800C1FB4, is the +0x18 word of that same row: it is
  * 0x800C1FAC + 8, index 4 of the 0x0600 halfword run the row holds from +0x10
@@ -32,7 +32,7 @@ extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
  * publisher installs at +0xE4: it masks its argument with 0xFF, scales it by
  * four and calls the entry of the 0x800C2084 run, the three inert handlers at
  * 0x800C1D38, 0x800C1D40 and 0x800C1D48. */
-void dispatchIndexedHandlerBossBoss00216_800C1D00(u8 index);
+void callIndexedTable2084(u8 index);
 
 /* Shared main-program helper the whole boss archive family calls at the end of
  * its step setup, for example 0x800C1C68 and 0x800C1D40 of BIN/BOSS/BOSS008.EMI
@@ -43,7 +43,7 @@ void func_8014D978(void);
  * @behavior Step setup of this overlay work state machine: publishes three
  * words into the current enemy work record loaded from 0x801EB4E8 -- the data
  * row pointer 0x800C1F9C into +0xEC, the indexed dispatcher
- * dispatchIndexedHandlerBossBoss00216_800C1D00 into +0xE4 and the in-row
+ * callIndexedTable2084 into +0xE4 and the in-row
  * pointer 0x800C1FB4 (0x800C1F9C + 0x18) into +0xE8 -- then raises bit 0x8 of
  * the record +0x104 flag word, stores 2 into the state byte at +1 of the work
  * record the main program publishes at the scratchpad pointer cell 0x1F800044
@@ -67,7 +67,7 @@ void publishWorkStepFlag(
 
   work->data_row = &D_800C1F9C;
   work->step_handler =
-      dispatchIndexedHandlerBossBoss00216_800C1D00;
+      callIndexedTable2084;
   work->step_data = &D_800C1FB4;
   state = SPAD_PTR_SLOT(u8, 0x44u);
   work->flags |= 8u;

@@ -19,7 +19,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * This overlay's handler run at 0x800C35D4 holds sixteen code pointers, entry 0
  * = 0x800C204C through entry 15 = 0x800C2FFC, and the four bases inside it are
  * used by four dispatchers: 0x800C35D8 (entry 1) here, 0x800C35EC (entry 6) in
- * dispatchIndexedHandlerBossBoss05516_800C22F0, and 0x800C35F8 (entry 9) in
+ * callIndexedHandler31, and 0x800C35F8 (entry 9) in
  * publishEnemyBaseBoss. From this
  * base the reached entries are 0x800C2120, 0x800C2158, 0x800C21E4, 0x800C2234
  * and 0x800C2244, the five state bodies of this overlay. The Splat `textbin`

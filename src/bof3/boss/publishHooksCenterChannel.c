@@ -6,10 +6,10 @@ typedef void (*Boss03816Handler)(void);
  * slots. The first is this target's exact battle-flag state switch 0x800C1B10,
  * the second its exact inert handler 0x800C1B74, and the third its exact
  * zero-result accessor 0x800C1B08, which the void slot type drops. */
-void initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss03816_800C1B10(
+void stateFlagProgressSwitch(
     void);
-void noopHandlerBossBoss03816_800C1B74(void);
-s32 zeroResultBossBoss03816_800C1B08(void);
+void noopHandler7(void);
+s32 zeroResult(void);
 
 /* Scratchpad work-record pointer cell: the battle code publishes a work record
  * here and every access reaches that record through this cell. Declared as a
@@ -53,7 +53,7 @@ extern u16 D_8014932E; /* @source 0x8014932E @kind unknown */
  * step loads and calls: the battle overlay header include/bof3/battle/
  * battle03_internal.h binds both as handler cells, and its own lifts call the
  * loaded pointers. 0x801463AC is the third slot of the same trio. The exact
- * same-target sibling publishBattleHooksBossBoss03816_800C1B7C writes the same
+ * same-target sibling publishFlagHooks2 writes the same
  * three slots in the same order through the same slot type. */
 extern Boss03816Handler D_801463A4; /* @source 0x801463A4 @kind unknown */
 extern Boss03816Handler D_801463A8; /* @source 0x801463A8 @kind unknown */
@@ -99,9 +99,9 @@ void publishHooksCenterChannel(
   u8 *work;
 
   D_801463A4 =
-      initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss03816_800C1B10;
-  D_801463A8 = noopHandlerBossBoss03816_800C1B74;
-  D_801463AC = (Boss03816Handler)zeroResultBossBoss03816_800C1B08;
+      stateFlagProgressSwitch;
+  D_801463A8 = noopHandler7;
+  D_801463AC = (Boss03816Handler)zeroResult;
   D_80146384 = 0x40;
   D_1F800044 = &D_801EBDD8;
   func_800AFD9C();

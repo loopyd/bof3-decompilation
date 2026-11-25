@@ -5,7 +5,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern u8 func_8014D978(void); /* @source 0x8014D978 */
 extern s32 func_801782FC(s32 angle); /* @source 0x801782FC */
 extern s32 func_801783C8(s32 angle); /* @source 0x801783C8 */
-extern void clearWorkBytesBmagicMagic22503_801F0338(void); /* @source 0x801F0338 */
+extern void clearWorkBytes(void); /* @source 0x801F0338 */
 
 /* @source 0x801F021C
  * @behavior Calls 0x8014D978, adds 0x800 to work words 0x40 and 0x44,
@@ -37,6 +37,6 @@ void stepPositionPairGrow(void) {
     *(s32 *)(work3 + 0x38) += sample * 4;
     if (--work3[9] == 0) {
         D_801EB4E0[0xB]--;
-        clearWorkBytesBmagicMagic22503_801F0338();
+        clearWorkBytes();
     }
 }

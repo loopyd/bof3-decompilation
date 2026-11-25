@@ -31,26 +31,26 @@ segments:
     - D_800C1804
   - - 20
     - c
-    - dispatchStateByte1Table1dc4BossBoss05116_800C1814
-    - '@source: src/bof3/boss/dispatchStateByte1Table1dc4BossBoss05116_800C1814.c'
+    - callStateByte1Table11
+    - '@source: src/bof3/boss/callStateByte1Table11.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer from the scratchpad cell 0x1F800044, takes its unsigned byte at offset 1, scales it by four and calls that entry of the handler table based at 0x800C1DC4, word 5 of the reviewed textbin row D_800C1DB0, with no arguments. It bounds nothing before the scaled load, reads no other state and writes none; the 0x18-byte frame only keeps $ra at 0x10 and the epilogue leaves the selected handler''s $v0 untouched. No word of the payload holds 0x800C1814 and no jal names it, so the overlay loader enters it after the sixteen-byte handler table at 0x800C1804.'
   - - 88
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05116_800C1858
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05116_800C1858.c'
+    - publishWorkStepFlag2
+    - '@source: src/bof3/boss/publishWorkStepFlag2.c'
     - '@behavior: Publishes three words into the current enemy work record loaded from 0x801EB4E8: the data row pointer 0x800C1DB0 into +0xEC, the byte-indexed dispatcher 0x800C19C4 into +0xE4 and the in-row word 0x800C1DBC into +0xE8. Then it raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the record published at scratchpad cell 0x1F800044 and calls func_8014D978. No jal names 0x800C1858: its only in-image reference is the word 0x800C1DC4, entry 0 of the state table the payload dispatcher at 0x800C1814 indexes with that same state byte, so writing 2 moves the next dispatch to entry 2, the shared handler 0x801E35D8. The 0x18-byte frame only keeps $ra at 0x10 across the helper call; it reads no other state, writes none and returns nothing.'
   - - 188
     - c
-    - dispatchStateByte2Table1df4BossBoss05116_800C18BC
-    - '@source: src/bof3/boss/dispatchStateByte2Table1df4BossBoss05116_800C18BC.c'
+    - callStateByte2Table8
+    - '@source: src/bof3/boss/callStateByte2Table8.c'
   - - 256
     - c
     - armClassSlotPointer
     - '@source: src/bof3/boss/armClassSlotPointer.c'
-    - '@behavior: Entry 0 of this overlay byte-2 step run, the code pointer run the payload places at 0x800C1DF4 that the dispatcher dispatchStateByte2Table1df4BossBoss05116_800C18BC indexes with work byte +2 of the scratch work record at 0x1F800044: loads the current enemy work record pointer from 0x801EB4E8, takes its unsigned byte +0xE0, scales it by the 0x88-byte class-row stride and stores the class-row byte at 0x800E40CE into scratch work byte +0x09, claims an action slot of the 0x78-byte pool through func_801E590C(3, 7), truncates the returned index to a byte, scales it by that stride and publishes the work record pointer it re-reads from the scratchpad cell into the claimed slot word at 0x801EC3A4, then advances scratch work byte +0x02 by one, which moves the dispatcher to run word 1, the inert handler 0x800C1984. The body has no branch and never distinguishes the 0xFF pool-full answer; the record pointer load precedes frame creation, the class-row store fills the call delay slot, and the 0x18-byte frame only keeps $ra at 0x10 across that single call. No jal names 0x800C1900: its only in-image reference is the run word at 0x800C1DF4.'
+    - '@behavior: Entry 0 of this overlay byte-2 step run, the code pointer run the payload places at 0x800C1DF4 that the dispatcher callStateByte2Table8 indexes with work byte +2 of the scratch work record at 0x1F800044: loads the current enemy work record pointer from 0x801EB4E8, takes its unsigned byte +0xE0, scales it by the 0x88-byte class-row stride and stores the class-row byte at 0x800E40CE into scratch work byte +0x09, claims an action slot of the 0x78-byte pool through func_801E590C(3, 7), truncates the returned index to a byte, scales it by that stride and publishes the work record pointer it re-reads from the scratchpad cell into the claimed slot word at 0x801EC3A4, then advances scratch work byte +0x02 by one, which moves the dispatcher to run word 1, the inert handler 0x800C1984. The body has no branch and never distinguishes the 0xFF pool-full answer; the record pointer load precedes frame creation, the class-row store fills the call delay slot, and the 0x18-byte frame only keeps $ra at 0x10 across that single call. No jal names 0x800C1900: its only in-image reference is the run word at 0x800C1DF4.'
   - - 388
     - c
-    - noopHandlerBossBoss05116_800C1984
+    - noopHandler80
   - - 396
     - c
     - callSlotAllocatorReset
@@ -58,32 +58,32 @@ segments:
     - '@behavior: Guarded shared-helper pair of this overlay and record word 10 of the payload-final textbin row D_800C1DB0: it reads the shared battle flag halfword 0x801462E8 at halfword width, tests bit 0x4, and while that bit is set calls the shared main-executable flag-and-slot helper 0x801E5704 with no arguments and then the shared enemy-scratch reset 0x801E567C. While the bit is clear it returns without touching anything. The body writes no state itself, the 0x18-byte frame only keeps $ra at 0x10, and neither call keeps a result, so the one epilogue discards the last $v0. No jal names this address; the word 0x800C198C it stores at 0x800C1DD8 is its only in-image reference and the consumer of that word is outside this payload.'
   - - 452
     - c
-    - dispatchIndexedHandlerBossBoss05116_800C19C4
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss05116_800C19C4.c'
+    - callIndexedHandler15
+    - '@source: src/bof3/boss/callIndexedHandler15.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the three-word run based at 0x800C1DFC, the 0x4C-byte offset of the payload-final textbin row D_800C1DB0 whose three words are the inert handlers 0x800C19FC, 0x800C1A04 and 0x800C1A0C. The original bounds nothing before the scaled table load and the selected handler result stays in the return register; the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal names 0x800C19C4: the step-setup publisher at 0x800C1858 materializes the address and stores it into +0xE4 of the current enemy work record, so whoever calls that stored slot supplies the index.'
   - - 508
     - c
-    - noopHandlerBossBoss05116_800C19FC
+    - noopHandler67
   - - 516
     - c
-    - noopHandlerBossBoss05116_800C1A04
+    - noopHandler68
   - - 524
     - c
-    - noopHandlerBossBoss05116_800C1A0C
+    - noopHandler
   - - 532
     - c
-    - publishBattleHooksBossBoss05116_800C1A14
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss05116_800C1A14.c'
+    - publishBattleHooks11
+    - '@source: src/bof3/boss/publishBattleHooks11.c'
     - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the state switch 0x800C1A54 into 0x801463A4, the inert handler 0x800C1AA0 into 0x801463A8 and the zero-result accessor 0x800C1A4C into 0x801463AC. It writes no other state and returns nothing; no jal immediate and no pointer word of this payload names 0x800C1A14, so the main program reaches it through the overlay entry point.'
   - - 588
     - c
-    - zeroResultBossBoss05116_800C1A4C
+    - zeroResult
   - - 596
     - asm
     - func_800C1A54
   - - 672
     - c
-    - noopHandlerBossBoss05116_800C1AA0
+    - noopHandler86
   - - 680
     - c
     - callStateTable1804Boss
@@ -101,8 +101,8 @@ segments:
     - '@source: src/bof3/boss/pollBattleReadyRequest.c'
   - - 1404
     - c
-    - raiseFlag4AndInvokeHelperBossBoss05116_800C1D7C
-    - '@source: src/bof3/boss/raiseFlag4AndInvokeHelperBossBoss05116_800C1D7C.c'
+    - raiseInvokeHelperBoss
+    - '@source: src/bof3/boss/raiseInvokeHelperBoss2.c'
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments, unconditionally. This entry is the fourth code pointer of the boss step table at 0x800C1804 (0x800C1B14, 0x800C1BF0, 0x800C1CE4, 0x800C1D7C), which the neighbouring dispatcher copies into its frame and indexes by the work record byte 1, so no jal reaches it. The 0x18-byte frame only keeps $ra at 0x10 across the helper call; it reads and writes no other state and returns nothing.'
   - - 1456
     - textbin

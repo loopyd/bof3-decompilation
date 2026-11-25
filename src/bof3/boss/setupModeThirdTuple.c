@@ -21,7 +21,7 @@ void initModeTuple530(void); /* @source 0x801DDF28 */
  * then stores the mode byte 3 into 0x80146255. It reads no other state, writes
  * only those two bytes, takes no arguments and returns nothing, and its
  * 0x18-byte frame keeps $ra at 0x10 across the chosen call. The installer
- * publishBattleHooksBossBoss01316_800C200C next in this payload materializes
+ * publishBattleHooksMode32 next in this payload materializes
  * this function's address into the shared battle-hook slot 0x801463A4; no word
  * of this payload holds that address and no `jal` reaches it, so the main
  * program reaches it through that slot. Same hook slot and condition shape as

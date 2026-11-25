@@ -5,7 +5,7 @@
  * nine-word run based at 0x800C26A8 read one word in, so these are that run's
  * entries 1 through 7, and its trailing words 0x800C26C0 through 0x800C26C8
  * hold this payload's no-op handlers. The next word at 0x800C26CC opens the
- * byte-1 run that dispatchStateByte1Table26ccBossBoss00816_800C1CD8 indexes.
+ * byte-1 run that callByte1Table26cc indexes.
  * The words themselves sit inside the Splat `textbin` row D_800C2640, so the
  * run is only referenced here. */
 extern void (*D_800C26B0[])(void); /* @source 0x800C26B0 @kind data */

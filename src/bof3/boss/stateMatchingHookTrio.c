@@ -37,7 +37,7 @@ void func_800C1F30(void); /* @source 0x800C1F30 */
  * then stores 0x800C20A8, 0x800C22D0 and 0x800C1F30 into the shared hook slots
  * 0x801463A4, 0x801463A8 and 0x801463AC: the same three slots, in the same
  * order and with the same store shape the exact sibling
- * publishBattleHooksBossBoss03416_800C2340 wrote, so that sibling supplied the
+ * publishBattleHooks22 wrote, so that sibling supplied the
  * tail's statement order while the published addresses come from this span's
  * own bytes. The counter-and-offset loop is the shape of the exact sibling
  * scanWorkRecordsForPartyByte2ScenarioScena0700_801FDA34, which walks the same

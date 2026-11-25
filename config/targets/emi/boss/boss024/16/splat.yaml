@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table1b58BossBoss02416_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table1b58BossBoss02416_800C1804.c'
+    - callStateByte1Table523
+    - '@source: src/bof3/boss/callStateByte1Table523.c'
     - '@behavior: Overlay state dispatch: loads the scratchpad work pointer cell at 0x1F800044, takes the work record dispatch byte at offset 1 as the index and calls the handler pointer at that index of the local handler table based at 0x800C1B58, so the selected handler result stays in the return register'
   - - 72
     - c
@@ -45,60 +45,60 @@ segments:
     - noopHandlerBossBoss02416_800C18D8
   - - 224
     - c
-    - noopHandlerBossBoss02416_800C18E0
+    - noopHandler69
   - - 232
     - c
     - noopHandlerBossBoss02416_800C18E8
   - - 240
     - c
-    - dispatchStateByte1Table1b94BossBoss02416_800C18F0
-    - '@source: src/bof3/boss/dispatchStateByte1Table1b94BossBoss02416_800C18F0.c'
+    - callStateByte1Table8
+    - '@source: src/bof3/boss/callStateByte1Table8.c'
     - '@behavior: Overlay state dispatch: loads the scratchpad work pointer cell at 0x1F800044, takes the work record dispatch byte at offset 1 as the index and calls the handler pointer at that index of the local handler table based at 0x800C1B94, so the selected handler result stays in the return register'
   - - 308
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss02416_800C1934
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss02416_800C1934.c'
+    - publishWorkStepFlag8
+    - '@source: src/bof3/boss/publishWorkStepFlag8.c'
     - '@behavior: Step setup of this overlay work state machine: publishes the data row pointer 0x800C1B44 into +0xEC, the indexed dispatcher 0x800C1998 into +0xE4 and the in-row pointer 0x800C1B50 into +0xE8 of the current enemy work record loaded from 0x801EB4E8, raises bit 0x8 of that record +0x104 flag word, stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls 0x8014D978.'
   - - 408
     - c
-    - dispatchIndexedHandlerBossBoss02416_800C1998
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss02416_800C1998.c'
+    - callIndexedHandler26
+    - '@source: src/bof3/boss/callIndexedHandler26.c'
     - '@behavior: Byte-indexed overlay dispatcher: it masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1BC4 handler table, so the selected handler result stays in the return register'
   - - 464
     - c
-    - noopHandlerBossBoss02416_800C19D0
+    - noopHandler72
   - - 472
     - c
-    - noopHandlerBossBoss02416_800C19D8
+    - noopHandler88
   - - 480
     - c
-    - noopHandlerBossBoss02416_800C19E0
+    - noopHandler126
   - - 488
     - c
-    - publishBattleHooksBossBoss02416_800C19E8
+    - publishBattleHooks25
   - - 544
     - c
-    - zeroResultBossBoss02416_800C1A20
+    - zeroResult31
   - - 552
     - asm
     - func_800C1A28
   - - 656
     - c
-    - invokeHelperArgBossBoss02416_800C1A90
+    - invokeHelperArg1
   - - 688
     - c
-    - publishBattleHooksBossBoss02416_800C1AB0
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss02416_800C1AB0.c'
-    - '@behavior: Publishes a second overlay handler trio into the shared hook slots: func_800C1AF0 into 0x801463A4, noopHandlerBossBoss02416_800C1B3C into 0x801463A8 and zeroResultBossBoss02416_800C1AE8 into 0x801463AC.'
+    - publishBattleHooks17
+    - '@source: src/bof3/boss/publishBattleHooks17.c'
+    - '@behavior: Publishes a second overlay handler trio into the shared hook slots: func_800C1AF0 into 0x801463A4, noopHandler75 into 0x801463A8 and zeroResult32 into 0x801463AC.'
   - - 744
     - c
-    - zeroResultBossBoss02416_800C1AE8
+    - zeroResult32
   - - 752
     - asm
     - func_800C1AF0
   - - 828
     - c
-    - noopHandlerBossBoss02416_800C1B3C
+    - noopHandler75
   - - 836
     - textbin
     - D_800C1B44

@@ -51,7 +51,11 @@ def read_psx_exe_info(path: Path) -> PsxExeInfo | None:
 
 
 def infer_size_from_sibling_sources(
-    source_path: Path, address: int, root: Path | None = None
+    source_path: Path,
+    address: int,
+    root: Path | None = None,
+    *,
+    manifests=None,
 ) -> int | None:
     """Infer a size from the next-higher authored lift address.
 
@@ -61,7 +65,7 @@ def infer_size_from_sibling_sources(
     """
 
     if root is not None:
-        manifest = owning_manifest(root, source_path)
+        manifest = owning_manifest(root, source_path, manifests=manifests)
         if manifest is not None:
             from ..domain.claims import collect_manifest_source_addresses
 
@@ -125,13 +129,16 @@ def infer_original_size(
     binary_path: Path,
     load_address: int | None,
     root: Path | None = None,
+    manifests=None,
 ) -> int:
     try:
         return infer_size_from_binary_return(
             binary_path, address=address, load_address=load_address
         )
     except ValueError:
-        sibling_size = infer_size_from_sibling_sources(source_path, address, root=root)
+        sibling_size = infer_size_from_sibling_sources(
+            source_path, address, root=root, manifests=manifests
+        )
         if sibling_size is not None:
             return sibling_size
         raise
@@ -167,8 +174,10 @@ def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
     return object_path.relative_to(layout.root.resolve()).as_posix()
 
 
-def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
-    manifest = owning_manifest(layout.root, source_path)
+def default_binary_for_source(
+    layout: RepoLayout, source_path: Path, *, manifests=None
+) -> Path:
+    manifest = owning_manifest(layout.root, source_path, manifests=manifests)
     if manifest is not None:
         return layout.root / manifest.binary
     resolved_source = source_path.expanduser().resolve()
@@ -180,9 +189,9 @@ def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
 
 
 def overlay_load_address_for_source(
-    layout: RepoLayout, source_path: Path
+    layout: RepoLayout, source_path: Path, *, manifests=None
 ) -> int | None:
-    manifest = owning_manifest(layout.root, source_path)
+    manifest = owning_manifest(layout.root, source_path, manifests=manifests)
     if manifest is not None:
         return _catalog_load_address(layout, manifest.disc_id) or manifest.load_address
     return None

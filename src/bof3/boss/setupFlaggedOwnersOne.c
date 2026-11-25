@@ -22,7 +22,7 @@ extern u8 D_801EB748[]; /* @source 0x801EB748 @kind unknown */
 
 /* @source 0x800C2F74
  * @behavior Battle setup hook of this overlay, the second member of the handler
- *           trio the exact installer publishBattleHooksBossBoss02513_800C2B60
+ *           trio the exact installer publishBattleHooks28
  *           publishes into the shared battle hook slot 0x801463A8; no `jal` in
  *           this payload reaches it and the only word naming it is that
  *           installer's store, so the main program calls it through the slot.

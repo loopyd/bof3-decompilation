@@ -8,20 +8,20 @@ splat = "config/targets/emi/boss/boss050/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchStateByte1Table1b4cBossBoss05016_800C1810.c",
-    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05016_800C1854.c",
+    "src/bof3/boss/callStateByte1Table7.c",
+    "src/bof3/boss/publishWorkStepFlag4.c",
     "src/bof3/boss/publishSavedPointerPrevious.c",
 ]
 support_sources = [
     "src/bof3/boss/setupFlagBitSelected.c",
-    "src/bof3/boss/publishBattleHooksBossBoss05016_800C1908.c",
-    "src/bof3/boss/noopHandlerBossBoss05016_800C19A0.c",
-    "src/bof3/boss/zeroResultBossBoss05016_800C1940.c",
-    "src/bof3/boss/noopHandlerBossBoss05016_800C1900.c",
-    "src/bof3/boss/noopHandlerBossBoss05016_800C18F8.c",
+    "src/bof3/boss/publishBattleHooks29.c",
+    "src/bof3/boss/noopHandler101.c",
+    "src/bof3/boss/zeroResult16.c",
+    "src/bof3/boss/noopHandler74.c",
+    "src/bof3/boss/noopHandler92.c",
     "src/bof3/boss/noopHandlerBossBoss05016_800C18F0.c",
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss05016_800C18B8.c",
-    "src/bof3/boss/dispatchStateByte1Table1804BossBoss05016_800C19A8.c",
+    "src/bof3/boss/callIndexedHandler24.c",
+    "src/bof3/boss/dispatchWorkByte1Triple.c",
     "src/bof3/support/boss050_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss050_16_psyq.c"

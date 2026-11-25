@@ -35,47 +35,47 @@ segments:
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer at scratchpad cell 0x1F800044, calls the handler at that record byte 1 of the run based at 0x800C2090 with no arguments, and the epilogue leaves the selected handler return value untouched.'
   - - 124
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05416_800C187C
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05416_800C187C.c'
+    - publishStepStateSetup
+    - '@source: src/bof3/boss/publishStepStateSetup.c'
     - '@behavior: Step setup of this overlay work state machine: publishes the data row pointer 0x800C2078, the indexed handler 0x800C18E0 and the in-row pointer 0x800C2084 into words +0xEC, +0xE4 and +0xE8 of the current work record loaded from 0x801EB4E8, raises bit 0x8 of that record +0x104 flag word, stores 2 into the state byte at +1 of the record published at scratchpad pointer cell 0x1F800044 and calls func_8014D978; no jal names it, its only in-image reference being entry 0 of the 0x800C2090 handler run inside the 0x800C2078 data row.'
   - - 224
     - c
-    - dispatchIndexedHandlerBossBoss05416_800C18E0
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss05416_800C18E0.c'
+    - callIndexedHandler29
+    - '@source: src/bof3/boss/callIndexedHandler29.c'
     - '@behavior: Byte-indexed handler dispatch of this overlay: masks the index argument with 0xFF, scales it by four and calls the entry of the three-word handler run at 0x800C20C0, which holds this overlay''s inert handlers 0x800C1918, 0x800C1920 and 0x800C1928, inside a 0x18-byte frame that keeps the return address at 0x10 so the selected handler result survives; 0x800C187C stores the address into work record word +0xE4 and no jal names it.'
   - - 280
     - c
-    - noopHandlerBossBoss05416_800C1918
+    - noopHandler
   - - 288
     - c
-    - noopHandlerBossBoss05416_800C1920
+    - noopHandler60
   - - 296
     - c
-    - noopHandlerBossBoss05416_800C1928
+    - noopHandler61
   - - 304
     - c
-    - publishBattleHooksBossBoss05416_800C1930
+    - publishBattleHooks27
   - - 360
     - c
-    - zeroResultBossBoss05416_800C1968
+    - zeroResult
   - - 368
     - c
-    - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress32BossBoss05416_800C1970
-    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress32BossBoss05416_800C1970.c'
+    - initModeProgress32
+    - '@source: src/bof3/boss/initModeProgress32.c'
     - '@behavior: Battle-flag state switch of this overlay work state machine: loads the shared battle flag byte 0x80146328 once, tests bit 0x2 and, while it is set, stores 0x32 into the shared scenario progress byte 0x80146864 and runs the mode-tuple service 0x801DDED8, otherwise running the mode-tuple service 0x801DDF00, in a 0x18-byte frame that keeps the return address at 0x10 across the chosen call.'
   - - 444
     - c
-    - noopHandlerBossBoss05416_800C19BC
+    - noopHandler106
   - - 452
     - c
-    - dispatchStateByte1Table1804BossBoss05416_800C19C4
-    - '@source: src/bof3/boss/dispatchStateByte1Table1804BossBoss05416_800C19C4.c'
+    - callStateTableFrame
+    - '@source: src/bof3/boss/callStateTableFrame.c'
     - '@behavior: Overlay step dispatch on work-record byte 1 from a frame copy of the thirteen-word handler run at 0x800C1804: copies the ten leading words of that run into a 0x28-byte local frame table, four words per iteration over the leading 0x20 bytes plus a two-word tail, then reads the work-record pointer at scratchpad cell 0x1F800044 once, scales unsigned byte 1 of that record by four, loads the matching frame word and calls it with no arguments; the 0x40-byte frame keeps the return address at 0x38 and the epilogue leaves the selected handler result in $v0 untouched, so no jal and no stored word in the payload names this dispatcher.'
   - - 596
     - c
     - publishSavedRestorePrevious
     - '@source: src/bof3/boss/publishSavedRestorePrevious.c'
-    - '@behavior: Step handler entry 0 of this overlay handler run: reads the active work-object pointer at the scratchpad cell 0x1F800044 into a callee-saved register, publishes word 0x74 of the shared battle record 0x801EC2E0, that record''s saved work-object pointer, into the same cell, calls the shared active-work sequence selector 0x8014D6B8 with selector 2, restores the cell to the pointer it held, then advances state byte 1 of that previous work object and stores 8 into its word 0xC. The 0x18-byte frame keeps the previous pointer at 0x10 and the return address at 0x14 across the single call; the address is entry 0 of the thirteen-word code pointer run 0x800C1804 and the first of the ten entries that dispatchStateByte1Table1804BossBoss05416_800C19C4 copies into its frame table, so no jal names it.'
+    - '@behavior: Step handler entry 0 of this overlay handler run: reads the active work-object pointer at the scratchpad cell 0x1F800044 into a callee-saved register, publishes word 0x74 of the shared battle record 0x801EC2E0, that record''s saved work-object pointer, into the same cell, calls the shared active-work sequence selector 0x8014D6B8 with selector 2, restores the cell to the pointer it held, then advances state byte 1 of that previous work object and stores 8 into its word 0xC. The 0x18-byte frame keeps the previous pointer at 0x10 and the return address at 0x14 across the single call; the address is entry 0 of the thirteen-word code pointer run 0x800C1804 and the first of the ten entries that callStateTableFrame copies into its frame table, so no jal names it.'
   - - 692
     - asm
     - func_800C1AB4
@@ -92,7 +92,7 @@ segments:
     - c
     - raiseInvokeHelperBoss
     - '@source: src/bof3/boss/raiseInvokeHelperBoss.c'
-    - '@behavior: Step handler of this overlay handler run: raises bit 0x4 of the shared battle global halfword 0x801462E8 with a halfword read-modify-write through one address register whose store fills the call delay slot, then calls the shared helper 0x801E5988 with no arguments inside a 0x18-byte frame that keeps the return address at 0x10; it returns nothing. Its address is entry 9 of the thirteen-word code pointer run 0x800C1804 through 0x800C1834, held by the word at 0x800C1824 and the last of the ten entries that dispatchStateByte1Table1804BossBoss05416_800C19C4 copies into its frame, so no jal names it.'
+    - '@behavior: Step handler of this overlay handler run: raises bit 0x4 of the shared battle global halfword 0x801462E8 with a halfword read-modify-write through one address register whose store fills the call delay slot, then calls the shared helper 0x801E5988 with no arguments inside a 0x18-byte frame that keeps the return address at 0x10; it returns nothing. Its address is entry 9 of the thirteen-word code pointer run 0x800C1804 through 0x800C1834, held by the word at 0x800C1824 and the last of the ten entries that callStateTableFrame copies into its frame, so no jal names it.'
   - - 1328
     - c
     - callLocalHandlerBoss

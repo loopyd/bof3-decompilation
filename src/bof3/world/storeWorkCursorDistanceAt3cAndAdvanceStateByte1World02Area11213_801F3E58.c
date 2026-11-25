@@ -20,7 +20,7 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           shared distance helper func_8015477C, stores the answer shifted left
  *           16 into the object's third cursor word at +0x3C, and advances the
  *           object's state byte at +1 by one, which hands the step over to
- *           entry 1 of the same table, drawWorkCursorQuadWorld02Area11213_801F3EA4.
+ *           entry 1 of the same table, drawWorkCursorQuad.
  *           The pointer is loaded before the stack frame because the first
  *           argument pair needs it and nothing before those loads needs the
  *           frame, and it is re-read from the cell after the call rather than

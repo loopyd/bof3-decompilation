@@ -36,7 +36,7 @@ void func_8014D978(void);
  * 0x800C1B50 (0x800C1B44 + 0xC, inside that same row) into +0xE8 -- then stores
  * 2 into the state byte at +1 of the work record the main program publishes at
  * the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state
- * byte is the value dispatchStateByte1Table1b58BossBoss02416_800C1804 scales by
+ * byte is the value callStateByte1Table523 scales by
  * four against its 0x800C1B58 run, whose entry 0 is the word 0x800C1848, so
  * writing 2 selects that run's entry 2, 0x801E35D8, instead of re-entering this
  * installer; a scan of the payload finds the word 0x800C1848 at 0x800C1B58 only

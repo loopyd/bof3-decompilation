@@ -12,7 +12,7 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  * the ori and the store, and the store fills the call delay slot. This address
  * is entry 9 of the thirteen-word code pointer run at 0x800C1804, held by the
  * word at 0x800C1824 and the last of the ten entries that
- * dispatchStateByte1Table1804BossBoss05416_800C19C4 copies into its frame and
+ * callStateTableFrame copies into its frame and
  * indexes by work record byte 1, so no jal and no other word of the payload
  * names it. The 0x18-byte frame only keeps $ra at 0x10 across the helper call;
  * nothing is returned and no other state is read or written.

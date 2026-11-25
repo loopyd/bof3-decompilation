@@ -29,7 +29,7 @@ extern void (*D_800C2CAC[])(void); /* @source 0x800C2CAC @kind data */
  * after the scaled table load stay nops. The payload contains no word or jal
  * site naming 0x800C184C, so its caller is outside this overlay. Takes no
  * arguments and forwards none. Same shape as the already-exact siblings
- * dispatchStateByte1Table2d24BossBoss01816_800C1B84 of this overlay and
+ * callByte1Table2d24 of this overlay and
  * dispatchStateByte1Table2744BossBoss00816_800C1EB0 of boss008/16, which read
  * the same dispatch byte through their own tables; this body differs from them
  * only in the table address of its scaled load word.

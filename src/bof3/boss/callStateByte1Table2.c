@@ -8,7 +8,7 @@
  * 0x800C1ED8) and hold 0x800C1848, 0x801E52E8, 0x801E35D8, 0x801E3638,
  * 0x801E3980, 0x801E3A00, 0x800C18B4, 0x801E4AE8, 0x801E4D8C, 0x801E4F64,
  * 0x801E52E8 and 0x801E5288. The byte-2 table base 0x800C1EA4 of
- * dispatchStateByte2Table1ea4BossBoss01216_800C18B4 starts at the next word. The
+ * callByte2Table1ea4 starts at the next word. The
  * row stays one map entry, so this declaration binds only the word the scaled
  * index is added to.
  */

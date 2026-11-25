@@ -13,9 +13,9 @@ sources = [
     "src/bof3/boss/callStateTable2788Boss.c",
 ]
 support_sources = [
-    "src/bof3/boss/publishBattleHooksBossBoss00413_800C1C0C.c",
+    "src/bof3/boss/publishBattleHooksIndex.c",
     "src/bof3/boss/publishBattleHooks2.c",
-    "src/bof3/boss/publishBattleHooksBossBoss00413_800C234C.c",
+    "src/bof3/boss/publishBattleHooks12.c",
     "src/bof3/boss/invokeOverlayHelper.c",
     "src/bof3/boss/noopHandler21.c",
     "src/bof3/boss/noopHandler20.c",

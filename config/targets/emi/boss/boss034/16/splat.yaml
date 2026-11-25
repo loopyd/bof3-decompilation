@@ -30,18 +30,18 @@ segments:
     - D_800C1804
   - - 28
     - c
-    - dispatchStateByte1Table26ccBossBoss03416_800C181C
-    - '@source: src/bof3/boss/dispatchStateByte1Table26ccBossBoss03416_800C181C.c'
+    - dispatchByte1Table26cc
+    - '@source: src/bof3/boss/dispatchByte1Table26cc.c'
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C26CC with no arguments. The index is bounded only by the zero-extended byte, never compared against the run length. No word or jal in this payload names 0x800C181C and it is no entry of the handler row either, so the overlay loader is what calls it.'
   - - 96
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03416_800C1860
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03416_800C1860.c'
+    - publishWorkStepPair
+    - '@source: src/bof3/boss/publishWorkStepPair.c'
     - '@behavior: Step-0 setup of this overlay work state machine. Loads the current enemy work record from 0x801EB4E8 and publishes three words into it: the data row pointer 0x800C26B8 into +0xEC, the byte-indexed handler dispatcher 0x800C1D60 into +0xE4 and the in-row data word 0x800C26C4 into +0xE8. It then loads the work record the main program publishes at the scratchpad pointer cell 0x1F800044, stores 2 into that record state byte at offset 1 and calls func_8014D978. That state byte is the value this overlay byte-1 dispatcher 0x800C181C scales by four against the handler run at the 0x800C26CC interior word of the reviewed row D_800C26B8, and that run entry 0 is this function itself, so writing 2 moves the next dispatch off this installer to 0x801E35D8, a main-program handler. No jal names 0x800C1860; the run word at 0x800C26CC is its only in-image reference, so the overlay entry calls it.'
   - - 184
     - c
-    - dispatchStateByte2Table26fcBossBoss03416_800C18B8
-    - '@source: src/bof3/boss/dispatchStateByte2Table26fcBossBoss03416_800C18B8.c'
+    - dispatchByte2Table26fc
+    - '@source: src/bof3/boss/dispatchByte2Table26fc.c'
     - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C26FC of the reviewed row D_800C26B8, with no arguments. The payload holds no jal naming 0x800C18B8; the one pointer word that names it is the run entry at 0x800C26E4.'
   - - 252
     - c
@@ -72,19 +72,19 @@ segments:
     - func_800C1CBC
   - - 1344
     - c
-    - invokeHelperBossBoss03416_800C1D40
+    - callSharedTrampoline
   - - 1376
     - c
-    - dispatchIndexedHandlerBossBoss03416_800C1D60
+    - callIndexedHandler37
   - - 1432
     - c
-    - noopHandlerBossBoss03416_800C1D98
+    - noopHandler65
   - - 1440
     - c
-    - noopHandlerBossBoss03416_800C1DA0
+    - noopHandler129
   - - 1448
     - c
-    - noopHandlerBossBoss03416_800C1DA8
+    - noopHandler70
   - - 1456
     - c
     - callStateTable273Boss
@@ -92,23 +92,23 @@ segments:
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C273C of the reviewed row D_800C26B8, with no arguments. The payload holds no word or jal naming 0x800C1DB0, so its caller is outside this overlay.'
   - - 1524
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03416_800C1DF4
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03416_800C1DF4.c'
-    - '@behavior: Step setup of this overlay byte-1 work state machine, entry 0 of the handler run based at 0x800C273C that the byte-1 dispatcher callStateTable273Boss indexes with the work-record byte at offset 1: publishes three words into the record loaded from 0x801EB4E8 - the data row pointer 0x800C26B8 into +0xEC, the indexed step dispatcher dispatchIndexedHandlerBossBoss03416_800C1E58 into +0xE4 and the in-row record word 0x800C26C4 into +0xE8 - raises bit 0x8 of the +0x104 flag word, stores 2 into the state byte at offset 1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978, so the next byte-1 dispatch reaches that run entry 2, 0x801E35D8. No jal names 0x800C1DF4; its only in-image word is the run entry at 0x800C273C.'
+    - publishStepDataFlag
+    - '@source: src/bof3/boss/publishStepDataFlag.c'
+    - '@behavior: Step setup of this overlay byte-1 work state machine, entry 0 of the handler run based at 0x800C273C that the byte-1 dispatcher callStateTable273Boss indexes with the work-record byte at offset 1: publishes three words into the record loaded from 0x801EB4E8 - the data row pointer 0x800C26B8 into +0xEC, the indexed step dispatcher callIndexedHandler33 into +0xE4 and the in-row record word 0x800C26C4 into +0xE8 - raises bit 0x8 of the +0x104 flag word, stores 2 into the state byte at offset 1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978, so the next byte-1 dispatch reaches that run entry 2, 0x801E35D8. No jal names 0x800C1DF4; its only in-image word is the run entry at 0x800C273C.'
   - - 1624
     - c
-    - dispatchIndexedHandlerBossBoss03416_800C1E58
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03416_800C1E58.c'
+    - callIndexedHandler33
+    - '@source: src/bof3/boss/callIndexedHandler33.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C276C handler table, so the selected handler''s result stays in the return register'
   - - 1680
     - c
-    - noopHandlerBossBoss03416_800C1E90
+    - noopHandler118
   - - 1688
     - c
-    - noopHandlerBossBoss03416_800C1E98
+    - noopHandler144
   - - 1696
     - c
-    - noopHandlerBossBoss03416_800C1EA0
+    - noopHandler71
   - - 1704
     - c
     - stateMatchingHookTrio
@@ -125,12 +125,12 @@ segments:
     - func_800C22D0
   - - 2880
     - c
-    - publishBattleHooksBossBoss03416_800C2340
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss03416_800C2340.c'
-    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the mode-transition handler setupModeTupleFlag into 0x801463A4, the inert handler noopHandlerBossBoss03416_800C23CC into 0x801463A8, and the zero-result accessor zeroResultBossBoss03416_800C2378 into 0x801463AC'
+    - publishBattleHooks22
+    - '@source: src/bof3/boss/publishBattleHooks22.c'
+    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the mode-transition handler setupModeTupleFlag into 0x801463A4, the inert handler noopHandlerBossBoss03416_800C23CC into 0x801463A8, and the zero-result accessor zeroResult25 into 0x801463AC'
   - - 2936
     - c
-    - zeroResultBossBoss03416_800C2378
+    - zeroResult25
   - - 2944
     - c
     - setupModeTupleFlag

@@ -27,40 +27,40 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table19bcBossBoss02916_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table19bcBossBoss02916_800C1804.c'
+    - callStateByte1Table528
+    - '@source: src/bof3/boss/callStateByte1Table528.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-word code pointer run based at 0x800C19BC with no arguments, leaving the handler''s result in the return register. The original does not bound the index before the scaled table load, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the pointer-cell load precedes frame creation. No word of this payload names this function''s address, so it is an overlay entry reached from outside the payload.'
   - - 72
     - asm
     - func_800C1848
   - - 160
     - c
-    - dispatchIndexedHandlerBossBoss02916_800C18A0
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss02916_800C18A0.c'
+    - callIndexedHandler34
+    - '@source: src/bof3/boss/callIndexedHandler34.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C19EC handler table, so the selected handler''s result stays in the return register. The original does not bound the index before the scaled table load, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No word of this payload names this function''s address, so it is an overlay entry reached from outside the payload.'
   - - 216
     - c
-    - noopHandlerBossBoss02916_800C18D8
+    - noopHandler84
   - - 224
     - c
-    - noopHandlerBossBoss02916_800C18E0
+    - noopHandler142
   - - 232
     - c
-    - noopHandlerBossBoss02916_800C18E8
+    - noopHandler143
   - - 240
     - c
-    - publishBattleHooksBossBoss02916_800C18F0
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss02916_800C18F0.c'
-    - '@behavior: Publishes this overlay handler trio into the shared hook slots of the archive family in slot order: the state switch at 0x800C1930 into 0x801463A4, the zero-argument wrapper invokeZeroArgBossBoss02916_800C1988 into 0x801463A8, and the zero-result accessor zeroResultBossBoss02916_800C1928 into 0x801463AC through the void slot type. The 0x38-byte body reserves no frame and keeps nothing across the three stores. No word of this payload names this function and no jal reaches it, so it is an overlay entry reached from outside the payload.'
+    - publishBattleHooks34
+    - '@source: src/bof3/boss/publishBattleHooks34.c'
+    - '@behavior: Publishes this overlay handler trio into the shared hook slots of the archive family in slot order: the state switch at 0x800C1930 into 0x801463A4, the zero-argument wrapper callOwnerRecordHead into 0x801463A8, and the zero-result accessor zeroResult18 into 0x801463AC through the void slot type. The 0x38-byte body reserves no frame and keeps nothing across the three stores. No word of this payload names this function and no jal reaches it, so it is an overlay entry reached from outside the payload.'
   - - 296
     - c
-    - zeroResultBossBoss02916_800C1928
+    - zeroResult18
   - - 304
     - asm
     - func_800C1930
   - - 392
     - c
-    - invokeZeroArgBossBoss02916_800C1988
+    - callOwnerRecordHead
   - - 424
     - asm
     - func_800C19A8

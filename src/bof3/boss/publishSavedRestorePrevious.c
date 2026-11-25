@@ -35,7 +35,7 @@ void func_8014D6B8(s32 arg0);
  * function writes no other state and takes no arguments. No jal names this
  * span: its address is entry 0 of the thirteen-word code pointer run at
  * 0x800C1804 and the first of the ten entries that
- * dispatchStateByte1Table1804BossBoss05416_800C19C4 copies into its frame
+ * callStateTableFrame copies into its frame
  * table, so the overlay loader that steps the work record reaches it through
  * that run and the epilogue leaves the advanced state byte in $v0 unread.
  * A first seed reached this cell through the SPAD_PTR_SLOT macro and folded

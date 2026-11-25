@@ -123,8 +123,8 @@ segments:
     - func_801F0B8C
   - - 8176
     - c
-    - clearWorkBytesBmagicMagic22603_801F0BF0
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic22603_801F0BF0.c'
+    - clearWorkBytes
+    - '@source: src/bof3/bmagic/clearWorkBytes4.c'
   - - 8256
     - textbin
     - D_801F0C40

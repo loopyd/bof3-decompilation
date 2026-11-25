@@ -73,7 +73,7 @@ segments:
     - noopHandler21
   - - 1036
     - c
-    - publishBattleHooksBossBoss00413_800C1C0C
+    - publishBattleHooksIndex
   - - 1092
     - asm
     - func_800C1C44
@@ -99,8 +99,8 @@ segments:
     - func_800C2208
   - - 2892
     - c
-    - publishBattleHooksBossBoss00413_800C234C
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss00413_800C234C.c'
+    - publishBattleHooks12
+    - '@source: src/bof3/boss/publishBattleHooks12.c'
   - - 2948
     - asm
     - func_800C2384

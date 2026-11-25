@@ -62,8 +62,8 @@ segments:
     - func_800C1A78
   - - 788
     - c
-    - dispatchIndexedHandlerBossBoss01316_800C1B14
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C1B14.c'
+    - callIndexedTable268c
+    - '@source: src/bof3/boss/callIndexedTable268c.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the run word 0x800C268C of the reviewed 0x800C25D8 row, so the selected handler result stays in the return register. Word 27 of that run, it holds 0x800C1B4C at entry 0, the step handler 0x800C1C4C at entry 1, the inert handler 0x800C1CBC at entry 2 and 0x800C1D08, the entry 0 of the run at 0x800C2698, at entry 3, then shared main-executable handlers. The index is bounded only to a byte and never checked against the run length, so the zero word 0x800C26E0 that ends the run is reachable; the slot after the scaled table load and the indirect call delay slot both stay nops, and the call passes no argument. The 0x18-byte frame only keeps the return address at 0x10 across that call, and the epilogue leaves the return value untouched. No jal and no word of this payload names 0x800C1B14, so the overlay entry is what reaches it.'
   - - 844
     - asm
@@ -83,8 +83,8 @@ segments:
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C2698 with no arguments.'
   - - 1288
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkByte8AndStateTo2BossBoss01316_800C1D08
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkByte8AndStateTo2BossBoss01316_800C1D08.c'
+    - publishWorkStepByte8
+    - '@source: src/bof3/boss/publishWorkStepByte8.c'
     - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C25F0 into +0xEC of the current enemy work record from 0x801EB4E8, the byte-indexed dispatcher callIndexedHandler7 into +0xE4 and the in-row pointer 0x800C2618 (0x800C25D8 + 0x40) into +0xE8, then stores 1 into the byte at +8 of the work record published at the scratchpad pointer cell 0x1F800044 and 2 into that record state byte at +1, and returns without calling anything: the state byte is what the overlay dispatcher at 0x800C1CC4 scales into the run based at 0x800C2698, whose entry 0 this function is and whose entry 2 is the main-executable handler 0x801E35D8.'
   - - 1368
     - c
@@ -114,10 +114,10 @@ segments:
     - '@behavior: Entry 1 of the handler run at 0x800C26D4 that callIndexedHandler7 scales a byte index into. Initializes the battle UI bundle slot 0 through 0x801D9484, copies eight bytes of the field record selected by the local-battler byte 0x80181B11 into the shared name slot 0x801490D8 through 0x801501E4, resolves texture 0x25 through 0x801502D0 and queues it through 0x801DE560 as event row kind 2 with halfword 0x2D, clears the overlay step countdown byte 0x800C26E0, runs the shared transition helper 0x801C1254 with 1 and 1, stores 4 into byte 0x29 of the work record published at the scratchpad pointer cell 0x1F800044, republishes the in-row pointer 0x800C25FC into the +0xEC data-row word of the current enemy work record from 0x801EB4E8, requests resource work byte +8 plus 4 through 0x8014D6B8 and raises bit 0x40 of the shared flag byte 0x801462ED. Only the word at 0x800C26D8 holds its address, so no jal in the payload names it.'
   - - 2052
     - c
-    - noopHandlerBossBoss01316_800C2004
+    - noopHandler93
   - - 2060
     - c
-    - publishBattleHooksBossBoss01316_800C200C
+    - publishBattleHooksMode32
   - - 2116
     - c
     - zeroResult8
@@ -125,12 +125,12 @@ segments:
     - c
     - setupModeThirdTuple
     - '@source: src/bof3/boss/setupModeThirdTuple.c'
-    - '@behavior: First member of this overlay battle hook trio: loads the shared battle flag byte 0x80146328 and tests bit 0x2; while the bit is set it stores 0x32 into the shared scenario progress byte 0x80146864 and runs initModeTuple510 (0x801DDED8), and when the bit is clear it stores the same 0x32 into 0x80146864, runs initModeTuple530 (0x801DDF28) and then stores the mode byte 3 into 0x80146255. The installer publishBattleHooksBossBoss01316_800C200C stores this address into the shared battle hook slot 0x801463A4, which the battle step loads and calls through jalr; no jal in the payload names this function.'
+    - '@behavior: First member of this overlay battle hook trio: loads the shared battle flag byte 0x80146328 and tests bit 0x2; while the bit is set it stores 0x32 into the shared scenario progress byte 0x80146864 and runs initModeTuple510 (0x801DDED8), and when the bit is clear it stores the same 0x32 into 0x80146864, runs initModeTuple530 (0x801DDF28) and then stores the mode byte 3 into 0x80146255. The installer publishBattleHooksMode32 stores this address into the shared battle hook slot 0x801463A4, which the battle step loads and calls through jalr; no jal in the payload names this function.'
   - - 2224
     - c
     - stateOwnerOwnerOwner
     - '@source: src/bof3/boss/stateOwnerOwnerOwner.c'
-    - '@behavior: Second member of this overlay battle hook trio: clears the 0x40 flag of the battle record owned by id 0 through clearOwnerRecordFlag40 at 0x800AC844, then the same flag of the record owned by id 1, and returns through a 0x18 byte frame that keeps the return address across both calls. The installer publishBattleHooksBossBoss01316_800C200C stores this address into the shared battle hook slot 0x801463A8, which the battle step loads and calls through jalr; no jal in the payload names this function.'
+    - '@behavior: Second member of this overlay battle hook trio: clears the 0x40 flag of the battle record owned by id 0 through clearOwnerRecordFlag40 at 0x800AC844, then the same flag of the record owned by id 1, and returns through a 0x18 byte frame that keeps the return address across both calls. The installer publishBattleHooksMode32 stores this address into the shared battle hook slot 0x801463A8, which the battle step loads and calls through jalr; no jal in the payload names this function.'
   - - 2264
     - c
     - publishHooksSeedCountdown

@@ -150,6 +150,8 @@ def _resolve(
     _collect_files(plan, root, manifest)
     _check_consumers(plan, root, target, old)
     _check_cross_target_name(plan, root, target)
+    if plan.passed:
+        _retarget_twin(plan, root)
     return plan
 
 
@@ -519,6 +521,128 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
     return _payload(root, plan, applied=True, proof=(before, after), attempted=True)
 
 
+def _batch_rows(rows: list[dict]) -> tuple[list[tuple[str, str, str]], list[dict]]:
+    """Split batch rows into single renames and group renames, validating shape."""
+    singles: list[tuple[str, str, str]] = []
+    groups: list[dict] = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            raise ValueError(f"row {index}: expected an object")
+        new = row.get("new")
+        members = row.get("members")
+        if members:
+            if not isinstance(members, list) or not members:
+                raise ValueError(f"row {index}: members must be a nonempty list")
+            pairs = []
+            for member in members:
+                if not isinstance(member, dict) or "target" not in member or "old" not in member:
+                    raise ValueError(f"row {index}: each member needs target and old")
+                pairs.append((str(member["target"]), str(member["old"])))
+            if not new:
+                raise ValueError(f"row {index}: a group row needs new")
+            groups.append({"new": str(new), "members": pairs})
+            continue
+        if not (row.get("target") and row.get("old") and new):
+            raise ValueError(f"row {index}: needs target, old and new")
+        singles.append((str(row["target"]), str(row["old"]), str(new)))
+    return singles, groups
+
+
+def plan_batch(root: Path, rows: list[dict]) -> dict:
+    """Dry run for a batch: every single row and every group, nothing written."""
+    root = root.resolve()
+    singles, groups = _batch_rows(rows)
+    records = [
+        _payload(
+            root,
+            _resolve(root, target, old, new),
+            applied=False,
+            proof=(),
+            attempted=False,
+        )
+        for target, old, new in singles
+    ]
+    for group in groups:
+        planned = plan_group(root, group["new"], group["members"])
+        records.extend(
+            {**member, "action": "rename-group"} for member in planned["members"]
+        )
+    return {
+        "operation": "naming",
+        "action": "batch",
+        "applied": False,
+        "passed": all(record["passed"] for record in records),
+        "records": records,
+        "refusals": [
+            {"target": record["scope"]["target"], **refusal}
+            for record in records
+            for refusal in record["refusals"]
+        ],
+    }
+
+
+def apply_rows(root: Path, rows: list[dict], *, jobs: int = 4) -> dict:
+    """Apply a batch: single rows share one manifest and compile pass, groups stay atomic."""
+    root = root.resolve()
+    singles, groups = _batch_rows(rows)
+    records = apply_batch(root, singles, jobs=jobs) if singles else []
+    for group in groups:
+        applied = apply_group(root, group["new"], group["members"], jobs=jobs)
+        records.extend(
+            {**member, "action": "rename-group"} for member in applied["members"]
+        )
+    return {
+        "operation": "naming",
+        "action": "batch",
+        "applied": bool(records) and all(record["applied"] for record in records),
+        "passed": bool(records) and all(record["passed"] for record in records),
+        "records": records,
+        "refusals": [
+            {"target": record["scope"]["target"], **refusal}
+            for record in records
+            for refusal in record["refusals"]
+        ],
+    }
+
+
+def _claim_owners(root: Path, manifests) -> dict[Path, set[str]]:
+    """Every claimed source path with the targets that claim it."""
+    owners: dict[Path, set[str]] = {}
+    for target, manifest in manifests.items():
+        try:
+            paths = manifest_source_paths(root, manifest)
+        except (OSError, ValueError):
+            continue
+        for path in paths:
+            owners.setdefault(path, set()).add(target)
+    return owners
+
+
+def _retarget_twin(plan: RenamePlan, root: Path) -> None:
+    """A twin takes a numbered filename when another target owns the plain one.
+
+    Two units of one family cannot share a file, and the decoupled filename lets
+    them share the symbol spelling instead.
+    """
+    if not plan.renames:
+        return
+    before, after = plan.renames[0]
+    if not after.exists():
+        return
+    owners = _claim_owners(root, load_manifests_for(plan)).get(after, set())
+    if not owners or owners == {plan.target}:
+        return
+    number = 2
+    while True:
+        candidate = after.with_name(f"{plan.new}{number}.c")
+        if not candidate.exists() and not _claim_owners(
+            root, load_manifests_for(plan)
+        ).get(candidate):
+            plan.renames[0] = (before, candidate)
+            return
+        number += 1
+
+
 def _retarget_group_filenames(plans: list[RenamePlan]) -> None:
     """Give a twin its own filename when the family already uses the shared name.
 
@@ -714,7 +838,7 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                     # A batch's plan can lose its unit to an earlier row's rename;
                     # re-resolve this row against the tree and try it once more.
                     fresh = _resolve(root, plan.target, plan.old, plan.new)
-                    if fresh.passed and fresh.source != plan.source:
+                    if fresh.passed:
                         ready[index] = fresh
                         try:
                             before = _measure(fresh, fresh.source)

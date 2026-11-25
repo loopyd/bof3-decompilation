@@ -28,7 +28,7 @@ extern u8 D_8014832E; /* @source 0x8014832E @kind unknown */
  *           so the pending frontend-mode entry is retired. It takes no
  *           arguments, returns nothing and keeps $ra in a 0x18-byte frame.
  *           Bit 0x2 is the flag the exact sibling
- *           raiseFlagEnterFrontend raises
+ *           raiseFlagEnterFrontend1 raises
  *           immediately before it requests frontend mode 4 through
  *           func_8014ECAC, so this body is the clear-side counterpart of that
  *           request: it waits for the gate halfword and then retires the flag
@@ -36,7 +36,7 @@ extern u8 D_8014832E; /* @source 0x8014832E @kind unknown */
  *           address appears in exactly one word of the payload, 0x800C31EC,
  *           the last word of the five-word group 0x800C31DC..0x800C31EC whose
  *           previous word is the exact noop handler
- *           noopHandlerBossBoss02513_800C1AF8; that word lies inside the record
+ *           noopHandler98; that word lies inside the record
  *           template blob the setup sibling func_800C1BB0 publishes into +0xEC
  *           of the overlay work record, and no `jal` or `jalr` in the payload
  *           reaches it, so the main program reaches it through that run rather

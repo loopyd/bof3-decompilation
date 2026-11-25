@@ -34,7 +34,7 @@ segments:
     - c
     - publishStepDataBoss
     - '@source: src/bof3/boss/publishStepDataBoss.c'
-    - '@behavior: Step-0 setup of this overlay work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C2744 into offset 0xEC, the handler dispatcher dispatchIndexedHandlerBossBoss03316_800C1CA4 into offset 0xE4 and the data pointer 0x800C2750, that same row plus 0xC, into offset 0xE8 -- then stores 2 into the state byte at +1 of the scratch work object published at the scratchpad pointer cell 0x1F800044 and calls the shared main-program helper func_8014D978. That state byte is the value callStateTable275Boss indexes its code-pointer run based at 0x800C275C by, and this function is that run entry 0, which holds this address, so writing 2 selects its third entry 0x801E35D8 instead of re-entering this installer; no jal in this payload names this address. The state byte store fills the call delay slot and the 0x18-byte frame only keeps the return address at 0x10. The roles of the three published words and of state 2 are not established beyond the order they drive.'
+    - '@behavior: Step-0 setup of this overlay work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C2744 into offset 0xEC, the handler dispatcher dispatchIndexRun27a0 into offset 0xE4 and the data pointer 0x800C2750, that same row plus 0xC, into offset 0xE8 -- then stores 2 into the state byte at +1 of the scratch work object published at the scratchpad pointer cell 0x1F800044 and calls the shared main-program helper func_8014D978. That state byte is the value callStateTable275Boss indexes its code-pointer run based at 0x800C275C by, and this function is that run entry 0, which holds this address, so writing 2 selects its third entry 0x801E35D8 instead of re-entering this installer; no jal in this payload names this address. The state byte store fills the call delay slot and the 0x18-byte frame only keeps the return address at 0x10. The roles of the three published words and of state 2 are not established beyond the order they drive.'
   - - 160
     - c
     - callStateTable278Boss
@@ -71,8 +71,8 @@ segments:
     - '@behavior: Byte-1 handler entry 16 of this overlay code-pointer run based at 0x800C275C, the table the overlay entry dispatcher callStateTable275Boss indexes with work byte 1 scaled by four; run word 16 at 0x800C279C holds this address and no jal in this payload names it. It runs the shared readiness helper at 0x8014DAEC with its result dropped, resolves the owner-0 scan record index through the shared battle record scan at 0x800AC7D0, and hands that index 0x98-byte record of the table at 0x801468FC to the shared record routine at 0x8015C264 together with 0, -0xE, 0x40, -0x400, 0xFF and 0. Only when that routine returns zero does the finish tail run, in this order: it clears the pending bit of byte +5 of the work object held by the scratchpad pointer cell 0x1F800044, raises bit 0x2 of the shared battle flag byte D_80146328, adds the current enemy work record halfword at byte offset 0x86, read through the pointer published at 0x801EB4E8, into the shared accumulator D_8014632C, and calls the shared battle work reset at 0x800ACFF4. Takes no arguments and returns nothing; the 0x28-byte frame only keeps the return address at 0x20 above the three stack arguments of the seven-argument call. The roles of the six values handed to 0x8015C264 and of the accumulator are not established.'
   - - 1188
     - c
-    - dispatchIndexedHandlerBossBoss03316_800C1CA4
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03316_800C1CA4.c'
+    - dispatchIndexRun27a0
+    - '@source: src/bof3/boss/dispatchIndexRun27a0.c'
     - '@behavior: Byte-indexed overlay dispatcher indexed by its own argument, published into the enemy work record by publishStepDataBoss at byte offset 0xE4. It masks that argument with 0xFF, scales the masked value by four and calls the matching entry of the fourteen-word code-pointer run based at 0x800C27A0, whose entries are 0x800C1CDC, 0x800C1D14, 0x800C1D68, 0x800C1E70, 0x800C256C, 0x800C1ED8, 0x800C1F38, 0x800C1F88, 0x800C20CC, 0x800C2310, 0x800C244C, 0x800C24DC, 0x800C25D4 and 0x800C26A4. That run is an interior span of the reviewed 0x800C2744 textbin row and ends at the payload end. The original does not bound the index before the scaled table load, passes no arguments to the selected handler and leaves that handler result in the return register. No jal in this payload names this function own address; the installer publishStepDataBoss stores that address into the work record field 0xE4, so the main program reaches it through that stored pointer. The meaning of the index is not established.'
   - - 1244
     - c
@@ -85,7 +85,7 @@ segments:
     - noopHandlerBossBoss03316_800C1D68
   - - 1392
     - c
-    - publishBattleHooksBossBoss03316_800C1D70
+    - publishHooksStateSwitch
   - - 1448
     - c
     - zeroResultBossBoss03316_800C1DA8
@@ -141,8 +141,8 @@ segments:
     - '@behavior: Work-step handler at index 6 of this overlay code-pointer run based at 0x800C27B4, which is the base word the step dispatcher func_800C1E70 loads and indexes with work byte 2 scaled by four; run word 6 at 0x800C27CC holds this address and no jal in this payload names it. It reads the battle selection byte 0x80146374, subtracts three, scales it by the 0x118-byte enemy work record stride and clears bit 0x40 of that record byte 0 through the 0xBF mask, re-materialising the record base for the read and again for the store. It then saves the scratchpad work-object pointer cell 0x1F800044, publishes the shared battle work record pointer held at 0x801EB4E0 there, requests resource 0 through the main-executable wrapper func_8014D6B8, restores the previously published work object and runs the shared helper func_801E5988, which takes no arguments. It advances no work byte, so this step stays selected. Takes no arguments and returns nothing; the 0x18-byte frame only keeps the return address and the saved work object across the two calls.'
   - - 3436
     - c
-    - dispatchWorkByte2Table27d0ThenInvokeSharedServiceWhenWorkByte0SetBossBoss03316_800C256C
-    - '@source: src/bof3/boss/dispatchWorkByte2Table27d0ThenInvokeSharedServiceWhenWorkByte0SetBossBoss03316_800C256C.c'
+    - dispatchByte2Table27d0
+    - '@source: src/bof3/boss/dispatchByte2Table27d0.c'
     - '@behavior: Overlay step dispatch on the work-record byte 2 from the tail of this overlay handler run: it loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the code pointer run based at 0x800C27D0, whose two entries are 0x800C25D4 and 0x800C26A4, the last two of the nine-entry run based at 0x800C27B4 that func_800C1E70 indexes. After that call returns it re-reads the pointer cell and, when the work record unsigned byte at offset 0 is non-zero, runs the shared main-executable service func_8014D290. It does not bound the index before the scaled table load and writes no state; the 0x18-byte frame only keeps the return address at 0x10. The run word at 0x800C27B0 holds this function own address, so it is entry 1 of the byte-1 handler run based at 0x800C27AC.'
   - - 3540
     - c

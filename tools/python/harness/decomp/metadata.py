@@ -7,6 +7,7 @@ from contextlib import closing
 from pathlib import Path
 import sqlite3
 
+from harness.build.compilation import compile_objects_parallel
 from harness.common.process import ProcessCleanupError
 from harness.domain.functions import collect_lift_metadata
 from harness.domain.ids import parse_function_id
@@ -14,6 +15,7 @@ from harness.domain.layout import SplatBoundary, parse_splat_layout
 from harness.domain.manifests import TargetManifest
 from harness.domain.tags import SOURCE_TAG_RE, parse_behavior_tag, parse_progress_tags
 from harness.io import repo_layout
+from harness.match._asm_resolve import object_path_for_source
 from harness.match.asm_diff import run_asm_diff_one
 from harness.match.status_cache import MatchStatusCache, target_fingerprint
 
@@ -130,6 +132,41 @@ def _cached(
     except (OSError, RuntimeError, ValueError, sqlite3.DatabaseError) as error:
         for record in displayed:
             record["measurement"] = {"state": "stale", "reason": str(error)}
+
+
+def _precompile(
+    root: Path,
+    manifest: TargetManifest,
+    records: list[dict],
+    boundaries: dict[int, "SplatBoundary"],
+) -> None:
+    """Build every compared unit once, in parallel, before the per-row comparisons."""
+    sources = []
+    for record in records:
+        address = record["address"]
+        if record["findings"] or address is None or not record["source"]:
+            continue
+        boundary = boundaries.get(int(address, 16))
+        if boundary is None or boundary.kind != "c" or not boundary.file_size:
+            continue
+        path = root / record["source"]
+        if not path.is_file():
+            continue
+        object_path = object_path_for_source(repo_layout(root), path)
+        if (
+            object_path.is_file()
+            and object_path.stat().st_mtime >= path.stat().st_mtime
+        ):
+            # Already built from these exact bytes; the row compares it directly.
+            continue
+        sources.append(path)
+    if len(sources) < 2:
+        return
+    try:
+        compile_objects_parallel(root, sources, jobs=min(8, len(sources)))
+    except (OSError, RuntimeError, ValueError):
+        # The per-row comparison reports the real build failure.
+        return
 
 
 def _compare(
@@ -264,6 +301,7 @@ def report(
             if len(boundaries) != len(layout.boundaries):
                 raise ValueError("reviewed layout has duplicate boundary addresses")
             before = target_fingerprint(root, manifest)
+            _precompile(root, manifest, records, boundaries)
             for record in records:
                 _compare(root, manifest, record, boundaries)
             changed = target_fingerprint(root, manifest) != before

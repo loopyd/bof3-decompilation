@@ -8,26 +8,26 @@ splat = "config/targets/emi/boss/boss038/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchStateByte1Table1c24BossBoss03816_800C1804.c",
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss03816_800C18EC.c",
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss03816_800C19E4.c",
-    "src/bof3/boss/publishBattleHooksBossBoss03816_800C1B7C.c",
+    "src/bof3/boss/dispatchWorkByte1Table2.c",
+    "src/bof3/boss/dispatchIndexedHandler2.c",
+    "src/bof3/boss/dispatchIndexedHandler3.c",
+    "src/bof3/boss/publishFlagHooks2.c",
     "src/bof3/boss/publishHooksCenterChannel.c",
 ]
 support_sources = [
-    "src/bof3/boss/initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss03816_800C1B10.c",
-    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03816_800C1980.c",
-    "src/bof3/boss/noopHandlerBossBoss03816_800C1C08.c",
-    "src/bof3/boss/zeroResultBossBoss03816_800C1BB4.c",
-    "src/bof3/boss/noopHandlerBossBoss03816_800C1B74.c",
-    "src/bof3/boss/zeroResultBossBoss03816_800C1B08.c",
-    "src/bof3/boss/noopHandlerBossBoss03816_800C1A2C.c",
-    "src/bof3/boss/noopHandlerBossBoss03816_800C1A24.c",
-    "src/bof3/boss/noopHandlerBossBoss03816_800C1A1C.c",
+    "src/bof3/boss/stateFlagProgressSwitch.c",
+    "src/bof3/boss/publishStepSetup2.c",
+    "src/bof3/boss/noopHandler83.c",
+    "src/bof3/boss/zeroResult22.c",
+    "src/bof3/boss/noopHandler73.c",
+    "src/bof3/boss/zeroResult9.c",
+    "src/bof3/boss/noopHandler610.c",
+    "src/bof3/boss/noopHandler510.c",
+    "src/bof3/boss/noopHandler411.c",
     "src/bof3/boss/callStateTable0Boss.c",
-    "src/bof3/boss/noopHandlerBossBoss03816_800C1934.c",
-    "src/bof3/boss/noopHandlerBossBoss03816_800C192C.c",
-    "src/bof3/boss/noopHandlerBossBoss03816_800C1924.c",
+    "src/bof3/boss/noopHandler311.c",
+    "src/bof3/boss/noopHandler211.c",
+    "src/bof3/boss/noopHandler104.c",
     "src/bof3/support/boss038_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss038_16_psyq.c"

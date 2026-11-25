@@ -6,7 +6,7 @@ void clearOwnerRecordFlag40(u8 id); /* @source 0x800AC844 */
  * @behavior Second member of this overlay's battle hook trio: clears the 0x40
  * flag of the battle record owned by id 0 through clearOwnerRecordFlag40, then
  * the same flag of the record owned by id 1, and returns. The installer
- * publishBattleHooksBossBoss01316_800C200C stores this address into the shared
+ * publishBattleHooksMode32 stores this address into the shared
  * battle hook slot 0x801463A8, which the battle step loads and calls through
  * jalr, so no jal in this payload names it.
  * @status exact

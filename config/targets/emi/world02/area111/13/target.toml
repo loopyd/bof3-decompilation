@@ -12,7 +12,7 @@ support_sources = [
     "src/bof3/world/renderPartsCountdownExpiry.c",
     "src/bof3/world/dispatchSharedModeByteTable2C04World02Area11113_801F3EE8.c",
     "src/bof3/world/zeroStepClearFlags.c",
-    "src/bof3/world/invokeHelperWorld02Area11113_801F2D80.c",
+    "src/bof3/world/invokeHelper.c",
     "src/bof3/world/copySharedWord7To7.c",
     "src/bof3/world/stateStatusRequestPrimary.c",
     "src/bof3/world/area11113DispatchTables.c",

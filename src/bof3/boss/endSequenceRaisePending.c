@@ -17,7 +17,7 @@ extern u16 D_801463BE; /* @source 0x801463BE @kind unknown */
  * into the battle halfword 0x801463BE and writes step byte +2 = 3, one past the
  * last step index the caller accepts, so the step sequence ends there. On any
  * other battle id it calls the engine scratch-state reset 0x801E567C instead,
- * the same entry resetScratchStateBossBoss05516_800C2244 calls first. The
+ * the same entry resetScratchState calls first. The
  * pointer cell at 0x1F800044 is read twice, once per store, through the
  * zero-based cell table so each read is a `lui` plus offset load: the store
  * through the loaded pointer may alias the cell. Nothing but $ra lives in the

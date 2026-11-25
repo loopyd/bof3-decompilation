@@ -30,7 +30,7 @@ extern void (*D_800C2714[])(void); /* @source 0x800C2714 @kind data */
  * $v0 untouched, so this shim returns whatever that handler returns. The
  * payload holds no jal naming 0x800C18FC; the one pointer word that names it is
  * 0x800C270C, entry 4 of the run based at 0x800C26FC, so the byte-2 dispatcher
- * dispatchStateByte2Table26fcBossBoss03416_800C18B8 enters it when work byte 2
+ * dispatchByte2Table26fc enters it when work byte 2
  * is 4, and the overlay loader that steps the same row reaches it as well.
  * Same C shape as dispatchStateByte3Table1ebcBossBoss01216_800C18F8 of
  * emi/boss/boss012/16 and dispatchStateByte3Table26a8BossBoss00816_800C18E4 of

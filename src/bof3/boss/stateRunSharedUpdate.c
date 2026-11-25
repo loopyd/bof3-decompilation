@@ -16,7 +16,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 /* Shared main-executable per-frame update helper, bound by this target's
  * generated undefined_funcs_auto.txt row. It is not part of any payload here,
  * so its body stays outside this lift; this caller passes no arguments, as the
- * exact sibling invokeHelperBossBoss02816_800C2120 declares for its own
+ * exact sibling invokeHelperOverlay2 declares for its own
  * callee. */
 void func_8014D978(void);
 

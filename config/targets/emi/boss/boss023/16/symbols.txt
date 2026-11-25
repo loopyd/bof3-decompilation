@@ -1,12 +1,12 @@
 clearOwnerRecordHead = 0x800AC934;
-dispatchStateByte1Table1a70BossBoss02316_800C1804 = 0x800C1804;
+callStateByte1Table525 = 0x800C1804;
 func_800C1848 = 0x800C1848;
-dispatchIndexedHandlerBossBoss02316_800C1934 = 0x800C1934;
+callIndexedHandler16 = 0x800C1934;
 noopHandlerBossBoss02316_800C196C = 0x800C196C;
-noopHandlerBossBoss02316_800C1974 = 0x800C1974;
+noopHandler66 = 0x800C1974;
 noopHandlerBossBoss02316_800C197C = 0x800C197C;
-publishBattleHooksBossBoss02316_800C1984 = 0x800C1984;
-zeroResultBossBoss02316_800C19BC = 0x800C19BC;
+publishBattleHooks19 = 0x800C1984;
+zeroResult13 = 0x800C19BC;
 func_800C19C4 = 0x800C19C4;
 stateOwnerRecordHeads = 0x800C1A10;
 D_800C1A40 = 0x800C1A40;

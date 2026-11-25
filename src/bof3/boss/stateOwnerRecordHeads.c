@@ -7,7 +7,7 @@ void clearOwnerRecordHead(u8 id); /* @source 0x800AC934 */
  * owner records for ids 0, 1 and 2 by calling the main-program helper at
  * 0x800AC934 once per id in ascending order, then returns. The body takes no
  * arguments and returns no value; the overlay installer
- * publishBattleHooksBossBoss02316_800C1984 publishes it into the 0x801463A8
+ * publishBattleHooks19 publishes it into the 0x801463A8
  * hook slot, which the sibling installers of this archive family fill with the
  * same thin helper wrapper.
  * @status exact

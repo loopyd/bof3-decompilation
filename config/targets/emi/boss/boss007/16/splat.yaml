@@ -40,8 +40,8 @@ segments:
     - '@behavior: Step-0 setup of this overlay work state machine: publishes this payload data row pointer 0x800C1D78 into +0xEC of the current enemy work record from 0x801EB4E8, the byte dispatcher 0x800C18BC into +0xE4 and the in-row flag-byte pointer 0x800C1D90 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 188
     - c
-    - dispatchIndexedHandlerBossBoss00716_800C18BC
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss00716_800C18BC.c'
+    - callIndexedTable1dd0
+    - '@source: src/bof3/boss/callIndexedTable1dd0.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1DD0 handler run inside this payload''s data row 0x800C1D78, so the selected handler''s result stays in the return register; the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal and no payload word names it: the only in-payload reference is the address the step-setup publisher 0x800C1864 stores into +0xE4 of the current enemy work record.'
   - - 244
     - c
@@ -54,8 +54,8 @@ segments:
     - noopHandler24
   - - 268
     - c
-    - dispatchStateByte1Table1ddcBossBoss00716_800C190C
-    - '@source: src/bof3/boss/dispatchStateByte1Table1ddcBossBoss00716_800C190C.c'
+    - callByte1Table1ddc
+    - '@source: src/bof3/boss/callByte1Table1ddc.c'
   - - 336
     - c
     - publishStepDataClear
@@ -63,8 +63,8 @@ segments:
     - '@behavior: Step setup, entry 0 of the twelve-word handler run 0x800C1DDC: publishes this payload data row pointer 0x800C1D84 into +0xEC of the current enemy work record from 0x801EB4E8, the next step dispatcher 0x800C19B4 into +0xE4 and the in-row pointer 0x800C1D98 into +0xE8, clears byte +8 of the work record published at the scratchpad pointer cell 0x1F800044, stores 2 into that record byte +1 and calls func_8014D978.'
   - - 436
     - c
-    - dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4
-    - '@source: src/bof3/boss/dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4.c'
+    - callThreeWordRun
+    - '@source: src/bof3/boss/callThreeWordRun.c'
     - '@behavior: Index-argument overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the three-word handler run based at 0x800C1E0C, the tail of this payload 0x800C1D78 data row holding the inert handler 0x800C19EC, the record-halfword clear 0x800C19F4 and the inert handler 0x800C1A04, so the selected handler result stays in the return register. The original bounds nothing before the scaled table load, and the slots after the index shift and after the table load stay nops. It reads no state and writes none; the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names 0x800C19B4, and its address appears only in the step-setup publisher 0x800C1950, which stores it into +0xE4 of the current enemy work record.'
   - - 492
     - c
@@ -77,8 +77,8 @@ segments:
     - noopHandler26
   - - 524
     - c
-    - publishBattleHooksBossBoss00716_800C1A0C
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss00716_800C1A0C.c'
+    - publishBattleHooks13
+    - '@source: src/bof3/boss/publishBattleHooks13.c'
     - '@behavior: Hook installer of this overlay: stores the battle-flag state switch 0x800C1CB4 into the shared battle hook slot 0x801463A4, the two-call wrapper 0x800C1D50 into 0x801463A8 and this payload handler entry 0x800C1A44 into 0x801463AC, all three as void handlers; the body has no frame, makes no call and returns immediately.'
   - - 580
     - asm

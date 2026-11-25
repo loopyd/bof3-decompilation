@@ -36,7 +36,7 @@ segments:
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at its first pointer word 0x800C2034, with no arguments. The original does not bound the index before the scaled table load, writes no state, and leaves the selected handler result in $v0. The payload holds neither a jal nor a pointer word naming 0x800C1810, so the overlay loader is its caller.'
   - - 84
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1854
+    - publishStepDataFlag3
   - - 184
     - c
     - callStateTable2064Boss
@@ -62,13 +62,13 @@ segments:
     - func_800C1AE8
   - - 804
     - c
-    - dispatchIndexedHandlerBossBoss03616_800C1B24
+    - callIndexedHandler35
   - - 860
     - c
-    - noopHandlerBossBoss03616_800C1B5C
+    - noopHandler116
   - - 868
     - c
-    - noopHandlerBossBoss03616_800C1B64
+    - noopHandler78
   - - 876
     - asm
     - func_800C1B6C
@@ -79,42 +79,42 @@ segments:
     - '@behavior: Loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record byte at offset 1, scales it by four and calls the entry at that index of the handler run based at the interior word 0x800C2080 of the reviewed row D_800C2020, leaving the selected handler result in $v0.'
   - - 1244
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1CDC
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1CDC.c'
+    - publishStepDataFlag4
+    - '@source: src/bof3/boss/publishStepDataFlag4.c'
     - '@behavior: Publishes three words into the current enemy work record loaded from 0x801EB4E8 (data row pointer 0x800C2020 into +0xEC, the byte-indexed dispatcher 0x800C1D40 into +0xE4 and the in-row pointer 0x800C202C into +0xE8), raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. The only in-image word naming this function is 0x800C2080, entry 0 of the run this payload dispatches through 0x800C1C98 with that state byte.'
   - - 1344
     - c
-    - dispatchIndexedHandlerBossBoss03616_800C1D40
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03616_800C1D40.c'
+    - callIndexedHandler30
+    - '@source: src/bof3/boss/callIndexedHandler30.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C20B0 handler run tail, leaving that handler result in $v0. No jal and no pointer word in the payload names 0x800C1D40, so the overlay loader is its caller.'
   - - 1400
     - c
-    - publishBattleHooksBossBoss03616_800C1D78
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss03616_800C1D78.c'
+    - publishBattleHooks32
+    - '@source: src/bof3/boss/publishBattleHooks32.c'
     - '@behavior: Publishes this overlay first handler trio into the shared battle hook slots: materializes the 0x800C1DB8 state switch and stores it into 0x801463A4, the 0x800C1E04 inert handler into 0x801463A8 and the 0x800C1DB0 zero-result accessor into 0x801463AC, then returns. No jal and no pointer word in the payload names 0x800C1D78, so the overlay loader is its caller; the same three slots are republished later by 0x800C1E0C.'
   - - 1456
     - c
-    - zeroResultBossBoss03616_800C1DB0
+    - zeroResult30
   - - 1464
     - c
-    - initModeTuple510Or520ByFlagBitTwoAndSetSubstate8BossBoss03616_800C1DB8
-    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoAndSetSubstate8BossBoss03616_800C1DB8.c'
+    - initModeSubstate8
+    - '@source: src/bof3/boss/initModeSubstate8.c'
     - '@behavior: Mode-transition handler and first slot of the trio this overlay publishes into the shared battle hook slots: when the 0x2 bit of the shared battle flag byte at 0x80146328 is set it stores 8 into the shared secondary sub-state byte at 0x80146875 and calls the shared initializer at 0x801DDED8, and otherwise calls the shared initializer at 0x801DDF00.'
   - - 1540
     - c
-    - noopHandlerBossBoss03616_800C1E04
+    - noopHandler128
   - - 1548
     - c
-    - publishBattleHooksBossBoss03616_800C1E0C
+    - publishBattleHooks18
   - - 1604
     - c
-    - zeroResultBossBoss03616_800C1E44
+    - zeroResult15
   - - 1612
     - c
-    - initModeTuple510Or520ByFlagBitTwoAndSetSubstate5BossBoss03616_800C1E4C
+    - initModeSubstate5
   - - 1688
     - c
-    - noopHandlerBossBoss03616_800C1E98
+    - noopHandler
   - - 1696
     - c
     - callStateTable20Boss
@@ -122,8 +122,8 @@ segments:
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at its last word 0x800C20BC, the entry that holds 0x800C1EE4, with no arguments. The original does not bound the index before the scaled table load, writes no state, and leaves the selected handler result in $v0. The payload holds neither a jal nor a pointer word naming 0x800C1EA0, so the overlay loader is its caller.'
   - - 1764
     - c
-    - dispatchStateByte2Table1804BossBoss03616_800C1EE4
-    - '@source: src/bof3/boss/dispatchStateByte2Table1804BossBoss03616_800C1EE4.c'
+    - dispatchWorkByte2Slot
+    - '@source: src/bof3/boss/dispatchWorkByte2Slot.c'
     - '@behavior: Overlay step dispatch on work-record byte 2: copies the three handler pointers of the in-image run at 0x800C1804 into a local frame table, then calls the entry selected by unsigned byte 2 of the record published at the scratchpad pointer cell 0x1F800044 with no arguments. The index is not bounded before the scaled load, the 0x28-byte frame keeps $ra at 0x20 and the three copied words at 0x10 through 0x18, and the epilogue leaves the selected handler result in $v0. The payload holds no jal naming 0x800C1EE4; the only in-image pointer word that names it is 0x800C20BC, the last word of the reviewed run D_800C2020, which the byte-1 dispatcher at 0x800C1EA0 indexes as its base.'
   - - 1860
     - c
@@ -135,7 +135,7 @@ segments:
     - func_800C1FA4
   - - 2048
     - c
-    - invokeHelperBossBoss03616_800C2000
+    - callClearQueuedSlot
   - - 2080
     - textbin
     - D_800C2020

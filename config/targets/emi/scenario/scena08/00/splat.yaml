@@ -169,8 +169,8 @@ segments:
     - '@behavior: Work-record claim scan: walks the 0x40 entries of the 0x28-byte-stride record table at 0x800E4800 with an unsigned byte counter and returns the address of the first entry whose lead byte reads zero, or zero when all 0x40 entries are claimed; reads only each entry lead byte, makes no call and has no frame.'
   - - 4584
     - c
-    - clearWorkTableAt800E4800ScenarioScena0800_801F7DE8
-    - '@source: src/bof3/scenario/clearWorkTableAt800E4800ScenarioScena0800_801F7DE8.c'
+    - clearWorkTableStride28
+    - '@source: src/bof3/scenario/clearWorkTableStride28.c'
     - '@behavior: Clears the lead byte of each of the 0x40 entries of the 0x28-byte-stride record table at 0x800E4800 in a bottom-tested unsigned-byte loop; takes no arguments and returns nothing.'
   - - 4628
     - asm

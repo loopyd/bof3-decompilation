@@ -9,7 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/checkHitsAnyBox.c",
-    "src/bof3/world/drawWorkCursorQuadWorld02Area11213_801F3EA4.c",
+    "src/bof3/world/drawWorkCursorQuad.c",
     "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld02Area11213_801F3638.c",
     "src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58.c",
     "src/bof3/world/renderQuadRunSliced.c",

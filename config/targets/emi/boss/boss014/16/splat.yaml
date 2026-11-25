@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table1b44BossBoss01416_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table1b44BossBoss01416_800C1804.c'
+    - callByte1Table1b44
+    - '@source: src/bof3/boss/callByte1Table1b44.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: it loads the work-record pointer from the scratchpad pointer cell 0x1F800044, takes that record byte at offset 1, scales it by four and calls the handler selected from the twelve-word 0x800C1B44 code pointer run, so the selected handler result stays in the return register'
   - - 72
     - asm
@@ -43,7 +43,7 @@ segments:
     - noopHandler42
   - - 224
     - c
-    - noopHandlerBossBoss01416_800C18E0
+    - noopHandler89
   - - 232
     - c
     - noopHandler44

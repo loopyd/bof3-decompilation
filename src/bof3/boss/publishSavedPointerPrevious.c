@@ -37,7 +37,7 @@ extern u8 func_8014DAEC(void);
  *           was published before this call, on zero it writes nothing more, and
  *           either way it restores the cell to the saved pointer. Byte 1 of the
  *           record at that cell is the dispatch state byte this overlay steps on
- *           - dispatchStateByte1Table1b4cBossBoss05016_800C1810 loads it, scales
+ *           - callStateByte1Table7 loads it, scales
  *           it by four and calls that entry of the handler run at 0x800C1B4C -
  *           so the increment advances the dispatch state of the previous work
  *           object. The helper and the increment therefore both run while the

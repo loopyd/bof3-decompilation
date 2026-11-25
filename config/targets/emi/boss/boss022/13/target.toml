@@ -8,20 +8,20 @@ splat = "config/targets/emi/boss/boss022/13/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchWorkByte2Table1B5CBossBoss02213_800C18F4.c",
+    "src/bof3/boss/callWorkByte2Table9.c",
     "src/bof3/boss/stateHelperReadyBoss.c",
 ]
 support_sources = [
     "src/bof3/boss/accumulateEnemyRearm.c",
     "src/bof3/boss/setupBattleEntryBoss.c",
     "src/bof3/boss/zeroResultBossBoss02213_800C1A40.c",
-    "src/bof3/boss/noopHandlerBossBoss02213_800C1A00.c",
-    "src/bof3/boss/noopHandlerBossBoss02213_800C19F8.c",
-    "src/bof3/boss/noopHandlerBossBoss02213_800C19F0.c",
+    "src/bof3/boss/noopHandler64.c",
+    "src/bof3/boss/noopHandler63.c",
+    "src/bof3/boss/noopHandler62.c",
     "src/bof3/boss/setupBattleRecordBoss.c",
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss02213_800C19B8.c",
+    "src/bof3/boss/callIndexedHandler28.c",
     "src/bof3/support/boss022_13_psyq.c",
-    "src/bof3/boss/publishBattleHooksBossBoss02213_800C1A08.c",
+    "src/bof3/boss/publishBattleHooks33.c",
     "src/bof3/boss/callWorkTable1Boss.c",
 ]
 psyq_source = "src/bof3/support/boss022_13_psyq.c"

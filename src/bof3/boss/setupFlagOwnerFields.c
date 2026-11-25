@@ -27,7 +27,7 @@ void initModeTuple520(void); /* @source 0x801DDF00 */
 
 /* @source 0x800C1E7C
  * @behavior Progress hook of this overlay. The installer
- * publishBattleHooksBossBoss00216_800C1E3C stores this function's address into
+ * publishBattleHooksFlag stores this function's address into
  * the shared battle hook slot 0x801463A4, so the main program reaches it
  * through that slot; no word of this payload holds the address and no jal
  * reaches it. It reads the shared battle flag word D_80146328 and tests the

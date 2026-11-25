@@ -48,7 +48,7 @@ extern void func_801E5988(void); /* @source 0x801E5988 */
  *
  *           No jal names this address. The payload word at 0x800C21B8 holds it
  *           twice over: entry 8 of the handler run based at 0x800C2198 that
- *           dispatchIndexedHandlerBossBoss02816_800C1AF0 indexes, and slot 3 of
+ *           callIndexedHandler32 indexes, and slot 3 of
  *           the seven-slot run based at 0x800C21AC that
  *           dispatchWorkByte2Table21acThenInvokeSharedServiceWhenWorkByte0Bit0Set
  *           BossBoss02816_800C1C30 indexes, so the prologue and the return path

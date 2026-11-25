@@ -31,7 +31,7 @@ segments:
     - '@source: src/bof3/boss/callStateTable2154Boss.c'
   - - 72
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02816_800C1848
+    - publishWorkStepHandler4
   - - 160
     - c
     - callWorkTable2184Boss
@@ -47,7 +47,7 @@ segments:
     - '@behavior: Entry 1 of this overlay byte-2 step run, the code pointer run based at 0x800C2184 that the dispatcher callWorkTable2184Boss indexes with work byte +2 of the scratch work record at 0x1F800044; this address is the run word 1 at 0x800C2188 and no jal in the payload encodes it, while run word 0 at 0x800C18E4 arms work byte +0x09 and advances that step index to reach this body. It loads the work record pointer from the scratchpad cell before the frame reservation, decrements that record unsigned byte +0x09 in place and tests the stored byte truncated to eight bits, so the guarded arm runs only when the countdown reaches zero; on zero it reads the current enemy work record pointer at 0x801EB4E8, takes that record word 0xE8 and submits the halfword at its offset 0 through the shared submitter 0x801E52F0. It then calls the shared readiness helper 0x801E30F8 and takes the one epilogue while the low byte of the answer is zero; when the helper reports it claims an action slot of the 0x78-byte pool, truncating the index func_801E590C(3, 2) returns to a byte and scaling it by the stride into one register shared by both stores, clears the slot byte at 0x801EC331 to 0, publishes the work record pointer it re-reads from the scratchpad cell in the slot word at 0x801EC3A4, and advances work byte +0x02 by one at byte width, handing the byte-2 dispatcher to entry 2 at 0x800C1A08, this overlay noop handler.'
   - - 520
     - c
-    - noopHandlerBossBoss02816_800C1A08
+    - noopHandler140
   - - 528
     - c
     - callWorkTable2190Boss
@@ -64,44 +64,44 @@ segments:
     - '@behavior: Entry 1 of this overlay work-byte-2 handler run, the code pointer run based at 0x800C2190 that the dispatcher callWorkTable2190Boss indexes with the work record byte +2 scaled by four: it calls the shared main-executable enemy-ready helper func_801E30F8 with no arguments and does nothing further while the low byte of the result is zero; otherwise it raises bit 0x4 of the shared battle flag halfword 0x801462E8, calls the shared main-executable flag-and-slot helper func_801E5704 with no arguments and then the shared scratch-state reset func_801E567C, and returns through its one epilogue.'
   - - 752
     - c
-    - dispatchIndexedHandlerBossBoss02816_800C1AF0
+    - callIndexedHandler32
   - - 808
     - c
-    - noopHandlerBossBoss02816_800C1B28
+    - noopHandler114
   - - 816
     - c
-    - noopHandlerBossBoss02816_800C1B30
+    - noopHandler82
   - - 824
     - c
-    - noopHandlerBossBoss02816_800C1B38
+    - noopHandler141
   - - 832
     - c
-    - publishBattleHooksBossBoss02816_800C1B40
+    - publishBattleHooks20
   - - 888
     - c
-    - zeroResultBossBoss02816_800C1B78
+    - zeroResult33
   - - 896
     - c
     - setupFlagBitTwo
   - - 972
     - c
-    - invokeZeroArgBossBoss02816_800C1BCC
+    - invokeZeroArgOverlay
   - - 1004
     - c
     - callWorkTable21Boss
   - - 1072
     - c
-    - dispatchWorkByte2Table21acThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1C30
+    - dispatchWorkStep
   - - 1180
     - c
     - stateDistanceSlotPointer
     - '@source: src/bof3/boss/stateDistanceSlotPointer.c'
-    - '@behavior: Entry 0 of this overlay seven-slot work-state pointer run based at 0x800C21AC, the code pointer run the dispatcher dispatchWorkByte2Table21acThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1C30 indexes with work record byte 2 scaled by four: clears the work record published through the scratchpad pointer cell 0x1F800044 at bytes 0x24, 0x2A and 0x48, sets its byte 0x29 to 2, applies main lookup record 0x15C through func_8014DD3C, requests resource 4 through func_8014D6B8, copies the shared battle record halfword 0x36 plus seven and word 0x38 into the work record at the same offsets, stores -0x20 in work word 0x20 and zero in word 0x14, sets work byte 9 to 6 and seeds work halfword 0x3E from the record own 0x3E plus 0x1000, then claims an action slot of the 0x78-byte main-RAM pool with the byte the allocator func_801E590C returns for (3, 2), stamps the slot byte at 0x801EC331 with 1 and publishes the work record pointer in the slot word at 0x801EC3A4, and finally advances work byte 2 by one, moving the dispatcher to entry 1 (0x800C1D90).'
+    - '@behavior: Entry 0 of this overlay seven-slot work-state pointer run based at 0x800C21AC, the code pointer run the dispatcher dispatchWorkStep indexes with work record byte 2 scaled by four: clears the work record published through the scratchpad pointer cell 0x1F800044 at bytes 0x24, 0x2A and 0x48, sets its byte 0x29 to 2, applies main lookup record 0x15C through func_8014DD3C, requests resource 4 through func_8014D6B8, copies the shared battle record halfword 0x36 plus seven and word 0x38 into the work record at the same offsets, stores -0x20 in work word 0x20 and zero in word 0x14, sets work byte 9 to 6 and seeds work halfword 0x3E from the record own 0x3E plus 0x1000, then claims an action slot of the 0x78-byte main-RAM pool with the byte the allocator func_801E590C returns for (3, 2), stamps the slot byte at 0x801EC331 with 1 and publishes the work record pointer in the slot word at 0x801EC3A4, and finally advances work byte 2 by one, moving the dispatcher to entry 1 (0x800C1D90).'
   - - 1424
     - c
     - workPreviousBelowThat
     - '@source: src/bof3/boss/workPreviousBelowThat.c'
-    - '@behavior: Slot 1 of this overlay seven-slot work-state code pointer run based at 0x800C21AC, the run the dispatcher dispatchWorkByte2Table21acThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1C30 indexes with work record byte 2 scaled by four, and the slot its own entry 0 at 0x800C1C9C advances that byte to reach: loads the work record published through the scratchpad pointer cell 0x1F800044 before its own frame setup, adds record unsigned halfword 0x3E by record word 0x14 as that word stood before the update, advances word 0x14 by word 0x20, and then, while the signed halfword 0x3E is still below the func_8015477C distance of the record position word pair 0x34 and 0x38 plus 0x200, stores that remeasured distance plus 0x200 back into halfword 0x3E, clears word 0x14, seeds word 0x20 with 0x40, invokes func_8015D71C with selector 0x600, decrements work countdown byte 9 while it is nonzero and advances work byte 2 by one, and advances work byte 2 by two once that countdown has reached zero, handing the dispatcher to its next slot.'
+    - '@behavior: Slot 1 of this overlay seven-slot work-state code pointer run based at 0x800C21AC, the run the dispatcher dispatchWorkStep indexes with work record byte 2 scaled by four, and the slot its own entry 0 at 0x800C1C9C advances that byte to reach: loads the work record published through the scratchpad pointer cell 0x1F800044 before its own frame setup, adds record unsigned halfword 0x3E by record word 0x14 as that word stood before the update, advances word 0x14 by word 0x20, and then, while the signed halfword 0x3E is still below the func_8015477C distance of the record position word pair 0x34 and 0x38 plus 0x200, stores that remeasured distance plus 0x200 back into halfword 0x3E, clears word 0x14, seeds word 0x20 with 0x40, invokes func_8015D71C with selector 0x600, decrements work countdown byte 9 while it is nonzero and advances work byte 2 by one, and advances work byte 2 by two once that countdown has reached zero, handing the dispatcher to its next slot.'
   - - 1664
     - c
     - workPreviousAboveRemeasured
@@ -110,7 +110,7 @@ segments:
     - workAccumulatePreviousAbove
   - - 1976
     - c
-    - dispatchWorkByte2Table21bcThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1FB8
+    - dispatchWorkStepTail
   - - 2084
     - c
     - stateApplyCopyDistance
@@ -118,10 +118,10 @@ segments:
     - c
     - stateRunSharedUpdate
     - '@source: src/bof3/boss/stateRunSharedUpdate.c'
-    - '@behavior: Entry 1 of this overlay three-word step run based at 0x800C21BC, whose words are 0x800C2024, 0x800C20C8 and 0x800C2120: the dispatcher dispatchWorkByte2Table21bcThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1FB8 indexes that base with the work record byte 2, and the sibling stateApplyCopyDistance ends by advancing that byte to hand the run to this entry. It samples unsigned byte 0 of the shared battle record the main-RAM cell 0x801EB4E0 points at and, while bit 0 of that byte is clear, advances the work record step byte 2 by one through the scratchpad pointer cell 0x1F800044, moving the dispatcher to entry 2 at 0x800C2120; then it runs the shared main-executable per-frame update func_8014D978 with no arguments and returns the value that update leaves in v0.'
+    - '@behavior: Entry 1 of this overlay three-word step run based at 0x800C21BC, whose words are 0x800C2024, 0x800C20C8 and 0x800C2120: the dispatcher dispatchWorkStepTail indexes that base with the work record byte 2, and the sibling stateApplyCopyDistance ends by advancing that byte to hand the run to this entry. It samples unsigned byte 0 of the shared battle record the main-RAM cell 0x801EB4E0 points at and, while bit 0 of that byte is clear, advances the work record step byte 2 by one through the scratchpad pointer cell 0x1F800044, moving the dispatcher to entry 2 at 0x800C2120; then it runs the shared main-executable per-frame update func_8014D978 with no arguments and returns the value that update leaves in v0.'
   - - 2336
     - c
-    - invokeHelperBossBoss02816_800C2120
+    - invokeHelperOverlay2
   - - 2368
     - textbin
     - boss028DataHandlerTable

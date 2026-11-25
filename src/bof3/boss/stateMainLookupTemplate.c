@@ -57,7 +57,7 @@ extern void refreshPositionModeScale(void); /* @source 0x800C3284 */
 
 /* @source 0x800C2D2C
  * @behavior Entry 0 body of this overlay's local two-entry handler pair, the
- *           pair dispatchStateByte2LocalPairBossBoss05516_800C2CD4 seeds with
+ *           pair callLocalPairBoss5 seeds with
  *           0x800C2D2C then 0x800C2E04 and selects with work byte +2. It copies
  *           the 10-byte step template at 0x800C1834 into frame slot 0x10, then
  *           applies main lookup record 0x318 through the shared main-executable

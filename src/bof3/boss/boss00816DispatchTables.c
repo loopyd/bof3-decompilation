@@ -34,7 +34,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable2660Boss, D_800C26
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table26ccBossBoss00816_800C1CD8, D_800C26CC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callByte1Table26cc, D_800C26CC);
 
 /* @source 0x800C1DC4
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work

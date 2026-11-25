@@ -18,7 +18,7 @@ extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
 
 /* This payload's step dispatcher at 0x800C18A0: it masks its argument with
  * 0xFF, scales it by four and calls the entry of the 0x800C19E0 handler run. */
-void dispatchIndexedHandlerBossBoss01516_800C18A0(u8 index);
+void callIndexedTable19e0(u8 index);
 
 /* Shared main-program helper the boss archive family calls at the end of its
  * step setup; it takes no arguments and returns none here. */
@@ -28,7 +28,7 @@ void func_8014D978(void);
  * @behavior Step-0 setup of this overlay's work state machine: publishes three
  * words into the current enemy work record loaded from 0x801EB4E8 -- the data
  * row pointer 0x800C199C into +0xEC, the step dispatcher
- * dispatchIndexedHandlerBossBoss01516_800C18A0 into +0xE4 and the data pointer
+ * callIndexedTable19e0 into +0xE4 and the data pointer
  * 0x800C19A8 (0x800C199C + 0xC, inside that same row) into +0xE8 -- then stores
  * 2 into the state byte at +1 of the work record the main program publishes at
  * the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state
@@ -53,7 +53,7 @@ void publishWorkStepHandler1(void) {
 
   FIELD_REF(void *, work, 0xECu) = &D_800C199C;
   FIELD_REF(Boss01516StepHandler, work, 0xE4u) =
-      dispatchIndexedHandlerBossBoss01516_800C18A0;
+      callIndexedTable19e0;
   FIELD_REF(void *, work, 0xE8u) = &D_800C19A8;
   SPAD_PTR_SLOT(u8, 0x44u)[1] = 2;
   func_8014D978();

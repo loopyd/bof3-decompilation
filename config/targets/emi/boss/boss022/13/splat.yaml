@@ -40,8 +40,8 @@ segments:
     - '@behavior: Overlay step handler on work-record byte 1: calls the shared readiness helper at 0x8014DAEC and, when the unsigned byte it answers is nonzero, stores 2 into byte 1 of the work object held by the scratchpad pointer cell 0x1F800044, the workspace-state byte the dispatcher at 0x800C1804 indexes the handler run at 0x800C1B2C with. It bounds nothing else, writes no other state, loads the pointer cell once, leaves the load and return delay slots as nops and spends its 0x18-byte frame only on $ra at 0x10.'
   - - 244
     - c
-    - dispatchWorkByte2Table1B5CBossBoss02213_800C18F4
-    - '@source: src/bof3/boss/dispatchWorkByte2Table1B5CBossBoss02213_800C18F4.c'
+    - callWorkByte2Table9
+    - '@source: src/bof3/boss/callWorkByte2Table9.c'
     - '@behavior: Overlay workspace-state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay code pointer run based at 0x800C1B5C, which holds 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, 0x800C1938, 0x801E4928, 0x800C19F0, 0x800C19F8 and 0x800C1A00 in that order; it bounds no index, writes no state, returns the handler result and spends its 0x18-byte frame only on $ra at 0x10.'
   - - 312
     - c
@@ -50,22 +50,22 @@ segments:
     - '@behavior: Battle-step handler of this overlay: runs the shared readiness helper at 0x8014DAEC and the shared enemy accumulation pass at 0x801E54EC, then overrides that pass re-arm by raising bit 0x1000 of word +0x100 of the current enemy work record published at 0x801EB4E8, clearing the accumulate flag 0x40 of byte 0 of the work object held by the scratchpad pointer cell 0x1F800044 and writing 3, 0, 0 into its bytes 1, 2 and 3.'
   - - 440
     - c
-    - dispatchIndexedHandlerBossBoss02213_800C19B8
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss02213_800C19B8.c'
+    - callIndexedHandler28
+    - '@source: src/bof3/boss/callIndexedHandler28.c'
     - '@behavior: Byte-indexed overlay dispatcher: it masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B74 handler table, whose three words are this overlay inert handlers, so the selected handler result stays in the return register and the handler sees the scaled index in a0'
   - - 496
     - c
-    - noopHandlerBossBoss02213_800C19F0
+    - noopHandler62
   - - 504
     - c
-    - noopHandlerBossBoss02213_800C19F8
+    - noopHandler63
   - - 512
     - c
-    - noopHandlerBossBoss02213_800C1A00
+    - noopHandler64
   - - 520
     - c
-    - publishBattleHooksBossBoss02213_800C1A08
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss02213_800C1A08.c'
+    - publishBattleHooks33
+    - '@source: src/bof3/boss/publishBattleHooks33.c'
     - '@behavior: Installer of this overlay handler trio into the shared battle-hook slots: it stores the battle-entry hook at 0x800C1A48 into 0x801463A4, the battle setup hook at 0x800C1ABC into 0x801463A8 and the zero-result accessor at 0x800C1A40 into 0x801463AC, the last one through the void slot type. No word of this payload and no jal names the function, so the main program enters it through the overlay entry point.'
   - - 576
     - c

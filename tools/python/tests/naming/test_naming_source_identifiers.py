@@ -84,6 +84,6 @@ def test_cli_exposes_list_check_and_the_rename_transaction() -> None:
     from harness.naming import cli
 
     choices = cli.build_parser()._subparsers._group_actions[0].choices
-    assert set(choices) == {"list", "check", "rename"}
+    assert set(choices) == {"list", "check", "rename", "batch"}
     rename = choices["rename"]
     assert rename.get_default("apply") is False

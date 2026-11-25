@@ -56,7 +56,7 @@ support_sources = [
     "src/bof3/scenario/callOverlayHelper6.c",
     "src/bof3/scenario/noopProgressHandler.c",
     "src/bof3/scenario/callRecordCallback2.c",
-    "src/bof3/scenario/clearWorkTableAt800E4800ScenarioScena0800_801F7DE8.c",
+    "src/bof3/scenario/clearWorkTableStride28.c",
     "src/bof3/scenario/stateClearWorkTable.c",
     "src/bof3/scenario/stateFlagsNonzeroRefresh.c",
     "src/bof3/scenario/callByte1RunHandler2.c",

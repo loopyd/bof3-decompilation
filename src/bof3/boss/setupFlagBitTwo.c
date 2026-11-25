@@ -11,7 +11,7 @@ extern void initModeTuple520(void); /* @source 0x801DDF00 */
 
 /* @source 0x800C1B80
  * @behavior First member of this overlay's battle-hook trio, the slot its
- * installer publishBattleHooksBossBoss02816_800C1B40 writes into 0x801463A4. It
+ * installer publishBattleHooks20 writes into 0x801463A4. It
  * loads the shared battle flag byte 0x80146328 once and tests bit 0x2; while the
  * bit is set it stores 0x1E into the shared scenario progress byte 0x80146864 and
  * runs initModeTuple510 (0x801DDED8), which seeds the three-byte battle mode

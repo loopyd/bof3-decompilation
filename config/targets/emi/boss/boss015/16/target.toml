@@ -14,11 +14,11 @@ sources = [
 ]
 support_sources = [
     "src/bof3/boss/publishBattleHooks9.c",
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss01516_800C18A0.c",
+    "src/bof3/boss/callIndexedTable19e0.c",
     "src/bof3/boss/invokeHelperArg.c",
     "src/bof3/boss/zeroResult11.c",
     "src/bof3/boss/noopHandler51.c",
-    "src/bof3/boss/noopHandlerBoss015_800C18E0.c",
+    "src/bof3/boss/noopHandler109.c",
     "src/bof3/boss/noopHandler49.c",
     "src/bof3/support/boss015_16_psyq.c",
 ]

@@ -384,6 +384,7 @@ def _request_for_source(
         load_address=manifest.load_address,
         output_root=root / "out" / "matching",
         section_placements=manifest.section_placements.get(address, ()),
+        manifests={manifest.id.value: manifest},
         diagnostics=True,
     )
 

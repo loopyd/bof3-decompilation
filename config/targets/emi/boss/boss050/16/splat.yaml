@@ -30,32 +30,32 @@ segments:
     - D_800C1804
   - - 16
     - c
-    - dispatchStateByte1Table1b4cBossBoss05016_800C1810
-    - '@source: src/bof3/boss/dispatchStateByte1Table1b4cBossBoss05016_800C1810.c'
+    - callStateByte1Table7
+    - '@source: src/bof3/boss/callStateByte1Table7.c'
     - '@behavior: Overlay step dispatch on work-record state byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of the handler run based at 0x800C1B4C with no arguments, without bounding the index before the scaled table load; the overlay loader that steps this pointer run is its caller.'
   - - 84
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05016_800C1854
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05016_800C1854.c'
-    - '@behavior: Step setup of the overlay work state machine: publishes the data row pointer 0x800C1B34 into +0xEC, the indexed dispatcher dispatchIndexedHandlerBossBoss05016_800C18B8 into +0xE4 and the in-row pointer 0x800C1B40 (the data row +0xC) into +0xE8 of the current work record loaded from 0x801EB4E8, raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. The payload holds no jal naming 0x800C1854; the only in-image word that names it is 0x800C1B4C, entry 0 of the 0x800C1B4C handler run that the state dispatcher at 0x800C1810 indexes with that state byte, so the stored 2 moves the next dispatch to run entry 2, the shared handler 0x801E35D8.'
+    - publishWorkStepFlag4
+    - '@source: src/bof3/boss/publishWorkStepFlag4.c'
+    - '@behavior: Step setup of the overlay work state machine: publishes the data row pointer 0x800C1B34 into +0xEC, the indexed dispatcher callIndexedHandler24 into +0xE4 and the in-row pointer 0x800C1B40 (the data row +0xC) into +0xE8 of the current work record loaded from 0x801EB4E8, raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. The payload holds no jal naming 0x800C1854; the only in-image word that names it is 0x800C1B4C, entry 0 of the 0x800C1B4C handler run that the state dispatcher at 0x800C1810 indexes with that state byte, so the stored 2 moves the next dispatch to run entry 2, the shared handler 0x801E35D8.'
   - - 184
     - c
-    - dispatchIndexedHandlerBossBoss05016_800C18B8
+    - callIndexedHandler24
   - - 240
     - c
     - noopHandlerBossBoss05016_800C18F0
   - - 248
     - c
-    - noopHandlerBossBoss05016_800C18F8
+    - noopHandler92
   - - 256
     - c
-    - noopHandlerBossBoss05016_800C1900
+    - noopHandler74
   - - 264
     - c
-    - publishBattleHooksBossBoss05016_800C1908
+    - publishBattleHooks29
   - - 320
     - c
-    - zeroResultBossBoss05016_800C1940
+    - zeroResult16
   - - 328
     - c
     - setupFlagBitSelected
@@ -63,10 +63,10 @@ segments:
     - '@behavior: State switch this overlay publishes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x10 into the shared secondary sub-state byte 0x80146875, runs initModeTuple510 at 0x801DDED8 and then stores 0x8C into the shared selected-record index byte 0x80145029, and otherwise runs initModeTuple520 at 0x801DDF00.'
   - - 416
     - c
-    - noopHandlerBossBoss05016_800C19A0
+    - noopHandler101
   - - 424
     - c
-    - dispatchStateByte1Table1804BossBoss05016_800C19A8
+    - dispatchWorkByte1Triple
   - - 520
     - asm
     - func_800C1A08
@@ -74,7 +74,7 @@ segments:
     - c
     - publishSavedPointerPrevious
     - '@source: src/bof3/boss/publishSavedPointerPrevious.c'
-    - '@behavior: Step handler of this overlay work state machine: publishes word 0x74 of the shared battle record 0x801EC2E0 into the scratchpad work-object pointer cell 0x1F800044 while keeping the cell previous value in a callee-saved register, calls the shared readiness helper func_8014DAEC and tests only the zero-extended low byte of its answer, increments byte 1 of the work object published before the call when that byte is non-zero and writes nothing more when it is zero, then restores the cell to the saved pointer. Byte 1 of the record at that cell is the dispatch state byte dispatchStateByte1Table1b4cBossBoss05016_800C1810 indexes the 0x800C1B4C handler run with. The payload names this span only through word 1 of the three-word pointer run at 0x800C1804, so the overlay loader that steps that run is its caller.'
+    - '@behavior: Step handler of this overlay work state machine: publishes word 0x74 of the shared battle record 0x801EC2E0 into the scratchpad work-object pointer cell 0x1F800044 while keeping the cell previous value in a callee-saved register, calls the shared readiness helper func_8014DAEC and tests only the zero-extended low byte of its answer, increments byte 1 of the work object published before the call when that byte is non-zero and writes nothing more when it is zero, then restores the cell to the saved pointer. Byte 1 of the record at that cell is the dispatch state byte callStateByte1Table7 indexes the 0x800C1B4C handler run with. The payload names this span only through word 1 of the three-word pointer run at 0x800C1804, so the overlay loader that steps that run is its caller.'
   - - 748
     - asm
     - func_800C1AEC

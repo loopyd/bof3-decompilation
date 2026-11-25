@@ -24,7 +24,7 @@ extern void (*D_800C1DA0[])(void); /* @source 0x800C1DA0 @kind data */
  * whatever that handler returns. The payload holds neither a jal nor a pointer
  * word naming 0x800C1820, so the overlay loader that steps the handler run is
  * its caller and the function takes no arguments. Seeded from the exact sibling
- * dispatchStateByte1Table1ddcBossBoss00716_800C190C of this target, whose
+ * callByte1Table1ddc of this target, whose
  * measurement is exact: the two spans are equal word for word except the single
  * %lo word of the scaled table load at 0x800C1844, 0x800C1DA0 here against
  * 0x800C1DDC there, both in the one 0x8000 page.

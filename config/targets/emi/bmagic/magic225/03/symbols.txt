@@ -19,5 +19,5 @@ checkDownHeadingHeader = 0x801EFEE8;
 func_801F0140 = 0x801F0140;
 stepPositionPairGrow = 0x801F021C;
 reserveFirstFreeRecordBmagicMagic22503_801F02D4 = 0x801F02D4;
-clearWorkBytesBmagicMagic22503_801F0338 = 0x801F0338;
+clearWorkBytes = 0x801F0338;
 T_801F0388 = 0x801F0388;

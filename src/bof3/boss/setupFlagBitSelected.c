@@ -27,7 +27,7 @@ void initModeTuple520(void); /* @source 0x801DDF00 */
  * initModeTuple520 at 0x801DDF00 instead, which seeds the same tuple with 5, 2
  * and 0. It takes no arguments and returns nothing, and its 0x18-byte frame
  * keeps $ra at 0x10 across the chosen call. The installer
- * publishBattleHooksBossBoss05016_800C1908 of this overlay materialized this
+ * publishBattleHooks29 of this overlay materialized this
  * function address and stored it into the shared battle hook slot 0x801463A4,
  * beside an inert handler and a zero-result accessor; no jal of this payload
  * reaches this function, so the main program calls it through that slot. Its

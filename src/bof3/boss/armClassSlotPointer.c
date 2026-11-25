@@ -33,7 +33,7 @@ extern u32 func_801E590C(u32 arg0, u32 arg1); /* @source 0x801E590C */
 /* @source 0x800C1900
  * @behavior Entry 0 of this overlay's byte-2 step run, the code pointer run the
  *           payload places at 0x800C1DF4 and the dispatcher
- *           dispatchStateByte2Table1df4BossBoss05116_800C18BC indexes with work
+ *           callStateByte2Table8 indexes with work
  *           byte +2 of the scratch work record at 0x1F800044. It loads the
  *           current enemy work record pointer from the main-RAM cell
  *           0x801EB4E8, takes that record's unsigned byte +0xE0, scales it by

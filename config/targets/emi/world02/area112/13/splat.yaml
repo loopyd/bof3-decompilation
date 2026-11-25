@@ -96,11 +96,11 @@ segments:
     - c
     - storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58
     - '@source: src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58.c'
-    - '@behavior: Evaluates the work object''s cursor word pair at +0x34 and +0x38 through the shared distance helper func_801F5477C, stores the answer shifted left 16 into cursor word +0x3C and advances the work state byte at +1 so the next dispatch of table 0x801F493C lands on drawWorkCursorQuadWorld02Area11213_801F3EA4.'
+    - '@behavior: Evaluates the work object''s cursor word pair at +0x34 and +0x38 through the shared distance helper func_801F5477C, stores the answer shifted left 16 into cursor word +0x3C and advances the work state byte at +1 so the next dispatch of table 0x801F493C lands on drawWorkCursorQuad.'
   - - 4772
     - c
-    - drawWorkCursorQuadWorld02Area11213_801F3EA4
-    - '@source: src/bof3/world/drawWorkCursorQuadWorld02Area11213_801F3EA4.c'
+    - drawWorkCursorQuad
+    - '@source: src/bof3/world/drawWorkCursorQuad.c'
   - - 4844
     - asm
     - func_801F3EEC

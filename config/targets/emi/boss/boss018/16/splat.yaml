@@ -43,8 +43,8 @@ segments:
     - func_800C1940
   - - 380
     - c
-    - dispatchIndexedHandlerBossBoss01816_800C197C
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss01816_800C197C.c'
+    - callIndexedTable2cdc
+    - '@source: src/bof3/boss/callIndexedTable2cdc.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C2CDC handler table of this overlay, so the selected handler''s result stays in the return register.'
   - - 436
     - c
@@ -53,14 +53,14 @@ segments:
     - '@behavior: Overlay handler: when the record state byte at 0x80145FA8 equals 4, publishes 5 into the shared boss state byte at 0x80146384; otherwise it returns without touching any state.'
   - - 472
     - c
-    - noopHandlerBossBoss01816_800C19D8
+    - noopHandler110
   - - 480
     - c
-    - noopHandlerBossBoss01816_800C19E0
+    - noopHandler111
   - - 488
     - c
-    - dispatchStateByte1Table2ce8BossBoss01816_800C19E8
-    - '@source: src/bof3/boss/dispatchStateByte1Table2ce8BossBoss01816_800C19E8.c'
+    - callByte1Table2ce8
+    - '@source: src/bof3/boss/callByte1Table2ce8.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay''s handler table based at 0x800C2CE8 with no arguments, so the selected handler''s result stays in the return register.'
   - - 556
     - asm
@@ -70,7 +70,7 @@ segments:
     - func_800C1ADC
   - - 792
     - c
-    - dispatchIndexedHandlerBossBoss01816_800C1B18
+    - callIndexedTable2d18
   - - 848
     - c
     - setBossStateFive
@@ -78,29 +78,29 @@ segments:
     - '@behavior: Overlay handler: when the record state byte at 0x80145FA8 equals 4, publishes 5 into the shared boss state byte at 0x80146384; otherwise it returns without touching any state. Entry 0 of this overlay''s 0x800C2D18 handler table.'
   - - 884
     - c
-    - noopHandlerBossBoss01816_800C1B74
+    - noopHandler97
   - - 892
     - c
-    - noopHandlerBossBoss01816_800C1B7C
+    - noopHandler95
   - - 900
     - c
-    - dispatchStateByte1Table2d24BossBoss01816_800C1B84
-    - '@source: src/bof3/boss/dispatchStateByte1Table2d24BossBoss01816_800C1B84.c'
+    - callByte1Table2d24
+    - '@source: src/bof3/boss/callByte1Table2d24.c'
   - - 968
     - asm
     - func_800C1BC8
   - - 1132
     - c
-    - dispatchIndexedHandlerBossBoss01816_800C1C6C
+    - callIndexedHandler11
   - - 1188
     - c
     - setBossStateFive2
   - - 1224
     - c
-    - noopHandlerBossBoss01816_800C1CC8
+    - noopHandler52
   - - 1232
     - c
-    - noopHandlerBossBoss01816_800C1CD0
+    - noopHandler53
   - - 1240
     - asm
     - func_800C1CD8
@@ -109,27 +109,27 @@ segments:
     - func_800C1DC4
   - - 1764
     - c
-    - dispatchStateByte2Table2d94BossBoss01816_800C1EE4
-    - '@source: src/bof3/boss/dispatchStateByte2Table2d94BossBoss01816_800C1EE4.c'
+    - callStateByte2Table74
+    - '@source: src/bof3/boss/callStateByte2Table74.c'
   - - 1832
     - asm
     - func_800C1F28
   - - 2040
     - c
-    - dispatchStateByte2Table2dacBossBoss01816_800C1FF8
-    - '@source: src/bof3/boss/dispatchStateByte2Table2dacBossBoss01816_800C1FF8.c'
+    - callStateByte2Table5
+    - '@source: src/bof3/boss/callStateByte2Table5.c'
   - - 2108
     - c
     - stateCursorFrameParity
   - - 2148
     - c
-    - noopHandlerBossBoss01816_800C2064
+    - noopHandler54
   - - 2156
     - c
-    - noopHandlerBossBoss01816_800C206C
+    - noopHandler55
   - - 2164
     - c
-    - dispatchIndexedHandlerBossBoss01816_800C2074
+    - callIndexedHandler12
   - - 2220
     - c
     - clearBossStateByte
@@ -141,7 +141,7 @@ segments:
     - noopHandlerBossBoss01816_800C210C
   - - 2324
     - c
-    - publishBattleHooksBossBoss01816_800C2114
+    - publishBattleHooks10
   - - 2380
     - asm
     - func_800C214C
@@ -153,7 +153,7 @@ segments:
     - func_800C2378
   - - 3064
     - c
-    - publishBattleHooksBossBoss01816_800C23F8
+    - publishBattleHooks24
   - - 3120
     - asm
     - func_800C2430
@@ -165,7 +165,7 @@ segments:
     - func_800C265C
   - - 3804
     - c
-    - publishBattleHooksBossBoss01816_800C26DC
+    - publishBattleHooks21
   - - 3860
     - asm
     - func_800C2714

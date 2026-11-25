@@ -28,7 +28,7 @@ extern u8* D_1F800044;
 /* This payload's next step dispatcher at 0x800C19B4: it masks its argument
  * with 0xFF, scales it by four and calls the entry of the 0x800C1E0C run, the
  * 0x94-byte offset inside the same 0x800C1D78 row. */
-void dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4(u8 index);
+void callThreeWordRun(u8 index);
 
 /* Shared main-program helper the whole boss archive family calls at the end of
  * its step setup, for example 0x800C1C68 and 0x800C1D40 of BIN/BOSS/BOSS008.EMI
@@ -40,7 +40,7 @@ void func_8014D978(void);
  * twelve-word handler run based at 0x800C1DDC: publishes three words into the
  * current enemy work record loaded from 0x801EB4E8 -- the data row pointer
  * 0x800C1D84 (row +0xC) into +0xEC, the step dispatcher
- * dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4 into
+ * callThreeWordRun into
  * +0xE4 and the in-row pointer 0x800C1D98 (row +0x20) into +0xE8 -- then
  * clears byte +0x8 of the work record the main program publishes at the
  * scratchpad pointer cell 0x1F800044, stores 2 into that record's byte +1 and
@@ -49,7 +49,7 @@ void func_8014D978(void);
  * three record stores, so each access keeps its own load; the first one is
  * held in a pointer local because a store through the named cell cannot be
  * moved behind the three record stores, while the store it feeds sits after
- * them. Byte +1 is the value dispatchStateByte1Table1ddcBossBoss00716_800C190C
+ * them. Byte +1 is the value callByte1Table1ddc
  * indexes its 0x800C1DDC run by, so writing 2 hands the next step to that run's
  * entry 2; the role of byte +0x8 is not established here. No jal in the payload
  * names 0x800C1950: its only in-image reference is the word 0x800C1DDC of that
@@ -72,7 +72,7 @@ void publishStepDataClear(
   record = D_1F800044;
   FIELD_REF(void *, work, 0xECu) = &D_800C1D84;
   FIELD_REF(Boss00716StepHandler, work, 0xE4u) =
-      dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4;
+      callThreeWordRun;
   FIELD_REF(void *, work, 0xE8u) = &D_800C1D98;
   record[8] = 0;
   D_1F800044[1] = 2;

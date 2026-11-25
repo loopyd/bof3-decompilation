@@ -58,11 +58,9 @@ def run_build_object(
     object_path = object_path_for_source(layout, source_path)
     stat = source_path.stat()
     key = (source_path, stat.st_mtime_ns, stat.st_size)
-    if (
-        key in _BUILT
-        and object_path.is_file()
-        and object_path.stat().st_mtime >= stat.st_mtime
-    ):
+    if object_path.is_file() and object_path.stat().st_mtime >= stat.st_mtime:
+        # A parallel precompile may have produced it already.
+        _BUILT.add(key)
         return
     result = compile_object(layout.root, source_path, object_path)
     log_text = result.stdout
@@ -118,10 +116,10 @@ def _asm_diff_resolve(
     binary_path = (
         request.binary_path.expanduser().resolve()
         if request.binary_path is not None
-        else default_binary_for_source(repo, source_path)
+        else default_binary_for_source(repo, source_path, manifests=manifests)
     )
     load_address = request.load_address or overlay_load_address_for_source(
-        repo, source_path
+        repo, source_path, manifests=manifests
     )
     original_size = (
         request.size
@@ -132,6 +130,7 @@ def _asm_diff_resolve(
             binary_path=binary_path,
             load_address=load_address,
             root=repo.root,
+            manifests=manifests,
         )
     )
     object_path = object_path_for_source(repo, source_path)

@@ -88,8 +88,8 @@ segments:
     - '@behavior: Step handler of this overlay work state machine: runs the shared readiness helper at 0x8014DAEC, then the shared enemy accumulation pass at 0x801E54EC, raises bit 0x1000 of word +0x100 of the current enemy work record published at 0x801EB4E8, clears bit 0x40 of byte 0 of the work object held by the scratchpad pointer cell 0x1F800044, and writes 3, 0, 0 into bytes 1, 2 and 3 of that object where the pass leaves 2, 0, 0.'
   - - 1032
     - c
-    - dispatchIndexedHandlerBossBoss00216_800C1C08
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss00216_800C1C08.c'
+    - callIndexedTable2048
+    - '@source: src/bof3/boss/callIndexedTable2048.c'
     - '@behavior: Byte-indexed dispatcher of this overlay work state machine: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C2048 handler run, whose entries 0 through 2 are the noop handlers at 0x800C1C40, 0x800C1C48 and 0x800C1C50. The step setup at 0x800C1AEC installs this function at +0xE4 of the enemy work record, and the selected handler result stays in the return register.'
   - - 1088
     - c
@@ -111,7 +111,7 @@ segments:
     - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C1F9C into +0xEC of the current enemy work record from 0x801EB4E8, the indexed dispatcher 0x800C1D00 into +0xE4 and the in-row data pointer 0x800C1FB4 into +0xE8, raises bit 0x8 of the record +0x104 flag word, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 1280
     - c
-    - dispatchIndexedHandlerBossBoss00216_800C1D00
+    - callIndexedTable2084
   - - 1336
     - c
     - noopHandler16
@@ -139,7 +139,7 @@ segments:
     - noopHandler18
   - - 1596
     - c
-    - publishBattleHooksBossBoss00216_800C1E3C
+    - publishBattleHooksFlag
   - - 1652
     - c
     - zeroResult1

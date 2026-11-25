@@ -27,78 +27,78 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table1b30BossBoss04916_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table1b30BossBoss04916_800C1804.c'
+    - callStateByte1Table10
+    - '@source: src/bof3/boss/callStateByte1Table10.c'
     - '@behavior: Overlay state dispatch on work-record byte 1, the first code word after this payload four-byte entry header: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of the code pointer run based at 0x800C1B30 with no arguments. It writes no state and returns whatever the called handler leaves in the return register, so the overlay loader enters it from outside the payload'
   - - 72
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss04916_800C1848
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss04916_800C1848.c'
-    - '@behavior: Step setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C1B1C into +0xEC, the indexed dispatcher dispatchIndexedHandlerBossBoss04916_800C18AC into +0xE4 and the in-row pointer 0x800C1B28 (0x800C1B1C + 0xC) into +0xE8 -- then raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. No jal names 0x800C1848: its only in-image reference is the word 0x800C1B30, entry 0 of the run this payload''s 0x800C1804 state dispatcher indexes with that same state byte, so writing 2 moves the next dispatch to that run''s entry 2, the shared handler 0x801E35D8, instead of re-entering this installer. The later installer of this overlay at 0x800C1940 has the same 0x64-byte body with the 0x800C19A4 dispatcher, and this span compares equal to the one at the same offset of BIN/BOSS/BOSS040.EMI#16'
+    - publishWorkStepFlag3
+    - '@source: src/bof3/boss/publishWorkStepFlag3.c'
+    - '@behavior: Step setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C1B1C into +0xEC, the indexed dispatcher callIndexedHandler19 into +0xE4 and the in-row pointer 0x800C1B28 (0x800C1B1C + 0xC) into +0xE8 -- then raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. No jal names 0x800C1848: its only in-image reference is the word 0x800C1B30, entry 0 of the run this payload''s 0x800C1804 state dispatcher indexes with that same state byte, so writing 2 moves the next dispatch to that run''s entry 2, the shared handler 0x801E35D8, instead of re-entering this installer. The later installer of this overlay at 0x800C1940 has the same 0x64-byte body with the 0x800C19A4 dispatcher, and this span compares equal to the one at the same offset of BIN/BOSS/BOSS040.EMI#16'
   - - 172
     - c
-    - dispatchIndexedHandlerBossBoss04916_800C18AC
+    - callIndexedHandler19
   - - 228
     - c
-    - noopHandlerBossBoss04916_800C18E4
+    - noopHandler131
   - - 236
     - c
-    - noopHandlerBossBoss04916_800C18EC
+    - noopHandler96
   - - 244
     - c
-    - noopHandlerBossBoss04916_800C18F4
+    - noopHandler56
   - - 252
     - c
-    - dispatchStateByte1Table1b6cBossBoss04916_800C18FC
-    - '@source: src/bof3/boss/dispatchStateByte1Table1b6cBossBoss04916_800C18FC.c'
+    - callStateByte1Table9
+    - '@source: src/bof3/boss/callStateByte1Table9.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the code pointer run based at 0x800C1B6C with no arguments. It writes no state and returns whatever the called handler leaves in the return register, so the overlay loader enters it from outside the payload'
   - - 320
     - c
-    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss04916_800C1940
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss04916_800C1940.c'
-    - '@behavior: Step setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C1B1C into +0xEC, the byte dispatcher dispatchIndexedHandlerBossBoss04916_800C19A4 into +0xE4 and the in-row pointer 0x800C1B28 (0x800C1B1C + 0xC) into +0xE8 -- then raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. No jal names 0x800C1940: its only in-image reference is the word 0x800C1B6C, entry 0 of the run this payload''s 0x800C18FC state dispatcher indexes with that same state byte, so writing 2 moves the next dispatch to that run''s entry 2, the shared handler 0x801E35D8, instead of re-entering this installer. The earlier installer of this overlay at 0x800C1848 has the same 0x64-byte body with the 0x800C18AC dispatcher, and this span compares equal to the one at the same offset of BIN/BOSS/BOSS040.EMI#16'
+    - publishWorkStepFlag1
+    - '@source: src/bof3/boss/publishWorkStepFlag1.c'
+    - '@behavior: Step setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C1B1C into +0xEC, the byte dispatcher callIndexedHandler13 into +0xE4 and the in-row pointer 0x800C1B28 (0x800C1B1C + 0xC) into +0xE8 -- then raises bit 0x8 of the record +0x104 flag word, stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. No jal names 0x800C1940: its only in-image reference is the word 0x800C1B6C, entry 0 of the run this payload''s 0x800C18FC state dispatcher indexes with that same state byte, so writing 2 moves the next dispatch to that run''s entry 2, the shared handler 0x801E35D8, instead of re-entering this installer. The earlier installer of this overlay at 0x800C1848 has the same 0x64-byte body with the 0x800C18AC dispatcher, and this span compares equal to the one at the same offset of BIN/BOSS/BOSS040.EMI#16'
   - - 420
     - c
-    - dispatchIndexedHandlerBossBoss04916_800C19A4
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss04916_800C19A4.c'
+    - callIndexedHandler13
+    - '@source: src/bof3/boss/callIndexedHandler13.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B9C handler table, whose three entries are the overlay''s closing inert handlers 0x800C19DC, 0x800C19E4 and 0x800C19EC, so the selected handler''s result stays in the return register. Its 0x38 bytes compare equal to the exact lift at 0x800C19A4 of BIN/BOSS/BOSS040.EMI#16. The installer at 0x800C1940 stores this function''s address into offset 0xE4 of the record it reaches through D_801EB4E8'
   - - 476
     - c
-    - noopHandlerBossBoss04916_800C19DC
+    - noopHandler57
   - - 484
     - c
-    - noopHandlerBossBoss04916_800C19E4
+    - noopHandler117
   - - 492
     - c
     - noopHandlerBossBoss04916_800C19EC
   - - 500
     - c
-    - publishBattleHooksBossBoss04916_800C19F4
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss04916_800C19F4.c'
-    - '@behavior: Publishes this overlay''s early battle handler trio into the shared hook slots: func_800C1A34 (bit 0x2 of D_80146328 selects storing 5 into D_80146875 and calling func_801DDED8, else func_801DDF00) into 0x801463A4, noopHandlerBossBoss04916_800C1A80 into 0x801463A8 and zeroResultBossBoss04916_800C1A2C into 0x801463AC. The later installer at 0x800C1A88 overwrites the same trio. Its 0x38 bytes compare equal to the exact lift at 0x800C19F4 of BIN/BOSS/BOSS040.EMI#16, whose payload carries the same 0x800C1800 load address'
+    - publishBattleHooks36
+    - '@source: src/bof3/boss/publishBattleHooks36.c'
+    - '@behavior: Publishes this overlay''s early battle handler trio into the shared hook slots: func_800C1A34 (bit 0x2 of D_80146328 selects storing 5 into D_80146875 and calling func_801DDED8, else func_801DDF00) into 0x801463A4, noopHandler134 into 0x801463A8 and zeroResult14 into 0x801463AC. The later installer at 0x800C1A88 overwrites the same trio. Its 0x38 bytes compare equal to the exact lift at 0x800C19F4 of BIN/BOSS/BOSS040.EMI#16, whose payload carries the same 0x800C1800 load address'
   - - 556
     - c
-    - zeroResultBossBoss04916_800C1A2C
+    - zeroResult14
   - - 564
     - asm
     - func_800C1A34
   - - 640
     - c
-    - noopHandlerBossBoss04916_800C1A80
+    - noopHandler134
   - - 648
     - c
-    - publishBattleHooksBossBoss04916_800C1A88
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss04916_800C1A88.c'
-    - '@behavior: Publishes this overlay''s late-phase handler trio into the shared hook slots: func_800C1AC8 (tests the 0x2 bit of D_80146328 and, when it is set, stores 10 into D_80146875 and calls func_801DDED8, else func_801DDF00) into 0x801463A4, noopHandlerBossBoss04916_800C1B14 into 0x801463A8 and zeroResultBossBoss04916_800C1AC0 into 0x801463AC. The earlier installer at 0x800C19F4 writes the same trio with the overlay''s early handlers. Its 0x38 bytes at payload offset 0x288 compare equal to the span at the same offset of BIN/BOSS/BOSS040.EMI#16, whose payload carries the same 0x800C1800 load address and binds the same three entrypoints and hook slots'
+    - publishBattleHooks23
+    - '@source: src/bof3/boss/publishBattleHooks23.c'
+    - '@behavior: Publishes this overlay''s late-phase handler trio into the shared hook slots: func_800C1AC8 (tests the 0x2 bit of D_80146328 and, when it is set, stores 10 into D_80146875 and calls func_801DDED8, else func_801DDF00) into 0x801463A4, noopHandler91 into 0x801463A8 and zeroResult17 into 0x801463AC. The earlier installer at 0x800C19F4 writes the same trio with the overlay''s early handlers. Its 0x38 bytes at payload offset 0x288 compare equal to the span at the same offset of BIN/BOSS/BOSS040.EMI#16, whose payload carries the same 0x800C1800 load address and binds the same three entrypoints and hook slots'
   - - 704
     - c
-    - zeroResultBossBoss04916_800C1AC0
+    - zeroResult17
   - - 712
     - asm
     - func_800C1AC8
   - - 788
     - c
-    - noopHandlerBossBoss04916_800C1B14
+    - noopHandler91
   - - 796
     - textbin
     - D_800C1B1C

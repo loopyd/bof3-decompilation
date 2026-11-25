@@ -9,18 +9,18 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss00716_800C18BC.c",
+    "src/bof3/boss/callIndexedTable1dd0.c",
     "src/bof3/boss/setupBitEffectBank.c",
     "src/bof3/boss/publishStepDataClear.c",
-    "src/bof3/boss/dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4.c",
+    "src/bof3/boss/callThreeWordRun.c",
     "src/bof3/boss/publishWorkStepSetup.c",
-    "src/bof3/boss/dispatchStateByte1Table1ddcBossBoss00716_800C190C.c",
+    "src/bof3/boss/callByte1Table1ddc.c",
     "src/bof3/boss/stateHalfwordFourBoss.c",
     "src/bof3/boss/callArgZeroOne.c",
     "src/bof3/boss/noopHandler26.c",
     "src/bof3/boss/noopHandler25.c",
     "src/bof3/boss/noopHandler24.c",
-    "src/bof3/boss/publishBattleHooksBossBoss00716_800C1A0C.c",
+    "src/bof3/boss/publishBattleHooks13.c",
     "src/bof3/boss/noopHandler23.c",
     "src/bof3/boss/noopHandler22.c",
     "src/bof3/boss/callStateByte1Table1.c",

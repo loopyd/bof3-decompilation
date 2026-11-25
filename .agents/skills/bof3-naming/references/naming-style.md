@@ -74,6 +74,16 @@ SDK row and a target row. When a lift needs a differently typed view of a mapped
 cell, change the one row's type or leave the spelling alone; do not plan on a
 parallel name.
 
+## Applying many rows at once
+
+`bin/harness naming batch --plan ROWS [--apply]` applies a plan file, one row per line
+as `TARGET<TAB>OLD<TAB>NEW` (or a JSON list of `{target, old, new}` rows, where a row
+may instead carry `new` and a `members` list to share one spelling across targets). It
+loads the manifest tree once and compiles each pass in parallel, so a lane of forty
+rows costs a fraction of forty separate `rename` calls. Each row is still its own
+transaction: a row that loses its unit to an earlier row is re-resolved once, and the
+summary counts refusals by code.
+
 ## Migration draft rule
 
 A migration wave may draft a name from the evidenced spelling before anyone reads

@@ -8,16 +8,16 @@ splat = "config/targets/emi/boss/boss042/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchStateByte1Table19a4BossBoss04216_800C1804.c",
+    "src/bof3/boss/callStateByte1Table4.c",
 ]
 support_sources = [
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss04216_800C18AC.c",
-    "src/bof3/boss/publishBattleHooksBossBoss04216_800C18FC.c",
-    "src/bof3/boss/noopHandlerBossBoss04216_800C1988.c",
-    "src/bof3/boss/zeroResultBossBoss04216_800C1934.c",
-    "src/bof3/boss/noopHandlerBossBoss04216_800C18F4.c",
-    "src/bof3/boss/noopHandlerBossBoss04216_800C18EC.c",
-    "src/bof3/boss/noopHandlerBossBoss04216_800C18E4.c",
+    "src/bof3/boss/callIndexedHandler17.c",
+    "src/bof3/boss/publishBattleHooks15.c",
+    "src/bof3/boss/noopHandler107.c",
+    "src/bof3/boss/zeroResult21.c",
+    "src/bof3/boss/noopHandler130.c",
+    "src/bof3/boss/noopHandler50.c",
+    "src/bof3/boss/noopHandler125.c",
     "src/bof3/support/boss042_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss042_16_psyq.c"

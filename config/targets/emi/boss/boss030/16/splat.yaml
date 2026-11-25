@@ -27,22 +27,22 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table1adcBossBoss03016_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table1adcBossBoss03016_800C1804.c'
+    - dispatchByte1Table1adc
+    - '@source: src/bof3/boss/dispatchByte1Table1adc.c'
     - '@behavior: First code span of the overlay and the state dispatch on work-record byte 1: it loads the work-record pointer from the scratchpad cell 0x1F800044 before creating its 0x18-byte frame, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-word code-pointer run based at 0x800C1ADC, whose entry 0 is the installer 0x800C1848 and whose entries 1 through 11 are shared main-executable handlers. The original does not bound the index before the scaled load, writes no state and leaves the handler return register untouched; no word and no jal of this payload names 0x800C1804, so the overlay entry is its caller.'
   - - 72
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848.c'
+    - publishWorkStepData
+    - '@source: src/bof3/boss/publishWorkStepData.c'
     - '@behavior: Step-0 setup of this overlay work state machine: publishes this payload data row pointer 0x800C1AB4 into +0xEC of the current enemy work record from 0x801EB4E8, the step dispatcher 0x800C18A0 into +0xE4 and the in-row data pointer 0x800C1ACC into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 160
     - c
-    - dispatchIndexedHandlerBossBoss03016_800C18A0
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03016_800C18A0.c'
+    - dispatchIndexTable
+    - '@source: src/bof3/boss/dispatchIndexTable.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B0C handler table, so the selected handler result stays in the return register. The original does not bound the index before the scaled table load, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. The step setup at 0x800C1848 publishes this address into +0xE4 of the enemy work record loaded from 0x801EB4E8, so the state machine enters it through that stored pointer word; no jal immediate in this payload reaches it.'
   - - 216
     - c
-    - noopHandlerBossBoss03016_800C18D8
+    - noopHandler133
   - - 224
     - c
     - noopHandlerBossBoss03016_800C18E0
@@ -51,18 +51,18 @@ segments:
     - noopHandlerBossBoss03016_800C18E8
   - - 240
     - c
-    - dispatchStateByte1Table1b18BossBoss03016_800C18F0
-    - '@source: src/bof3/boss/dispatchStateByte1Table1b18BossBoss03016_800C18F0.c'
+    - dispatchByte1Table1b18
+    - '@source: src/bof3/boss/dispatchByte1Table1b18.c'
     - '@behavior: Second entry dispatcher of this overlay and the state dispatch on work-record byte 1: it loads the work-record pointer from the scratchpad cell 0x1F800044 before creating its 0x18-byte frame, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-word code-pointer run based at 0x800C1B18, whose entry 0 is the publisher 0x800C1934 and whose entries 1 through 11 are shared main-executable handlers. The original does not bound the index before the scaled load, writes no state and leaves the handler return register untouched; no word and no jal of this payload names 0x800C18F0, so the overlay entry is its caller.'
   - - 308
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1934
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1934.c'
+    - publishWorkStepData2
+    - '@source: src/bof3/boss/publishWorkStepData2.c'
     - '@behavior: Step setup of this overlay''s work state machine: publishes the in-row data pointer 0x800C1AC0 into +0xEC of the current enemy work record from 0x801EB4E8, the step dispatcher 0x800C198C into +0xE4 and the in-row data pointer 0x800C1AD4 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. The body''s own address word is entry 3 of the 0x800C1B0C step run and entry 0 of the 0x800C1B18 state run, its only in-image references, so no jal of this payload names it.'
   - - 396
     - c
-    - dispatchIndexedHandlerBossBoss03016_800C198C
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03016_800C198C.c'
+    - dispatchIndexTable2
+    - '@source: src/bof3/boss/dispatchIndexTable2.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B48 handler table, so the selected handler result stays in the return register. The original does not bound the index before the scaled table load, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. The step setup at 0x800C1934 stores this address into +0xE4 of the enemy work record loaded from 0x801EB4E8, so the state machine enters it through that stored pointer word; no jal immediate in this payload reaches it.'
   - - 452
     - c
@@ -75,12 +75,12 @@ segments:
     - noopHandlerBossBoss03016_800C19D4
   - - 476
     - c
-    - publishBattleHooksBossBoss03016_800C19DC
-    - '@source: src/bof3/boss/publishBattleHooksBossBoss03016_800C19DC.c'
+    - publishHooksOwnerHeads
+    - '@source: src/bof3/boss/publishHooksOwnerHeads.c'
     - '@behavior: Publishes this overlay handler trio into the shared hook slots: the state switch at 0x800C1A1C into 0x801463A4, the owner record head clearing hook 0x800C1A84 into 0x801463A8 and the zero-result accessor 0x800C1A14 into 0x801463AC, so the main program reaches the trio through those three slot words; no jal immediate and no pointer word of this payload names this span.'
   - - 532
     - c
-    - zeroResultBossBoss03016_800C1A14
+    - stateZeroResult
   - - 540
     - asm
     - func_800C1A1C

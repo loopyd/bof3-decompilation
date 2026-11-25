@@ -44,8 +44,8 @@ segments:
     - '@behavior: State handler 1 of the byte-1 dispatch table based at 0x801F4890 for the work record published at the scratchpad pointer cell 0x1F800044. It draws the record parts block at offset 0x34 through the overlay renderer at 0x801F2DA0 at the signed halfword pair 0x2E and 0x30, advances both of those unsigned halfwords by 0x40, decrements the countdown byte at offset 0x09 and, once that byte reaches zero, increments the state byte at offset 0x01.'
   - - 384
     - c
-    - invokeHelperWorld02Area11113_801F2D80
-    - '@source: src/bof3/world/invokeHelperWorld02Area11113_801F2D80.c'
+    - invokeHelper
+    - '@source: src/bof3/world/invokeHelper.c'
   - - 416
     - asm
     - func_801F2DA0

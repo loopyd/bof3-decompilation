@@ -8,7 +8,7 @@ typedef void (*Boss02513Handler)(void);
  * index in $a0, so it is stored through the void slot type. */
 void refreshActivePartyRecords(
     void);
-void raiseFlagEnterFrontend(void);
+void raiseFlagEnterFrontend1(void);
 u32 accumulateCountersFlagsHook(u8 mode);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -35,7 +35,7 @@ extern u8 D_801FE4EF; /* @source 0x801FE4EF @kind unknown */
  * each active battler's action flags through 0x801DD14C and starts that
  * record's 0x800F0800 region, then stores 4 into the scenario progress byte
  * and runs initModeTuple530) into 0x801463A4, the battle-exit routine
- * raiseFlagEnterFrontend (raises bit 0x2 of
+ * raiseFlagEnterFrontend1 (raises bit 0x2 of
  * D_801462E8 and requests frontend mode 4) into 0x801463A8, and the mode
  * dispatcher accumulateCountersFlagsHook
  * (six-entry jump table at 0x800C181C) into
@@ -47,7 +47,7 @@ extern u8 D_801FE4EF; /* @source 0x801FE4EF @kind unknown */
  * already covers the byte at 4EF. No in-payload caller: neither this address
  * nor any of the three published addresses appears as a word of this payload,
  * so the main program reaches it through its overlay entry point. Same trio
- * shape as the sibling installer publishBattleHooksBossBoss02513_800C2B60
+ * shape as the sibling installer publishBattleHooks28
  * (0x800C2B60), which writes the same three slots in the same order and differs
  * in the published addresses and in having no counter clear; that sibling is
  * shape evidence only, not a clone, since the two bodies differ in both the
@@ -59,7 +59,7 @@ extern u8 D_801FE4EF; /* @source 0x801FE4EF @kind unknown */
 void publishBattleHooksCounters(void) {
   D_801463A4 =
       refreshActivePartyRecords;
-  D_801463A8 = raiseFlagEnterFrontend;
+  D_801463A8 = raiseFlagEnterFrontend1;
   D_801463AC = (Boss02513Handler)accumulateCountersFlagsHook;
   D_801FE4F0 = 0;
   D_801FE4E8 = 0;

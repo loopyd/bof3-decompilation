@@ -8,18 +8,18 @@ splat = "config/targets/emi/boss/boss032/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchStateByte1Table1c40BossBoss03216_800C1804.c",
-    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03216_800C1848.c",
-    "src/bof3/boss/dispatchStateByte2Table1c70BossBoss03216_800C18AC.c",
+    "src/bof3/boss/dispatchByte1Table1c40.c",
+    "src/bof3/boss/publishWorkStepBit.c",
+    "src/bof3/boss/dispatchByte2Table1c70.c",
 ]
 support_sources = [
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss03216_800C1978.c",
+    "src/bof3/boss/dispatchIndexTable1c88.c",
     "src/bof3/boss/zeroResultBossBoss03216_800C1A00.c",
     "src/bof3/boss/noopHandlerBossBoss03216_800C19C0.c",
     "src/bof3/boss/noopHandlerBossBoss03216_800C19B8.c",
     "src/bof3/boss/noopHandlerBossBoss03216_800C19B0.c",
-    "src/bof3/boss/publishOwnerRecordAndRequestResourceZeroBossBoss03216_800C1BEC.c",
-    "src/bof3/boss/publishBattleHooksBossBoss03216_800C19C8.c",
+    "src/bof3/boss/publishOwnerRecordResource.c",
+    "src/bof3/boss/publishHooksOwnerRecord.c",
     "src/bof3/support/boss032_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss032_16_psyq.c"

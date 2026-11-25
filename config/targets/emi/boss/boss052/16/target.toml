@@ -8,18 +8,18 @@ splat = "config/targets/emi/boss/boss052/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchStateByte2Table1f80BossBoss05216_800C18B8.c",
-    "src/bof3/boss/dispatchStateByte1Table1f50BossBoss05216_800C1810.c",
+    "src/bof3/boss/callStateByte2Table4.c",
+    "src/bof3/boss/callStateByte1Table5.c",
 ]
 support_sources = [
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss05216_800C1984.c",
-    "src/bof3/boss/dispatchStateByte1Table1fa4BossBoss05216_800C1D54.c",
-    "src/bof3/boss/publishBattleHooksBossBoss05216_800C1B0C.c",
-    "src/bof3/boss/invokeHelperBossBoss05216_800C1F1C.c",
+    "src/bof3/boss/callIndexedHandler36.c",
+    "src/bof3/boss/callStateByte1Table6.c",
+    "src/bof3/boss/publishBattleHooks26.c",
+    "src/bof3/boss/invokeSharedHelper3.c",
     "src/bof3/boss/stateClassRowRequest.c",
-    "src/bof3/boss/zeroResultBossBoss05216_800C1B44.c",
-    "src/bof3/boss/noopHandlerBossBoss05216_800C19C4.c",
-    "src/bof3/boss/noopHandlerBossBoss05216_800C19BC.c",
+    "src/bof3/boss/zeroResult27.c",
+    "src/bof3/boss/noopHandler127.c",
+    "src/bof3/boss/noopHandler120.c",
     "src/bof3/support/boss052_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss052_16_psyq.c"
