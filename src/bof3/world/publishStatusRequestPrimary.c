@@ -24,7 +24,7 @@ void func_8015B580(void* flag_bank, u8 bit_index);
  * @behavior Publishes the halfword indexed by the signed shared mode byte
  *           D_801490C7 from the target-local halfword table at 0x801F5358 into
  *           the shared status halfword D_801490A8 -- the same status store the
- *           exact siblings publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C
+ *           exact siblings statePublishModeStatus
  *           and
  *           publishModeStatusFromTable535cThenRequestPrimaryState7Substate32OrPrimaryState9Substate0Or2ByFlag20World02Area09413_801F2DC4
  *           make from the neighbouring tables at 0x801F5354 and 0x801F535C --

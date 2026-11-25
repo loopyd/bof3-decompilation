@@ -13,7 +13,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 /* Scratchpad work-object pointer cell at 0x1F800044, outside this overlay's
  * image. This target's map binds no name there, so the cell is reached through
  * its address-anchored name, the same spelling the exact siblings
- * seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic15403_801EF544 and
+ * stateSeedByte9Advance and
  * decrementWorkMotionWord44By1000ThenDecrementGlobalWorkByteBAndInvokeHelper
  * WhenTintChannel5FIsMinus80BmagicMagic15403_801EF454 bind it with. The
  * original reads the cell after the byte 9 store, so this body keeps the named

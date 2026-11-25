@@ -21,7 +21,7 @@ extern u8 D_80146254; /* @source 0x80146254 @kind unknown */
  * value is loaded once into a saved register before the walks and stored back
  * after them, and every intermediate store re-materialises the cell address
  * with its own `lui $at,0x1F80`, which is what a named cell symbol emits. */
-extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Shared main-executable service that consumes the record published through the
  * scratchpad pointer cell. Its callers disagree on the signature (see the note
@@ -81,11 +81,11 @@ void stateEveryLiveLocal(
   u8* local;
   u32 i;
 
-  saved = workRecord44World02Area10814;
+  saved = workRecordSlot;
 
   for (i = 0; (i & 0xFF) < 0x1E; i++) {
     record = D_80146888 + (i & 0xFF) * 0x98;
-    workRecord44World02Area10814 = record;
+    workRecordSlot = record;
 
     if (record[0] & 1) {
       record[0x29] = 5;
@@ -97,12 +97,12 @@ void stateEveryLiveLocal(
   if (D_80146254 != 0) {
     do {
       local = D_80145E90 + (i & 0xFF) * 0x140;
-      workRecord44World02Area10814 = local;
+      workRecordSlot = local;
       local[0x29] = 5;
       func_8014D290();
       i++;
     } while ((u32)(i & 0xFF) < D_80146254);
   }
 
-  workRecord44World02Area10814 = saved;
+  workRecordSlot = saved;
 }

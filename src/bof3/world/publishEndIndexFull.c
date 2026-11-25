@@ -7,7 +7,7 @@
  * `lw $vN,68($vN)` pair the original bytes show, and the store through the
  * loaded record makes the second group reload the cell. The cell is a plain
  * pointer; no volatility is needed. */
-extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Record published through the global pointer cell at 0x80148210; this body
  * reads and writes back the halfword at its +0x0A offset through one base. The
@@ -39,8 +39,8 @@ void publishEndIndexFull(void) {
   u8 index;
 
   index = func_8019601C();
-  workRecord44World02Area10814[0xb] = index;
-  if (workRecord44World02Area10814[0xb] == 0xff) {
+  workRecordSlot[0xb] = index;
+  if (workRecordSlot[0xb] == 0xff) {
     D_80148210[5] -= 2;
   }
 }

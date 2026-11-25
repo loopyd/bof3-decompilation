@@ -3,7 +3,7 @@
 /* @source 0x801F4988
  * @kind data
  */
-extern void (*workByte4HandlersWorld02Area09913[])(void);
+extern void (*byte4HandlerTable[])(void);
 
 /* @source 0x801F2D68
  * @behavior Calls the local handler selected by byte +4 of the work record
@@ -14,4 +14,4 @@ extern void (*workByte4HandlersWorld02Area09913[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4Table4988, workByte4HandlersWorld02Area09913);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4Table4988, byte4HandlerTable);

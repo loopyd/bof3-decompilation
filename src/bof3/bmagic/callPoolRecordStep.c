@@ -41,7 +41,7 @@ extern void func_801EEE50(void); /* @source 0x801EEE50 @kind function */
  * unsigned byte 0x01 of the work object published at 0x1F800044 selects from the
  * local table based at 0x801F04E4, so publishing a record there makes it run
  * that record's step. */
-extern void dispatchStateByte1Table04e4BmagicMagic14403_801EF510(void); /* @source 0x801EF510 @kind function */
+extern void callStateByte1Handlers(void); /* @source 0x801EF510 @kind function */
 
 /* @source 0x801EEC04
  * @behavior Per-frame entry of this overlay. It seeds a two-word local handler
@@ -83,7 +83,7 @@ void callPoolRecordStep(
       record_work = *(u8 **)&D_801F050C[offset + 0x74];
       g_battle_work = record;
       D_801EB4E0 = record_work;
-      dispatchStateByte1Table04e4BmagicMagic14403_801EF510();
+      callStateByte1Handlers();
       D_801EB4E0 = saved_pointer;
       g_battle_work = saved_work;
     }

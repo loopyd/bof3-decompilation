@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8 T_801EF2A8[128][0x3C]; /* @source 0x801EF2A8 @kind data */
+extern u8 stateRecordPool[128][0x3C]; /* @source 0x801EF2A8 @kind data */
 
 /* @source 0x801EEFF4
  * @behavior Clears the active byte of every record in this overlay's
@@ -21,7 +21,7 @@ void stateAllActiveBytes(void) {
     u8 *record;
     u8 index;
 
-    record = T_801EF2A8[0];
+    record = stateRecordPool[0];
     for (index = 0; index < 128; index++, record += 0x3C) {
         record[0] = 0;
     }

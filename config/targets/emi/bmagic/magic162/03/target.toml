@@ -8,19 +8,19 @@ splat = "config/targets/emi/bmagic/magic162/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic16203_801EEC28.c",
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16203_801EF158.c",
+    "src/bof3/bmagic/callWorkByte1Records.c",
+    "src/bof3/bmagic/stateSetByte9Advance.c",
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EF048.c",
-    "src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16203_801EF37C.c",
+    "src/bof3/bmagic/callWorkRecordByte2.c",
 ]
 support_sources = [
     "src/bof3/support/magic162_03_psyq.c",
-    "src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic16203_801EF338.c",
-    "src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic16203_801F0068.c",
+    "src/bof3/bmagic/callWorkRecordByte1.c",
+    "src/bof3/bmagic/stateClearRecordHead.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16203_801EFFFC.c",
     "src/bof3/bmagic/stateSampleIntoLimit.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EEFA0.c",
-    "src/bof3/bmagic/decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic16203_801EF478.c",
+    "src/bof3/bmagic/mathByte9EffectSubmit.c",
+    "src/bof3/bmagic/mathRecordMotionStep.c",
     "src/bof3/bmagic/renderRotatedPublishedCenter.c",
     "src/bof3/bmagic/renderRotatedSpokesCenter.c",
 ]

@@ -11,7 +11,7 @@
  * load, which is what the original bytes show. The cell is a plain pointer: the
  * stores through the loaded record already separate the reads, so no volatility
  * is needed. */
-extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Shared overlay helpers this step calls after its own update. 0x801F3BA0
  * builds the full-screen 0x140-by-0xF0 semi-transparent tile whose r0/g0/b0
@@ -54,14 +54,14 @@ void workTintTripletExpires(void) {
   u8* countdown;
   u8* work;
 
-  countdown = workRecord44World02Area10814;
+  countdown = workRecordSlot;
   countdown[9]--;
-  work = workRecord44World02Area10814;
+  work = workRecordSlot;
   if (work[9] != 0) {
     work[0x5D] -= 6;
-    work = workRecord44World02Area10814;
+    work = workRecordSlot;
     work[0x5E] -= 6;
-    work = workRecord44World02Area10814;
+    work = workRecordSlot;
     work[0x5F] -= 6;
   } else {
     work[1] = 6;

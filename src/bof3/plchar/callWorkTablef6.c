@@ -2,14 +2,14 @@
 
 /* This overlay's handler run: twenty code pointers, 0x801CF6D8 through 0x801CF724,
  * holding this payload's functions plus the shared main-executable handler
- * 0x801B2D54 at entries 2, 5 and 11. The Splat `textbin` row T_801CF6D8 places the
+ * 0x801B2D54 at entries 2, 5 and 11. The Splat `textbin` row workByte2HandlerRun places the
  * words, so the run is only referenced here. This dispatcher indexes it from its
  * first word, so its base is entry 0 and the entries the run still holds from there
  * are 0x801CE448, 0x801CE514, 0x801B2D54, 0x801CE664, 0x801CE758, 0x801B2D54,
  * 0x801CE898, 0x801CEBE4, 0x801CED80, 0x801CF2C0, 0x801CF38C, 0x801B2D54,
  * 0x801CF4CC, 0x801CF5E4, 0x801CE404, 0x801CE620, 0x801CF27C, 0x801CE610,
  * 0x801CE854 and 0x801CF488. */
-extern void (*T_801CF6D8[])(void); /* @source 0x801CF6D8 @kind data */
+extern void (*workByte2HandlerRun[])(void); /* @source 0x801CF6D8 @kind data */
 
 /* Seeded from the lift of the same body at plp478/00 0x801CE854. A payload
  * comparison of this span's 68 bytes at offset 4 against that span found one
@@ -38,4 +38,4 @@ extern void (*T_801CF6D8[])(void); /* @source 0x801CF6D8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablef6, T_801CF6D8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablef6, workByte2HandlerRun);

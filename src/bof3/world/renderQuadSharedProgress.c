@@ -18,7 +18,7 @@ extern u8 D_8014933B; /* @source 0x8014933B @kind data */
  * address for each of its three loads (`lui $vN,0x1F80` plus the folded
  * `lw $vN,68($vN)`), while the constant-address macro folds the whole address
  * into one shared base. */
-extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Overlay quad helper at 0x801F4160. It fills an FT4 primitive from the
  * scratchpad coordinate block at 0x1F800014, projects the four vertices
@@ -62,12 +62,12 @@ void renderQuadSharedProgress(void) {
   if (*progress != 0xE) {
     return;
   }
-  quad = workRecord44World02Area10814;
+  quad = workRecordSlot;
   renderSizedCenterPage(
       quad[9], quad[9]);
-  work = workRecord44World02Area10814;
+  work = workRecordSlot;
   work[9]++;
-  work = workRecord44World02Area10814;
+  work = workRecordSlot;
   if (work[9] < 0x6D) {
     return;
   }

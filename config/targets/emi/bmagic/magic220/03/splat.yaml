@@ -69,8 +69,8 @@ segments:
     - func_801EF6B8
   - - 3208
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic22003_801EF888
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic22003_801EF888.c'
+    - stateByte2BelowThree
+    - '@source: src/bof3/bmagic/stateByte2BelowThree.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record byte at offset 0xB is below three (unsigned bound), reads the scratchpad work-object pointer cell at 0x1F800044 once and increments its byte at offset 0x2 by one.'
   - - 3276
     - asm
@@ -92,8 +92,8 @@ segments:
     - '@source: src/bof3/bmagic/magic22003DispatchTables.c'
   - - 5028
     - c
-    - dispatchWorkByte2HandlerThenInvoke0284And0334AndPopWhenWorkBytes0And2SetBmagicMagic22003_801EFFA4
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0284And0334AndPopWhenWorkBytes0And2SetBmagicMagic22003_801EFFA4.c'
+    - callWorkByte2Pair
+    - '@source: src/bof3/bmagic/callWorkByte2Pair.c'
     - '@behavior: Dispatches work-byte-2 handler from 0x801F0704, reloads the work pointer, and when bytes 0 and 2 are set invokes 0x801F0284, 0x801F0334, then PopMatrix.'
   - - 5164
     - asm
@@ -121,8 +121,8 @@ segments:
     - '@behavior: Reserves the first free record among 64 records of stride 0x78, returning its index or 0xFF.'
   - - 6796
     - c
-    - clearWorkBytesBmagicMagic22003_801F068C
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic22003_801F068C.c'
+    - clearWorkBytes
+    - '@source: src/bof3/bmagic/clearWorkBytes2.c'
   - - 6876
     - textbin
     - T_801F06DC

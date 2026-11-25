@@ -7,7 +7,7 @@
  * calls in a saved register and widen the frame. */
 extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
-void claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C(void);
+void stateClaimFreeRecord(void);
 
 /* Per-frame passes this overlay's progress handlers run, still anchored to
  * their addresses. 0x801F5940 is the draw pass over the 0x800E48C0 table.
@@ -55,7 +55,7 @@ void func_801F5308(void);
  * and 0x200 from them and adds each into 0x18 and 0x1C, so 0x0C/0x10 are the
  * per-frame steps and 0x18/0x1C/0x20 the triple they move. The 0x64/0x68/0x6C
  * triple is the record origin: this payload's exact
- * claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C seeds a
+ * stateClaimFreeRecord seeds a
  * spawned record's position from the nearby 0x34/0x38/0x3C triple.
  *
  * Shape evidence: this 180-byte span, payload offsets 0xEA8-0xF5B, carries the
@@ -95,7 +95,7 @@ void stateOriginWordsExpires(
 
   tick = scratchWorkPointerAt1[6]++;
   if ((tick & 3) == 0) {
-    claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C();
+    stateClaimFreeRecord();
   }
   func_801F5940();
   func_801F5308();

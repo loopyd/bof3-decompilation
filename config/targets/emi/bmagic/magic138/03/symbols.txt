@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
-dispatchWorkByte1HandlerBmagicMagic13803_801EEC28 = 0x801EEC28;
+callWorkByte1Entry = 0x801EEC28;
 statePoseHalfwordsPointer = 0x801EEC88;
 func_801EED60 = 0x801EED60;
 publishPointerUpdateForward = 0x801EEED8;
@@ -8,7 +8,7 @@ callStateTablef72 = 0x801EEF60;
 callDispatchBattleUpdate = 0x801EEFA4;
 stateDeltaTablesHeader = 0x801EF04C;
 func_801EF3A0 = 0x801EF3A0;
-invokeHelperBmagicMagic13803_801EF50C = 0x801EF50C;
+callQueuedSlotReset = 0x801EF50C;
 callDispatchFlagService = 0x801EF52C;
 stateHeaderSelectorParity = 0x801EF5D0;
 func_801EF6A4 = 0x801EF6A4;

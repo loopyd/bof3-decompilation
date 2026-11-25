@@ -12,7 +12,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/bmagic/subtractSixtyFourRecords.c",
-    "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic12503_801EEE60.c",
+    "src/bof3/bmagic/forwardBattleIdleFlag4.c",
     "src/bof3/bmagic/decrementDownOddFrames.c",
     "src/bof3/bmagic/callInvokePopSet.c",
     "src/bof3/bmagic/resourceReserveFreeRecord10.c",

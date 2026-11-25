@@ -8,9 +8,9 @@ splat = "config/targets/emi/world02/area103/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/initArea10313State.c",
+    "src/bof3/world/setupFrontMode8.c",
     "src/bof3/world/stateOverlayFourBlocks.c",
-    "src/bof3/world/stateWorkResetArea.c",
+    "src/bof3/world/stateAdvanceDrawStep.c",
     "src/bof3/world/claimEndPositionLower.c",
     "src/bof3/world/renderDescendingVariantLast.c",
     "src/bof3/world/renderVariantFifthFifth.c",
@@ -21,10 +21,10 @@ sources = [
     "src/bof3/world/renderRadialCellsArgument.c",
 ]
 support_sources = [
-    "src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World02Area10313_801F37A0.c",
+    "src/bof3/world/stateClampAdvanceWord.c",
     "src/bof3/world/rampXyFifthTick.c",
     "src/bof3/world/rampYFifthTick.c",
-    "src/bof3/world/invokeHelperWorld02Area10313_801F2F98.c",
+    "src/bof3/world/callWorkResetHelper.c",
     "src/bof3/world/area10313DispatchTables.c",
     "src/bof3/world/initializeWorkFieldsAdvance.c",
     "src/bof3/world/signedTableStepWord80149318.c",

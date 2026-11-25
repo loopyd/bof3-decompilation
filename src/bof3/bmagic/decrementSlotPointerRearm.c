@@ -26,7 +26,7 @@ extern u8 D_801EC3A4[]; /* @source 0x801EC3A4 @kind data */
 /* @source 0x801EFC68
  * @behavior Countdown step of the overlay work object, and the third entry of
  *           the six-entry work-byte-2 handler table at 0x801EEC38 that
- *           dispatchWorkByte2HandlerBmagicMagic15103_801EFA34 copies. The
+ *           callWorkByte2Handlers copies. The
  *           scratchpad work-object pointer cell at 0x1F800044 is read once,
  *           before this function's 0x18-byte frame is created, and the
  *           work-object byte at offset 0x9 is decremented through that pointer

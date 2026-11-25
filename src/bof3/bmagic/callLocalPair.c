@@ -3,7 +3,7 @@
 typedef void (*BmagicMagic15103Handler)(void);
 
 void func_801EEE38(void);
-void dispatchWorkByte3HandlerBmagicMagic15103_801EF318(void);
+void callWorkByte3Handlers(void);
 
 /* @source 0x801EEDE0
  * @behavior Reads the scratchpad work pointer at 0x1F800044 and uses the
@@ -16,7 +16,7 @@ void dispatchWorkByte3HandlerBmagicMagic15103_801EF318(void);
  */
 void callLocalPair(void) {
   BmagicMagic15103Handler handlers[2] = {
-      func_801EEE38, dispatchWorkByte3HandlerBmagicMagic15103_801EF318 };
+      func_801EEE38, callWorkByte3Handlers };
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
 }

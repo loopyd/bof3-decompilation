@@ -6,7 +6,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern s32 func_801782FC(s32 angle);
 extern s32 func_801783C8(s32 angle);
 
-void clearWorkBytesBmagicMagic22003_801F068C(void);
+void clearWorkBytes(void);
 
 /* @source 0x801F01C8
  * @behavior Entry 12 (word at 0x801F070C) of the handler table based at
@@ -46,6 +46,6 @@ void stepAngleTimesTwo(void) {
   *(s32 *)(work2 + 0x38) = value;
   if (count == 0) {
     D_801EB4E0[0xB] -= 1;
-    clearWorkBytesBmagicMagic22003_801F068C();
+    clearWorkBytes();
   }
 }

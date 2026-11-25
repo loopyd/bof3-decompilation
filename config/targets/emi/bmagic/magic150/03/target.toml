@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic150/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic15003_801EEC20.c",
+    "src/bof3/bmagic/callWorkByte1Handlers.c",
     "src/bof3/bmagic/publishEffectTransformFromSavedWorkObjectZeroRadiiResetEffectSlotsArmCountdownAdvanceWorkByte1AndSubmitCue100BmagicMagic15003_801EECA4.c",
     "src/bof3/bmagic/stepSlotsNoneActive.c",
     "src/bof3/bmagic/stateParitySpinFan.c",
@@ -16,7 +16,7 @@ sources = [
     "src/bof3/bmagic/renderRedSideNegative.c",
     "src/bof3/bmagic/audioBurstIdleExpires.c",
     "src/bof3/bmagic/shrinkRingBurstRadii.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic15003_801EF00C.c",
+    "src/bof3/bmagic/stateRaiseFlagCall.c",
 ]
 support_sources = [
     "src/bof3/support/magic150_03_psyq.c",

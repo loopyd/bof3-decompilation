@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 32
     - c
-    - dispatchWorkByte1HandlerBmagicMagic15003_801EEC20
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic15003_801EEC20.c'
+    - callWorkByte1Handlers
+    - '@source: src/bof3/bmagic/callWorkByte1Handlers.c'
     - '@behavior: Overlay entry dispatcher for this magic work handler. The scratchpad work-object pointer cell at 0x1F800044 is read first, ahead of the frame adjustment, and its state byte at offset 1 is read after the table copy as the step index. The seven code pointer words of the overlay handler table at 0x801EEC04 (0x801EECA4, 0x801EED60, 0x801EEDCC, 0x801EEE24, 0x801EEEC4, 0x801EEF80, 0x801EF00C) are copied into its own 0x38-byte frame at $sp+0x10, the word the state byte selects is read back from that copy, and it is invoked with no arguments; the index is not bounds-checked. The epilogue restores $ra from $sp+0x30 and $sp from +0x38 and leaves the handler answer in $v0, so this entry returns whatever the selected handler returns. It writes no cell, has no loop, and no word of this payload holds this entry address, so it is reached from outside the payload and its prologue and return path alone place the boundary.'
   - - 164
     - c
@@ -63,8 +63,8 @@ segments:
     - '@behavior: Magic-150 effect handler, the entry at 0x801EEC18 of the overlay handler table 0x801EEC04 and index 5 of its seven words that the dispatcher 0x801EEC20 copies into its frame and indexes by unsigned work byte 1. It shrinks the two radii of the effect transform in fixed steps with an unsigned halfword load, one addiu and a halfword store each: 0x40 off the ring radius at 0x801EFAAC and 0x60 off the burst radius at 0x801EFAAE, so the ring and its burst particles contract together. It then calls the overlay draw setup 0x801EF254 with no arguments, so the frame is drawn once from the state it just wrote. After the draw it decrements work byte 9 through the pointer read from scratchpad cell 0x1F800044, stores it back, masks the stored byte to 0xFF for the test, and returns untouched while that countdown is nonzero. When the countdown reaches zero it re-reads the same cell and increments work byte 1, which moves the dispatcher on to the next handler entry; it neither re-arms the countdown nor submits a cue. Those are its only stores, it reads no other cell, has no loop, keeps $ra at $sp+0x10 in a 0x18-byte frame, and takes no arguments and returns nothing.'
   - - 1036
     - c
-    - raiseFlag4AndInvokeHelperBmagicMagic15003_801EF00C
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic15003_801EF00C.c'
+    - stateRaiseFlagCall
+    - '@source: src/bof3/bmagic/stateRaiseFlagCall.c'
     - '@behavior: Magic-150 effect handler, the entry at 0x801EEC1C of the overlay handler table 0x801EEC04 and index 6 of its seven words, which the dispatcher 0x801EEC20 copies into its 0x38-byte frame and indexes by unsigned work byte 1. It raises bit 0x4 of the shared battle global halfword at 0x801462E8 with a halfword read-modify-write: the address is materialized once, the halfword is loaded unsigned into $v0, ori sets 0x4 and the halfword store fills the call delay slot while that address register stays live. It then calls the main-executable helper 0x801E5988 with no arguments and returns nothing; it neither advances work byte 1 nor touches work byte 9, so it runs once per dispatching frame and leaves the handler index where it was. Its 52 bytes are identical to the exact sibling 0x801EFCFC of emi/bmagic/magic008/00, and the only reference to this address in the payload is its word in the handler table.'
   - - 1088
     - c

@@ -28,7 +28,7 @@ extern void func_80196070(void);
 /* This overlay's cell-quad draw. Its argument is a per-call displacement that
  * shifts every cell edge and the third quad's slip.
  */
-extern void drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C(
+extern void renderTexturedQuadsShifted(
     s32 shift);
 
 /* @source 0x801F2D38
@@ -58,6 +58,6 @@ void advanceWorkByte9ResetWorkAreaWhenSharedStateByteClearThenDrawThreeCellQuads
   if (D_8014933B == 0) {
     func_80196070();
   }
-  drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C(
+  renderTexturedQuadsShifted(
       D_1F800044[9]);
 }

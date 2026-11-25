@@ -9,13 +9,13 @@
  * frame. */
 extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
-void claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C(void);
+void stateClaimFreeRecord(void);
 
 /* Per-frame passes this overlay's progress handlers run, still anchored to
  * their addresses. 0x801F5308 is the record pass over the 0x800E4800 table
  * that ticks the active records; it is the call the step handlers of this row
  * make right after the spawn, and the exact
- * claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C records it
+ * stateClaimFreeRecord records it
  * as the pass that reads and clears the claim flag this handler's spawn sets.
  * 0x801F5940 is the pass that follows it here and in the sibling handlers
  * 0x801F3AA8 and 0x801F3B5C of the same row. */
@@ -81,7 +81,7 @@ void func_801F48E8(void* arg0, void* arg1, u8 channels);
  * target's exact stateWorkWords64Advance. The
  * every-fourth-frame cadence, the state-byte-1 advance and the countdown byte
  * at +0x09 are the roles this target's exact
- * claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C records for
+ * stateClaimFreeRecord records for
  * its step-handler callers. Nothing in this payload reads the work byte at
  * +0x03, so its role stays described by offset.
  *
@@ -124,7 +124,7 @@ void claimPassesIntegrateReload(
 
   tick = scratchWorkPointerAt1[6]++;
   if ((tick & 3) == 0) {
-    claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C();
+    stateClaimFreeRecord();
   }
   func_801F5308();
   func_801F5940();

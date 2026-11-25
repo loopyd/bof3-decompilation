@@ -12,7 +12,7 @@ sources = [
     "src/bof3/bmagic/decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZeroBmagicMagic21903_801EF5DC.c",
     "src/bof3/bmagic/decrementInvokeRaiseTarget.c",
     "src/bof3/bmagic/checkShiftHitBand.c",
-    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic21903_801EF664.c",
+    "src/bof3/bmagic/renderProjectRecord.c",
 ]
 support_sources = [
     "src/bof3/support/magic219_03_psyq.c",

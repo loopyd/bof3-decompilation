@@ -1,12 +1,12 @@
 g_battle_work = 0x1F800044;
-dispatchWorkByte1HandlerBmagicMagic15003_801EEC20 = 0x801EEC20;
+callWorkByte1Handlers = 0x801EEC20;
 publishEffectTransformFromSavedWorkObjectZeroRadiiResetEffectSlotsArmCountdownAdvanceWorkByte1AndSubmitCue100BmagicMagic15003_801EECA4 = 0x801EECA4;
 audioBurstIdleExpires = 0x801EED60;
 stepSlotsNoneActive = 0x801EEDCC;
 func_801EEE24 = 0x801EEE24;
 stateParitySpinFan = 0x801EEEC4;
 shrinkRingBurstRadii = 0x801EEF80;
-raiseFlag4AndInvokeHelperBmagicMagic15003_801EF00C = 0x801EF00C;
+stateRaiseFlagCall = 0x801EF00C;
 renderRedSideNegative = 0x801EF040;
 func_801EF254 = 0x801EF254;
 func_801EF2C0 = 0x801EF2C0;

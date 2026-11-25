@@ -18,7 +18,7 @@
  *           0x40 to that record's halfword at offset 0x2E, clears its halfword
  *           at offset 0x30 and queues cue 0x200. The loop half is the same
  *           instruction sequence as the already-exact
- *           clearWorkTableAt800E4800World02Area09813_801F40A4 lift in this
+ *           stateClearEntryTable lift in this
  *           target (same base, walk and return), differing only in its two
  *           immediates (stride 0x1C versus 0x38, count 0x10 versus 0x18) and in
  *           the two latch stores that function does not carry, so it supplied

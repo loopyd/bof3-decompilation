@@ -40,8 +40,8 @@ segments:
     - func_801F2E5C
   - - 920
     - c
-    - invokeHelperWorld02Area10313_801F2F98
-    - '@source: src/bof3/world/invokeHelperWorld02Area10313_801F2F98.c'
+    - callWorkResetHelper
+    - '@source: src/bof3/world/callWorkResetHelper.c'
   - - 952
     - asm
     - func_801F2FB8
@@ -61,8 +61,8 @@ segments:
     - func_801F3718
   - - 2976
     - c
-    - advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World02Area10313_801F37A0
-    - '@source: src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World02Area10313_801F37A0.c'
+    - stateClampAdvanceWord
+    - '@source: src/bof3/world/stateClampAdvanceWord.c'
     - '@behavior: advances the work record''s signed word at 0x1C by 0x1000000 and clamps it to the word at 0x14 plus 0x8000000, sweeps the halfword at 0x20 down by 0x200 around the helper call func_801F38DC, decrements countdown byte 0x09 and, when it reads zero, re-arms it with 0x10 and advances the work-byte-1 dispatch step.'
   - - 3168
     - asm
@@ -176,8 +176,8 @@ segments:
     - '@behavior: reads the work record published through the scratchpad pointer cell 0x1F800044 and hands the drawer renderShadedSteppingDepth (0x1F - byte 0x09) / 4 as a per-band step and (0x1F - byte 0x09) * 4 as a shade level, then increments byte 0x09 and, when a fresh cell read shows it has reached 0x19, clears byte 0x09 and advances the record''s work-byte-2 dispatch step.'
   - - 9500
     - c
-    - stateWorkResetArea
-    - '@source: src/bof3/world/stateWorkResetArea.c'
+    - stateAdvanceDrawStep
+    - '@source: src/bof3/world/stateAdvanceDrawStep.c'
     - '@behavior: entry 3 of the work-byte-2 handler table at 0x801F5A28; increments work-record byte 0x09 through its own read of the scratchpad pointer cell 0x1F800044 and, when a fresh cell read shows that byte has reached 0x1D, calls the shared work-area reset helper func_80196070.'
   - - 9588
     - c
@@ -224,8 +224,8 @@ segments:
     - '@behavior: claims one front-end record through the shared allocator func_8019601C and, unless the returned index is 0xFF, scales it by the 0x74-byte row stride and seeds the claimed row at 0x80143FC8: row byte +0 takes 1, the occupancy flag every seeder of this family writes, row byte +5 takes the handler selector 0x4D, and the word triple at row +0x34/+0x38/+0x3C takes the position words 0x34/0x38/0x3C of the work object published through the scratchpad pointer cell 0x1F800044. A table-full answer (0xFF) instead lowers the halfword at +0x0A of the record published through the global pointer cell 0x80148210 by 2. Takes no arguments and returns nothing.'
   - - 11508
     - c
-    - initArea10313State
-    - '@source: src/bof3/world/initArea10313State.c'
+    - setupFrontMode8
+    - '@source: src/bof3/world/setupFrontMode8.c'
     - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 8 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED as the overlay state-entry tuple, where 0x801448EB is the front-end state selector, 0x801448EC its progress byte and 0x801448ED its substate byte; takes no arguments and returns nothing.'
   - - 11572
     - textbin

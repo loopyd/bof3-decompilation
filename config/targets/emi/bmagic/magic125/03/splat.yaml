@@ -33,8 +33,8 @@ segments:
     - func_801EED04
   - - 608
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic12503_801EEE60
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic12503_801EEE60.c'
+    - forwardBattleIdleFlag
+    - '@source: src/bof3/bmagic/forwardBattleIdleFlag4.c'
     - '@behavior: When work byte 0xB is zero, forward the battle byte, raise halfword mask 4 and invoke the helper.'
   - - 704
     - c

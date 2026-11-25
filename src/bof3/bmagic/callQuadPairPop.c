@@ -16,7 +16,7 @@ extern void (*workByte2HandlerTable[])(void); /* @source 0x801F250C @kind data *
 
 /* Installs the work record's transform: pushes the GTE matrix stack, builds the
  * record's translation and rotation and sets both GTE matrices. */
-void projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F1DC0(
+void renderProjectObject(
     void);
 
 /* Draws the first quad ring of the active work record: sixty-four
@@ -73,7 +73,7 @@ void callQuadPairPop(
   workByte2HandlerTable[step_record[2]]();
   draw_record = g_battle_work;
   if (draw_record[0] != 0 && draw_record[2] != 0) {
-    projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F1DC0();
+    renderProjectObject();
     renderWideOuterFifteen();
     renderWideInnerFifteen();
     PopMatrix();

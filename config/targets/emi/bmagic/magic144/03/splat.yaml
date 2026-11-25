@@ -71,7 +71,7 @@ segments:
     - '@behavior: Draws eight translucent gouraud triangles from the origin at radius 384, with work-byte-9 tint times eight capped at 128 and rim RGB (1,1,1).'
   - - 2320
     - c
-    - dispatchStateByte1Table04e4BmagicMagic14403_801EF510
+    - callStateByte1Handlers
     - '@source: src/bof3/bmagic/magic14403DispatchTables.c'
   - - 2388
     - c

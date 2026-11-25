@@ -11,7 +11,7 @@ extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 /* Work-table reset at 0x801F40A4: clears the lead byte of each of the 0x18
  * entries of the 0x38-byte-stride work table at 0x800E4800. That lift is exact
  * and records this span as its only caller inside the payload. */
-extern void clearWorkTableAt800E4800World02Area09813_801F40A4(void); /* @source 0x801F40A4 @kind function */
+extern void stateClearEntryTable(void); /* @source 0x801F40A4 @kind function */
 
 /* Cue submission at 0x8015DF18: takes the cue id in $a0 and returns nothing. Its
  * body lies outside this payload, so the argument role comes from the exact
@@ -88,7 +88,7 @@ void func_8015DF18(u16 cue);
  */
 void stateSpawnIntervalSpawn(
     void) {
-  clearWorkTableAt800E4800World02Area09813_801F40A4();
+  stateClearEntryTable();
   scratchWorkPointerAt1[9] = 0xFF;
   scratchWorkPointerAt1[0xA] = 0;
   scratchWorkPointerAt1[6] = 0x10;

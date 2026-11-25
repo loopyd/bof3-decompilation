@@ -4,7 +4,7 @@ extern u8* D_80146884; /* @source 0x80146884 @kind data */
 extern u8 D_80145F09; /* @source 0x80145F09 @kind data */
 extern u8 D_80181B10[]; /* @source 0x80181B10 @kind table */
 extern u8 D_80144F28[]; /* @source 0x80144F28 @kind data */
-extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 extern void func_8015B580(void* bitmap, s32 bit_index);
 extern void func_8015507C(s32 arg0, s32 arg1);
@@ -28,6 +28,6 @@ void stateFlagScratchMapped(void) {
   if (D_80181B10[D_80145F09] == 5) {
     func_8015B580(D_80144F28, 0x30);
     func_8015507C(1, 0x0B);
-    workRecord44World02Area10814[0] = 0;
+    workRecordSlot[0] = 0;
   }
 }

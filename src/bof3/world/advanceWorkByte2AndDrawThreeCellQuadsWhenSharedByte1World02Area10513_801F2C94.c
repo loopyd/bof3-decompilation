@@ -17,7 +17,7 @@ extern u8 D_8014933B;
  * shifts every cell edge and the third quad's slip, so the zero passed here
  * draws the cells unshifted.
  */
-extern void drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C(
+extern void renderTexturedQuadsShifted(
     s32 shift);
 
 /* @source 0x801F2C94
@@ -42,6 +42,6 @@ void advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C
     void) {
   if (D_8014933B == 1) {
     D_1F800044[2]++;
-    drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C(0);
+    renderTexturedQuadsShifted(0);
   }
 }

@@ -3,7 +3,7 @@
 /* @source 0x801F3B44
  * @kind data
  */
-extern void (*workByte4HandlersWorld02Area09113[])(void);
+extern void (*byte4DispatchTable[])(void);
 
 /* @source 0x801F2D6C
  * @behavior Overlay step dispatch: the leading two instructions read the work
@@ -40,4 +40,4 @@ extern void (*workByte4HandlersWorld02Area09113[])(void);
  */
 EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4,
                       dispatchWorkByte4Table3b44World02Area09113_801F2D6C,
-                      workByte4HandlersWorld02Area09113);
+                      byte4DispatchTable);

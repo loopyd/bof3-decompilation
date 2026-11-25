@@ -7,15 +7,15 @@
  * `lui $vN,0x1F80` plus the folded `lw $vN,0x44($vN)` at each of them. The cell
  * is a plain pointer: the stores through the loaded record already separate the
  * reads, so no volatility is needed. */
-extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* The shared projector 0x801AFF04 writes the projected screen pair into the
  * scratchpad halfwords at 0x1F800034 and 0x1F800036, which this step hands to
  * it as its destination and reads back into the record's own halfwords at
  * +0x2E and +0x30. Both halves are bound as their own cells so the pair base
  * keeps a single address materialisation across the call. */
-extern u16 workScreenX34World02Area10814; /* @source 0x1F800034 @kind data */
-extern u16 workScreenY36World02Area10814; /* @source 0x1F800036 @kind data */
+extern u16 workScreenX; /* @source 0x1F800034 @kind data */
+extern u16 workScreenY; /* @source 0x1F800036 @kind data */
 
 /* Shared overlay helpers. 0x801AFF04 projects a three-word point into a screen
  * pair, and 0x801F3D90 draws the semi-transparent circle fan of radius arg2
@@ -57,19 +57,19 @@ void renderWhiteCircleExpires(void) {
   u8* record;
   u8* tint;
 
-  screen = &workScreenX34World02Area10814;
-  func_801AFF04(workRecord44World02Area10814 + 0x34, screen);
-  record = workRecord44World02Area10814;
+  screen = &workScreenX;
+  func_801AFF04(workRecordSlot + 0x34, screen);
+  record = workRecordSlot;
   *(u16*)(record + 0x2E) = *screen;
-  screenY = workScreenY36World02Area10814;
+  screenY = workScreenY;
   *(u16*)(record + 0x30) = screenY;
   func_801F3D90(*(s16*)(record + 0x2E), (s16)screenY, *(s16*)(record + 0x18),
                 0xFF, 0xFF);
-  if (--workRecord44World02Area10814[9] == 0) {
-    tint = workRecord44World02Area10814;
+  if (--workRecordSlot[9] == 0) {
+    tint = workRecordSlot;
     tint[0x5F] = 0x60;
     tint[0x5E] = 0x60;
     tint[0x5D] = 0x60;
-    workRecord44World02Area10814[1]++;
+    workRecordSlot[1]++;
   }
 }

@@ -8,18 +8,18 @@ splat = "config/targets/emi/world02/area094/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C.c",
-    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area09413_801F2ED0.c",
-    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2F50.c",
-    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2FD0.c",
-    "src/bof3/world/queueSharedUiElementBlock52x32To34Size0World02Area09413_801F30D0.c",
-    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3050.c",
-    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09413_801F3118.c",
-    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09413_801F3198.c",
-    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F3230.c",
-    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F32B0.c",
-    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3330.c",
-    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F33E0.c",
+    "src/bof3/world/statePublishModeStatus.c",
+    "src/bof3/world/stateSeedMode2A.c",
+    "src/bof3/world/stateSeedMode3B.c",
+    "src/bof3/world/stateSeedMode3C.c",
+    "src/bof3/world/renderQueueMarkerTriple.c",
+    "src/bof3/world/stateSeedParty4A.c",
+    "src/bof3/world/stateSeedParty1B.c",
+    "src/bof3/world/stateSeedParty1C.c",
+    "src/bof3/world/stateSeedMode3A.c",
+    "src/bof3/world/stateSeedMode4B.c",
+    "src/bof3/world/stateSeedMode4C.c",
+    "src/bof3/world/stateSeedMode4A.c",
     "src/bof3/world/markFlagFlagWord.c",
     "src/bof3/world/stateConsumeConditionChain.c",
     "src/bof3/world/publishStatusPrimaryPrimary.c",
@@ -27,6 +27,6 @@ sources = [
 ]
 support_sources = [
     "src/bof3/support/area094_13_psyq.c",
-    "src/bof3/world/copyModeByteWorld02Area09413_801F3218.c",
+    "src/bof3/world/statePublishModeByte.c",
 ]
 psyq_source = "src/bof3/support/area094_13_psyq.c"

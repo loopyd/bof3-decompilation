@@ -120,6 +120,36 @@ def test_cross_target_name_refuses_the_rename(tmp_path: Path) -> None:
     assert codes == ["cross-target-name"]
 
 
+def test_group_rename_dry_run_names_every_member(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherRow",))
+    other = root / "src/bof3/battle" / "other.c"
+    other.write_text("void otherRow(void) {}\n", encoding="utf-8")
+    payload = rename.plan_group(
+        root, "stateRaiseFlag4", [("exe/game", OLD), ("exe/other", "otherRow")]
+    )
+    assert payload["action"] == "rename-group"
+    assert payload["passed"] is True, payload["refusals"]
+    assert {m["scope"]["target"] for m in payload["members"]} == {"exe/game", "exe/other"}
+    assert (root / "src" / "bof3" / "battle" / f"{OLD}.c").is_file()
+
+
+def test_group_rename_refuses_an_outside_owner(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherRow",))
+    _target(root, "exe/third", ["src/bof3/battle/third.c"], rows=("outsideRow", "stateRaiseFlag4"))
+    for name in ("other.c", "third.c"):
+        (root / "src" / "bof3" / "battle" / name).write_text(
+            "void held(void) {}\n", encoding="utf-8"
+        )
+    payload = rename.plan_group(
+        root, "stateRaiseFlag4", [("exe/game", OLD), ("exe/other", "otherRow")]
+    )
+    codes = {row["code"] for row in payload["refusals"]}
+    assert payload["passed"] is False
+    assert codes == {"cross-target-name"}
+
+
 def test_foreign_consumer_refuses_the_rename(tmp_path: Path) -> None:
     root = _repo(tmp_path)
     _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherTargetRow",))

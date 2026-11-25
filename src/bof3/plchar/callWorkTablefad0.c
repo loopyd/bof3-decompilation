@@ -3,7 +3,7 @@
 /* This overlay's handler run at 0x801CFAB8: twenty-three code pointers, 0x801CFAB8
  * through 0x801CFB10, holding this payload's own functions plus the shared
  * main-executable handler 0x801B2D54 at entries 2, 8 and 14. The target's Splat
- * `textbin` rows `T_801CFAB8` and `T_801CFAF8` place entries 0 through 15 and 16
+ * `textbin` rows `T_801CFAB8` and `workByte2RunTail` place entries 0 through 15 and 16
  * through 22, so the run is only referenced here, at the interior word this
  * dispatcher indexes. This dispatcher's base 0x801CFAD0 is entry 6 of that run, so
  * the entries it holds from there are 0x801CEA44, 0x801CEB38, 0x801B2D54,

@@ -5,6 +5,12 @@ extern u16 D_801490A8;
 extern u8 D_801448EB;
 extern u8 D_801448EC;
 
+/* The word handler table based at 0x801F64B8: sixteen argument-free entry
+ * pointers, entries 0..3 the status/mode handlers 0x801F5A68, 0x801F5A98,
+ * 0x801F5AC8 and 0x801F5B0C and entry 4 this file's body, which is reached only
+ * through that table. */
+extern void (*statusModeHandlerTable[])(void); /* @source 0x801F64B8 @kind data */
+
 void func_8015C088(void);
 
 /* @source 0x801F5B50

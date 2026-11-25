@@ -15,7 +15,7 @@ typedef struct CellRecord {
  * each field where that use stands, so the fields stay behind one base
  * symbol. */
 /* @source 0x801F3330 @kind table */
-extern CellRecord cellRectTableWorld02Area10513_801F3330[];
+extern CellRecord cellRectTable[];
 
 /* The four scratchpad vectors at 0x1F800014 that RotTransPers4 projects. The
  * original keeps their base in a saved register and writes the halfword lanes
@@ -110,20 +110,20 @@ void renderTexturedQuadsShifted(
     prim->clut = 0x78C6;
 
     left = shift * 4 +
-           (cellRectTableWorld02Area10513_801F3330[i].x - 0x80) * 128 - 0x40;
+           (cellRectTable[i].x - 0x80) * 128 - 0x40;
     v[0].vx = v[2].vx = left;
     right = shift * 4 +
-            (cellRectTableWorld02Area10513_801F3330[i].x +
-             cellRectTableWorld02Area10513_801F3330[i].w - 0x81) *
+            (cellRectTable[i].x +
+             cellRectTable[i].w - 0x81) *
                 128 +
             0x40;
     v[1].vx = v[3].vx = right;
     top = shift * 4 +
-          (cellRectTableWorld02Area10513_801F3330[i].y - 0x80) * 128 - 0x40;
+          (cellRectTable[i].y - 0x80) * 128 - 0x40;
     v[0].vy = v[1].vy = top;
     bottom = shift * 4 +
-             (cellRectTableWorld02Area10513_801F3330[i].y +
-              cellRectTableWorld02Area10513_801F3330[i].h - 0x81) *
+             (cellRectTable[i].y +
+              cellRectTable[i].h - 0x81) *
                  128 +
              0x40;
     v[2].vy = v[3].vy = bottom;
@@ -136,12 +136,12 @@ void renderTexturedQuadsShifted(
 
     prim->u0 = 0;
     prim->v0 = 0;
-    prim->u1 = cellRectTableWorld02Area10513_801F3330[i].w * 16 - 1;
+    prim->u1 = cellRectTable[i].w * 16 - 1;
     prim->v1 = 0;
     prim->u2 = 0;
-    prim->v2 = cellRectTableWorld02Area10513_801F3330[i].h * 16 - 1;
-    prim->u3 = cellRectTableWorld02Area10513_801F3330[i].w * 16 - 1;
-    prim->v3 = cellRectTableWorld02Area10513_801F3330[i].h * 16 - 1;
+    prim->v2 = cellRectTable[i].h * 16 - 1;
+    prim->u3 = cellRectTable[i].w * 16 - 1;
+    prim->v3 = cellRectTable[i].h * 16 - 1;
     prim->r0 = 0x80;
     prim->g0 = 0x80;
     prim->b0 = 0x80;

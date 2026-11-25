@@ -10,7 +10,7 @@ extern u8 D_80149333;
 /* Four bytes: 0, 1, 0, -1 when interpreted as signed frame steps.
  * @source 0x801F5D68 @kind table
  */
-extern s8 signedStepTableWorld02Area10313_801F5D68[];
+extern s8 signedStepRamp[];
 
 /* @source 0x801F57B4
  * @behavior Overlay handler: selects a signed byte from the four-entry table
@@ -28,7 +28,7 @@ extern s8 signedStepTableWorld02Area10313_801F5D68[];
 void signedTableStepWord80149318(void) {
   s32 step;
 
-  step = signedStepTableWorld02Area10313_801F5D68[D_80143E6C & 3];
+  step = signedStepRamp[D_80143E6C & 3];
   D_80149333 = 2;
   D_80149318 = D_80149318 + step * 8;
 }

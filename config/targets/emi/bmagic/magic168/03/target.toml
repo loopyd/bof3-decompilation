@@ -8,14 +8,14 @@ splat = "config/targets/emi/bmagic/magic168/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic16803_801F0068.c",
+    "src/bof3/bmagic/stateClearRecordSlot.c",
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic16803_801EF048.c",
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16803_801EF158.c",
+    "src/bof3/bmagic/stateSetByte9Rearm.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16803_801EFFFC.c",
 ]
 support_sources = [
     "src/bof3/support/magic168_03_psyq.c",
-    "src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic16803_801EF338.c",
-    "src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16803_801EF37C.c",
+    "src/bof3/bmagic/callRecordByte1Step.c",
+    "src/bof3/bmagic/callRecordByte2Step.c",
 ]
 psyq_source = "src/bof3/support/magic168_03_psyq.c"

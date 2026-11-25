@@ -43,13 +43,13 @@ segments:
     - func_801EECDC
   - - 856
     - c
-    - raiseFlag4AndInvokeHelperWhenByteC2E4ZeroBmagicMagic21600_801EEF58
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenByteC2E4ZeroBmagicMagic21600_801EEF58.c'
+    - stateRaiseFlagGate
+    - '@source: src/bof3/bmagic/stateRaiseFlagGate.c'
     - '@behavior: Reads the shared battle byte at 0x801EC2E4 with an unsigned byte load before the 0x18-byte frame is created and, only when that byte is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword read-modify-write and then invokes the shared helper at 0x801E5988. The halfword address stays in one register across the read-modify-write, so it is written through a local pointer; the frame only keeps $ra across the helper call. It takes no arguments, returns nothing and writes no other state. Its address is the third word (index 2) of the three-entry code pointer table at 0x801EEC04, whose words are 0x801EEC70, 0x801EECDC and 0x801EEF58 and which the overlay entry dispatches on unsigned work byte 1.'
   - - 920
     - c
-    - copyEquipmentObjectNameBmagicMagic21600_801EEF98
-    - '@source: src/bof3/bmagic/copyEquipmentObjectNameBmagicMagic21600_801EEF98.c'
+    - textCopyObjectName
+    - '@source: src/bof3/bmagic/textCopyObjectName.c'
     - '@behavior: copies the name of the equipment object selected by the masked category and index pair into the shared name slot at 0x801490D8 with the bounded count 0xC: categories 1, 2 and 3 select the weapon, armor and accessory tables with record strides 0x18, 0x16 and 0x14, while the default arm, which also takes the serialized empty category 0, selects the item table with stride 0x12.'
   - - 1144
     - textbin

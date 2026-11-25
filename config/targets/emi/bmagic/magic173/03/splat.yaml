@@ -33,8 +33,8 @@ segments:
     - func_801EEC5C
   - - 400
     - c
-    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic17303_801EED90
-    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic17303_801EED90.c'
+    - forwardBattleIdleFlag
+    - '@source: src/bof3/bmagic/forwardBattleIdleFlag3.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once before the 0x18-byte frame, returns when work byte 0xB is non-zero, and otherwise loads the shared battle byte at 0x80146384 unsigned, passes it to func_800A9820, raises bit 0x4 of the shared halfword at 0x801462E8 and calls func_801E5988.'
   - - 496
     - c
@@ -48,8 +48,8 @@ segments:
     - func_801EEE3C
   - - 748
     - c
-    - seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic17303_801EEEEC
-    - '@source: src/bof3/bmagic/seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic17303_801EEEEC.c'
+    - stateSeedWorkMotion
+    - '@source: src/bof3/bmagic/stateSeedWorkMotion.c'
     - '@behavior: Entry 2 of the ten-entry code-pointer run based at 0x801F0988, indexed by scratchpad work-object byte 1: it reads the record pointer at 0x8014638C once, copies record byte 8 from the shared pointer at 0x801EB4E0 into work byte 8, selects the work motion triple at 0xC, 0x10 and 0x14 from the acting battler byte at 0x80146374 - 0x4000, 0 and 0xC00000 below 3, otherwise the kind byte of the 0x118-byte record at 0x801EB6AC indexed by that byte minus 3, with 0x38000, 0 and 0 for kind 0x61, 0x20000 when bit 2 of work byte 8 is set and 0x30000 otherwise with 0x800000 for kind 0x6C, and 0x10000 with 0x800000 for every other kind - then calls func_801DD350 with the work object, adds the battle record words 0x34, 0x38 and 0x3C into those same work words, stores func_8017A138 of the record-minus-work differences in words 0x34 and 0x38 into work word 0xC, clears work word 0x10, calls func_800AF764 with that clearing store in its delay slot, publishes the work halfword pair at 0x2E and 0x30 into the two leading halfword pairs of row work byte 4 of the 0x80-byte-row pair table at 0x801F09B0, clears work byte 0xB, sets work byte 9 to 0x10 and work byte 0xA to 1 and advances work byte 2 from a 0x18-byte frame that keeps the return address and the saved record pointer.'
   - - 1352
     - c
@@ -75,8 +75,8 @@ segments:
     - func_801F02B0
   - - 6048
     - c
-    - insertEmptyRecordAtWorkByteBAndShiftRowRecordsUpBmagicMagic17303_801F03A0
-    - '@source: src/bof3/bmagic/insertEmptyRecordAtWorkByteBAndShiftRowRecordsUpBmagicMagic17303_801F03A0.c'
+    - stateInsertRecordRow
+    - '@source: src/bof3/bmagic/stateInsertRecordRow.c'
     - '@behavior: Shifts the 4-byte records of the pair table at 0x801F09B0 from row work[0x4] one record higher for indices work[0xB] through work[0xA] - 1 and then writes the 0xFFFF, 0xFFFF null sentinel into record work[0xB] after re-reading the scratchpad work-object pointer cell at 0x1F800044; takes no arguments, returns nothing and is a leaf with no frame.'
   - - 6280
     - c
@@ -100,8 +100,8 @@ segments:
     - '@behavior: Entry 8 of the overlay step dispatch run based at 0x801F0988, indexed by scratchpad work-object byte 1; from a 0x18-byte frame that keeps only the return address it calls the shared readiness helper at 0x8014DAEC twice and discards the first result, then only when the second result truncated to eight bits is nonzero re-reads the work-object pointer cell at 0x1F800044 and increments work byte 2 modulo 256, advancing to the next byte-2 handler step; takes no arguments and returns nothing.'
   - - 6912
     - c
-    - decrementWorkByte9By4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17303_801F0700
-    - '@source: src/bof3/bmagic/decrementWorkByte9By4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17303_801F0700.c'
+    - mathByte9CountdownFour
+    - '@source: src/bof3/bmagic/mathByte9CountdownFour.c'
     - '@behavior: Per-call step that reads the scratchpad work object through the pointer cell at 0x1F800044, subtracts four from work byte 9 at byte width and tests the stored byte truncated to eight bits, and only when that countdown reaches zero reads the shared battle work record pointer at 0x801EB4E0, decrements that record byte 0xB by one and invokes the shared helper at 0x801E5988 with the store in the call delay slot; the pointer-cell load precedes the 0x18-byte frame that keeps only the return address, and the function takes no arguments and returns nothing.'
   - - 7004
     - asm

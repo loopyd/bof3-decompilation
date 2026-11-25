@@ -13,8 +13,8 @@ sources = [
     "src/bof3/bmagic/stateDeltaTablesHeader.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic13803_801EEC28.c",
-    "src/bof3/bmagic/invokeHelperBmagicMagic13803_801EF50C.c",
+    "src/bof3/bmagic/callWorkByte1Entry.c",
+    "src/bof3/bmagic/callQueuedSlotReset.c",
     "src/bof3/bmagic/magic13803DispatchTables.c",
     "src/bof3/support/magic138_03_psyq.c",
     "src/bof3/bmagic/stateDecrementGlobalDirect.c",

@@ -40,7 +40,7 @@ segments:
     - '@source: src/bof3/bmagic/magic21303DispatchTables.c'
   - - 1028
     - c
-    - dispatchStateByte2Tablef8a4BmagicMagic21303_801EF004
+    - callStateByte2Handlers
     - '@source: src/bof3/bmagic/magic21303DispatchTables.c'
   - - 1096
     - asm
@@ -54,8 +54,8 @@ segments:
     - func_801EF348
   - - 2192
     - c
-    - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic21303_801EF490
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic21303_801EF490.c'
+    - mathGlobalByteZero
+    - '@source: src/bof3/bmagic/mathGlobalByteZero.c'
     - '@behavior: Decrements shared work byte 0xB and invokes the helper when scratchpad work byte 0xB is zero.'
   - - 2272
     - c
@@ -76,8 +76,8 @@ segments:
     - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic21303_801EF7EC.c'
   - - 3152
     - c
-    - clearWorkBytesBmagicMagic21303_801EF850
-    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic21303_801EF850.c'
+    - clearWorkBytes
+    - '@source: src/bof3/bmagic/clearWorkBytes.c'
   - - 3232
     - textbin
     - T_801EF8A0

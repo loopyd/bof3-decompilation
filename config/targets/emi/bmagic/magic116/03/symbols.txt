@@ -10,4 +10,4 @@ stateAllActiveBytes = 0x801EEFF4;
 func_801EF020 = 0x801EF020;
 func_801EF118 = 0x801EF118;
 activateUpFreeRecords = 0x801EF258;
-T_801EF2A8 = 0x801EF2A8;
+stateRecordPool = 0x801EF2A8;

@@ -3,7 +3,7 @@
 /* Scratchpad work-object pointer cell 0x1F800044, already bound at that address
  * by this target's map as g_battle_work, the name this target's exact lifts
  * reserveFirstFreeRecordBmagicMagic21903_801EF934,
- * clearWorkBytes0Through4BmagicMagic21903_801EF998 and
+ * stateWorkThrough4 and
  * decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZero
  * BmagicMagic21903_801EF5DC use. This body reads the cell once per access
  * group, because the byte store in the first group and the word stores later

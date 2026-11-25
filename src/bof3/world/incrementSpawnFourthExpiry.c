@@ -11,7 +11,7 @@ extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 /* Free-record scan of the shared 0x1C-byte-stride work table at 0x800E4800:
  * walks the sixteen records, returns the first one whose lead byte reads zero,
  * and returns null once every record is taken. */
-u8* findFreeWorkRecordWorld02Area09813_801F4D80(void);
+u8* stateFindFreeRecord(void);
 
 /* Record spawn: takes the claimed record and seeds its lead byte with 1, its
  * handler index, its countdown byte at +0x02 with 8, its delay byte at +0x04

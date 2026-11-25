@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 extern u8* D_80146884; /* @source 0x80146884 @kind data */
 extern void func_80196670(u8 arg0);
 
@@ -23,26 +23,26 @@ void raiseTintTripletConsume(void) {
   u8* cursor;
   u8* work;
 
-  if (((s8*)workRecord44World02Area10814)[0x5d] < -0x30) {
-    ((s8*)workRecord44World02Area10814)[0x5d] += 1;
+  if (((s8*)workRecordSlot)[0x5d] < -0x30) {
+    ((s8*)workRecordSlot)[0x5d] += 1;
   }
-  if (((s8*)workRecord44World02Area10814)[0x5e] < -0x30) {
-    ((s8*)workRecord44World02Area10814)[0x5e] += 1;
+  if (((s8*)workRecordSlot)[0x5e] < -0x30) {
+    ((s8*)workRecordSlot)[0x5e] += 1;
   }
-  if (((s8*)workRecord44World02Area10814)[0x5f] < -0x30) {
-    ((s8*)workRecord44World02Area10814)[0x5f] += 1;
+  if (((s8*)workRecordSlot)[0x5f] < -0x30) {
+    ((s8*)workRecordSlot)[0x5f] += 1;
   }
 
-  record = workRecord44World02Area10814;
+  record = workRecordSlot;
   if ((*(u32*)(record + 0x5c) & 0xffffff00) == 0xd0d0d000) {
     func_80196670(D_80146884[0x93]);
-    workRecord44World02Area10814[0] &= 0xdf;
-    workRecord44World02Area10814[0x5c] = 0;
-    cursor = workRecord44World02Area10814;
+    workRecordSlot[0] &= 0xdf;
+    workRecordSlot[0x5c] = 0;
+    cursor = workRecordSlot;
     cursor[0x5f] = 0;
     cursor[0x5e] = 0;
     cursor[0x5d] = 0;
-    workRecord44World02Area10814[4] = 0;
+    workRecordSlot[4] = 0;
   } else {
     work = D_80146884;
     *(u16*)(work + 0x7e) -= 2;

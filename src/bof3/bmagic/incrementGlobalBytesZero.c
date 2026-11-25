@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell 0x1F800044, bound by this target's map as
  * g_battle_work, the name its exact lift
- * clearWorkBytes0Through4BmagicMagic14603_801EF964 uses. The cell is
+ * stateClearWorkHead uses. The cell is
  * re-evaluated for each access group because the byte store that precedes the
  * second group goes through the pointer the cell supplied, so the original
  * re-materializes `lui $v1,0x1F80` / `lw $v1,0x44($v1)` exactly twice, at
@@ -18,7 +18,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* Work-byte clear routine at 0x801EF964, bound by this target's map. Its own
  * 80-byte lift measured exact against the payload. */
-extern void clearWorkBytes0Through4BmagicMagic14603_801EF964(void); /* @source 0x801EF964 @kind function */
+extern void stateClearWorkHead(void); /* @source 0x801EF964 @kind function */
 
 /* @source 0x801EF58C
  * @behavior Per-frame handler of the battle work object published at the
@@ -64,6 +64,6 @@ void incrementGlobalBytesZero(void) {
   work[0x0A] = counter;
   if (counter == 0) {
     D_801EB4E0[0x0B] -= 1;
-    clearWorkBytes0Through4BmagicMagic14603_801EF964();
+    stateClearWorkHead();
   }
 }

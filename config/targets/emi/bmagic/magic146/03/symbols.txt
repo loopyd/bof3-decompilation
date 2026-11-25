@@ -14,5 +14,5 @@ workBytes9AdvanceAt16 = 0x801EF520;
 incrementGlobalBytesZero = 0x801EF58C;
 renderTranslucentTexturedTinted = 0x801EF604;
 func_801EF900 = 0x801EF900;
-clearWorkBytes0Through4BmagicMagic14603_801EF964 = 0x801EF964;
+stateClearWorkHead = 0x801EF964;
 D_801EF9B4 = 0x801EF9B4;

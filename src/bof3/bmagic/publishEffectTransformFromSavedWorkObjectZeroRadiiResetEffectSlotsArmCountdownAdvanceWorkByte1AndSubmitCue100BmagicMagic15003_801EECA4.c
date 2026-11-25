@@ -40,10 +40,10 @@ extern s16 D_801EFAB0; /* @source 0x801EFAB0 @kind data */
 
 /* Publishes the eight-slot table base 0x801EFAB4 into the cursor cell
  * 0x801EFAF4 and clears each slot leading state halfword. Already lifted exact
- * in this target as src/bof3/bmagic/resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0.c
+ * in this target as src/bof3/bmagic/stateSlotCursorStates.c
  * and bound by this target's own Splat listing, so this call takes no
  * arguments. */
-void resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0(void); /* @source 0x801EF6B0 */
+void stateSlotCursorStates(void); /* @source 0x801EF6B0 */
 
 /* Sound-cue dispatcher of the main executable at 0x8015DF18, outside this
  * overlay's image and bound through this target's generated
@@ -102,7 +102,7 @@ void publishEffectTransformFromSavedWorkObjectZeroRadiiResetEffectSlotsArmCountd
   D_801EFAAC = 0;
   D_801EFAAE = 0;
   D_801EFAB0 = 0;
-  resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0();
+  stateSlotCursorStates();
   g_battle_work[9] = 0x3C;
   g_battle_work[1]++;
   func_8015DF18(0x100);

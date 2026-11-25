@@ -30,16 +30,16 @@ segments:
   subsegments:
   - - 40
     - c
-    - dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic16203_801EEC28
-    - '@source: src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic16203_801EEC28.c'
+    - callWorkByte1Records
+    - '@source: src/bof3/bmagic/callWorkByte1Records.c'
     - '@behavior: Per-frame entry of this overlay. Copies the six code pointer words at 0x801EEC04 into its own 0x38-byte frame and calls the copy entry selected by the unsigned byte 0x01 of the work object published at 0x1F800044, with no arguments and no bound on the index; the cell is read before the frame is created and the selected word is read back from the frame copy. It then walks the 128 records of the 0x2C-stride pool at 0x801F01B0 and, for each record whose flags byte has bit 0 set, saves 0x801EB4E0, loads the record word 0x28, publishes the record into the current-record cell at 0x801F17B0, stores that word into 0x801EB4E0, runs the record byte-1 step through the dispatcher at 0x801EF338 and restores 0x801EB4E0. The flags read re-materialises the pool base, while the published record pointer reuses one materialised base held in a saved register. Takes no arguments and returns nothing, and no jal and no payload word names 0x801EEC28, so the overlay loader is its only caller.'
   - - 312
     - asm
     - func_801EED38
   - - 928
     - c
-    - decrementWorkByte9ThenSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EEFA0
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EEFA0.c'
+    - mathByte9EffectSubmit
+    - '@source: src/bof3/bmagic/mathByte9EffectSubmit.c'
     - '@behavior: Reads the battle record pointer published at 0x8014638C once into a saved register, decrements the scratchpad work object byte at offset 0x9 and returns while the stored value stays non-zero; only on zero it submits that record through func_80196718, stores the low return byte of func_8019651C called with the 0/0/0 offsets and mode 1 in work byte 0xA, sets work byte 0x9 to 8 and advances work byte 0x1, re-reading the work object pointer cell at 0x1F800044 for each of the three stores. Takes no arguments and returns nothing.'
   - - 1096
     - c
@@ -48,8 +48,8 @@ segments:
     - '@behavior: Word 2 of the six-entry code pointer run at 0x801EEC04, which the entry dispatcher func_801EEC28 indexes with the work-object byte at offset 1 scaled by four. Reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group and, for each of three counter bytes, re-reads work byte 0xA, scales it by the 12-byte record stride and increments the selected record byte 0x0, the record byte 0x1 at D_80145BD6 + 1 and the byte at 0x80145BD8 with a byte-width read-modify-write. Then re-reads the cell, decrements the work-object byte at offset 0x9 in the same byte-width form and returns while the stored value stays non-zero; only on zero it re-reads the cell once more and increments work byte 0x1, so the next dispatch selects word 3 of the run, the stage arm at 0x801EF158. Leaf with no saved registers and no calls, in a 0x10-byte frame that it reserves in the bnez delay slot and never touches. Takes no arguments, returns nothing and reads or writes no other state. Its 272-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF048 and to emi/bmagic/magic062/03 0x801EEF68.'
   - - 1368
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16203_801EF158
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16203_801EF158.c'
+    - stateSetByte9Advance
+    - '@source: src/bof3/bmagic/stateSetByte9Advance.c'
     - '@behavior: Step of the scratchpad work object that the entry dispatcher at 0x801EEC28 runs: reads the work-object pointer cell at 0x1F800044 once, loads the work object byte 0xB and compares it against five with an unsigned bound (lbu/sltiu), so the arm is taken for every value below five. Only on that path it stores 8 into the work byte at 0x9 - the countdown the overlay''s source at 0x801EEFA0 decrements and re-arms to 8 when it reaches zero - then re-reads the cell and increments the work byte at 0x1, the stage index the dispatcher copies the six words at 0x801EEC04 into its frame and indexes with that byte scaled by four, by one at byte width. This address is word 3 of that run, so the arm advances the stage to word 4. Takes no arguments, returns nothing, keeps no frame and reads or writes no other state. Its 72-byte body is byte-identical to emi/bmagic/magic070/03, magic071/03 and magic072/03 0x801EF15C and to emi/bmagic/magic168/03 0x801EF158.'
   - - 1440
     - asm
@@ -59,18 +59,18 @@ segments:
     - func_801EF2D8
   - - 1848
     - c
-    - dispatchWorkRecordByte1HandlerBmagicMagic16203_801EF338
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic16203_801EF338.c'
+    - callWorkRecordByte1
+    - '@source: src/bof3/bmagic/callWorkRecordByte1.c'
     - '@behavior: Handler dispatch of the bmagic frame loop. Reads the work record pointer from the cell at 0x801F17B0 before reserving its 0x18-byte frame, loads the record unsigned byte at offset 0x1, scales it by four and calls the entry of the handler table based at 0x801F01AC that the byte selects, passing no arguments; the only table word on disc sits at index 0 and holds 0x801EF37C. Reads no other state, writes none, and keeps only $ra in the frame. Its 68-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF338.'
   - - 1916
     - c
-    - dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16203_801EF37C
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16203_801EF37C.c'
+    - callWorkRecordByte2
+    - '@source: src/bof3/bmagic/callWorkRecordByte2.c'
     - '@behavior: Entry handler of the bmagic work record. Reads the record pointer cell at 0x801F17B0 before reserving its 0x28-byte frame, copies the three-word step table at 0x801EEC1C into the frame, scales the record unsigned byte at offset 2 by four and calls the selected copy with no arguments; the only record bytes the table covers are 0, 1 and 2, holding 0x801EF478, 0x801EF678 and 0x801EF728. While the reloaded record byte 0 has bit 0 set and byte 2 is non-zero it runs the eight-triangle draw at 0x801EFCD8, and while the reloaded record unsigned halfword at 0xC has either low bit set it runs the four-spoke draw at 0x801EF80C with half of the shared frame counter at 0x80143E6C narrowed to 16 bits and record byte 6, then func_801EFA40 with that halved counter plus four and with record byte 6 added to half itself. Takes no arguments, returns nothing, writes no state, and keeps only $ra and the copied table in the frame. Its 252-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF37C.'
   - - 2168
     - c
-    - decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic16203_801EF478
-    - '@source: src/bof3/bmagic/decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic16203_801EF478.c'
+    - mathRecordMotionStep
+    - '@source: src/bof3/bmagic/mathRecordMotionStep.c'
     - '@behavior: Stage handler 6 of the pointer run at 0x801EEC04: decrements the work record countdown byte at 0x5 and returns while it stays non-zero; on zero it loads the three words at 0x34, 0x38 and 0x3C and the halfwords at 0x2E and 0x30 of the shared battle record at 0x801EB4E0 into the record words at 0x14, 0x18 and 0x1C and the record halfwords at 0x20 and 0x22, applies the per-entry motion offset pair at 0x801F00B8 indexed by the record byte at 0x7 masked with 0x1F scaled by four bytes, subtracting a rand nibble from the record halfword at 0x20 when that entry first halfword is negative and adding it otherwise, subtracts the entry second halfword at 0x801F00BA plus a rand nibble from the record halfword at 0x22, copies the record halfword at 0x20 into the halfword at 0x8, seeds the halfwords at 0xA and 0xC from rand masked with 1 and unmasked, reseeds the record byte at 0x7 from the byte table at 0x801F01A4 indexed by the record byte at 0x4 plus rand masked with 6, re-arms the countdown byte at 0x5 with 0x10, clears byte 0x6 and advances the stage byte at 0x2; takes no arguments and returns nothing.'
   - - 2680
     - c
@@ -99,8 +99,8 @@ segments:
     - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16203_801EFFFC.c'
   - - 5224
     - c
-    - clearRecordBytes0Through4BmagicMagic16203_801F0068
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic16203_801F0068.c'
+    - stateClearRecordHead
+    - '@source: src/bof3/bmagic/stateClearRecordHead.c'
   - - 5304
     - textbin
     - D_801F00B8

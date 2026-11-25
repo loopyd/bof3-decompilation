@@ -12,12 +12,12 @@ sources = [
 ]
 support_sources = [
     "src/bof3/bmagic/stepAngleTimesThree.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0284And0334AndPopWhenWorkBytes0And2SetBmagicMagic22003_801EFFA4.c",
+    "src/bof3/bmagic/callWorkByte2Pair.c",
     "src/bof3/support/magic220_03_psyq.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic22003_801F0628.c",
     "src/bof3/bmagic/magic22003DispatchTables.c",
-    "src/bof3/bmagic/clearWorkBytesBmagicMagic22003_801F068C.c",
-    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic22003_801EF888.c",
+    "src/bof3/bmagic/clearWorkBytes2.c",
+    "src/bof3/bmagic/stateByte2BelowThree.c",
     "src/bof3/bmagic/copyFrameParityDelta.c",
     "src/bof3/bmagic/stepAngleTimesTwo.c",
 ]

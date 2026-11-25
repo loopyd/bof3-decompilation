@@ -8,7 +8,7 @@
  * the frame. */
 extern u8* scratchWorkPointerAt1; /* @source 0x1F800044 @kind data */
 
-void claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C(void);
+void stateClaimFreeRecord(void);
 
 /* Per-frame passes this overlay's progress handlers run, still anchored to
  * their addresses. 0x801F5940 is the draw pass over the 0x800E48C0 table: it
@@ -63,7 +63,7 @@ void func_801F5308(void);
  * pair carry the same cadence block as this span. The every-fourth-frame
  * cadence, the state-byte-1 advance and the countdown byte at +0x09 are the
  * roles this target's exact
- * claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C records for
+ * stateClaimFreeRecord records for
  * its step-handler callers.
  *
  * Shape evidence: this 120-byte span, payload offsets 0xF5C-0xFD3, is
@@ -90,7 +90,7 @@ void claimEveryFourthPasses(
 
   tick = scratchWorkPointerAt1[6]++;
   if ((tick & 3) == 0) {
-    claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C();
+    stateClaimFreeRecord();
   }
   func_801F5940();
   func_801F5308();

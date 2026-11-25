@@ -7,7 +7,7 @@
  * `lui $vN,0x1F80` plus the folded `lw $vN,68($vN)` the original bytes show. The
  * cell is a plain pointer: the stores through the loaded record already
  * separate the reads, so no volatility is needed. */
-extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Global work record published by the pointer cell at 0x80146884. The function
  * stores one effect byte at +0x93 and reads and writes back the countdown
@@ -45,15 +45,15 @@ void initializeModeTintCountdown(void) {
   u8* record;
   u8* work;
 
-  D_80146884[0x93] = func_8019651C(workRecord44World02Area10814, 0, 0, 0, 1);
-  workRecord44World02Area10814[0] |= 0x20;
-  workRecord44World02Area10814[0] &= 0xbf;
-  workRecord44World02Area10814[0x5c] = 1;
-  record = workRecord44World02Area10814;
+  D_80146884[0x93] = func_8019651C(workRecordSlot, 0, 0, 0, 1);
+  workRecordSlot[0] |= 0x20;
+  workRecordSlot[0] &= 0xbf;
+  workRecordSlot[0x5c] = 1;
+  record = workRecordSlot;
   *(s8*)(record + 0x5f) = -0x80;
   *(s8*)(record + 0x5e) = -0x80;
   *(s8*)(record + 0x5d) = -0x80;
-  workRecord44World02Area10814[4] = 1;
+  workRecordSlot[4] = 1;
   work = D_80146884;
   *(u16*)(work + 0x7e) -= 2;
 }

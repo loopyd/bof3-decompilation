@@ -123,7 +123,7 @@ segments:
     - func_801F400C
   - - 5284
     - c
-    - clearWorkTableAt800E4800World02Area09813_801F40A4
+    - stateClearEntryTable
   - - 5328
     - asm
     - func_801F40D0
@@ -152,8 +152,8 @@ segments:
     - '@behavior: clears the lead byte of each of the 0x10 entries of the 0x1C-byte-stride work table at 0x800E4800 in a bottom-tested loop, then zeroes the two overlay latch bytes at 0x801F6510 and 0x801F6514 that func_801F4F60 and func_801F4FEC set to 1 on their first pass.'
   - - 8576
     - c
-    - findFreeWorkRecordWorld02Area09813_801F4D80
-    - '@source: src/bof3/world/findFreeWorkRecordWorld02Area09813_801F4D80.c'
+    - stateFindFreeRecord
+    - '@source: src/bof3/world/stateFindFreeRecord.c'
     - '@behavior: Work-record claim scan over the shared 0x1C-byte-stride work table at 0x800E4800, the same 0x10-entry table the neighbouring 0x801F4D44 clears: it walks the sixteen records, returns the address of the first one whose lead byte reads zero, and returns null once every record is taken. It writes nothing and makes no call; its 0x3C bytes carry no frame.'
   - - 8636
     - asm
@@ -180,11 +180,11 @@ segments:
     - func_801F5050
   - - 9792
     - c
-    - clearWorkTableAt800E4800World02Area09813_801F5240
+    - stateClearTableHead
   - - 9836
     - c
-    - claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C
-    - '@source: src/bof3/world/claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C.c'
+    - stateClaimFreeRecord
+    - '@source: src/bof3/world/stateClaimFreeRecord.c'
     - '@behavior: walks the 8 entries of the 0x18-byte-stride record table at 0x800E4800 and claims the first entry whose lead byte reads zero by storing 1 there, then seeds that record with byte 1 = 0, byte 2 = 0x10, the triple at 0x04/0x08/0x0C copied from words 0x34/0x38/0x3C of the scratch work object behind 0x1F800044, halfword 0x14 = 0x100, byte 0x16 = 0x40 and byte 0x17 = 0 before returning on the claim.'
   - - 9992
     - asm
@@ -206,10 +206,10 @@ segments:
     - func_801F59F4
   - - 11880
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld02Area09813_801F5A68
+    - stateSetStatusIndex3
   - - 11928
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld02Area09813_801F5A98
+    - stateSetStatusIndex5
   - - 11976
     - c
     - stateStatus2ModeGate
@@ -217,8 +217,8 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores the status halfword 0x2F into D_801490A8 and the mode index 6 into the shared byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and writes no mode byte.'
   - - 12044
     - c
-    - setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5B0C
-    - '@source: src/bof3/world/setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5B0C.c'
+    - stateSetStatusMode6
+    - '@source: src/bof3/world/stateSetStatusMode6.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores the status halfword 0x2F into D_801490A8 and the mode index 6 into the shared byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and writes no mode byte.'
   - - 12112
     - c
@@ -238,8 +238,8 @@ segments:
     - func_801F5E1C
   - - 12988
     - c
-    - resetWorkRecordAndPublishRecordIndexThenState4Substate9World02Area09813_801F5EBC
-    - '@source: src/bof3/world/resetWorkRecordAndPublishRecordIndexThenState4Substate9World02Area09813_801F5EBC.c'
+    - stateResetRecordEntry
+    - '@source: src/bof3/world/stateResetRecordEntry.c'
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then resets the work record published through the pointer cell 0x80148208 by storing 4 into its byte at +1, 0 into its byte at 0x77 and 0 into its halfword at 0x7E, publishes into the shared byte 0x80146867 the index of that record inside the 0x98-byte record array based at 0x80146888, and finally writes 4 into the shared state entry byte 0x801448EB and 9 into the shared substate byte 0x801448ED, leaving the middle byte 0x801448EC untouched. Takes no arguments and returns 0.'
   - - 13144
     - asm
@@ -258,7 +258,7 @@ segments:
     - T_801F6418
   - - 14520
     - textbin
-    - T_801F64B8
+    - statusModeHandlerTable
   - - 14584
     - textbin
     - T_801F64F8

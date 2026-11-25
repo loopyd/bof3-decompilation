@@ -20,4 +20,4 @@ adjustEvenSequenceCue = 0x801CF4CC;
 stateUnoccupiedRecordClear = 0x801CF5E4;
 callWorkTablef710 = 0x801CF650;
 callWorkHalfword2Tablef71 = 0x801CF694;
-T_801CF6D8 = 0x801CF6D8;
+workByte2HandlerRun = 0x801CF6D8;

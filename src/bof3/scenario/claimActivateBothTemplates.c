@@ -1,6 +1,8 @@
 #include "bof3/bof3.h"
 
-extern s32 D_801FEA74; /* @source 0x801FEA74 @kind data */
+/* This row holds the two effect-slot identifiers this body publishes: +0x0 the
+ * first activation (stored here) and +0x4 the second (D_801FEA78). */
+extern s32 effectSlotPairState; /* @source 0x801FEA74 @kind data */
 extern s32 D_801FEA78; /* @source 0x801FEA78 @kind data */
 extern u8 D_80146888[]; /* @source 0x80146888 @kind data */
 extern u16 D_1F800000; /* @source 0x1F800000 @kind data */
@@ -44,7 +46,7 @@ void claimActivateBothTemplates(void) {
   u16* scratch;
 
   first = func_8015CA48();
-  D_801FEA74 = first;
+  effectSlotPairState = first;
   if (first == 0xFF) {
     return;
   }
@@ -53,14 +55,14 @@ void claimActivateBothTemplates(void) {
   second = func_8015CA48();
   D_801FEA78 = second;
   if (second == 0xFF) {
-    offset = D_801FEA74 * 152;
+    offset = effectSlotPairState * 152;
     D_80146888[offset] = 0;
     return;
   }
   entry = D_801FE9A0;
   scratch = &D_1F800000;
   D_80146888[second * 152] = 1;
-  *scratch = D_801FEA74;
+  *scratch = effectSlotPairState;
   func_801A65A0(entry);
   func_8014D6DC(0x4C, 0);
   *scratch = D_801FEA78;

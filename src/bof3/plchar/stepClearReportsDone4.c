@@ -47,7 +47,7 @@ extern void func_8014D978(void);
  *           scratchpad pointer cell 0x1F800044, reached from outside this
  *           payload: the body address is the word 0x801CF6F8, entry 8 of the
  *           twenty-entry code pointer run based at 0x801CF6D8, which this
- *           target's Splat `textbin` row T_801CF6D8 places, so it is local index
+ *           target's Splat `textbin` row workByte2HandlerRun places, so it is local index
  *           2 of the interior base 0x801CF6F0 that this payload's byte-2
  *           dispatcher dispatchWorkByte2Tablef6f0 indexes. No instruction of
  *           this payload names the body, but that dispatcher scales work byte 2

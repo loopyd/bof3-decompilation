@@ -45,7 +45,7 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
 
 /* @source 0x801EFAAC
  * @behavior Entry index 0 of the six-word handler run at 0x801EEC38, which the
- *           dispatcher dispatchWorkByte2HandlerBmagicMagic15103_801EFA34 selects
+ *           dispatcher callWorkByte2Handlers selects
  *           with the scratchpad work object's byte 0x02. The scratchpad
  *           work-object pointer cell at 0x1F800044 is read before this
  *           function's 0x18-byte frame is created, and work byte 0x08 receives

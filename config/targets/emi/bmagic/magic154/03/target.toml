@@ -8,14 +8,14 @@ splat = "config/targets/emi/bmagic/magic154/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic15403_801EF4B4.c",
+    "src/bof3/bmagic/callWorkByte2Nonzero.c",
     "src/bof3/bmagic/decrementSeedHeader.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic15403_801EEC24.c",
-    "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic15403_801EF544.c",
+    "src/bof3/bmagic/stateSeedByte9Advance.c",
     "src/bof3/bmagic/decrementMotionTintIs.c",
     "src/bof3/bmagic/decrementGlobalHelperReady.c",
     "src/bof3/bmagic/decrementMotionPairGlobal.c",
-    "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic15403_801EF060.c",
+    "src/bof3/bmagic/forwardBattleIdleFlag.c",
     "src/bof3/bmagic/callRaiseBattleTarget.c",
     "src/bof3/bmagic/callHeadStampHalfwords.c",
     "src/bof3/bmagic/stateObjectSixPointer.c",

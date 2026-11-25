@@ -13,7 +13,7 @@ extern u8 D_80146875; /* @source 0x80146875 @kind unknown */
 
 /* Shared main-EXE helpers, both outside this payload and unlifted, so only the
  * call-site prototypes are declared. 0x8015C088 is the front-end startup helper
- * the exact sibling publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C
+ * the exact sibling statePublishModeStatus
  * neighbours; 0x8015B5D4 tests one flag of the flag word it is handed and
  * returns nonzero when that flag is set. */
 void func_8015C088(void);
@@ -23,7 +23,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
  * @behavior Publishes the halfword indexed by the signed shared mode byte
  *           D_801490C7 from the target-local halfword table at 0x801F535C into
  *           the shared status halfword D_801490A8 -- the same status store the
- *           exact sibling publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C
+ *           exact sibling statePublishModeStatus
  *           makes from the neighbouring table at 0x801F5354 -- and then acts on
  *           that same mode value. Mode 1 runs the front-end startup helper
  *           func_8015C088, stores 0x32 into the shared sub-state byte D_80146875,
@@ -79,7 +79,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
  *           body differing in at most six words, so the clone lever is declined
  *           and the body is seeded from the original bytes. Statement order,
  *           operand forms and declaration style follow the exact sibling
- *           publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C,
+ *           statePublishModeStatus,
  *           which publishes the same status halfword the same way and carries
  *           the same empty case 0.
  * @status exact

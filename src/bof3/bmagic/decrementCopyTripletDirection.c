@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell at 0x1F800044, declared the way this
  * target's exact sibling
- * dispatchWorkByte2HandlerThenDrawWhenWorkBytes2And0SetBmagicMagic17203_801EF518
+ * callWorkByte2Draw
  * declares it. The original re-materialises the cell with its own lui 0x1F80
  * plus lw 0x44($vN) pair at every read, because a store through the loaded
  * pointer may alias the cell, so the cell is named rather than written as a

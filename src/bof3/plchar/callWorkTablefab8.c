@@ -4,9 +4,13 @@
  * = 0x801CE448 through entry 22 = 0x801CF868, holding this payload's own
  * functions plus the shared main-executable handler 0x801B2D54 at entries 2, 8
  * and 14. The target's Splat `textbin` row `T_801CFAB8` places entries 0
- * through 15 and the following row `T_801CFAF8` carries entries 16 through 22,
+ * through 15 and the following row `workByte2RunTail` carries entries 16 through 22,
  * so the run is only referenced here, at its first entry. */
 extern void (*T_801CFAB8[])(void); /* @source 0x801CFAB8 @kind data */
+
+/* Entries 16 through 22 of the same run, which the target's next `textbin` row
+ * places: entry 16 = 0x801CEC34 through entry 22 = 0x801CF868. */
+extern void (*workByte2RunTail[])(void); /* @source 0x801CFAF8 @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step entry on work-record byte 2: loads the work-record

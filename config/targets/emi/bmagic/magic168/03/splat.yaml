@@ -44,8 +44,8 @@ segments:
     - '@behavior: Handler at entry 2, zero-based, of the six-entry code pointer run at 0x801EEC04 that the entry dispatcher func_801EEC28 copies into its frame and indexes with the work-object byte at offset 1 scaled by four. It re-reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group, loads the work-object byte 0xA, scales it by the 12-byte record stride and increments the selected record bytes 0x0, 0x1 and 0x2 of the 0x80145BD6 table with byte-width read-modify-writes, then re-reads the cell, decrements the work-object byte 9 and, only when that countdown reaches zero, re-reads the cell once more and increments the work byte at 0x1 so the next dispatch selects word 3 of the same run at 0x801EF158. Takes no arguments, returns nothing and keeps a 0x10-byte frame whose bytes it never touches.'
   - - 1368
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16803_801EF158
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16803_801EF158.c'
+    - stateSetByte9Rearm
+    - '@source: src/bof3/bmagic/stateSetByte9Rearm.c'
     - '@behavior: Reads the shared work-object pointer cell at 0x1F800044 once, loads the work-object byte at 0xB and compares it against five with an unsigned bound, and only below five stores 8 into the work byte at 0x9 and then re-reads the cell and increments the work byte at 0x1 by one at byte width. The entry dispatcher at 0x801EEC28 indexes the six-word run at 0x801EEC04 with that byte, and this address is word 3 of that run, so the arm advances the stage to word 4. Takes no arguments, returns nothing and keeps no frame.'
   - - 1440
     - asm
@@ -55,12 +55,12 @@ segments:
     - func_801EF2D8
   - - 1848
     - c
-    - dispatchWorkRecordByte1HandlerBmagicMagic16803_801EF338
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic16803_801EF338.c'
+    - callRecordByte1Step
+    - '@source: src/bof3/bmagic/callRecordByte1Step.c'
   - - 1916
     - c
-    - dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16803_801EF37C
-    - '@source: src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16803_801EF37C.c'
+    - callRecordByte2Step
+    - '@source: src/bof3/bmagic/callRecordByte2Step.c'
     - '@behavior: Copies the three words at 0x801EEC1C into its own frame and invokes the copy selected by the work record byte at offset 2, then, when that record byte 0 has bit 0 set and its byte 2 is non-zero, runs the helper at 0x801EFCD8 and, when the record halfword at 0xC has either low bit set, the draw helpers at 0x801EF80C and 0x801EFA40 with the halved shared frame counter at 0x80143E6C and the record byte at offset 6. Takes no arguments, returns nothing and keeps a 0x28-byte frame.'
   - - 2168
     - asm
@@ -87,8 +87,8 @@ segments:
     - '@behavior: Reserves the first of 128 records in the 0x801F01B0 pool whose flags byte has bit 0 clear, sets that bit with one sb and returns the record index, re-materializing the pool address for the load and again for the store, and returns 0xFF once all 128 records of stride 0x2C are occupied. Takes no arguments, returns the slot index as an unsigned byte and touches no other state.'
   - - 5224
     - c
-    - clearRecordBytes0Through4BmagicMagic16803_801F0068
-    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic16803_801F0068.c'
+    - stateClearRecordSlot
+    - '@source: src/bof3/bmagic/stateClearRecordSlot.c'
     - '@behavior: Clears bytes 0x00 through 0x04 of the bmagic work record published through the pointer cell at 0x801F17B0, storing $zero with one sb per byte after reloading the record pointer for each store, and returns with the last store in the delay slot. Takes no arguments, returns nothing and touches no other state.'
   - - 5304
     - textbin

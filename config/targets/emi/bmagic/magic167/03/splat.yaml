@@ -44,8 +44,8 @@ segments:
     - func_801EEF38
   - - 1096
     - c
-    - incrementWorkByte1WhenWorkByteBBelow2BmagicMagic16703_801EF048
-    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBBelow2BmagicMagic16703_801EF048.c'
+    - stateByte1BelowTwo
+    - '@source: src/bof3/bmagic/stateByte1BelowTwo.c'
   - - 1152
     - asm
     - func_801EF080
@@ -67,8 +67,8 @@ segments:
     - func_801EF3C0
   - - 2064
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic16703_801EF410
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic16703_801EF410.c'
+    - stateByte2BelowTwo
+    - '@source: src/bof3/bmagic/stateByte2BelowTwo.c'
   - - 2132
     - asm
     - func_801EF454

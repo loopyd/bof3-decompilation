@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 92
     - c
-    - publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C
-    - '@source: src/bof3/world/publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C.c'
+    - statePublishModeStatus
+    - '@source: src/bof3/world/statePublishModeStatus.c'
     - '@behavior: selects the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F5354, publishes it into the shared status halfword D_801490A8, and then sets flag bit 0x15 of the shared scenario flag word D_8014686C through the shared bit-set helper 0x8015B580 when that same mode reads 1.'
   - - 180
     - c
@@ -45,56 +45,56 @@ segments:
     - '@behavior: publishes the halfword indexed by the signed shared mode byte 0x801490C7 from the target-local halfword table at 0x801F535C into the shared status halfword 0x801490A8 and then acts on that same mode value. Mode 1 runs the shared main-EXE front-end startup helper 0x8015C088, stores 0x32 in the shared step byte 0x80146875, clears the shared scenario progress byte 0x80146864 and the three shared area state bytes 0x80146865/0x80146866/0x80146867, and stores 7 in the shared mode byte 0x80146874. Mode 2 first tests flag 0x20 of the shared flag word 0x8014686C through the shared flag tester 0x8015B5D4 and then runs 0x8015C088 and clears those four bytes on both arms, storing 0 in the step byte and 9 in the mode byte when the flag is clear and 2 in the step byte and 9 in the mode byte when it is set. Mode 0, a negative mode and every other mode publish the status halfword only.'
   - - 720
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area09413_801F2ED0
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area09413_801F2ED0.c'
+    - stateSeedMode2A
+    - '@source: src/bof3/world/stateSeedMode2A.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 2 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F3504 (indexed by the leading shared party-id byte D_80144F5A) and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 848
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2F50
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2F50.c'
+    - stateSeedMode3B
+    - '@source: src/bof3/world/stateSeedMode3B.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F3504 (indexed by the shared party-id byte D_80144F5B) and halfwords +0x2E/+0x30 from 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 976
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2FD0
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2FD0.c'
+    - stateSeedMode3C
+    - '@source: src/bof3/world/stateSeedMode3C.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F3504 (indexed by the shared party-id byte D_80144F5C) and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 1104
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3050
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3050.c'
+    - stateSeedParty4A
+    - '@source: src/bof3/world/stateSeedParty4A.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F350C (indexed by the leading shared party-id byte D_80144F5A) and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 1232
     - c
-    - queueSharedUiElementBlock52x32To34Size0World02Area09413_801F30D0
-    - '@source: src/bof3/world/queueSharedUiElementBlock52x32To34Size0World02Area09413_801F30D0.c'
+    - renderQueueMarkerTriple
+    - '@source: src/bof3/world/renderQueueMarkerTriple.c'
     - '@behavior: queues the three shared UI elements at x = 0x52 with y = 0x32, 0x33 and 0x34, every one at size 0, through the shared marker queue func_801A4BC0; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the three calls. No jal immediate targets this address and no word in this payload equals it, so no caller or handler run names an extra role.'
   - - 1304
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09413_801F3118
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09413_801F3118.c'
+    - stateSeedParty1B
+    - '@source: src/bof3/world/stateSeedParty1B.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 1 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-indexed byte of the row at 0x801F3514 (indexed by the shared party-id byte D_80144F5B) and halfwords +0x2E/+0x30 from 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 1432
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09413_801F3198
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09413_801F3198.c'
+    - stateSeedParty1C
+    - '@source: src/bof3/world/stateSeedParty1C.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 1 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F3514 (indexed by the shared party-id byte D_80144F5C) and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 1560
     - c
-    - copyModeByteWorld02Area09413_801F3218
+    - statePublishModeByte
   - - 1584
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F3230
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F3230.c'
+    - stateSeedMode3A
+    - '@source: src/bof3/world/stateSeedMode3A.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-indexed byte of the row at 0x801F5364 (indexed by the shared party-id byte D_80144F5A) and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 1712
     - c
-    - publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F32B0
-    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F32B0.c'
+    - stateSeedMode4B
+    - '@source: src/bof3/world/stateSeedMode4B.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F350C (indexed by the shared party-id byte D_80144F5B) and halfwords +0x2E/+0x30 from 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 1840
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3330
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3330.c'
+    - stateSeedMode4C
+    - '@source: src/bof3/world/stateSeedMode4C.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F350C (indexed by the shared party-id byte D_80144F5C) and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 1968
     - c
@@ -103,8 +103,8 @@ segments:
     - '@behavior: marks shared selector id 7 through the main-EXE setter 0x80166180 and then sets flag 0x1E of the shared flag-bank word D_8014686C, read with lw, through the EXE-side flag setter 0x8015B580; it takes no arguments and returns nothing, and its only reference is the handler-table word at 0x801F52DC.'
   - - 2016
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F33E0
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F33E0.c'
+    - stateSeedMode4A
+    - '@source: src/bof3/world/stateSeedMode4A.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-indexed byte of the row at 0x801F536C (indexed by the shared party-id byte D_80144F5A) and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2144
     - c

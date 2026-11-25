@@ -12,7 +12,7 @@ support_sources = [
     "src/bof3/world/stepCueSequenceClaim.c",
     "src/bof3/world/callWorkByte4Table4988.c",
     "src/bof3/world/callWorkByte4Table49.c",
-    "src/bof3/world/armWorkPhase48SelectHandler1ThenLowerSharedHalfword7eBy2World02Area09913_801F2DAC.c",
+    "src/bof3/world/stateArmWorkPhase.c",
     "src/bof3/world/stepAccumulatorPhaseConsume.c",
     "src/bof3/world/queueSharedUiFlag.c",
     "src/bof3/world/stateFlagBit1.c",

@@ -37,8 +37,8 @@ segments:
     - func_801F2C88
   - - 200
     - c
-    - advanceWorkByte1WhenNoRecordActiveWorld02Area10814_801F2CC8
-    - '@source: src/bof3/world/advanceWorkByte1WhenNoRecordActiveWorld02Area10814_801F2CC8.c'
+    - stateAdvanceIdle
+    - '@source: src/bof3/world/stateAdvanceIdle.c'
     - '@behavior: runs the 0x37-entry motion integrator at 0x801F34B8, walks the 16 records of the 0x28-byte-stride work table at 0x800E4800 through the handler table at 0x801F56F4, and advances the dispatch byte at +1 of the work record published at scratchpad pointer cell 0x1F800044 only when no record ran a handler.'
   - - 280
     - asm
@@ -127,7 +127,7 @@ segments:
     - '@source: src/bof3/world/area10814DispatchTables.c'
   - - 5180
     - c
-    - incrementWorkByte2World02Area10814_801F403C
+    - stateIncrementByte2A
   - - 5212
     - c
     - renderQuadSharedProgress
@@ -135,7 +135,7 @@ segments:
     - '@behavior: runs only while the shared scenario progress byte at 0x80146864 reads 0x0E; passes work byte +0x09 of the record published through scratchpad pointer cell 0x1F800044 twice to the overlay quad helper at 0x801F4160, advances that byte by one, and once it reaches 0x6D stores 1 into the shared overlay state byte 0x8014933B, advances the progress byte to 0x0F and increments the record dispatch byte +0x02.'
   - - 5384
     - c
-    - incrementWorkByte2World02Area10814_801F4108
+    - stateIncrementByte2B
   - - 5416
     - c
     - stateSharedClearFlags
@@ -153,25 +153,25 @@ segments:
     - '@behavior: Overlay state setter, entry 0 of the in-image code-pointer run based at 0x801F62DC: reads the shared gate byte at 0x801490C7 signed and stores 0xFFFF into the shared status halfword at 0x801490A8 on every path; gate 0 or 1 then writes 3 or 2 into the shared state-entry byte at 0x801448ED, sets flag bit 0x1E or 0x1F of the shared flag block at 0x80144F28 through the shared bit-set helper 0x8015B580 using that byte''s own address advanced by 0x63B, and both handled arms reach the closing store of 5 into the shared frontend state byte at 0x801448EB, the front-end selector that the front-end dispatcher 0x801A7CAC indexes its handler table with; any other gate value returns before it.'
   - - 5920
     - c
-    - setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4320
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4320.c'
+    - stateSetEntryFourth
+    - '@source: src/bof3/world/stateSetEntryFourth.c'
   - - 5984
     - c
-    - setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4360
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4360.c'
+    - stateSetEntryFf
+    - '@source: src/bof3/world/stateSetEntryFf.c'
   - - 6052
     - c
     - stateSharedByteBit
   - - 6080
     - c
-    - clearSharedByteBitPair1World02Area10814_801F43C0
+    - stateClearBitPair1
   - - 6108
     - c
-    - clearSharedByteBitPair2World02Area10814_801F43DC
+    - stateClearBitPair2
   - - 6136
     - c
-    - clearSharedByteBitPair3World02Area10814_801F43F8
-    - '@source: src/bof3/world/clearSharedByteBitPair3World02Area10814_801F43F8.c'
+    - stateClearBitPair3
+    - '@source: src/bof3/world/stateClearBitPair3.c'
   - - 6164
     - asm
     - func_801F4414
@@ -226,8 +226,8 @@ segments:
     - '@behavior: Thin overlay wrapper: reads the shared main-RAM byte 0x80145029 unsigned and passes it as the single argument of the shared helper at 0x80161D20, which it calls once and whose result it discards; the byte load is materialised ahead of the 0x18-byte frame because the argument is its only consumer.'
   - - 8932
     - c
-    - invokeHelperByteArgWorld02Area10814_801F4EE4
-    - '@source: src/bof3/world/invokeHelperByteArgWorld02Area10814_801F4EE4.c'
+    - invokeHelperByteArg
+    - '@source: src/bof3/world/invokeHelperByteArg.c'
     - '@behavior: Thin overlay wrapper: reads the shared main-RAM byte 0x80145029 unsigned and passes it as the single argument of the shared helper at 0x80161D74, which it calls once and whose result it discards; the byte load is materialised ahead of the 0x18-byte frame because the argument is its only consumer.'
   - - 8972
     - c
@@ -246,7 +246,7 @@ segments:
     - '@behavior: Walks the four cells of the payload block table 0x801F63DC and hands each coordinate pair to the shared helpers 0x80155038 with size 0xE and 0x801A4BC0 with size 0x11, or to both with size 0 when the byte argument is zero.'
   - - 10976
     - c
-    - noopHandlerWorld02Area10814_801F56E0
+    - noopHandler
   - - 10984
     - textbin
     - D_801F56E8

@@ -15,14 +15,14 @@ sources = [
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16903_801EF03C.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic16903_801EFBC4.c",
+    "src/bof3/bmagic/mathGrowPositionWord.c",
     "src/bof3/bmagic/decrementSubmitIndexedStore.c",
     "src/bof3/bmagic/incrementCountersCountdownZero.c",
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic16903_801EF640.c",
+    "src/bof3/bmagic/stateSetByte9Second.c",
     "src/bof3/bmagic/stateWorkBytes.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic16903_801EF254.c",
+    "src/bof3/bmagic/callWorkByte2Steps.c",
     "src/bof3/support/magic169_03_psyq.c",
     "src/bof3/bmagic/magic16903DispatchTables.c",
-    "src/bof3/bmagic/clearRecordPoolBytes0To2InvokeSharedHelperAddC00000ToWorkWord3CCopy256HalfwordsSettingBit15SetByte80145988ToOneCopyFirstHalfwordInvokeHelperAt100ClearWorkBytes9AndBAdvanceWorkByte1BmagicMagic16903_801EED8C.c",
+    "src/bof3/bmagic/stateResetRecordPool.c",
 ]
 psyq_source = "src/bof3/support/magic169_03_psyq.c"

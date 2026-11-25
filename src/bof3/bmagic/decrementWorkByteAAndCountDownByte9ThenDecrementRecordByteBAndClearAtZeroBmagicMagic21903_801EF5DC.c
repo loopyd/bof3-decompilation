@@ -3,7 +3,7 @@
 /* Scratchpad work-object pointer cell 0x1F800044, already bound at that address
  * by this target's map as g_battle_work, the name this target's exact lifts
  * reserveFirstFreeRecordBmagicMagic21903_801EF934 and
- * clearWorkBytes0Through4BmagicMagic21903_801EF998 use. This body reads the cell
+ * stateWorkThrough4 use. This body reads the cell
  * three times: once per access group, because the byte stores in between may
  * alias the cell. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
@@ -22,7 +22,7 @@ extern u8 func_8014DAEC(void); /* @source 0x8014DAEC @kind function */
 
 /* This target's own helper that clears work bytes 0x00-0x04, declared with the
  * prototype its exact lift carries. */
-extern void clearWorkBytes0Through4BmagicMagic21903_801EF998(void); /* @source 0x801EF998 */
+extern void stateWorkThrough4(void); /* @source 0x801EF998 */
 
 /* @source 0x801EF5DC
  * @behavior Overlay step handler selected by table, not by call: the pointer
@@ -41,7 +41,7 @@ extern void clearWorkBytes0Through4BmagicMagic21903_801EF998(void); /* @source 0
  *           byte 0x09 reaches zero the body loads the shared battle work-record
  *           pointer at 0x801EB4E0, decrements that record's byte 0x0B by one at
  *           byte width with the store filling the call delay slot, and invokes
- *           clearWorkBytes0Through4BmagicMagic21903_801EF998, which clears work
+ *           stateWorkThrough4, which clears work
  *           bytes 0x00-0x04. The 0x18-byte frame only keeps $ra at 0x10 across
  *           the calls, the slots after the helper call and after the untaken
  *           branch stay nops, and the body returns through the jr $ra at
@@ -62,6 +62,6 @@ void decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZeroBm
   }
   if (--g_battle_work[9] == 0) {
     D_801EB4E0[0xB]--;
-    clearWorkBytes0Through4BmagicMagic21903_801EF998();
+    stateWorkThrough4();
   }
 }

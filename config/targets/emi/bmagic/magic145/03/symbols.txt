@@ -1,11 +1,11 @@
-dispatchWorkByte1HandlerBmagicMagic14503_801EEC10 = 0x801EEC10;
+dispatchWorkByte1Slot = 0x801EEC10;
 func_801EEC70 = 0x801EEC70;
-incrementWorkByte1WhenWorkByteBZeroBmagicMagic14503_801EEDB0 = 0x801EEDB0;
+stateIncrementByte1Zero = 0x801EEDB0;
 func_801EEDE4 = 0x801EEDE4;
 callStateTablef414 = 0x801EEE2C;
 func_801EEE70 = 0x801EEE70;
 func_801EEEE8 = 0x801EEEE8;
-add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic14503_801EF034 = 0x801EF034;
-incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14503_801EF0A0 = 0x801EF0A0;
+mathAddWorkBytes = 0x801EF034;
+mathIncrementBytes9A = 0x801EF0A0;
 func_801EF118 = 0x801EF118;
 D_801EF414 = 0x801EF414;
