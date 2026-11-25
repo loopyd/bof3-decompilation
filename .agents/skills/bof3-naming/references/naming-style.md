@@ -27,7 +27,9 @@ One name per address, unique inside the target, and no two targets of one source
 parent may use one spelling for different bodies. Identical reviewed bytes may share
 one spelling: `bin/harness naming rename TARGET OLD NEW --with TARGET=OLD ...` applies
 it to every member together, and a member that already carries the spelling is an
-anchor that owes no write. A clash takes a more specific
+anchor that owes no write. Two identical units of one family cannot share a file, so
+the twin keeps the shared identifier and takes the smallest free numbered filename
+(`dispatchWorkByte1Slot2.c`). A clash takes a more specific
 object word (`renderDrawQuadBand` / `renderDrawQuadRow`). An ordinal is the last
 resort and is licensed only when the bodies it separates have no evidence
 separating their roles *and* their instructions agree apart from an immediate

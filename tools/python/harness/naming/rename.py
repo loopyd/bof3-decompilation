@@ -519,6 +519,34 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
     return _payload(root, plan, applied=True, proof=(before, after), attempted=True)
 
 
+def _retarget_group_filenames(plans: list[RenamePlan]) -> None:
+    """Give a twin its own filename when the family already uses the shared name.
+
+    Two byte-identical units in one family share the spelling but cannot share one
+    file, so the file takes the smallest free numbered form of that spelling while the
+    symbol keeps the shared name.
+    """
+    taken = {
+        plan.source
+        for plan in plans
+        if plan.source is not None and plan.old == plan.new
+    }
+    for plan in plans:
+        if not plan.renames or plan.old == plan.new:
+            continue
+        before, after = plan.renames[0]
+        if after.exists() or after in taken:
+            number = 2
+            while True:
+                candidate = after.with_name(f"{plan.new}{number}.c")
+                if not candidate.exists() and candidate not in taken:
+                    after = candidate
+                    break
+                number += 1
+            plan.renames[0] = (before, after)
+        taken.add(after)
+
+
 def _group_plans(root: Path, new: str, selections: list[tuple[str, str]]) -> list[RenamePlan]:
     """Resolve every member of one shared spelling with the group in view."""
     targets = frozenset(normalize_target_id(target).value for target, _old in selections)
@@ -527,6 +555,7 @@ def _group_plans(root: Path, new: str, selections: list[tuple[str, str]]) -> lis
         for target, old in selections
     ]
     _check_group_bytes(plans, root)
+    _retarget_group_filenames(plans)
     for plan in plans:
         for other in plans:
             if other is plan or not other.passed or not plan.passed:
@@ -844,7 +873,7 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
         for before, after in plan.renames
     ]
     if plan.source is not None and source_name == plan.old and plan.renames:
-        after = plan.source.with_name(plan.new + ".c")
+        after = plan.renames[0][1]
         before_key = _unit_key(plan.root, plan.source)
         after_key = _unit_key(plan.root, after)
     else:
@@ -853,13 +882,16 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
-        rewritten = pattern.sub(target_name, text)
+        # Paths first: a claim path carries the identifier, so rewriting the name
+        # before the path would make the path rule match nothing.
+        rewritten = text
         for old_path, new_path in paths:
             rewritten = (
                 rewritten.replace(old_path, new_path)
                 if forward
                 else rewritten.replace(new_path, old_path)
             )
+        rewritten = pattern.sub(target_name, rewritten)
         if before_key and path == plan.root / CONFIGURATION_PATH:
             rewritten = rewritten.replace(before_key, after_key)
         if rewritten != text:
