@@ -13,6 +13,8 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import yaml
+
 from harness.build.compilation import compile_objects_parallel
 from harness.build.compiler import CONFIGURATION_PATH, sanitize_identifier
 from harness.common.lease import acquire_writer
@@ -20,9 +22,11 @@ from harness.common.lexicon import mask_c_text
 from harness.decomp.consumers import identifier_consumers
 from harness.domain.claims import manifest_header_paths, manifest_source_paths
 from harness.domain.ids import normalize_target_id
+from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
 from harness.domain.tags import count_function_metadata
 from harness.domain.symbols import load_map, map_path, shared_map_path
+from harness.match._asm_resolve import extract_original_bytes
 from harness.match.asm_diff import match_target_source
 
 from .schema import name_report, token_index
@@ -71,6 +75,9 @@ class RenamePlan:
     files: list[Path] = field(default_factory=list)
     renames: list[tuple[Path, Path]] = field(default_factory=list)
     refusals: list[dict] = field(default_factory=list)
+    # Targets that will carry this same spelling. A name shared by a group is
+    # legal only when every member's reviewed bytes are identical.
+    group: frozenset[str] = frozenset()
 
     @property
     def passed(self) -> bool:
@@ -80,7 +87,15 @@ class RenamePlan:
         self.refusals.append({"code": code, "message": message})
 
 
-def _resolve(root: Path, target: str, old: str, new: str) -> RenamePlan:
+def _resolve(
+    root: Path,
+    target: str,
+    old: str,
+    new: str,
+    *,
+    group: frozenset[str] = frozenset(),
+    allow_noop: bool = False,
+) -> RenamePlan:
     target = normalize_target_id(target).value
     manifests = load_target_manifests(root)
     if target not in manifests:
@@ -88,10 +103,16 @@ def _resolve(root: Path, target: str, old: str, new: str) -> RenamePlan:
         plan.refuse("target", f"unknown target: {target}")
         return plan
     manifest = manifests[target]
-    plan = RenamePlan(root, target, old, new, manifest=manifest, manifests=manifests)
+    plan = RenamePlan(
+        root, target, old, new, manifest=manifest, manifests=manifests, group=group
+    )
 
     if old == new:
-        plan.refuse("no-op", "the old and new spellings are equal")
+        if not allow_noop:
+            plan.refuse("no-op", "the old and new spellings are equal")
+            return plan
+        # A group anchor already carries the spelling; it owes no write, but its
+        # bytes still take part in the equality check.
         return plan
     report = name_report(new, target=target, tokens_by_target=token_index(manifests))
     if not report.passed:
@@ -335,6 +356,30 @@ def _plan_dirs(root: Path, plan: RenamePlan) -> frozenset[Path]:
     )
 
 
+def _bytes_at(root: Path, manifests, target: str, address: int) -> bytes | None:
+    """Original bytes of one row in one target, or None when it has no code range."""
+    manifest = manifests.get(target)
+    if manifest is None:
+        return None
+    try:
+        layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+    except (OSError, ValueError, yaml.YAMLError):
+        # A layout this reader cannot parse is missing evidence, not a refusal.
+        return None
+    boundary = layout.find_boundary_at(address)
+    if boundary is None or boundary.virtual_end is None:
+        return None
+    try:
+        return extract_original_bytes(
+            root / manifest.binary,
+            address=address,
+            size=boundary.virtual_end - boundary.virtual_start,
+            load_address=manifest.load_address,
+        )
+    except (OSError, ValueError):
+        return None
+
+
 def _check_cross_target_name(plan: RenamePlan, root: Path, target: str) -> None:
     """Refuse a name another target already uses for a different body."""
     if plan.address is None:
@@ -345,11 +390,61 @@ def _check_cross_target_name(plan: RenamePlan, root: Path, target: str) -> None:
     ).get(plan.new.casefold(), ()):
         if owner == target or address == plan.address or not (ours & directories):
             continue
+        if owner in plan.group:
+            # A group member is about to carry this spelling; the byte check below
+            # decides whether sharing it is legal.
+            continue
+        manifests = load_manifests_for(plan)
+        ours_bytes = _bytes_at(root, manifests, target, plan.address)
+        theirs = _bytes_at(root, manifests, owner, address)
+        if ours_bytes is not None and ours_bytes == theirs:
+            # The symbol matrix allows one spelling for identical reviewed bytes.
+            continue
         plan.refuse(
             "cross-target-name",
             f"{plan.new} already names {owner}@0x{address:08X} in the same source parent",
         )
         return
+
+
+def _reviewed_bytes(root: Path, plan: RenamePlan) -> bytes | None:
+    """The original bytes of one planned row, or None when it has no code range."""
+    if plan.address is None or plan.manifest is None:
+        return None
+    try:
+        layout = parse_splat_layout(
+            root / plan.manifest.splat, plan.manifest.load_address
+        )
+    except (OSError, ValueError, yaml.YAMLError):
+        return None
+    boundary = layout.find_boundary_at(plan.address)
+    if boundary is None or boundary.virtual_end is None:
+        return None
+    try:
+        return extract_original_bytes(
+            root / plan.manifest.binary,
+            address=plan.address,
+            size=boundary.virtual_end - boundary.virtual_start,
+            load_address=plan.manifest.load_address,
+        )
+    except (OSError, ValueError):
+        return None
+
+
+def _check_group_bytes(plans: list[RenamePlan], root: Path) -> None:
+    """One spelling may span targets only when their reviewed bytes are equal."""
+    code = [(plan, _reviewed_bytes(root, plan)) for plan in plans]
+    shared = [(plan, body) for plan, body in code if body is not None]
+    if len(shared) < 2:
+        return
+    _first_plan, reference = shared[0]
+    for plan, body in shared[1:]:
+        if body != reference:
+            plan.refuse(
+                "group-bytes",
+                f"{plan.old} differs from {shared[0][0].old} "
+                f"({shared[0][0].target}); one spelling needs identical bytes",
+            )
 
 
 def load_manifests_for(plan: RenamePlan):
@@ -422,6 +517,140 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
         return _payload(root, plan, applied=False, proof=(), attempted=True)
     _remember(root, plan)
     return _payload(root, plan, applied=True, proof=(before, after), attempted=True)
+
+
+def _group_plans(root: Path, new: str, selections: list[tuple[str, str]]) -> list[RenamePlan]:
+    """Resolve every member of one shared spelling with the group in view."""
+    targets = frozenset(normalize_target_id(target).value for target, _old in selections)
+    plans = [
+        _resolve(root, target, old, new, group=targets, allow_noop=True)
+        for target, old in selections
+    ]
+    _check_group_bytes(plans, root)
+    for plan in plans:
+        for other in plans:
+            if other is plan or not other.passed or not plan.passed:
+                continue
+            if other.new.casefold() == plan.new.casefold():
+                continue
+    return plans
+
+
+def plan_group(root: Path, new: str, selections: list[tuple[str, str]]) -> dict:
+    """Dry run for one spelling shared by several targets."""
+    root = root.resolve()
+    plans = _group_plans(root, new, selections)
+    return {
+        "operation": "naming",
+        "action": "rename-group",
+        "new": new,
+        "applied": False,
+        "passed": all(plan.passed for plan in plans) and len(plans) > 1,
+        "members": [
+            _payload(root, plan, applied=False, proof=(), attempted=False)
+            for plan in plans
+        ],
+        "refusals": [
+            {"target": plan.target, **row} for plan in plans for row in plan.refusals
+        ],
+    }
+
+
+def apply_group(root: Path, new: str, selections: list[tuple[str, str]], *, jobs: int = 4) -> dict:
+    """Apply one spelling to every member, or to none of them.
+
+    Each member keeps its own write and proof; the group is atomic because a
+    shared spelling half-applied leaves the family inconsistent.
+    """
+    root = root.resolve()
+    plans = _group_plans(root, new, selections)
+    payload = {
+        "operation": "naming",
+        "action": "rename-group",
+        "new": new,
+        "applied": False,
+        "passed": False,
+        "members": [],
+        "refusals": [
+            {"target": plan.target, **row} for plan in plans for row in plan.refusals
+        ],
+    }
+    if not all(plan.passed for plan in plans) or len(plans) < 2:
+        payload["members"] = [
+            _payload(root, plan, applied=False, proof=(), attempted=False)
+            for plan in plans
+        ]
+        return payload
+
+    compile_objects_parallel(
+        root, [plan.source for plan in plans if plan.source is not None], jobs=jobs
+    )
+    written: list[tuple[RenamePlan, dict]] = []
+    try:
+        with acquire_writer(root):
+            for plan in plans:
+                if plan.old == plan.new:
+                    continue
+                try:
+                    before = _measure(plan, plan.source)
+                    _write(plan, plan.old, plan.new)
+                except (RuntimeError, ValueError, OSError) as error:
+                    for done, _proof in reversed(written):
+                        _write(done, done.new, done.old)
+                    plan.refuse("write", str(error).strip()[:200])
+                    payload["refusals"].append({"target": plan.target, **plan.refusals[-1]})
+                    payload["members"] = [
+                        _payload(root, item, applied=False, proof=(), attempted=True)
+                        for item in plans
+                    ]
+                    return payload
+                written.append((plan, before))
+
+            generation = load_target_manifests(root)
+            moved = [_source_after(plan) for plan, _proof in written]
+            compile_objects_parallel(root, [path for path in moved if path], jobs=jobs)
+
+            proofs: list[tuple[RenamePlan, dict, dict]] = []
+            failure = None
+            for plan, before in written:
+                plan.manifests = generation
+                plan.manifest = generation.get(plan.target) or plan.manifest
+                try:
+                    after = _measure(plan, _source_after(plan))
+                except (RuntimeError, ValueError, OSError) as error:
+                    failure = (plan, f"measure: {str(error).strip()[:200]}")
+                    break
+                if before != after:
+                    failure = (plan, "proof: the renamed row no longer measures the same")
+                    break
+                proofs.append((plan, before, after))
+            if failure is not None:
+                for plan, _before in reversed(written):
+                    _write(plan, plan.new, plan.old)
+                failing, message = failure
+                failing.refuse(message.split(":")[0], message.split(": ", 1)[-1])
+                payload["refusals"].append({"target": failing.target, **failing.refusals[-1]})
+                payload["members"] = [
+                    _payload(root, item, applied=False, proof=(), attempted=True)
+                    for item in plans
+                ]
+                return payload
+
+            for plan, before, after in proofs:
+                _remember(root, plan)
+                payload["members"].append(
+                    _payload(root, plan, applied=True, proof=(before, after), attempted=True)
+                )
+            payload["applied"] = True
+            payload["passed"] = True
+    except RuntimeError as error:
+        for plan, _before in reversed(written):
+            _write(plan, plan.new, plan.old)
+        payload["refusals"].append({"target": "", "code": "lease", "message": str(error)})
+        payload["members"] = [
+            _payload(root, item, applied=False, proof=(), attempted=True) for item in plans
+        ]
+    return payload
 
 
 def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int = 4) -> list[dict]:

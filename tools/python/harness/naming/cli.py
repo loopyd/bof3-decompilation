@@ -7,22 +7,46 @@ import json
 
 from harness.common.cli import add_example_argument, add_root_argument, run_main
 from .inspection import KINDS, check_report, list_report
-from .rename import apply_report, plan_report
+from .rename import apply_group, apply_report, plan_group, plan_report
 
 
 def run(args: argparse.Namespace) -> int:
     if args.action == "rename":
-        result = (
-            apply_report(args.root, args.target, args.old, args.new)
-            if args.apply
-            else plan_report(args.root, args.target, args.old, args.new)
-        )
+        selections = [(args.target, args.old)]
+        for pair in args.with_target:
+            target, _, old = pair.partition("=")
+            if not target or not old:
+                raise SystemExit(f"--with expects TARGET=OLD, got {pair!r}")
+            selections.append((target, old))
+        if args.with_target:
+            result = (
+                apply_group(args.root, args.new, selections)
+                if args.apply
+                else plan_group(args.root, args.new, selections)
+            )
+        else:
+            result = (
+                apply_report(args.root, args.target, args.old, args.new)
+                if args.apply
+                else plan_report(args.root, args.target, args.old, args.new)
+            )
     elif args.action == "check":
         result = check_report(args.root, args.target, tuple(args.selectors))
     else:
         result = list_report(args.root, args.target, kind=args.kind, limit=args.limit)
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
+        return 0 if result["passed"] else 1
+    if args.action == "rename" and "members" in result:
+        print(f"naming rename-group: new={result['new']} applied={result['applied']} passed={result['passed']}")
+        for member in result["members"]:
+            print(json.dumps({"target": member["scope"]["target"], "old": member["scope"]["old"],
+                              "address": member["address"], "passed": member["passed"],
+                              "edits": [row["file"] for row in member["edits"]],
+                              "renames": member["renames"], "refusals": member["refusals"],
+                              "proof": member["proof"]}, sort_keys=True))
+        for row in result["refusals"]:
+            print(json.dumps(row, sort_keys=True))
         return 0 if result["passed"] else 1
     if args.action == "rename":
         print(
@@ -71,6 +95,14 @@ def build_parser() -> argparse.ArgumentParser:
         else:
             action.add_argument("old", metavar="OLD")
             action.add_argument("new", metavar="NEW")
+            action.add_argument(
+                "--with",
+                dest="with_target",
+                action="append",
+                default=[],
+                metavar="TARGET=OLD",
+                help="another target that must carry the same spelling, with its own old name",
+            )
             action.add_argument("--apply", action="store_true")
         action.set_defaults(handler=run)
     return parser
