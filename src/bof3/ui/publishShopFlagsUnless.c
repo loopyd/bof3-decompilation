@@ -2,7 +2,7 @@
 
 /* @source 0x801D61C0
  * @behavior shop UI phase step at entry 0 of the phase step table D_801E5360,
- *           which func_801D6184 dispatches with the UI phase byte D_80148651 as
+ *           which dispatchUiPhaseTable2 dispatches with the UI phase byte D_80148651 as
  *           index. It first tests the shared flag tester func_8015B5D4 over the
  *           main-RAM flag bank base D_80144F28 with the flag id 0x77: a nonzero
  *           return aborts the step by selecting entry 6 of the same table (the
@@ -48,9 +48,9 @@ void publishShopFlagsUnless(void) {
   /* The original materializes the phase-byte address once and reuses that base
    * for the increment load and store (lui+addiu / lbu / sb through one
    * register), which a direct D_80148651 += 1 does not: that spelling stores
-   * through $at, as the exact phase step func_801D65A0 still shows. This
+   * through $at, as the exact phase step dimTilePhaseStep2 still shows. This
    * function takes the same explicitly non-volatile byte view the exact lifts
-   * func_801D46E0 and renderVariantRestoreSubstep
+   * advancePanelSubstep and renderVariantRestoreSubstep
    * use, with the same result. */
   phaseCell = (u8*)&D_80148651;
   *phaseCell += 1;

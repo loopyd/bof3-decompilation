@@ -7,5 +7,5 @@
  * @residual none
  */
 void dispatchEntryActionMode1(void) {
-  func_801D10AC((u16)(masterActionBaseTable[masterIndex] + 0x11));
+  updateEntryActionPanel((u16)(masterActionBaseTable[masterIndex] + 0x11));
 }

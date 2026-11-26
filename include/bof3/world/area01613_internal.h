@@ -70,7 +70,7 @@ extern u8 D_801F50E5[];
 /* @source 0x801F50F4 @kind unknown */
 extern u8 D_801F50F4[];
 /* @source 0x801F5194 @kind unknown — 4-byte marker layers (mask at 0x00,
- * code at 0x02) walked by func_801F3B00. Declared as an extern array so `as`
+ * code at 0x02) walked by drawMaskedMarkerLayers. Declared as an extern array so `as`
  * expands the indexed relocation with the original `addu $at,$at,$idx` operand
  * order, as for the other local record tables. */
 extern const World00Area016MarkerEntry D_801F5194[];
@@ -207,18 +207,18 @@ void seedScratchDefaults(void);
 void dispatchState02(void);
 void advanceScratchHeightState02(void);
 void advanceState02Step(void);
-void func_801F3608(void);
+void retreatScratchHeightState02(void);
 void dispatchState03(void);
-void func_801F36D0(void);
-void func_801F3750(void);
-void func_801F3828(void);
-void func_801F3928(void);
+void resetScratchHeightState03(void);
+void lowerScratchHeightState03(void);
+void holdScratchHeightState03(void);
+void liftScratchHeightState03(void);
 void emitSemiTransparentSprite(s16 arg0, s16 arg1, u8 arg2);
-void func_801F3B00(s16 arg0, s16 arg1);
+void drawMaskedMarkerLayers(s16 arg0, s16 arg1);
 void appendTransformedG4Panel(s16 arg0, s16 arg1);
-void func_801F40C4(s16 arg0, s16 arg1);
+void emitMarkerSpritePair(s16 arg0, s16 arg1);
 void dispatchScratchModeSelect(void);
-void func_801F45CC(void);
+void dispatchGridMode(void);
 
 #define WORLD00_AREA016_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area016Scratch*, 0x1f800044u)

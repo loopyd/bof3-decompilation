@@ -2,9 +2,9 @@
 
 /* @source 0x801D47AC
  * @behavior shop value-panel sub-step handler at table entry 2 of the sub-step
- *           handler table D_801E530C, which func_801D46A4 dispatches with the
+ *           handler table D_801E530C, which dispatchUiSubTable1 dispatches with the
  *           UI sub-step byte D_80148652 as index: it emits the shop panel strip
- *           through this EMI's panel strip emitter func_801DAB90 with the fixed
+ *           through this EMI's panel strip emitter drawShopPanelFrame with the fixed
  *           panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM
  *           CLUT-bank byte D_80144952 as the fifth argument, submits the
  *           texture row 0x1C at row 0x16 through func_8014F800 with the value
@@ -25,7 +25,7 @@
  *           reverse. Those paths arm the variant byte with 3, 1 and 2
  *           respectively and then re-arm the frame timer phaseTimer with 4 and
  *           advance the UI sub-step byte by one, which enters the value-panel
- *           slide-in step func_801D4970.
+ *           slide-in step retreatValuePanelStep.
  * @status exact
  * @match 100.00
  * @residual none
@@ -34,7 +34,7 @@ void armShopValueSubstep(void) {
   u32 armedActionId;
   u32 currentActionId;
 
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(D_801E60EC + 0x85));
   shopValueSelectionState = 0;
   func_801EEC30(0, 0, 0, 0, 0);

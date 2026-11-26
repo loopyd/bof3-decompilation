@@ -16,12 +16,12 @@
  * so no target-map row is added.
  * @source 0x8014845A @kind unknown */
 extern u8 D_8014845A;
-extern void func_801E2724(void); /* @source 0x801E2724 */
+extern void initShopPanelRecords(void); /* @source 0x801E2724 */
 
 /* @source 0x801E2150
  * @behavior shop sub-step handler reached as entry 0 of the three-entry
  *           sub-step table D_801E5D50 (the shipped word at 0x801E5D50 is this
- *           function), which the dispatcher func_801E2114 indexes with the UI
+ *           function), which the dispatcher dispatchUiSubTable7 indexes with the UI
  *           sub-step byte D_80148652. Every call first republishes the list
  *           cursor: it arms the s16 panel-state cell D_80148340 with 0x32,
  *           raises the cursor-visible flag D_80148624, clears the state byte
@@ -45,7 +45,7 @@ extern void func_801E2724(void); /* @source 0x801E2724 */
  *           confirm mask D_80145AC2 it rejects an empty selection (the
  *           selection byte D_80148361 already at 0xFF) with cue 0x107 and
  *           returns; a real selection instead plays the cues 0x103 and 0x102,
- *           runs the panel opener func_801E2724, arms the panel step byte
+ *           runs the panel opener initShopPanelRecords, arms the panel step byte
  *           D_80148357 with 3, drops the cursor-visible flag, re-arms the frame
  *           timer phaseTimer with 8 and advances the UI sub-step byte by one.
  *           When the pad state carries the cancel mask D_80145AC4 instead it
@@ -120,7 +120,7 @@ void stepListItemOpen(void) {
     if (D_80148361 != 0xFF) {
       func_8015DF18(0x103);
       func_8015DF18(0x102);
-      func_801E2724();
+      initShopPanelRecords();
       D_80148357 = 3;
       D_80148624 = 0;
       phaseTimer = 8;

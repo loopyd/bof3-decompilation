@@ -2,9 +2,9 @@
 
 /* @source 0x801D51B8
  * @behavior shop sub-step handler at table entry 0xA of the sub-step handler
- *           table D_801E530C, which func_801D46A4 dispatches with the UI
+ *           table D_801E530C, which dispatchUiSubTable1 dispatches with the UI
  *           sub-step byte D_80148652 as index: it emits the shop panel strip
- *           through this EMI's panel strip emitter func_801DAB90 with the fixed
+ *           through this EMI's panel strip emitter drawShopPanelFrame with the fixed
  *           panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM
  *           CLUT-bank byte D_80144952 as the fifth argument, submits the
  *           texture row 0x1C at row 0x16 through func_8014F800 with the value
@@ -27,7 +27,7 @@
  *           more and hands it to func_801EEC30 with the constants 2, 0x12B0 and
  *           0, playing the same 0x107 cue on the -1 result. When that second
  *           submission reports no failure it publishes the selected slot's
- *           panel record through func_801D6CE4 with the slot byte D_801E6074
+ *           panel record through copyPanelRecordState with the slot byte D_801E6074
  *           and the live save-data image base D_801448D8, arms the panel
  *           action id with 8, the sub-step byte and the frame timer phaseTimer
  *           with 0xC and 0x3C, and the overlay byte D_801E60F0 with 2. Every
@@ -52,7 +52,7 @@ void drawShopSavePanel(void) {
   u8* clutCell;
   clutCell = &D_80144952;
 
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, *clutCell);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, *clutCell);
   func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(D_801E60EC + 0x85));
   func_801D67B0(0x20, 0x30, 0);
   func_801EEC30(0, 0, 0, 0, 0);
@@ -67,7 +67,7 @@ void drawShopSavePanel(void) {
     prepareSaveDataImage();
     sprintf((char*)D_80145AD4, D_801D0C20, D_801E6074);
     if ((s8)func_801EEC30(1, D_80145AD4, 2, 0x12B0, 0) != -1) {
-      func_801D6CE4(D_801E6074, clutCell - 0x7A);
+      copyPanelRecordState(D_801E6074, clutCell - 0x7A);
       D_8018E228 = 8;
       D_80148652 = 0xC;
       phaseTimer = 0x3C;

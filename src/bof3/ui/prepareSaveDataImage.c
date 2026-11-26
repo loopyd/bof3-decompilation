@@ -15,7 +15,7 @@ typedef struct SavePlayTimeBytes {
 /* @source 0x801D69E0
  * @behavior Save-data prepare routine of the shop/status save screen, called by
  *           the save-write handler func_801D51B8 and the load handler
- *           func_801D5894: it draws the shop header row through func_801D7080
+ *           func_801D5894: it draws the shop header row through formatShopHeaderRow
  *           and func_801EF27C, copies the 16-byte scenario-state header
  *           D_80146870 into the head of the live save-data block D_801448D8 and
  *           publishes the save header fields: the scenario-progress bytes at
@@ -34,7 +34,7 @@ typedef struct SavePlayTimeBytes {
  *           stores the u16 byte-sum over the copied bytes at 0x800C1A70,
  *           extends the used-save count D_801E6078 when the selected slot
  *           D_801E6074 is the last one, and publishes the panel record for that
- *           slot through func_801D6CE4.
+ *           slot through copyPanelRecordState.
  * @status exact
  * @match 100.00
  * @residual none
@@ -50,7 +50,7 @@ void prepareSaveDataImage(void) {
   u32 flag;
   u16 i;
 
-  func_801D7080();
+  formatShopHeaderRow();
   func_801EF27C(1, 0x13, D_80145AD4);
   *(SaveHeaderBytes*)D_801448D8 = *(SaveHeaderBytes*)&D_80146870;
   /* The header cells keep the symbol form: the original emits one `lui` plus
@@ -121,5 +121,5 @@ void prepareSaveDataImage(void) {
   if (D_801E6074 == D_801E6078) {
     D_801E6078 = D_801E6078 + 1;
   }
-  func_801D6CE4(D_801E6074, D_801448D8);
+  copyPanelRecordState(D_801E6074, D_801448D8);
 }

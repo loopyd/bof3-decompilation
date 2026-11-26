@@ -2,7 +2,7 @@
 
 /* @source 0x801E09F4
  * @behavior shop command-row sub-step handler reached as entry 6 of the
- *           sub-step table D_801E5CFC, which func_801DFDB8 dispatches with the
+ *           sub-step table D_801E5CFC, which dispatchUiSubTable4 dispatches with the
  *           UI sub-step byte D_80148652 as index: it republishes the selector
  *           frame (the ability-record halfword D_80148340 = 0x18, the x
  *           halfword D_80148628 = D_801483E8 + 5 and the y halfword

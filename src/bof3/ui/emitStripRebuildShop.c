@@ -2,9 +2,9 @@
 
 /* @source 0x801D446C
  * @behavior shop UI sub-step handler at entry 4 of the sub-step table
- *           D_801E52F0, which the dispatcher func_801D41B0 selects with the UI
+ *           D_801E52F0, which the dispatcher dispatchUiPhaseTable1 selects with the UI
  *           sub-step byte D_80148652: emits the shop panel strip through
- *           func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118,
+ *           drawShopPanelFrame with the fixed panel arguments (0x14, 0x12, 0x118,
  *           0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth
  *           argument. When the global gate halfword D_80143C40 is set the
  *           handler returns after the strip. When the gate is clear it calls
@@ -24,7 +24,7 @@
 void emitStripRebuildShop(void) {
   s16 i;
 
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_80143C40 == 0) {
     rebuildFieldRecordSlots(1);
     D_8014865B = 1;

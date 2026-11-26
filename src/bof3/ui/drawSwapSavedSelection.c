@@ -2,7 +2,7 @@
 
 /* @source 0x801DE4C8
  * @behavior phase handler at entry 2 of the shop phase table D_801E5BEC, which
- *           the dispatcher func_801DE188 indexes with the UI phase byte
+ *           the dispatcher dispatchUiPhaseTable4 indexes with the UI phase byte
  *           D_80148651: it draws the slot list with its selection cursors
  *           through renderShopListCursors, then submits the shop
  *           panel row through func_8014F800 at 0x1A by 0x14 with the texture

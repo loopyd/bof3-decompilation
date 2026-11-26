@@ -1,6 +1,6 @@
 #include "bof3/ui/game00_internal.h"
 
-/* @behavior runs the palette-region stage helper func_801C2438, then resets the
+/* @behavior runs the palette-region stage helper markPaletteRowEntries, then resets the
  * active scratch work record: the three signed tint channels at 0x5D/0x5E/0x5F
  * are set to the -0x80 floor, the flags byte at 0x5C to 1, byte 0x12B of the
  * record published at D_80146250 to 7, bit 0x40 of the work flags byte at 0x00
@@ -11,7 +11,7 @@
  * @residual none
  */
 void resetWorkTintChannels(void) {
-  func_801C2438();
+  markPaletteRowEntries();
   g_game_work->unk_5D = -0x80;
   g_game_work->unk_5E = -0x80;
   g_game_work->unk_5F = -0x80;

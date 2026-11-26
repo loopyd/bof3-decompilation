@@ -2,7 +2,7 @@
 
 /* @source 0x801D81B4
  * @behavior shop work-block step counter shared by the phase steps
- *           func_801D7B74, func_801D7CC8 and func_801D7D48: submits the
+ *           commitSlotRowFlag, rollbackSlotRowStep and retreatSlotRowStep: submits the
  *           texture row 0x1C at row 0x14 through func_8014F800, passing the
  *           value returned by func_801502D0(work byte + 0x63) as its fifth
  *           argument, then counts the shared frame timer phaseTimer down by

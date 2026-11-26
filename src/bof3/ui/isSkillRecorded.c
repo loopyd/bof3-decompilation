@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-s32 func_801E4D4C(u8 arg0) {
+s32 isSkillRecorded(u8 arg0) {
   u8 i;
   u8 j;
   u8* p;

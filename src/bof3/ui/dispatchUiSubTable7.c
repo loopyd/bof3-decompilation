@@ -1,0 +1,12 @@
+#include "bof3/ui/shop00_internal.h"
+
+/* @source 0x801E2114
+ * @behavior phase-table dispatcher: tail-calls D_801E5D50[D_80148652],
+ *           indexing the phase handler table with the sub-step byte.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void dispatchUiSubTable7(void) {
+  D_801E5D50[D_80148652]();
+}

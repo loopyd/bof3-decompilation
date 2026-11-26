@@ -2,7 +2,7 @@
 
 /* @source 0x801DEE64
  * @behavior shop slot-list renderer called with no arguments by the phase step
- *           func_801DE45C: it reads the visible-list length through
+ *           refreshListBackgroundStep: it reads the visible-list length through
  *           func_801BDB7C(0) and, while the slot index stays below it, draws
  *           each visible slot through the field-list emitter func_801D826C
  *           with the panel-relative x (0x11 - phaseTimer * 40) masked to
@@ -16,7 +16,7 @@
  *           y slot * 54 + 0x43 with the alignment constant 0. Afterwards it
  *           emits the slidable off-screen slot region through func_801DF00C at
  *           (0x96 + phaseTimer * 45) masked to 0xFFFF with the y constant 0x3B
- *           and the shop panel strip through func_801DAB90 with the fixed panel
+ *           and the shop panel strip through drawShopPanelFrame with the fixed panel
  *           arguments 0x14, (0x12 - phaseTimer * 8) & 0xFFFE, 0x118 and 0x13
  *           plus the main-RAM CLUT-bank byte D_80144952.
  * @status exact
@@ -58,6 +58,6 @@ void renderNumberedShopStrip(void) {
   }
   tailTimer = &phaseTimer;
   func_801DF00C((u16)(*tailTimer * 45 + 0x96), 0x3B);
-  func_801DAB90(0x14, (0x12 - *tailTimer * 8) & 0xFFFE, 0x118, 0x13,
+  drawShopPanelFrame(0x14, (0x12 - *tailTimer * 8) & 0xFFFE, 0x118, 0x13,
                 D_80144952);
 }

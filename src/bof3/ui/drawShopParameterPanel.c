@@ -28,13 +28,13 @@ extern const u8 D_801E56DC[];
  * @source 0x801AF390 */
 extern void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, u8 arg3);
 
-/* Shop icon wrapper of this EMI (src/bof3/ui/func_801D910C_shop00.c), lifted
+/* Shop icon wrapper of this EMI (src/bof3/ui/mapShopIconKind.c), lifted
  * exact: it substitutes the icon kind 0xB for the kind 4 in one save-state
  * case and forwards the four arguments to emitShopIconSprite. Here it receives
  * the two zero-extended coordinates, the record's id byte as the icon kind and
  * the panel flag as the mode byte.
  * @source 0x801D910C */
-extern void func_801D910C(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
+extern void mapShopIconKind(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
 
 /* Group query of the main executable: two bytes in, one byte out, of which
  * this body reads the single bit its record index selects. The address has no
@@ -85,7 +85,7 @@ typedef struct ShopParameterPanelRecord {
  *   With the flag set it formats the record's own power, defense and agility
  *   halfwords at +0x20, +0x22 and +0x24 the same way and draws them in the
  *   same column with the shade 7. It then draws the record id byte through the
- *   shop icon wrapper func_801D910C at (x+0x46, y+2), submits the three
+ *   shop icon wrapper mapShopIconKind at (x+0x46, y+2), submits the three
  *   caption cells of D_801E5A10 at (x+5, y + 15*i + 6) through func_8014F800
  *   with the mask 0xFF and the shade the value rows used, and closes with the
  *   stream D_801E56DC at (x, y) through func_801AF390 with the flag 0. Nothing
@@ -96,7 +96,7 @@ typedef struct ShopParameterPanelRecord {
  *   fourth shade replace the third slot of their runs before the three drawn
  *   rows read them. No jal and no word of this payload names the span, so its
  *   five arguments have the roles their uses give them: the dispatcher
- *   func_801E2C18 invokes it from the panel task and the widths are that call
+ *   dispatchParameterState invokes it from the panel task and the widths are that call
  *   site's.
  * @status exact
  * @match 100.00
@@ -162,7 +162,7 @@ void drawShopParameterPanel(u16 x, u16 y, u8 index, u8 mode, u8 arg4) {
     func_80150098((s16)(x + 0x2C), (s16)(y + 0x26), 7, D_80145AD4);
   }
 
-  func_801D910C((u16)(x + 0x46), (u16)(y + 2), record->id, flag);
+  mapShopIconKind((u16)(x + 0x46), (u16)(y + 2), record->id, flag);
 
   for (i = 0; i < 3; i++) {
     func_8014F800((s16)(x + 5), (s16)(y + i * 15 + 6), shade, 0xFF,

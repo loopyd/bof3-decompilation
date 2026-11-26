@@ -2,11 +2,11 @@
 
 /* @source 0x801D5790
  * @behavior shop sub-step handler at table entry 0x0D of the sub-step handler
- *           table D_801E530C, which func_801D46A4 dispatches with the UI
+ *           table D_801E530C, which dispatchUiSubTable1 dispatches with the UI
  *           sub-step byte D_80148652 as index: it stores the constant 3 into the
  *           published entry count D_801E6078 that rebuildPanelRecordTable
  *           re-reads as its inner scan bound, emits the shop panel strip through
- *           this EMI's panel strip emitter func_801DAB90 with the fixed panel
+ *           this EMI's panel strip emitter drawShopPanelFrame with the fixed panel
  *           arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
  *           D_80144952 as the fifth argument, submits the texture row 0x1C at
  *           row 0x16 through func_8014F800 with the value returned by
@@ -33,7 +33,7 @@ void renderShopAcceptTransition(void) {
   u8 previous;
 
   D_801E6078 = 3;
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(0x90));
   func_801D67B0(0x20, 0x30, 0);
   if ((u8)renderOptionPromptChoice()) {

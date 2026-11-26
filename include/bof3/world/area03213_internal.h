@@ -29,7 +29,7 @@ typedef struct World00Area032Record {
 /* Shared work records at 0x80146888; 0x80146884 publishes the pointer to the
  * current one. Proven for this target: the 0x98-byte element size and the
  * flag byte at 0x00, the signed 0x34/0x38 accumulators and the 0x5C byte that
- * func_801F30EC touches on the two records it selects. */
+ * stateArmEffectPair touches on the two records it selects. */
 typedef struct World00Area032WorkRecord {
   u8  flags_00;
   u8  pad_01[0x33]; /* 0x01 - 0x33 */
@@ -42,7 +42,7 @@ typedef struct World00Area032WorkRecord {
 
 /* @source 0x1F800000 @kind unknown — signed work-record slot index that
  * func_801A4D54 resolves into the 0x80146888 table and publishes at
- * 0x80146884; func_801F30EC stores the two selected cursor ids there. */
+ * 0x80146884; stateArmEffectPair stores the two selected cursor ids there. */
 extern u16 D_1F800000;
 /* @source 0x1F800014 @kind unknown */
 extern s16 D_1F800014;
@@ -65,7 +65,7 @@ extern u8 D_801448EC;
 /* @source 0x801448ED @kind unknown */
 extern u8 D_801448ED;
 /* @source 0x80145E90 @kind unknown — work base published as the scratchpad
- * cursor by func_801F363C. */
+ * cursor by publishWorkBaseGate. */
 extern u8 D_80145E90[];
 /* @source 0x80145EC4 @kind unknown */
 extern s32 D_80145EC4;
@@ -89,7 +89,7 @@ extern s8 D_801490C7;
 extern void (*D_801F3F6C[])(void);
 /* @source 0x801F3F80 @kind table */
 extern void (*D_801F3F80[])(void);
-/* @source 0x801F3F8C @kind unknown — local data script that func_801F30EC
+/* @source 0x801F3F8C @kind unknown — local data script that stateArmEffectPair
  * hands to func_801A4D54 while activating the two selected work records. */
 extern u8 D_801F3F8C[];
 /* @source 0x801F4900 @kind table */
@@ -100,7 +100,7 @@ extern void (*D_801F4908[])(void);
 void func_80196070(void);
 
 /* @source 0x8015CA48 — returns the identifier of one free local effect slot;
- * func_801F30EC stores two of them at cursor offsets 3 and 4 and treats 0xFF
+ * stateArmEffectPair stores two of them at cursor offsets 3 and 4 and treats 0xFF
  * as "none left". */
 u8 func_8015CA48(void);
 
@@ -109,11 +109,11 @@ u8 func_8015CA48(void);
  * record at 0x80146884 and as the scratch cursor at 0x1F800044. */
 void func_801A4D54(void* arg0);
 
-/* Shared work-record submitter; func_801F35B4 hands it the 0x98-byte record of
+/* Shared work-record submitter; submitWorkRecordPair hands it the 0x98-byte record of
  * D_80146888 selected by a scratch cursor byte. */
 void func_80196718(void* arg0);
 
-/* Shared work-record effect submitter; func_801F3920 hands it the effect byte at
+/* Shared work-record effect submitter; stateAdvanceLevelBytes hands it the effect byte at
  * 0x93 of the current work record at 0x80146884. Every caller loads that byte
  * with lbu, and the engine-side caller masks it with andi 0xFF, so the
  * parameter is one byte wide. */
@@ -141,6 +141,6 @@ s32 func_801783C8(s32 arg0);
  * with cue id 0x203 while scratch work byte 9 reads 0xD7. */
 void func_8015DF18(u16 arg0);
 
-void func_801F2F04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4);
+void renderGouraudFanTriangles(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4);
 
 #endif

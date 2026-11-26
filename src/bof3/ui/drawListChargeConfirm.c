@@ -2,7 +2,7 @@
 
 /* @source 0x801D7960
  * @behavior shop phase step at entry 3 of the phase handler table D_801E545C,
- *           which the phase dispatcher func_801D7344 selects with the UI phase
+ *           which the phase dispatcher dispatchUiPhaseTable3 selects with the UI phase
  *           byte D_80148651: builds the shop slot list through buildSlotList(0),
  *           submits the texture row 0x1C at row 0x15 through func_8014F800 with
  *           the value returned by func_801502D0(0x6D) as its fifth argument,

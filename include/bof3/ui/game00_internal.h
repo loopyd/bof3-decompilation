@@ -33,7 +33,7 @@ extern u8 D_80146260;
 /* @source 0x80146261 @kind unknown */
 extern u8 D_80146261;
 /* @behavior two-word direction record table used by the panel position
- * helpers func_801C090C / func_801C0758: each eight-byte record holds an x word
+ * helpers publishAdjustedWorkPair / func_801C0758: each eight-byte record holds an x word
  * at +0 and a y word at +4. */
 /* @source 0x801CD47C @kind table */
 extern u8 D_801CD47C[];
@@ -125,10 +125,10 @@ void func_801F5918(void);
 void func_801F45BC(void);
 void func_801F4B00(void);
 
-int func_801C0F9C(s32 arg0);
+int commitPendingWorkRequest(s32 arg0);
 void countActiveRecords(u8 arg0, s32* counter);
-void func_801C1F4C(u8 arg0);
-void func_801C2438(void);
+void advanceUnclaimedSlotCounter(u8 arg0);
+void markPaletteRowEntries(void);
 void func_801C2538(void);
 void func_801C2710(void);
 /* Shared tint-fade step of this overlay: the three signed tint channels of the
@@ -226,7 +226,7 @@ u8 checkPositionRejectedSelector(s32 x, s32 y, s16 reference);
 u8 checkRejectedNonzeroSelector(s32 x, s32 y, s16 reference);
 u8 func_801C476C(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 u8 func_801C48FC(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
-u8 func_801C6FD4(s16 arg0, s16 arg1);
+u8 readBitmapPixel(s16 arg0, s16 arg1);
 
 typedef struct GameScenarioState {
   s8  scenario_id;
@@ -382,7 +382,7 @@ extern GameEntry0StateHandler D_801C80E0[];
 extern GameEntry0StateHandler D_801C80EC[];
 /* @source 0x801CD510 @kind table */
 extern GameEntry0StateHandler* D_801CD510[];
-/* @behavior four-byte-per-entry mode record table read by func_801C0F9C: the
+/* @behavior four-byte-per-entry mode record table read by commitPendingWorkRequest: the
  * bytes at +0..+3 of entry mode (byte offset mode * 4) are published into bytes
  * 1..4 of the mode's 0x140-byte-stride work record. */
 /* @source 0x801CD4AC @kind table */
@@ -566,7 +566,7 @@ u8 queryCurrentWorldIndex(void);
 /* @behavior world/front flags: bit0=scenario pending, bit3=alt front mode */
 /* @source 0x80143F02 @kind unknown */
 extern volatile u8 D_80143F02;
-/* @behavior pad state word whose bits 12-13 and 14-15 func_801BDBC4 swaps when
+/* @behavior pad state word whose bits 12-13 and 14-15 publishSharedFrontendWord swaps when
  * any visible input record carries flag bit 5. */
 /* @source 0x80145AA4 @kind unknown */
 extern u16 D_80145AA4;
@@ -662,7 +662,7 @@ extern u16 D_8003963E[];
 extern u16         D_80146258;
 /* @source 0x8014625A @kind unknown */
 extern u16         D_8014625A;
-/* @behavior published derivative of D_80145AA4 written by func_801BDBC4: the
+/* @behavior published derivative of D_80145AA4 written by publishSharedFrontendWord: the
  * same word with bits 12-13 and 14-15 swapped when a visible input record was
  * found, otherwise the raw word. */
 /* @source 0x8014625C @kind unknown */
@@ -705,7 +705,7 @@ extern u8          D_80145FBB[];
 extern u8          D_80145FBC[];
 /* @behavior leading byte of each D_80146254-entry, 0x140-byte-stride record;
  * selects the 164-byte game input record in D_80144974 whose flags bit 5 marks
- * the record as visible to func_801BDBC4. */
+ * the record as visible to publishSharedFrontendWord. */
 /* @source 0x80145FCC @kind table */
 extern u8          D_80145FCC[];
 /* @source 0x80146256 @kind unknown */
@@ -777,12 +777,12 @@ typedef struct GameModeRecord {
 } GameModeRecord;
 
 /* @behavior base of the D_80146254-entry, 0x140-byte-stride local work record
- * array read by the front-end request helpers; func_801C0E48 publishes the
+ * array read by the front-end request helpers; advancePendingWorkRequest publishes the
  * record address at index D_80146262 here once its gate byte is set. */
 /* @source 0x80145E90 @kind table */
 extern u8          D_80145E90[];
 /* @behavior gate byte at offset 1 of each 0x140-byte-stride local work record;
- * func_801C0E48 only advances the pending request while the record at
+ * advancePendingWorkRequest only advances the pending request while the record at
  * D_80146262 - 1 carries 1 here. */
 /* @source 0x80145E91 @kind table */
 extern u8          D_80145E91[];
@@ -792,7 +792,7 @@ extern u8          D_80145E91[];
 /* @source 0x80145E92 @kind table */
 extern u8          D_80145E92[];
 /* @behavior work-record byte at offset 3 of each D_80146254-entry,
- * 0x140-byte-stride local work record; func_801C0F9C publishes bytes 2 and 3 of
+ * 0x140-byte-stride local work record; commitPendingWorkRequest publishes bytes 2 and 3 of
  * the four-byte mode record D_801CD4AC + mode * 4 here. */
 /* @source 0x80145E93 @kind table */
 extern u8          D_80145E93[];

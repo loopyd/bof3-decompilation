@@ -21,6 +21,6 @@ void advanceState02Step(void) {
     World00Area016Scratch* scratch;
 
     scratch = WORLD00_AREA016_SCRATCH_PTR;
-    func_801F3B00(0x10, scratch->field_2e);
+    drawMaskedMarkerLayers(0x10, scratch->field_2e);
   }
 }

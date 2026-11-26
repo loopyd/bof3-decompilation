@@ -1463,7 +1463,7 @@ segments:
     - c
     - resetWorkTintChannels
     - '@source: src/bof3/ui/resetWorkTintChannels.c'
-    - '@behavior: runs the palette-region stage helper func_801C2438, then resets the active scratch work record: the three signed tint channels at 0x5D/0x5E/0x5F are set to the -0x80 floor, the flags byte at 0x5C to 1, byte 0x12B of the record published at D_80146250 to 7, bit 0x40 of the work flags byte at 0x00 is cleared, and the work handler index byte at 0x03 is advanced to 1.'
+    - '@behavior: runs the palette-region stage helper markPaletteRowEntries, then resets the active scratch work record: the three signed tint channels at 0x5D/0x5E/0x5F are set to the -0x80 floor, the flags byte at 0x5C to 1, byte 0x12B of the record published at D_80146250 to 7, bit 0x40 of the work flags byte at 0x00 is cleared, and the work handler index byte at 0x03 is advanced to 1.'
   - - 138052
     - asm
     - func_801B7344
@@ -1531,13 +1531,13 @@ segments:
     - func_801B7CA0
   - - 140544
     - c
-    - func_801B7D00
+    - dispatchWorkByte4Handler2
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD330) indexed by the work-area byte (work+0x04) through a framed jalr call.'
   - - 140612
     - c
-    - func_801B7D44
-    - '@source: src/bof3/ui/func_801B7D44.c'
+    - resetWorkNextHandler
+    - '@source: src/bof3/ui/resetWorkNextHandler.c'
     - '@behavior: Entry 0 of the work-state table D_801CD330: runs the shared work-area reset service func_801C4D58, raises bit 3 of the world-flags halfword D_8014625A and advances the scratchpad work area handler index (g_game_work + 0x04) to state 1.'
   - - 140676
     - c
@@ -1578,8 +1578,8 @@ segments:
     - '@behavior: runs the shared tint-fade step func_801C27E0 with the +8 ramp delta and, when it reports the fade complete, advances the work-area handler index byte at 0x04 (the index byte of the D_801CD310 / D_801CD330 dispatch tables) by one.'
   - - 141876
     - c
-    - func_801B8234
-    - '@source: src/bof3/ui/func_801B8234.c'
+    - publishStateByteTwo
+    - '@source: src/bof3/ui/publishStateByteTwo.c'
     - '@behavior: set state byte and dispatch the current work handler'
   - - 141964
     - asm
@@ -1603,8 +1603,8 @@ segments:
     - func_801B870C
   - - 143212
     - c
-    - func_801B876C
-    - '@source: src/bof3/ui/func_801B876C.c'
+    - setupRouteWorkMode
+    - '@source: src/bof3/ui/setupRouteWorkMode.c'
     - '@behavior: Resets local route state and selects mode 4 on shared work.'
   - - 143288
     - asm
@@ -1623,8 +1623,8 @@ segments:
     - func_801B8D18
   - - 145480
     - c
-    - func_801B9048
-    - '@source: src/bof3/ui/func_801B9048.c'
+    - publishStateByteSix
+    - '@source: src/bof3/ui/publishStateByteSix.c'
     - '@behavior: Set the active work mode and dispatch the handler selected by the current game-work state.'
   - - 145568
     - asm
@@ -1634,7 +1634,7 @@ segments:
     - func_801B9100
   - - 145868
     - c
-    - func_801B91CC
+    - dispatchWorkByte3Handler5
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD37C) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 145936
@@ -1653,13 +1653,13 @@ segments:
     - func_801B95E0
   - - 149256
     - c
-    - func_801B9F08
-    - '@source: src/bof3/ui/func_801B9F08.c'
+    - resolveCommandCodeShort
+    - '@source: src/bof3/ui/resolveCommandCodeShort.c'
     - '@behavior: Maps a one to three byte command sequence to a single command code: counts the leading nonzero bytes of the local copy, remaps them through the scratchpad byte table at 0x1F800000, resolves the 0x70/0xFF/0xB0 command families and then the 0xA0-0xA3 and 0x20 families against the work-area route bit, returning 0 when no family matches.'
   - - 150136
     - c
-    - func_801BA278
-    - '@source: src/bof3/ui/func_801BA278.c'
+    - resolveCommandCodeLong
+    - '@source: src/bof3/ui/resolveCommandCodeLong.c'
     - '@behavior: Maps a one to five byte command sequence to a single command code: counts the leading nonzero bytes of the local copy, remaps them through the scratchpad byte table at 0x1F800000, resolves the 0x70/0xFF/0xB0 command families, then the two-byte and three-byte 0xA0-0xA3 families against the work-area route bit, and finally the variable-length 0x20 family, returning 0 when no family matches.'
   - - 151160
     - asm
@@ -1672,8 +1672,8 @@ segments:
     - func_801BB2B8
   - - 155376
     - c
-    - func_801BB6F0
-    - '@source: src/bof3/ui/func_801BB6F0_game00.c'
+    - checkRouteIndexSelector
+    - '@source: src/bof3/ui/checkRouteIndexSelector.c'
     - '@behavior: reports whether arg0 selects the current route index: the high nibble must be 0xB0 and the low nibble must equal route_index_08, except that nibble 8 instead accepts route index 3 or 5.'
   - - 155488
     - c
@@ -1685,13 +1685,13 @@ segments:
     - '@behavior: Queries func_80154F78 with the two incoming coordinates and the scratch work route index. Returns 1 only when the scratch flag at D_1F800000[0] is nonzero and the signed 16-bit sample difference returned by that helper exceeds 64. Returns 0 otherwise. The sampled quantity has no proven terrain or height meaning.'
   - - 155568
     - c
-    - func_801BB7B0
-    - '@source: src/bof3/ui/func_801BB7B0_game00.c'
+    - decodeNibbleKindCode
+    - '@source: src/bof3/ui/decodeNibbleKindCode.c'
     - '@behavior: Maps the low nibble of the scratchpad byte at arg0 to a small code: 5 for 2, 2 for 1 or 15, and 4 for every other value.'
   - - 155676
     - c
-    - func_801BB81C
-    - '@source: src/bof3/ui/func_801BB81C.c'
+    - compareTypeNibbleBytes
+    - '@source: src/bof3/ui/compareTypeNibbleBytes.c'
     - '@status: partial'
     - '@match: 40.00'
     - '@residual: Type-mask, constant and report register allocation differ at unchanged 80-byte size.'
@@ -1717,8 +1717,8 @@ segments:
     - '@behavior: scans 3 bytes in a mode-indexed table at D_80144F5A for 0xFF; returns index of first match (0-2), or 3 if none.'
   - - 164804
     - c
-    - func_801BDBC4
-    - '@source: src/bof3/ui/func_801BDBC4_game00.c'
+    - publishSharedFrontendWord
+    - '@source: src/bof3/ui/publishSharedFrontendWord.c'
     - '@behavior: when world flag byte D_80143F02 bit 0 is set, walks the first D_80146254 records of the 0x140-byte-stride table whose leading byte lives at D_80145FCC and tests bit 5 of the flags word of the 164-byte game input record in D_80144974 selected by that leading byte; with bit 0 clear only the first record is tested. When any tested record carries the flag, publishes D_80145AA4 into D_8014625C with bits 12-13 and 14-15 swapped, otherwise copies D_80145AA4 unchanged.'
   - - 165112
     - asm
@@ -1758,7 +1758,7 @@ segments:
     - func_801BE800
   - - 168224
     - c
-    - func_801BE920
+    - swapWorkRecords
   - - 168880
     - asm
     - func_801BEBB0
@@ -1769,7 +1769,7 @@ segments:
     - c
     - stateRoutesInitializeTint
     - '@source: src/bof3/ui/stateRoutesInitializeTint.c'
-    - '@behavior: Scans the 0x140-byte-stride work records at D_80145E90 for a nonzero byte at 0x0B, bounded by D_80146254. If one exists, walks all records and publishes each at D_80146250 and the scratch work pointer. Input flag 0x4000 selects func_8014D664 with byte 0x4B, clears work byte 0x0B and skips func_8014D978. Otherwise, a route byte 0x08 matching D_801CD478[D_801462EC] selects func_8014D664 only when byte 0x0B is nonzero and then clears work byte 0x0B. A differing route advances byte 0x08 by byte 0x0B modulo 8 and selects func_8014D664 with the reloaded route byte. Both non-0x4000 paths call func_8014D978. This first walk returns 0 without entering the tint path. When the scan finds no nonzero 0x0B byte, D_80146325 bit 2 skips tint work and returns 1. Otherwise, each record copies its selected 32-halfword palette row at 0x80035600 to the row 0xC0 bytes higher, calls func_801C2438, clears work byte 0x0B, sets tint bytes 0x5D-0x5F to -0x40 and flag byte 0x5C to 1. Returns 1 after that path, including a non-positive record count.'
+    - '@behavior: Scans the 0x140-byte-stride work records at D_80145E90 for a nonzero byte at 0x0B, bounded by D_80146254. If one exists, walks all records and publishes each at D_80146250 and the scratch work pointer. Input flag 0x4000 selects func_8014D664 with byte 0x4B, clears work byte 0x0B and skips func_8014D978. Otherwise, a route byte 0x08 matching D_801CD478[D_801462EC] selects func_8014D664 only when byte 0x0B is nonzero and then clears work byte 0x0B. A differing route advances byte 0x08 by byte 0x0B modulo 8 and selects func_8014D664 with the reloaded route byte. Both non-0x4000 paths call func_8014D978. This first walk returns 0 without entering the tint path. When the scan finds no nonzero 0x0B byte, D_80146325 bit 2 skips tint work and returns 1. Otherwise, each record copies its selected 32-halfword palette row at 0x80035600 to the row 0xC0 bytes higher, calls markPaletteRowEntries, clears work byte 0x0B, sets tint bytes 0x5D-0x5F to -0x40 and flag byte 0x5C to 1. Returns 1 after that path, including a non-positive record count.'
   - - 170268
     - asm
     - func_801BF11C
@@ -1805,13 +1805,13 @@ segments:
     - func_801C0758
   - - 176396
     - c
-    - func_801C090C
-    - '@source: src/bof3/ui/func_801C090C_game00.c'
+    - publishAdjustedWorkPair
+    - '@source: src/bof3/ui/publishAdjustedWorkPair.c'
     - '@behavior: publishes the pair D_80145EC4/D_80145EC8 for the mode byte arg2: with fewer than two D_80146254 records the two arguments are stored unchanged, otherwise the byte offset (arg2 << 2) & 0x3F8 selects one eight-byte record from D_801CD47C whose first word doubled is added to the first argument and whose second word doubled is added to the second; when the record flagged by D_80145F00, or a later 0x140-byte-stride record, is live, that same record is added once more to both published words, and the mode byte is stored into the record leading byte D_80145E98.'
   - - 176744
     - c
-    - func_801C0A68
-    - '@source: src/bof3/ui/func_801C0A68.c'
+    - dispatchEnabledRecordHandler
+    - '@source: src/bof3/ui/dispatchEnabledRecordHandler.c'
     - '@behavior: dispatches the indexed handler at D_801CD49C when enabled by D_80146260.'
   - - 176820
     - asm
@@ -1821,19 +1821,19 @@ segments:
     - func_801C0CDC
   - - 177460
     - c
-    - func_801C0D34
+    - submitWorkRequestFour
   - - 177492
     - asm
     - func_801C0D54
   - - 177736
     - c
-    - func_801C0E48
-    - '@source: src/bof3/ui/func_801C0E48_game00.c'
+    - advancePendingWorkRequest
+    - '@source: src/bof3/ui/advancePendingWorkRequest.c'
     - '@behavior: advances the pending front-end local-work request: gated by byte 1 of the previous 0x140-byte-stride work record at D_80145E91, it clears the per-request bit of the world flags D_8014625A, publishes D_80145E90[cursor] to the scratchpad work pointer and D_80146250, and stores cursor + 1 in the request cursor D_80146262; when the cursor reaches the record count D_80146254 the request is finished instead (request bits 3 and 9 of D_8014625A and the active flag D_80146260 cleared, returns 0).'
   - - 178076
     - c
-    - func_801C0F9C
-    - '@source: src/bof3/ui/func_801C0F9C.c'
+    - commitPendingWorkRequest
+    - '@source: src/bof3/ui/commitPendingWorkRequest.c'
     - '@behavior: commits the pending front-end local-work request at cursor D_80146262: it rejects the request (0) unless the world flags D_80146258 carry no bit for the cursor and either the previous cursor bit is set or the previous 0x140-byte work record gate byte D_80145E91 reads 1 (cursor 2 additionally needs record 0''s gate byte to read 1); an accepted request clears the cursor bit of D_8014625A and, when the cursor''s D_80146258 bit is clear, fills the cursor''s work record from the four-byte mode record D_801CD4AC + mode * 4 with byte 0 masked 0xBF and byte 0x12C masked 0xFD, then advances D_80146262 and returns 1, or clears D_80146260 and request bit 4 of D_8014625A and returns 2 once the cursor reaches the record count D_80146254.'
   - - 178772
     - asm
@@ -1849,8 +1849,8 @@ segments:
     - func_801C16B8
   - - 180288
     - c
-    - func_801C1840
-    - '@source: src/bof3/ui/func_801C1840.c'
+    - clearStateGridBytes
+    - '@source: src/bof3/ui/clearStateGridBytes.c'
     - '@behavior: clears all nine bytes in the three-by-three state table'
   - - 180348
     - asm
@@ -1875,8 +1875,8 @@ segments:
     - '@behavior: counts the active front-end records claimed by an entry slot whose kind byte is 4 and whose argument byte equals arg0, then increments the supplied counter when no record claims a matching slot.'
   - - 182092
     - c
-    - func_801C1F4C
-    - '@source: src/bof3/ui/func_801C1F4C_game00.c'
+    - advanceUnclaimedSlotCounter
+    - '@source: src/bof3/ui/advanceUnclaimedSlotCounter.c'
     - '@behavior: for each of the eight stride-8 front-end record slots whose kind byte at D_801457A8 equals arg0 and whose flags byte at D_801457AB is nonzero, counts the active records at D_801455C8/D_801455C9 owned by that slot (owning slot byte == slot + 1) and, when no record claims the slot, increments that slot counter word at D_801457AC.'
   - - 182296
     - asm
@@ -1886,8 +1886,8 @@ segments:
     - func_801C22D8
   - - 183352
     - c
-    - func_801C2438
-    - '@source: src/bof3/ui/func_801C2438.c'
+    - markPaletteRowEntries
+    - '@source: src/bof3/ui/markPaletteRowEntries.c'
     - '@behavior: marks the first 31 of the 32 halfword entries of the row at 0x80039600 + (work byte 0x05 << 6) with bit 0x8000 and clears the row word at 0x8003963E, sets bit 0x20 of the work flags byte at 0x00, and advances the palette stage serial to 1.'
   - - 183504
     - c
@@ -1905,8 +1905,8 @@ segments:
     - func_801C27E0
   - - 184468
     - c
-    - func_801C2894
-    - '@source: src/bof3/ui/func_801C2894_game00.c'
+    - raiseWorkTintChannels
+    - '@source: src/bof3/ui/raiseWorkTintChannels.c'
     - '@behavior: Adds the signed delta to every non-zero signed channel byte of the active work record at offsets 0x5D, 0x5E and 0x5F, clamps each updated channel to at most -0x40, then reports whether the three channel bytes are all -0x40 by comparing the upper three bytes of the word at 0x5C with 0xC0C0C0.'
   - - 184736
     - c
@@ -1930,8 +1930,8 @@ segments:
     - func_801C308C
   - - 186708
     - c
-    - func_801C3154
-    - '@source: src/bof3/ui/func_801C3154.c'
+    - copyClutRowShadow
+    - '@source: src/bof3/ui/copyClutRowShadow.c'
     - '@behavior: When bit 3 of the active work record flags byte at 0x12C is set, copies the 31 palette words of the CLUT source block selected by the scratch work byte at 0x27 from 0x80033800 into the VRAM shadow block at 0x80037800, advances the palette stage serial, and clears that bit.'
   - - 186884
     - c
@@ -1962,12 +1962,12 @@ segments:
     - func_801C3828
   - - 188660
     - c
-    - func_801C38F4
-    - '@source: src/bof3/ui/func_801C38F4.c'
+    - countRecordGroupMatches
+    - '@source: src/bof3/ui/countRecordGroupMatches.c'
     - '@behavior: counts how many bytes of one 164-byte record of the table at 0x80144968 equal the low byte of the third argument: the record is selected by the byte D_80181B10[low byte of the first argument], the compared byte group is selected by the low byte of the second argument (1 compares byte 0x0E, 2 compares bytes 0x0F, 0x10 and 0x11, 3 compares bytes 0x12 and 0x13), the first byte of a group counts as one and each further match adds one, and an unlisted group returns 0.'
   - - 188888
     - c
-    - func_801C39D8
+    - dispatchAlternateQuery
   - - 188952
     - asm
     - func_801C3A18
@@ -1990,7 +1990,7 @@ segments:
     - checkRejectedNonzeroSelector
   - - 192300
     - c
-    - func_801C472C
+    - dispatchTileQueryMode
   - - 192364
     - asm
     - func_801C476C
@@ -2037,8 +2037,8 @@ segments:
     - func_801C5474
   - - 195928
     - c
-    - func_801C5558
-    - '@source: src/bof3/ui/func_801C5558.c'
+    - advanceAnimationPosition
+    - '@source: src/bof3/ui/advanceAnimationPosition.c'
     - '@behavior: ticks an animation-position counter, computes offset-adjusted coordinates, and sets a completion flag when the counter crosses a per-entity threshold.'
   - - 196128
     - asm
@@ -2062,8 +2062,8 @@ segments:
     - '@source: src/bof3/ui/func_801C5830.c'
   - - 196664
     - c
-    - func_801C5838
-    - '@source: src/bof3/ui/func_801C5838.c'
+    - dispatchMainStateHandler
+    - '@source: src/bof3/ui/dispatchMainStateHandler.c'
     - '@behavior: dispatches through the handler table at D_801CD570 using the u8 main state machine index at D_80143F4A.'
   - - 196724
     - asm
@@ -2120,8 +2120,8 @@ segments:
     - func_801C6EE0
   - - 202708
     - c
-    - func_801C6FD4
-    - '@source: src/bof3/ui/func_801C6FD4.c'
+    - readBitmapPixel
+    - '@source: src/bof3/ui/readBitmapPixel.c'
     - '@behavior: reads one pixel from the 4bpp bitmap based at D_80032000: a column at or beyond the D_80104000 width or a row at or beyond the D_80104001 height yields 0, otherwise the pixel index (column + width * signed row) selects the bitmap byte at index / 2 and the even index returns its high nibble while the odd index returns its low nibble.'
   - - 202852
     - asm

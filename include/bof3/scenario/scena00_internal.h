@@ -497,42 +497,42 @@ void renderObjectTintSprite(s32 semi_transparent);
  * argument reads.
  * @source 0x801F78EC
  */
-void func_801F78EC(Scena00Cursor first, Scena00Cursor second, Scena00Tint tint);
+void renderCursorPairQuad(Scena00Cursor first, Scena00Cursor second, Scena00Tint tint);
 /* Overlay-local helper invoked once per frame by the dispatch-byte-0x14 entry
  * of this code span's handler table before that handler advances its ramp
  * words; the call site passes no arguments and consumes no return value.
  * @source 0x801F8360
  */
-void func_801F8360(void);
+void renderEntrySpinShapes(void);
 /* Overlay-local primitive emitter called by the handler-table entries of this
  * code span; only the caller-observed four-word argument image is proven (the
  * first argument is scaled by the callee, the other three are stored into the
  * scratch work object's words at offsets 0x64/0x68/0x6C).
  * @source 0x801F85A8
  */
-void func_801F85A8(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void renderEntryFlare(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 /* Overlay-local sprite emitter run by the handler-table entries of this code
  * span; only the caller-observed no-argument image is proved.
  * @source 0x801F8BCC
  */
-void func_801F8BCC(void);
+void emitObjectTexturedQuad(void);
 /* Following per-frame handler in this overlay's code span, run by the trail
  * handler when the work object is still fading; only the caller-observed
  * no-argument image is proven.
  * @source 0x801F8BCC
  */
-void func_801F8BCC(void);
+void emitObjectTexturedQuad(void);
 /* Route-stage companion the handler at 0x801F92DC runs unconditionally once
  * its route-1 block ends; only the caller-observed no-argument image is
  * proven.
  * @source 0x801F9644
  */
-void func_801F9644(void);
+void statePathTwoSetup(void);
 /* Second route-stage companion the handler at 0x801F92DC runs unconditionally
- * after func_801F9644; only the caller-observed no-argument image is proven.
+ * after statePathTwoSetup; only the caller-observed no-argument image is proven.
  * @source 0x801F9868
  */
-void func_801F9868(void);
+void statePathThreeStep(void);
 /* Following overlay-local beam entry this code span's wrapper at 0x801F8D70
  * runs; the wrapper sets up no argument register image, so the no-argument
  * prototype is proven by that call site.

@@ -2,14 +2,14 @@
 
 /* @source 0x801DF6A8
  * @behavior shop screen draw called with no arguments by the phase step
- *           func_801DE40C, the cursor/confirm handler
+ *           finishListCursorsStep, the cursor/confirm handler
  *           renderPickSwapSaved and
- *           the sub-step handler func_801DE88C: it first emits the shop screen
+ *           the sub-step handler gateDimTileSubstep: it first emits the shop screen
  *           background through
  *           renderBackgroundTilesKind with the main-RAM index
  *           byte D_80144953,
  *           reads the visible-list length through func_801BDB7C(0) and draws
- *           the shop panel strip through func_801DAB90 with the fixed panel
+ *           the shop panel strip through drawShopPanelFrame with the fixed panel
  *           arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank
  *           byte D_80144952. While the slot index stays below that length it
  *           draws each visible slot through the field-list emitter
@@ -51,7 +51,7 @@ void renderShopListCursors(void) {
   slot = 0;
   renderBackgroundTilesKind(D_80144953);
   count = func_801BDB7C(0);
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (count != 0) {
     do {
       u8 record;

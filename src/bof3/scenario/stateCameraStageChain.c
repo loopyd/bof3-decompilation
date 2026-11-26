@@ -1,0 +1,297 @@
+#include "bof3/scenario/scena00_internal.h"
+
+/* @behavior Runs the third SCENA00 controller selected by the state byte
+ * D_80146875, whose eighteen states drive the mid-scenario camera/effect
+ * sequence. While the state byte sits in 4..6 and the shared frame word
+ * D_80143E6C has its low nibble clear, it reseeds D_80146867 with 1 << (rand()
+ * % 3) and, when that byte leaves 0/1, bumps the shared mode byte D_80146866 by
+ * 0x10; state 0 raises flag 0x80 in the mode word D_80146258, runs
+ * func_8015B580(D_8014686C, 0..3), arms D_80146876 = 0x90 and advances to state
+ * 1; states 1 and 2 count D_80146876 down while publishing (count * 8) in
+ * D_8014932C and, at zero, store 2 in D_80149333, clear D_8014932C and advance
+ * to state 3; state 3, on progress byte 0xC, arms D_80146876 = 0x3C, clears the
+ * mode byte and advances to state 4; state 4 counts that word down, and once it
+ * expires stores state 5, increments the scenario progress byte and then, while
+ * the mode byte is non-zero, decrements it and steps D_80147A96 by the signed
+ * D_801FCA4C nibble entry (frames D_80143E6C & 0xF) times 4; state 5 first
+ * re-arms the countdown and advances to state 6 on progress byte 0x11 and then
+ * repeats that mode-byte decrement/D_80147A96 step; state 6 counts down and, at
+ * zero, stores the object byte func_8019601C() in scratchpad 0x1F800000 and,
+ * unless that byte is 0xFF, seeds that object's 0x74-byte row at 0x80143FC8
+ * (+0 = 1, +5 = 0x1E, the D_80145EC4/D_80145EC8 word pair at +0x34/+0x38, the
+ * func_8015477C distance of that pair scaled by 0x10000 at +0x3C and 0 at
+ * +0x29), then reloads the countdown with 0x84, advances the progress byte and
+ * requests state 7; state 7 counts down and, at exactly 0x20, runs
+ * func_8014ECAC(8) and advances to state 8; state 8 counts down, clearing the
+ * effect bank D_8014832E while the gate word D_80143C40 is clear, and at zero
+ * sets progress byte 0x14 and reloads 0x40 frames before requesting state 10;
+ * state 9, on progress byte 0x14, runs func_80164020(0, 1) and arms 0x25C
+ * frames before requesting state 10; state 10 counts down and, at zero, runs
+ * func_8015B580(D_8014686C, 4), seeds the front selector context
+ * (0x18, 0x630000, 0x110000, 3) through func_8019FA28, stores 9/0xFF in
+ * D_80143F1D/D_80143F1E and advances to state 11; state 11, while the gate word
+ * D_80143C40 is clear, stores progress byte 1 and advances to state 12; state
+ * 12, on progress byte 4 once func_80162D00 reports ready, queues the frontend
+ * cue func_80161C20(3, 0x69, 8) and advances to state 13; state 13, on progress
+ * byte 5, arms 0x20 frames and advances to state 14; state 14 counts down while
+ * adding the signed D_801FCA4C nibble entry (frames D_80143E6C & 0xF) shifted
+ * by 11 to D_801469EC and subtracting it from D_801469F0, advancing to state 15
+ * at zero; state 15, on progress byte 7, passes the D_80145EC4/D_80145EC8 pair
+ * with 1 to func_801BFE34, runs func_801C7A54(1) and func_8015B580(D_8014686C,
+ * 5) before advancing to state 16; state 16 is not handled (its jump-table
+ * slot is the switch default) and state 17 increments the scenario progress
+ * byte, runs func_8015C058 and func_801BE1B0(6) and clears D_80146874 and
+ * D_80146875.
+ * @source 0x801FA7D8
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void stateCameraStageChain(void) {
+    if ((u32)(D_80146875 - 4u) < 3u) {
+        if ((D_80143E6C & 0xFu) == 0) {
+            u8 effect = (u8)(1 << (rand() % 3));
+
+            D_80146867 = effect;
+            if (effect >= 2u) {
+                D_80146866 = (u8)(D_80146866 + 0x10u);
+            }
+        }
+    }
+
+    switch (D_80146875) {
+    case 0:
+        D_80146258 |= 0x80u;
+        func_8015B580(D_8014686C, 0);
+        func_8015B580(D_8014686C, 1);
+        func_8015B580(D_8014686C, 2);
+        func_8015B580(D_8014686C, 3);
+        D_80146876 = 0x90u;
+        D_80146875 = 1u;
+        break;
+
+    case 1:
+    case 2: {
+        u16 *counter = (u16 *)&D_80146876;
+        u32  count = (u32)*counter;
+
+        if (count != 0u) {
+            u16 next = (u16)(*counter - 1u);
+
+            D_8014932C = (u16)((count * 0x80000u) >> 16);
+            *counter = next;
+            break;
+        }
+
+        D_80149333 = 2u;
+        D_8014932C = 0u;
+        D_80146875 = 3u;
+        break;
+    }
+
+    case 3:
+        if (*(u8 *)&g_ScenarioProgress == 0xcu) {
+            D_80146876 = 0x3cu;
+            D_80146875 = 4u;
+            D_80146866 = 0u;
+        }
+        break;
+
+    case 4: {
+        u16 *counter = (u16 *)&D_80146876;
+        u8  *mode;
+        u16 *world;
+        u8   table_value;
+
+        if (*counter != 0u) {
+            *counter = (u16)(*counter - 1u);
+        } else {
+            D_80146875 = 5u;
+            *(u8 *)&g_ScenarioProgress += 1;
+        }
+
+        mode = (u8 *)&D_80146866;
+        if (*mode == 0u) {
+            break;
+        }
+
+        table_value = D_801FCA4C[D_80143E6C & 0xFu];
+        *mode = (u8)(*mode - 1u);
+        world = (u16 *)&D_80147A96;
+        *world = (u16)(*world + (s32)((u32)(s32)(s8)table_value << 2));
+        break;
+    }
+
+    case 5: {
+        u16 *world;
+        u8   table_value;
+
+        if (*(u8 *)&g_ScenarioProgress == 0x11u) {
+            D_80146876 = 0x3cu;
+            D_80146875 = 6u;
+        }
+
+        if (D_80146866 == 0u) {
+            break;
+        }
+
+        D_80146866 = (u8)(D_80146866 - 1u);
+        world = (u16 *)&D_80147A96;
+        table_value = D_801FCA4C[D_80143E6C & 0xFu];
+        *world = (u16)(*world + (s32)((u32)(s32)(s8)table_value << 2));
+        break;
+    }
+
+    case 6: {
+        u16 *counter = (u16 *)&D_80146876;
+        u8  *scratch;
+        u8   object_index;
+
+        if (*counter != 0u) {
+            *counter = (u16)(*counter - 1u);
+            break;
+        }
+
+        object_index = func_8019601C();
+        scratch = &D_1F800000;
+        *scratch = object_index;
+
+        if (object_index != 0xffu) {
+            u32 seed;
+
+            D_80143FC8[(u32)object_index * 0x74u] = 1u;
+            D_80143FCD[(u32)*scratch * 0x74u] = 0x1eu;
+            seed = (u32)(D_80143FFC + (u32)*scratch * 0x74u);
+            *(s32 *)seed = D_80145EC4;
+            seed = (u32)(D_80144000 + (u32)*scratch * 0x74u);
+            *(s32 *)seed = D_80145EC8;
+            *(s32 *)(D_80144004 + (u32)*scratch * 0x74u) =
+                func_8015477C(*(s32 *)(D_80143FFC + (u32)*scratch * 0x74u),
+                              *(s32 *)(D_80144000 + (u32)*scratch * 0x74u)) << 16;
+            seed = *scratch;
+            D_80143FF1[seed * 0x74u] = 0u;
+        }
+
+        *counter = 0x84u;
+        D_80146875 = 7u;
+        *(u8 *)&g_ScenarioProgress += 1;
+        break;
+    }
+
+    case 7: {
+        u16 *counter = (u16 *)&D_80146876;
+        u16  next = (u16)(*counter - 1u);
+
+        *counter = next;
+        if (next != 0x20u) {
+            break;
+        }
+
+        func_8014ECAC(8u);
+        D_80146875 = 8u;
+        break;
+    }
+
+    case 8: {
+        u16 *counter = (u16 *)&D_80146876;
+
+        if (*counter != 0u) {
+            /* Preserve the original counter-store-before-clear order. */
+            *counter = (u16)(*counter - 1u);
+            if (D_80143C40 == 0u) {
+                D_8014832E = 0u;
+            }
+            break;
+        }
+
+        *(u8 *)&g_ScenarioProgress = 0x14u;
+        *counter = 0x40u;
+        D_80146875 = 0xau;
+        break;
+    }
+
+    case 9:
+        if (*(u8 *)&g_ScenarioProgress == 0x14u) {
+            func_80164020(0, 1);
+            D_80146876 = 0x25cu;
+            D_80146875 = 0xau;
+        }
+        break;
+
+    case 10: {
+        u16 *counter = (u16 *)&D_80146876;
+
+        if (*counter != 0u) {
+            *counter = (u16)(*counter - 1u);
+            break;
+        }
+
+        func_8015B580(D_8014686C, 4);
+        func_8019FA28(0x18u, 0x630000u, 0x110000u, 3u);
+        D_80143F1D = 9u;
+        D_80143F1E = 0xffu;
+        D_80146875 = 0xbu;
+        break;
+    }
+
+    case 11:
+        if (D_80143C40 == 0u) {
+            *(u8 *)&g_ScenarioProgress = 1u;
+            D_80146875 = 0xcu;
+        }
+        break;
+
+    case 12:
+        if (*(u8 *)&g_ScenarioProgress == 4u && func_80162D00() != 0) {
+            func_80161C20(3u, 0x69, 8);
+            D_80146875 = 0xdu;
+        }
+        break;
+
+    case 13:
+        if (*(u8 *)&g_ScenarioProgress == 5u) {
+            D_80146876 = 0x20u;
+            D_80146875 = 0xeu;
+        }
+        break;
+
+    case 14: {
+        u16 *counter = (u16 *)&D_80146876;
+        u16  remaining = *counter;
+
+        if (remaining != 0u) {
+            u32  index = remaining & 0xfu;
+            s32 *accum = (s32 *)&D_801469EC;
+            s32  delta;
+
+            *accum += (s32)((u32)(s32)(s8)D_801FCA4C[index] << 11);
+            delta = (s32)((u32)(s32)(s8)D_801FCA4C[index] << 11);
+            *counter = (u16)(remaining - 1u);
+            D_801469F0 -= delta;
+            break;
+        }
+
+        D_80146875 = 0xfu;
+        break;
+    }
+
+    case 15:
+        if (*(u8 *)&g_ScenarioProgress != 7u) {
+            break;
+        }
+
+        func_801BFE34(D_80145EC4, D_80145EC8, 1);
+        func_801C7A54(1);
+        func_8015B580(D_8014686C, 5);
+        D_80146875 = 0x10u;
+        break;
+
+    case 17:
+        *(u8 *)&g_ScenarioProgress += 1;
+        func_8015C058();
+        func_801BE1B0(6u);
+        D_80146874 = 0u;
+        D_80146875 = 0u;
+        break;
+    }
+}

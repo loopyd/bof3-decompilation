@@ -10,7 +10,7 @@
  *           D_80148334..D_8014862E) and, when the byte result of
  *           func_80166140(0xF) is zero, the second state block at
  *           D_80148408..0x8014840E. Called by the phase advance handler
- *           func_801DF9B4 with no arguments.
+ *           rebuildListPhaseStep with no arguments.
  * @status partial
  * @match 92.66
  * @residual 101/109 insns (436 bytes) match; the first live difference is the head state-block store order, where the original emits sb 0(v0) for D_80148331 before the D_80148332/D_80148333 stores while this spelling emits it after them, plus the -0x14 pair landing in v0 instead of a0 and its two schedule knock-ons
@@ -36,7 +36,7 @@
  *     compiler-variants) for the remaining allocator tie-break, which is not
  *     authorized for this mission.
  */
-void func_801E0F78(void) {
+void rebuildShopListState(void) {
   u8* base;
   u8  i;
   u32 offset;

@@ -2,7 +2,7 @@
 
 /* @source 0x801E032C
  * @behavior note-list sub-step handler reached as entry 3 of the sub-step table
- *           D_801E5CFC, which func_801DFDB8 dispatches with the UI sub-step byte
+ *           D_801E5CFC, which dispatchUiSubTable4 dispatches with the UI sub-step byte
  *           D_80148652 as index: it first publishes the highlighted skill slot's
  *           ability halfword D_80148340 = the +0x12 field of the 0x14-byte
  *           ability record selected by the byte at D_801449E2 + 164 *

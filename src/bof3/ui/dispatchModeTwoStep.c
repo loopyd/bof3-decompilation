@@ -1,0 +1,12 @@
+#include "bof3/ui/sisyou00_internal.h"
+
+/* @source 0x801D278C
+ * @behavior dispatches the handler selected by D_801D4286 through the
+ * D_801D4204 function-pointer table.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void dispatchModeTwoStep(void) {
+  D_801D4204[D_801D4286]();
+}

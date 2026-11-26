@@ -151,9 +151,9 @@ void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 void drawScratchStatus(void);
 void drawFlagStatus(void);
 void stateSecondaryByteSelect(void);
-void func_801F317C(void);
+void stateSecondaryByteSelect2(void);
 void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
-void func_801F3244(void);
+void dispatchStateMode(void);
 
 #define WORLD00_AREA008_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area008State*, 0x1f800044u)

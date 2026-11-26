@@ -41,7 +41,7 @@ typedef struct ShopIconTile {
 extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot
 
-/* Main-RAM byte tested by the sub-step handler func_801D5D98 before it clears
+/* Main-RAM byte tested by the sub-step handler confirmPanelExitStep before it clears
  * the halfword cells D_80145AC8/D_80145AC6 and arms sub-step 0x14; it has no
  * other reference in this target, is not owned by the shared map and its role
  * is not recovered, so it is kept raw at the original access width (lbu).
@@ -210,7 +210,7 @@ extern volatile u8  D_80148650;
 /* UI phase byte: reset with the timer on phase changes and stepped (+1/+2)
  * by the phase handlers. Kept raw: the shared map owns this address and
  * emi/etc/game/00 consumes it as D_80148651 (declared non-volatile there too).
- * The plain view is byte-required: the phase step func_801DE45C's original
+ * The plain view is byte-required: the phase step refreshListBackgroundStep's original
  * schedule hoists the phaseTimer re-arm constant above the phase-byte load
  * (li in the branch delay slot); a volatile view makes gcc treat the load as a
  * scheduling barrier and materializes the constant after it instead.
@@ -222,10 +222,10 @@ extern u8 D_80148651;
  * @source 0x80148652
  * @kind unknown */
 extern u8 D_80148652;
-/* Shop work-block base read at entry by the phase steps func_801D7B74,
- * func_801D7CC8 and func_801D7D48: its first byte is the index passed to
+/* Shop work-block base read at entry by the phase steps commitSlotRowFlag,
+ * rollbackSlotRowStep and retreatSlotRowStep: its first byte is the index passed to
  * renderShopPriceList and the byte at +5 is the counter handed to
- * tickPhaseTimerThenAdvanceWorkCounter (read there with lbu and incremented). The phase handler func_801D4614 reads
+ * tickPhaseTimerThenAdvanceWorkCounter (read there with lbu and incremented). The phase handler resetFramePhaseStep reads
  * that same +5 byte with a signed byte load (lb), so it views it through an
  * explicit signed pointer; no target-map row exists for the byte itself.
  * Kept raw: the block's field roles are
@@ -233,7 +233,7 @@ extern u8 D_80148652;
  * @source 0x80148656
  * @kind unknown */
 extern u8 D_80148656[];
-/* Main-RAM byte read twice by the phase step func_801D7B74: as the fifth
+/* Main-RAM byte read twice by the phase step commitSlotRowFlag: as the fifth
  * (stack) argument of renderShopPriceList, loaded zero-extended with lbu,
  * and as the shift amount of the field-record bit that step publishes, loaded
  * signed with lb. No target-map row existed for this address before the lift and its role
@@ -260,7 +260,7 @@ extern s8 D_80148659;
 /* @source 0x8014865A @kind unknown */
 extern s8 D_8014865A;
 /* Work-block byte at +5 of the block D_80148656, re-armed with 1 by the phase
- * step func_801D3AE4 when its frame timer wraps and read/incremented by the
+ * step retreatPanelStripStep when its frame timer wraps and read/incremented by the
  * byte-counter step tickPhaseTimerThenAdvanceWorkCounter, which those steps
  * hand the same address.
  * Written with a folded `sb %lo(D_8014865B)(at)` in the original, so it is
@@ -296,7 +296,7 @@ extern s8 D_8014865C;
  * changes, advances D_80148652 on wrap. */
 extern volatile u8  phaseTimer;
 /* Byte directly after the frame timer phaseTimer, cleared with the timer by
- * the countdown phase step func_801D7380 when its countdown wraps. Stored only
+ * the countdown phase step finishSlotListStep when its countdown wraps. Stored only
  * there (no load in this target), so its role is not recovered; it is the only
  * reference to this address, which the shared map does not own. Declared
  * locally with a target-map row. The same function also reaches the block base
@@ -324,7 +324,7 @@ extern void (*panelField6HandlerTable[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
- * sibling dispatcher func_801E29C8, which calls the selected handler with no
+ * sibling dispatcher dispatchCommandRowState, which calls the selected handler with no
  * arguments (framed jalr) and then draws the command row at the same task
  * root's x/field-6 coordinates, bytes 0xA/0xB and the constant 0 through
  * drawShopCommandRow. The three pointer entries present in the shipped payload
@@ -338,7 +338,7 @@ extern void (*D_801E5DC0[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
- * sibling dispatcher func_801E2AB0, which calls the selected handler with no
+ * sibling dispatcher dispatchMoneyPanelState, which calls the selected handler with no
  * arguments (framed jalr) and then draws the panel at the same task root's
  * x/field-6 coordinates through drawShopMoneyPanel. The three pointer entries
  * present in the shipped payload are panelNoop (0x801E2800),
@@ -349,7 +349,7 @@ extern void (*D_801E5DC0[])(void);
  * @kind table */
 extern void (*D_801E5DCC[])(void);
 
-/* u16 table read by func_801E2BC4 with the panel task's byte 0xA as index; the
+/* u16 table read by emitTaskBorderRect with the panel task's byte 0xA as index; the
  * single shipped entry is 0x70.
  * @source 0x801E5DD8
  * @kind table */
@@ -357,14 +357,14 @@ extern u16 D_801E5DD8[];
 
 /* Panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell) read as an unsigned byte
- * and scaled by 4; dispatched by the sibling dispatcher func_801E2C18, which
+ * and scaled by 4; dispatched by the sibling dispatcher dispatchParameterState, which
  * calls the selected handler with no arguments (framed jalr) and then forwards
  * the same task root's x and field-6 halfwords, the field-record index
  * D_80181B10[D_80144F5A[task byte 0xA]], task byte 0xB and task byte 0xC to
  * the field-record panel drawShopParameterPanel. The five pointer entries
  * present in the shipped payload are panelNoop (0x801E2800),
  * retreatPanelXNeg150 (0x801E2C9C), advancePanelXTo17 (0x801E2CDC),
- * retreatPanelField6To62 (0x801E2D1C) and func_801E2D5C; the table starts one
+ * retreatPanelField6To62 (0x801E2D1C) and advancePanelFieldStep; the table starts one
  * word past the u16 D_801E5DD8 and ends where the pointer table D_801E5DF0
  * starts.
  * @source 0x801E5DDC
@@ -373,7 +373,7 @@ extern void (*D_801E5DDC[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
- * sibling dispatcher func_801E2DB4, which calls the selected handler with no
+ * sibling dispatcher dispatchEquipPanelState, which calls the selected handler with no
  * arguments (framed jalr) and then draws the shop panel through
  * drawShopEquipPanel with the same task root's x and field-6 halfwords and the
  * byte
@@ -387,7 +387,7 @@ extern void (*D_801E5DF0[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by
- * func_801E2EB0, which calls the selected handler with no arguments and then
+ * dispatchPriceListState, which calls the selected handler with no arguments and then
  * steps the same task through drawShopPriceListPanel. The four entries present
  * in the shipped image are panelNoop, advancePanelXTo320, retreatPanelXTo132
  * and retreatPanelXTo70.
@@ -406,7 +406,7 @@ extern void (*D_801E5DFC[])(void);
 extern u8 D_801E5E0C[];
 
 /* Second panel handler table indexed with the panel task root's state byte
- * (D_80148648->state); dispatched by the sibling dispatcher func_801E3720,
+ * (D_80148648->state); dispatched by the sibling dispatcher dispatchPanelState1,
  * which calls the selected handler with no arguments and then forwards the
  * same task root to func_801DC6FC. The three pointer entries present in the
  * shipped payload are panelNoop (0x801E2800), statePanelXTo320
@@ -416,7 +416,7 @@ extern u8 D_801E5E0C[];
 extern void (*D_801E5E2C[])(void);
 
 /* Third panel handler table indexed with the panel task root's state byte
- * (D_80148648->state); dispatched by the sibling dispatcher func_801E3BA4,
+ * (D_80148648->state); dispatched by the sibling dispatcher dispatchPanelState2,
  * which calls the selected handler with no arguments and then forwards the
  * same task root to the shop panel step func_801E112C. The five pointer
  * entries present in the shipped payload are panelNoop (0x801E2800),
@@ -429,7 +429,7 @@ extern void (*D_801E5E2C[])(void);
 extern void (*D_801E5E48[])(void);
 
 /* Fourth panel handler table indexed with the panel task root's state byte
- * (D_80148648->state); dispatched by the sibling dispatcher func_801E3CF8,
+ * (D_80148648->state); dispatched by the sibling dispatcher dispatchPanelState3,
  * which calls the selected handler with no arguments (framed jalr) and then
  * forwards the same task root to the shop panel step func_801E1710. The five
  * pointer entries present in the shipped payload are panelNoop (0x801E2800),
@@ -441,7 +441,7 @@ extern void (*D_801E5E5C[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
- * sibling dispatcher func_801E3E4C, which calls the selected handler with no
+ * sibling dispatcher dispatchFieldListState, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root's x and field-6
  * halfwords, byte 0xA and the constants 0 and 0 to the shop field-list emitter
  * func_801D826C. The three pointer entries present in the shipped payload are
@@ -454,7 +454,7 @@ extern void (*D_801E5E70[])(void);
 
 /* Fifth panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
- * sibling dispatcher func_801E4224, which calls the selected handler with no
+ * sibling dispatcher dispatchListBuildState, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root to the shop
  * panel step func_801E45C0. The thirteen pointer entries present in the
  * shipped payload alternate the panelNoop (0x801E2800) idle handler with the
@@ -469,9 +469,9 @@ extern void (*D_801E5F14[])(void);
 
 /* Sixth panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
- * sibling dispatcher func_801E4338, which calls the selected handler with no
+ * sibling dispatcher dispatchPanelFrameState, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root to the shop
- * panel emitter func_801E4DF4. The nine pointer entries present in the shipped
+ * panel emitter drawShopTexturePanel. The nine pointer entries present in the shipped
  * payload are panelNoop (0x801E2800), advancePanel320E (0x801E438C),
  * retreatPanelXTo140 (0x801E43CC), panelNoop, advancePanelField6To240
  * (0x801E4460), retreatPanelField6To128 (0x801E44A0), panelNoop,
@@ -484,9 +484,9 @@ extern void (*D_801E5F24[])(void);
 
 /* Seventh panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
- * sibling dispatcher func_801E440C, which calls the selected handler with no
+ * sibling dispatcher dispatchFieldIconState, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root to the shop
- * panel emitter func_801E4E9C. The six pointer entries present in the shipped
+ * panel emitter drawFieldGridPanel. The six pointer entries present in the shipped
  * payload are panelNoop (0x801E2800), advancePanelField6To240 (0x801E4460),
  * retreatPanelField6To128 (0x801E44A0), panelNoop, advancePanel320F
  * (0x801E4540) and retreatPanelXTo210 (0x801E4580); the window starts 0x1C
@@ -498,7 +498,7 @@ extern void (*D_801E5F30[])(void);
 
 /* Eighth panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
- * sibling dispatcher func_801E44E0, which calls the selected handler with no
+ * sibling dispatcher dispatchInkPanelState, which calls the selected handler with no
  * arguments (framed jalr) and then draws the panel at the same task root's
  * x/field-6 coordinates through drawShopInkPanel. The three pointer entries
  * present in the shipped payload are panelNoop (0x801E2800),
@@ -529,7 +529,7 @@ extern u16 D_80143F00;
  * @source 0x8014686C @kind unknown */
 extern u32 D_8014686C;
 
-/* Shared main-RAM state byte read by the shop icon wrapper func_801D910C with
+/* Shared main-RAM state byte read by the shop icon wrapper mapShopIconKind with
  * a signed byte load: when the wrapper's kind byte is 4 and this byte is at
  * least 8, the wrapper substitutes the kind 0xB. The address is the first byte
  * of the emi/etc/game/00 scenario state record (declared there as
@@ -626,7 +626,7 @@ extern u8 D_80145025;
  * @source 0x80146258 @kind unknown */
 extern u16 D_80146258;
 
-/* Overlay-local panel record table filled by func_801D6CE4: seven 32-bit words per
+/* Overlay-local panel record table filled by copyPanelRecordState: seven 32-bit words per
  * record (stride 0x1C bytes) taken from byte offset 0xCA0 of the shop state
  * block. Zero-filled in the shipped payload, so the record contents are not
  * observable there.
@@ -635,10 +635,10 @@ extern u16 D_80146258;
 extern ShopPanelWords D_801E6098[];
 
 /* Overlay-local tail-data bytes shared by the D_801E530C phase-step family: the
- * sub-step handler func_801D472C clears D_801E6110 and D_801E6080, arms
+ * sub-step handler archiveSubstepReset clears D_801E6110 and D_801E6080, arms
  * D_801E60EC with 0x17 and archives the sub-step count in D_801E6094, while the
  * sibling steps armShopValueSubstep/renderShopValueSave read
- * D_801E60EC and func_801D4CF0/func_801D5D98 read D_801E6080/D_801E6110. All
+ * D_801E60EC and valuePanelPhaseStep/confirmPanelExitStep read D_801E6080/D_801E6110. All
  * four are zero-filled in the shipped payload, so their roles are not
  * observable there; each is kept as a raw byte at the width of the original
  * access (sb/lbu).
@@ -776,7 +776,7 @@ extern u8 D_801E60E5;
 
 /* Second overlay-local byte in the tail of this image (zero-filled in the
  * shipped payload); read as the row argument of the value-panel emitter
- * func_801DDFB0 by the phase step func_801D4CF0.
+ * drawShopValuePanel by the phase step valuePanelPhaseStep.
  * @source 0x801E60F8
  * @kind unknown */
 extern u8 D_801E60F8;
@@ -788,7 +788,7 @@ extern u8 D_801E60F8;
 extern u8 D_801E60F0;
 
 /* Second overlay-local gating byte (zero-filled in the shipped payload), read
- * twice by the phase step func_801D408C: it selects between resetting
+ * twice by the phase step selectorPanelPhaseStep: it selects between resetting
  * phaseTimer and arming it with 0x2D when the advanced frame timer reaches 6,
  * and its value also biases the UI phase byte advance at that point.
  * @source 0x801E60F4
@@ -810,13 +810,13 @@ extern u8 D_801E60F4;
 extern s16 D_801E6100[];
 
 /* Second overlay-local byte in the tail of this image (zero-filled in the
- * shipped payload); cleared by the phase-advance handler func_801DF9B4.
+ * shipped payload); cleared by the phase-advance handler rebuildListPhaseStep.
  * @source 0x801E6260
  * @kind unknown */
 extern u8 D_801E6260;
 
 /* Overlay-local list-head counter read and post-incremented by the shop
- * list/state rebuild func_801E0F78 while it fills D_801E6264; byte after the
+ * list/state rebuild rebuildShopListState while it fills D_801E6264; byte after the
  * D_801E6260 flag. Zero-filled in the shipped payload, so its value there is
  * not observable. Not owned by the shared map; declared locally with a
  * target-map row.
@@ -837,7 +837,7 @@ extern u8 D_801E6258;
 extern u8 D_801E625C;
 
 /* Overlay-local list of the field-record indices found by the shop list/state
- * rebuild func_801E0F78, appended at D_801E6258 and holding at most the eight
+ * rebuild rebuildShopListState, appended at D_801E6258 and holding at most the eight
  * indices it scans. Zero-filled in the shipped payload, so the list contents
  * there are not observable. Not owned by the shared map; declared locally with
  * a target-map row.
@@ -981,7 +981,7 @@ void func_801A3E50(u32 arg0);
 void appendRenderPrim(u32 ot_index, u32 primitive_size);
 void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 /* Main-exe shaded-panel rectangle helper (executable space, unlifted) called by
- * the shop panel emitter func_801DB938 with the task's x and field-6 halfwords,
+ * the shop panel emitter drawEquipPanelTask with the task's x and field-6 halfwords,
  * the fixed 0x8B by 0x9F rectangle size, the low byte of that function's second
  * argument offset by 0xF0 and the main-RAM CLUT-bank byte D_80144952 as the
  * trailing stack argument. The AREA030 cell drawers and the sisyou00 panel
@@ -1024,7 +1024,7 @@ extern const char D_801D0E5C[];
 extern const char D_801D0E88[];
 
 /* Shop parameter panel of this EMI, lifted at src/bof3/ui/
- * drawShopParameterPanel.c; the sibling dispatcher func_801E2C18 calls it with
+ * drawShopParameterPanel.c; the sibling dispatcher dispatchParameterState calls it with
  * the panel task's x and field-6 halfwords, the field-record index
  * D_80181B10[D_80144F5A[task byte 0xA]], task byte 0xB and task byte 0xC. Its
  * body reads both halfwords through 16-bit sign extensions (coordinate
@@ -1038,7 +1038,7 @@ extern const char D_801D0E88[];
 void drawShopParameterPanel(u16 x, u16 y, u8 index, u8 mode, u8 arg4);
 void func_801DBF18(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 /* Shop icon sprite emitter of this EMI (lifted: src/bof3/ui/
- * emitShopIconSprite.c); the wrapper func_801D910C calls it with two
+ * emitShopIconSprite.c); the wrapper mapShopIconKind calls it with two
  * coordinates, an icon kind byte and a mode byte. It stores both coordinates as
  * sprite halfwords, masks the kind byte to a byte, scales it by 4 and indexes
  * the 4-byte-stride icon tile table D_801E5850 with it, picks the draw-mode
@@ -1052,13 +1052,13 @@ void emitShopIconSprite(s32 x, s32 y, s32 kind, s32 mode);
  * renderEquipSlotRows.c: it paints the inset backing rectangle at
  * (x+2, y+0x44) with the size 0x87 by 0x58 and the shade 0xF1, then draws the
  * six equipped slots of the 164-byte field record the index byte selects and
- * submits the six palette cells that label them. func_801DB938 calls it with
+ * submits the six palette cells that label them. drawEquipPanelTask calls it with
  * the task x and field-6 halfwords, the leading byte of the 0x140-byte record
  * D_80145FCC selected by task byte 0xC and the low byte of that function
  * second argument.
  * @source 0x801D95F4 */
 void renderEquipSlotRows(u16 x, u16 y, u8 index, u8 flag);
-/* Shop row emitter in this EMI (unlifted) called by func_801DB938 with the same
+/* Shop row emitter in this EMI (unlifted) called by drawEquipPanelTask with the same
  * arguments as renderEquipSlotRows: the task's x and field-6
  * halfwords, the leading
  * byte of the 0x140-byte record D_80145FCC selected by task byte 0xC and the
@@ -1070,7 +1070,7 @@ void renderEquipSlotRows(u16 x, u16 y, u8 index, u8 flag);
  * @source 0x801D9254 */
 void func_801D9254(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
 /* Shop equipment panel of this EMI (lifted: src/bof3/ui/
- * drawShopEquipPanel.c): the sibling dispatcher func_801E2DB4 draws the panel
+ * drawShopEquipPanel.c): the sibling dispatcher dispatchEquipPanelState draws the panel
  * through it with the panel task root's x and field-6 halfwords and the
  * main-RAM byte D_80181B10[D_80144F5A[task byte 0xA]], which selects one of the
  * eight 164-byte field records of D_80144968. The body draws the panel backing
@@ -1106,7 +1106,7 @@ u32 func_801AF20C(const void* arg0);
  * @source 0x801D8E2C */
 void emitLineRectangleBorder(u16 x, u16 y, u16 w, u16 h, u8 colorEnable, u8 mask);
 /* Field-record rebuild helper of this target (lifted: src/bof3/ui/
- * rebuildFieldRecordSlots.c); func_801D6668 calls it once with the constant 0
+ * rebuildFieldRecordSlots.c); rebuildFieldRecordsStep calls it once with the constant 0
  * when the global gate halfword D_80143C40 is clear, and the sub-step handler
  * emitStripRebuildShop calls it with the constant 1.
  * It walks the eight 0xA4-byte records at D_80144968, clearing each record's
@@ -1118,7 +1118,7 @@ void emitLineRectangleBorder(u16 x, u16 y, u16 w, u16 h, u8 colorEnable, u8 mask
 void rebuildFieldRecordSlots(u8 arg0);
 /* Shop slot price list of this EMI (lifted: src/bof3/ui/
  * renderShopPriceList.c) called by the sibling phase steps
- * func_801D7380/func_801D7AE4/func_801D7B74/func_801D7CC8/func_801D7D48 and by
+ * finishSlotListStep/setupSlotListStep/commitSlotRowFlag/rollbackSlotRowStep/retreatSlotRowStep and by
  * the confirm step drawListChargeConfirm with the work-block
  * index byte D_80148656[0], the panel origin (0x98, 0x3F), a flag byte and a
  * selected row byte as the fifth (stack) argument. It draws the eight-row item
@@ -1134,7 +1134,7 @@ void rebuildFieldRecordSlots(u8 arg0);
 void renderShopPriceList(u8 arg0, u16 arg1, u16 arg2, u8 arg3, u8 arg4);
 /* Shop slot-list builder in this EMI (lifted partial:
  * src/bof3/ui/buildSlotList.c) called by the sibling phase steps
- * func_801D7B74/func_801D7CC8/func_801D7D48 with the constant 0; its body
+ * commitSlotRowFlag/rollbackSlotRowStep/retreatSlotRowStep with the constant 0; its body
  * masks the argument with andi 0xFF, so the parameter is a byte.
  * @source 0x801D8050 */
 void buildSlotList(u8 arg0);
@@ -1155,7 +1155,7 @@ void collectSaveSlotsBlocks(void);
 void rebuildPanelRecordTable(void);
 /* Shop byte-counter step in this EMI (lifted: src/bof3/ui/
  * tickPhaseTimerThenAdvanceWorkCounter.c) called by the sibling phase steps
- * func_801D7B74/func_801D7CC8/func_801D7D48 with the address of the work-block
+ * commitSlotRowFlag/rollbackSlotRowStep/retreatSlotRowStep with the address of the work-block
  * byte D_8014865B and a limit byte: it reads that byte with lbu, submits the
  * texture row 0x1C at row 0x14 through func_8014F800 with func_801502D0(byte +
  * 0x63) as the fifth argument, counts phaseTimer down, re-arms the timer with
@@ -1178,7 +1178,7 @@ u32 tickPhaseTimerThenAdvanceWorkCounter(u8* arg0, u8 arg1);
 u32 tickPhaseTimerCounter(u8* arg0, u8 arg1);
 void func_801644D8(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 arg5);
 /* Main-exe byte-result query called by this target's shop list/state rebuild
- * func_801E0F78, by the command row emitter drawShopCommandRow and by the
+ * rebuildShopListState, by the command row emitter drawShopCommandRow and by the
  * unlifted handler func_801DF9EC
  * with the constant 0xF in `$a0`; every reviewed call site masks the result
  * with `andi v0,v0,0xFF` before testing it, so the return is declared
@@ -1187,7 +1187,7 @@ void func_801644D8(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 arg5);
  * sites, not a recovered callee contract.
  * @source 0x80166140 */
 u32 func_80166140(u32 arg0);
-/* Main-exe field-record rebuild helper called by the phase step func_801D7B74
+/* Main-exe field-record rebuild helper called by the phase step commitSlotRowFlag
  * with the address of the 164-byte field record it just updated, and by this
  * target's rebuildFieldRecordSlots while it walks the same table. The same
  * address is declared as func_80164A44(volatile void*) by emi/etc/game/00 and
@@ -1260,8 +1260,8 @@ u32 func_801502D0(u32 arg0);
  * @source 0x8016620C */
 void func_8016620C(u32 arg0, u32 arg1, u32 arg2);
 /* Main-exe cue dispatcher called by this target's phase steps with a single
- * word cue id: func_801D3AE4 passes 0xD1,
- * emitStripRebuildShop passes 0xD5 and func_801D5D98
+ * word cue id: retreatPanelStripStep passes 0xD1,
+ * emitStripRebuildShop passes 0xD5 and confirmPanelExitStep
  * passes 0xD0, always as a bare `addiu a0,zero,K`.
  * All three call sites drop the result, and the id range sits next to the cue
  * ids handed to func_8015DF18, so the width below is the width observed at
@@ -1312,7 +1312,7 @@ void func_8014ECAC(u16 local_mode);
 s32 func_8014E640(u32 arg0);
 
 /* Main-exe sound cue dispatcher (lifted in src/bof3/audio/dispatchSoundCue.c)
- * called by the shop sub-step handlers func_801E2084 and
+ * called by the shop sub-step handlers initShopUiSubstep and
  * emitStripAmountSubstep with the cue id 0x102.
  * The battle, scenario and world targets declare this address as
  * func_8015DF18(u16), so the width below is that reviewed call-site width.
@@ -1348,7 +1348,7 @@ void func_80158E50(void);
 u8 func_801BDB7C(u8 arg0);
 
 /* Shop money panel drawer of this EMI (lifted in
- * src/bof3/ui/drawShopMoneyPanel.c); the sibling dispatcher func_801E2AB0 and
+ * src/bof3/ui/drawShopMoneyPanel.c); the sibling dispatcher dispatchMoneyPanelState and
  * the shop phase and sub-step handlers draw the panel through it with the panel
  * origin, the constant 0 and the main-RAM value D_80144F50. Both task arguments
  * arrive loaded with `lhu` (the u16 fields at the observed call sites) and the
@@ -1359,7 +1359,7 @@ u8 func_801BDB7C(u8 arg0);
  * @source 0x801DA2F4 */
 void drawShopMoneyPanel(u16 x, u16 y, s32 arg2, s32 amount);
 /* Shop command row emitter of this EMI (src/bof3/ui/drawShopCommandRow.c),
- * reached from the panel state dispatcher func_801E29C8 with the panel task
+ * reached from the panel state dispatcher dispatchCommandRowState with the panel task
  * root's x and field-6 halfwords, its bytes 0xA and 0xB and the constant 0:
  * it paints one 0x2D by 0x14 cell per command code of the five-byte record
  * D_801E59C0[group] and draws the label of each code. The two halfword
@@ -1383,7 +1383,7 @@ void func_801E3284(PanelTask* task);
 void dispatchCommand(u8 arg0);
 
 /* Shop ink panel drawer of this EMI (lifted in
- * src/bof3/ui/drawShopInkPanel.c); the sibling dispatcher func_801E44E0 draws
+ * src/bof3/ui/drawShopInkPanel.c); the sibling dispatcher dispatchInkPanelState draws
  * the panel through it with the panel task root's x and field-6 halfwords, which
  * reach it loaded with `lh` (the caller reads both fields as signed halfwords,
  * as against the `lhu` of the u16 prototype calls). Both parameters are
@@ -1396,7 +1396,7 @@ void dispatchCommand(u8 arg0);
 void drawShopInkPanel(s32 x, s32 y);
 
 /* Shop price list panel of this EMI (lifted:
- * src/bof3/ui/drawShopPriceListPanel.c); func_801E2EB0 calls it with the
+ * src/bof3/ui/drawShopPriceListPanel.c); dispatchPriceListState calls it with the
  * global panel task root after the state dispatch. It reads the u16 x/field-6
  * halfwords at offsets 0x4/0x6, the bytes at 0xA/0xB/0xC and the count-prefixed
  * row list pointer at 0x20 of its first argument, so the argument is the panel
@@ -1404,7 +1404,7 @@ void drawShopInkPanel(s32 x, s32 y);
  * @source 0x801E2F04 */
 void drawShopPriceListPanel(PanelTask* task);
 
-/* Shop panel step in this EMI (unlifted); the sibling dispatcher func_801E3720
+/* Shop panel step in this EMI (unlifted); the sibling dispatcher dispatchPanelState1
  * forwards the global panel task root to it after the state dispatch. Its body
  * reads the u16 at offsets 0x4/0x6 and bytes at 0x9/0xA/0xB/0x12 of its first
  * argument, so the argument is the panel task root (same layout as
@@ -1412,7 +1412,7 @@ void drawShopPriceListPanel(PanelTask* task);
  * @source 0x801DC6FC */
 void func_801DC6FC(PanelTask* task);
 
-/* Shop panel step in this EMI (unlifted); the sibling dispatcher func_801E3BA4
+/* Shop panel step in this EMI (unlifted); the sibling dispatcher dispatchPanelState2
  * forwards the global panel task root to it after the state dispatch. Its body
  * reads the u16 x/field-6 halfwords at offsets 0x4/0x6 and the bytes at
  * 0xA/0xD of its first argument, so the argument is the panel task root (same
@@ -1420,7 +1420,7 @@ void func_801DC6FC(PanelTask* task);
  * @source 0x801E112C */
 void func_801E112C(PanelTask* task);
 
-/* Shop panel step in this EMI (unlifted); the sibling dispatcher func_801E3CF8
+/* Shop panel step in this EMI (unlifted); the sibling dispatcher dispatchPanelState3
  * forwards the global panel task root to it after the state dispatch. Its body
  * reads the u16 x/field-6 halfwords at offsets 0x4/0x6 and the bytes at
  * 0xA/0xB/0xC/0xD of its first argument and writes the 0xD byte back, so the
@@ -1428,13 +1428,13 @@ void func_801E112C(PanelTask* task);
  * @source 0x801E1710 */
 void func_801E1710(PanelTask* task);
 
-/* Shop panel draw helper (this EMI); func_801E3B7C forwards the global panel
+/* Shop panel draw helper (this EMI); forwardPanelTask2 forwards the global panel
  * task root to it. It reads the same task layout as func_801E3284 (u16 x/y at
  * 0x4/0x6 and bytes at 0xA/0xB/0xD of the argument).
  * @source 0x801E37F4 */
 void func_801E37F4(PanelTask* task);
 
-/* Shop panel step in this EMI (unlifted); the sibling dispatcher func_801E4224
+/* Shop panel step in this EMI (unlifted); the sibling dispatcher dispatchListBuildState
  * forwards the global panel task root to it after the state dispatch. Its body
  * copies its first argument into a callee-saved register and reads the u16
  * x/field-6 halfwords at offsets 0x4/0x6 and the bytes at 0xB/0xC/0xD of that
@@ -1443,25 +1443,25 @@ void func_801E37F4(PanelTask* task);
  * @source 0x801E45C0 */
 void func_801E45C0(PanelTask* task);
 
-/* Shop panel emitter (this EMI); the dispatcher func_801E4338 forwards the
+/* Shop panel emitter (this EMI); the dispatcher dispatchPanelFrameState forwards the
  * global panel task root to it. It reads the u16 x/y at 0x4/0x6 and the byte
  * at 0xA of the argument task (same layout as func_801E3284 and
  * func_801E45C0) and drives the primitive helpers func_801AE3F0,
  * func_801DD350, func_801502D0 and func_8014F800 with coordinates derived
  * from those fields.
  * @source 0x801E4DF4 */
-void func_801E4DF4(PanelTask* task);
+void drawShopTexturePanel(PanelTask* task);
 
-/* Shop panel emitter in this EMI (lifted: func_801E4E9C.c); the sibling
- * dispatcher func_801E440C forwards the global panel task root to it after the
+/* Shop panel emitter in this EMI (lifted: drawFieldGridPanel.c); the sibling
+ * dispatcher dispatchFieldIconState forwards the global panel task root to it after the
  * state dispatch. Its body reads the u16 x/field-6 halfwords at offsets 0x4/0x6
  * of its first argument, so the argument is the panel task root (same layout as
  * func_801E3284).
  * @source 0x801E4E9C */
-void func_801E4E9C(PanelTask* task);
+void drawFieldGridPanel(PanelTask* task);
 
 /* Shop field-record icon sprite emitter in this EMI (lifted:
- * src/bof3/ui/emitShopFieldIcon.c); called only by func_801E4E9C,
+ * src/bof3/ui/emitShopFieldIcon.c); called only by drawFieldGridPanel,
  * which passes the task's x/field-6 halfwords offset by its running icon
  * position, the record's byte at +0 as the icon kind and the mode byte 0. It
  * substitutes the kind 0xB when the kind byte is 4 and D_80146870 is at least
@@ -1475,8 +1475,8 @@ void emitShopFieldIcon(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
 
 /* Main-exe panel frame drawer called by this EMI's panel emitters
  * renderThreeRowSelector, renderShopPriceList, drawShopPriceListPanel,
- * func_801E4DF4 and
- * func_801E4E9C with two sign-extended task halfwords (`lh`) and two small
+ * drawShopTexturePanel and
+ * drawFieldGridPanel with two sign-extended task halfwords (`lh`) and two small
  * constants. The widths below are the widths observed at those call sites, not
  * a recovered callee contract.
  * @source 0x801DD350 */
@@ -1494,7 +1494,7 @@ u8* func_80165D48(s32 arg0, u8 arg1);
 u32 func_80165E04(s32 arg0, u8 arg1);
 
 /* Shop sort option panel (this EMI, lifted:
- * src/bof3/ui/renderShopSortOption.c); func_801E3F34 forwards the global
+ * src/bof3/ui/renderShopSortOption.c); forwardSortOptionTask forwards the global
  * panel task root to it. It reads the u16 x/y at 0x4/0x6 of the argument task
  * (same layout as func_801E3284) and emits the panel rectangle through
  * func_801AE3F0, the caption and the LOOK/High/Low option rows through
@@ -1503,9 +1503,9 @@ u32 func_80165E04(s32 arg0, u8 arg1);
 void renderShopSortOption(PanelTask* task);
 
 /* Shop field-list emitter in this EMI (unlifted); the sibling dispatcher
- * func_801E3E4C calls it with the panel task root's x and field-6 halfwords,
+ * dispatchFieldListState calls it with the panel task root's x and field-6 halfwords,
  * its byte 0xA and the constants 0 and 0. The byte argument indexes the same
- * 164-byte field records this target's func_801E4D4C scans (0x80144968 +
+ * 164-byte field records this target's isSkillRecorded scans (0x80144968 +
  * 0xA4 * index), and the fourth argument's low byte selects between the forced
  * highlight value 1 and a value derived from the record's 0xC halfword. The
  * widths below are the widths observed at that call site (lhu/lbu arguments),
@@ -1513,21 +1513,21 @@ void renderShopSortOption(PanelTask* task);
  * @source 0x801D826C */
 void func_801D826C(u16 arg0, u16 arg1, u8 arg2, s32 arg3, s32 arg4);
 
-/* Shop value-panel emitter in this EMI (lifted partial: func_801DDFB0); the
- * phase step func_801D4CF0 draws the sliding shop value panel through it with
+/* Shop value-panel emitter in this EMI (lifted partial: drawShopValuePanel); the
+ * phase step valuePanelPhaseStep draws the sliding shop value panel through it with
  * the panel x derived from the frame timer phaseTimer, the y constant 0x4C,
  * the overlay flag byte D_801E60F8, the main-RAM byte D_8018E260 and the
  * variant constant 1. The three trailing arguments are loaded with `lbu` at
  * that call site (flags word, row byte, stack byte); the widths below are the
  * widths observed at that call site, not a recovered callee contract.
  * @source 0x801DDFB0 */
-void func_801DDFB0(s16 arg0, s16 arg1, u32 arg2, u8 arg3, u8 arg4);
+void drawShopValuePanel(s16 arg0, s16 arg1, u32 arg2, u8 arg3, u8 arg4);
 
-/* Shop panel strip emitter (this EMI); the phase step func_801D46E0 calls it
+/* Shop panel strip emitter (this EMI); the phase step advancePanelSubstep calls it
  * with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM
  * CLUT-bank byte D_80144952 as the fifth argument.
  * @source 0x801DAB90 */
-void func_801DAB90(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
+void drawShopPanelFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
 
 /* Shop panel prompt helper in this EMI (lifted:
  * src/bof3/ui/renderOptionPromptChoice.c); the sub-step handler
@@ -1543,7 +1543,7 @@ void func_801DAB90(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
  * @source 0x801DA678 */
 s32 renderOptionPromptChoice(void);
 
-/* Shop panel row emitter in this EMI (unlifted); the phase step func_801D5390
+/* Shop panel row emitter in this EMI (unlifted); the phase step advancePanelRowStep
  * calls it with the phase-relative row coordinate (phaseTimer * 80 + 0x20),
  * the constant 0x30 and the constant 0. The first argument is sign-extended
  * from 16 bits at that call site, so the parameter is a signed halfword; the
@@ -1559,7 +1559,7 @@ void func_801D67B0(s16 arg0, s32 arg1, s32 arg2);
  * src/bof3/ui/renderThreeRowSelector.c); the phase steps
  * retreatShopUiSubstep,
  * stepChargePriceSubstep,
- * renderShopPanelsSubstep, func_801D408C and func_801D46A4 call
+ * renderShopPanelsSubstep, selectorPanelPhaseStep and dispatchUiSubTable1 call
  * it with the panel row coordinate as the first argument (phaseTimer * 48 +
  * 0x6E for the count-up step, 0x6E - phaseTimer * 48 for its countdown mirror,
  * the fixed 0x6E for the others) and the y constant 0x4C. Both arguments are
@@ -1591,16 +1591,16 @@ extern void (*D_801E52C4[])(void);
 
 /* @source 0x801E5360
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801D6184 with the phase byte D_80148651 as index. */
+ * dispatchUiPhaseTable2 with the phase byte D_80148651 as index. */
 extern void (*D_801E5360[])(void);
 
 /* @source 0x801E545C
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801D7344 with the phase byte D_80148651 as index. */
+ * dispatchUiPhaseTable3 with the phase byte D_80148651 as index. */
 extern void (*D_801E545C[])(void);
 
 /* Shop icon tiles: twelve 4-byte entries indexed by the icon kind byte of the
- * shop icon wrapper func_801D910C, which substitutes the highest kind 0xB when
+ * shop icon wrapper mapShopIconKind, which substitutes the highest kind 0xB when
  * its kind is 4 and the shared byte D_80146870 is at least 8. Every clut column
  * is a multiple of 0x10, and the payload bytes after entry 0xB are string data
  * rather than further entries. Read-only payload data inside the rodata tail
@@ -1637,7 +1637,7 @@ extern ShopSelectionCell D_801E5BC8[3][2];
 
 /* @source 0x801E5BEC
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801DE188 with the phase byte D_80148651 as index. */
+ * dispatchUiPhaseTable4 with the phase byte D_80148651 as index. */
 extern void (*D_801E5BEC[])(void);
 
 /* @source 0x801E52D8
@@ -1647,22 +1647,22 @@ extern void (*D_801E52D8[])(void);
 
 /* @source 0x801E5D10
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801E092C with the phase byte D_80148652 as index. */
+ * dispatchUiSubTable5 with the phase byte D_80148652 as index. */
 extern void (*D_801E5D10[])(void);
 
 /* @source 0x801E52F0
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801D41B0 with the phase byte D_80148652 as index. */
+ * dispatchUiPhaseTable1 with the phase byte D_80148652 as index. */
 extern void (*D_801E52F0[])(void);
 
 /* @source 0x801E530C
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801D46A4 with the phase byte D_80148652 as index. */
+ * dispatchUiSubTable1 with the phase byte D_80148652 as index. */
 extern void (*D_801E530C[])(void);
 
 /* @source 0x801E5BFC
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801DE1C4 with the phase byte D_80148652 as index. */
+ * dispatchUiSubTable2 with the phase byte D_80148652 as index. */
 extern void (*D_801E5BFC[])(void);
 
 /* @source 0x801E5C08
@@ -1671,43 +1671,43 @@ extern void (*D_801E5C08[])(void);
 
 /* @source 0x801E5CFC
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801DFDB8 with the phase byte D_80148652 as index. */
+ * dispatchUiSubTable4 with the phase byte D_80148652 as index. */
 extern void (*D_801E5CFC[])(void);
 
 /* @source 0x801E5CE8
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801DF978 with the phase byte D_80148651 as index. */
+ * dispatchUiPhaseTable5 with the phase byte D_80148651 as index. */
 extern void (*D_801E5CE8[])(void);
 
 /* @source 0x801E5D3C
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801E200C with the phase byte D_80148651 as index. */
+ * dispatchUiPhaseTable6 with the phase byte D_80148651 as index. */
 extern void (*D_801E5D3C[])(void);
 
 /* @source 0x801E5D48
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801E2048 with the sub-step byte D_80148652 as index. */
+ * dispatchUiSubTable6 with the sub-step byte D_80148652 as index. */
 extern void (*D_801E5D48[])(void);
 
 /* @source 0x801E5D50
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801E2114 with the sub-step byte D_80148652 as index. */
+ * dispatchUiSubTable7 with the sub-step byte D_80148652 as index. */
 extern void (*D_801E5D50[])(void);
 
 /* @source 0x801E5D5C
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801E2590 with the sub-step byte D_80148652 as index. */
+ * dispatchUiSubTable8 with the sub-step byte D_80148652 as index. */
 extern void (*D_801E5D5C[])(void);
 
 /* @source 0x801E5D68
- * @kind table — handler pointers (this EMI); dispatched by func_801E27BC
+ * @kind table — handler pointers (this EMI); dispatched by callPanelByteTable
  * with panel task byte 2 (g_PanelTaskRoot->unk_00[2]) as index. */
 extern void (*D_801E5D68[])(void);
 
 /* Shop screen draw (lifted); called with no arguments by the phase step
- * func_801DE40C, the cursor/confirm handler
+ * finishListCursorsStep, the cursor/confirm handler
  * drawSwapSavedSelection and the
- * sub-step handler func_801DE88C, all of which drop the result, so the call is
+ * sub-step handler gateDimTileSubstep, all of which drop the result, so the call is
  * argument- and return-free at those sites.
  * @source 0x801DF6A8 */
 void renderShopListCursors(void);
@@ -1724,26 +1724,26 @@ u8 swapSelectionIds(void);
  * prepare routine calls it with no arguments before drawing the row through
  * func_801EF27C.
  * @source 0x801D7080 */
-void func_801D7080(void);
+void formatShopHeaderRow(void);
 
 /* Save-slot panel record copier (lifted: func_801D6CE4_shop00.c); the save-data
  * prepare routine hands it the selected save slot D_801E6074 and the save-data
  * block whose panel record at +0xCA0 is copied into that slot's record.
  * @source 0x801D6CE4 */
-void func_801D6CE4(u8 arg0, u8* arg1);
+void copyPanelRecordState(u8 arg0, u8* arg1);
 void appendFullscreenDimTile(void);
 void appendFullscreenDimTileB(void);
-void func_801DE8E8(void);
+void dimTileCountdownStep(void);
 
 /* Shop UI state initializer in this EMI (lifted: initializeShopUiState,
  * 0x801E2650); called with no arguments by the sub-step handler
- * func_801E2084.
+ * initShopUiSubstep.
  * @source 0x801E2650 */
 void initializeShopUiState(void);
 
 /* Shop background painter in this EMI (lifted:
  * renderBackgroundTilesKind, 0x801DBD24); called by the phase
- * step func_801DE45C and by renderShopListCursors with the
+ * step refreshListBackgroundStep and by renderShopListCursors with the
  * main-RAM index byte D_80144953. It masks the low byte of its argument and
  * uses it to index the D_801E5B1C table, which selects the index run of the
  * D_801E5AD0 tile blob and one of the four GetClut entries it collects, then
@@ -1753,7 +1753,7 @@ void initializeShopUiState(void);
 void renderBackgroundTilesKind(u32 kind);
 
 /* Byte-swap helper in this EMI (already lifted); called by the skill-notes
- * scanner func_801E1BCC with the two addresses of an adjacent zero/non-zero
+ * scanner normalizeSkillBankPairs with the two addresses of an adjacent zero/non-zero
  * byte pair inside the 128-slot main-RAM bank D_8014546C.
  * @source 0x801E1BB8 */
 void swapBytes(u8* arg0, u8* arg1);
@@ -1761,15 +1761,15 @@ void swapBytes(u8* arg0, u8* arg1);
 /* Skill-notes bank normalizer in this EMI (already lifted): it walks the
  * 128-slot main-RAM bank D_8014546C and swaps adjacent byte pairs whose first
  * byte is zero and second byte is not. It runs first inside the command
- * handlers sortSkillNotesCost and func_801E1D84.
+ * handlers sortSkillNotesCost and orderSkillNotesCost.
  * @source 0x801E1BCC */
-void func_801E1BCC(void);
+void normalizeSkillBankPairs(void);
 
 /* Shop slot-list renderer in this EMI (lifted: renderNumberedShopStrip,
- * 0x801DEE64); called by the phase step func_801DE45C with no arguments. It
+ * 0x801DEE64); called by the phase step refreshListBackgroundStep with no arguments. It
  * reads phaseTimer and the value tables through func_801D826C/sprintf/
  * func_80150098, then emits the slidable off-screen slot region through
- * func_801DF00C and the shop panel strip through func_801DAB90.
+ * func_801DF00C and the shop panel strip through drawShopPanelFrame.
  * @source 0x801DEE64 */
 void renderNumberedShopStrip(void);
 
@@ -1795,9 +1795,9 @@ void func_80150098(s32 arg0, s16 arg1, s32 arg2, u8* arg3);
 
 /* Shop list/state rebuild in this EMI (resets D_801E6258, refills the eight
  * D_801E6264 entries, then rewrites D_80148331/0x32/0x33); called by the phase
- * advance handler func_801DF9B4 with no arguments.
+ * advance handler rebuildListPhaseStep with no arguments.
  * @source 0x801E0F78 */
-void func_801E0F78(void);
+void rebuildShopListState(void);
 
 /* Main-exe helper (unlifted, outside this EMI's payload) called once by
  * rebuildPanelRecordTable with the constant 1, the address of the
@@ -1828,7 +1828,7 @@ s32 func_801EEC30(u32 arg0, void* arg1, u32 arg2, u32 arg3, u32 arg4);
  * @source 0x801EF200 */
 s32 func_801EF200(void);
 
-/* Shared flag-bank tester: the entry predicate func_801E4C2C passes the
+/* Shared flag-bank tester: the entry predicate checkShopEntryRequirement passes the
  * main-RAM bank base D_80144F28 and the flag index 0x6C and treats a nonzero
  * return as "flag set". The two-argument (base, flag) prototype is the one
  * carried by emi/etc/commu00/00, emi/etc/sisyou/00, emi/scenario/scena00/00,
@@ -1859,10 +1859,10 @@ void func_8015B580(void* arg0, u8 bit_index);
 void func_80150224(s32 action_id);
 
 /* Byte-list membership test lifted in src/bof3/ui/isSkillRecorded.c as a
- * 32-bit-returning function; the entry predicate func_801E4C2C reads only its
+ * 32-bit-returning function; the entry predicate checkShopEntryRequirement reads only its
  * low byte, which is why that call site truncates the result with (u8).
  * @source 0x801E4D4C */
-s32 func_801E4D4C(u8 arg0);
+s32 isSkillRecorded(u8 arg0);
 
 typedef struct ShopValueRecord {
   u16 value;
@@ -1872,7 +1872,7 @@ typedef struct ShopValueRecord {
 extern ShopValueRecord D_801CB8DC[][99];
 
 /* Main-RAM shop value tables: the u16 value at record offset 0 of the table
- * selected by func_801DA9C4's mode byte. Only the record stride is proven by
+ * selected by lookupShopValueRecord's mode byte. Only the record stride is proven by
  * the original's index scaling (9/12/11/10 u16 = 18/24/22/20 bytes); the
  * record tails are not recovered (all four tables are zero-filled in the
  * shipped image, so no record content is observable).
@@ -1886,12 +1886,12 @@ extern u16 D_801C98B8[];
 extern u16 D_801C9E8E[];
 
 /* Main-RAM CLUT-bank byte read as the fifth argument of the shop panel strip
- * emitter func_801DAB90 by the phase step func_801D46E0; the same address is
+ * emitter drawShopPanelFrame by the phase step advancePanelSubstep; the same address is
  * declared as D_80144952 by emi/etc/sisyou/00.
  * @source 0x80144952 @kind unknown */
 extern u8 D_80144952;
 
-/* Main-RAM index byte read at the entry of the phase step func_801DE45C and
+/* Main-RAM index byte read at the entry of the phase step refreshListBackgroundStep and
  * passed as the only argument of the shop background painter
  * renderBackgroundTilesKind, which
  * masks it to 0xFF and indexes the D_801E5B1C table with it. It is the byte
@@ -1901,12 +1901,12 @@ extern u8 D_80144953;
 
 /* Main-RAM amount drawn by the shop money panel drawer drawShopMoneyPanel,
  * which formats it through sprintf with the `%7d` string D_801D0D08; read as
- * the fourth argument of the panel dispatcher func_801E2AB0 and of the shop
+ * the fourth argument of the panel dispatcher dispatchMoneyPanelState and of the shop
  * phase and sub-step handlers that draw the same panel.
  * @source 0x80144F50 @kind unknown */
 extern s32 D_80144F50;
 
-/* Main-RAM byte table read by the shop panel dispatcher func_801E2DB4 with the
+/* Main-RAM byte table read by the shop panel dispatcher dispatchEquipPanelState with the
  * panel task byte 0xA as index; its byte result indexes D_80181B10. The same
  * address is declared as D_80144F5A by emi/etc/game/00 (indexed there by the
  * mode byte) and it is owned by the shared map, so no target map row is added.
@@ -1922,14 +1922,14 @@ extern u8 D_80144F5A[];
 extern u8 D_80144F5D[];
 
 /* Main-RAM flag byte whose bits 3, 4 and 5 are the shop requirement ids 0xB,
- * 0xD and 0xE tested by the entry predicate func_801E4C2C; the sisyou overlay
+ * 0xD and 0xE tested by the entry predicate checkShopEntryRequirement; the sisyou overlay
  * sets those same three bits in func_801D3A24_sisyou00. The address is owned by
  * the shared map, so no target map row is added.
  * @source 0x80144F59 @kind unknown */
 extern u8 D_80144F59;
 
 /* Main-RAM flag bank whose flag 0x6C is the shop requirement id 0xC read by
- * the entry predicate func_801E4C2C through the shared flag tester
+ * the entry predicate checkShopEntryRequirement through the shared flag tester
  * func_8015B5D4, which takes this address as its base argument. The same bank
  * is declared by emi/etc/commu00/00, emi/etc/game/00, emi/world00/area027/13 and
  * emi/world03/area127/13; it is not owned by the shared map, so this target
@@ -1970,7 +1970,7 @@ extern u16 D_80145AA8;
 extern u16 D_80145AC4;
 
 /* Main-RAM halfword cells cleared together (`sh $zero`) by the sub-step handler
- * func_801D5D98 on its cue 0xD0 path, immediately before it arms sub-step
+ * confirmPanelExitStep on its cue 0xD0 path, immediately before it arms sub-step
  * 0x14. The two stores are adjacent and hand-written to $at in the original;
  * the addresses have no other reference in this target and are not owned by
  * the shared map, so each keeps its own scalar declaration and target-map row.
@@ -1982,7 +1982,7 @@ extern u16 D_80145AC8;
 
 /* Main-RAM leading byte of the 0x140-byte-stride record table walked as the
  * D_80146254 records at D_80145FCC by emi/etc/game/00, emi/etc/sisyou/00 and
- * emi/battle/battle/03. Read by this target's func_801DB938 to select the
+ * emi/battle/battle/03. Read by this target's drawEquipPanelTask to select the
  * record named by its task byte 0xC and passed as the third argument of the
  * equipment-slot block renderEquipSlotRows and the shop row
  * emitter func_801D9254. The address is not owned
@@ -1993,7 +1993,7 @@ extern u16 D_80145AC8;
 extern u8 D_80145FCC[];
 
 /* Main-RAM byte read as the row argument of the value-panel emitter
- * func_801DDFB0 by the phase step func_801D4CF0, which loads it with `lbu` and
+ * drawShopValuePanel by the phase step valuePanelPhaseStep, which loads it with `lbu` and
  * passes it as the emitter's fourth argument. Zero-filled in the shipped
  * payload, so its role is not observable there; kept raw at the access width.
  * @source 0x8018E260
@@ -2060,7 +2060,7 @@ typedef struct ShopSlotEntry {
 } ShopSlotEntry;
 extern ShopSlotEntry D_8018E990[];
 
-/* Main-RAM state-byte table read by the shop panel dispatcher func_801E2DB4 as
+/* Main-RAM state-byte table read by the shop panel dispatcher dispatchEquipPanelState as
  * the third argument of drawShopEquipPanel, indexed by D_80144F5A[task byte
  * 0xA].
  * The same address is declared as D_80181B10 by emi/battle/battle/03, which
@@ -2070,7 +2070,7 @@ extern ShopSlotEntry D_8018E990[];
 extern u8 D_80181B10[];
 
 /* Main-RAM field-record table: eight 164-byte (0xA4) records starting at
- * 0x80144968. The phase step func_801D7B74 rebuilds the record selected by
+ * 0x80144968. The phase step commitSlotRowFlag rebuilds the record selected by
  * D_80145FCC through func_80164A44, this target's rebuildFieldRecordSlots walks
  * the same eight records, and emi/etc/game/00 (status bytes +0x0E..+0x13) and
  * emi/battle/battle/03 (41-word records) declare the same table. The address is
@@ -2104,7 +2104,7 @@ extern u8 D_801E5834[];
 extern const char D_801E583C[];
 
 /* Main-RAM byte inside each 164-byte field record, at offset +0x19: the phase
- * step func_801D7B74 writes 1 << (s8)D_8014865D into it for the record selected
+ * step commitSlotRowFlag writes 1 << (s8)D_8014865D into it for the record selected
  * by D_80145FCC, so the field is a bit mask byte whose contents are not
  * recovered. Declared as its own byte list at the original access width (the
  * sibling D_801449E2 is the same record's +0x7A list); no target-map row
@@ -2113,7 +2113,7 @@ extern const char D_801E583C[];
 extern u8 D_80144981[];
 
 /* Main-RAM bit-flag byte at offset +0x07 of each 164-byte field record of the
- * table D_80144968: the shop list/state rebuild func_801E0F78 scans the eight
+ * table D_80144968: the shop list/state rebuild rebuildShopListState scans the eight
  * records and keeps the index of every one whose low bit is set. Declared as
  * its own byte list at the original access width (the sibling D_80144981 is
  * the same record's +0x19 list); no target-map row existed for it before this
@@ -2121,7 +2121,7 @@ extern u8 D_80144981[];
  * @source 0x8014496F @kind unknown */
 extern u8 D_8014496F[];
 
-/* Main-RAM skill lists scanned by func_801E4D4C. D_801449E2 is the ten-slot
+/* Main-RAM skill lists scanned by isSkillRecorded. D_801449E2 is the ten-slot
  * list at offset +0x7A of the field records (record base 0x80144968, stride
  * 164); D_8014546C is the 128-slot global skill-notes bank.
  * @source 0x801449E2 @kind table */
@@ -2130,7 +2130,7 @@ extern u8 D_801449E2[];
 extern u8 D_8014546C[];
 
 /* Front-end play-time clock bytes formatted as the two h/m digit fields of the
- * shop header row by func_801D7080: the byte at 0x80144FC0 is the hour cell and
+ * shop header row by formatShopHeaderRow: the byte at 0x80144FC0 is the hour cell and
  * the byte at 0x80144FC1 the minute cell, each read with `lbu` and split into
  * its tens and units halves through the unsigned divide-by-ten sequence. Both
  * addresses are owned by the shared map, so no target-map row is added. They are
@@ -2163,7 +2163,7 @@ extern u8 D_80144FC2;
 extern u8 D_80144FC3;
 
 /* Main-RAM level byte formatted as the two digits of the `Lv.` field of the
- * same header row by func_801D7080, which loads it once per digit with `lbu` and
+ * same header row by formatShopHeaderRow, which loads it once per digit with `lbu` and
  * splits each load into tens and units. It is the +6 byte of the first 164-byte
  * field record of D_80144968; the phase step
  * drawListChargeConfirm charges 10 per level of a record and
@@ -2175,7 +2175,7 @@ extern u8 D_80144FC3;
 extern u8 D_8014496E;
 
 /* Shared sprintf work buffer of the front-end row formatters: the row builder
- * func_801D7080 clears its 0x40 bytes through `sb` and hands it to sprintf as
+ * formatShopHeaderRow clears its 0x40 bytes through `sb` and hands it to sprintf as
  * the destination. The address is owned by the shared map, so no target-map row
  * is added.
  * @source 0x80145AD4 @kind unknown */
@@ -2226,32 +2226,32 @@ extern const char slotPriceFormatStrings[];
 /* EMI-local table of the ten full-width digit strings: the ten 4-byte char
  * pointers at 0x801E5434 point at the Shift-JIS "0".."9" strings of
  * 0x801E540C..0x801E5430 (one 2-byte glyph plus a terminator each), and
- * func_801D7080 passes two of them per formatted number as the `%s` arguments
+ * formatShopHeaderRow passes two of them per formatted number as the `%s` arguments
  * of the header row (tens then units). Not owned by the shared map; declared
  * locally with a target-map row.
  * @source 0x801E5434 @kind table */
 extern const char* D_801E5434[];
 
 /* EMI-local table of requirement lists for the shop entry predicate
- * func_801E4C2C, which indexes it with the entry id byte and walks the
+ * checkShopEntryRequirement, which indexes it with the entry id byte and walks the
  * 0xFF-terminated byte list it selects: the 17 live entries 0..0x10 point into
  * the list block at 0x801E5F6C..0x801E5FBD (entry 0 -> {0xAA, 0x27, 0x03,
  * 0x14}, entry 0x10 -> {0x9E, 0xAB, 0x26}); entries 0xB..0xE (11..14) are empty
  * lists, which is why those four ids are answered by the flag tests in
- * func_801E4C2C instead. Not owned by the shared map; declared locally with a
+ * checkShopEntryRequirement instead. Not owned by the shared map; declared locally with a
  * target-map row.
  * @source 0x801E5FC0 @kind table */
 extern u8* D_801E5FC0[];
 
 /* EMI-local byte selecting the table entry formatted into the bracketed slot
- * of the header row built by func_801D7080. Zero-filled in the shipped payload,
+ * of the header row built by formatShopHeaderRow. Zero-filled in the shipped payload,
  * so its role is not observable there; kept raw at the access width. Not owned
  * by the shared map; declared locally with a target-map row.
  * @source 0x801E6108 @kind unknown */
 extern u8 D_801E6108;
 
 /* EMI-local Shift-JIS format string of the shop header row (the
- * "(%s) %s%s h %s%s m Lv.%s%s" row) passed to sprintf by func_801D7080. Not
+ * "(%s) %s%s h %s%s m Lv.%s%s" row) passed to sprintf by formatShopHeaderRow. Not
  * owned by the shared map; declared locally with a target-map row.
  * @source 0x801D0C98 @kind rodata */
 extern const char D_801D0C98[];

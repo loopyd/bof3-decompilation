@@ -3,10 +3,10 @@
 /* @source 0x801D5894
  * @behavior shop sub-step handler at table entry 0x0E of the sub-step handler
  *           table D_801E530C (the payload word at 0x801E5344 names this
- *           function), which func_801D46A4 dispatches with the UI sub-step byte
+ *           function), which dispatchUiSubTable1 dispatches with the UI sub-step byte
  *           D_80148652 as index: it publishes 3 into the panel-record count
  *           D_801E6078, emits the shop panel strip through this EMI's panel
- *           strip emitter func_801DAB90 with the fixed panel arguments
+ *           strip emitter drawShopPanelFrame with the fixed panel arguments
  *           (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
  *           D_80144952 as the fifth argument, submits the texture row 0x1C at
  *           row 0x16 through func_8014F800 with the value returned by
@@ -47,7 +47,7 @@ void drawSlotMemoryCard(void) {
   char stamp[0x40];
 
   D_801E6078 = 3;
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(D_801E60EC + 0x85));
   func_801D67B0(0x20, 0x30, 0);
   func_801EEC30(0, 0, 0, 0, 0);

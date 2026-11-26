@@ -5,7 +5,7 @@
  *           D_801E52D8, which the dispatcher func_801D3AA8 selects with the UI
  *           sub-step byte D_80148652: draws the three-row selector panel
  *           through renderThreeRowSelector at the fixed origin (0x6E, 0x4C),
- *           emits the shop panel strip through func_801DAB90 with the fixed
+ *           emits the shop panel strip through drawShopPanelFrame with the fixed
  *           panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM
  *           CLUT-bank byte D_80144952 as the fifth argument and, when the
  *           saved-state byte D_8014865C is not the -1 sentinel, submits the
@@ -37,7 +37,7 @@ void stepChargePriceSubstep(void) {
   u8 row;
 
   renderThreeRowSelector(0x6E, 0x4C);
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
     /* The texture handle is passed in place as the fifth argument of
      * func_8014F800 instead of through a local: the original keeps it in $v0

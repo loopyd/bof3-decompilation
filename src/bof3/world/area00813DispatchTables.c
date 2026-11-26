@@ -20,7 +20,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchMode, modeHandlerTable);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801F3244, areaModeHandlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateMode, areaModeHandlerTable);
 
 /* @behavior dispatches the current area-state mode byte through the local
  * handler table at 0x801F46EC.
@@ -29,4 +29,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801F3244, areaModeHandlerTa
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801F3A64, D_801F46EC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStepMode, D_801F46EC);

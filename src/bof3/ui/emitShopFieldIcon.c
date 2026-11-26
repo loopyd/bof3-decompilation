@@ -9,7 +9,7 @@ extern s32 GetGraphType(void);
 
 /* @source 0x801E4FC8
  * @behavior shop field-record icon sprite emitter of this EMI, called only by
- *           the panel emitter func_801E4E9C once per field record whose flag
+ *           the panel emitter drawFieldGridPanel once per field record whose flag
  *           byte is set and whose byte at +0x16 matches D_80148361, with the
  *           task's x/field-6 coordinates plus that walk's running icon offset,
  *           the record byte at +0 as the icon kind and the mode byte 0. It

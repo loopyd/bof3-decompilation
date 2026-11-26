@@ -2,7 +2,7 @@
 
 /* @source 0x801D65EC
  * @behavior shop UI phase step at entry 3 of the phase step table D_801E5360,
- *           which the dispatcher func_801D6184 selects with the UI phase byte
+ *           which the dispatcher dispatchUiPhaseTable2 selects with the UI phase byte
  *           D_80148651: appends the fullscreen dim tile through
  *           appendFullscreenDimTile, then counts the shared frame timer
  *           phaseTimer down. When the timer is already zero, or its decrement

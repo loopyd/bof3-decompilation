@@ -6,7 +6,7 @@
  *           slice through func_80158E50 and arms the write-only byte
  *           D_80148650 with 1 (that byte has no loads in this target, so its
  *           role is unproven). Reached as entry 4 of the phase handler table
- *           D_801E5CE8, which func_801DF978 dispatches with the UI phase byte
+ *           D_801E5CE8, which dispatchUiPhaseTable5 dispatches with the UI phase byte
  *           D_80148651 as index.
  * @status exact
  * @match 100.00

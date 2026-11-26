@@ -3,7 +3,7 @@
 /* @source 0x801E2474
  * @behavior shop sub-step handler reached as entry 1 of the three-entry
  *           sub-step table D_801E5D50 (the shipped word at 0x801E5D54 is this
- *           function), which the dispatcher func_801E2114 indexes with the UI
+ *           function), which the dispatcher dispatchUiSubTable7 indexes with the UI
  *           sub-step byte D_80148652. Every call first republishes the panel
  *           state: it arms the s16 cell D_80148340 with the selected
  *           field-record id D_80148361 plus 0x122 and copies the list cursor
@@ -16,7 +16,7 @@
  *           plays the main-exe cues 0x106 and 0x102 through the cue dispatcher
  *           func_8015DF18, arms D_80148357 with 2, returns both 0x24-byte panel
  *           records anchored at D_80148378 to the state byte 1 that the opener
- *           func_801E2724 overwrites with 2 (D_8014837B and D_8014839F are that
+ *           initShopPanelRecords overwrites with 2 (D_8014837B and D_8014839F are that
  *           byte of the first and second record), re-arms the published slot
  *           byte D_80148360 with the 0x7F none sentinel that
  *           initializeShopUiState also uses, re-arms phaseTimer with 8 and

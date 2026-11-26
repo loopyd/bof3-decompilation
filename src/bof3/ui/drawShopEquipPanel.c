@@ -3,7 +3,7 @@
 
 /* @source 0x801D8A0C
  * @behavior shop equipment panel reached from the panel state dispatcher
- *           func_801E2DB4 with the panel task root x and field-6 halfwords and
+ *           dispatchEquipPanelState with the panel task root x and field-6 halfwords and
  *           the field-record index D_80181B10[D_80144F5A[task byte 0xA]]: it
  *           draws the panel backing through func_801DBF18 with the size pair
  *           9/10, the 16x16 icon through func_801644D8 at (x+7, y+5) with the

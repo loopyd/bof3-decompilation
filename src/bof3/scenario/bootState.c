@@ -2,7 +2,7 @@
 
 /* @source 0x801F9178
  * @behavior Boots state 0 of the overlay's own state machine (the entry that
- * the code-span dispatcher func_801F913C selects from the main-RAM state byte
+ * the code-span dispatcher dispatchStageStateByte selects from the main-RAM state byte
  * D_80146872): it runs the front-end scene init func_801C1DF0(0), seeds the
  * front selector/context bundle - selection seed 0x18, the channel pair
  * 0x630000/0xC0000 and kind 3, both published in the bundle words D_801448FC/

@@ -2,7 +2,7 @@
 
 /* @source 0x801E05E0
  * @behavior note-list sub-step handler reached as entry 4 of the sub-step
- *           table D_801E5CFC, which func_801DFDB8 dispatches with the UI
+ *           table D_801E5CFC, which dispatchUiSubTable4 dispatches with the UI
  *           sub-step byte D_80148652 as index: it first republishes the cursor
  *           state (D_80148624 = 1, the x halfword D_80148628 =
  *           D_801483C4 + 7, the y halfword D_8014862A = D_801483C6 + 13 *

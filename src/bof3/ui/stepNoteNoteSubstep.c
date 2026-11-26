@@ -13,7 +13,7 @@ extern u8 D_801483C2; /* @source 0x801483C2 @kind data */
 
 /* @source 0x801E006C
  * @behavior note-list sub-step handler reached as entry 2 of the sub-step
- *           table D_801E5CFC, which func_801DFDB8 dispatches with the UI
+ *           table D_801E5CFC, which dispatchUiSubTable4 dispatches with the UI
  *           sub-step byte D_80148652 as index: it submits the 164-byte field
  *           record selected by the rebuilt list entry
  *           D_801E6264[D_801E625C] through the main-exe icon-record helper

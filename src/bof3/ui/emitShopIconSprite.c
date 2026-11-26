@@ -9,7 +9,7 @@ extern s32 GetGraphType(void);
 
 /* @source 0x801D8FC0
  * @behavior shop icon sprite emitter of this EMI, called by the shop icon
- *           wrapper func_801D910C with two coordinates, an icon kind byte and a
+ *           wrapper mapShopIconKind with two coordinates, an icon kind byte and a
  *           mode byte: it first picks the draw-mode texture page from
  *           GetGraphType, taking 0x2E when the first query answers 1, 0x2E when
  *           a second query answers 2 and 0x1E otherwise, then arms SetDrawMode

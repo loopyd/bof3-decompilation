@@ -48,7 +48,7 @@ extern void func_801AEA80(u16 arg0, u16 arg1, u8 arg2, s32 arg3);
  *   is zero; the six palette cells 8, 0xA, 9, 0xB, 0xC and 0xC follow at
  *   (x+5, y+0x49/0x56/0x63/0x70/0x84/0x91) through func_801AEA80 with that same
  *   flag byte as the fourth argument. This payload names the span only from the
- *   jal at 0x801DB9A4 inside func_801DB938, which passes the task x and field-6
+ *   jal at 0x801DB9A4 inside drawEquipPanelTask, which passes the task x and field-6
  *   halfwords, the leading byte of the 0x140-byte record D_80145FCC[task byte
  *   0xC] and the low byte of its own second argument, right after painting the
  *   panel backing through func_801AE3F0. Its 0x38-byte frame keeps $s0 through

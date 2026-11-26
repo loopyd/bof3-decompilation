@@ -14,7 +14,7 @@
  * entering the tint path. When the scan finds no nonzero 0x0B byte,
  * D_80146325 bit 2 skips tint work and returns 1. Otherwise, each record
  * copies its selected 32-halfword palette row at 0x80035600 to the row 0xC0
- * bytes higher, calls func_801C2438, clears work byte 0x0B, sets tint bytes
+ * bytes higher, calls markPaletteRowEntries, clears work byte 0x0B, sets tint bytes
  * 0x5D-0x5F to -0x40 and flag byte 0x5C to 1. Returns 1 after that path,
  * including a non-positive record count.
  * @status partial
@@ -104,7 +104,7 @@ s32 stateRoutesInitializeTint(void) {
         value = *(u16*)((u32)(j << 1) + (u32)row);
         *(u16*)((u32)(j << 1) + (u32)pad) = value;
       }
-      func_801C2438();
+      markPaletteRowEntries();
       g_game_work->field_0B = 0;
       g_game_work->unk_5D = -0x40;
       g_game_work->unk_5E = -0x40;

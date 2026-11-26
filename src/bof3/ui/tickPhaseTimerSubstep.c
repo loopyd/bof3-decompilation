@@ -2,7 +2,7 @@
 
 /* @source 0x801D43F0
  * @behavior shop UI sub-step handler at entry 3 of the sub-step handler table
- *           D_801E52F0, which the dispatcher func_801D41B0 selects with the UI
+ *           D_801E52F0, which the dispatcher dispatchUiPhaseTable1 selects with the UI
  *           sub-step byte D_80148652: appends the fullscreen dim tile through
  *           appendFullscreenDimTile, then counts the shared frame timer
  *           phaseTimer down. When the timer is already zero, or its decrement

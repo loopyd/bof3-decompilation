@@ -2,7 +2,7 @@
 
 /* @source 0x801DE200
  * @behavior shop sub-step handler reached as entry 0 of the sub-step table
- *           D_801E5BFC, which the phase dispatcher func_801DE1C4 indexes with
+ *           D_801E5BFC, which the phase dispatcher dispatchUiSubTable2 indexes with
  *           the UI sub-step byte D_80148652: it reads the visible-list length
  *           through func_801BDB7C(0), clears the off-screen count byte
  *           D_801E6250 and appends the id byte (record offset +5) of every one

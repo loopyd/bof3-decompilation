@@ -34,10 +34,10 @@ extern void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, u8 arg3);
 
 extern int sprintf(char* buffer, const char* format, ...);
 
-/* Value sum of this EMI, defined by func_801DAA78.c: the row and the number of
+/* Value sum of this EMI, defined by sumShopRowValues.c: the row and the number of
  * entries it adds, reporting -1 for a count the row cannot hold.
  * @source 0x801DAA78 */
-extern s32 func_801DAA78(u8 row, u8 count);
+extern s32 sumShopRowValues(u8 row, u8 count);
 
 /* One 164-byte entry of the record table D_80144968 selected by the index byte;
  * only the two fields this body reads are named.
@@ -59,7 +59,7 @@ typedef struct ShopExpRowRecord {
  *           through func_8014F800 at (x+0x2C, y+7) with the mask 0xFF and takes
  *           the word at record+8 as its value; with the mode byte set it draws
  *           the NEXT caption D_801E5848 at (x+0x26, y+7) with the same mask and
- *           takes as its value the sum func_801DAA78 forms over the first
+ *           takes as its value the sum sumShopRowValues forms over the first
  *           record[6]+1 values of that record's row. It formats the value into
  *           the shared buffer D_80145AD4 with the format D_801D0CF8 when it is
  *           not -1 and with the placeholder D_801D0CFC when it is, draws that
@@ -116,7 +116,7 @@ void renderExpRowPanel(s16 x, s16 y, u8 index, u8 mode) {
   if (mode == 0) {
     value = record->exp;
   } else {
-    value = func_801DAA78(index, (u8)(record->level + 1));
+    value = sumShopRowValues(index, (u8)(record->level + 1));
   }
   if (value != -1) {
     sprintf((char*)D_80145AD4, D_801D0CF8, value);

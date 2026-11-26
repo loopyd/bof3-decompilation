@@ -2,9 +2,9 @@
 
 /* @source 0x801D3C9C
  * @behavior shop phase step, the countdown mirror of the count-up row step
- *           func_801D408C: draws the phase-relative shop panel row through
+ *           selectorPanelPhaseStep: draws the phase-relative shop panel row through
  *           renderThreeRowSelector at x = 0x6E - phaseTimer * 48 with the y
- *           constant 0x4C, emits the shop panel strip through func_801DAB90
+ *           constant 0x4C, emits the shop panel strip through drawShopPanelFrame
  *           with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the
  *           main-RAM CLUT-bank byte D_80144952 as the fifth argument. When the
  *           saved-state byte D_8014865C is not the -1 sentinel it submits the
@@ -27,10 +27,10 @@ void retreatShopUiSubstep(void) {
    * callee-saved base for the row coordinate, the countdown load and the
    * countdown store (lui+addiu / lbu / sb through one register that stays live
    * across the three calls), the same shape as the countdown siblings
-   * func_801D3AE4 and func_801D408C. */
+   * retreatPanelStripStep and selectorPanelPhaseStep. */
   timer = &phaseTimer;
   renderThreeRowSelector(0x6E - *timer * 48, 0x4C);
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
     /* The texture id is passed in place as the fifth argument of
      * func_8014F800 instead of through a local: the original keeps it in $v0

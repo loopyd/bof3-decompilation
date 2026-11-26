@@ -245,7 +245,7 @@ DISPATCH_WORK_HANDLER(dispatchWorkByte4Handler, D_801CD310, field_04)
  * @match 100.00
  * @residual none
  */
-DISPATCH_WORK_HANDLER(func_801B7D00, D_801CD330, field_04)
+DISPATCH_WORK_HANDLER(dispatchWorkByte4Handler2, D_801CD330, field_04)
 
 /*
  * @behavior Dispatches the handler table (0x801CD37C) indexed by the
@@ -255,4 +255,4 @@ DISPATCH_WORK_HANDLER(func_801B7D00, D_801CD330, field_04)
  * @match 100.00
  * @residual none
  */
-DISPATCH_WORK_HANDLER(func_801B91CC, D_801CD37C, pad_03)
+DISPATCH_WORK_HANDLER(dispatchWorkByte3Handler5, D_801CD37C, pad_03)

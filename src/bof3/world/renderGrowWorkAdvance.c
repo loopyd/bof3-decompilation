@@ -9,13 +9,13 @@
  * @match 100.00
  * @residual none
  * Live audit: 37/37 instructions, 148 -> 148 bytes, exact on the first shape;
- * the sibling func_801F2E64 supplied the call/prologue idiom. State 1 of the
+ * the sibling renderFanRadiusExpires supplied the call/prologue idiom. State 1 of the
  * local handler table at 0x801F3F6C; its relocation-different twin is
  * drawAndGrowWorkByte9ThenAdvanceScenarioScena0300_801F8710 in
  * emi/scenario/scena03/00.
  */
 void renderGrowWorkAdvance(void) {
-  func_801F2F04(*(s16*)(D_1F800044 + 0x2e), *(s16*)(D_1F800044 + 0x30),
+  renderGouraudFanTriangles(*(s16*)(D_1F800044 + 0x2e), *(s16*)(D_1F800044 + 0x30),
                 D_1F800044[9], 0x80, 0);
   D_1F800044[9] += 0xf;
   if (D_1F800044[9] >= 0x3d) {

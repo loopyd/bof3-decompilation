@@ -1,7 +1,7 @@
 #include "bof3/ui/shop00_internal.h"
 
 /* One two-byte row of the count-prefixed list the panel task root holds at
- * +0x20: the pair func_801DA9C4 resolves through its mode and index bytes. */
+ * +0x20: the pair lookupShopValueRecord resolves through its mode and index bytes. */
 typedef struct ShopPriceRow {
   u8 kind;
   u8 index;
@@ -38,7 +38,7 @@ typedef struct ShopPriceListTask {
  *           task byte 0xA as the shade and the main-RAM CLUT-bank byte
  *           D_80144952 as the trailing argument, then one row per entry of the
  *           count-prefixed list the task holds at +0x20. Every entry is a
- *           (kind, index) pair: the row value is func_801DA9C4(kind, index)
+ *           (kind, index) pair: the row value is lookupShopValueRecord(kind, index)
  *           scaled by task byte 0xB through scaleByPercentFloor1 and formatted
  *           into the shared text buffer D_80145AD4 with the "%6dZ" string
  *           D_801D0E88. The row draws the icon cell
@@ -83,7 +83,7 @@ void drawShopPriceList(PanelTask* task) {
   for (i = 0; i < list->count; i++) {
     kind = list->rows[i].kind;
     index = list->rows[i].index;
-    base = func_801DA9C4(kind, index);
+    base = lookupShopValueRecord(kind, index);
     value = scaleByPercentFloor1(base, view->unk_0B);
     icon = func_80165E04(kind, index);
     record = func_80165D48(kind, index);

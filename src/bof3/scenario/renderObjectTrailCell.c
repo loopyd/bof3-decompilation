@@ -9,7 +9,7 @@
  * high halfword with the func_8015477C distance of (x, y + 0x8000) each time;
  * once the target cell's y is reached it snaps that cursor's y and scale word
  * to the cell's own cursor and stops after one more stamp. Every iteration
- * emits one tinted sprite through func_801F78EC(interpolated cursor, object
+ * emits one tinted sprite through renderCursorPairQuad(interpolated cursor, object
  * cursor, tint), where the tint is the three signed channels of
  * g_WorkObjectTint, then advances the object cursor to the interpolated one.
  * When the shared mode byte D_80146866 reads 0x32 the object's state byte at
@@ -56,7 +56,7 @@ void renderObjectTrailCell(void) {
       interp.scale_08.parts.depth_02 =
           func_8015477C(cur.coord_x_00, interp.coord_y_04);
     }
-    func_801F78EC(interp, cur, color);
+    renderCursorPairQuad(interp, cur, color);
     cur = interp;
   } while (more);
 

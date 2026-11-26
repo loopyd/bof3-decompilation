@@ -88,10 +88,10 @@ set(BOF3_OBJFLAGS_bof3_battle_copyCurrentBattlerQueued_c -O2 -G4)
 set(BOF3_OBJFLAGS_bof3_ui_resetSelectionState_c -O2 -fno-schedule-insns)
 set(BOF3_OBJCOMPILER_bof3_audio_dispatchSoundCue_c gcc-2.6.3-psx)
 
-# func_801D1B28 keeps the original's unsigned division-trap sequence (break 7);
+# renderEntryValueLine keeps the original's unsigned division-trap sequence (break 7);
 # the original expands `divu zero,v0,v1` into bnez/nop/break 0x7 + mflo at
 # 0x801D1BD0..0x801D1BDC. The canonical maspsx pass omits that check, so the
 # clean-C shape matches everywhere except the three-instruction expansion.
 # --expand-div restores the exact expansion. /* @source 0x801D1B28 */
 # Verified by bin/harness lift flag-search (see lane w1-l4).
-set(BOF3_OBJFLAGS_bof3_ui_func_801D1B28_sisyou00_c -O2 -Wa,--expand-div)
+set(BOF3_OBJFLAGS_bof3_ui_renderEntryValueLine_c -O2 -Wa,--expand-div)

@@ -2,7 +2,7 @@
 
 /* @source 0x801DFDF4
  * @behavior note-list sub-step handler reached as entry 0 of the sub-step table
- *           D_801E5CFC, which func_801DFDB8 dispatches with the UI sub-step byte
+ *           D_801E5CFC, which dispatchUiSubTable4 dispatches with the UI sub-step byte
  *           D_80148652 as index: it first publishes the note-list panel state
  *           (the halfword D_80148340 = 0x36, the visibility byte D_80148624 = 1,
  *           the published x halfword D_80148628 = D_80148334 +

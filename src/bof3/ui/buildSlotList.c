@@ -9,10 +9,10 @@
  * callee-saved registers by the loop optimizer. */
 /* @source 0x801D8050
  * @behavior shop slot-list builder reached from the panel phase steps
- *           func_801D7B74/func_801D7CC8/func_801D7D48 with the constant 0: its
+ *           commitSlotRowFlag/rollbackSlotRowStep/retreatSlotRowStep with the constant 0: its
  *           byte argument only selects whether the frame timer phaseTimer
  *           supplies the phase offset (nonzero) or the offset is zero. It emits
- *           the shop panel strip through the panel strip emitter func_801DAB90
+ *           the shop panel strip through the panel strip emitter drawShopPanelFrame
  *           with the panel x constant 0x14, the phase-relative second argument
  *           (0x10 - phaseTimer * 10) masked with 0xFFFE, the height constant
  *           0x118, the constant 0x13 and the main-RAM CLUT-bank byte
@@ -42,7 +42,7 @@ void buildSlotList(u8 arg0) {
   if (enabled != 0) {
     timer = phaseTimer;
   }
-  func_801DAB90(0x14, (0x10 - timer * 10) & 0xFFFE, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, (0x10 - timer * 10) & 0xFFFE, 0x118, 0x13, D_80144952);
   for (slot = 0; slot < func_801BDB7C(0); slot++) {
     s32 offset;
     s32 record_offset;

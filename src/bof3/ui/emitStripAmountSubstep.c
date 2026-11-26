@@ -4,7 +4,7 @@
  * @behavior shop UI sub-step handler reached as entry 1 of the sub-step table
  *           D_801E52D8, which the dispatcher func_801D3AA8 selects with the UI
  *           sub-step byte D_80148652: it emits the shop panel strip through
- *           func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118,
+ *           drawShopPanelFrame with the fixed panel arguments (0x14, 0x12, 0x118,
  *           0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth
  *           argument. When the saved-state byte D_8014865C is not the -1
  *           sentinel it formats ten times the main-RAM byte D_80148699 into the
@@ -27,10 +27,10 @@ void emitStripAmountSubstep(void) {
   /* Plain view of the volatile frame-timer cell: the guarded schedule keeps
    * the re-arm constant in the branch delay slot and hoists the sub-step load
    * above the store, which the volatile view's ordering barriers defeat (the
-   * same shape as the sibling func_801E2084). */
+   * same shape as the sibling initShopUiSubstep). */
   u8* timer = (u8*)&phaseTimer;
 
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
     /* The amount is the shared header cell scaled by ten; the sibling sub-step
      * handler func_801D3D84 charges the same product against D_80144F50.

@@ -3,7 +3,7 @@
 /* @source 0x801F7CF0
  * @behavior Emits the scratch work object's staged entry-effect draws:
  * re-reads the published work-object pointer cell at 0x1F800044 and passes
- * four func_801F85A8 draws in order, the first from that object's word at
+ * four renderEntryFlare draws in order, the first from that object's word at
  * offset 0x18 with (0x200, 0, 0), the second from the word at offset 0x1C with
  * (0x71, 0, 0x8E3), the third from the object's byte at offset 0x0B with
  * (0x155, 0, 0x200) and the fourth from the byte at offset 0x08 with
@@ -17,10 +17,10 @@
  * @residual none
  */
 void renderObjectEntryEffect(void) {
-  func_801F85A8(*(s32 *)(D_1F800044 + 0x18), 0x200, 0, 0);
-  func_801F85A8(*(s32 *)(D_1F800044 + 0x1C), 0x71, 0, 0x8E3);
-  func_801F85A8(D_1F800044[0x0B], 0x155, 0, 0x200);
-  func_801F85A8(D_1F800044[0x08], 0xE3, 0, 0xE38);
+  renderEntryFlare(*(s32 *)(D_1F800044 + 0x18), 0x200, 0, 0);
+  renderEntryFlare(*(s32 *)(D_1F800044 + 0x1C), 0x71, 0, 0x8E3);
+  renderEntryFlare(D_1F800044[0x0B], 0x155, 0, 0x200);
+  renderEntryFlare(D_1F800044[0x08], 0xE3, 0, 0xE38);
 
   D_1F800044[0x08] += 8;
 

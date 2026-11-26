@@ -3,7 +3,7 @@
 /* @source 0x801E1C88
  * @behavior orders the main-RAM 128-slot skill-notes bank D_8014546C by
  *           ability cost after normalizing it: it first runs the scanner
- *           func_801E1BCC over the bank, then for every outer pass i in
+ *           normalizeSkillBankPairs over the bank, then for every outer pass i in
  *           0..0x7E re-seeds the byte cursor p at the bank start and walks j
  *           from 0 while j is below the signed pass limit 0x7F - i, deriving
  *           the next byte address q from the current cursor on every step and
@@ -28,7 +28,7 @@ void sortSkillNotesCost(u32 arg0) {
   u8 i;
   u8 j;
 
-  func_801E1BCC();
+  normalizeSkillBankPairs();
   for (i = 0; i < 0x7F; i++) {
     p = D_8014546C;
     for (j = 0; j < 0x7F - i; j++) {

@@ -16,7 +16,7 @@ extern int rand(void);
  * @match 100.00
  * @residual none
  */
-void func_801D12A8(void) {
+void reseedScratchRotationPhase(void) {
   ScenarioSce10effScratch* work;
   volatile s32* slot;
   s32 counter;

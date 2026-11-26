@@ -40,7 +40,7 @@ extern void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, u8 arg3);
 
 /* @source 0x801E3F5C
  * @behavior shop sort option panel of the panel task, reached through the
- *           wrapper func_801E3F34, which forwards the global panel task root:
+ *           wrapper forwardSortOptionTask, which forwards the global panel task root:
  *           paints the shaded panel rectangle through func_801AE3F0 at (task x
  *           + 3, task y + 3) with the width 0x65, the height 0x19 plus 0x10
  *           times the option count byte D_801E5F0C[0], the constant 0 and the

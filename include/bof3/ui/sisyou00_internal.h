@@ -20,26 +20,26 @@ typedef union SisyouEntryStatus {
 } SisyouEntryStatus;
 
 /* One 164-byte entry of the 0x80144968 record table; only the fields consumed
- * by func_801D177C are named. */
+ * by renderMasterListRow are named. */
 typedef struct SisyouEntry {
   u8 unk_00[5];
-  u8 unk_05;                /* icon kind selected by func_801D23A0 */
-  u8 unk_06;                /* value byte and func_801D1B28 argument */
+  u8 unk_05;                /* icon kind selected by emitPanelKindSprite */
+  u8 unk_06;                /* value byte and renderEntryValueLine argument */
   u8 unk_07;
-  u32 unk_08;               /* func_801D1B28 numeric row base */
+  u32 unk_08;               /* renderEntryValueLine numeric row base */
   SisyouEntryStatus status; /* +0x0C */
   u16 unk_10;
   u16 unk_12;
   u16 unk_14;               /* first limit, compared against 2 */
   u16 unk_16;               /* second value, compared against 0 */
   u8 unk_18[3];
-  u8 unk_1B;                /* badge byte compared against 0xFF by func_801D1444 */
+  u8 unk_1B;                /* badge byte compared against 0xFF by renderMasterSummaryPanel */
   u16 unk_1C;               /* first value formatted after the first limit */
   u16 unk_1E;               /* second limit, shifted right by 2 */
-  u16 unk_20;               /* Pwr value row formatted by func_801D1444 */
-  u16 unk_22;               /* Def value row formatted by func_801D1444 */
-  u16 unk_24;               /* Agl value row formatted by func_801D1444 */
-  u16 unk_26;               /* Int value row formatted by func_801D1444 */
+  u16 unk_20;               /* Pwr value row formatted by renderMasterSummaryPanel */
+  u16 unk_22;               /* Def value row formatted by renderMasterSummaryPanel */
+  u16 unk_24;               /* Agl value row formatted by renderMasterSummaryPanel */
+  u16 unk_26;               /* Int value row formatted by renderMasterSummaryPanel */
   u8 unk_28[0x7C];          /* record tail, stride is 0xA4 */
 } SisyouEntry;
 
@@ -49,7 +49,7 @@ extern u8* g_PrimCursor;
 
 /* Main-RAM globals owned by the loaded image. */
 /* @source 0x80010000 @kind table */
-/* Offset table over the 0x80010000 main-RAM base: func_801D10AC adds the entry
+/* Offset table over the 0x80010000 main-RAM base: updateEntryActionPanel adds the entry
  * selected by its argument to that base to obtain the texture handle passed to
  * func_8014F800. */
 extern u16 D_80010000[];
@@ -57,18 +57,18 @@ extern u16 D_80010000[];
 /* Byte read as the emitted panel strip's fifth argument. */
 extern u8 D_80144952;
 /* @source 0x80145AA8 @kind unknown */
-/* Shared pad-state word; func_801D10AC reads it through the array form so its
+/* Shared pad-state word; updateEntryActionPanel reads it through the array form so its
  * address stays materialized in a register across the func_8014E640 call. */
 extern u16 D_80145AA8[];
 /* @source 0x80145AC2 @kind unknown */
-/* Shared pressed-button mask matched against D_80145AA8 by func_801D10AC. */
+/* Shared pressed-button mask matched against D_80145AA8 by updateEntryActionPanel. */
 extern u16 D_80145AC2;
 /* @source 0x80145AC4 @kind unknown */
-/* Shared pressed-button mask matched against D_80145AA8 by func_801D10AC. */
+/* Shared pressed-button mask matched against D_80145AA8 by updateEntryActionPanel. */
 extern u16 D_80145AC4;
 /* @source 0x80145FCC @kind table */
 /* First byte of each D_80146254-entry, 0x140-byte-stride record drawn by
- * func_801D12FC. */
+ * advancePanelSlideIndex. */
 extern u8 D_80145FCC[];
 /* @source 0x80144968 @kind unknown */
 extern u8 D_80144968[];
@@ -78,17 +78,17 @@ extern u8 D_80144968[];
 extern u8 D_80144983[];
 /* @source 0x80144F59 @kind unknown */
 /* Confirmation bits 3..5 of the master states 0xB, 0xD and 0xE set by
- * func_801D3A24 once their record's +6/+0x84 byte difference reaches three. */
+ * confirmSelectedEntry once their record's +6/+0x84 byte difference reaches three. */
 extern u8 D_80144F59;
 /* @source 0x80145024 @kind unknown */
 /* Stream index hint byte; its low seven bits select the alternate icon-kind
- * mapping used by func_801D23A0 when the requested kind is 4. */
+ * mapping used by emitPanelKindSprite when the requested kind is 4. */
 extern u8 D_80145024;
 /* @source 0x801490D8 @kind unknown */
 extern u8 D_801490D8[];
 /* @source 0x801490F8 @kind unknown */
 /* Twelve-byte name work buffer filled from the gate-selected D_801CA70C ability
- * record by func_801D3A24; byte +0xC terminates it. */
+ * record by confirmSelectedEntry; byte +0xC terminates it. */
 extern u8 D_801490F8[];
 /* @source 0x80143BB0 @kind unknown */
 extern u8 D_80143BB0;
@@ -106,7 +106,7 @@ extern u8 D_80146889[];
 extern u8 D_80146254;
 /* @source 0x8014554C @kind unknown */
 /* Base address passed with masterIndex to the EXE-side flag helper
- * func_8015B580 by func_801D26C4. */
+ * func_8015B580 by startMasterBaseAction. */
 extern u8 D_8014554C;
 /* @source 0x8014554F @kind unknown */
 /* Base address passed with masterIndex to the EXE-side flag helper
@@ -118,11 +118,11 @@ extern u8 D_8014554F;
 extern u8 masterIndex;
 /* @source 0x801CB8DC @kind table */
 /* Shared per-row value table; 99 records per row (0x318-byte row stride,
- * 8-byte record stride). Row summaries are read by func_801D1C44. */
+ * 8-byte record stride). Row summaries are read by sumValueRowPrefix. */
 extern SisyouValueRecord D_801CB8DC[][99];
 /* @source 0x801CA70C @kind table */
 /* Shared ability records; each 0x14-byte record holds the twelve name bytes
- * copied into D_801490F8 by func_801D3A24. */
+ * copied into D_801490F8 by confirmSelectedEntry. */
 extern u8 D_801CA70C[];
 /* @source 0x80145AD4 @kind unknown */
 /* Shared sprintf work buffer holding the formatted text row emitted by
@@ -140,20 +140,20 @@ extern const char D_801D0C10[];
 /* Byte stream submitted as the sprite record table of func_801AF390. */
 extern const u8 D_801D3F58[];
 /* @source 0x801D3FE8 @kind unknown */
-/* Sprite record stream submitted to func_801AF390 by func_801D1444 as the
+/* Sprite record stream submitted to func_801AF390 by renderMasterSummaryPanel as the
  * panel's filled row. */
 extern const u8 D_801D3FE8[];
 /* @source 0x801D4014 @kind unknown */
 /* Sixteen-cell sprite record stream drawn once per panel cell by
- * func_801D1444 through func_801AF390. */
+ * renderMasterSummaryPanel through func_801AF390. */
 extern const u8 D_801D4014[];
 /* @source 0x801D4020 @kind unknown */
 /* Panel background sprite record stream submitted to func_801AF390 by
- * func_801D1444. */
+ * renderMasterSummaryPanel. */
 extern const u8 D_801D4020[];
 /* @source 0x801D4038 @kind rodata */
 /* Row-label strings "Pwr", "Def", "Int" and "Agl" passed to func_8014F800
- * as the row texture handle by func_801D1444. */
+ * as the row texture handle by renderMasterSummaryPanel. */
 extern const u8 D_801D4038[];
 extern const u8 D_801D403C[];
 extern const u8 D_801D4040[];
@@ -165,10 +165,10 @@ extern const u8 D_801D4048[];
 extern const u8 D_801D4050[];
 /* @source 0x801D4058 @kind table */
 /* Four-byte icon texture records (u, v and the CLUT VRAM coordinates) indexed
- * by the icon kind selected in func_801D23A0. */
+ * by the icon kind selected in emitPanelKindSprite. */
 extern u8 D_801D4058[];
 /* @source 0x801D4088 @kind table */
-/* Per-master gate descriptors of func_801D3A24: twelve bytes per master, six
+/* Per-master gate descriptors of confirmSelectedEntry: twelve bytes per master, six
  * (limit, gate bit) pairs; a limit of 99 with gate bit 0xFF disables a pair. */
 extern u8 D_801D4088[];
 /* @source 0x801D4089 @kind table */
@@ -177,7 +177,7 @@ extern u8 D_801D4088[];
 extern u8 D_801D4089[];
 /* @source 0x801D4154 @kind unknown */
 /* Six per-master bytes copied into the selected record's offsets 0x85..0x8A
- * by func_801D2CA4. */
+ * by claimSelectedEntry. */
 extern u8 D_801D4154[];
 /* @source 0x801D41BC @kind table */
 /* Per-master u16 action-id base; adding 4 or 0x11 yields the action id
@@ -244,7 +244,7 @@ void func_8014E5A0(u32 ot_index, u32 primitive_size);
 void func_801AE3F0(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4,
                    u32 arg5);
 /* @behavior queues the inner fill rectangle bounded by the two submitted
- * corner coordinates; func_801D1E54 passes the panel's inner top-left corner
+ * corner coordinates; renderPanelStrip passes the panel's inner top-left corner
  * and the width and height reduced by the four-pixel strip border as its four
  * 16-bit arguments, and 0 as its fifth argument.
  * Body not lifted in this target.
@@ -267,7 +267,7 @@ void func_80150098(s16 arg0, s16 arg1, u32 arg2, const u8* arg3);
  * @source 0x801AF390
  */
 void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, u8 arg3);
-/* @behavior EXE-side helper; func_801D10AC passes the shared pad word masked
+/* @behavior EXE-side helper; updateEntryActionPanel passes the shared pad word masked
  * with 0xA000 and tests the low halfword of the result to decide whether to
  * toggle D_801D4284. Body not lifted in this target.
  * @source 0x8014E640
@@ -286,7 +286,7 @@ void func_80150224(s32 arg0);
  */
 u32 func_801502D0(u32 arg0);
 /* @behavior EXE-side icon-record helper called with a zero first argument and
- * the fixed second argument 8 by func_801D1444; body not lifted in this
+ * the fixed second argument 8 by renderMasterSummaryPanel; body not lifted in this
  * target.
  * @source 0x8016620C
  */
@@ -297,11 +297,11 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
 void func_8015B580(void* arg0, u8 bit_index);
 /* @behavior reports whether the ability record identified by the two byte
  * arguments passes its availability gate; the byte return is tested by
- * func_801D3A24.
+ * confirmSelectedEntry.
  * @source 0x801651DC
  */
 u8 func_801651DC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-/* @behavior runs the three-argument-id ability gate used by func_801D3A24 as
+/* @behavior runs the three-argument-id ability gate used by confirmSelectedEntry as
  * func_801650B4(3, 0x16, 1, 0) and reports its result as a byte.
  * @source 0x801650B4
  */
@@ -315,21 +315,21 @@ void game_queue_frontend_cue(u32 cue_id);
 /* EMI-local functions. */
 /* a0 carries the action id selected from masterActionBaseTable; a1 is a 0/1
  * flag (two callsites pass 0 and 1). */
-void func_801D0DD4(u16 action, s32 flag);
-void func_801D10AC(u32 arg0);
+void updateEntrySelectPanel(u16 action, s32 flag);
+void updateEntryActionPanel(u32 arg0);
 /* Draws one D_80145FCC record at the masked 16-bit coordinates (arg0, arg1);
  * arg2 is the record's first byte and arg3 the record index. */
-void func_801D177C(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
+void renderMasterListRow(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
 /* Draws the D_80145FCC record selected by arg2 at (arg0, arg1). */
-void func_801D1444(s32 arg0, u16 arg1, u8 arg2);
+void renderMasterSummaryPanel(s32 arg0, u16 arg1, u8 arg2);
 /* Emits the shared panel strip at (arg0, arg1) sized arg2 by arg3; arg4 is
  * read from a byte global by every callsite. */
-void func_801D1E54(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
+void renderPanelStrip(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
 /* Submits the record selected by arg2 at the masked coordinates (arg0, arg1);
  * arg3 is the record value byte and arg4 the record numeric row base, both
  * read as bytes/words by the callee. */
-void func_801D1B28(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u32 arg4);
-void func_801D25D8(void);
-void func_801D2BE8(void);
+void renderEntryValueLine(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u32 arg4);
+void dispatchModeHandler(void);
+void dispatchModeThreeStep(void);
 
 #endif

@@ -2,7 +2,7 @@
 
 /* @source 0x801D62DC
  * @behavior Shop UI phase step at entry 1 of the phase step table D_801E5360,
- *           which the dispatcher func_801D6184 selects with the UI phase byte
+ *           which the dispatcher dispatchUiPhaseTable2 selects with the UI phase byte
  *           D_80148651; the entry-0 step
  *           publishShopFlagsUnless advances that
  *           byte into this step. It runs only while the shared gate halfword
@@ -38,7 +38,7 @@
  *           the first word of the record that the pointer table D_8017F974
  *           selects with D_80143F00 through func_801A3E50. Both arms end by
  *           advancing the UI phase byte D_80148651 by one, which hands the next
- *           frame to entry 2 func_801D65A0, while a set gate halfword leaves that
+ *           frame to entry 2 dimTilePhaseStep2, while a set gate halfword leaves that
  *           byte untouched so the step repeats. The phase byte is read and
  *           written once per run and the three table words are the only stores
  *           into the work record besides the four cleared bytes. Takes no
@@ -121,7 +121,7 @@ void stateUpRowsTriples(void) {
    * for the increment load and store (lui plus addiu, then lbu and sb through
    * one register), which a direct D_80148651 += 1 does not: that spelling folds
    * the low half into the load and stores through $at, as the exact phase step
-   * func_801D65A0 shows. The exact entry-0 phase step
+   * dimTilePhaseStep2 shows. The exact entry-0 phase step
    * publishShopFlagsUnless takes this same pointer
    * form for this same byte. */
   phaseCell = (u8*)&D_80148651;

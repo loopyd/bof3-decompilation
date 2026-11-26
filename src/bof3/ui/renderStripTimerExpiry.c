@@ -2,9 +2,9 @@
 
 /* @source 0x801D41EC
  * @behavior shop UI sub-step handler at entry 0 of the sub-step table
- *           D_801E52F0, which the dispatcher func_801D41B0 selects with the UI
+ *           D_801E52F0, which the dispatcher dispatchUiPhaseTable1 selects with the UI
  *           sub-step byte D_80148652: emits the shop panel strip through
- *           func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118,
+ *           drawShopPanelFrame with the fixed panel arguments (0x14, 0x12, 0x118,
  *           0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth
  *           argument. When the saved-state byte D_8014865C is not the -1
  *           sentinel it submits the texture row 0x1C at row 0x16 through
@@ -28,7 +28,7 @@ void renderStripTimerExpiry(void) {
   s16 i;
   s16 flag;
 
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
     handle = func_801502D0(0xA4);
     func_8014F800(0x1C, 0x16, 0, 0xFF, handle);

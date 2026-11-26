@@ -60,32 +60,32 @@ segments:
     - '@behavior: mode-4 handler of the scratchpad mode dispatch table (modeHandlerTable entry 4, dispatched by dispatchMode): selects area mode 9 when the shared high-bit flag byte 0x80146867 is set; otherwise selects mode 5 when the neighbouring shared byte 0x80146866 reads 3.'
   - - 888
     - c
-    - func_801F2F78
-    - '@source: src/bof3/world/func_801F2F78_area00813.c'
+    - rearmCountdownSelect
+    - '@source: src/bof3/world/rearmCountdownSelect.c'
     - '@behavior: selects area mode 9 when the shared high-bit flag is set; otherwise clears the shared secondary state byte, clears the shared halfword counter with a countdown restart of 2 when it reads 0xFF, decrements the shared countdown byte, and when the decremented value is below 2 clears the shared scenario-progress neighbour byte and selects area mode 1.'
   - - 1040
     - c
-    - func_801F3010
-    - '@source: src/bof3/world/func_801F3010_area00813.c'
+    - stateCueSelectMode7
+    - '@source: src/bof3/world/stateCueSelectMode7.c'
     - '@behavior: clears scratch byte 9, selects area mode 9 when the shared high-bit flag is set; otherwise installs the local area state as both the current state and the scratchpad state, sets bit 0x40 in the shared state byte 0x801460E8, dispatches the shared cues 0x20E and 0x57, restores the previous scratchpad state pointer and selects mode 7 on it.'
   - - 1208
     - c
-    - func_801F30B8
-    - '@source: src/bof3/world/func_801F30B8_area00813.c'
+    - armCountdownSelectMode8
+    - '@source: src/bof3/world/armCountdownSelectMode8.c'
     - '@behavior: selects area mode 9 when the shared high-bit flag is set; otherwise installs the local area state as both the current state and the scratchpad state and, when the shared area state halfword reads 8 while the shared state byte 0x8014601A reads 1, requests the shared area resource selector with argument 1, stores the random mode-table byte into the shared countdown, restores the previous scratchpad state pointer and selects mode 8 on it.'
   - - 1404
     - c
-    - func_801F317C
-    - '@source: src/bof3/world/func_801F317C.c'
+    - stateSecondaryByteSelect2
+    - '@source: src/bof3/world/stateSecondaryByteSelect2.c'
     - '@behavior: selects area mode 9 when the shared high-bit flag byte 0x80146867 is set; otherwise selects mode 5 when the neighbouring shared byte 0x80146866 reads 3.'
   - - 1488
     - c
-    - func_801F31D0
-    - '@source: src/bof3/world/func_801F31D0_area00813.c'
+    - clearStateFlagReset
+    - '@source: src/bof3/world/clearStateFlagReset.c'
     - '@behavior: installs the local area state as both the current state and the scratchpad state, requests resource 1 through the shared area resource selector, clears bit 0x40 in the current state byte at offset 0x118, restores the previous scratchpad state pointer and finally calls the shared 0x80196070 work-area reset helper.'
   - - 1604
     - c
-    - func_801F3244
+    - dispatchStateMode
     - '@source: src/bof3/world/area00813DispatchTables.c'
     - '@behavior: dispatches the current area-state mode byte through the local handler table at 0x801F46B0.'
   - - 1672
@@ -95,18 +95,18 @@ segments:
     - '@behavior: resets scratch-state offsets 0x09 and 0x01.'
   - - 1708
     - c
-    - func_801F32AC
-    - '@source: src/bof3/world/func_801F32AC.c'
+    - clearEntityActivitySelect
+    - '@source: src/bof3/world/clearEntityActivitySelect.c'
     - '@behavior: advances the area mode or clears the active entity flag.'
   - - 1860
     - c
-    - func_801F3344
-    - '@source: src/bof3/world/func_801F3344_area00813.c'
+    - stateSecondaryResourceSelect
+    - '@source: src/bof3/world/stateSecondaryResourceSelect.c'
     - '@behavior: installs the entity selected by the scratch state entity index as the scratch work pointer, then selects mode 14 when the shared high-bit flag is set, mode 3 after requesting resource 3 when the shared secondary state byte reads 2, or mode 10 after requesting resource 3 when that byte reads 5; finally restores the previous scratch work pointer.'
   - - 2032
     - c
-    - func_801F33F0
-    - '@source: src/bof3/world/func_801F33F0_area00813.c'
+    - advanceSelectorCueSelect
+    - '@source: src/bof3/world/advanceSelectorCueSelect.c'
     - '@behavior: installs the entity selected by the scratch state entity index
       as the scratch work pointer, then selects mode 14 when the shared high-bit
       flag is set; when the shared secondary state byte 0x80146865 reads 1 it arms
@@ -124,73 +124,73 @@ segments:
     - '@behavior: installs the entity selected by the scratch state entity index as the scratch work pointer, selects mode 14 for the shared high-bit flag or mode 5 for the entity halfword 0x58 == 2 / byte 0x4A == 1 pair, then restores the previous scratch work pointer.'
   - - 2428
     - c
-    - func_801F357C
-    - '@source: src/bof3/world/func_801F357C_area00813.c'
+    - armEntityActivitySelect
+    - '@source: src/bof3/world/armEntityActivitySelect.c'
     - '@behavior: selects area mode 14 when the shared high-bit flag is set; otherwise sets the activity flag on the work area entity selected by the scratch state entity index, records the shared secondary state byte as 3, installs that entity as the scratch work pointer, requests the shared area resource selector with argument 1, selects mode 1 on the previously installed state and finally restores it as the scratch work pointer.'
   - - 2644
     - c
-    - func_801F3654
-    - '@source: src/bof3/world/func_801F3654.c'
+    - noopMode6
+    - '@source: src/bof3/world/noopMode6.c'
     - '@behavior: Empty body: returns to the caller immediately without reading or writing any state; the no-op area-state mode 6 handler at entry 6 (table word 0x801F46C8) of the 15-entry handler table at 0x801F46B0.'
   - - 2652
     - c
-    - func_801F365C
-    - '@source: src/bof3/world/func_801F365C.c'
+    - checkEntityPairSelect8
+    - '@source: src/bof3/world/checkEntityPairSelect8.c'
     - '@behavior: installs the entity selected by the scratch state entity index as the scratch work pointer, selects mode 14 for the shared high-bit flag or mode 8 for the entity halfword 0x58 == 8 / byte 0x4A == 1 pair, then restores the previous scratch work pointer.'
   - - 2780
     - c
-    - func_801F36DC
-    - '@source: src/bof3/world/func_801F36DC_area00813.c'
+    - armEntityActivitySelect2
+    - '@source: src/bof3/world/armEntityActivitySelect2.c'
     - '@behavior: selects area mode 14 when the shared high-bit flag is set; otherwise sets the activity flag on the work area entity selected by the scratch state entity index, records the shared secondary state byte as 3, installs that entity as the scratch work pointer, requests the shared area resource selector with argument 1, selects mode 1 on the previously installed state and finally restores it as the scratch work pointer.'
   - - 2996
     - c
-    - func_801F37B4
-    - '@source: src/bof3/world/func_801F37B4.c'
+    - noopMode9
+    - '@source: src/bof3/world/noopMode9.c'
     - '@behavior: Empty body: returns to the caller immediately without reading or writing any state; the no-op area-state mode 9 handler at entry 9 (table word 0x801F46D4) of the 15-entry handler table at 0x801F46B0.'
   - - 3004
     - c
-    - func_801F37BC
-    - '@source: src/bof3/world/func_801F37BC_area00813.c'
+    - requestEntityPairSelect
+    - '@source: src/bof3/world/requestEntityPairSelect.c'
     - '@behavior: installs the entity selected by the scratch state entity index as the scratch work pointer, selects mode 14 for the shared high-bit flag or mode 11 after requesting the shared area resource selector with argument 4 when the entity halfword 0x58 == 8 / byte 0x4A == 1 pair, then restores the previous scratch work pointer.'
   - - 3164
     - c
-    - func_801F385C
-    - '@source: src/bof3/world/func_801F385C_area00813.c'
+    - checkEntityPairSelect12
+    - '@source: src/bof3/world/checkEntityPairSelect12.c'
     - '@behavior: installs the entity selected by the scratch state entity index as the scratch work pointer, selects mode 14 for the shared high-bit flag or mode 12 for the entity halfword 0x58 == 2 / byte 0x4A == 1 pair, then restores the previous scratch work pointer.'
   - - 3292
     - c
-    - func_801F38DC
-    - '@source: src/bof3/world/func_801F38DC_area00813.c'
+    - armEntityActivitySelect3
+    - '@source: src/bof3/world/armEntityActivitySelect3.c'
     - '@behavior: selects area mode 14 when the shared high-bit flag is set; otherwise sets the activity flag of the work-area entity selected by the scratch state entity index, records the shared secondary state byte as 3, installs that entity as the scratch work pointer, requests the shared area resource selector with argument 1, selects mode 1 on the previously installed state and finally restores it as the scratch work pointer.'
   - - 3508
     - c
-    - func_801F39B4
-    - '@source: src/bof3/world/func_801F39B4.c'
+    - noopMode13
+    - '@source: src/bof3/world/noopMode13.c'
     - '@behavior: Empty body: returns to the caller immediately without reading or writing any state; the no-op area-state mode 13 handler at entry 13 (table word 0x801F46E4) of the 15-entry handler table at 0x801F46B0.'
   - - 3516
     - c
-    - func_801F39BC
-    - '@source: src/bof3/world/func_801F39BC_area00813.c'
+    - armEntityActivityReset
+    - '@source: src/bof3/world/armEntityActivityReset.c'
     - '@behavior: raises bit 0x40 in the activity flags of the work-area entity selected by the scratch state entity index, installs that entity as the scratch work pointer, requests the shared area resource selector with argument 1, restores the previous scratch work pointer and finally calls the shared 0x80196070 work-area reset helper.'
   - - 3684
     - c
-    - func_801F3A64
+    - dispatchStepMode
     - '@source: src/bof3/world/area00813DispatchTables.c'
     - '@behavior: dispatches the current area-state mode byte through the local handler table at 0x801F46EC.'
   - - 3752
     - c
-    - func_801F3AA8
-    - '@source: src/bof3/world/func_801F3AA8.c'
+    - resetScratchTimerAdvance
+    - '@source: src/bof3/world/resetScratchTimerAdvance.c'
     - '@behavior: resets scratch-state fields 0x5d/0x5e and advances the mode byte.'
   - - 3816
     - c
-    - func_801F3AE8
-    - '@source: src/bof3/world/func_801F3AE8.c'
+    - drawStatusCountdown
+    - '@source: src/bof3/world/drawStatusCountdown.c'
     - '@behavior: draws both local status frames, decrements scratch countdown bytes 0x5d and 0x5e with a 0x1D restart on the first, and advances the area mode when both expire.'
   - - 4020
     - c
-    - func_801F3BB4
-    - '@source: src/bof3/world/func_801F3BB4_area00813.c'
+    - disableFlagStopEffect
+    - '@source: src/bof3/world/disableFlagStopEffect.c'
     - '@behavior: marks the shared world byte 0x80146867 with bit 0x80, additionally marking the adjacent shared byte 0x80146866 when the byte is not below 0x10, then stops the shared selection effect pair (0, 2) and calls the shared 0x80196070 work-area reset helper.'
   - - 4140
     - c
@@ -209,28 +209,28 @@ segments:
     - '@behavior: draws the local textured frame as four translucent FT4 border strips (left edge, top/bottom span, right-inner span, right edge) around a shared texture window, then queues the matching inner fill rectangle.'
   - - 5844
     - c
-    - func_801F42D4
-    - '@source: src/bof3/world/func_801F42D4.c'
+    - statePublishModeProgress
+    - '@source: src/bof3/world/statePublishModeProgress.c'
     - '@behavior: selects a halfword from the local mode table, stores it to the shared area value, and maps modes zero and one to scenario flags one and zero respectively.'
   - - 5940
     - c
-    - func_801F4334
-    - '@source: src/bof3/world/func_801F4334_area00813.c'
+    - queueWorldMarkerTriple
+    - '@source: src/bof3/world/queueWorldMarkerTriple.c'
     - '@behavior: queues three shared UI elements through func_801A4BC0: (0x33, 0x15) with size 0, (0x33, 0x16) with size 0 and (0x32, 0x16) with size 0x51.'
   - - 6012
     - c
-    - func_801F437C
-    - '@source: src/bof3/world/func_801F437C_area00813.c'
+    - textPublishMaskedCount
+    - '@source: src/bof3/world/textPublishMaskedCount.c'
     - '@behavior: formats the masked shared world byte through the local %d format string into the shared UI text buffer, starts action 0x54 on the selected master, then records phase 2 in the shared phase byte.'
   - - 6088
     - c
-    - func_801F43C8
-    - '@source: src/bof3/world/func_801F43C8_area00813.c'
+    - textPublishCountCue
+    - '@source: src/bof3/world/textPublishCountCue.c'
     - '@behavior: formats the masked shared world byte through the local %d format string into the shared UI text buffer, starts action 0x56 on the selected master, records phase 2 in the shared phase byte and queues the frontend cue (0xA, 0x64, 8).'
   - - 6180
     - c
-    - func_801F4424
-    - '@source: src/bof3/world/func_801F4424_area00813.c'
+    - stateClaimFrontendSlot
+    - '@source: src/bof3/world/stateClaimFrontendSlot.c'
     - '@behavior: claims the front-end record slot selected by func_8019601C, publishes that index in the scratchpad byte 0x1F800000, and when the index is not 0xFF marks the record occupancy byte, sets record byte 5 to 0x54 and stores the current work-entity index in record byte 0x0B.'
   - - 6412
     - c
@@ -274,8 +274,8 @@ segments:
     - '@behavior: decrements the area counter by 0x800'
   - - 6684
     - c
-    - func_801F461C
-    - '@source: src/bof3/world/func_801F461C_area00813.c'
+    - queueWorldMarkerBlock
+    - '@source: src/bof3/world/queueWorldMarkerBlock.c'
     - '@behavior: queues four shared UI elements through func_801A4BC0: the element at (0x55, 0x1C) with size 0, the element at (0x55, 0x1D) with size 0, the element at (0x54, 0x1C) with size 0 and the element at (0x54, 0x1D) with size 0.'
 - - 6772
   - bin

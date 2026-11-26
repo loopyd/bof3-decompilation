@@ -883,8 +883,11 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                 # An earlier row may have renamed a unit this row references, so the
                 # consumer list is refreshed against the tree as it is now.
                 plan.files = []
+                plan.renames = []
                 try:
                     _collect_files(plan, root, plan.manifest)
+                    if plan.passed:
+                        _retarget_twin(plan, root)
                 except (OSError, ValueError):
                     pass
                 try:
@@ -1077,7 +1080,11 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
         if rewritten != text:
             path.write_text(rewritten, encoding="utf-8")
     if forward:
+        seen = set()
         for before, after in plan.renames:
+            if (before, after) in seen:
+                continue
+            seen.add((before, after))
             before.rename(after)
 
 

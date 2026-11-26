@@ -5,7 +5,7 @@
  *           D_801E52D8, which the dispatcher func_801D3AA8 selects with the UI
  *           sub-step byte D_80148652: draws the three-row selector panel through
  *           renderThreeRowSelector at the fixed origin (0x6E, 0x4C), emits
- *           the shop panel strip through func_801DAB90 with the fixed panel
+ *           the shop panel strip through drawShopPanelFrame with the fixed panel
  *           arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
  *           D_80144952 as the fifth argument, draws the money panel through
  *           drawShopMoneyPanel at (0x62, 0x28) with the constant 0 and the
@@ -24,7 +24,7 @@
  * (`D_80148652 = D_80148652 - 1`), not through a named pointer: the original
  * reads the byte with `lui` plus `lbu %lo(D_80148652)` and writes it back with
  * a second `lui $at` plus `sb %lo`. That is the folded form the exact sibling
- * func_801D3AE4 emits for the same cell (`D_80148652 = D_80148652 + 1`), while
+ * retreatPanelStripStep emits for the same cell (`D_80148652 = D_80148652 + 1`), while
  * the pointer form of advanceUiSubstep and appendDimTileOrRedrawPanelStrip
  * keeps one materialized address.
  *
@@ -35,7 +35,7 @@
  */
 void renderShopPanelsSubstep(void) {
   renderThreeRowSelector(0x6E, 0x4C);
-  func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
+  drawShopPanelFrame(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
     drawShopMoneyPanel(0x62, 0x28, 0, D_80144F50);
   }

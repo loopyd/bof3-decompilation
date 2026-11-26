@@ -12,7 +12,7 @@ extern void (*D_801F51D0[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801F341C, D_801F5114);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchAdvanceMode, D_801F5114);
 
 /* @behavior dispatches through the local handler table selected by scratchpad
  * state byte `0x02`.
@@ -39,4 +39,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchScratchModeSelect, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801F45CC, D_801F51D0);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchGridMode, D_801F51D0);
