@@ -17,7 +17,7 @@
  * `lbu`, so the shared comparison compares the zero-extended load result
  * directly.
  */
-u8 func_801DB9E4(u32 arg0) {
+u8 isBattlerActorEligible(u32 arg0) {
   u8  index;
   u8  phase;
   u32 state;

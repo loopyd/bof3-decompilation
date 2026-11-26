@@ -9,7 +9,7 @@
  * (arg0 + 0x65, arg1 + 0x10) with four semi-transparent sprite prims: the top
  * and left edges from texture page 1 and the right and bottom edges from
  * texture page 0. The red/green/blue channels come from palette entry 1 of the
- * CLUT bank byte D_80144952. The only caller, func_801E9538, frames one battle
+ * CLUT bank byte D_80144952. The only caller, renderSlotMessagePanel, frames one battle
  * panel message row with it, anchored 0x10 left of the panel halfword +0x04.
  * Its twins draw the same outline wider: 0x801D7EB0 spans 0x113 from tile row
  * 3 and quad rows 8/9, and 0x801D8090 spans 0x43 from tile row 6 and quad rows
@@ -32,7 +32,7 @@ void renderBattlePanelMessage(s32 arg0, s32 arg1) {
   red = (palette & 0x1f) << 3;
   green = (palette >> 2) & 0xf8;
   blue = (palette >> 7) & 0xf8;
-  func_801D9C80((s16)arg0, (s16)(arg1 + 2), 0x0a, 1);
+  drawTableTilePrim((s16)arg0, (s16)(arg1 + 2), 0x0a, 1);
   func_801D9AB4((s16)arg0, (s16)arg1, 6, 1);
   func_801D9AB4((s16)arg0, (s16)(arg1 + 0x11), 7, 1);
   drawSpriteAbrFull((s16)(arg0 + 2), (s16)(arg1 + 2), (s16)(arg0 + 0x65),

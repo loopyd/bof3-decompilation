@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/magic218_03_psyq.c",
     "src/bof3/bmagic/magic21803DispatchTables.c",
-    "src/bof3/bmagic/func_801EF70C_bmagicMagic21803.c",
+    "src/bof3/bmagic/checkSpanDominance.c",
     "src/bof3/bmagic/forwardBattleIdleFlag6.c",
 ]
 psyq_source = "src/bof3/support/magic218_03_psyq.c"

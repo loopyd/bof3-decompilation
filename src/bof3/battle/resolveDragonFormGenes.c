@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
 extern u8 queryDragonFormRow6(void); /* @source 0x800A6D84 */
-extern u8 func_800A6CF8(u8 index, u8 value); /* @source 0x800A6CF8 */
+extern u8 queryTableEntryListed(u8 index, u8 value); /* @source 0x800A6CF8 */
 
 extern u8 D_800B4D4C[]; /* @source 0x800B4D4C @kind table */
 extern u8 D_800B6F5C; /* @source 0x800B6F5C @kind data */
@@ -33,7 +33,7 @@ u8 resolveDragonFormGenes(void)
       i++;
     }
     for (j = 0; j < 3; j++) {
-      if (func_800A6CF8(i, j) == 0) {
+      if (queryTableEntryListed(i, j) == 0) {
         break;
       }
     }

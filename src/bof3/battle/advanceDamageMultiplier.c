@@ -9,7 +9,7 @@ typedef struct BattleSelectionCell {
 
 /**
  * @source 0x800A15DC
- * @behavior Runs selection pass func_800A3F28, raises flag 0x80 in the flag
+ * @behavior Runs selection pass stateRefreshFlagStatus, raises flag 0x80 in the flag
  *   word of the selected record - the 0x140-stride party record at 0x80145FB8
  *   for indices below three, the 0x118-stride reserve record at 0x801EB734 at
  *   index minus three otherwise - then reloads the selection and advances that
@@ -27,7 +27,7 @@ void advanceDamageMultiplier(void)
   BattleSelectionCell *selected;
   u8 advance;
 
-  func_800A3F28();
+  stateRefreshFlagStatus();
   selected = (BattleSelectionCell *)&D_80146374;
   index = selected->index;
   if (index < 3) {

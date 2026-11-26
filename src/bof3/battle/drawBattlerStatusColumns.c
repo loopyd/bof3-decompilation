@@ -20,7 +20,7 @@ extern u8 D_8014833E[];
  * @behavior Draws the battler status window at the panel anchor (arg0, arg1):
  * opens the 0x3C0-texture draw mode and emits the two quadrangle caps through
  * func_801D9AB4 at (arg0, arg1) and (arg0, arg1 + 0x18) and the body tile
- * through func_801D9C80 at (arg0, arg1 + 2), whose tile rows follow the
+ * through drawTableTilePrim at (arg0, arg1 + 2), whose tile rows follow the
  * localBattlerCount byte 0x801462F0. It then draws one framed column per local
  * battler at x = arg0 + index * 0x5E: the row-9 colour tile and the textured
  * gauge through renderBattlerStatusGauge at (x + 0x14, arg1 + 0xE) with the
@@ -65,7 +65,7 @@ void drawBattlerStatusColumns(s32 arg0, s32 arg1) {
   func_801D9AB4((s16)arg0, (s16)arg1, (localBattlerCount * 2 + 0x0a) & 0xfe, 1);
   func_801D9AB4((s16)arg0, (s16)(arg1 + 0x18),
                 (localBattlerCount * 2 + 0x0b) & 0xff, 1);
-  func_801D9C80((s16)arg0, (s16)(arg1 + 2), (localBattlerCount + 0x0d) & 0xff,
+  drawTableTilePrim((s16)arg0, (s16)(arg1 + 2), (localBattlerCount + 0x0d) & 0xff,
                 1);
   palette_offset = ((D_80144952 * 2) + 1) * 32;
   palette = *(u16*)(PSX_PTR(u8, 0x80033A08u) + palette_offset);

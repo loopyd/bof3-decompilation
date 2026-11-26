@@ -3,7 +3,7 @@
 void func_800AAC88(s16 arg0, u8 arg1); /* @source 0x800AAC88 */
 
 /* @source 0x800A0564
- * @behavior Runs the battle selection roll func_800A3A10 for the acting
+ * @behavior Runs the battle selection roll querySelectionChance for the acting
  *   battler byte D_80146374 and selected battler byte D_80146394. A nonzero
  *   roll stores 1 in byte +0x08 of the selection record pointer
  *   D_8014639C.record and calls func_800AAC88 with effect kind 0 and the
@@ -11,7 +11,7 @@ void func_800AAC88(s16 arg0, u8 arg1); /* @source 0x800AAC88 */
  *   word at 0x80145FB8 (stride 0x140) when the selected battler index is
  *   below three, or at 0x801EB734 (stride 0x118) rebased by -3 otherwise, and
  *   then calls func_800A9BD8 with the selected battler byte. Both paths finish
- *   with the selection refresh pass func_800A3F28.
+ *   with the selection refresh pass stateRefreshFlagStatus.
  * @status partial
  * @match 93.65
  * @residual The byte-store arm allocates the stored constant to v1 and the
@@ -24,7 +24,7 @@ void runSelectionRollRefresh(void)
 {
   u32 index;
 
-  if ((u8)func_800A3A10(D_80146374, D_80146394) == 0) {
+  if ((u8)querySelectionChance(D_80146374, D_80146394) == 0) {
     /* Non-volatile view: the roll call above already read the cell and
      * widening the volatile u8 costs an extra `andi` on the load, the same
      * remedy stateValueRollRejected uses. */
@@ -39,5 +39,5 @@ void runSelectionRollRefresh(void)
     ((u8 *)D_8014639C.record)[8] = 1;
     func_800AAC88(0, D_80146394);
   }
-  func_800A3F28();
+  stateRefreshFlagStatus();
 }

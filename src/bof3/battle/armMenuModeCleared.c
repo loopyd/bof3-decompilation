@@ -1,0 +1,18 @@
+#include "bof3/battle/battle15_internal.h"
+
+/* @behavior Reads byte D_801462E4, stores 2 into byte D_80148627 and 0 into
+ * byte D_8014862E, then stores the previously read value plus 1 modulo 256
+ * into D_801462E4.
+ * @source 0x800A4C44
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void armMenuModeCleared(void) {
+  u8 *counter = (u8 *)&D_801462E4;
+  u8 count = *counter;
+
+  D_80148627 = 2;
+  D_8014862E = 0;
+  *counter = (u8)(count + 1);
+}

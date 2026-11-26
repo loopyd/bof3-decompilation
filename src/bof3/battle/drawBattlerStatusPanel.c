@@ -11,13 +11,13 @@
  * byte reads 1 it submits the record's textured gauge through
  * renderBattlerStatusGauge at (arg0 + 6, arg1 + 0xA) with the current panel
  * object bytes +0x0B/+0x0D as the two gauge widths, otherwise it blanks the
- * numeric field through drawDecimalGlyphRun at (arg0 + 0x24, arg1 + 0xC). When func_801DA69C accepts
+ * numeric field through drawDecimalGlyphRun at (arg0 + 0x24, arg1 + 0xC). When canReuseUiOwner accepts
  * that index it draws the record's text pointer at +0x74 through func_8014FC90
  * at (arg0 + 4, arg1 + 3), and finally outlines the box from
  * (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12) with four
  * semi-transparent sprite prims: the top and left edges from texture page 1 and
  * the right and bottom edges from texture page 0. The only caller,
- * func_801E9910, feeds it the active panel halfwords +0x04/+0x06 and panel byte
+ * renderPanelActivateTask, feeds it the active panel halfwords +0x04/+0x06 and panel byte
  * +0x0A.
  * @status exact
  * @match 100.00
@@ -41,7 +41,7 @@ void drawBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2) {
   red = (palette & 0x1f) << 3;
   green = (palette >> 2) & 0xf8;
   blue = (palette >> 7) & 0xf8;
-  func_801D9C80((s16)arg0, (s16)(arg1 + 2), 8, 1);
+  drawTableTilePrim((s16)arg0, (s16)(arg1 + 2), 8, 1);
   drawColorTilePrim((s16)(arg0 + 6), (s16)(arg1 + 0xb), 9, 0, 0);
   func_801D9AB4((s16)arg0, (s16)arg1, 2, 1);
   func_801D9AB4((s16)arg0, (s16)(arg1 + 0x13), 3, 1);
@@ -55,7 +55,7 @@ void drawBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2) {
   } else {
     drawDecimalGlyphRun((s16)(arg0 + 0x24), (s16)(arg1 + 0xc), 0, 0xffff);
   }
-  if (func_801DA69C(index) != 0) {
+  if (canReuseUiOwner(index) != 0) {
     func_8014FC90((s16)(x + 4), (s16)(y + 3), 0, 8,
                   &D_801EB6A4[index * 0x118]);
   }

@@ -19,7 +19,7 @@ void stateStoreIndexedModifier(void)
   index = D_801463C0;
   selection_index = D_80146374;
   battler_index = D_80146394;
-  result = func_800A2880(selection_index, battler_index,
+  result = mathScaledDamageRoll(selection_index, battler_index,
                         D_801CA71B[index * 0x14], 1);
   D_8014639C.record[3] = result;
 }

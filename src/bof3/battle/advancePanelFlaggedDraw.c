@@ -1,0 +1,23 @@
+#include "bof3/battle/battle03_internal.h"
+
+/* @source 0x801EA894
+ * @behavior Raises the panel update flag, then advances the panel state: when the
+ * state halfword at +0x6 is 0x12 it increments byte +0x3, otherwise it adds 8 to
+ * the state; finally it redispatches the panel handler.
+ * @status partial
+ * @match 75.00
+ * @residual Halfword-state and flag-constant register allocation differ at unchanged 96-byte size.
+ */
+void advancePanelFlaggedDraw(void) {
+    u8* panel = (u8*)D_80148648;
+    s16 state;
+
+    D_801EC2E4 = 1;
+    state = FIELD_REF(s16, panel, 6);
+    if (state == 0x12) {
+        FIELD_REF(u8, panel, 3)++;
+    } else {
+        FIELD_REF(s16, panel, 6) = state + 8;
+    }
+    drawPanelRingPrim();
+}

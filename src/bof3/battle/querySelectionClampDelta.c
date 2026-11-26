@@ -12,7 +12,7 @@
  */
 u8 querySelectionClampDelta(u8 index, s8 delta)
 {
-  if ((u8)func_800A3A10(D_80146374, D_80146394) == 0) {
+  if ((u8)querySelectionChance(D_80146374, D_80146394) == 0) {
     clampIndexedBattleByte14(delta, index);
     func_800A9BD8(D_80146394);
     return 0;

@@ -21,7 +21,7 @@ void initializeGroupFlagScratch(void) {
     Battle03LocalWork* motion_work;
 
     ((u8*)D_1F800044)[0x0b] = 0;
-    index = func_801E8FA8();
+    index = selectNextMaskBit();
     if (index == 0xffu) {
         return;
     }

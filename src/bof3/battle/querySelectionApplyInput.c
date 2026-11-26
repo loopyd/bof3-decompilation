@@ -8,7 +8,7 @@
  * @residual none
  */
 u8 querySelectionApplyInput(s32 input_mask) {
-  if ((u8)func_800A3A10(D_80146374, D_80146394) == 0) {
+  if ((u8)querySelectionChance(D_80146374, D_80146394) == 0) {
     func_800A31E0(D_80146394, (u16)input_mask);
     return 0;
   }

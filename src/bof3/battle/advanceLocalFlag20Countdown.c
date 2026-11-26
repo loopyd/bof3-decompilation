@@ -37,7 +37,7 @@ u8 advanceLocalFlag20Countdown(void) {
     initUiBundleFixed();
     event_id = 0x29u;
     if (count == 1u) {
-      func_801DE9A8(last_index);
+      copyBattlerNameText(last_index);
       event_id = 0x28u;
     }
     event_id = func_801502D0(event_id);

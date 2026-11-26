@@ -1,0 +1,15 @@
+#include "bof3/battle/battle15_internal.h"
+
+/* @source 0x800A2404
+ * @behavior Stores 4 into battle state byte D_80146375 and 0x6A into battle
+ * state halfword D_801463C0, then runs the 0x6A action selection
+ * stateValueRollRejected.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void stateRejectRoll6A(void) {
+  D_80146375 = 4;
+  D_801463C0 = 0x6A;
+  stateValueRollRejected();
+}

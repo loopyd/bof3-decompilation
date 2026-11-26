@@ -1,0 +1,13 @@
+#include "bof3/battle/battle15_internal.h"
+
+/* @source 0x8009F83C
+ * @behavior Forwards request kind 2 to the battle selection query
+ * func_800A4294 and stores the signed halfword result in the active selection
+ * record.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void stateStoreEstimate2(void) {
+  D_8014639C.record[2] = func_800A4294(2);
+}

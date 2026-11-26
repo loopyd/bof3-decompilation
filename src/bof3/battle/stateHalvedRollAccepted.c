@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* @source 0x800A0244
- * @behavior Runs the battle selection roll func_800A3A10 for the current
+ * @behavior Runs the battle selection roll querySelectionChance for the current
  *   battler byte D_80146374 and selection byte D_80146394. When the roll
  *   accepts, halves the selected battler's leading halfword - read from the
  *   0x140-stride party work record above 0x80145F18 for selection bytes below
@@ -18,12 +18,12 @@ void stateHalvedRollAccepted(void)
     u32 enemy_index;
     u16 value;
 
-    if ((u8)func_800A3A10(D_80146374, D_80146394) != 0) {
+    if ((u8)querySelectionChance(D_80146374, D_80146394) != 0) {
         return;
     }
     /* Non-volatile view: the roll gate above already read the cell, and
      * letting the volatile u8 widen into the u32 itself costs an extra `andi`
-     * on the load. func_8009DE8C reads the same cell through this view for the
+     * on the load. storeNegatedWorkHalfword reads the same cell through this view for the
      * same reason. */
     index = *(u8*)&D_80146394;
     if (index < 3) {

@@ -29,7 +29,7 @@ void drawBattlePanelStrip(s32 arg0, s32 arg1) {
   red = (palette & 0x1f) << 3;
   green = (palette >> 2) & 0xf8;
   blue = (palette >> 7) & 0xf8;
-  func_801D9C80((s16)arg0, (s16)(arg1 + 2), 3, 1);
+  drawTableTilePrim((s16)arg0, (s16)(arg1 + 2), 3, 1);
   func_801D9AB4((s16)arg0, (s16)arg1, 8, 1);
   func_801D9AB4((s16)arg0, (s16)(arg1 + 0x11), 9, 1);
   drawSpriteAbrFull((s16)(arg0 + 2), (s16)(arg1 + 2), (s16)(arg0 + 0x115),

@@ -2,7 +2,7 @@
 
 /**
  * @source 0x800A1704
- * @behavior Runs selection pass func_800A3F28, then sets flag 0x100 in
+ * @behavior Runs selection pass stateRefreshFlagStatus, then sets flag 0x100 in
  *   the word at selected local record +0x128 for indices below three,
  *   or selected reserve record +0x104 at index minus three otherwise.
  * @status exact
@@ -13,7 +13,7 @@ void runSelectionCellFlag(void)
 {
   u32 index;
 
-  func_800A3F28();
+  stateRefreshFlagStatus();
   index = *(u8 *)&D_80146374;
   if (index < 3) {
     D_80145FB8[index].flags_00 |= 0x100;

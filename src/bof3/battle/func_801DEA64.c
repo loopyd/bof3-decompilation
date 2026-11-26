@@ -15,5 +15,5 @@ void func_801DEA64(s32 arg0) {
   if (BATTLE_GLOBAL_BYTE_63BA != 0u) {
     strcat(script, (const char*)(D_801EB000 + 0xdu));
   }
-  func_801DE60C(0u, 1u, 1u, 0u, 0xffu, (u32)script);
+  overwriteEventSlot(0u, 1u, 1u, 0u, 0xffu, (u32)script);
 }

@@ -9,7 +9,7 @@ void func_80196670(u8 arg0); /* @source 0x80196670 */
  * 12-byte effect record selected by scratch work byte 7. If the selection gate
  * is clear, or the active selection neither matches scratch work byte 5 nor
  * carries bit 0x40, submits the effect byte to func_80196670 and resets scratch
- * state byte 2. This is the enemy selection handler paired with func_801E383C.
+ * state byte 2. This is the enemy selection handler paired with submitWorkPositionEffect.
  * @status exact
  * @match 100.00
  * @residual none

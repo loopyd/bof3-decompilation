@@ -18,6 +18,6 @@ void storeHalvedAction66Modifier(void)
   battler = D_80146394;
   power = D_801CA71B[0x66 * 0x14];
   D_801463C0 = 0x66;
-  D_8014639C.record[2] = func_800A2880(selection, battler, power, 0);
+  D_8014639C.record[2] = mathScaledDamageRoll(selection, battler, power, 0);
   D_8014639C.record[2] /= 2;
 }

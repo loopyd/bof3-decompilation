@@ -15,6 +15,6 @@ void dispatchResultAuxState(void) {
     work = BATTLE_LOCAL_SCRATCH_PTR;
   } while (0);
   table[0] = func_801E8684;
-  table[1] = func_801E8D04;
+  table[1] = stateAdvanceTimerMask;
   table[work->unk_01]();
 }

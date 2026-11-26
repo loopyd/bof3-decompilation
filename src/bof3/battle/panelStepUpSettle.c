@@ -20,5 +20,5 @@ void panelStepUpSettle(void) {
         task->field_06 = value - 0x10;
     }
     draw_task = (BattlePanelTask*)D_80148648;
-    func_800B0B0C((s16)draw_task->x, draw_task->field_06);
+    drawBattlePanelSlots((s16)draw_task->x, draw_task->field_06);
 }

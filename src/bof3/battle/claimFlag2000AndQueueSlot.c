@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801E12DC(void) {
+void claimFlag2000QueueSlot(void) {
   Battle03LocalWork* work;
   Battle03LocalWork* scratch;
   u32                slot;

@@ -2,7 +2,7 @@
 
 /* @source 0x800A07D0
  * @behavior Selection-action handler, entry 95 of the battle selection-action
- *   table D_800B471C. Runs the selection-input refresh pass func_800A3F28, then
+ *   table D_800B471C. Runs the selection-input refresh pass stateRefreshFlagStatus, then
  *   doubles the halfwords at +0x00 and +0x02 of the 0x118-byte enemy-band work
  *   record field base D_801EB6B4/D_801EB6B6 - the record selected by the active
  *   battler byte D_80146394 rebased by -3, which is the same band and rebase
@@ -24,7 +24,7 @@ void doubleEnemyHalfwordsClamped(void)
     s32 doubled_first;
     s32 doubled_second;
 
-    func_800A3F28();
+    stateRefreshFlagStatus();
     selected = &D_80146394;
     offset = (u32)(*selected - 3) * 0x118;
     first = *(u16 *)(D_801EB6B4 + offset);

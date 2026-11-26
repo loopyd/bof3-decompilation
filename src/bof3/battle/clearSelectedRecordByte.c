@@ -4,7 +4,7 @@ extern u8 battlePartyByteAt80145[]; /* @source 0x80145FC6 @kind unknown */
 
 /**
  * @source 0x800A22CC
- * @behavior Runs selection pass func_800A3F28, sets selected flag 0x4000
+ * @behavior Runs selection pass stateRefreshFlagStatus, sets selected flag 0x4000
  *   at 0x80145FB8 (stride 0x140) for indices below three or 0x801EB734
  *   (stride 0x118) at index minus three otherwise, then reloads the selection
  *   and clears the corresponding byte at word +0x0E. Calls func_800A9BD8
@@ -18,7 +18,7 @@ void clearSelectedRecordByte(void)
   u32 index;
   volatile u8 *selected;
 
-  func_800A3F28();
+  stateRefreshFlagStatus();
   selected = &D_80146374;
   index = *selected;
   if (index < 3) {

@@ -38,7 +38,7 @@ typedef struct BattleLocalPanelEntry {
   u16 panel_id;
 } BattleLocalPanelEntry;
 
-/* 0x118-byte local panel record: the kind byte read by func_8009CFEC (and by
+/* 0x118-byte local panel record: the kind byte read by compactPanelEntryList (and by
  * the BATTLE_LOCAL_PANEL_OWNER_KIND view) comes first; the rest is unnamed. */
 typedef struct BattleLocalPanelRecord {
   u8 kind;
@@ -52,7 +52,7 @@ typedef struct BattlePanelTask {
   s16 field_06;
 } BattlePanelTask;
 
-/* Panel box record as func_800B0498 reads it: the box origin at +0x04/+0x06 is
+/* Panel box record as drawBattleLocalPanel reads it: the box origin at +0x04/+0x06 is
  * read as unsigned halfwords here (the same halfwords other panel passes read
  * through the signed BattlePanelTask view) and the box size bytes at
  * +0x08/+0x09 lie past the end of BattlePanelTask. */
@@ -108,7 +108,7 @@ typedef struct BattleLocalWork {
   u8 unk_86;
   u8 unk_87;
   u8 unk_88[0x9C];
-  /* Flag word read by func_800A99AC at 0x80145FB4 (record + 0x124). */
+  /* Flag word read by queryParticipantArmedStatus at 0x80145FB4 (record + 0x124). */
   u32 unk_124;
   u8 unk_128[0x18];
 } BattleLocalWork;
@@ -136,7 +136,7 @@ typedef struct BattleRecord {
   u8 unk_03;
   u8 unk_04;
   u8 unk_05[0xFB];
-  /* Flag word read by func_800A99AC at 0x801EB730 (record + 0x100). */
+  /* Flag word read by queryParticipantArmedStatus at 0x801EB730 (record + 0x100). */
   u32 unk_100;
   u8 unk_104[0x14];
 } BattleRecord;
@@ -170,7 +170,7 @@ typedef struct BattleIdentityRecord {
 extern BattleIdentityRecord D_800E4050[]; /* @source 0x800E4050 @kind unknown */
 
 u32 checkWorkRangeAgainst(BattleRange *range, u32 value);
-u32 func_800A99AC(void);
+u32 queryParticipantArmedStatus(void);
 u8 *findOwnerRecord(u8 id);
 void func_800AE9C4(u8 selector);
 
@@ -188,7 +188,7 @@ extern u8 battleAdjustmentModeState; /* @source 0x80144F58 @kind unknown */
 extern s32 D_80144F60[]; /* @source 0x80144F60 @kind unknown */
 extern volatile u32  D_80144F80[]; /* @source 0x80144F80 @kind unknown */
 extern u16 D_80145FAA[]; /* @source 0x80145FAA @kind unknown */
-/* Shared runtime flag byte raised by func_800A4BB4 once the EXE-side EMI
+/* Shared runtime flag byte raised by enterSelectionWhenReady once the EXE-side EMI
  * loader reports ready; its consumer is outside this target. */
 extern u8 D_80145988; /* @source 0x80145988 @kind unknown */
 extern volatile u32  D_80146250; /* @source 0x80146250 @kind unknown */
@@ -227,10 +227,10 @@ extern BattleSelectionHandler battlePanelStateHandler3[]; /* @source 0x800B6E50 
 extern BattleLocalOffsetPair D_800B6C90[]; /* @source 0x800B6C90 @kind unknown */
 extern u8 D_800B6D00[]; /* @source 0x800B6D00 @kind unknown */
 /* Eight-byte rodata blocks holding the "1" and "0" cursor-label strings at
- * +0x02; func_800B0B0C passes their base addresses to func_801AF390. */
+ * +0x02; drawBattlePanelSlots passes their base addresses to func_801AF390. */
 extern u8 D_800B6D20[]; /* @source 0x800B6D20 @kind string */
 extern u8 D_800B6D28[]; /* @source 0x800B6D28 @kind string */
-/* "Data"/"Pick"/"Best" string run; func_800B0B0C passes &D_800B6D30[slot*3]
+/* "Data"/"Pick"/"Best" string run; drawBattlePanelSlots passes &D_800B6D30[slot*3]
  * (three u16 rows, six bytes per panel slot) as the label record of each slot. */
 extern u16 D_800B6D30[]; /* @source 0x800B6D30 @kind string */
 extern u8 D_801462E4; /* @source 0x801462E4 @kind unknown */
@@ -242,7 +242,7 @@ extern volatile u8   localBattlerCount; /* @source 0x801462F0 @kind unknown */
 extern u8            D_801462F1; /* @source 0x801462F1 @kind unknown */
 extern volatile u8   D_80146303; /* @source 0x80146303 @kind unknown */
 extern volatile u16  D_80145AC8; /* @source 0x80145AC8 @kind unknown */
-/* sprintf work buffer of the panel label row: func_800B0498 formats the
+/* sprintf work buffer of the panel label row: drawBattleLocalPanel formats the
  * battler index into it and prints it through func_8014FF0C. Declared as a
  * named symbol so both uses materialize the buffer address through %hi/%lo. */
 extern u8            D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
@@ -380,7 +380,7 @@ extern u8 D_801EB72D[]; /* @source 0x801EB72D @kind unknown */
 extern u8 D_801EB742[]; /* @source 0x801EB742 @kind unknown */
 extern u8 D_801EB743[]; /* @source 0x801EB743 @kind unknown */
 extern u8 D_801EB744[]; /* @source 0x801EB744 @kind unknown */
-/* Local panel entry list read by func_8009CFEC: count byte plus 4-byte entries. */
+/* Local panel entry list read by compactPanelEntryList: count byte plus 4-byte entries. */
 extern u8 D_801EB5A8; /* @source 0x801EB5A8 @kind unknown */
 extern BattleLocalPanelEntry D_801ED9B0[]; /* @source 0x801ED9B0 @kind unknown */
 /* Kind byte of the 0x118-byte local panel record selected by an entry's owner
@@ -461,7 +461,7 @@ extern u8 D_80145518[][4]; /* @source 0x80145518 @kind unknown */
  * 0x801454F4 (see BATTLE_SELECTION_SAVED_GROUP). Declared as named symbols
  * because the original encodes each read as a `%hi`/`%lo` pair. */
 /* 3-byte saved group/scroll/cursor rows indexed by three times the active
- * message slot (func_80097EC0). Same table as the index-3 symbols below. */
+ * message slot (initSelectionGridBand). Same table as the index-3 symbols below. */
 extern u8 D_801454F4[]; /* @source 0x801454F4 @kind table */
 extern u8 D_80144952; /* @source 0x80144952 @kind unknown */
 extern u8 D_801454FD; /* @source 0x801454FD @kind unknown */
@@ -490,13 +490,13 @@ extern s16 D_80149322; /* @source 0x80149322 @kind unknown */
  * func_8014E5A0 is a game primitive-append helper (lifted in exe/slus_004.22). */
 void func_8014E5A0(u32 ot_index, u32 primitive_size);
 /* Panel-slot primitive/text helpers owned by the main EXE (0x8014xxxx).
- * Argument widths come from func_800B0B0C's live original bytes: the two
+ * Argument widths come from drawBattlePanelSlots's live original bytes: the two
  * coordinate arguments are zero-extended to u16 for func_801AE3F0 and
  * sign-extended to s16 for func_801AF390. func_8014F800 stays declared by
  * <gpu/prim.h> (s32, s32, s32, u32, u32). */
 void func_801AE3F0(u16 arg0, u16 arg1, s32 arg2, s32 arg3, s32 arg4, u8 arg5);
 void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, s32 arg3);
-/* INFERRED: 0x8014E3A0 is reached only from func_800A4BB4, which passes the
+/* INFERRED: 0x8014E3A0 is reached only from enterSelectionWhenReady, which passes the
  * literal 0x1B in $a0; the callee itself lives outside this target, so the
  * parameter is modelled as an engine action id. Promotion needs the EXE-side
  * body of 0x8014E3A0. */
@@ -532,46 +532,46 @@ void                           raiseFlag4PendingBits(void);
 void                           pollReadyInvokeHelper(void);
 void                           stateUnlockedB(void);
 void __attribute__((noinline)) runPanelTasks16To19(void);
-u8                             func_8009C8AC(u16 required_mask);
-u32                            func_800A7B40(u8 group, u8 slot);
-void                           func_8009CFEC(void);
-void                           func_8009DCC8(void);
-void                           func_8009DE18(void);
-void                           func_8009DE8C(void);
+u8                             checkBattlerMaskPresent(u16 required_mask);
+u32                            appendSlotGroupBytes(u8 group, u8 slot);
+void                           compactPanelEntryList(void);
+void                           storeIndexedDamageResult(void);
+void                           storeNegatedScaledValue(void);
+void                           storeNegatedWorkHalfword(void);
 void                           func_8009E500(void);
-void                           func_8009F320(void);
+void                           setIndexedFlag200(void);
 void                           stateValueRollRejected(void);
 /* Damage modifier at 0x800A2880: the first argument is the 0x80146374 selection
  * byte, which the decoded body never reads; every call site passes the 0x80146394
  * battler byte second and the selected action's power byte third, and the fourth
  * argument selects the element table consulted for that power. */
-s16  func_800A2880(u8 selection_index, u8 battler_index, u16 base_value,
+s16  mathScaledDamageRoll(u8 selection_index, u8 battler_index, u16 base_value,
                    u8 element_flag);
 s32  passesBytePairGate(u8 battler_index, u8 value);
 s16  func_800A2AE0(u8 battler_index, u16 element_mask);
-s32  func_800A2EF0(u8 battler_index, u32 flags);
-s16  func_800A2D70(s32 battler_index, s32 selection_mask);
-s32  func_800A30E8(u32 unused, u8 selector);
+s32  queryElementModifierZero(u8 battler_index, u32 flags);
+s16  queryElementModifierSentinel(s32 battler_index, s32 selection_mask);
+s32  mathNegatedScaleRoll(u32 unused, u8 selector);
 void func_800A31E0(u8 selection_kind, u16 input_mask);
-s32  func_800A3A10(s32 battler_index, s32 selection_kind);
+s32  querySelectionChance(s32 battler_index, s32 selection_kind);
 /* Selection roll: forwards (battler_index & 0xFF, selection_mask & 0x1FF) to
- * func_800A2D70 and returns a 0/1 success flag; its first parameter is not read
+ * queryElementModifierSentinel and returns a 0/1 success flag; its first parameter is not read
  * by the decoded body at 0x800A3B6C. */
 s32  func_800A3B6C(s32 arg0, s32 battler_index, s32 selection_mask);
 /* Selection roll at 0x800A3C9C: the 0x800B496C modifier-table twin of
- * func_800A3A10 (identical body apart from its callee). Its first parameter is
+ * querySelectionChance (identical body apart from its callee). Its first parameter is
  * not read by the decoded body; the second selects the battler (& 0xFF) and the
  * selection mask is the halfword of the 0x14-byte row 0x801CA71C[D_801463C0].
  * Returns a 0/1 success flag. */
 s32  func_800A3C9C(s32 arg0, s32 battler_index);
 u16  func_800A36F0(u8 battler_index, u16 flags);
-void func_800A3F28(void);
+void stateRefreshFlagStatus(void);
 void claimOwnerSlotsRow(void);
-void func_800ABBE0(void);
+void dispatchModeHandlerPass(void);
 void setupBattlerActiveSlots(void);
 void func_800A9BD8(u8 battler_index);
 void clampIndexedBattleByte14(s16 delta, s32 index);
-s32  func_800A403C(u8 index);
+s32  querySelectionRollClamp(u8 index);
 u8   querySelectionClampIndexed(u8 index);
 u8   resetSelectionApplyInput(s32 input_mask);
 /* @source 0x801DB524 */
@@ -581,12 +581,12 @@ void func_800A4458(void);
 /* Selection-grid initialiser called by the confirm-selection substate step
  * setupSelectionGridSubstate (0x80096FBC): rebuilds the
  * 0x80148570 grid band from the active message-slot work record. */
-void func_80097EC0(void);
+void initSelectionGridBand(void);
 void setupMode104ArmWork(void);
 void adjustBattleWorkValues(void);
 void func_800AAEBC(s16 target_index, u8 battler_index);
-void func_800B0498(void);
-void func_800B0B0C(s16 base_x, s16 base_y);
+void drawBattleLocalPanel(void);
+void drawBattlePanelSlots(s16 base_x, s16 base_y);
 void func_800B0F9C(void);
 void func_800B1728(void);
 void advancePanelXTo320(void);
@@ -611,7 +611,7 @@ void func_80196718(void *arg0);
 /* Status-word consumer called by func_800A36F0 with the status word it has just
  * stored; the call site loads it with `lhu` and sets no other argument. */
 void func_801DDAB4(u16 status);
-/* Panel box pass called first by func_800B0498 with the panel origin at
+/* Panel box pass called first by drawBattleLocalPanel with the panel origin at
  * +0x04/+0x06 (signed halfwords) and the size bytes at +0x08/+0x09. */
 void func_800B06F4(s16 x, s16 y, u8 width, u8 height);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void *arg3);
@@ -704,11 +704,11 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_UNK_801485DE        PSX_REF(volatile u8, 0x801485deu)
 #define BATTLE_UNK_80148656        PSX_REF(volatile u8, 0x80148656u)
 /* UNREVIEWED: the "palette" names below come from the partial lift
- * func_800B0B0C and are not proven. Original bytes at 0x800b6d20/0x800b6d28/
+ * drawBattlePanelSlots and are not proven. Original bytes at 0x800b6d20/0x800b6d28/
  * 0x800b6d30 are the ASCII string run "1"/"0"/"Data"/"Pick"/"Best"
  * continuing battleApParamStrings (0x800b6d1c, "AP"), inside the reviewed
  * pointer/string-table region (reviewed.rz: Cd 0x2D0C @ 0x800B43B8).
- * Rename only with evidence from a matched func_800B0B0C. */
+ * Rename only with evidence from a matched drawBattlePanelSlots. */
 #define BATTLE_PALETTE_TABLE       PSX_PTR(volatile u16, 0x800b6d30u)
 #define BATTLE_PALETTE_ROW_28      PSX_PTR(volatile void, 0x800b6d28u)
 #define BATTLE_PALETTE_ROW_20      PSX_PTR(volatile void, 0x800b6d20u)
@@ -782,7 +782,7 @@ typedef struct BattlePartyFlagRecord {
 
 extern BattlePartyFlagRecord D_80145FB8[]; /* @source 0x80145FB8 @kind unknown */
 
-/* Guard words read by func_800A2880: the 0x10000 "takes no damage" word at
+/* Guard words read by mathScaledDamageRoll: the 0x10000 "takes no damage" word at
  * +0x00 and the 0x200 guard word at +0x04 of each record. Every address keeps
  * its own symbol because the original encodes each access as
  * `lui %hi(SYM); addu at,at,index; lw %lo(SYM)(at)`, which a raw address
@@ -802,7 +802,7 @@ typedef struct BattleEnemyGuardRecord {
 extern BattlePartyGuardRecord D_80145FB4[]; /* @source 0x80145FB4 @kind unknown */
 extern BattleEnemyGuardRecord D_801EB730[]; /* @source 0x801EB730 @kind unknown */
 
-/* Random damage-band table indexed by the three-bit roll in func_800A2880;
+/* Random damage-band table indexed by the three-bit roll in mathScaledDamageRoll;
  * eight signed halfwords directly above battleElementResistanceModifier. */
 extern u16 D_800B492C[]; /* @source 0x800B492C @kind table */
 

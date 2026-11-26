@@ -61,7 +61,7 @@ WEAK_SYMBOL_AT(D_80181B10, 0x80181b10);
 WEAK_SYMBOL_AT(D_80146256, 0x80146256);
 WEAK_SYMBOL_AT(D_80146258, 0x80146258);
 WEAK_SYMBOL_AT(D_8014625A, 0x8014625a);
-/* ---- Pending frontend request block written by func_8019FF88 ---- */
+/* ---- Pending frontend request block written by publishFrontendRequest ---- */
 WEAK_SYMBOL_AT(D_80146254, 0x80146254);
 WEAK_SYMBOL_AT(D_80146262, 0x80146262);
 WEAK_SYMBOL_AT(D_80146264, 0x80146264);
@@ -209,7 +209,7 @@ WEAK_SYMBOL_AT(worldIdHandlerTable, 0x801c86f8);
 WEAK_SYMBOL_AT(D_801C8090, 0x801c8090);
 WEAK_SYMBOL_AT(D_801C80E0, 0x801c80e0);
 WEAK_SYMBOL_AT(D_801C80EC, 0x801c80ec);
-/* ---- Four-entry work-flag handler table dispatched by func_801B2D90 ---- */
+/* ---- Four-entry work-flag handler table dispatched by dispatchWorkByte2Ready ---- */
 WEAK_SYMBOL_AT(D_801CD120, 0x801cd120);
 /* ---- Two-entry work-flag handler table dispatched by
  * callHandlerReadyUpdate ---- */
@@ -251,7 +251,7 @@ WEAK_SYMBOL_AT(D_80145559, 0x80145559);
 WEAK_SYMBOL_AT(D_8014555A, 0x8014555a);
 WEAK_SYMBOL_AT(D_8014555B, 0x8014555b);
 
-/* ---- Entry-0 context seed table (searched by func_801A02E8) ---- */
+/* ---- Entry-0 context seed table (searched by refreshPendingRequestKind) ---- */
 WEAK_SYMBOL_AT(D_801C8384, 0x801c8384);
 WEAK_SYMBOL_AT(D_801C84BC, 0x801c84bc);
 WEAK_SYMBOL_AT(D_801C8120, 0x801c8120);

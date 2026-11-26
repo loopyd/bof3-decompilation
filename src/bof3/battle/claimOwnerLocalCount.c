@@ -9,7 +9,7 @@ typedef struct BattleOwnerHead {
 } BattleOwnerHead;
 
 extern void func_800AC218(u8 index, u8 class_id); /* @source 0x800AC218 */
-extern void func_800AD0A8(u8 index, u16 class_id); /* @source 0x800AD0A8 */
+extern void publishClassRulePair(u8 index, u16 class_id); /* @source 0x800AD0A8 */
 
 /**
  * @source 0x800AC01C
@@ -22,7 +22,7 @@ extern void func_800AD0A8(u8 index, u16 class_id); /* @source 0x800AD0A8 */
  *   quad, the six words 0x0C..0x20, bytes 6, 7, 0x2B and 0x48, and byte 8 to
  *   the battle mode byte D_801462EC toggled by 2), initialises the record from
  *   its class template through func_800AC218, applies the class rule pair
- *   through func_800AD0A8, clears band byte 0x7F of the same record, raises
+ *   through publishClassRulePair, clears band byte 0x7F of the same record, raises
  *   flag 0x40 of the owner record leading byte and advances the initialised
  *   record counter D_801462F2.
  * @status exact
@@ -100,7 +100,7 @@ void claimOwnerLocalCount(u8 slot, u8 index,
   work10 = g_battle_work;
   work10[0x48] = 0;
   func_800AC218(index, class_id);
-  func_800AD0A8(index, class_id);
+  publishClassRulePair(index, class_id);
   D_801EB6AF[(u32)index * 0x118u] = 0;
   rec[0] |= 0x40;
   D_801462F2 += 1;

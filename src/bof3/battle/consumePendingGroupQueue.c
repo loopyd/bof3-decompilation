@@ -11,7 +11,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DD29C(void) {
+void consumePendingGroupQueue(void) {
   s8* cursor;
   u8 group;
   u8 empty_marker;
@@ -30,7 +30,7 @@ loop:
   if (group == empty_marker) {
     return;
   }
-  /* The selection byte 0x801462EE sits 0x15 bytes below the cursor; func_801DF3F8
+  /* The selection byte 0x801462EE sits 0x15 bytes below the cursor; driveLocalSelectState
    * reads it as the group index this queue selected. */
   *(u8*)(cursor - 0x15) = group;
   D_80145E90[group].unk_119 = record_flag;

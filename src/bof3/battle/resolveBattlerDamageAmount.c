@@ -39,7 +39,7 @@ extern u32 resolveEnemyTargetDamage(s16 damage, u8 attacker,
  *   raises the matching bit of 0x801463DA, clears the target's guard bits
  *   through func_800A36F0 and zeroes the target's +0x121/+0xFD byte, and bit
  *   0x04 as well as both of those arms raise a zero amount to one; with none of
- *   bits 0x64 set the amount instead passes through func_801DC73C for a party
+ *   bits 0x64 set the amount instead passes through resolveDamageNegation for a party
  *   target or resolveEnemyTargetDamage for an enemy target. A
  *   target guard byte carrying bit 0x02 rolls the frame band by rand() % 8 and
  *   keeps rand()'s percentage of the amount. While 0x801462E8 carries bit 0x80
@@ -160,7 +160,7 @@ s32 resolveBattlerDamageAmount(u8 attacker, u8 target, u16 kind_mask) {
     }
   } else {
     if (target < 3u) {
-      damage = func_801DC73C(damage, attacker, target);
+      damage = resolveDamageNegation(damage, attacker, target);
     } else {
       damage = resolveEnemyTargetDamage(damage, attacker, target);
     }

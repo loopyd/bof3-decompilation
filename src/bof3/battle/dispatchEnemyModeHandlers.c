@@ -11,7 +11,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801E2170(void) {
+void dispatchEnemyModeHandlers(void) {
   u8                 index;
   Battle03EnemyWork* work;
 

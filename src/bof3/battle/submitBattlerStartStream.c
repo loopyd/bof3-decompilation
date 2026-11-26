@@ -11,11 +11,11 @@
  * halfword carries bit 0x800, copies that record's D_80145F20/D_80145F22
  * halfwords and D_80145F2E byte into D_80145F18/D_80145F1A/D_80145F1C before
  * submitting the 0xBFFF-masked status; every record is then submitted with the
- * 0xBF5F mask, refreshed through func_80196718, ranked through func_801DDFEC,
+ * 0xBF5F mask, refreshed through func_80196718, ranked through advanceRankedLocalCounter,
  * and the enemy-ready latch BATTLE_GLOBAL_BYTE_63CE is cleared. When no enemy
  * cue is pending it maps D_80146328 bit 0 to battle mode byte 0x801462E1 = 2
  * and bit 1 to 1, then runs the battle hook D_801463A4 registered by
- * func_801E320C, resets layout bank 0 through func_80161808, starts EMI stream
+ * setupFrontScriptHooks, resets layout bank 0 through func_80161808, starts EMI stream
  * slot 1 or 2 through func_80161FDC for the mode byte it ended on, and clears
  * the battle state byte BATTLE_GLOBAL_BYTE_62E2.
  * @status exact
@@ -80,7 +80,7 @@ void submitBattlerStartStream(void) {
         }
         func_800A36F0(index, *(volatile u16*)(D_80145F10 + offset) & 0xBF5Fu);
         func_80196718(record);
-        func_801DDFEC(index);
+        advanceRankedLocalCounter(index);
         index += 1;
       } while (index < localBattlerCount);
     }

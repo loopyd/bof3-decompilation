@@ -2,7 +2,7 @@
 
 /**
  * @source 0x800A1A30
- * @behavior Runs selection pass func_800A3F28, then sets flag 0x10000 in
+ * @behavior Runs selection pass stateRefreshFlagStatus, then sets flag 0x10000 in
  *   the guard word of the selected local record for indices below three,
  *   or the selected reserve record at index minus three otherwise.
  * @status exact
@@ -13,7 +13,7 @@ void runSelectionGuardFlag(void)
 {
   u32 index;
 
-  func_800A3F28();
+  stateRefreshFlagStatus();
   index = *(u8 *)&D_80146374;
   if (index < 3) {
     D_80145FB4[index].unk_00 |= 0x10000;

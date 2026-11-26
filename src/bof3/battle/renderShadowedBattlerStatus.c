@@ -20,7 +20,7 @@
  * the box from (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12): the top
  * and left edges as texture-page-1 sprite prims in that palette colour and the
  * right and bottom edges as flat line prims in the same channels lowered by
- * 0x10 and clamped to 0 through 0xFF. Its only in-image caller, func_801E99AC,
+ * 0x10 and clamped to 0 through 0xFF. Its only in-image caller, renderShadowedSlotStatus,
  * feeds it the active panel halfwords +0x04/+0x06 and panel byte +0x0A.
  * @status partial
  * @match 92.06
@@ -53,12 +53,12 @@ void renderShadowedBattlerStatus(s32 arg0, s32 arg1, s32 arg2) {
   red = (palette & 0x1f) << 3;
   green = (palette >> 2) & 0xf8;
   blue = (palette >> 7) & 0xf8;
-  func_801D9C80((s16)(arg0 + 4), (s16)(arg1 + 8), 8, 1);
+  drawTableTilePrim((s16)(arg0 + 4), (s16)(arg1 + 8), 8, 1);
   func_801D9AB4((s16)(arg0 + 4), (s16)(arg1 + 6), 2, 1);
   func_801D9AB4((s16)(arg0 + 4), (s16)(arg1 + 0x19), 3, 1);
   SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(0, 1, 0x3c0, 0), 0);
   func_8014E5A0(1, 0x0c);
-  func_801D9C80((s16)arg0, (s16)(arg1 + 2), 8, 0);
+  drawTableTilePrim((s16)arg0, (s16)(arg1 + 2), 8, 0);
   drawColorTilePrim((s16)(arg0 + 6), (s16)(arg1 + 0xb), 9, 0, 0);
   func_801D9AB4((s16)arg0, (s16)arg1, 2, 0);
   func_801D9AB4((s16)arg0, (s16)(arg1 + 0x13), 3, 0);

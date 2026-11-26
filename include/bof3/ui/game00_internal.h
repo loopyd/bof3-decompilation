@@ -44,7 +44,7 @@ extern u8 D_801CD478[];
 /* @source 0x801CD480 @kind table */
 extern u8 D_801CD480[];
 /* @behavior three-byte list of record types accepted by the entry-0 record
- * gate func_801B55C0. */
+ * gate checkRecordTypeGate. */
 /* @source 0x801CD1C8 @kind table */
 extern u8 D_801CD1C8[];
 /* @source 0x801CD49C @kind table */
@@ -293,7 +293,7 @@ struct GameWorkArea {
 /* Work-script interpreter state shared by the front-end script runner
  * (func_801A8F94 / func_801A8D38). Only the u16 byte cursor at +0x0A is proven
  * here: three readers load it as `lhu` and the runner stores the resolved
- * target back into it after func_801AC8F0. The remaining offsets are not
+ * target back into it after resolveScriptJumpOperand. The remaining offsets are not
  * modelled yet. */
 typedef struct GameWorkScriptState {
   u8  pad_00[0x0A];
@@ -306,7 +306,7 @@ typedef struct GameWorkScriptState {
  * whose id byte equals label and the offset of that definition is returned.
  * @source 0x801AC8F0
  */
-s32 func_801AC8F0(GameWorkScriptState* state, u8 label, const u8* script);
+s32 resolveScriptJumpOperand(GameWorkScriptState* state, u8 label, const u8* script);
 
 typedef struct GameResetRecord {
   u8 unk_00;
@@ -389,7 +389,7 @@ extern GameEntry0StateHandler* D_801CD510[];
 extern u8          D_801CD4AC[];
 /* @source 0x801CD4C0 @kind table */
 extern GameEntry0StateHandler* D_801CD4C0[];
-/* @behavior four-entry work-flag handler table dispatched by func_801B2D90: the
+/* @behavior four-entry work-flag handler table dispatched by dispatchWorkByte2Ready: the
  * byte at work+0x02 selects the handler, whose entries are the sibling update
  * routines 0x801B2DDC, 0x801B2FC8, 0x801B315C and 0x801B31F0. */
 /* @source 0x801CD120 @kind table */
@@ -419,7 +419,7 @@ extern GameEntry0StateHandler D_801CD2F4[];
 /* @source 0x801CD2EC @kind table */
 extern GameEntry0StateHandler D_801CD2EC[];
 /* @behavior 256-byte per-opcode width table used by the label scanner
- * func_801AC8F0 to step over each script instruction: the byte at the current
+ * resolveScriptJumpOperand to step over each script instruction: the byte at the current
  * scan offset is added to that offset, except for the scanner's own 0xF8 and
  * 0x0E/0x0F overrides. Values are the scanner's initial lookup data, not proven
  * interpreter instruction lengths. */
@@ -432,11 +432,11 @@ extern GameEntry0StateHandler D_801C8904[];
 /* @source 0x801C7BEC @kind table */
 extern GameEntry0StateHandler D_801C7BEC[];
 /* @behavior three-entry panel state callback table dispatched by
- * func_801995A4 with the panel task root state byte as the index. */
+ * callPanelStateHandler with the panel task root state byte as the index. */
 /* @source 0x801C7C00 @kind table */
 extern GameEntry0StateHandler D_801C7C00[];
 /* @behavior three-entry panel state callback table dispatched by
- * func_801996A8 with the panel task root state byte as the index. */
+ * callPanelStateHandler2 with the panel task root state byte as the index. */
 /* @source 0x801C7C0C @kind table */
 extern GameEntry0StateHandler D_801C7C0C[];
 /* @source 0x801C7C70 @kind table */
@@ -667,12 +667,12 @@ extern u16         D_8014625A;
  * found, otherwise the raw word. */
 /* @source 0x8014625C @kind unknown */
 extern u16         D_8014625C;
-/* @behavior count of live 0x140-byte-stride records walked by func_8019FF88
+/* @behavior count of live 0x140-byte-stride records walked by publishFrontendRequest
  * and the sibling request/route helpers. */
 /* @source 0x80146254 @kind unknown */
 extern u8          D_80146254;
 /* @behavior low byte of the pending frontend request published by
- * func_8019FF88; the request argument pair is kept in the two words below. */
+ * publishFrontendRequest; the request argument pair is kept in the two words below. */
 /* @source 0x80146262 @kind unknown */
 extern u8          D_80146262;
 /* @source 0x80146264 @kind unknown */
@@ -697,7 +697,7 @@ extern u8          D_80145F1A[];
 /* @source 0x80145F1E @kind table */
 extern u8          D_80145F1E[];
 /* @behavior leading byte of each D_80146254-entry, 0x140-byte-stride record;
- * func_8019FF88 copies the per-kind byte D_801C8380[kind] into it and sets
+ * publishFrontendRequest copies the per-kind byte D_801C8380[kind] into it and sets
  * bit 1 of the record's second byte at D_80145FBC. */
 /* @source 0x80145FBB @kind table */
 extern u8          D_80145FBB[];
@@ -787,7 +787,7 @@ extern u8          D_80145E90[];
 /* @source 0x80145E91 @kind table */
 extern u8          D_80145E91[];
 /* @behavior byte at offset 1 of each 0x140-byte-stride local work record.
- * func_801B55C0 accepts a record whose leading byte (D_80145E91) reads 2 only
+ * checkRecordTypeGate accepts a record whose leading byte (D_80145E91) reads 2 only
  * while this type byte appears in the three-byte list D_801CD1C8. */
 /* @source 0x80145E92 @kind table */
 extern u8          D_80145E92[];
@@ -832,19 +832,19 @@ extern u8          D_80181BD4[];
 /* @source 0x80181164 @kind table */
 extern u8*         D_80181164[];
 /* Packed world-id to context-seed mapping record: key at +0, mapped id at +2
- * (4-byte stride).  Ten records are read by func_801B6418. */
+ * (4-byte stride).  Ten records are read by lookupWorldContextSeed. */
 typedef struct GameWorldContextSeed {
   u16 world_id;
   u16 context_seed;
 } GameWorldContextSeed;
 /* @source 0x801CD224 @kind table */
 extern GameWorldContextSeed D_801CD224[];
-/* @behavior eleven u16 context seeds searched by func_801A02E8; a hit selects
+/* @behavior eleven u16 context seeds searched by refreshPendingRequestKind; a hit selects
  * the 0xB pending request kind, an exhausted search selects 1. */
 /* @source 0x801C8384 @kind table */
 extern const u16 D_801C8384[];
 /* @behavior per-kind byte copied into the record leading byte by
- * func_8019FF88, indexed by the pending handler index (0-3). */
+ * publishFrontendRequest, indexed by the pending handler index (0-3). */
 /* @source 0x801C8380 @kind table */
 extern u8 D_801C8380[];
 /* @source 0x80149308 @kind unknown */
@@ -1083,7 +1083,7 @@ void func_8015A758(void);
 void func_801BDAB8(void);
 void runFrameFinalizationServices(void);
 void func_8019A0E4(void);
-void func_8019AAFC(void);
+void stateSaveWorkCoordinates(void);
 void func_8014BA54(void);
 
 /* @behavior runs the panel task update slice over the panel task root record
@@ -1152,8 +1152,8 @@ void func_8014D664(u8 arg0, u32 arg1, u32 arg2, u32 arg3);
 s32 func_8015C148(void);
 
 void clearAllRecords(void);
-void func_8019625C(void);
-u8   func_801968BC(u8 mode);
+void renderPaletteWorkRecords(void);
+u8   queryPaletteMapRange(u8 mode);
 u8   locatePaletteColor(u8 value);
 void func_80196B9C(void);
 u8   allocPaletteSlot(u8* owner, u8* source_table);
@@ -1166,7 +1166,7 @@ void dispatchSubstate1(void);
 void enterState2OnInput(void);
 void dispatchSubstate2(void);
 void bank2Init(void);
-void func_80197AA4(void);
+void stateFrontendRoutePrep(void);
 void bank2AdvanceWhenReady(void);
 void bank2CompleteOperation(void);
 void bank2FinalUpdates(void);
@@ -1192,7 +1192,7 @@ void func_801BFAC4(void);
 u8   func_801BF78C(void);
 u8   findModeFreeSlot(u8 mode);
 void updateWorkRouteIndex(u8 arg_a, u8 arg_b, u8 arg_c);
-/* @behavior tests the 16.16 x/y position handed in by func_8019C1E4 against
+/* @behavior tests the 16.16 x/y position handed in by stateProjectWorkOffset against
  * the active work area's route/sub-state and the shared collision helpers,
  * returning a truthy acceptance result whose low byte the caller reads.
  * @source 0x8019C344
@@ -1212,7 +1212,7 @@ void func_8019FAA0(u16 selection_seed, u32 context_a, u32 context_b,
  * kind and stamps every live 0x140-byte-stride record.
  * @source 0x8019FF88
  */
-void func_8019FF88(u8 kind, u32 context_a, u32 context_b);
+void publishFrontendRequest(u8 kind, u32 context_a, u32 context_b);
 void waitTransition(u32 arg0);
 void func_801A0048(s16 a, s16 b);
 /* @behavior searches the eleven u16 context seeds of D_801C8384 for the current
@@ -1220,7 +1220,7 @@ void func_801A0048(s16 a, s16 b);
  * after the search is exhausted.
  * @source 0x801A02E8
  */
-void func_801A02E8(void);
+void refreshPendingRequestKind(void);
 /* @behavior resolves the pending front-end request for the 16.16 context point
  * (x, y) and the stored context seed, publishing the resulting request byte at
  * D_80143F1F; when world-flags bit 0x80 is set it publishes the front selector

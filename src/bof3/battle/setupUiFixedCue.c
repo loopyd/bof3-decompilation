@@ -19,6 +19,6 @@ void setupUiFixedCue(void) {
   }
   initUiBundleFixed();
   cue = func_801502D0(0x11u);
-  func_801DE60C(0u, 2u, 0u, 0u, 0xffu, cue);
+  overwriteEventSlot(0u, 2u, 0u, 0u, 0xffu, cue);
   BATTLE_GLOBAL_BYTE_62E2 += 1;
 }

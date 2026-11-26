@@ -7,7 +7,7 @@
  * 0x80146874/0x80146875, then runs the shared front-end startup helper
  * func_8015C088 and initializes the shared 5/3/0 mode tuple through
  * initModeTuple530; otherwise it does nothing. Registered as the battle hook
- * D_801463A4 by func_801E320C and invoked from the battle step func_801D6A14.
+ * D_801463A4 by setupFrontScriptHooks and invoked from the battle step func_801D6A14.
  * @status exact
  * @match 100.00
  * @residual none

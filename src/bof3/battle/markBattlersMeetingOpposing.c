@@ -21,7 +21,7 @@ u8 markBattlersMeetingOpposing(void) {
   count = 0u;
   index = 3u;
   while (index < 0x0bu) {
-    if (func_801DB2F8(index) != 0u) {
+    if (isBattlerRankingEligible(index) != 0u) {
       u16 value;
 
       value = D_801EB6D8[index - 3u].half_00;
@@ -41,8 +41,8 @@ u8 markBattlersMeetingOpposing(void) {
   count = 0u;
   index = 0u;
   while (index < 3u) {
-    if ((func_801DB9E4(index) != 0u) &&
-        (func_801DB3A0(index, total, maximum) != 0u)) {
+    if ((isBattlerActorEligible(index) != 0u) &&
+        (localBattlerMeetsThresholds(index, total, maximum) != 0u)) {
       D_80145FB8[index].flags_00 |= 0x8000u;
       count += 1u;
     }
@@ -58,7 +58,7 @@ u8 markBattlersMeetingOpposing(void) {
   count = 0u;
   index = 0u;
   while (index < 3u) {
-    if (func_801DB2F8(index) != 0u) {
+    if (isBattlerRankingEligible(index) != 0u) {
       u16 value;
 
       value = D_80145F28[index].half_00;
@@ -77,7 +77,7 @@ u8 markBattlersMeetingOpposing(void) {
 
   index = 3u;
   while (index < 0x0bu) {
-    if ((func_801DB9E4(index) != 0u) &&
+    if ((isBattlerActorEligible(index) != 0u) &&
         (enemyBattlerMeetsThresholds(index, total, maximum) != 0u)) {
       D_801EB734[index - 3u].word_00 |= 0x8000u;
     }

@@ -28,7 +28,7 @@ u8 func_801E2A88(u8 arg0) {
       return value;
     }
     if ((flags & 0x10u) != 0u) {
-      return func_801E2D90();
+      return pickLowestLocalSlot();
     }
     return func_801E2E30();
   }
@@ -56,7 +56,7 @@ u8 func_801E2A88(u8 arg0) {
         return pickTargetByMode((u8)index);
       }
       if ((flags & 0x10u) != 0u) {
-        return func_801E2D90();
+        return pickLowestLocalSlot();
       }
       return func_801E2E30();
     }
@@ -76,10 +76,10 @@ u8 func_801E2A88(u8 arg0) {
       return (u8)(arg0 + 3u);
     }
     if ((kind_flags & 0x20u) == 0u) {
-      return func_801E2CA4();
+      return pickLowestEnemyId();
     }
     if ((flags & 0x10u) != 0u) {
-      return func_801E2D90();
+      return pickLowestLocalSlot();
     }
     return func_801E2E30();
   }

@@ -8,7 +8,7 @@ splat = "config/targets/emi/etc/commu01/07/splat.yaml"
 load_address = 0x801D0C00
 
 sources = [
-    "src/bof3/ui/func_801D0C68.c",
+    "src/bof3/ui/statePublishRequestMode.c",
     "src/bof3/ui/confirmEntryRequest.c",
     "src/bof3/ui/computeListOriginY.c",
     "src/bof3/ui/publishTextId.c",

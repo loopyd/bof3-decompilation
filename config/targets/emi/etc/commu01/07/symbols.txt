@@ -1,7 +1,7 @@
 fairyProgress = 0x801448EC;
 dispatchSoundCue = 0x8015DF18;
 D_801D0C04 = 0x801D0C04;
-func_801D0C68 = 0x801D0C68;
+statePublishRequestMode = 0x801D0C68;
 confirmEntryRequest = 0x801D0CAC;
 callScreenStepTable = 0x801D0E44;
 callByte1Table4 = 0x801D0E80;

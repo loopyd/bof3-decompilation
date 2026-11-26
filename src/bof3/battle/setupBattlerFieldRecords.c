@@ -15,7 +15,7 @@ extern u8  D_801462E4;   /* @source 0x801462E4 @kind unknown */
 
 /* @source 0x801D7350
  * @behavior Third handler of the D_801EAD20 state table: resets the eight enemy
- *   work records (func_800ACF80) and the queued-slot key bytes (func_801E5A38),
+ *   work records (func_800ACF80) and the queued-slot key bytes (resetAllQueuedSlots),
  *   then initializes the 0xA4-byte field record of each active local work
  *   record -- active meaning bit 0x4000 of its +0x80 halfword (D_80145F10), with
  *   the field record selected by byte +0x13C (D_80145FCC). Initializing sets
@@ -43,7 +43,7 @@ void setupBattlerFieldRecords(void) {
   do {
     index = 0;
   } while (0);
-  func_801E5A38();
+  resetAllQueuedSlots();
   if (localBattlerCount != 0) {
     do {
       u32 work_offset;

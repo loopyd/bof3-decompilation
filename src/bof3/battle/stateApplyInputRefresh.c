@@ -14,7 +14,7 @@ extern u8 battlePartyByteAt801452[]; /* @source 0x80145FC7 @kind unknown */
  *   clears byte +0x0F of the record when the selection byte is below three
  *   (party side only). querySelectionApplyInput reports whether the mask was
  *   applied; when it was not, the handler runs the selection refresh pass
- *   func_800A3F28 and returns. Otherwise, and whenever the flag word carries a
+ *   stateRefreshFlagStatus and returns. Otherwise, and whenever the flag word carries a
  *   low bit, it stores 1 in byte +0x08 of the selection record pointer
  *   D_8014639C.record.
  * @status exact
@@ -33,7 +33,7 @@ void stateApplyInputRefresh(void)
       battlePartyByteAt801452[index * 0x140] = 0;
     }
     if ((u8)querySelectionApplyInput(0x800) == 0) {
-      func_800A3F28();
+      stateRefreshFlagStatus();
       return;
     }
   }

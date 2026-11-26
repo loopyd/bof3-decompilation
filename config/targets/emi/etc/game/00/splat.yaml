@@ -55,8 +55,8 @@ segments:
     - func_8019615C
   - - 2652
     - c
-    - func_8019625C
-    - '@source: src/bof3/ui/func_8019625C.c'
+    - renderPaletteWorkRecords
+    - '@source: src/bof3/ui/renderPaletteWorkRecords.c'
     - '@behavior: Advances active palette work records and writes their adjusted colors into the shared palette buffer.'
   - - 3356
     - asm
@@ -72,8 +72,8 @@ segments:
     - func_80196784
   - - 4284
     - c
-    - func_801968BC
-    - '@source: src/bof3/ui/func_801968BC.c'
+    - queryPaletteMapRange
+    - '@source: src/bof3/ui/queryPaletteMapRange.c'
     - '@behavior: Scans four 16-byte palette maps for an 0xff range selected by mode and records its row and column in scratchpad bytes zero and one.'
   - - 4896
     - c
@@ -154,8 +154,8 @@ segments:
     - '@behavior: initializes the second frontend callback bank, ticks its shared update paths, and advances to the next sub-state.'
   - - 8868
     - c
-    - func_80197AA4
-    - '@source: src/bof3/ui/func_80197AA4.c'
+    - stateFrontendRoutePrep
+    - '@source: src/bof3/ui/stateFrontendRoutePrep.c'
     - '@behavior: waits for the selected frontend route, configures its scenario coordinates and stream mode, then advances the New Game/load preparation chain.'
   - - 9244
     - c
@@ -287,8 +287,8 @@ segments:
     - '@behavior: calls the entry-1 update slice, then finalizes the shared front-end frame.'
   - - 15384
     - c
-    - func_80199418
-    - '@source: src/bof3/ui/func_80199418.c'
+    - callFrameUpdateFinalize
+    - '@source: src/bof3/ui/callFrameUpdateFinalize.c'
     - '@behavior: runs the func_801D0D80 update slice, then finalizes the shared front-end frame through func_80158C80.'
   - - 15424
     - asm
@@ -304,8 +304,8 @@ segments:
     - '@source: src/bof3/ui/func_8019959C.c'
   - - 15780
     - c
-    - func_801995A4
-    - '@source: src/bof3/ui/func_801995A4.c'
+    - callPanelStateHandler
+    - '@source: src/bof3/ui/callPanelStateHandler.c'
     - '@behavior: calls the panel state handler D_801C7C00[D_80148648->state] with no arguments, then runs the panel task update func_801999F8 over the same task root.'
   - - 15864
     - c
@@ -323,8 +323,8 @@ segments:
     - '@source: src/bof3/ui/panelTasksGame00.c'
   - - 16040
     - c
-    - func_801996A8
-    - '@source: src/bof3/ui/func_801996A8.c'
+    - callPanelStateHandler2
+    - '@source: src/bof3/ui/callPanelStateHandler2.c'
     - '@behavior: panel state dispatcher: calls the handler selected by the panel task root state byte (D_801C7C0C[D_80148648->state]) with no arguments (framed jalr), then runs the panel task update func_801D7AD0 over the same task root.'
   - - 16124
     - c
@@ -415,15 +415,15 @@ segments:
     - '@behavior: calls handler 4 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index queryCurrentWorldIndex returns for the current world state ID.'
   - - 19384
     - c
-    - func_8019A3B8
-    - '@source: src/bof3/ui/func_8019A3B8.c'
+    - callByte1Table090
+    - '@source: src/bof3/ui/callByte1Table090.c'
     - '@behavior: Dispatches the handler table (0x801C8090) indexed by the work-area byte (work+0x01) through a tail-style jalr call.'
   - - 19452
     - asm
     - func_8019A3FC
   - - 19772
     - c
-    - func_8019A53C
+    - callByte6Table0a4
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C80A4) indexed by the work-area byte (work+0x06) through a framed jalr call.'
   - - 19840
@@ -442,31 +442,31 @@ segments:
     - '@behavior: clears work-area status bytes then clears work flags'
   - - 20484
     - c
-    - func_8019A804
+    - callByte1Table0bc
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C80BC) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 20552
     - c
-    - func_8019A848
-    - '@source: src/bof3/ui/func_8019A848.c'
+    - stateApplyCoordinateDeltas
+    - '@source: src/bof3/ui/stateApplyCoordinateDeltas.c'
     - '@behavior: dispatches the work-area handler selected by field 0x06, then applies signed coordinate deltas to the halfwords at offsets 0x2E/0x30.'
   - - 20660
     - c
-    - func_8019A8B4
-    - '@source: src/bof3/ui/func_8019A8B4.c'
+    - callByte1Table0e0
+    - '@source: src/bof3/ui/callByte1Table0e0.c'
     - '@behavior: Dispatch the handler selected by work byte 1, then set state 2.'
   - - 20740
     - asm
     - func_8019A904
   - - 21060
     - c
-    - func_8019AA44
-    - '@source: src/bof3/ui/func_8019AA44.c'
+    - stateAdvancePanelAccumulators
+    - '@source: src/bof3/ui/stateAdvancePanelAccumulators.c'
     - '@behavior: While the scratch work-area countdown byte at 0x09 is nonzero, advances the three 16.16 panel accumulators at 0x801481E8/0x801481EC/0x801481F0 by their paired per-frame deltas and commits the integer part of each sum to the panel coordinates at 0x801492D8/0x801492DA/0x801492DC, then decrements the countdown; when it has already reached zero it sets work byte 0x01 to 2 instead.'
   - - 21244
     - c
-    - func_8019AAFC
-    - '@source: src/bof3/ui/func_8019AAFC.c'
+    - stateSaveWorkCoordinates
+    - '@source: src/bof3/ui/stateSaveWorkCoordinates.c'
     - '@behavior: Saves work coordinates and clears scenario/work flags.'
   - - 21340
     - c
@@ -478,8 +478,8 @@ segments:
     - func_8019ABB0
   - - 21556
     - c
-    - func_8019AC34
-    - '@source: src/bof3/ui/func_8019AC34.c'
+    - callByte1Table0ec
+    - '@source: src/bof3/ui/callByte1Table0ec.c'
     - '@behavior: Dispatches the handler table (0x801C80EC) indexed by the work-area byte (work+0x01), then sets the shared state byte to 2.'
   - - 21636
     - asm
@@ -489,12 +489,12 @@ segments:
     - func_8019ACF4
   - - 21872
     - c
-    - func_8019AD70
-    - '@source: src/bof3/ui/func_8019AD70_game00.c'
+    - stateStoreWorkShadow
+    - '@source: src/bof3/ui/stateStoreWorkShadow.c'
     - '@behavior: copies the work-area word at offset 0x0C into the u16 shadow at D_8014932C, then runs the work-coordinate save helper.'
   - - 21924
     - c
-    - func_8019ADA4
+    - callByte1Table0f8
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C80F8) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 21992
@@ -513,7 +513,7 @@ segments:
     - '@behavior: calls the shared work-area reset helper.'
   - - 22796
     - c
-    - func_8019B10C
+    - callByte1Table120
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8120) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 22864
@@ -527,7 +527,7 @@ segments:
     - func_8019B284
   - - 23396
     - c
-    - func_8019B364
+    - callByte1Table12c
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C812C) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 23464
@@ -553,21 +553,21 @@ segments:
     - func_8019BF78
   - - 26580
     - c
-    - func_8019BFD4
-    - '@source: src/bof3/ui/func_8019BFD4.c'
+    - setupWorkControlFields
+    - '@source: src/bof3/ui/setupWorkControlFields.c'
     - '@behavior: Copies two shared values into working state, initializes control fields, and negates the signed value at D_80149330.'
   - - 26664
     - asm
     - func_8019C028
   - - 26916
     - c
-    - func_8019C124
-    - '@source: src/bof3/ui/func_8019C124_game00.c'
+    - stateSnapWorkCoordinate
+    - '@source: src/bof3/ui/stateSnapWorkCoordinate.c'
     - '@behavior: Snaps the active work-area coordinate whose low halfword at 0x34 is nonzero (falling back to the word at 0x38 when it is zero) onto its integer part and stores the result at 0x18: with a positive delta at 0x0C (or 0x10) the low byte of arg0 truncates, otherwise the coordinate is rounded up by 0x10000; a negative delta truncates and a zero delta stores nothing. Either axis then sets byte 0x01 of the work area to 3.'
   - - 27108
     - c
-    - func_8019C1E4
-    - '@source: src/bof3/ui/func_8019C1E4_game00.c'
+    - stateProjectWorkOffset
+    - '@source: src/bof3/ui/stateProjectWorkOffset.c'
     - '@behavior: projects the active work area onto the movement-offset pair selected by its route byte at 0x08 (each selected offset doubled) and passes the projected 16.16 x/y pair to func_8019C344, returning the low byte of the acceptance result.'
   - - 27204
     - asm
@@ -580,7 +580,7 @@ segments:
     - func_8019C4F0
   - - 28192
     - c
-    - func_8019C620
+    - callByte1Table144
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8144) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 28260
@@ -602,7 +602,7 @@ segments:
     - func_8019CAB4
   - - 29588
     - c
-    - func_8019CB94
+    - callByte1Table154
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8154) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 29656
@@ -649,12 +649,12 @@ segments:
     - func_8019DC6C
   - - 34252
     - c
-    - func_8019DDCC
+    - callByte1Table164
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8164) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 34320
     - c
-    - func_8019DE10
+    - callFlags2Table17c
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C817C) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 34388
@@ -662,8 +662,8 @@ segments:
     - func_8019DE54
   - - 34700
     - c
-    - func_8019DF8C
-    - '@source: src/bof3/ui/func_8019DF8C.c'
+    - stateResetWorkShadow
+    - '@source: src/bof3/ui/stateResetWorkShadow.c'
     - '@behavior: zeroes the u16 at D_8014932C, then clears work area flags 0x00-0x04.'
   - - 34740
     - asm
@@ -673,7 +673,7 @@ segments:
     - func_8019E1A0
   - - 35428
     - c
-    - func_8019E264
+    - callFlags2Table198
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8198) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 35496
@@ -684,13 +684,13 @@ segments:
     - func_8019E36C
   - - 35876
     - c
-    - func_8019E424
+    - callFlags2Table1a0
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81A0) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 35944
     - c
-    - func_8019E468
-    - '@source: src/bof3/ui/func_8019E468.c'
+    - stateStepWorkFlags02
+    - '@source: src/bof3/ui/stateStepWorkFlags02.c'
     - '@behavior: clears work byte 9, sets byte 0xA to 5, then increments work flags byte 2'
   - - 36008
     - asm
@@ -703,7 +703,7 @@ segments:
     - func_8019E6F8
   - - 36736
     - c
-    - func_8019E780
+    - callFlags2Table1b0
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81B0) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 36804
@@ -714,7 +714,7 @@ segments:
     - func_8019E884
   - - 37144
     - c
-    - func_8019E918
+    - callFlags2Table1b8
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81B8) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 37212
@@ -730,13 +730,13 @@ segments:
     - '@behavior: calls the shared work-area reset helper.'
   - - 37620
     - c
-    - func_8019EAF4
+    - callByte1Table1c0
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81C0) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 37688
     - c
-    - func_8019EB38
-    - '@source: src/bof3/ui/func_8019EB38.c'
+    - setupRouteWorkRecord
+    - '@source: src/bof3/ui/setupRouteWorkRecord.c'
     - '@behavior: Initializes work-area route and coordinates from global tables, then advances the work substate.'
   - - 37920
     - asm
@@ -746,21 +746,21 @@ segments:
     - func_8019ED40
   - - 38416
     - c
-    - func_8019EE10
-    - '@source: src/bof3/ui/func_8019EE10.c'
+    - setupSharedWorkRecord
+    - '@source: src/bof3/ui/setupSharedWorkRecord.c'
     - '@behavior: Initialize fields in the current game work record from shared state.'
   - - 38628
     - asm
     - func_8019EEE4
   - - 39628
     - c
-    - func_8019F2CC
+    - callByte1Table1cc
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81CC) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 39696
     - c
-    - func_8019F310
-    - '@source: src/bof3/ui/func_8019F310.c'
+    - setupMovementAdvance
+    - '@source: src/bof3/ui/setupMovementAdvance.c'
     - '@behavior: Initializes movement fields and advances the work state.'
   - - 39812
     - asm
@@ -779,55 +779,55 @@ segments:
     - func_8019F75C
   - - 40984
     - c
-    - func_8019F818
-    - '@source: src/bof3/ui/func_8019F818.c'
+    - runSharedFrameServices
+    - '@source: src/bof3/ui/runSharedFrameServices.c'
     - '@behavior: calls func_8019D800 and then func_8019DC6C in sequence; both take no arguments.'
   - - 41024
     - asm
     - func_8019F840
   - - 41356
     - c
-    - func_8019F98C
+    - dispatchWorkByte1Handler
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81DC) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 41424
     - c
-    - func_8019F9D0
-    - '@source: src/bof3/ui/func_8019F9D0.c'
+    - applyRouteStateActive
+    - '@source: src/bof3/ui/applyRouteStateActive.c'
     - '@behavior: Copies the route state into the active state and clears transition fields.'
   - - 41512
     - c
     - func_8019FA28
     - '@source: src/bof3/ui/func_8019FA28.c'
-    - '@behavior: copies the active front selection/context into the shared cells D_80143F10 (seed), D_80143F14/D_80143F18 (the two 16.16 context words) and D_80143F1C (kind), refreshes the pending request kind for that seed through func_801A02E8, resolves the request through func_801A0380 with the context words taken as whole units and the stored seed, then sets the front-end phase byte D_80143BB0 to 5.'
+    - '@behavior: copies the active front selection/context into the shared cells D_80143F10 (seed), D_80143F14/D_80143F18 (the two 16.16 context words) and D_80143F1C (kind), refreshes the pending request kind for that seed through refreshPendingRequestKind, resolves the request through func_801A0380 with the context words taken as whole units and the stored seed, then sets the front-end phase byte D_80143BB0 to 5.'
   - - 41632
     - asm
     - func_8019FAA0
   - - 42888
     - c
-    - func_8019FF88
-    - '@source: src/bof3/ui/func_8019FF88_game00.c'
+    - publishFrontendRequest
+    - '@source: src/bof3/ui/publishFrontendRequest.c'
     - '@behavior: publishes a pending frontend request: a nonzero kind first sets bit 3 of the world-flags halfword D_8014625A, then the active flag D_80146260, the handler index kind (D_80146261), a cleared byte D_80146262 and the two argument words D_80146264/D_80146268 are stored; while the record count D_80146254 is nonzero it walks that many 0x140-byte-stride records at D_80145FBB, copying the per-kind byte D_801C8380[kind] into each record leading byte and setting bit 1 of each record second byte at D_80145FBC.'
   - - 43080
     - asm
     - func_801A0048
   - - 43752
     - c
-    - func_801A02E8
-    - '@source: src/bof3/ui/func_801A02E8.c'
+    - refreshPendingRequestKind
+    - '@source: src/bof3/ui/refreshPendingRequestKind.c'
     - '@behavior: searches the eleven u16 context-seed entries of D_801C8384 for the current context seed D_80143F10 and stores the pending request kind in D_80143F1D: 11 (0xB) on a hit, otherwise 1 after the table is exhausted.'
   - - 43848
     - c
-    - func_801A0348
-    - '@source: src/bof3/ui/func_801A0348.c'
-    - '@behavior: returns byte 5 of the eight-byte bounding-box record that contains the point (x, y) in the box list of the pending world id D_80143F00, i.e. the byte behind the func_801A0490 pointer for that point.'
+    - queryWorldRecordByte5
+    - '@source: src/bof3/ui/queryWorldRecordByte5.c'
+    - '@behavior: returns byte 5 of the eight-byte bounding-box record that contains the point (x, y) in the box list of the pending world id D_80143F00, i.e. the byte behind the findIndexedBoundsRecord pointer for that point.'
   - - 43904
     - asm
     - func_801A0380
   - - 44176
     - c
-    - func_801A0490
-    - '@source: src/bof3/ui/func_801A0490_game00.c'
+    - findIndexedBoundsRecord
+    - '@source: src/bof3/ui/findIndexedBoundsRecord.c'
     - '@behavior: returns the first bounding-box record reached from the pointer table D_80181164[index] whose box contains the point (x, y): record[0] <= x, record[1] <= y, record[2] >= x and record[3] >= y; the scan advances the record pointer eight bytes at a time with no count bound, so the box list is expected to contain the point.'
   - - 44308
     - c
@@ -878,13 +878,13 @@ segments:
     - '@behavior: checks movement to a position determined by the route index, using two offset tables.'
   - - 50112
     - c
-    - func_801A1BC0
-    - '@source: src/bof3/ui/func_801A1BC0.c'
+    - projectRoutePosition
+    - '@source: src/bof3/ui/projectRoutePosition.c'
     - '@behavior: projects the supplied coordinates along the active scratch route, dispatches by movement speed, and returns the low byte of the result.'
   - - 72496
     - c
-    - func_801A7330
-    - '@source: src/bof3/ui/func_801A7330.c'
+    - spawnEntityFromRecord
+    - '@source: src/bof3/ui/spawnEntityFromRecord.c'
     - '@behavior: initializes the next free entity slot from one packed spawn record, applies its saved-state gate, and advances the entity count.'
   - - 73476
     - c
@@ -956,8 +956,8 @@ segments:
     - func_801A82F8
   - - 76700
     - c
-    - func_801A839C
-    - '@source: src/bof3/ui/func_801A839C.c'
+    - dispatchWorldIndexHandler
+    - '@source: src/bof3/ui/dispatchWorldIndexHandler.c'
     - '@behavior: resolves the current world state ID through queryCurrentWorldIndex and tail-calls the matching no-argument handler from the handler table at 0x801C85C4.'
   - - 76764
     - asm
@@ -1047,8 +1047,8 @@ segments:
     - func_801AC768
   - - 94448
     - c
-    - func_801AC8F0
-    - '@source: src/bof3/ui/func_801AC8F0.c'
+    - resolveScriptJumpOperand
+    - '@source: src/bof3/ui/resolveScriptJumpOperand.c'
     - '@behavior: Resolves a work-script jump operand: when the state cursor at +0x0A has bit 0x4000 clear that 16-bit absolute target is returned unchanged, otherwise the script is scanned from offset 0 for the 0x0A label definition whose id byte equals the label argument and the offset of that definition is returned.'
   - - 94672
     - c
@@ -1078,13 +1078,13 @@ segments:
     - func_801ACCD8
   - - 95760
     - c
-    - func_801ACE10
-    - '@source: src/bof3/ui/func_801ACE10.c'
+    - dispatchWorkCallback
+    - '@source: src/bof3/ui/dispatchWorkCallback.c'
     - '@behavior: dispatches a work callback selected by the active record or argument'
   - - 95900
     - c
-    - func_801ACE9C
-    - '@source: src/bof3/ui/func_801ACE9C.c'
+    - queryStrideTableEntry
+    - '@source: src/bof3/ui/queryStrideTableEntry.c'
     - '@behavior: returns the u16 entry at index from the stride-8 local table'
   - - 95932
     - c
@@ -1121,8 +1121,8 @@ segments:
     - '@behavior: clears bit 0 of the byte at offset 0x74 in the current work area.'
   - - 97388
     - c
-    - func_801AD46C
-    - '@source: src/bof3/ui/func_801AD46C.c'
+    - dispatchModeTableFive
+    - '@source: src/bof3/ui/dispatchModeTableFive.c'
     - '@behavior: Dispatches through a five-entry handler table using work field 04.'
   - - 97500
     - asm
@@ -1134,8 +1134,8 @@ segments:
     - '@behavior: clears bit 0 of the byte at offset 0x74 in the current work area.'
   - - 97980
     - c
-    - func_801AD6BC
-    - '@source: src/bof3/ui/func_801AD6BC.c'
+    - dispatchModeTableSix
+    - '@source: src/bof3/ui/dispatchModeTableSix.c'
     - '@behavior: Dispatches the handler selected by the work area''s field_04.'
   - - 98100
     - asm
@@ -1156,7 +1156,7 @@ segments:
     - func_801ADAC0
   - - 99480
     - c
-    - func_801ADC98
+    - computeStepDelta
   - - 99572
     - asm
     - func_801ADCF4
@@ -1211,8 +1211,8 @@ segments:
     - '@behavior: Steps the scratch work sequence through func_8014DAEC and clears D_80146250[0x12B] when its low return byte is nonzero. A nonzero result can mean sequence end or a control redirect. The scratch work pointer and D_80146250 need not identify the same record.'
   - - 120208
     - c
-    - func_801B2D90
-    - '@source: src/bof3/ui/func_801B2D90.c'
+    - dispatchWorkByte2Ready
+    - '@source: src/bof3/ui/dispatchWorkByte2Ready.c'
     - '@behavior: Dispatches the handler table (0x801CD120) indexed by the work-area flags byte (work+0x02) through a framed jalr call, then runs the shared ready helper func_8014D978.'
   - - 120284
     - asm
@@ -1228,17 +1228,17 @@ segments:
     - func_801B31F0
   - - 121440
     - c
-    - func_801B3260
+    - dispatchWorkByte2Handler1
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD130) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 121508
     - c
-    - func_801B32A4
-    - '@source: src/bof3/ui/func_801B32A4.c'
+    - publishWorkStateTwo
+    - '@source: src/bof3/ui/publishWorkStateTwo.c'
     - '@behavior: runs the shared work-area select service selectWorkSequenceRoute7, then publishes state 2 into the work-area flags byte at offset 0x02.'
   - - 121552
     - c
-    - func_801B32D0
+    - dispatchWorkByte3Handler1
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD140) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 121620
@@ -1269,13 +1269,13 @@ segments:
     - func_801B3488
   - - 122176
     - c
-    - func_801B3540
+    - dispatchWorkByte3Handler2
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD154) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 122244
     - c
-    - func_801B3584
-    - '@source: src/bof3/ui/func_801B3584.c'
+    - advanceWorkIndexOne
+    - '@source: src/bof3/ui/advanceWorkIndexOne.c'
     - '@behavior: runs the shared work-area scratchpad service func_801C51B0, then advances the work-area byte at offset 0x03 (the handler index of the D_801CD140/D_801CD154 dispatch tables) to 1.'
   - - 122288
     - c
@@ -1287,7 +1287,7 @@ segments:
     - func_801B35EC
   - - 122480
     - c
-    - func_801B3670
+    - runWorkStepService
   - - 122512
     - asm
     - func_801B3690
@@ -1309,8 +1309,8 @@ segments:
     - '@behavior: Overlay trampoline selected by the pending world id D_80143F00: when that u16 reads 0x68 it calls the concurrently resident per-area overlay routine at 0x801F45BC, otherwise the one at 0x801F4B00.'
   - - 123964
     - c
-    - func_801B3C3C
-    - '@source: src/bof3/ui/func_801B3C3C.c'
+    - findWorldBoundsRecord
+    - '@source: src/bof3/ui/findWorldBoundsRecord.c'
     - '@behavior: Finds the first eight-byte bounding-box record in the list reached from the pointer table D_80181164[D_80143F00] whose box contains (x, y) and returns that record.'
   - - 124108
     - asm
@@ -1343,8 +1343,8 @@ segments:
     - func_801B544C
   - - 130496
     - c
-    - func_801B55C0
-    - '@source: src/bof3/ui/func_801B55C0_game00.c'
+    - checkRecordTypeGate
+    - '@source: src/bof3/ui/checkRecordTypeGate.c'
     - '@behavior: entry-0 front-end record gate: returns 0 while either world flag word 0x80146258 / 0x8014625A carries one of the low three bits set; otherwise it walks the live 0x140-byte-stride local work records after the first (record count D_80146254): a record whose leading byte at D_80145E91 reads 2 must carry a byte at D_80145E92 that appears in the three-byte accepted-type list D_801CD1C8, otherwise 0 is returned; records that are skipped or accepted fall through to 1.'
   - - 130692
     - asm
@@ -1354,8 +1354,8 @@ segments:
     - func_801B5758
   - - 131064
     - c
-    - func_801B57F8
-    - '@source: src/bof3/ui/func_801B57F8_game00.c'
+    - checkRecordCountGate
+    - '@source: src/bof3/ui/checkRecordCountGate.c'
     - '@behavior: gate predicate over the shared entry-0 frontend/world bytes: returns 0 while either world flag word 0x80146258 / 0x8014625A carries one of the low three bits set; otherwise returns 1 when the live record count byte 0x80146254 is below 2, when the byte 0x80145FD1 is neither 1 nor 6, or when the count is not 3, and with the count equal to 3 returns 1 only when the byte 0x80146111 is 1 or 6.'
   - - 131204
     - asm
@@ -1365,8 +1365,8 @@ segments:
     - func_801B5910
   - - 131508
     - c
-    - func_801B59B4
-    - '@source: src/bof3/ui/func_801B59B4.c'
+    - selectFrontendRouteIndex
+    - '@source: src/bof3/ui/selectFrontendRouteIndex.c'
     - '@behavior: selects the scratch work-area route index from the top nibble of the shared frontend word D_8014625C: 0x1000 stores 0, 0x2000 stores 2, 0x3000 stores 1, 0x4000 stores 4, 0x6000 stores 3, 0x8000 stores 6, 0x9000 stores 7 and 0xC000 stores 5 into route_index_08, each handled nibble returning 1; any other nibble returns 0.'
   - - 131812
     - asm
@@ -1377,24 +1377,24 @@ segments:
     - '@source: src/bof3/ui/applyRemapRequest.c'
   - - 132180
     - c
-    - func_801B5C54
-    - '@source: src/bof3/ui/func_801B5C54.c'
+    - findCellRectangleRecord
+    - '@source: src/bof3/ui/findCellRectangleRecord.c'
     - '@behavior: scans the stride-8 cell-rectangle records reached from the world object D_8017F974[D_80143F00] (+0x2C pointer, +0x31 signed count) from record count down to record 0; for every length index of each record it compares the leading/second bytes (shifted along the length by +0 or +1) against the work-area cell built from the route step table D_80181B00 / D_80181B01 plus the boundary cell, returning the first matching record or 0.'
   - - 132696
     - asm
     - func_801B5E58
   - - 132796
     - c
-    - func_801B5EBC
-    - '@source: src/bof3/ui/func_801B5EBC_game00.c'
+    - enterPanelModeTen
+    - '@source: src/bof3/ui/enterPanelModeTen.c'
     - '@behavior: requires selection record byte 0x79 to be outside {2, 4, 9, 10}, the two work gate words at 0x80145AA8 / 0x80145AC0 to share a set bit and front flag bit 0 at 0x80143F02 to be clear; then sets work area byte 0x01 to 10, clears work area byte 0x02 and sets selection record byte 0x12B to 8, returning 1; every failed gate returns 0.'
   - - 132968
     - asm
     - func_801B5F68
   - - 133188
     - c
-    - func_801B6044
-    - '@source: src/bof3/ui/func_801B6044_game00.c'
+    - countdownPanelModeTen
+    - '@source: src/bof3/ui/countdownPanelModeTen.c'
     - '@behavior: requires selection record byte 0x79 to be 2 and work-area route bit 0 to be set, then increments work byte 0x0B once per call; on the call that reaches 16 it sets work byte 0x01 to 10, clears work byte 0x02 and sets selection record byte 0x12B to 8, returning 1 only on that transition.'
   - - 133340
     - asm
@@ -1404,8 +1404,8 @@ segments:
     - func_801B6258
   - - 134168
     - c
-    - func_801B6418
-    - '@source: src/bof3/ui/func_801B6418.c'
+    - lookupWorldContextSeed
+    - '@source: src/bof3/ui/lookupWorldContextSeed.c'
     - '@behavior: Searches the ten packed 16-bit id pairs at 0x801CD224 (key at +0, mapped id at +2, 4-byte stride) for the pair whose key equals the pending world id D_80143F00 and, on the first hit, stores the paired mapped id into the context seed D_80143F10.'
   - - 134256
     - asm
@@ -1421,7 +1421,7 @@ segments:
     - func_801B690C
   - - 135616
     - c
-    - func_801B69C0
+    - dispatchWorkByte2Handler2
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD2B0) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 135684
@@ -1438,8 +1438,8 @@ segments:
     - func_801B6F1C
   - - 137180
     - c
-    - func_801B6FDC
-    - '@source: src/bof3/ui/func_801B6FDC.c'
+    - clearFlagIndexZero
+    - '@source: src/bof3/ui/clearFlagIndexZero.c'
     - '@behavior: Unless state byte D_80143BB0 is 2, clears bit 0x20 in the record byte at D_80146250+0x118 and clears work-area byte 0x03.'
   - - 137252
     - c
@@ -1456,20 +1456,20 @@ segments:
     - func_801B70D4
   - - 137836
     - c
-    - func_801B726C
+    - dispatchWorkByte3Handler3
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD2EC) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 137904
     - c
-    - func_801B72B0
-    - '@source: src/bof3/ui/func_801B72B0.c'
+    - resetWorkTintChannels
+    - '@source: src/bof3/ui/resetWorkTintChannels.c'
     - '@behavior: runs the palette-region stage helper func_801C2438, then resets the active scratch work record: the three signed tint channels at 0x5D/0x5E/0x5F are set to the -0x80 floor, the flags byte at 0x5C to 1, byte 0x12B of the record published at D_80146250 to 7, bit 0x40 of the work flags byte at 0x00 is cleared, and the work handler index byte at 0x03 is advanced to 1.'
   - - 138052
     - asm
     - func_801B7344
   - - 138160
     - c
-    - func_801B73B0
+    - dispatchWorkByte3Handler4
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD2F4) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 138228
@@ -1494,18 +1494,18 @@ segments:
     - func_801B781C
   - - 139444
     - c
-    - func_801B78B4
-    - '@source: src/bof3/ui/func_801B78B4.c'
+    - dispatchStateThreeHandler
+    - '@source: src/bof3/ui/dispatchStateThreeHandler.c'
     - '@behavior: Sets the active object''s state and dispatches a work-area handler.'
   - - 139532
     - c
-    - func_801B790C
+    - dispatchWorkByte4Handler
     - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD310) indexed by the work-area byte (work+0x04) through a framed jalr call.'
   - - 139600
     - c
-    - func_801B7950
-    - '@source: src/bof3/ui/func_801B7950.c'
+    - advanceWorkAfterSelect
+    - '@source: src/bof3/ui/advanceWorkAfterSelect.c'
     - '@behavior: runs the shared work-area select service and then advances the work-area handler index at offset 0x04.'
   - - 139656
     - asm

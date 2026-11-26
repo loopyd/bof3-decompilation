@@ -1,6 +1,6 @@
 #include "bof3/ui/game00_internal.h"
 
-extern s32 func_801A1BC0(struct GameWorkArea* arg);
+extern s32 projectRoutePosition(struct GameWorkArea* arg);
 extern s8 func_801BDE14(s32 x, s32 y, s32 range);
 extern s32 func_801BE0C0(s32 arg0, s32 arg1, u8 arg2);
 
@@ -24,7 +24,7 @@ s32 func_801A1AE4(struct GameWorkArea* arg) {
   s0 = arg->coord_x_34 + D_80181B94[route * 2];
   s1 = arg->coord_y_38 + D_80181B98[route * 2];
 
-  result = func_801A1BC0(arg);
+  result = projectRoutePosition(arg);
   second_x = s0;
   second_y = s1;
   if (result & 0xFF) {

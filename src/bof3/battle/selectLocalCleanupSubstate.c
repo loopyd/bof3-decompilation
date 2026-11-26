@@ -26,7 +26,7 @@ void selectLocalCleanupSubstate(void) {
   u8* ready;
   u8 index;
 
-  func_801DDFEC(D_1F800044->unk_05);
+  advanceRankedLocalCounter(D_1F800044->unk_05);
   clearBattlerActionFlags(D_1F800044->unk_05);
   work = D_80146250;
   if ((work->unk_124 & 4u) != 0u) {
@@ -68,7 +68,7 @@ void selectLocalCleanupSubstate(void) {
     D_80146250->unk_138 = 0u;
     D_80146250->unk_139 = 0u;
     func_800A9BD8(D_1F800044->unk_05);
-    if (func_801E0E0C() != 0u || battleByte801462f1 == 0u) {
+    if (allLocalRecordsReady() != 0u || battleByte801462f1 == 0u) {
       ready = &D_80146328;
       *ready |= 1u;
     }

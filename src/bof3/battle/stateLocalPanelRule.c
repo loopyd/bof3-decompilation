@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
-void func_8009CCBC(u8 *obj, u8 index, u8 value); /* @source 0x8009CCBC */
-void func_8009CF80(u8 *obj, u8 index, u8 value); /* @source 0x8009CF80 */
+void applyScaledBattlerField(u8 *obj, u8 index, u8 value); /* @source 0x8009CCBC */
+void storeIndexedSelectionByte(u8 *obj, u8 index, u8 value); /* @source 0x8009CF80 */
 
 /* Selection byte written by rule operation 7. */
 extern u8 D_801463D7; /* @source 0x801463D7 @kind unknown */
@@ -13,7 +13,7 @@ extern u8 D_801463D7; /* @source 0x801463D7 @kind unknown */
  *   func_800A36F0 with the work byte +0x05 and 0xFFFF, then func_800A31E0 with
  *   the published record byte +0x05 and the rule byte +0x02 or-ed with the work
  *   byte +0x82; 3 and 4 walk the eight high bits of the rule byte +0x02 and call
- *   func_8009CCBC or func_8009CF80 for each set bit with the work record, the
+ *   applyScaledBattlerField or storeIndexedSelectionByte for each set bit with the work record, the
  *   bit index and the rule byte +0x03; 5 stores the rule byte +0x03 at work
  *   +0x9A for mask 2 and at work +0x9E for mask 1; 6 scales the work halfwords
  *   +0x86 and +0x84 by the rule byte +0x03 through times 100 over 1000 and
@@ -53,7 +53,7 @@ void stateLocalPanelRule(u8 *work, u8 *rule) {
     bits = rule[2];
     for (i = 0; i < 8; i++) {
       if (bits & 0x80) {
-        func_8009CCBC(work, i, rule[3]);
+        applyScaledBattlerField(work, i, rule[3]);
       }
       bits <<= 1;
     }
@@ -62,7 +62,7 @@ void stateLocalPanelRule(u8 *work, u8 *rule) {
     bits = rule[2];
     for (i = 0; i < 8; i++) {
       if (bits & 0x80) {
-        func_8009CF80(work, i, rule[3]);
+        storeIndexedSelectionByte(work, i, rule[3]);
       }
       bits <<= 1;
     }

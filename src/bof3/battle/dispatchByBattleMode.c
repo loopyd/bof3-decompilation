@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* @source 0x800ABBA4
- * @behavior Runs the battle mode pass func_800ABBE0 (which calls
+ * @behavior Runs the battle mode pass dispatchModeHandlerPass (which calls
  *   claimOwnerSlotsRow and then dispatches the mode
  *   handler D_800B5108[D_801462EA]) when the battle mode byte D_801462EA is
  *   nonzero, and the mode-zero pass
@@ -12,7 +12,7 @@
  */
 void dispatchByBattleMode(void) {
   if (D_801462EA != 0) {
-    func_800ABBE0();
+    dispatchModeHandlerPass();
   } else {
     setupBattlerActiveSlots();
   }

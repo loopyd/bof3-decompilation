@@ -2,7 +2,7 @@
 
 /**
  * @source 0x800A1CB4
- * @behavior Runs the battle selection refresh pass func_800A3F28 and then,
+ * @behavior Runs the battle selection refresh pass stateRefreshFlagStatus and then,
  *   while the selected battler byte at 0x80146394 is below three, raises flag
  *   0x400 in the flag word of every local battler record below the volatile
  *   count byte at 0x801462F0 (records at 0x80145FB8, stride 0x140) and clears
@@ -28,7 +28,7 @@ void runPassAllLocal(void)
   u8 *selected;
   volatile u8 *count;
 
-  func_800A3F28();
+  stateRefreshFlagStatus();
   selected = (u8 *)&D_80146394;
   if (*selected < 3) {
     index = 0;

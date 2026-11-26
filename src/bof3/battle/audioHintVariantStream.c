@@ -30,7 +30,7 @@ void audioHintVariantStream(void) {
   u32 slot;
 
   if ((BATTLE_GLOBAL_HALF_62E8 & 0x8000u) != 0u) {
-    if (func_801E7B34() != 0u) {
+    if (checkWorkStatusPair() != 0u) {
       if (D_80145024 == 7u) {
         if (D_801EB4E0->unk_08 < 2u) {
           slot = 0x201u;

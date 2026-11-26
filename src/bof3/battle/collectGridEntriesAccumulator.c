@@ -1,6 +1,6 @@
 #include "bof3/battle/battle15_internal.h"
 
-extern void func_800A82F8(void); /* @source 0x800A82F8 */
+extern void accumulateActiveListBytes(void); /* @source 0x800A82F8 */
 
 /*
  * @source 0x800A5164
@@ -8,7 +8,7 @@ extern void func_800A82F8(void); /* @source 0x800A82F8 */
  *   of the four-byte grid cell addressed by the D_801485C8/D_801485CA pair,
  *   keeping every entry that is not the 0xFF sentinel and counting the kept
  *   entries in D_801463C7, then refreshes the list accumulator through
- *   func_800A82F8, stores 2 into D_801485BB, sets bit 2 of local work field
+ *   accumulateActiveListBytes, stores 2 into D_801485BB, sets bit 2 of local work field
  *   unk_128 and advances the substate byte D_801462E4.
  * @status exact
  * @match 100.00
@@ -35,7 +35,7 @@ void collectGridEntriesAccumulator(void) {
     }
     index++;
   } while (index < 3);
-  func_800A82F8();
+  accumulateActiveListBytes();
   D_801485BB = 2;
   D_801EBF08_PTR->unk_128 |= 4;
   counter = &D_801462E4;

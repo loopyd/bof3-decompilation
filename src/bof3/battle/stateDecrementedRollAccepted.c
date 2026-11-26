@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* @source 0x800A0B2C
- * @behavior Runs the battle selection roll func_800A3A10 for the current
+ * @behavior Runs the battle selection roll querySelectionChance for the current
  *   battler byte D_80146374 and selection byte D_80146394. When the roll
  *   accepts, stores one less than the selected battler's leading work-record
  *   halfword - read from the 0x140-stride party work record above 0x80145F18
@@ -19,7 +19,7 @@ void stateDecrementedRollAccepted(void)
     u32 enemy_index;
     u16 value;
 
-    if ((u8)func_800A3A10(D_80146374, D_80146394) != 0) {
+    if ((u8)querySelectionChance(D_80146374, D_80146394) != 0) {
         return;
     }
     /* Non-volatile view: the roll gate above already read the cell, and

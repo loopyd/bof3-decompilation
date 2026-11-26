@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-/* First parameter byte of the current commu request; func_801D0C68 rewrites it
+/* First parameter byte of the current commu request; statePublishRequestMode rewrites it
  * when it publishes request mode 1. */
 extern u8 D_801D4DF8; /* @source 0x801D4DF8 @kind data */
 

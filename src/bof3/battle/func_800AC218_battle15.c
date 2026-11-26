@@ -69,7 +69,7 @@
  *   template +0x16, storing it to D_801EB6BA, the record halfword +0x16 this
  *   function leaves untouched; that store names its base with `lui` alone and
  *   folds `%lo` into the displacement, so it is not part of the pair.
- *   Both sites then call func_800AD0A8 with the same a0 and a1. This
+ *   Both sites then call publishClassRulePair with the same a0 and a1. This
  *   corroborates the two-u8 ABI and the 0x88/0x118 bands and names no role, so
  *   the address-anchored name stays.
  *   No aids: no register pins, clobbers, barriers or empty asm.

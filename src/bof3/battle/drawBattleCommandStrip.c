@@ -24,7 +24,7 @@
  * 0x801EAEB0 label address, and each table keeps its own symbol-relative base.
  * The seed copied the statement order, operand forms and cast spelling of the
  * exact twins drawBattlePanelStrip, renderBattlePanelMessage and
- * func_801D8090 and added the trailing func_8014F800 label call.
+ * drawNarrowPanelStrip and added the trailing func_8014F800 label call.
  */
 void drawBattleCommandStrip(u32 arg0) {
   s32 offset;
@@ -46,7 +46,7 @@ void drawBattleCommandStrip(u32 arg0) {
   red = (palette & 0x1f) << 3;
   green = (palette >> 2) & 0xf8;
   blue = (palette >> 7) & 0xf8;
-  func_801D9C80(x, (s16)(y + 2), 5, 1);
+  drawTableTilePrim(x, (s16)(y + 2), 5, 1);
   func_801D9AB4(x, (s16)y, 0x0a, 1);
   func_801D9AB4(x, (s16)(y + 0x11), 0x0b, 1);
   drawSpriteAbrFull((s16)(x + 2), (s16)(y + 2), (s16)(x + 0x25),

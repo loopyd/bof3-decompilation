@@ -12,5 +12,5 @@ void stateScratchGlobalBit4(void) {
     return;
   }
 
-  func_801E1DD4();
+  resetLocalWorkState();
 }

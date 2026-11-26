@@ -1,12 +1,12 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @calls func_800A403C with argument 1
+/* @calls querySelectionRollClamp with argument 1
  * @source 0x8009E7C4
- * @behavior forwards selector 1 to func_800A403C
+ * @behavior forwards selector 1 to querySelectionRollClamp
  * @status exact
  * @match 100.00
  * @residual none
  */
 void forwardSelectorOne(void) {
-  func_800A403C(1);
+  querySelectionRollClamp(1);
 }

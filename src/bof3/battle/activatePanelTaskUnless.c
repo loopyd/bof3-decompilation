@@ -2,7 +2,7 @@
 
 /* @source 0x801E9F18
  * @behavior Second of the three panel-task root handlers dispatched by panel
- * byte +0x03 through the table copied off 0x801D0FE0 (func_801E9B18). It
+ * byte +0x03 through the table copied off 0x801D0FE0 (syncPanelHandFields). It
  * returns while the battle selection gate byte 0x801462EF is clear. With the
  * gate set it takes panel byte +0x0A as a battler index and returns only when
  * checkBattlerInactiveFlag4000 reports that battler inactive while both

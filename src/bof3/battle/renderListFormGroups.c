@@ -16,7 +16,7 @@ extern s8 D_800B6F6C; /* @source 0x800B6F6C @kind data */
  * 0x80145F04 + D_80146374 * 0x140. The three bytes of the row selected by the
  * form byte 0x800B6F58 in the three-byte table 0x800B4EA4 are copied in order,
  * stopping at the first zero byte. Each of 0x800B6F60 through 0x800B6F64 that
- * is positive appends its group (0 through 4) through func_800A7B40, and each
+ * is positive appends its group (0 through 4) through appendSlotGroupBytes, and each
  * of 0x800B6F61 through 0x800B6F64 that is positive appends the companion
  * group five above it (6 through 9) only while the shared gate byte 0x800B6F69
  * is positive; 0x800B6F60 also appends group 5 under that gate and group 0xE
@@ -47,46 +47,46 @@ void renderListFormGroups(void) {
     count++;
   }
   if (D_800B6F60 > 0) {
-    count = func_800A7B40(0, count);
+    count = appendSlotGroupBytes(0, count);
     if (D_800B6F69 > 0) {
-      count = func_800A7B40(5, count);
+      count = appendSlotGroupBytes(5, count);
     }
     if (D_800B6F63 > 0) {
-      count = func_800A7B40(0xE, count);
+      count = appendSlotGroupBytes(0xE, count);
     }
   }
   if (D_800B6F61 > 0) {
-    count = func_800A7B40(1, count);
+    count = appendSlotGroupBytes(1, count);
     if (D_800B6F69 > 0) {
-      count = func_800A7B40(6, count);
+      count = appendSlotGroupBytes(6, count);
     }
   }
   if (D_800B6F62 > 0) {
-    count = func_800A7B40(2, count);
+    count = appendSlotGroupBytes(2, count);
     if (D_800B6F69 > 0) {
-      count = func_800A7B40(7, count);
+      count = appendSlotGroupBytes(7, count);
     }
   }
   if (D_800B6F63 > 0) {
-    count = func_800A7B40(3, count);
+    count = appendSlotGroupBytes(3, count);
     if (D_800B6F69 > 0) {
-      count = func_800A7B40(8, count);
+      count = appendSlotGroupBytes(8, count);
     }
   }
   if (D_800B6F64 > 0) {
-    count = func_800A7B40(4, count);
+    count = appendSlotGroupBytes(4, count);
     if (D_800B6F69 > 0) {
-      count = func_800A7B40(9, count);
+      count = appendSlotGroupBytes(9, count);
     }
   }
   if (D_800B6F6C > 0) {
-    count = func_800A7B40(0xC, count);
+    count = appendSlotGroupBytes(0xC, count);
   }
   if (D_800B6F6B > 0) {
-    count = func_800A7B40(0xB, count);
+    count = appendSlotGroupBytes(0xB, count);
   }
   if (D_800B6F69 > 0) {
-    count = func_800A7B40(0xD, count);
+    count = appendSlotGroupBytes(0xD, count);
   }
   (record + count)[0x70] = 0xD9;
   for (count++; count < 10u; count++) {

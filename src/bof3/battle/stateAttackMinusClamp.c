@@ -3,7 +3,7 @@
 /* @source 0x800A0D64
  * @behavior Selection-action handler, entry 104 of the battle selection-action
  *   table D_800B471C. Stores into the signed halfword at byte +0x04 of the
- *   selection record pointer D_8014639C.record the value func_800A2880 scales
+ *   selection record pointer D_8014639C.record the value mathScaledDamageRoll scales
  *   from the 0x14-row table byte D_801CA71B[D_801463C0 * 0x14] for the active
  *   battler byte D_80146374 and the selected battler byte D_80146394 with
  *   element flag 0, subtracts the selected battler's work-record halfword - the
@@ -37,7 +37,7 @@ void stateAttackMinusClamp(void) {
   /* The index leaves D_801463C0 before the call arguments are read, so the
    * leading loads stay on their named cells instead of a shared base. */
   *(volatile s16 *)&D_8014639C.record[2] =
-      func_800A2880(D_80146374, D_80146394, D_801CA71B[index * 0x14], 0);
+      mathScaledDamageRoll(D_80146374, D_80146394, D_801CA71B[index * 0x14], 0);
   selection = *(u8 *)&D_80146394;
   if (selection < 3) {
     D_8014639C.record[2] -= *(u16*)(D_80145F26 + selection * 0x140u);

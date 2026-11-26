@@ -1,0 +1,17 @@
+#include "bof3/ui/game00_internal.h"
+
+/* @behavior resolves the current world state ID through queryCurrentWorldIndex and
+ * tail-calls the matching no-argument handler from the handler table at
+ * D_801C85C4.
+ * @source 0x801A839C
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void dispatchWorldIndexHandler(void)
+{
+  u8 index;
+
+  index = queryCurrentWorldIndex();
+  D_801C85C4[index]();
+}

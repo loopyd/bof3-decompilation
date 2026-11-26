@@ -9,7 +9,7 @@ extern int rand(void);
  * byte and, while the gate stays clear, reads the unsigned chance byte at +0xAA of
  * the D_80146250 record and rolls `rand() % 100` against it; a roll below the
  * chance raises bit 0x80 of the battle global halfword 0x801462E8 (the flag
- * func_801DC73C reads to return full damage instead of running its own percent
+ * resolveDamageNegation reads to return full damage instead of running its own percent
  * roll) and submits effect variant 3, while a roll at or above the chance submits
  * variant 2 instead. A set gate low byte skips the roll and submits variant 3.
  * Both cases then submit effect variant 4, reload the scratch work pointer and

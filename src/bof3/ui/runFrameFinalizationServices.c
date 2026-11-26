@@ -13,6 +13,6 @@ void runFrameFinalizationServices(void) {
   func_801BDAB8();
   stateActiveGameRecords();
   func_8019A0E4();
-  func_8019625C();
+  renderPaletteWorkRecords();
   func_8014BA54();
 }

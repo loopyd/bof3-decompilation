@@ -21,7 +21,7 @@ void stateSelectedValueRoll(void)
         return;
     }
     /* Non-volatile view: stateHalvedRollAccepted and
-     * func_8009DE8C read the same cell through it, which keeps the widening
+     * storeNegatedWorkHalfword read the same cell through it, which keeps the widening
      * from adding a trailing `andi` to the load. */
     index = *(u8*)&D_80146394;
     if (index < 3) {

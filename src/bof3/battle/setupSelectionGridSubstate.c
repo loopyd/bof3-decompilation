@@ -4,7 +4,7 @@
  * @behavior Confirm-selection substate step, index 1 of the 0x800B43EC handler
  *   table: stores 4 into byte +0x01 of the active selection slot pointer, then
  *   re-initialises the primary selection grid at 0x80148570 through
- *   func_80097EC0, stores 2 into the grid row byte 0x8014857B while bit 1 of the
+ *   initSelectionGridBand, stores 2 into the grid row byte 0x8014857B while bit 1 of the
  *   slot flag word +0x10 is set and bit 17 is clear, and finally advances the
  *   battle substate index 0x801462E3, clears its own confirm-substate index
  *   0x801462E4 and mirrors the active message-slot work byte +0x05 into the
@@ -27,7 +27,7 @@ void setupSelectionGridSubstate(void) {
 
   active = D_801EB4D8;
   active[1] = 4;
-  func_80097EC0();
+  initSelectionGridBand();
   flags = *(u32 *)(D_801EB4D8 + 0x10);
   if ((flags & 2u) != 0u) {
     if ((flags & 0x20000u) == 0u) {

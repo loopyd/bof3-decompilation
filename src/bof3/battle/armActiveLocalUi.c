@@ -26,6 +26,6 @@ void armActiveLocalUi(void) {
     func_8015D300(0u, 1u, 0x64u, 0x64u);
   }
   initUiBundleFixed();
-  func_801DEAE0();
+  queueModeDependentEvent();
   BATTLE_GLOBAL_BYTE_62E2 += 1;
 }

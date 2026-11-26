@@ -30,7 +30,7 @@ segments:
     - D_801D0C04
   - - 104
     - c
-    - func_801D0C68
+    - statePublishRequestMode
   - - 172
     - c
     - confirmEntryRequest

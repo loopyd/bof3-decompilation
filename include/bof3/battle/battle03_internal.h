@@ -34,7 +34,7 @@ typedef struct Battle03SeventyDispatchTable {
 /* Message view of the 12-byte battleDispatchSlots entries selected by state
  * byte +0x0A: a queued message stream pointer at +0x00 (consumed by
  * countMessageTokens) and a panel byte at +0x06 (the style-0x12 draw byte of
- * func_801E9538). */
+ * renderSlotMessagePanel). */
 typedef struct Battle03SlotMessageView {
   u8* unk_00;
   u8  pad_04[2];
@@ -88,7 +88,7 @@ typedef struct Battle03LocalWork {
    * 0x801C90EB kind record stored in the scratchpad. */
   u8  unk_82;
   u8  pad_83[2];
-  /* Identity triple tested by func_801E0E0C while unk_80 carries 0x4000. */
+  /* Identity triple tested by allLocalRecordsReady while unk_80 carries 0x4000. */
   u8  unk_85;
   u8  unk_86;
   u8  unk_87;
@@ -105,10 +105,10 @@ typedef struct Battle03LocalWork {
   u8  pad_a5[0x73];
   u8  unk_118;
   u8  unk_119;
-  /* unk_11a is the packed counter value func_801DDFEC hands to
+  /* unk_11a is the packed counter value advanceRankedLocalCounter hands to
    * advanceCounterStorePacked together with the unk_122 counter index. */
   u16 unk_11a;
-  /* unk_11c/unk_11e/unk_120 proven by the func_801D5BC0 reset path */
+  /* unk_11c/unk_11e/unk_120 proven by the resetFlag80Countdown reset path */
   u16 unk_11c;
   u16 unk_11e;
   u8  unk_120;
@@ -168,7 +168,7 @@ typedef struct Battle03TemplateRecord {
 typedef struct Battle03EnemyWork {
   u8                       unk_00;
   u8                       unk_01;
-  /* unk_02/unk_03/unk_04 proven by the func_801D5BC0 reset path */
+  /* unk_02/unk_03/unk_04 proven by the resetFlag80Countdown reset path */
   u8                       unk_02;
   u8                       unk_03;
   u8                       unk_04;
@@ -184,14 +184,14 @@ typedef struct Battle03EnemyWork {
   u8                       unk_7e;
   u8                       pad_7f;
   u16                      unk_80;
-  /* unk_82/unk_fd proven by the func_801D57AC countdown path */
+  /* unk_82/unk_fd proven by the advanceEnemyFlag40Countdown countdown path */
   u16                      unk_82;
   /* unk_84/unk_86 are the two halfword counters
    * accumulateEnemyHalfwordsReset adds into the 0x8014632C and
    * 0x80146330 accumulators; the same step clears unk_84. */
   u16                      unk_84;
   u16                      unk_86;
-  /* unk_88 proven by the func_801DD978 slot-selection scan */
+  /* unk_88 proven by the pickEnemyTargetSlot slot-selection scan */
   u16                      unk_88;
   u8                       pad_8a[2];
   /* unk_8c is an eight-byte candidate run; the entry selected by rand() & 7 is
@@ -220,7 +220,7 @@ typedef struct Battle03EnemyWork {
   /* unk_f6 indexes the D_801CA718 kind table in func_801E2A88; the original
    * reads it as lhu %lo(D_801EB726)($at). */
   u16                      unk_f6;
-  /* unk_f8/unk_fa/unk_fc proven by the func_801D5BC0 reset path */
+  /* unk_f8/unk_fa/unk_fc proven by the resetFlag80Countdown reset path */
   u16                      unk_f8;
   u16                      unk_fa;
   u8                       unk_fc;
@@ -280,7 +280,7 @@ typedef struct Battle03SlotStore {
   u8  pad_0a;
   u8  unk_0b;
   u8  pad_0c[0x22];
-  /* unk_2e/unk_30 proven by the func_801E1BA8 position stores. */
+  /* unk_2e/unk_30 proven by the storeScratchHalvesEntry position stores. */
   u16 unk_2e;
   u16 unk_30;
   u8  pad_32[2];
@@ -289,7 +289,7 @@ typedef struct Battle03SlotStore {
   u32 unk_3c;
   u8  pad_40[8];
   /* unk_48/unk_5d/unk_5e/unk_5f are the late entry bytes cleared for every
-   * slot by func_801E5A38, matching the single-entry clearQueuedSlotBytes. */
+   * slot by resetAllQueuedSlots, matching the single-entry clearQueuedSlotBytes. */
   u8  unk_48;
   u8  pad_49[0x14];
   u8  unk_5d;
@@ -413,7 +413,7 @@ extern u8                           D_801EB230[]; /* @source 0x801EB230 @kind un
 extern u8                           D_801EB23C[]; /* @source 0x801EB23C @kind unknown */
 extern Battle03LocalWork            D_80145E90[]; /* @source 0x80145E90 @kind unknown */
 /* Fields of the D_80145E90 local work record selected by panel byte +0x0A in
- * func_801E9FDC: byte +0x08, halfword +0x2E, halfword +0x30 and byte +0x79. The
+ * applyPanelHpOffsets: byte +0x08, halfword +0x2E, halfword +0x30 and byte +0x79. The
  * original reaches each with its own 32-bit displacement (`lui $at,%hi(X)` +
  * `addu at,at,offset` + load `%lo(X)(at)`), so they are bound as flat symbols
  * the same way the D_801EB638 family binds the D_801EB630 record bytes. */
@@ -422,7 +422,7 @@ extern u8                           D_80145EBE[]; /* @source 0x80145EBE @kind un
 extern u8                           D_80145EC0[]; /* @source 0x80145EC0 @kind unknown */
 extern u8                           D_80145F09[]; /* @source 0x80145F09 @kind unknown */
 /* Bytes +0x7A and +0x119 of the same 0x140-stride record, read by the phase-2
- * local arm of func_801DAAE4. The original reaches both with `lui $at,%hi(X)` +
+ * local arm of buildRankingList. The original reaches both with `lui $at,%hi(X)` +
  * `addu at,at,index*0x140` + `lbu %lo(X)(at)` instead of a shared record base, so
  * they join the flat-symbol family above; +0x119 is volatile because the arm
  * re-reads it after the value store. */
@@ -472,7 +472,7 @@ extern Battle03SlotStore            D_801EC330[]; /* @source 0x801EC330 @kind un
 extern Battle03LocalWork            localWorkRecordsBf20[]; /* @source 0x801EBF20 @kind unknown */
 /* 0x140-stride battle status records paired with the local work records; bit 0
  * of word 0 is cleared for the first three records by queueEligibleWorkRecord
- * and tested by func_801E7B34. */
+ * and tested by checkWorkStatusPair. */
 extern Battle03FlagRecord            battleLocalStatusArray[]; /* @source 0x801EC048 @kind unknown */
 /* @kind: bss (map symbol: uiRingHead) — UI ring consumer index. */
 extern u8                            uiRingHead; /* @source 0x801EBF04 */
@@ -485,7 +485,7 @@ extern u8*                           D_80148648; /* @source 0x80148648 */
 extern u8                            D_801462E5; /* @source 0x801462E5 */
 extern u8                            D_801462EE; /* @source 0x801462EE @kind unknown */
 extern volatile u8                   D_801462EF; /* @source 0x801462EF @kind unknown */
-/* Oscillating factor byte stepped by func_801DD800; its consumers
+/* Oscillating factor byte stepped by advanceOscillatorByte; its consumers
  * func_801E38C0/func_801DF7EC copy it into the effect record bytes +0x02, +0x03
  * and +0x04 of the 12-byte D_80145BD4 records. BATTLE_GLOBAL_BYTE_6304 is the
  * direction latch inside the same step: the byte ramps up while it is zero and
@@ -495,15 +495,15 @@ extern u8                            BATTLE_GLOBAL_BYTE_6308; /* @source 0x80146
  * compare) while the oscillating byte above is masked, so the latch is the plain
  * non-volatile view: a volatile view forces a redundant `andi` on that load. */
 extern u8                            BATTLE_GLOBAL_BYTE_6304; /* @source 0x80146304 @kind unknown */
-/* Ranked owner list: func_801DAAE4 publishes the selected owner ids here and
- * func_801DDFEC walks entries [D_80146322 - 1, D_80146323). Kept as the plain
+/* Ranked owner list: buildRankingList publishes the selected owner ids here and
+ * advanceRankedLocalCounter walks entries [D_80146322 - 1, D_80146323). Kept as the plain
  * byte spelling because the exact callers index it through its address
  * (`(&D_8014630C)[index]`), which an array declaration would make a
  * pointer-to-incomplete-array use. */
 extern u8                            D_8014630C; /* @source 0x8014630C @kind unknown */
 extern u8                            D_8014864C; /* @source 0x8014864C @kind unknown */
 extern u8                            D_80181B10[]; /* @source 0x80181B10 @kind unknown */
-/* The pair is bound as two symbols because the original func_801E1BA8 reads
+/* The pair is bound as two symbols because the original storeScratchHalvesEntry reads
  * both bytes at one 2-byte stride and reaches them as separate symbol
  * relocations; a single array with a `+ 1` addend keeps one shared base-address
  * pseudo that forces an 8-byte stack frame (asm-diff vars= 8 versus vars= 0). */
@@ -546,7 +546,7 @@ extern Battle03Handler D_801EB15C[]; /* @source 0x801EB15C @kind unknown */
 extern Battle03Handler D_801EB218[]; /* @source 0x801EB218 @kind unknown */
 extern Battle03Handler D_801EB3B0[]; /* @source 0x801EB3B0 @kind unknown */
 extern Battle03EnemyWork          D_801EB630[]; /* @source 0x801EB630 @kind unknown */
-/* Unknown bytes of the 0x118-byte D_801EB630 record read by func_801E99AC. The
+/* Unknown bytes of the 0x118-byte D_801EB630 record read by renderShadowedSlotStatus. The
  * original encodes each of them as its own 32-bit displacement (`lui $at,%hi(X)`
  * + `addu at,at,index*0x118` + load `%lo(X)(at)`), so they are bound as flat
  * symbols the same way battle15 binds the D_801EB712/D_801EB713 pair. */
@@ -556,13 +556,13 @@ extern u8  D_801EB660[]; /* @source 0x801EB660 @kind unknown */
 extern u8  D_801EB712[]; /* @source 0x801EB712 @kind unknown */
 extern u8  D_801EB713[]; /* @source 0x801EB713 @kind unknown */
 extern Battle03Handler D_801EB188; /* @source 0x801EB188 @kind unknown */
-/* Kind-keyed byte table read by func_801DF914 with the current local work
+/* Kind-keyed byte table read by armScratchTimerPair with the current local work
  * record's kind byte +0x79 as its index. The original reaches it
  * symbol-relative (`lui $at,%hi(X)` + `addu $at,$at,index` + `lbu
  * %lo(X)($at)`), so it is bound as a symbol beside the D_801EB188 handler
  * rather than as a fixed-address macro. */
 extern const u8 D_801EB18C[]; /* @source 0x801EB18C @kind unknown */
-/* Actor-keyed byte table read by func_801DF914 with the global byte
+/* Actor-keyed byte table read by armScratchTimerPair with the global byte
  * BATTLE_GLOBAL_BYTE_63C9 as its index; it sits 0x0C bytes after D_801EB18C
  * in the same byte run and is reached the same symbol-relative way. */
 extern const u8 D_801EB198[]; /* @source 0x801EB198 @kind unknown */
@@ -579,7 +579,7 @@ extern Battle03Handler D_801EB1F4[]; /* @source 0x801EB1F4 @kind unknown */
 extern Battle03Handler D_801EB3E4[]; /* @source 0x801EB3E4 @kind unknown */
 extern Battle03Handler D_801EB3EC[]; /* @source 0x801EB3EC @kind unknown */
 extern Battle03Handler D_801EB3F4[]; /* @source 0x801EB3F4 @kind unknown */
-/* Handler table for the scratch work byte +0x02 dispatch in func_801E3638; the
+/* Handler table for the scratch work byte +0x02 dispatch in stateAdvanceSlotCountdown; the
  * original reaches it symbol-relative (`lui $at,%hi(D_801EB3FC)` +
  * `lw %lo(D_801EB3FC)($at)`), so it is bound as its own table beside the byte
  * +0x03 table at 0x801EB3F4. */
@@ -599,7 +599,7 @@ extern u8               D_801EB05B[];
 /* @source 0x801EB068 @kind unknown — the 0xD-stride row 8 sibling of D_801EB05B. */
 extern u8               D_801EB068[];
 /* Panel correction bytes selected by the D_80145E90 local work record bytes
- * +0x08/+0x79 read by func_801E9FDC; the original reaches each with its own
+ * +0x08/+0x79 read by applyPanelHpOffsets; the original reaches each with its own
  * displacement, so they are bound as two flat symbols the same way the
  * D_801EB638 family binds the D_801EB630 record bytes. */
 extern u8               D_801EB0B0[]; /* @source 0x801EB0B0 @kind unknown */
@@ -614,7 +614,7 @@ extern u8               D_801EB710[]; /* @source 0x801EB710 @kind unknown */
 extern u8               D_800E40CB[]; /* @source 0x800E40CB @kind unknown */
 extern volatile u8      battleDispatchSlots[]; /* @source 0x801EB4F0 @kind unknown */
 /* @source 0x801EB4F4 @kind table — the message view of the 12-byte
- * battleDispatchSlots entries read by func_801E9538: the original reaches the
+ * battleDispatchSlots entries read by renderSlotMessagePanel: the original reaches the
  * message pointer at the base and the panel byte at +0x06 of that base, so the
  * table is bound at its own address the same way the D_801EB638 family binds
  * the D_801EB630 record bytes. */
@@ -627,7 +627,7 @@ extern u8  D_801EC303; /* @source 0x801EC303 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_62F3;
 extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
 
-void func_801E679C(void);
+void stateInitDisplayBytes(void);
 void stateQueuedSlotReady(void);
 extern volatile u8  BATTLE_GLOBAL_BYTE_6374; /* @source 0x80146374 @kind unknown */
 /* @source 0x8014932C @kind unknown — shared 16-bit channel the queued-slot
@@ -652,7 +652,7 @@ extern u8           BATTLE_GLOBAL_BYTE_63C9; /* @source 0x801463C9 @kind unknown
 extern u8           D_801463CD;
 extern Battle03SelectionKind D_801CA71C[]; /* @source 0x801CA71C @kind unknown */
 /* @source 0x801CA718 @kind unknown — 0x14-stride kind-keyed byte four bytes below
- * the D_801CA71C mask table; func_801E020C reaches it as its own displacement
+ * the D_801CA71C mask table; resolveLocalReadyFlags reaches it as its own displacement
  * (`lbu %lo(D_801CA718)($at)`), so it is bound as a flat symbol. */
 extern u8           D_801CA718[];
 extern volatile u8  BATTLE_GLOBAL_BYTE_6322; /* @source 0x80146322 @kind unknown */
@@ -762,7 +762,7 @@ extern Battle03Handler D_801EB120[]; /* @source 0x801EB120 @kind unknown */
 void dispatchLocalStateTable(void);
 void markPendingBit(u32 arg0);
 void func_801DE560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4);
-void func_801DE9A8(u32 arg0);
+void copyBattlerNameText(u32 arg0);
 extern u8 D_801490D8[]; /* @source 0x801490D8 @kind unknown */
 extern u8 D_801EB35C[]; /* @source 0x801EB35C @kind unknown */
 
@@ -783,12 +783,12 @@ u8   localReadyOrHelper1(void);
 u8   localReadyOrHelper2(void);
 void setState8WhenReady(void);
 void storeLocalReady2Result(void);
-void func_801DEF0C(void);
+void resetScratchWorkRecord(void);
 void forwardSelectedPresentationOffset(void);
 void forwardSelectedEffectId(void);
 void resetReadyAdvanceByte1(void);
 void callNextLocalHandler(void);
-void func_801DF914(void);
+void armScratchTimerPair(void);
 void callLocalSubmitRolled(void);
 void copyScratchLocalWork(void);
 void waitReadyAdvanceSubstate3(void);
@@ -806,10 +806,10 @@ extern Battle03Handler D_801EB274[]; /* @source 0x801EB274 @kind unknown */
 void dispatchState2EventTable(void);
 void dispatchState2FollowupTable(void);
 void dispatchDefaultClassTable(void);
-void func_801E2170(void);
+void dispatchEnemyModeHandlers(void);
 void stateEnemyTargetPublish(u8 arg0);
 void pickTargetStoreGlobal(u8 arg0);
-void func_801D9304(u8 arg0);
+void initUiBundleMode1(u8 arg0);
 u8   resolveKindResultMode(void);
 void statePendingPairsExcept(void);
 void initUiBundleSlot2(u8 arg0);
@@ -818,10 +818,10 @@ void initUiBundleSlot4(u8 arg0);
 void initUiBundleFixed(void);
 u8   resolveLocalFlag800Countdown(void);
 u8   advanceLocalFlag40Countdown(void);
-u8   func_801D57AC(void);
+u8   advanceEnemyFlag40Countdown(void);
 u8   advanceLocalFlag20Countdown(void);
-u8   func_801D5A60(void);
-u8   func_801D5BC0(void);
+u8   advanceEnemyFlag20Countdown(void);
+u8   resetFlag80Countdown(void);
 u8   func_801D5DCC(void);
 void stateBattlerCountdownsRelease(void);
 void drawBattlerStatusColumns(s32 arg0, s32 arg1);
@@ -839,8 +839,8 @@ u8   markBattlersMeetingOpposing(void);
  * arg3 unsigned; the `(u16)arg3` test against 0xffff in the body stays the
  * identity. */
 void drawDecimalGlyphRun(s16 arg0, s16 arg1, u8 arg2, u16 arg3);
-/* arg1 is the signed slot Y halfword: both call sites (func_801E5CA4 and
- * func_801E62BC) sign-extend it in the original binary (`lh`) and the callee
+/* arg1 is the signed slot Y halfword: both call sites (renderQueuedSlotEntry and
+ * renderRollDigitRun) sign-extend it in the original binary (`lh`) and the callee
  * stores only its low half, so the declaration stays signed to reproduce that
  * caller-side extension. */
 void renderDecimalGlyphRun8(s32 arg0, s32 arg1, s32 arg2, u16 arg3);
@@ -858,13 +858,13 @@ extern u16 D_801EAE50[][2]; /* @source 0x801EAE50 @kind table */
 extern u8  D_801EAEE8[]; /* @source 0x801EAEE8 @kind data */
 extern u8  D_801EAEEA[]; /* @source 0x801EAEEA @kind data */
 extern u8  D_801EAEB0[]; /* @source 0x801EAEB0 @kind data */
-/* Byte views of the 0x24-byte UI owner records scanned by func_801DA69C: every
+/* Byte views of the 0x24-byte UI owner records scanned by canReuseUiOwner: every
  * record carries its mode byte at +0x33 and its kind byte at +0x3A, and the
  * scan reaches both with one 0x24-scaled index. */
 extern u8  D_80148333[]; /* @source 0x80148333 @kind unknown */
 extern u8  D_8014833A[]; /* @source 0x8014833A @kind unknown */
 /* Byte view of the kind byte at +0x7C of the 0x118-byte D_801EB630 enemy work
- * records, reached by the func_801DA69C UI-slot reuse scan. */
+ * records, reached by the canReuseUiOwner UI-slot reuse scan. */
 extern u8  D_801EB6AC[]; /* @source 0x801EB6AC @kind unknown */
 /* Text pointer at +0x74 and mode byte at +0x7F of the same 0x118-byte
  * D_801EB630 records, read by drawBattlerStatusPanel for the record
@@ -874,7 +874,7 @@ extern u8  D_801EB6AC[]; /* @source 0x801EB6AC @kind unknown */
 extern u8  D_801EB6A4[]; /* @source 0x801EB6A4 @kind unknown */
 extern u8  D_801EB6AF[]; /* @source 0x801EB6AF @kind unknown */
 /* Panel correction bytes selected by the D_801EB630 record byte +0x08 read by
- * func_801E99AC; bound as two symbols because the original reaches each with its
+ * renderShadowedSlotStatus; bound as two symbols because the original reaches each with its
  * own displacement. */
 extern s8  D_801EAEA4; /* @source 0x801EAEA4 @kind unknown */
 extern s8  D_801EAEA6; /* @source 0x801EAEA6 @kind unknown */
@@ -895,62 +895,62 @@ extern Battle03RankEntry D_801EB550[];
  * adds to the enemy value. */
 extern const s8 D_801EAF48[];
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
-void func_801D9C80(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+void drawTableTilePrim(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void drawColorTilePrim(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
 void renderBattlerStatusGauge(s16 arg0, s16 arg1, u16 arg2, u16 arg3,
                                u8 arg4);
 void emitBattlerStatusAccent(u16 arg0, u16 arg1, u8 arg2);
 void drawFlatLinePrim(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
-u8   func_801DA69C(u32 arg0);
+u8   canReuseUiOwner(u32 arg0);
 
 u32  findThresholdRank(u8 arg0, u32 arg1);
-u8   func_801DB844(u32 arg0);
-u8   func_801DB9E4(u32 arg0);
-u8   func_801DB2F8(u32 arg0);
-u8   func_801DB3A0(u32 arg0, u32 arg1, u32 arg2);
+u8   isStrictActorCandidate(u32 arg0);
+u8   isBattlerActorEligible(u32 arg0);
+u8   isBattlerRankingEligible(u32 arg0);
+u8   localBattlerMeetsThresholds(u32 arg0, u32 arg1, u32 arg2);
 u8   enemyBattlerMeetsThresholds(u32 arg0, s32 arg1, u32 arg2);
 void clearRankingScratch(void);
-void func_801DA7D4(void);
-void func_801DAAE4(void);
-u32  func_801DC73C(s16 arg0, u32 arg1, u32 arg2);
-u32  func_801DCCB0(void);
-u32  func_801DCD50(u32 arg0, u8 arg1, s32 arg2);
+void rebuildPendingGroupQueue(void);
+void buildRankingList(void);
+u32  resolveDamageNegation(s16 arg0, u32 arg1, u32 arg2);
+u32  computeAverageLocalValue(void);
+u32  applyDamageVarianceModifiers(u32 arg0, u8 arg1, s32 arg2);
 s32  resolveBattlerDamageAmount(u8 attacker, u8 target, u16 kind_mask);
 u32  func_801DCAD8(u8 arg0, u8 arg1, s8 arg2);
 u32  resolveEnemyTargetDamage(s16 arg0, u8 arg1, u8 arg2);
 s16  stateResolvedDamageTarget(u8 attacker, u8 target);
 void copyLocalTemplates(void);
 void clearBattlerActionFlags(u8 arg0);
-void func_801DD29C(void);
+void consumePendingGroupQueue(void);
 void transformFirstPointPair(s32 arg0);
-void func_801DD3CC(s32 arg0);
+void rotateSecondPointPair(s32 arg0);
 u8   checkLocalQueuedBranch(void);
 void submitCurrentWorkEffect(u32 arg0);
 void copyCurrentVisibleTemplate(u32 arg0);
 void submitPositionalEffectBit80(u32 arg0);
 void copyCurrentBattlerQueued(void);
-void func_801DD800(void);
+void advanceOscillatorByte(void);
 u8   advanceCounterStorePacked(u32 arg0, u32 arg1);
 void initModeTuple530(void);
 u8   scanTriggerTableSubmit(u16 arg0, u32 arg1);
-void func_801DDFEC(u32 arg0);
+void advanceRankedLocalCounter(u32 arg0);
 void clearPendingBit(u32 arg0);
-void func_801DE1D4(void);
-void func_801DE60C(u32 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4, u32 arg5);
+void copyActiveBattlerRecords(void);
+void overwriteEventSlot(u32 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4, u32 arg5);
 void stubHandlerE690(void);
 void stubHandlerE7fc(void);
 void deactivateBattleDispatchSlots(void);
-u8   func_801DE858(s8 arg0);
+u8   queuedSlotKindAbsent(s8 arg0);
 void pushUiRingTriple(s8 arg0, s8 arg1, u32 arg2);
 u8   hasUiRingWork(void);
 void func_801DEA64(s32 arg0);
 void queueActiveBattlerSnapshots(void);
-u8   func_801E0E0C(void);
+u8   allLocalRecordsReady(void);
 void selectLocalCleanupSubstate(void);
 void rebuildLocalBandsField(void);
 void stateScratchGlobalBit4(void);
-void func_801E1DD4(void);
+void resetLocalWorkState(void);
 u8   enemyReadyOrHelper2(void);
 u8   checkEnemyQueuedPredicate(void);
 void func_801E2314(u32 arg0);
@@ -968,14 +968,14 @@ void raiseBit80AllocSlot(void);
 void clearQueuedSlotBytes(void);
 void requestFrontSelectorState1(void);
 void enterFrontendMode4(void);
-void func_801E5A38(void);
-void func_801E62BC(u8 arg0);
-u8   func_801E7B34(void);
+void resetAllQueuedSlots(void);
+void renderRollDigitRun(u8 arg0);
+u8   checkWorkStatusPair(void);
 void func_801E8DD8(void);
-u8   func_801E8FA8(void);
+u8   selectNextMaskBit(void);
 void func_801E97A8(void);
-void func_801E9910(void);
-void func_801DEAE0(void);
+void renderPanelActivateTask(void);
+void queueModeDependentEvent(void);
 void queueScriptEvent(u32 arg0, u32 arg1);
 void drawIconStrip24x8(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void drawFullscreenFadeTile(void);
@@ -988,9 +988,9 @@ void renderSpritePrim8X8(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u8 arg4);
 void renderSpritePrimFt4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 u8   pickRandomUnblockedId(u8 arg0);
 u8   func_801E2A88(u8 arg0);
-u8   func_801E2CA4(void);
+u8   pickLowestEnemyId(void);
 u8   pickTargetByMode(u8 arg0);
-u8   func_801E2D90(void);
+u8   pickLowestLocalSlot(void);
 u8   enemyReadyOrHelper1(void);
 u8   pickTargetOrFf(u8 arg0);
 void dispatchPresentationState1(void);
@@ -998,25 +998,25 @@ void dispatchPresentationByte3(void);
 extern Battle03Handler D_801EB454[]; /* @source 0x801EB454 @kind unknown */
 
 void dispatchResultSubstateTable(void);
-void func_801E5AF4(void);
+void callSlotByte5Short(void);
 void runQueuedSlotHandlers(void);
 void dispatchByte1FiveTable(void);
-void func_801E7818(void);
+void dispatchPreviewResult(void);
 void callStateByte2Table(void);
-void func_801E915C(void);
+void stateClampPanelState(void);
 void forwardPanelHalfwords(void);
 void callD8450WhenIdle(void);
 void activatePanelTask(void);
 void commitQueuedPanelTask(void);
-void func_801EA1E0(u8* arg0, s16* arg1, s16* arg2, s16* arg3, s16* arg4,
+void callPanelForwardingTable(u8* arg0, s16* arg1, s16* arg2, s16* arg3, s16* arg4,
                   u8* arg5, s16* arg6, u8* selector);
 void dispatchResultAuxState(void);
 void func_801E8684(void);
-void func_801E8D04(void);
-void func_801EA650(void);
-void func_801EA774(void);
-void func_801EA7DC(void);
-void func_801EAAB8(void);
+void stateAdvanceTimerMask(void);
+void drawPanelStripEvent(void);
+void advancePanelHandlerMask(void);
+void dispatchPanelTaskState(void);
+void drawPanelRingPrim(void);
 u8   advanceUiRingCheck(void);
 u8   countMessageTokens(u8* arg0);
 
@@ -1136,7 +1136,7 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_LOCAL_DEFAULT_CLASS_TABLE                                       \
   PSX_PTR(const volatile Battle03Handler, 0x801eb27cu)
 /* The 0x801EB294/0x801EB298 pair is bound as symbols because the original
- * func_801E2170 encoding is symbol-relative: both handler-table bases are
+ * dispatchEnemyModeHandlers encoding is symbol-relative: both handler-table bases are
  * hoisted into callee-saved registers in the preheader (`lui`/`addiu`).
  * Spelled as fixed-address macros GCC instead materializes each base with
  * `lui`/`ori` inside its branch (asm-diff 32/69, first mismatch +0x000c). */

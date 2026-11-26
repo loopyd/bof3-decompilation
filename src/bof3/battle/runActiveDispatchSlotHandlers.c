@@ -12,7 +12,7 @@
  * @residual none
  * Live audit: 73/73 instructions, 292 bytes, live byte match.
  */
-void func_801DE43C(void) {
+void runDispatchSlotHandlers(void) {
   Battle03FiveDispatchTable handlers;
   u8*                       slot;
   u8                        pass;

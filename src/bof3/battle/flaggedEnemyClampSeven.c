@@ -6,7 +6,7 @@ extern u8 D_801EB6CE[]; /* @source 0x801EB6CE @kind unknown */
 /* @source 0x800A0000
  * @behavior Selection-action handler stored at 0x800B4878 in the battle
  *   selection-action table D_800B471C. Runs the selection-input refresh pass
- *   func_800A3F28, then addresses the 0x118-byte enemy work record band by the
+ *   stateRefreshFlagStatus, then addresses the 0x118-byte enemy work record band by the
  *   active battler byte D_80146394 rebased by -3 and applies one raise-once step
  *   to two of its byte pairs. When the byte at D_801EB6CA (record + 0x06) is
  *   non-zero and bit 0 of the flag byte at record + 0x07 is clear, it sets that
@@ -36,7 +36,7 @@ void flaggedEnemyClampSeven(void)
     u8 flags2;
     u8 value2;
 
-    func_800A3F28();
+    stateRefreshFlagStatus();
     index = D_80146394 - 3;
     offset = (u32)index * 0x118;
     if (*(volatile u8 *)(D_801EB6CA + offset) != 0) {

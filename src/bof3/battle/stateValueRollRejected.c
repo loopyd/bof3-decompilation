@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* @source 0x800A0378
- * @behavior Runs the battle selection roll func_800A3A10 for the current
+ * @behavior Runs the battle selection roll querySelectionChance for the current
  *   battler byte D_80146374 and selection byte D_80146394. When the roll
  *   rejects, marks byte +0x08 of the selection record pointer
  *   D_8014639C.record as 1; when it accepts, copies the selected battler's
@@ -19,7 +19,7 @@ void stateValueRollRejected(void)
     u32 enemy_index;
     u16 value;
 
-    if ((u8)func_800A3A10(D_80146374, D_80146394) == 0) {
+    if ((u8)querySelectionChance(D_80146374, D_80146394) == 0) {
         /* Non-volatile view: the roll gate above already read the cell, and
          * widening the volatile u8 straight into the u32 costs an extra
          * `andi` on the load. stateHalvedRollAccepted reads

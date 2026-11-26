@@ -47,7 +47,7 @@ void countdownSlotEmitEvent(void) {
 
   if (D_80146329 == 0u) {
     initUiBundleFixed();
-    func_801DE9A8(D_1F800044->unk_05);
+    copyBattlerNameText(D_1F800044->unk_05);
     queueScriptEvent(0u, D_80146250->unk_79);
   }
 

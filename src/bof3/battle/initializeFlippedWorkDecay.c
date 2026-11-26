@@ -1,7 +1,7 @@
 #include "base/types.h"
 
 extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind bss */
-void func_801DD3CC(s32 arg0);
+void rotateSecondPointPair(s32 arg0);
 void func_801E2314(u32 arg0);
 s32 func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_8015DF18(u16 arg0);
@@ -26,7 +26,7 @@ void initializeFlippedWorkDecay(void)
     pair_work = D_1F800044;
     *(s32*)(pair_work + 0x18) = -0x1000;
     *(s32*)(pair_work + 0x1c) = 0;
-    func_801DD3CC((s32)pair_work);
+    rotateSecondPointPair((s32)pair_work);
     D_1F800044[8] ^= 2;
     motion_work = D_1F800044;
     *(s32*)(motion_work + 0x0c) = 0;

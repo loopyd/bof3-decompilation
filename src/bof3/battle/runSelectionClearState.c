@@ -11,7 +11,7 @@ extern u8 battleEnemyStateBytes[][0x118]; /* @source 0x801EB738 @kind table */
 
 /**
  * @source 0x800A17A4
- * @behavior Runs selection pass func_800A3F28, then clears the selected
+ * @behavior Runs selection pass stateRefreshFlagStatus, then clears the selected
  *   battler's record state. For a selected byte below three the record is the
  *   0x140-stride party record above 0x80145FB8, otherwise the 0x118-stride
  *   reserve record above 0x801EB734 at index minus three. It zeroes the eight
@@ -40,7 +40,7 @@ void runSelectionClearState(void)
   u32 clearMask;
   u8 i;
 
-  func_800A3F28();
+  stateRefreshFlagStatus();
   if (((u8 *)&D_80146394)[0] < 3) {
     i = 0;
     do {

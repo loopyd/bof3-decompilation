@@ -129,11 +129,11 @@ extern u16          taskLabelBandTable[3][3];
 extern Commu00TaskSlot *commu00ScratchTask;
 /* @source 0x801F2948 @kind bss: current commu00 task pointer. */
 extern Commu00TaskSlot *currentTask;
-/* @source 0x80143BB0 @kind unknown: shared frontend mode byte; func_801F1AFC
+/* @source 0x80143BB0 @kind unknown: shared frontend mode byte; callVariantWhenIdle
  * settles the UI selection state while it is clear.
  */
 extern u8           D_80143BB0;
-/* @source 0x801455B4 @kind unknown: shared counter snapshot word; func_801EF110
+/* @source 0x801455B4 @kind unknown: shared counter snapshot word; advanceWeightedCounterTick
  * compares it against the shared counter at 0x8014502C and republishes the
  * counter there after advancing the 0x801455C2 byte.
  */
@@ -148,7 +148,7 @@ extern u32          D_801455B8;
  * scan limit by the type-45 notification scan.
  */
 extern u16          D_801455C0;
-/* @source 0x801455C2 @kind unknown: signed counter byte that func_801EF110
+/* @source 0x801455C2 @kind unknown: signed counter byte that advanceWeightedCounterTick
  * clamps to 0..99; the filler init path seeds it with 10 and func_801EEEF0
  * reads it as the signed entry bound it scales the row index against.
  */
@@ -204,11 +204,11 @@ extern u16          D_8014625A;
 extern u8           D_801455C3;
 /* @source 0x801455C4 @kind bss: village-expansion state byte (7 gate). */
 extern u8           D_801455C4;
-/* @source 0x801455C5 @kind bss: byte total that func_801F0320 accumulates the
+/* @source 0x801455C5 @kind bss: byte total that accumulateKindWeightTotals accumulates the
  * weight byte of every active kind-10 record into.
  */
 extern u8           D_801455C5;
-/* @source 0x801455C6 @kind bss: byte total that func_801F0320 accumulates the
+/* @source 0x801455C6 @kind bss: byte total that accumulateKindWeightTotals accumulates the
  * weight byte of every active kind-11 record into.
  */
 extern u8           D_801455C6;
@@ -233,7 +233,7 @@ extern u8           D_801CA28C[];
  * bytes +0 and +1 that the frontend selection-effect helper consumes.
  */
 extern const u8     D_80181EBA[];
-/* @source 0x80145988 @kind unknown: shared byte published as 1 by func_801F17A4
+/* @source 0x80145988 @kind unknown: shared byte published as 1 by commitStreamedSlotState
  * once the EMI loader reports the streamed slot ready.
  */
 extern u8           D_80145988;
@@ -269,12 +269,12 @@ extern Commu00BandRecord commu00BandTable[];
 extern u8           D_801EEC98[];
 
 /* Local commu00 mutable data at the tail of the T_801F24FC blob. */
-/* @source 0x801F2944 @kind unknown: two bytes cleared by func_801F17A4; the
+/* @source 0x801F2944 @kind unknown: two bytes cleared by commitStreamedSlotState; the
  * fairy progress state-0 handler reads byte 0 as a flag (effect group 10 when
  * set, otherwise 8) and stores a selected record index into byte 1.
  */
 extern u8           D_801F2944[2];
-/* @source 0x801F294C @kind unknown: four bytes cleared by func_801F17A4.
+/* @source 0x801F294C @kind unknown: four bytes cleared by commitStreamedSlotState.
  */
 extern u8           D_801F294C[4];
 
@@ -319,7 +319,7 @@ extern void (*progressHandlerTable5[])(void);
 /* @source 0x801F26EC @kind table: function pointers indexed by the fairy progress byte. */
 extern void (*progressHandlerTable6[])(void);
 /* @source 0x801F2705 @kind table: container-local byte column read at stride
- * nine in lockstep with the stride-8 active-record table by func_801EF110, which
+ * nine in lockstep with the stride-8 active-record table by advanceWeightedCounterTick, which
  * adds three to each byte it reads; it is the byte immediately below the
  * 0x801F2706 column of the same sixty stride-9 records. INFERRED: the two
  * columns are the first two bytes of one stride-9 record (the byte read here
@@ -328,7 +328,7 @@ extern void (*progressHandlerTable6[])(void);
  */
 extern u8           D_801F2705[];
 /* @source 0x801F2706 @kind table: sixty stride-9 local weight records walked in
- * lockstep with the active-record table by func_801F0320, which reads the +0
+ * lockstep with the active-record table by accumulateKindWeightTotals, which reads the +0
  * byte of each record.
  */
 extern u8           D_801F2706[];
@@ -359,9 +359,9 @@ void func_8016728C(u8 index, u8 family);
 
 s16  func_8015477C(s32 coord_x, s32 coord_y);
 void func_8014DD3C(u16 arg0);
-void func_801EEDF8(void);
+void scanNotificationQueue(void);
 void func_801EEEF0(u32 row_index);
-void func_801EF110(u8 active_count);
+void advanceWeightedCounterTick(u8 active_count);
 void advanceVillageExpansionTier(void);
 void func_801EF398(void);
 void func_801EF52C(void);
@@ -369,29 +369,29 @@ void func_801EF784(void);
 void resolveSlotBattleOutcomes(void);
 void func_801EFEA8(void);
 void func_801F00D4(void);
-void func_801F01F4(void);
+void removeRandomActiveRecord(void);
 u8   countActiveRecords(void);
-void func_801F0320(void);
-void func_801F0C6C(u8 task_index, u8 record_kind_index);
-void func_801F0D3C(u8 task_index, u8 record_kind_index);
-void func_801F0E1C(u8 task_index, u8 record_kind_index);
+void accumulateKindWeightTotals(void);
+void activateTaskStatusCC(u8 task_index, u8 record_kind_index);
+void activateTaskStatusC008(u8 task_index, u8 record_kind_index);
+void activateTaskStatusCA(u8 task_index, u8 record_kind_index);
 void activateTaskStatusC003(u8 task_index);
 void activateTaskBandLabel(u8 source_index, u8 task_index, u8 record_kind_index);
-void func_801F0FBC(u8 source_index, u8 task_index, u8 record_kind_index);
-void func_801F1064(u8 task_index, u8 record_kind_index);
-void func_801F1110(u8 task_index, u8 record_kind_index);
+void activateTaskStatusC004(u8 source_index, u8 task_index, u8 record_kind_index);
+void activateTaskStatusCB(u8 task_index, u8 record_kind_index);
+void activateTaskStatusC009(u8 task_index, u8 record_kind_index);
 void setVariantTaskStatus(u8 task_index, u8 record_kind_index);
 void activateTaskStatus(u8 task_index);
-void func_801F1F9C(void);
-void func_801F2020(void);
-void func_801F228C(void);
+void dispatchProgressTable4(void);
+void dispatchProgressTable5(void);
+void dispatchProgressTable6(void);
 
 void clearUiSelectionState(void);
 void callCurrentTaskVariant(void);
 
 void func_801F0534(void);
 void func_801F0718(u8 source_index, u8 task_index);
-void func_801F08D8(u8 source_index, u8 task_index);
+void activateVariantTaskSlot(u8 source_index, u8 task_index);
 void activateTaskRandomLabel(u8 task_index);
 
 #define COMMU00_TASK_SLOTS PSX_PTR(volatile Commu00TaskSlot, 0x80146888u)
@@ -409,7 +409,7 @@ void activateTaskRandomLabel(u8 task_index);
 #define COMMU00_REMOVAL_QUEUE        PSX_PTR(volatile u8, 0x80145e30u)
 #define COMMU00_PENDING_QUEUE        PSX_PTR(volatile u8, 0x80145e48u)
 /* @source 0x801F2458 @kind rodata: type-45 notification kinds, one byte per
- * pending-queue entry, scanned by func_801EEDF8.
+ * pending-queue entry, scanned by scanNotificationQueue.
  */
 extern const u8   COMMU00_TYPE45_NOTIFICATION_TABLE[];
 #define COMMU00_TASK_SLOT_BASE      ((u32)0x80146888u)

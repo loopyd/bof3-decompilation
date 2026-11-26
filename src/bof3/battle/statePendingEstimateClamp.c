@@ -5,7 +5,7 @@
  *   selection record reached through D_8014639C.record from the acting
  *   battler's work-record byte: when the 0x140-stride local-work byte at
  *   D_80145F09[D_80146374 * 0x140] is 0x0A it runs the selection-input pass
- *   func_800A3F28 and stores 9999 there, otherwise it stores the
+ *   stateRefreshFlagStatus and stores 9999 there, otherwise it stores the
  *   func_800A4294 estimate for kind 3 minus the 0x118-stride enemy-work
  *   halfword at 0x801EB6D6 + (D_80146394 - 3) * 0x118. The stored halfword is
  *   then clamped to zero when it is negative, through a fresh load of the
@@ -26,7 +26,7 @@ void statePendingEstimateClamp(void) {
 
   battler = D_80146374;
   if (D_80145F09[battler * 0x140u] == 0x0A) {
-    func_800A3F28();
+    stateRefreshFlagStatus();
     D_8014639C.record[2] = 0x270F;
   } else {
     value = func_800A4294(3);

@@ -14,7 +14,7 @@ u8 querySelectionClampIndexed(u8 index)
 {
   u8 result;
 
-  result = func_800A3A10(D_80146374, D_80146394);
+  result = querySelectionChance(D_80146374, D_80146394);
   if (result == 0) {
     clampIndexedBattleByte14((s8)D_801CA71B[D_801463C0 * 20], index);
     func_800A9BD8(D_80146394);

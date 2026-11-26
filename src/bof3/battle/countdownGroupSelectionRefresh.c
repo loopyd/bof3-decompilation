@@ -9,7 +9,7 @@ void func_8014D6B8(u8 request);
  * current work record byte +5 is the global progress byte 0x80146374, or fight
  * stage 0x80146375 reads 4 with 0x801463C0 reading 0x97 or 0xE1, increments
  * scratchpad byte +1 and returns. Otherwise it counts down scratch byte +0x0A:
- * on expiry it takes the next enabled 0x58 group bit from func_801E8FA8, clears
+ * on expiry it takes the next enabled 0x58 group bit from selectNextMaskBit, clears
  * the queued slot bytes when that index is 0xFF, and otherwise arms scratch
  * byte +0x27 to 0xFF and byte +0x0A to 0x3C and requests the D_801EB494 table
  * byte of that index, publishing the index at scratch byte +0x0B when it
@@ -36,7 +36,7 @@ void countdownGroupSelectionRefresh(void) {
   }
 
   if (((u8*)D_1F800044)[0x0a] == 0u) {
-    index = func_801E8FA8();
+    index = selectNextMaskBit();
     if (index == 0xffu) {
       clearQueuedSlotBytes();
       return;
