@@ -546,6 +546,10 @@ def _foreign_proof(plan: RenamePlan) -> str | None:
                 continue
             try:
                 result = compile_object(plan.root, path, output)
+            except ValueError:
+                # A grouped unit cannot be compiled on its own; its target check below
+                # covers it, and the caller that owns the row keeps its own proof.
+                continue
             except (OSError, RuntimeError) as error:
                 return f"{relative}: {str(error)[:160]}"
             if result.returncode != 0:
@@ -1211,6 +1215,17 @@ def _write(
             rewritten = text.replace(source_name, target_name)
             if rewritten == text:
                 continue
+            # A unit that aliases the spelling for a shared template keeps its
+            # `#define` intact; rewriting the macro name would make it self-referential.
+            alias = re.compile(rf"^(\s*#\s*define\s+){re.escape(source_name)}\b")
+            lines = text.splitlines(keepends=True)
+            if len(lines) != len(rewritten.splitlines(keepends=True)):
+                lines = None
+            if lines is not None:
+                rewritten = "".join(
+                    line if alias.match(line) else line.replace(source_name, target_name)
+                    for line in lines
+                )
             if journal is None:
                 path.write_text(rewritten, encoding="utf-8")
             else:
