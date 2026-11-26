@@ -27,4 +27,4 @@ testProjectedRecord = 0x801CFBDC;
 callWorkTablefdc0 = 0x801CFCF8;
 callWorkTablefdcc = 0x801CFD3C;
 codePointerTablefd80 = 0x801CFD80;
-T_801CFDC0 = 0x801CFDC0;
+workStepTable = 0x801CFDC0;

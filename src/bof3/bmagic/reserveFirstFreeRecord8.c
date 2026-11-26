@@ -8,7 +8,7 @@ extern u8 stateRecordFlags[]; /* @source 0x801EF8C0 @kind data */
  *           index, or returns 0xFF once every record is occupied. Records have
  *           stride 0x78, so the pool covers 0x1E00 bytes from 0x801EF8C0 to
  *           the end of the payload at 0x801F16C0, starting 0x20 bytes into the
- *           data blob T_801EF8A0. The pool address is re-materialized for the
+ *           data blob workByte1HandlerTable. The pool address is re-materialized for the
  *           flags load and again for the store. The sweep at 0x801EEC80 tests
  *           that same bit 0 as the in-use flag before dispatching a record, and
  *           the reset at 0x801EED34 clears bytes 0 through 2 of all 64 records.

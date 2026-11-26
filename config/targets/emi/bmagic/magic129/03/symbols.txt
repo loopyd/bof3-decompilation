@@ -18,5 +18,5 @@ decrementIntegrateGlobalZero = 0x801F029C;
 renderFanTrianglesTinted = 0x801F030C;
 resourceReserveFreeRecord11 = 0x801F0500;
 stateWorkBytes5 = 0x801F0564;
-T_801F05B4 = 0x801F05B4;
+workByte1HandlerTable = 0x801F05B4;
 recordFlags = 0x801F05D8;

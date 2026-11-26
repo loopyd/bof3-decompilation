@@ -26,4 +26,4 @@ stateSelectedUnseededB = 0x801CFBC0;
 callWorkTablefcf4 = 0x801CFC2C;
 callWorkTablefd00 = 0x801CFC70;
 codePointerTablefcb4 = 0x801CFCB4;
-T_801CFCF4 = 0x801CFCF4;
+workByte2HandlerTable = 0x801CFCF4;

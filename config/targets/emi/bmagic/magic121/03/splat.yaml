@@ -79,5 +79,5 @@ segments:
     - '@source: src/bof3/bmagic/renderDashesPerpendicularDrifting.c'
   - - 8248
     - textbin
-    - T_801F0C38
+    - workByte1HandlerTable
 - - 8280

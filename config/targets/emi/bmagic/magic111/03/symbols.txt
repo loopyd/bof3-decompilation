@@ -20,4 +20,4 @@ stateAdvanceGlobalByte = 0x801EF870;
 mathAdvanceStepAt10 = 0x801EF8C4;
 decrementTwoInvokeZero = 0x801EF914;
 func_801EF970 = 0x801EF970;
-T_801EFA9C = 0x801EFA9C;
+workByte1HandlerTable = 0x801EFA9C;

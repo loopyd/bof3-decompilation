@@ -3,10 +3,10 @@
 /* This overlay's handler run at 0x801CFAB8: twenty-three code pointers, entry 0
  * = 0x801CE448 through entry 22 = 0x801CF868, holding this payload's own
  * functions plus the shared main-executable handler 0x801B2D54 at entries 2, 8
- * and 14. The target's Splat `textbin` row `T_801CFAB8` places entries 0
+ * and 14. The target's Splat `textbin` row `workByte2HandlerTable` places entries 0
  * through 15 and the following row `workByte2RunTail` carries entries 16 through 22,
  * so the run is only referenced here, at its first entry. */
-extern void (*T_801CFAB8[])(void); /* @source 0x801CFAB8 @kind data */
+extern void (*workByte2HandlerTable[])(void); /* @source 0x801CFAB8 @kind data */
 
 /* Entries 16 through 22 of the same run, which the target's next `textbin` row
  * places: entry 16 = 0x801CEC34 through entry 22 = 0x801CF868. */
@@ -33,4 +33,4 @@ extern void (*workByte2RunTail[])(void); /* @source 0x801CFAF8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefab8, T_801CFAB8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefab8, workByte2HandlerTable);

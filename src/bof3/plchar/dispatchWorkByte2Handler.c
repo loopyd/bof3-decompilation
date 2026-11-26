@@ -3,9 +3,9 @@
 /* This overlay's handler run at 0x801D03AC: twenty-eight code pointers,
  * 0x801D03AC through 0x801D0418, holding this payload's own functions plus the
  * shared main-executable handler 0x801B2D54 at entries 2 and 18. The Splat
- * `textbin` row T_801D03AC places all twenty-eight words, so the run is only
+ * `textbin` row workByte2HandlerTable places all twenty-eight words, so the run is only
  * referenced here, at its first entry. */
-extern void (*T_801D03AC[])(void); /* @source 0x801D03AC @kind data */
+extern void (*workByte2HandlerTable[])(void); /* @source 0x801D03AC @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay step entry on work-record byte 2: loads the work-record
@@ -25,4 +25,4 @@ extern void (*T_801D03AC[])(void); /* @source 0x801D03AC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchWorkByte2Handler, T_801D03AC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchWorkByte2Handler, workByte2HandlerTable);

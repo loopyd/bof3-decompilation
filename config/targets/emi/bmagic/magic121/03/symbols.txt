@@ -15,4 +15,4 @@ decrementWorkByteB = 0x801EF3A8;
 renderDriftingSizedCounted = 0x801EF414;
 func_801F0198 = 0x801F0198;
 renderDashesPerpendicularDrifting = 0x801F06E8;
-T_801F0C38 = 0x801F0C38;
+workByte1HandlerTable = 0x801F0C38;

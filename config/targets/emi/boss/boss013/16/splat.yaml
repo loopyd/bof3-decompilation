@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - textbin
-    - func_800C1804
+    - tableJumpTargets
   - - 28
     - c
     - callStateTable2620Boss

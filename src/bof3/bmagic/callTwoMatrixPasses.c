@@ -9,13 +9,13 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* The six-word code-pointer run at 0x801EFC9C, which Splat places as the
- * single `textbin` row T_801EFC9C. Its words are this overlay's step handlers
+ * single `textbin` row workByte1HandlerTable. Its words are this overlay's step handlers
  * 0x801EEE0C, 0x801EEF48, 0x801EF020, 0x801EF090, 0x801EF0E0 and 0x801EF130,
  * the ones the exact handlers of this target advance with work byte 0x01. The
  * work object's byte 0x01 scales by four and is added to this base, so the
  * extern is declared at the run head and the run keeps its one row in this
  * target's Splat. */
-extern void (*T_801EFC9C[])(void); /* @source 0x801EFC9C @kind data */
+extern void (*workByte1HandlerTable[])(void); /* @source 0x801EFC9C @kind data */
 
 /* This overlay's two transform passes, both still `asm` rows in this target's
  * Splat. 0x801EF5C0 pushes the matrix stack and installs the projection
@@ -64,7 +64,7 @@ void func_801EF2D4(void);
  */
 void callTwoMatrixPasses(
     void) {
-  T_801EFC9C[g_battle_work[1]]();
+  workByte1HandlerTable[g_battle_work[1]]();
   if (g_battle_work[0] != 0) {
     func_801EF5C0();
     func_801EF6C0();

@@ -146,7 +146,7 @@ segments:
     - func_801F41F4
   - - 5916
     - textbin
-    - T_801F431C
+    - workByte1HandlerTable
   - - 6812
     - textbin
     - T_801F469C

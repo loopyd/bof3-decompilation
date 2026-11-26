@@ -28,4 +28,4 @@ checkAgainstMapWork = 0x801CFD20;
 callWorkTableff20 = 0x801CFE54;
 callWorkHalfword2Tableff2 = 0x801CFE98;
 codePointerTablefedc = 0x801CFEDC;
-T_801CFF1C = 0x801CFF1C;
+workByte2RunTail = 0x801CFF1C;

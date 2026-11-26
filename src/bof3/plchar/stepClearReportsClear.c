@@ -49,7 +49,7 @@ extern void func_8014D978(void);
  *           payload: the body address is the word 0x801CFF1C, entry 16 of the
  *           twenty-three-entry code pointer run based at 0x801CFEDC, and it is
  *           also the first word of the run's second Splat `textbin` row, which
- *           the target names T_801CFF1C. No instruction of this payload names
+ *           the target names workByte2RunTail. No instruction of this payload names
  *           the body, but its byte-2 dispatchers index that run from the
  *           interior bases 0x801CFF08 and 0x801CFF14 without bounding the index,
  *           and the body is index 5 from the first base and index 2 from the

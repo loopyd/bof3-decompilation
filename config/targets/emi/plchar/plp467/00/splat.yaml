@@ -174,5 +174,5 @@ segments:
     - callWorkTable0410
   - - 8108
     - textbin
-    - T_801D03AC
+    - workByte2HandlerTable
 - - 8220

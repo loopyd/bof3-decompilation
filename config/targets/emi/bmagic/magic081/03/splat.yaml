@@ -106,5 +106,5 @@ segments:
     - '@source: src/bof3/bmagic/resourceReserveFreeRecord.c'
   - - 3716
     - textbin
-    - T_801EFA84
+    - workByte1HandlerTable
 - - 9484

@@ -9,7 +9,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 /* @source 0x801EF090
  * @behavior Per-frame step handler entered through the six-word code-pointer
  *           run at 0x801EFC9C, which Splat places as this target's `textbin` row
- *           T_801EFC9C: its word at payload offset 0x10A8, entry index 3, holds
+ *           workByte1HandlerTable: its word at payload offset 0x10A8, entry index 3, holds
  *           0x801EF090, and the only reader of that run is
  *           dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0Set
  *           BmagicMagic10803_801EED7C, which scales work byte 0x01 by four and

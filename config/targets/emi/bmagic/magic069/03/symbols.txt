@@ -32,4 +32,4 @@ func_801EFC00 = 0x801EFC00;
 renderDashedCircleArcs = 0x801EFF14;
 renderGreyCrossLines = 0x801F0104;
 queuePerEligibleOrdinal = 0x801F0274;
-T_801F04F8 = 0x801F04F8;
+workByte1HandlerTable = 0x801F04F8;

@@ -18,6 +18,12 @@ extern Boss01316Handler D_801463A4; /* @source 0x801463A4 @kind unknown */
 extern Boss01316Handler D_801463A8; /* @source 0x801463A8 @kind unknown */
 extern Boss01316Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
+/* Jump table of the six switch bodies inside func_800C2138: the function masks
+ * its byte argument, rejects six and above, scales the value by four and jumps
+ * through this run, so every entry is a block address inside that function and
+ * the three equal words are the shared return block. */
+extern void (*tableJumpTargets[])(void); /* @source 0x800C1804 @kind table */
+
 /* Step countdown byte of this payload's own data run: the last word before the
  * run end at 0x800C26E4, zero in the payload. The dispatched handler
  * stateOneBitBit

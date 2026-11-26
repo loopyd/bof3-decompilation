@@ -8,7 +8,7 @@
  * 0x801CF500, 0x801CE72C, 0x801CF338 and 0x801CF70C. The neighbouring base
  * 0x801CFDCC used by the sibling dispatcher at 0x801CFD3C is entry 3 of the same
  * run. */
-extern void (*D_801CFDC0[])(void); /* @source 0x801CFDC0 @kind data */
+extern void (*workStepTable[])(void); /* @source 0x801CFDC0 @kind data */
 
 /* @source 0x801CFCF8
  * @behavior Overlay step dispatch on the work record's halfword at offset 0x2C:
@@ -29,5 +29,5 @@ extern void (*D_801CFDC0[])(void); /* @source 0x801CFDC0 @kind data */
  * @residual none
  */
 void callWorkTablefdc0(void) {
-  D_801CFDC0[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
+  workStepTable[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
 }

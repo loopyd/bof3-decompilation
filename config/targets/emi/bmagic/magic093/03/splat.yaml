@@ -145,5 +145,5 @@ segments:
     - func_801F0670
   - - 7324
     - textbin
-    - drawVertexAngleTable
+    - workByte1HandlerTable
 - - 11220

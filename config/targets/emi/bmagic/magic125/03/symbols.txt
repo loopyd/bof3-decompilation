@@ -22,4 +22,4 @@ renderTrianglesTintedTimes = 0x801EFFC8;
 func_801F020C = 0x801F020C;
 resourceReserveFreeRecord10 = 0x801F0524;
 stateWorkBytes3 = 0x801F0588;
-recordFlags = 0x801F05D8;
+workByte1HandlerTable = 0x801F05D8;

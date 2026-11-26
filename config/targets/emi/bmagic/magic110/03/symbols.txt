@@ -29,5 +29,5 @@ offsetChannelPair = 0x801F0040;
 workDecrementHelperZero = 0x801F00D8;
 func_801F0138 = 0x801F0138;
 func_801F01E8 = 0x801F01E8;
-T_801F046C = 0x801F046C;
+workByte1HandlerTable = 0x801F046C;
 workMotionPairTable = 0x801F04A4;

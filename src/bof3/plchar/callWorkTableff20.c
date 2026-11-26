@@ -3,13 +3,17 @@
 /* This overlay's handler run at 0x801CFEDC: twenty-three code pointers, entry 0
  * = 0x801CE448 through entry 22 = 0x801CF42C, holding this payload's functions
  * plus the shared main-executable handler 0x801B2D54 at entries 2, 7 and 13. The
- * run's tail sits inside the following `textbin T_801CFF1C` row, so the run is
+ * run's tail sits inside the following `textbin workByte2RunTail` row, so the run is
  * only referenced here. This dispatcher indexes it from 0x801CFF20, so its base
  * is entry 17 of that run and the six entries it reaches are 0x801CE404,
  * 0x801CEBFC, 0x801CF1F8, 0x801CE610, 0x801CEE08 and 0x801CF42C. The
  * neighbouring base 0x801CFF2C used by the sibling dispatcher at 0x801CFE98
  * holds the last three of those. */
 extern void (*D_801CFF20[])(void); /* @source 0x801CFF20 @kind data */
+
+/* The run's last seven entries, placed by the target's `textbin` row: entry 16
+ * of the 0x801CFEDC run is this row's first word. */
+extern void (*workByte2RunTail[])(void); /* @source 0x801CFF1C @kind table */
 
 /* @source 0x801CFE54
  * @behavior Overlay step dispatch on the work record's halfword at offset 0x2C:

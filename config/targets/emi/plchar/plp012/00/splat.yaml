@@ -147,5 +147,5 @@ segments:
     - codePointerTablefd80
   - - 6592
     - textbin
-    - T_801CFDC0
+    - workStepTable
 - - 6616

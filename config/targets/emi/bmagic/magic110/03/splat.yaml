@@ -155,7 +155,7 @@ segments:
     - func_801F01E8
   - - 6252
     - textbin
-    - T_801F046C
+    - workByte1HandlerTable
   - - 6308
     - textbin
     - workMotionPairTable

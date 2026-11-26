@@ -3,9 +3,9 @@
 /* This overlay's handler run at 0x801CFAB8: twenty-three code pointers,
  * 0x801CFAB8 through 0x801CFB10, holding this payload's own functions plus the
  * shared main-executable handler 0x801B2D54 at entries 2, 8 and 14. The run
- * crosses the target's `textbin T_801CFAB8` row boundary at 0x801CFAF8 and ends
+ * crosses the target's `textbin workByte2HandlerTable` row boundary at 0x801CFAF8 and ends
  * with the payload, so it is only referenced here. This dispatcher indexes it
- * from 0x801CFAF4, entry 15, the last word the `T_801CFAB8` row holds, so the
+ * from 0x801CFAF4, entry 15, the last word the `workByte2HandlerTable` row holds, so the
  * reachable entries are 0x801CF8AC, 0x801CF9C4, 0x801CE404, 0x801CEA00,
  * 0x801CF65C, 0x801CE610, 0x801CEC34 and this body itself at 0x801CF868; an
  * index above 7 leaves the payload. */

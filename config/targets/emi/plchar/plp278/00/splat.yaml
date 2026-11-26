@@ -125,5 +125,5 @@ segments:
     - codePointerTablefcb4
   - - 6388
     - textbin
-    - T_801CFCF4
+    - workByte2HandlerTable
 - - 6412

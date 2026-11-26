@@ -12,4 +12,4 @@ func_801EF188 = 0x801EF188;
 func_801EF23C = 0x801EF23C;
 renderGouraudBandOver = 0x801EF9A4;
 func_801EFC74 = 0x801EFC74;
-T_801EFEE8 = 0x801EFEE8;
+workByte1HandlerTable = 0x801EFEE8;

@@ -23,5 +23,5 @@ func_801CF8AC = 0x801CF8AC;
 stateUnoccupiedRecordClear2 = 0x801CF9C4;
 callWorkHalfword2Tablefafc = 0x801CFA30;
 callWorkHalfword2Tablefb08 = 0x801CFA74;
-T_801CFAB8 = 0x801CFAB8;
+workByte2HandlerTable = 0x801CFAB8;
 workByte2RunTail = 0x801CFAF8;

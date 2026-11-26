@@ -9,7 +9,7 @@
  * 0 of that run. The neighbouring 0x801CFD00, entry 3, is the base the sibling
  * dispatcher at 0x801CFC70 uses. Because the run is the payload's last six words,
  * an index above five reads past the end of the payload. */
-extern void (*D_801CFCF4[])(void); /* @source 0x801CFCF4 @kind data */
+extern void (*workByte2HandlerTable[])(void); /* @source 0x801CFCF4 @kind data */
 
 /* @source 0x801CFC2C
  * @behavior Overlay step dispatch on the work record's halfword at offset 0x2C:
@@ -30,5 +30,5 @@ extern void (*D_801CFCF4[])(void); /* @source 0x801CFCF4 @kind data */
  * @residual none
  */
 void callWorkTablefcf4(void) {
-  D_801CFCF4[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
+  workByte2HandlerTable[SPAD_PTR_SLOT(u16, 0x44u)[0x16]]();
 }

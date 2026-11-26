@@ -20,4 +20,4 @@ renderWideRingQuads = 0x801EFA78;
 recordWithinPositionRadius = 0x801EFDD4;
 reservePool36 = 0x801EFE38;
 clearWorkBytesFive = 0x801EFE9C;
-T_801EFEEC = 0x801EFEEC;
+workByte1HandlerTable = 0x801EFEEC;

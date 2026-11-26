@@ -3,7 +3,7 @@
 /* This overlay's handler run at 0x801CFAB8: twenty-three code pointers, 0x801CFAB8
  * through 0x801CFB10, holding this payload's own functions plus the shared
  * main-executable handler 0x801B2D54 at entries 2, 8 and 14. The run crosses the
- * target's `textbin T_801CFAB8` row boundary at 0x801CFAF8, so it is only
+ * target's `textbin workByte2HandlerTable` row boundary at 0x801CFAF8, so it is only
  * referenced here. This dispatcher indexes it from 0x801CFAC4, so its base is
  * entry 3 of that run and the entries the run itself still holds from there are
  * 0x801CE654, 0x801CE820, 0x801CE92C, 0x801CEA44, 0x801CEB38, 0x801B2D54,
