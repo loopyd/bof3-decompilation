@@ -13,3 +13,4 @@ startActionFirstPresent = 0x801F3F90;
 startCandidateActions05To08 = 0x801F4054;
 setSharedByte01 = 0x801F4118;
 D_801F412C = 0x801F412C;
+statePublishedSharedIs = 0x801F4304;
