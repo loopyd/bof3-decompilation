@@ -9,20 +9,20 @@
 extern u8* D_1F800044;
 
 void func_801F2ED8(void);
-void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
+void stateActiveRecordsBase(void);
 
-/* @source 0x801F2CB4
- * @behavior Entry 1 of this overlay's byte-1 handler run based at 0x801F3D2C,
+/* @source 0x801F2D70
+ * @behavior Entry 2 of this overlay byte-1 handler run based at 0x801F3D2C,
  *           the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4,
  *           0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and
  *           0x801F36B4 in that order and which the dispatcher
  *           dispatchStateByte1Table3 indexes with
  *           the work byte at +0x01 of the record published at the scratchpad
  *           pointer cell 0x1F800044, so this body is the step that dispatcher
- *           takes while that byte reads 1. It decrements the record countdown
+ *           takes while that byte reads 2. It decrements the record countdown
  *           byte +0x09 through its own read of the cell, reads the countdown
  *           back through a second read and, while the decremented byte is
- *           nonzero, raises the tile colour triplet at +0x5D, +0x5E and +0x5F
+ *           nonzero, lowers the tile colour triplet at +0x5D, +0x5E and +0x5F
  *           by 4, re-reading the cell before the +0x5E and +0x5F stores while
  *           the +0x5D store goes through the pointer the read already holds.
  *           When the decremented byte reads zero it re-arms that byte with 0x0C
@@ -37,18 +37,18 @@ void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
  * @match 100.00
  * @residual none
  */
-void decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2CB4(
+void decrementCountdownByte9Lower(
     void) {
   u8* record;
 
   D_1F800044[9]--;
   record = D_1F800044;
   if (record[9] != 0) {
-    record[0x5D] += 4;
+    record[0x5D] -= 4;
     record = D_1F800044;
-    record[0x5E] += 4;
+    record[0x5E] -= 4;
     record = D_1F800044;
-    record[0x5F] += 4;
+    record[0x5F] -= 4;
   } else {
     record[9] = 0xC;
     record = D_1F800044;
@@ -56,5 +56,5 @@ void decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByt
   }
 
   func_801F2ED8();
-  setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC();
+  stateActiveRecordsBase();
 }

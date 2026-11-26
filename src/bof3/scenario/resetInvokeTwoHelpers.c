@@ -7,7 +7,7 @@ extern u8 g_ScenarioProgress;
 
 void func_80196070(void);
 void func_801F7484(void);
-void setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568(
+void stateIndexedBaseService(
     void);
 
 /* @source 0x801F7444
@@ -22,7 +22,7 @@ void setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceSce
  * that byte equals 0x35 does it call the shared work-area reset func_80196070,
  * whose exact scena0300 lift at 0x801F7334 records it clearing the work-object
  * header bytes 0x00-0x04. Both paths then call the overlay helpers func_801F7484
- * and setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568
+ * and stateIndexedBaseService
  * in that order with no arguments and with any result discarded, so the pair
  * runs on every call; that second helper publishes the work record selected by
  * the object's byte 6 and then the base record 0x80145E90, storing 2 into each
@@ -34,10 +34,10 @@ void setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceSce
  * @match 100.00
  * @residual none
  */
-void resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444(void) {
+void resetInvokeTwoHelpers(void) {
   if (g_ScenarioProgress == 0x35) {
     func_80196070();
   }
   func_801F7484();
-  setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568();
+  stateIndexedBaseService();
 }

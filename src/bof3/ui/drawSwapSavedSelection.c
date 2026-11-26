@@ -48,7 +48,7 @@
  *           between 183 and 200 matched instructions with the arm unmoved, so
  *           the residual is scheduling, not expression.
  */
-void drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection(void) {
+void drawSwapSavedSelection(void) {
   s32 direction;
   u8 count;
   u8 kind;

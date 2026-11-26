@@ -31,21 +31,21 @@ segments:
     - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 72
     - c
-    - seedTrailCursorAndSizeThenRebuildAllTrailRecordsResetCountdownAndAdvanceWorkByte1World02Area08813_801F2C48
-    - '@source: src/bof3/world/seedTrailCursorAndSizeThenRebuildAllTrailRecordsResetCountdownAndAdvanceWorkByte1World02Area08813_801F2C48.c'
+    - seedTrailCursorSize
+    - '@source: src/bof3/world/seedTrailCursorSize.c'
     - '@behavior: Entry 0 of the work-byte-1 handler table 0x801F58DC that the overlay step dispatch 0x801F2C04 indexes with work byte 0x01: stores 0x10000, 0x250000 and 0x3800000 into the work record cursor words at +0x34, +0x38 and +0x3C, seeds the trail size seed halfword at 0x800E4B3E with 0x60, rebuilds all 0x20 records of the 0x800E4800 trail buffer through the overlay walk at 0x801F2F28, then zeroes work-record byte 0x09 and advances work byte 0x01 by one.'
   - - 228
     - asm
     - func_801F2CE4
   - - 384
     - c
-    - rebuildAndDrawTrailThenAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2D80
-    - '@source: src/bof3/world/rebuildAndDrawTrailThenAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2D80.c'
+    - rebuildDrawTrailAdvance
+    - '@source: src/bof3/world/rebuildDrawTrailAdvance.c'
     - '@behavior: Runs entry 2 of the work-byte-1 handler table: rebuilds the 0x800E4800 trail buffer through the overlay walk at 0x801F2F28, renders it through 0x801F3258, then decrements the work record byte 0x09 and, when it reads zero, reloads it with 0x10 and advances work byte 0x01.'
   - - 516
     - c
-    - rebuildAndDrawTrailThenShrinkSizeSeedBy6AndAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2E04
-    - '@source: src/bof3/world/rebuildAndDrawTrailThenShrinkSizeSeedBy6AndAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2E04.c'
+    - rebuildDrawTrailShrink
+    - '@source: src/bof3/world/rebuildDrawTrailShrink.c'
     - '@behavior: Entry 3 of the work-byte-1 handler table 0x801F58DC that the overlay step dispatch 0x801F2C04 indexes with work byte 0x01: rebuilds the 0x800E4800 trail buffer through the overlay walk at 0x801F2F28, renders it through 0x801F3258, shrinks the trail size seed halfword at 0x800E4B3E - the element 0x1F of the size run the walk copies into every record, seeded with 0x60 by entry 0 at 0x801F2C48 - by 6, then decrements work-record byte 0x09 modulo 256 and, when it reads zero, advances work byte 0x01 by one without the 0x10 rearm entry 2 writes.'
   - - 648
     - c

@@ -8,7 +8,7 @@
 extern u8* D_1F800044;
 
 void func_801F2ED8(void);
-void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
+void stateActiveRecordsBase(void);
 
 /* @source 0x801F2C48
  * @behavior Entry 0 of this overlay's byte-1 handler run based at 0x801F3D2C,
@@ -33,7 +33,7 @@ void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
  * @match 100.00
  * @residual none
  */
-void clearWorkTripletAndSubstateArmCountdownByte9To12AdvanceWorkByte1World02Area08513_801F2C48(
+void clearWorkTripletSubstate(
     void) {
   u8* record;
 
@@ -46,5 +46,5 @@ void clearWorkTripletAndSubstateArmCountdownByte9To12AdvanceWorkByte1World02Area
   record[0x5D] = 0;
 
   func_801F2ED8();
-  setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC();
+  stateActiveRecordsBase();
 }

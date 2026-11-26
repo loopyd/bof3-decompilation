@@ -10,8 +10,8 @@ extern s32 D_80146954;
 s32 func_801782FC(s32 phase);
 s32 func_801783C8(s32 phase);
 
-u8* findFreeWorkRecordByte25ScenarioScena0400_801F7FF8(void);
-void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0(
+u8* queryFreeRecord(void);
+void stepClampHeightDecay(
     void);
 
 /* @source 0x801F7BC0
@@ -24,7 +24,7 @@ void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena040
  *           published at pointer slot 0x1F800044.
  *           It walks sixteen index values and, for each one, claims a free
  *           record through the work-table scan
- *           findFreeWorkRecordByte25ScenarioScena0400_801F7FF8 (jal at
+ *           queryFreeRecord (jal at
  *           0x801F7BEC). An index whose scan answers zero seeds nothing and
  *           the walk moves on, so the body claims as many records as it can
  *           find up to sixteen. Each claimed record takes the shared saved
@@ -39,7 +39,7 @@ void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena040
  *           marker 0x40 lands in bytes 0x24 and 0x25, the byte the free-record
  *           scan tests against zero.
  *           After the walk it runs the overlay's per-frame record pass
- *           stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0
+ *           stepClampHeightDecay
  *           (jal at 0x801F7C6C, no arguments), re-reads the scratch work-object
  *           pointer from the cell at 0x1F800044 because the pass may
  *           rewrite that cell, and stores 0x40 in the work object's word at
@@ -75,7 +75,7 @@ void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena040
  * @match 100.00
  * @residual none
  */
-void claimUpTo16FreeWorkRecordsSeedSavedPositionAndDirectionArmCountdown64ThenStepActiveWorkRecordsScenarioScena0400_801F7BC0(
+void claimUpTo16Free(
     void) {
   u8 index;
   u8* record;
@@ -85,7 +85,7 @@ void claimUpTo16FreeWorkRecordsSeedSavedPositionAndDirectionArmCountdown64ThenSt
   index = 0u;
   saved = &D_80146954;
   do {
-    record = findFreeWorkRecordByte25ScenarioScena0400_801F7FF8();
+    record = queryFreeRecord();
     if (record != 0) {
       *(s32*)(record + 0x00) = saved[0];
       *(s32*)(record + 0x04) = saved[1];
@@ -100,7 +100,7 @@ void claimUpTo16FreeWorkRecordsSeedSavedPositionAndDirectionArmCountdown64ThenSt
     index += 1u;
   } while (index < 16u);
 
-  stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0();
+  stepClampHeightDecay();
   work = SPAD_PTR_SLOT(u8, 0x44u);
   *(s32*)(work + 0x0C) = 0x40;
 }

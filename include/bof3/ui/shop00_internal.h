@@ -247,7 +247,7 @@ extern u8 D_8014865D;
  * exchanges this cursor pair with the saved pair D_8014865A/D_8014865D and
  * loads all four cells signed (lb), which is why the three cells below are
  * declared signed; the confirm handler
- * drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection writes the 0x7F
+ * drawSwapSavedSelection writes the 0x7F
  * "no saved slot" sentinel into the saved pair and also reads D_80148658 and
  * D_80148659 zero-extended at two sites. Not owned by the shared map; the
  * generated undefined-symbol list carries the addresses, so no target-map row
@@ -1119,7 +1119,7 @@ void rebuildFieldRecordSlots(u8 arg0);
 /* Shop slot price list of this EMI (lifted: src/bof3/ui/
  * renderShopPriceList.c) called by the sibling phase steps
  * func_801D7380/func_801D7AE4/func_801D7B74/func_801D7CC8/func_801D7D48 and by
- * the confirm step drawShopSlotListThenChargeOnConfirm with the work-block
+ * the confirm step drawListChargeConfirm with the work-block
  * index byte D_80148656[0], the panel origin (0x98, 0x3F), a flag byte and a
  * selected row byte as the fifth (stack) argument. It draws the eight-row item
  * list panel: the shaded backing and frame at that origin, then per slot the
@@ -1706,7 +1706,7 @@ extern void (*D_801E5D68[])(void);
 
 /* Shop screen draw (lifted); called with no arguments by the phase step
  * func_801DE40C, the cursor/confirm handler
- * drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection and the
+ * drawSwapSavedSelection and the
  * sub-step handler func_801DE88C, all of which drop the result, so the call is
  * argument- and return-free at those sites.
  * @source 0x801DF6A8 */
@@ -1714,7 +1714,7 @@ void renderShopListCursors(void);
 
 /* Shop selection swap (lifted: swapSelectionIds.c, 0x801DF478); called with no
  * arguments by the shop cursor/confirm handler
- * drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection when the saved
+ * drawSwapSavedSelection when the saved
  * selection pair D_8014865A/D_8014865D already holds a real selection. It
  * returns the id to publish, or 0xFF when it published none.
  * @source 0x801DF478 */
@@ -1808,7 +1808,7 @@ void func_801E0F78(void);
  * not a recovered callee contract. The address had no prototype in this target
  * before this lift; it is bound with a target-map row and WEAK_SYMBOL_AT.
  * The shop sub-step handler
- * drawShopSavePanelThenWriteSelectedSaveSlotToMemoryCard consumes the returned
+ * drawShopSavePanel consumes the returned
  * value instead of dropping it: it sign-extends the low byte of the result and
  * plays the cue 0x107 when that byte reads -1, on both of its two calls, so the
  * return is declared as a word here and truncated at that call site.
@@ -2020,7 +2020,7 @@ extern u32 shopValueSelectionState;
  * remaining-capacity byte D_801E60FC leaves room for another entry and with 4
  * when that byte is zero, and the sibling handlers
  * armShopValueSubstep, func_801D4E74,
- * drawShopSavePanelThenWriteSelectedSaveSlotToMemoryCard,
+ * drawShopSavePanel,
  * renderIdSubstepTimer and
  * drawShopSavePanelThenCreateSaveSlotOnMemoryCard read
  * or rewrite it as the selected panel action, which takes
@@ -2166,7 +2166,7 @@ extern u8 D_80144FC3;
  * same header row by func_801D7080, which loads it once per digit with `lbu` and
  * splits each load into tens and units. It is the +6 byte of the first 164-byte
  * field record of D_80144968; the phase step
- * drawShopSlotListThenChargeOnConfirm charges 10 per level of a record and
+ * drawListChargeConfirm charges 10 per level of a record and
  * reaches that byte through the owning table (D_80144968[record_offset + 6]),
  * because the original folds the offset into the same `%lo` immediate. Not
  * owned by the shared map, so this target declares it locally and adds a
@@ -2186,7 +2186,7 @@ extern u8 D_80145AD4[];
  * into the payload's "%02d" and its 18 characters end with the two digits of
  * the selected slot, which leaves this byte holding the units digit. The
  * save-write handler
- * drawShopSavePanelThenWriteSelectedSaveSlotToMemoryCard reads it with one
+ * drawShopSavePanel reads it with one
  * `lbu` right after that format, adds 0xD1 to it and publishes the result into
  * the bracket-entry byte D_801E6108, so a units digit of 0..9 becomes the
  * 1-based index 1..10. Only that digit is recovered from the buffer, so the

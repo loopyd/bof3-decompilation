@@ -9,7 +9,7 @@
 extern u8* D_1F800044;
 
 /* @source 0x801F3084 */
-extern void claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084(void);
+extern void claimFourRecordsAround(void);
 
 /* @source 0x801F31C0 */
 extern void func_801F31C0(void);
@@ -19,7 +19,7 @@ extern void func_801F31C0(void);
  *           the scratchpad work object 0x1F800044. It first tests the phase
  *           step byte 0x09 of that object: while it reads zero the four records
  *           of the current phase are still unclaimed, so it calls
- *           claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084
+ *           claimFourRecordsAround
  *           once to claim them. It then increments the step byte, and when the
  *           incremented value reaches 4 it wraps the step byte back to zero and
  *           increments the phase counter byte 0x06, so one phase is counted per
@@ -35,10 +35,10 @@ extern void func_801F31C0(void);
  * @match 100.00
  * @residual none
  */
-void stepWorkRecordPhaseClaimAtStepZeroRunRecordStepAndCountGroupsToByteBWorld01Area05213_801F2DCC(
+void stepWorkRecordPhase(
     void) {
   if (D_1F800044[9] == 0) {
-    claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084();
+    claimFourRecordsAround();
   }
   D_1F800044[9] = D_1F800044[9] + 1;
   if (D_1F800044[9] == 4) {

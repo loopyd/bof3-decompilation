@@ -26,7 +26,7 @@ extern void func_801AFF04(const void* arg0, void* arg1);
  *           the line is drawn in one yellow-family shade, and the packet is
  *           appended with size class 2 and size 0x10 through 0x8014E5A0. The
  *           same five-instruction stamp/corner/tint/append body is the shape
- *           of the flat line emitter drawSemiTransFlatLinePrimWorld04Area17013_801F3774,
+ *           of the flat line emitter renderTransFlatLine,
  *           which differs only in taking its two corners already projected.
  *           Evidence from the original bytes at 0x801F4568: addiu $sp,$sp,-0x30
  *           with sw $s0,0x18, $s1,0x1C, $s2,0x20, $s3,0x24 and $ra,0x28, the

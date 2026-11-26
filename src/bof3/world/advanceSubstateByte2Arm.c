@@ -18,7 +18,7 @@ extern u8* D_1F800044;
 extern u8 g_ScenarioProgress;
 
 void func_801F2ED8(void);
-void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
+void stateActiveRecordsBase(void);
 
 /* @source 0x801F2E2C
  * @behavior Entry 3 of this overlay's byte-1 handler run based at 0x801F3D2C,
@@ -47,7 +47,7 @@ void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
  * @match 100.00
  * @residual none
  */
-void advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenarioProgressThenDrawAndServiceWorld02Area08513_801F2E2C(
+void advanceSubstateByte2Arm(
     void) {
   u8* record;
   u8* progress;
@@ -65,5 +65,5 @@ void advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenario
   }
 
   func_801F2ED8();
-  setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC();
+  stateActiveRecordsBase();
 }

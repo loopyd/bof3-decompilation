@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void drawFramedThreeDigitCounterScenarioScena1200_801F75EC(void);
+void renderFramedDigitCounter(void);
 void func_80196070(void);
 
 /* Shared front-end mode byte in the main executable: the scenario substate
@@ -23,7 +23,7 @@ extern u16 D_80143B90;
  * callWorkByte1State selects with the work
  * object unsigned byte at offset 0x01 scaled by four (entry 0 is the byte-2
  * dispatcher 0x801F71B8 and entry 1 is 0x801F73CC). It first calls
- * drawFramedThreeDigitCounterScenarioScena1200_801F75EC, the next subsegment at
+ * renderFramedDigitCounter, the next subsegment at
  * 0x801F75EC, which gated exact on its own bytes: that body arms a rectangle
  * through func_801F765C at (0x8A, 0x1E) with size 0x2D by 0x14, formats the low
  * byte of the overlay-local halfword D_801FD288 through sprintf with the
@@ -46,8 +46,8 @@ extern u16 D_80143B90;
  * @match 100.00
  * @residual none
  */
-void drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C(void) {
-  drawFramedThreeDigitCounterScenarioScena1200_801F75EC();
+void drawThreeDigitCounter(void) {
+  renderFramedDigitCounter();
   if (D_80143BB0 != 2 && D_80143B90 != 4) {
     func_80196070();
   }

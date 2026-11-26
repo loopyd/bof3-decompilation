@@ -9,7 +9,7 @@ load_address = 0x801d0c00
 
 
 sources = [
-    "src/bof3/world/drawRodListColumnWorld00Area03004_801D7EB0.c",
+    "src/bof3/world/drawRodListColumn.c",
     "src/bof3/world/initializeSelectedColumnCounts.c",
     "src/bof3/world/stateWorkScrollWords.c",
     "src/bof3/world/stateSelectedListPad.c",

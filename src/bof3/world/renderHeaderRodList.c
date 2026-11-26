@@ -14,5 +14,5 @@ void renderHeaderRodList(void) {
 
   WORLD00_AREA030_DRAW_HEADER_AND_STATUS(statusWork, statusMask);
   drawEquipmentGuideColumn(16, 64);
-  drawRodListColumnWorld00Area03004_801D7EB0(164, 64);
+  drawRodListColumn(164, 64);
 }

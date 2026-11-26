@@ -3,7 +3,7 @@
 /* This overlay's trail rebuild at 0x801F2F28: it shifts the 0x20-record trail
  * buffer passed in a0, reprojects every record from the work object published at
  * the scratchpad pointer cell and fills each record's heading and size. */
-void advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28(
+void stateHeadingsAverageAngles(
     u8 *arg0);
 
 /* This overlay's trail renderer, still on its assembled boundary, at 0x801F3258:
@@ -52,7 +52,7 @@ extern u8 *scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
  * called helper, and its entry index 3 is the work-byte-1 value that runs it.
  * The two callees supply the verb pair, the same pair entry 2 at 0x801F2D80
  * uses: 0x801F2F28 is the exact
- * advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28,
+ * stateHeadingsAverageAngles,
  * which records 0x800E4800 as the buffer all four in-image callers pass, and
  * 0x801F3258 is anchored by address because it has no reviewed body. The shrunk
  * halfword is that walk's size seed rather than a trail record field: entry 0
@@ -75,13 +75,13 @@ extern u8 *scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
  * @match 100.00
  * @residual none
  */
-void rebuildAndDrawTrailThenShrinkSizeSeedBy6AndAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2E04(
+void rebuildDrawTrailShrink(
     void) {
   u8 *work;
   u8 countdown;
   u16 seed;
 
-  advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28(
+  stateHeadingsAverageAngles(
       PSX_PTR(u8, 0x800E4800u));
   func_801F3258(PSX_PTR(u8, 0x800E4800u));
   seed = D_800E4B3E;

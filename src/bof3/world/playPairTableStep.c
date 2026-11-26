@@ -42,7 +42,7 @@ extern u8 D_80145E98[];
  * argument back into work byte 0x08.
  * @source 0x801F4A5C
  */
-extern void playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C(
+extern void audioStoreFirstSecond(
     u8* table, u32 index);
 
 /* @source 0x801F49C8
@@ -72,7 +72,7 @@ extern void playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWo
  * @match 100.00
  * @residual none
  */
-void playPairTableStepSelectedByRecordCommandByteUsingSharedByteXor4ThenAdvanceHalfword0aBy1World04Area17413_801F49C8(
+void playPairTableStep(
     void) {
   u32* states;
   u8* work;
@@ -85,7 +85,7 @@ void playPairTableStepSelectedByRecordCommandByteUsingSharedByteXor4ThenAdvanceH
   script = (u8*)states[work[3]];
   offset = *(u16*)(work + 0xA);
   cursor = script + offset;
-  playPairTableStepStoreWorkByte8RequestFirstByteAndCopySecondByteToWorkByte2aWorld04Area17413_801F4A5C(
+  audioStoreFirstSecond(
       D_801F6748[cursor[2]], D_80145E98[0] ^ 4);
   *(u16*)(D_80148210 + 0xA) += 1;
 }

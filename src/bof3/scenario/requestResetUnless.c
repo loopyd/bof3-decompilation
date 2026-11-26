@@ -2,7 +2,7 @@
 
 /* Shared front-end mode byte in the main executable: this handler waits while
  * it reads 2, and the sibling lift
- * drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C
+ * drawThreeDigitCounter
  * (0x801F759C of this overlay) tests the same cell against the same value.
  * @source 0x80143BB0 @kind unknown
  */

@@ -48,7 +48,7 @@
  * offset in the body. The two `-1` failure arms share one block because the
  * source tests the success arm twice (`!= -1`) and leaves the cue and the 0xC
  * arm at the end of the body, where the original also places them. */
-void drawShopSavePanelThenWriteSelectedSaveSlotToMemoryCard(void) {
+void drawShopSavePanel(void) {
   u8* clutCell;
   clutCell = &D_80144952;
 

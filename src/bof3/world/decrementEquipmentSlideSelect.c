@@ -45,7 +45,7 @@ void decrementEquipmentSlideSelect(void) {
 
   work = (u8*)D_1F800044;
   if ((work[7u] & 1u) == 0u) {
-    drawRodListColumnWorld00Area03004_801D7EB0((s16)(164 + work[9u] * 45), 64);
+    drawRodListColumn((s16)(164 + work[9u] * 45), 64);
   } else {
     renderLureListColumn(
         (s16)(164 + work[9u] * 45), 64);

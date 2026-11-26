@@ -22,7 +22,7 @@ extern u8 D_80144034[];
 extern u8 D_801FBFEC;
 extern u8 g_ScenarioProgress;
 
-void armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0(
+void armWindowStepChannels(
     u32 id, u32 frames);
 
 /* Shared front-end record allocator at 0x8014ECAC. */
@@ -162,7 +162,7 @@ void statePrimary7Substeps(void) {
     u16 *countdown;
     u8 *progress;
 
-    armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0(
+    armWindowStepChannels(
         6, 5);
     countdown = &D_80146876;
     if (*countdown != 0) {
@@ -204,7 +204,7 @@ void statePrimary7Substeps(void) {
     u16 *countdown;
     u8 *progress;
 
-    armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0(
+    armWindowStepChannels(
         7, 5);
     countdown = &D_80146876;
     if (*countdown != 0) {
@@ -231,7 +231,7 @@ void statePrimary7Substeps(void) {
   case 6: {
     u16 *countdown;
 
-    armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0(
+    armWindowStepChannels(
         8, 0xA);
     countdown = &D_80146876;
     if (*countdown != 0) {
@@ -263,7 +263,7 @@ void statePrimary7Substeps(void) {
   case 9: {
     u16 *countdown;
 
-    armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0(
+    armWindowStepChannels(
         9, 5);
     countdown = &D_80146876;
     if (*countdown != 0) {

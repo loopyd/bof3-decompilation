@@ -17,7 +17,7 @@ sources = [
     "src/bof3/world/allocatePaletteSlotPayload.c",
     "src/bof3/world/decrementHalfword0SharedByte5.c",
     "src/bof3/world/findFreeWorkRecord4.c",
-    "src/bof3/world/playPairTableStepSelectedByRecordCommandByteUsingSharedByteXor4ThenAdvanceHalfword0aBy1World04Area17413_801F49C8.c",
+    "src/bof3/world/playPairTableStep.c",
     "src/bof3/world/claimSizeHeadingObject.c",
     "src/bof3/world/stateTableSetClear.c",
     "src/bof3/world/spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanceWorkByte1WhenPositionEquals3c8000World04Area17413_801F2CA8.c",

@@ -21,7 +21,7 @@
  *           the current id with the saved id, overwrites every D_801E6244 slot
  *           holding the saved id with the current id, and reports 0xFF. The
  *           0xFF result tells the caller
- *           drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection that
+ *           drawSwapSavedSelection that
  *           there is no new id to publish; every other result is stored into
  *           D_801E6254. Both
  *           slot loops count bytes (u8 counter, bound from the mode scanner

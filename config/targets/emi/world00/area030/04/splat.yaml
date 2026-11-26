@@ -461,8 +461,8 @@ segments:
     - '@behavior: draws one 0x28 by 0x10 AREA030 status-panel cell at the requested origin: submits the inset panel rectangle through drawFramedTexturedPanel with the shared CLUT-bank byte D_80144952 as its trailing argument, selects graphics mode 8/1, then draws the groupIndex-selected spriteBase (groupIndex*4 + 0x1D) at (x, y), the (groupIndex*4 + 0x1E) spriteBase on the y + 0x10 lowerY, four (groupIndex*4 + 0x1F) sprites spaced eight pixels from x + 8 on that lowerY and finally the (groupIndex*4 + 0x20) spriteBase at (x + 0x28, y + 0x10).'
   - - 29360
     - c
-    - drawRodListColumnWorld00Area03004_801D7EB0
-    - '@source: src/bof3/world/drawRodListColumnWorld00Area03004_801D7EB0.c'
+    - drawRodListColumn
+    - '@source: src/bof3/world/drawRodListColumn.c'
     - '@behavior: Draws the AREA030 ROD list column at the requested origin. Walks 128 slot indices and draws records whose byte +0x0E is 11, publishing the selected slot index to work halfword +0x36. The row named by work word +0x0C receives the highlighted drawing while the shared mode byte is two and work byte 7 bit 0 is clear. Counts of two or more are formatted through "*%2d". Publishes the matching-row count to work word +0x18 and bounds an out-of-range upper selection to the last row, or zero when there are no matching rows. Finishes with the panel footer, stretched column and three-character ROD title.'
   - - 30280
     - c

@@ -620,7 +620,7 @@ void drawEquipmentGuideColumn(s16 x, s16 y);
  * and the fixed (16, 64) panel steps call it through that column drawer. */
 void drawStatusBoxPair(s16 x, s16 y);
 void renderListColumnFrame(s16 x, s16 y);
-void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1);
+void drawRodListColumn(s16 arg0, s32 arg1);
 /* Target-local drawer of the AREA030 lure column at 0x801D8364: the fixed
  * (164, 64) panel step and the sliding panel steps call it beside the
  * drawEquipmentGuideColumn equipment column at the same origin row. */

@@ -3,7 +3,7 @@
 /* @source 0x1F800044 @kind unknown */
 extern u8* D_1F800044;
 
-void seedSegmentKeyTableAt801FA2C0ScenarioScena0400_801F747C(void);
+void stateSegmentKeyTable(void);
 
 /* @source 0x801F6D44
  * @behavior Step-0 handler of this overlay's work-byte-1 handler run at
@@ -33,7 +33,7 @@ void seedSegmentKeyTableAt801FA2C0ScenarioScena0400_801F747C(void);
  * @match 100.00
  * @residual none
  */
-void seedWorkFieldsAndSegmentKeyTableSetByte9AndAdvanceWorkByte1ScenarioScena0400_801F6D44(
+void seedWorkFieldsSegment(
     void) {
   u8* work;
   u8* next;
@@ -49,7 +49,7 @@ void seedWorkFieldsAndSegmentKeyTableSetByte9AndAdvanceWorkByte1ScenarioScena040
   *(u32*)(work + 0x2C) = 0x1000000;
   *(u32*)(work + 0x34) = 0x4000;
   *(u32*)(work + 0x38) = 0x2200000;
-  seedSegmentKeyTableAt801FA2C0ScenarioScena0400_801F747C();
+  stateSegmentKeyTable();
   next = D_1F800044;
   next[9] = 8;
   next = D_1F800044;

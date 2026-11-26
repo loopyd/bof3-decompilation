@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0(
+void stepClampHeightDecay(
     void);
 void func_80196070(void);
 
@@ -10,7 +10,7 @@ void func_80196070(void);
  *           holds that address, so the loader dispatches it by address rather
  *           than through a table word.
  *           It first runs the overlay's per-frame record pass
- *           stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0
+ *           stepClampHeightDecay
  *           (0x801F7EC0, no arguments, no result), which walks the 0x80 entries
  *           of the 0x28-byte-stride work table at 0x800E4800, emits the sprite
  *           of every entry whose claim byte at offset 0x25 is set, integrates
@@ -56,12 +56,12 @@ void func_80196070(void);
  * @match 100.00
  * @residual none
  */
-void stepActiveWorkRecordsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0400_801F7CA8(
+void stepActiveWorkRecords(
     void) {
   u8* work;
   s32 count;
 
-  stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0();
+  stepClampHeightDecay();
   work = SPAD_PTR_SLOT(u8, 0x44u);
   count = *(s32*)(work + 0x0C) - 1;
   *(s32*)(work + 0x0C) = count;

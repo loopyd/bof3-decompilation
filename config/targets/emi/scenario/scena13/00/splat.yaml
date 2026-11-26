@@ -36,7 +36,7 @@ segments:
     - stateTintArmCountdown
   - - 804
     - c
-    - decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoHelpersScenarioScena1300_801F6F24
+    - decrementWorkCountdownRamp
   - - 976
     - c
     - callTwoHelpers
@@ -57,7 +57,7 @@ segments:
     - stateTintQueueEnd
   - - 1608
     - c
-    - armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248
+    - armWorkCountdownAdvance
   - - 1696
     - c
     - stateTintRampStep
@@ -68,7 +68,7 @@ segments:
     - func_801F735C
   - - 2116
     - c
-    - resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444
+    - resetInvokeTwoHelpers
   - - 2180
     - asm
     - func_801F7484
@@ -164,8 +164,8 @@ segments:
     - '@behavior: Entry 7 of the nine-entry primary-state handler table at 0x801FBF54 that the exact dispatcher callPrimaryStateHandler3 selects with the shared primary state byte D_80146874 and calls with no arguments, so no in-image jal targets 0x801FA844 and the word at 0x801FBF70 is its only reference: the sub-state switch of the overlay primary state 7 handler. It bounds the shared sub-state byte D_80146875 against 0x1E and dispatches through the thirty-word table at 0x801F6DFC, where sub-states 0x0B..0x13 and 0x1B are the body exit; case 0 releases a front-end record and advances; case 1 clears D_8014832E, queues func_80161C20(0x6F, 0x64, 0x10) and arms countdown 0x96; cases 2, 4, 6 and 9 run the palette ramp at 0x801FAFA0 with (6, 5), (7, 5), (8, 0x0A) and (9, 5) while cases 5 and 8 do not, and each of 2, 4, 5, 6, 8 and 9 decrements the shared countdown D_80146876 and returns while it stays nonzero, then runs its own tail that advances the sub-state and, for 2 and 4, the progress byte; case 3 seeds D_801492D8, D_801492DC and D_8014932C, publishes the func_8019601C selector to D_801FBFEC and fills the 0x74-byte shared record that id indexes with its +0 and +5 bytes and its +0xC, +0x64, +0x68 and +0x6C words; case 9 adds the -0x2AA and 0x200 halfwords and clears D_8014832E once D_80143C40 reads zero; cases 0x0A and 0x1D clear the primary state and sub-state bytes after setting flag bits 0x17 and 0x1A; 0x14 queues func_8015D4F8(0, 0, 0x64, 0x10); 0x15 decrements the countdown and adds 0x50 to D_8014932C, then releases and fills one record at +0 and +5 with 0x87; 0x18 subtracts 0x50 and stores progress 0x32; 0x19 stores 0x240000 and 0x1C8000 in D_80149308 and D_8014930C and runs func_80153DE8 and func_801BFE34(0x288000, 0x1D8000, 0x25); 0x1A runs func_801C7A54(0x25); 0x1C advances progress, runs func_801BE1B0(7) and fills one record at +0 and +5 with 0x86. It takes no arguments, returns nothing and its 0x18-byte frame keeps $ra and $s0.'
   - - 17312
     - c
-    - armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0
-    - '@source: src/bof3/scenario/armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0.c'
+    - armWindowStepChannels
+    - '@source: src/bof3/scenario/armWindowStepChannels.c'
     - '@behavior: Derives the palette fade step total 0x1E * (frames & 0xFF) - 1 from the second argument, stores it in the scratchpad halfword 0x1F800002, publishes the first argument as the shared status halfword 0x801490A8, stores the total minus the shared countdown 0x80146876 in the scratchpad halfword 0x1F800000, and while that difference compares below the total submits one 0x50 by 0x3C func_8014F800 window with the 0x80010002 plus main-RAM offset-table entry selected by the first argument and then steps the palette window through clampPaletteChannels at 0x801FB0B8 below 0x20 and above total minus 0x20, or copies the palette block at exactly 0x20; a difference that no longer compares below the total copies the block only when it still equals the total.'
   - - 17592
     - c

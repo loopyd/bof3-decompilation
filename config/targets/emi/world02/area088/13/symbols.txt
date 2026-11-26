@@ -1,9 +1,9 @@
 scratchpadWorkRecord = 0x1F800044;
 callStateTable58World = 0x801F2C04;
-seedTrailCursorAndSizeThenRebuildAllTrailRecordsResetCountdownAndAdvanceWorkByte1World02Area08813_801F2C48 = 0x801F2C48;
+seedTrailCursorSize = 0x801F2C48;
 func_801F2CE4 = 0x801F2CE4;
-rebuildAndDrawTrailThenAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2D80 = 0x801F2D80;
-rebuildAndDrawTrailThenShrinkSizeSeedBy6AndAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2E04 = 0x801F2E04;
+rebuildDrawTrailAdvance = 0x801F2D80;
+rebuildDrawTrailShrink = 0x801F2E04;
 stateIncrementStateByte = 0x801F2E88;
 stateIncrementStateByte2 = 0x801F2EA8;
 stateIncrementStateByte3 = 0x801F2EC8;

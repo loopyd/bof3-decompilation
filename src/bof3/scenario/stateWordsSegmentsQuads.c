@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_801F75BC(u8 fraction, u8 intensity);
-void drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+void drawFiveTranslucentGouraud(
     u8* record);
 
 /* @source 0x1F800044 @kind unknown */
@@ -26,7 +26,7 @@ extern u8* D_1F800044;
  *           0x10000, +0x34 by 0x2000 and +0x38 by 0x220000; those three updates
  *           are independent, so the original emits the +0x34 store first even
  *           though this source order is what schedules into it. It then passes
- *           the record at the work object's +0x0C to drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084
+ *           the record at the work object's +0x0C to drawFiveTranslucentGouraud
  *           at 0x801F7084; that record pointer is taken before the first call, so
  *           the advance sits in that call's delay slot on the saved register.
  *           After both calls it re-reads the cell and decrements work byte 9 in
@@ -58,7 +58,7 @@ void stateWordsSegmentsQuads(
 
   record = work + 0x0C;
   func_801F75BC(fraction, 0xFF);
-  drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+  drawFiveTranslucentGouraud(
       record);
   if (--D_1F800044[9] == 0) {
     next = D_1F800044;

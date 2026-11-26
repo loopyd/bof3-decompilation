@@ -26,7 +26,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
  * s1,s1,0x44` where the original loads `lw $s1,0x44($s1)`, while the original
  * re-materialises the cell address with its own `lui` before each store. The
  * same spelling measured exact in the world02/area085/13 lift
- * setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC, whose
+ * stateActiveRecordsBase, whose
  * tail stores this cell the same way, and a D_-prefixed address name binds at
  * its own address with no target-map row. */
 extern u8* D_1F800044;
@@ -52,7 +52,7 @@ extern u8* D_1F800044;
  *           `sll`/`addu`/`sll`/`subu`/`sll` chain gives 0x98 per index and the
  *           table base is materialised once into $v1, matching the stride and
  *           base that the exact world02/area085/13 lift
- *           setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC
+ *           stateActiveRecordsBase
  *           indexes with its loop counter and that the exact same-target lift
  *           convergeWorkRecordPairYOverCountdownThenAdvanceWorkByte1ScenarioScena1300_801F7958
  *           indexes with bytes 3 and 4 of this same object. The computed record

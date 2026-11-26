@@ -33,7 +33,7 @@ void stateIndexedBaseService(
  *
  * Statement order, operand forms, offset spelling and declaration style come
  * from the exact same-target step 0x801F6F24
- * (decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoHelpersScenarioScena1300_801F6F24),
+ * (decrementWorkCountdownRamp),
  * whose 0xAC-byte walk of this record differs only in the size and direction of
  * its triplet step, the state byte it stores on expiry and its two callees, and
  * from the exact cross-target mirror 0x801F3A6C

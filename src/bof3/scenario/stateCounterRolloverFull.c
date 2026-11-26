@@ -11,7 +11,7 @@ extern u32 D_8014686C;
 /* Overlay-local counter readout halfword: bit 15 is the random sign
  * stateRandomSign seeds, bits 8..14
  * are the phase count this handler advances and bits 0..7 are the 0..0xC7
- * counter drawFramedThreeDigitCounterScenarioScena1200_801F75EC formats.
+ * counter renderFramedDigitCounter formats.
  * @source 0x801FD288 @kind data
  */
 extern u16 D_801FD288;
@@ -29,7 +29,7 @@ void func_80196070(void);
  * first returns after the shared work-area reset func_80196070 when the shared
  * scenario progress byte g_ScenarioProgress reads 1. Otherwise it reads the
  * overlay-local halfword D_801FD288, whose low byte is the 0..0xC7 counter that
- * drawFramedThreeDigitCounterScenarioScena1200_801F75EC formats and whose bit
+ * renderFramedDigitCounter formats and whose bit
  * 15 is the random sign stateRandomSign
  * seeds: when that low byte already reads 0xC8 or more it only advances the
  * work object's unsigned byte at offset 0x02, which moves the state index of the

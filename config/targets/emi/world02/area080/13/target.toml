@@ -11,12 +11,12 @@ sources = [
     "src/bof3/world/publishModeStatusTable4494.c",
     "src/bof3/world/publishModeStatusTable449.c",
     "src/bof3/world/publishModeStatusTable4498.c",
-    "src/bof3/world/seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50.c",
+    "src/bof3/world/seedPublishedRecordWords.c",
     "src/bof3/world/claimFrontEndSet.c",
     "src/bof3/world/renderFacingAroundPoint.c",
     "src/bof3/world/claimRotationHeadingTrail.c",
     "src/bof3/world/stateAdvanceHalfword.c",
-    "src/bof3/world/publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48.c",
+    "src/bof3/world/publishAdvanceWorkByte1.c",
 ]
 support_sources = [
     "src/bof3/world/stateClearHalfword.c",

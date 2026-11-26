@@ -3,7 +3,7 @@
 /* This overlay's trail rebuild at 0x801F2F28: it shifts the 0x20-record trail
  * buffer passed in a0, reprojects every record from the work object published at
  * the scratchpad pointer cell and fills each record's heading and size. */
-void advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28(
+void stateHeadingsAverageAngles(
     u8 *arg0);
 
 /* Size seed of the trail buffer, the halfword entry 0x1F of the size run the
@@ -62,7 +62,7 @@ extern u8 *scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
  * @match 100.00
  * @residual none
  */
-void seedTrailCursorAndSizeThenRebuildAllTrailRecordsResetCountdownAndAdvanceWorkByte1World02Area08813_801F2C48(
+void seedTrailCursorSize(
     void) {
   u8 *work;
   u8 i;
@@ -73,7 +73,7 @@ void seedTrailCursorAndSizeThenRebuildAllTrailRecordsResetCountdownAndAdvanceWor
   *(u32 *)(work + 0x3C) = 0x3800000;
   D_800E4B3E = 0x60;
   for (i = 0; i < 0x20; i++) {
-    advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28(
+    stateHeadingsAverageAngles(
         PSX_PTR(u8, 0x800E4800u));
   }
   scratchpadWorkRecord[9] = 0;

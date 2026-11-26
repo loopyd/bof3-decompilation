@@ -22,7 +22,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * is zero until this initializer runs. */
 extern u8* D_801F44A0;
 
-void resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834(void);
+void stateClearCursorByte(void);
 
 /* @source 0x801F2C48
  * @behavior Area initializer, entry 0 of the six-word handler run based at
@@ -48,10 +48,10 @@ void resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834(void);
  * Name evidence: the only in-image word naming 0x801F2C48 is entry 0 of the
  * pointer run at 0x801F3DAC, the table the exact dispatcher at 0x801F2C04
  * indexes with the work record state byte at +0x01. The exact sibling
- * resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834 records
+ * stateClearCursorByte records
  * this span as the area initializer that reaches it after priming the shared
  * work words at 0x800E4800 through 0x800E4823, and the exact entry 4 handler
- * seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50
+ * seedPublishedRecordWords
  * reads the D_801F44A0 base this body publishes. The seed, publish, countdown
  * and state-byte roles come from this body's own stores and offsets.
  *
@@ -82,7 +82,7 @@ void resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834(void);
  * @match 100.00
  * @residual none
  */
-void publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48(
+void publishAdvanceWorkByte1(
     void) {
   u8* record;
   u8* work;
@@ -102,7 +102,7 @@ void publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkB
   PSX_REF(u8, 0x800E4822u) = 0x20;
   PSX_REF(u8, 0x800E4823u) = 0;
   PSX_REF(u16, 0x800E4820u) = 0;
-  resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834();
+  stateClearCursorByte();
   work = D_1F800044;
   work[9] = 0x10;
   state = D_1F800044;

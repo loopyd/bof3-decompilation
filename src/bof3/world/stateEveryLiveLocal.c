@@ -53,7 +53,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
  *
  * Statement order, operand forms and the first walk come from the exact
  * world02/area085/13 lift
- * setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC, whose
+ * stateActiveRecordsBase, whose
  * payload span in out/binaries is byte-identical to this one over its first
  * 0x88 bytes: same 0x80146888 table, 0x98 stride, counter masking, up-front
  * cell load into a saved register, byte-0 active test, 5 into byte 0x29, the

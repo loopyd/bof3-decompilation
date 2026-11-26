@@ -18,7 +18,7 @@ extern const char D_801E21CC[]; /* @source 0x801E21CC @kind rodata */
  * @match 100.00
  * @residual none
  */
-void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
+void drawRodListColumn(s16 arg0, s32 arg1) {
   u16 x;
   u16 baseY;
   s32 nameX;
@@ -110,7 +110,7 @@ row_drawn:
     }
   }
   renderListColumnFrame((s16)x, (s16)baseY);
-  drawStretchedPanelColumnWorld00Area03004_801D8248(
+  renderStretchedPanelColumn(
       (s16)(x + 0x80), (s16)(baseY + 0x1C), 0x72);
   drawEncodedTextAt((s16)(x + 0x3A), (s16)(baseY + 7),
                0, 3, (u32)D_801E21CC);

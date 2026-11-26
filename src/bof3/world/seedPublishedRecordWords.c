@@ -2,7 +2,7 @@
 
 void func_801F30B0(u8* record);
 void func_801F31A0(u8* record);
-void drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC(
+void renderFacingAroundPoint(
     u8* record);
 void func_801F3870(void);
 
@@ -75,7 +75,7 @@ extern u8* D_801F44A0;
  * @match 100.00
  * @residual none
  */
-void seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50(
+void seedPublishedRecordWords(
     void) {
   u8* record;
   u8* cursor;
@@ -87,7 +87,7 @@ void seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkB
   *(s32*)(record + 0x18) = D_8014695C;
   func_801F30B0(record);
   func_801F31A0(D_801F44A0);
-  drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC(
+  renderFacingAroundPoint(
       D_801F44A0);
   func_801F3870();
   cursor = D_1F800044;

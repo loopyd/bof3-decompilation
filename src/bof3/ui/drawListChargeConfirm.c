@@ -38,7 +38,7 @@
  * read into a local at the original's load position, which precedes the three
  * arming stores.
  */
-void drawShopSlotListThenChargeOnConfirm(void) {
+void drawListChargeConfirm(void) {
   u8* work;
   s32* value;
   s32 record_offset;

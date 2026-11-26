@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+void drawFiveTranslucentGouraud(
     u8* record);
 
 /* @source 0x1F800044 @kind unknown */
@@ -17,7 +17,7 @@ extern u8* D_1F800044;
  *           that holds byte 1 at 4 runs one step of that countdown.
  *           It loads the work-object pointer from the scratchpad cell
  *           0x1F800044, passes the record at its +0x0C to
- *           drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084
+ *           drawFiveTranslucentGouraud
  *           (that body sets a tpage and a draw mode,
  *           writes eight vertex records from the record's position words at
  *           +0x00/+0x04/+0x08/+0x10/+0x14 and its extent words at
@@ -40,7 +40,7 @@ extern u8* D_1F800044;
  */
 void renderQuadsTickCountdown(
     void) {
-  drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+  drawFiveTranslucentGouraud(
       D_1F800044 + 0xC);
   if (--D_1F800044[9] == 0) {
     D_1F800044[1]++;

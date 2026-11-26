@@ -2,7 +2,7 @@
 
 extern void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 void mathPaletteChannels(u32 intensity);
-void copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164(void);
+void copyPaletteSerial(void);
 
 /* Shared scenario countdown halfword that this overlay's states reload through
  * their own stores. */
@@ -40,7 +40,7 @@ extern u16 D_1F800000[]; /* @source 0x1F800000 @kind data */
  * id and the fade length as its two arguments and returns nothing. Evidence for
  * the shapes: the two stepping callees are the exact siblings
  * mathPaletteChannels (0x801FB0B8) and
- * copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164 (0x801FB164),
+ * copyPaletteSerial (0x801FB164),
  * whose recorded measurements name these two `jal` sites in this range, and the
  * 0x80010000 offset table is the table the sisyou00 header records as an
  * offset base for the func_8014F800 texture handle. A bounded search of the
@@ -64,7 +64,7 @@ extern u16 D_1F800000[]; /* @source 0x1F800000 @kind data */
  * an s32/u32 level local; the last two lost five instructions each and the
  * others kept this residual unchanged.
  */
-void armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0(
+void armWindowStepChannels(
     u32 id, u32 frames) {
   u32 total;
   u32 limit;
@@ -85,12 +85,12 @@ void armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena
     if (remain < 0x20u) {
       mathPaletteChannels(remain & 0xFFu);
     } else if (remain == 0x20u) {
-      copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164();
+      copyPaletteSerial();
     } else if ((s32)(*steps - 0x20u) < (s32)remain) {
       mathPaletteChannels(
           (0x20 - (remain - (*steps - 0x20u))) & 0xFF);
     }
   } else if (D_1F800000[0] == limit) {
-    copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164();
+    copyPaletteSerial();
   }
 }

@@ -1,10 +1,10 @@
 D_8014932A = 0x8014932A;
 dispatchByte1Table3dac = 0x801F2C04;
-publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48 = 0x801F2C48;
+publishAdvanceWorkByte1 = 0x801F2C48;
 func_801F2D34 = 0x801F2D34;
 func_801F2DE0 = 0x801F2DE0;
 func_801F2E7C = 0x801F2E7C;
-seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50 = 0x801F2F50;
+seedPublishedRecordWords = 0x801F2F50;
 func_801F3018 = 0x801F3018;
 func_801F30B0 = 0x801F30B0;
 func_801F31A0 = 0x801F31A0;

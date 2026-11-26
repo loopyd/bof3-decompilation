@@ -11,7 +11,7 @@ sources = [
     "src/bof3/world/callSharedModeTable.c",
     "src/bof3/world/queryFreeRecordByte15.c",
     "src/bof3/world/projectCueCellsProgress.c",
-    "src/bof3/world/stepWorkRecordPhaseClaimAtStepZeroRunRecordStepAndCountGroupsToByteBWorld01Area05213_801F2DCC.c",
+    "src/bof3/world/stepWorkRecordPhase.c",
     "src/bof3/world/stepActiveFlagsNone.c",
 ]
 support_sources = [

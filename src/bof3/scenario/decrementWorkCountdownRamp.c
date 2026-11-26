@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_801F6FF8(void);
-void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
+void stateActiveRecordsSix(
     void);
 
 /* @source 0x801F6F24
@@ -24,7 +24,7 @@ void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
  * the constant the `beqz` delay slot loads), which hands the next frame to table
  * entry 2 (0x801F6FD0, callTwoHelpers). Both arms
  * rejoin at the two overlay helper calls func_801F6FF8 and
- * setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC, made
+ * stateActiveRecordsSix, made
  * in that order with no arguments and with any result discarded, so the pair
  * runs on every call and their `jal` delay slots stay nops. The 0x18-byte frame
  * keeps only $ra at 0x10 across them, and the first pointer-cell load precedes
@@ -43,7 +43,7 @@ void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
  * @match 100.00
  * @residual none
  */
-void decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoHelpersScenarioScena1300_801F6F24(void) {
+void decrementWorkCountdownRamp(void) {
   u32 slot_offset;
   u8 *countdown;
   u8 *work;
@@ -62,5 +62,5 @@ void decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoH
     work[1] = 2;
   }
   func_801F6FF8();
-  setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC();
+  stateActiveRecordsSix();
 }

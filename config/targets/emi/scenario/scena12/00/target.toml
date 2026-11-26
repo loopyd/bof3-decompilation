@@ -8,7 +8,7 @@ splat = "config/targets/emi/scenario/scena12/00/splat.yaml"
 load_address = 0x801F6C00
 
 sources = [
-    "src/bof3/scenario/drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C.c",
+    "src/bof3/scenario/drawThreeDigitCounter.c",
     "src/bof3/scenario/renderFramedDigitCounter.c",
     "src/bof3/scenario/stateUnlessEndRelease.c",
     "src/bof3/scenario/requestFlagUnless.c",

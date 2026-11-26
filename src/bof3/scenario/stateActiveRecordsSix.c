@@ -38,7 +38,7 @@ extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
  *           for the values it stores and tests.
  *
  * Statement order, operand forms and the record walk come from the world02/area085/13
- * lift setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC
+ * lift stateActiveRecordsBase
  * (0x801F2FCC), whose body was measured exact over the same 0x80146888 table,
  * stride, counter masking, scratchpad cell, byte-0 active test, 5 into byte 0x29
  * and the same 0x8014D290 call, differing only by this span's byte 6 == 6 test

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
-u8* findFreeWorkRecordByte25ScenarioScena0400_801F7FF8(void);
-void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0(
+u8* queryFreeRecord(void);
+void stepClampHeightDecay(
     void);
 
 /* @source 0x80147A8C @kind data
@@ -45,7 +45,7 @@ typedef struct {
  *           ring based at 0x800E5C00, which entry 6 at 0x801F77EC fills with
  *           one sampled point per direction around the resident position. Each
  *           turn of the walk claims one free work record through the 0x80-entry
- *           work-table scan findFreeWorkRecordByte25ScenarioScena0400_801F7FF8
+ *           work-table scan queryFreeRecord
  *           (jal at 0x801F7934, delay slot a nop) and leaves the record
  *           untouched when the scan reports none. For a claimed record it
  *           copies the ring base words at +0x00, +0x04, +0x08 and +0x0C into
@@ -65,7 +65,7 @@ typedef struct {
  *           shifted right by eight arithmetic, with the last store filling the
  *           delay slot of the record pass call. It then runs the overlay's
  *           record pass
- *           stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0
+ *           stepClampHeightDecay
  *           (0x801F7EC0, no arguments, no result), re-reads
  *           the work-object cell because the pass may rewrite it, decrements
  *           its countdown word at +0x0C by one, storing it on both arms because
@@ -92,12 +92,12 @@ typedef struct {
  * Shape evidence: statement order, operand forms and the `*(s32*)(record + N)`
  *           spelling follow the exact in-target siblings that claim a work
  *           record from the same 0x800E4800 table
- *           (claimSeedWorkRecordEvery8FramesAndAdvanceWorkByte1AtProgress3ScenarioScena0400_801F7B00,
+ *           (claimSeedWorkRecord,
  *           including the 0x24 / 0x20 / 0x25 store order) and the ring-base
  *           seed group follows the exact entry 6 at 0x801F77EC. The decrement
  *           whose store lands in the guard branch delay slot follows the exact
  *           in-target step handler
- *           stepActiveWorkRecordsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0400_801F7CA8,
+ *           stepActiveWorkRecords,
  *           which ticks the same word. Every offset, bound, shift count and
  *           stored literal comes from this span's own bytes. The clone lever is
  *           declined on a masked payload scan: with the three jal immediate
@@ -119,7 +119,7 @@ typedef struct {
  * @match 100.00
  * @residual none
  */
-void seedWorkRecordsFromSampleRingEvery16StepsTickWorkCountdownAndAdvanceWorkByte1ScenarioScena0400_801F78F4(
+void seedWorkRecordsFrom(
     void) {
   u8* base;
   u8* sample;
@@ -135,7 +135,7 @@ void seedWorkRecordsFromSampleRingEvery16StepsTickWorkCountdownAndAdvanceWorkByt
   if ((*(s32*)(work + 0xC) & 0xF) == 0) {
     i = 0u;
     do {
-      record = findFreeWorkRecordByte25ScenarioScena0400_801F7FF8();
+      record = queryFreeRecord();
       if (record != 0) {
         *(ScenarioScena0400SampleRingBase*)record =
             *(ScenarioScena0400SampleRingBase*)base;
@@ -157,7 +157,7 @@ void seedWorkRecordsFromSampleRingEvery16StepsTickWorkCountdownAndAdvanceWorkByt
   *(s32*)(base + 0x00) = D_80147A8C;
   *(s32*)(base + 0x04) = D_80147A90;
   *(s32*)(base + 0x08) = D_80147A94 >> 8;
-  stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0();
+  stepClampHeightDecay();
   next = SPAD_PTR_SLOT(u8, 0x44u);
   count = *(s32*)(next + 0xC) - 1;
   *(s32*)(next + 0xC) = count;

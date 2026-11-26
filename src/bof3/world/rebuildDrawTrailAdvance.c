@@ -3,7 +3,7 @@
 /* This overlay's trail rebuild at 0x801F2F28: it shifts the 0x20-record trail
  * buffer passed in a0, reprojects every record from the work object published at
  * the scratchpad pointer cell and fills each record's heading and size. */
-void advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28(
+void stateHeadingsAverageAngles(
     u8 *arg0);
 
 /* This overlay's trail renderer, still on its assembled boundary, at 0x801F3258:
@@ -41,7 +41,7 @@ extern u8 *scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
  * naming it is the table word at 0x801F58E4 - so it is a dispatch entry, not a
  * called helper, and its entry index 2 is the work-byte-1 value that runs it.
  * The two callees supply the verb pair: 0x801F2F28 is the exact
- * advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28,
+ * stateHeadingsAverageAngles,
  * whose own metadata records 0x800E4800 as the buffer all four in-image callers
  * pass, and 0x801F3258 is anchored by address because it has no reviewed body.
  * The tail's reload-and-advance pair follows the statement order,
@@ -65,12 +65,12 @@ extern u8 *scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
  * @match 100.00
  * @residual none
  */
-void rebuildAndDrawTrailThenAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2D80(
+void rebuildDrawTrailAdvance(
     void) {
   u8 *work;
   u8 countdown;
 
-  advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28(
+  stateHeadingsAverageAngles(
       PSX_PTR(u8, 0x800E4800u));
   func_801F3258(PSX_PTR(u8, 0x800E4800u));
   work = scratchpadWorkRecord;

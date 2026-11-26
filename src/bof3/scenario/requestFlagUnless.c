@@ -2,7 +2,7 @@
 
 /* Shared front-end mode byte in the main executable: this handler waits while
  * it reads 2, and the sibling lift
- * drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C
+ * drawThreeDigitCounter
  * (0x801F759C of this overlay) tests the same cell against the same value.
  * @source 0x80143BB0 @kind unknown
  */
@@ -45,7 +45,7 @@ void func_80196070(void);
  * the work object unsigned byte at offset 0x01 scaled by four, so it is the
  * handler for that byte reading 5; the neighbours in the same run are the byte-2
  * dispatcher callWorkByte2State (0x801F71B8,
- * entry 0) and drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C
+ * entry 0) and drawThreeDigitCounter
  * (0x801F759C, entry 2). It requests primary scene state 5 with secondary
  * sub-state 0x19, raises bit 8 in the mode halfword D_80146258 and then calls
  * the shared work-area reset func_80196070, but only when three tests all allow

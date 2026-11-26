@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+void drawFiveTranslucentGouraud(
     u8* record);
 void func_801F75BC(u8 fraction, u8 intensity);
 
@@ -18,7 +18,7 @@ extern u8* D_1F800044;
  *           the scratchpad cell 0x1F800044 and advances the two words entry 0
  *           stamped: +0x1C by 0x4000 and +0x34 by 0x10000. It then passes the
  *           record at the work object +0x0C to
- *           drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084
+ *           drawFiveTranslucentGouraud
  *           at 0x801F7084, re-reads the cell to take the countdown byte 9, and
  *           passes it to the five-segment drawer at 0x801F75BC as an intensity
  *           of 0xFF when byte 9 is 8 and otherwise byte 9 scaled by 32 and
@@ -47,7 +47,7 @@ void stateWordsQuadsSegments(
   work = D_1F800044;
   *(u32*)(work + 0x1C) += 0x4000;
   *(u32*)(work + 0x34) += 0x10000;
-  drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+  drawFiveTranslucentGouraud(
       work + 0xC);
   countdown = D_1F800044[9];
   if (countdown != 8) {
