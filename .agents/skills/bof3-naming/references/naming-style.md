@@ -77,6 +77,13 @@ SDK row and a target row. When a lift needs a differently typed view of a mapped
 cell, change the one row's type or leave the spelling alone; do not plan on a
 parallel name.
 
+## Checking the whole tree
+
+`bin/harness naming check --all --summary --jobs 12` sweeps every target against one
+manifest generation in worker processes; `--targets-file FILE` limits it to a list.
+A repository-wide pass that used to take the better part of an hour now finishes in a
+few minutes, and `--summary` prints only the targets that have findings.
+
 ## Applying many rows at once
 
 `bin/harness naming batch --plan ROWS [--apply]` applies a plan file, one row per line

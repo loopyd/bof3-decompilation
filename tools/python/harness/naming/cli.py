@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 from harness.common.cli import add_example_argument, add_root_argument, run_main
-from .inspection import KINDS, check_report, list_report
+from .inspection import KINDS, check_batch, check_report, list_report
 from .rename import (
     apply_group,
     apply_report,
@@ -41,6 +41,42 @@ def read_plan(argument: str) -> list[dict]:
             raise SystemExit(f"{path}:{number}: expected TARGET<TAB>OLD<TAB>NEW")
         rows.append({"target": parts[0], "old": parts[1], "new": parts[2]})
     return rows
+
+
+def check_in_parallel(root, targets: list[str], jobs: int) -> list[dict]:
+    """Check independent targets in worker processes, each with one catalog."""
+    from concurrent.futures import ProcessPoolExecutor
+
+    if jobs <= 1 or len(targets) < 2:
+        return check_batch(root, targets)
+    chunks = [targets[index::jobs] for index in range(jobs)]
+    chunks = [chunk for chunk in chunks if chunk]
+    with ProcessPoolExecutor(max_workers=len(chunks)) as pool:
+        results = list(pool.map(_check_chunk, [(str(root), chunk) for chunk in chunks]))
+    by_target = {}
+    for chunk_reports in results:
+        for report in chunk_reports:
+            by_target[report["scope"]["target"]] = report
+    return [by_target[target] for target in targets if target in by_target]
+
+
+def _check_chunk(job) -> list[dict]:
+    from pathlib import Path
+
+    root, chunk = job
+    return check_batch(Path(root), chunk)
+
+
+def read_targets(path) -> list[str]:
+    from pathlib import Path
+
+    return [line.strip() for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def all_targets(root) -> list[str]:
+    from harness.domain.manifests import load_target_manifests
+
+    return sorted(load_target_manifests(root))
 
 
 def run(args: argparse.Namespace) -> int:
@@ -100,6 +136,26 @@ def run(args: argparse.Namespace) -> int:
                 if args.apply
                 else plan_report(args.root, args.target, args.old, args.new)
             )
+    elif args.action == "check" and (args.all or args.targets_file):
+        targets = all_targets(args.root) if args.all else read_targets(args.targets_file)
+        reports = check_in_parallel(args.root, targets, args.jobs)
+        if args.json:
+            print(json.dumps(reports, indent=2, sort_keys=True))
+            return 0 if all(report["passed"] for report in reports) else 1
+        failed = 0
+        for report in reports:
+            codes: dict[str, int] = {}
+            for finding in report["findings"]:
+                codes[finding["code"]] = codes.get(finding["code"], 0) + 1
+            if not report["passed"]:
+                failed += 1
+            if codes or not args.summary:
+                print(json.dumps({"target": report["scope"]["target"],
+                                  "records": len(report["records"]),
+                                  "passed": report["passed"],
+                                  "findings": codes}, sort_keys=True))
+        print(f"targets={len(reports)} failed={failed}")
+        return 0 if failed == 0 else 1
     elif args.action == "check":
         result = check_report(args.root, args.target, tuple(args.selectors))
     else:
@@ -162,13 +218,21 @@ def build_parser() -> argparse.ArgumentParser:
     for name in ("list", "check", "rename"):
         action = actions.add_parser(name)
         add_root_argument(action)
-        action.add_argument("target", metavar="TARGET")
+        action.add_argument("target", metavar="TARGET", nargs="?" if name == "check" else None)
         action.add_argument("--json", action="store_true")
         if name == "list":
             action.add_argument("--kind", choices=KINDS, default="debt")
             action.add_argument("--limit", type=int)
         elif name == "check":
             action.add_argument("selectors", metavar="SELECTOR", nargs="*")
+            action.add_argument("--all", action="store_true",
+                                help="check every target against one manifest generation")
+            action.add_argument("--targets-file", metavar="FILE",
+                                help="check the targets listed one per line")
+            action.add_argument("--summary", action="store_true",
+                                help="print only the targets that have findings")
+            action.add_argument("--jobs", type=int, default=1,
+                                help="check targets in this many worker processes")
         else:
             action.add_argument("old", metavar="OLD")
             action.add_argument("new", metavar="NEW")

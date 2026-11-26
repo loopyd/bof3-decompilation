@@ -23,6 +23,16 @@ from .preflight import _build_preflight, _request_for_source
 from .status import select_manifests
 
 
+def _canonical(target: str, manifests) -> str:
+    """Resolve one target id against an already loaded catalog."""
+    from ..domain.ids import normalize_target_id
+
+    key = normalize_target_id(target).value
+    if key not in manifests:
+        raise ValueError(f"unknown target: {key}")
+    return key
+
+
 def _finding(
     record: dict, code: str, message: str, *, unavailable: bool = False
 ) -> dict:
@@ -254,12 +264,17 @@ def report(
     check: bool = False,
     selectors: tuple[str, ...] = (),
     limit: int | None = None,
+    manifests: dict[str, TargetManifest] | None = None,
 ) -> dict:
     """Require a target and retain full findings even when presentation is limited."""
     root = root.resolve()
     if limit is not None and (check or limit < 1):
         raise ValueError("a positive --limit is supported only by list")
-    target, manifest = select_manifests(root, (target,))[0]
+    if manifests is None:
+        target, manifest = select_manifests(root, (target,))[0]
+    else:
+        target = parse_function_id(target).target.value if "@" in target else _canonical(target, manifests)
+        manifest = manifests[target]
     selected = {parse_function_id(value) for value in selectors}
     if any(value.target.value != target for value in selected):
         raise ValueError("every selector must belong to the selected target")

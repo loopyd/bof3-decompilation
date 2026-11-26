@@ -23,9 +23,10 @@ KINDS = ("debt", "symbols", "identifiers", "references", "files", "all")
 _IDENTIFIER = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
 
 
-def _target(root: Path, target: str):
+def _target(root: Path, target: str, manifests=None):
     target = normalize_target_id(target).value
-    manifests = load_target_manifests(root)
+    if manifests is None:
+        manifests = load_target_manifests(root)
     if target not in manifests:
         raise ValueError(f"unknown target: {target}")
     return target, manifests[target], manifests
@@ -52,6 +53,20 @@ def _locations(root: Path, manifest, names: set[str]) -> list[dict]:
                     }
                 )
     return rows
+
+
+def check_batch(root: Path, targets: list[str]) -> list[dict]:
+    """Check several targets against one manifest generation.
+
+    A repository-wide sweep otherwise pays for the claim walk and the toolchain
+    handshake once per target; the rows themselves are unchanged.
+    """
+    root = root.resolve()
+    manifests = load_target_manifests(root)
+    reports = []
+    for target in targets:
+        reports.append(check_report(root, target, (), manifests=manifests))
+    return reports
 
 
 def list_report(
@@ -147,9 +162,15 @@ def list_report(
     }
 
 
-def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> dict:
+def check_report(
+    root: Path,
+    target: str,
+    selectors: tuple[str, ...] = (),
+    *,
+    manifests=None,
+) -> dict:
     root = root.resolve()
-    target, manifest, manifests = _target(root, target)
+    target, manifest, manifests = _target(root, target, manifests)
     selected = {parse_function_id(value) for value in selectors}
     if any(value.target.value != target for value in selected):
         raise ValueError("every selector must belong to the selected target")
@@ -176,7 +197,11 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
             {"status": "unavailable", "code": "consumer_inputs", "message": str(error)}
         )
     result = metadata.report(
-        root, target, check=True, selectors=tuple(sorted(consumers)) if selected else ()
+        root,
+        target,
+        check=True,
+        selectors=tuple(sorted(consumers)) if selected else (),
+        manifests=manifests,
     )
     result["findings"].extend(coverage_findings)
     result["operation"] = "naming"
