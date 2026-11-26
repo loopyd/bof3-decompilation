@@ -7,6 +7,6 @@ renderRowIconSprite = 0x801D0F50;
 func_801D1048 = 0x801D1048;
 renderFairySectionRows = 0x801D129C;
 renderPendingNotificationRows = 0x801D14C8;
-func_801D1670 = 0x801D1670;
+renderPanelTileQuad = 0x801D1670;
 renderPanelBackgroundTiles = 0x801D1724;
 D_801D1950 = 0x801D1950;

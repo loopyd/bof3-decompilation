@@ -10,10 +10,10 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * offset load form the original shows. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
-/* Per-mode signed 16-bit pair table of the func_800C34D4 boundary, which holds
+/* Per-mode signed 16-bit pair table of the modeScalePairTable boundary, which holds
  * data rather than code: entry n is read at its first halfword here and at its
  * second halfword through D_800C34D6. */
-extern s16 func_800C34D4[]; /* @source 0x800C34D4 @kind data */
+extern s16 modeScalePairTable[]; /* @source 0x800C34D4 @kind data */
 extern s16 D_800C34D6[]; /* @source 0x800C34D6 @kind data */
 
 extern s32 fixedPointUnitsBoss(s32 value, s32 arg1); /* @source 0x800C3254 */
@@ -61,14 +61,14 @@ void refreshPositionModeScale(void) {
 
   if (((u8 *)g_battle_work)[0x48] != 0) {
     FIELD_REF(u16, g_battle_work, 0x2E) += fixedPointUnitsBoss(
-        func_800C34D4[((u8 *)g_battle_work)[0x1] * 2] * FIELD_REF(u32, g_battle_work, 0x40),
+        modeScalePairTable[((u8 *)g_battle_work)[0x1] * 2] * FIELD_REF(u32, g_battle_work, 0x40),
         FIELD_REF(u32, g_battle_work, 0x40));
     FIELD_REF(u16, g_battle_work, 0x30) += fixedPointUnitsBoss(
         D_800C34D6[((u8 *)g_battle_work)[0x1] * 2] * FIELD_REF(u32, g_battle_work, 0x44),
         FIELD_REF(u32, g_battle_work, 0x44));
   } else {
     FIELD_REF(u16, g_battle_work, 0x2E) += fixedPointUnitsBoss(
-        func_800C34D4[((u8 *)g_battle_work)[0x1] * 2] << 16, 0x10000);
+        modeScalePairTable[((u8 *)g_battle_work)[0x1] * 2] << 16, 0x10000);
     FIELD_REF(u16, g_battle_work, 0x30) += fixedPointUnitsBoss(
         D_800C34D6[((u8 *)g_battle_work)[0x1] * 2] << 16, 0x10000);
   }

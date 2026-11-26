@@ -13,5 +13,5 @@ void callPanelStateTable62(void)
     BattleSelectionDispatchTable handlers;
 
     handlers = D_80096A34;
-    handlers.handlers[D_80148648->state]();
+    handlers.handlers[panelTaskRoot->state]();
 }

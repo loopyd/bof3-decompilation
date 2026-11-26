@@ -2,8 +2,8 @@
 
 extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 extern u8 D_80143BB0; /* @source 0x80143BB0 @kind data */
-extern void func_801F301C(void); /* @source 0x801F301C @kind function */
-extern void func_801F3324(void); /* @source 0x801F3324 @kind function */
+extern void stateGateCueDraw(void); /* @source 0x801F301C @kind function */
+extern void renderDistanceSizedQuad(void); /* @source 0x801F3324 @kind function */
 extern void func_8015DF18(u32 cue_id); /* @source 0x8015DF18 @kind function */
 
 /* @source 0x801F3210
@@ -29,7 +29,7 @@ void incrementNonNegativeDraw(
   half = *(u16*)(work + 0x30) + 0x20;
   *(u16*)(work + 0x30) = half;
   if ((s16)half >= 0) {
-    func_801F301C();
+    stateGateCueDraw();
     resumedWork = scratchpadWorkRecord;
     if (resumedWork[2] == 2) {
       return;
@@ -39,5 +39,5 @@ void incrementNonNegativeDraw(
       func_8015DF18(0x201);
     }
   }
-  func_801F3324();
+  renderDistanceSizedQuad();
 }

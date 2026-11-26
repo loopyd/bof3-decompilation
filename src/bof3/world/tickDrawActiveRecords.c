@@ -3,7 +3,7 @@
 void func_801AFE18(void* arg0); /* @source 0x801AFE18 */
 s32 func_801783C8(s32 arg0);   /* @source 0x801783C8 */
 s32 func_801782FC(s32 arg0);   /* @source 0x801782FC */
-void func_801F3560(u8* record); /* @source 0x801F3560 */
+void renderProjectedRecordSprite(u8* record); /* @source 0x801F3560 */
 
 /* Scratch work pointer cell: the original materialises the cell address and
  * loads the published pointer once for the state byte read below. */
@@ -30,7 +30,7 @@ extern u8* D_801F4A88; /* @source 0x801F4A88 @kind data */
  *           angle helper func_801782FC result of the same shifted byte, itself
  *           shifted left 8, and the byte at +3 again drops by 2. The countdown
  *           byte at +2 then counts down and releases the claim byte at 0 when
- *           it reaches zero, the record is drawn through func_801F3560, and one
+ *           it reaches zero, the record is drawn through renderProjectedRecordSprite, and one
  *           is latched as the result. The cursor advances by 0x18 per record;
  *           the pass returns one when any record was advanced or drawn and zero
  *           when the whole table was unclaimed, which is how its in-payload
@@ -84,7 +84,7 @@ u32 tickDrawActiveRecords(void) {
       if (countdown == 0) {
         D_801F4A88[0] = 0;
       }
-      func_801F3560(D_801F4A88);
+      renderProjectedRecordSprite(D_801F4A88);
       active = 1;
     }
     D_801F4A88 += 0x18;

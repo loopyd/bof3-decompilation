@@ -1,13 +1,13 @@
 #include "bof3/bof3.h"
 
 /* Record ramp and draw step of this overlay: it stores one word of the
- * fixed-point table based at T_801D9688 into 0x801DA088 at the index that the
+ * fixed-point table based at mathFixedPointTable into 0x801DA088 at the index that the
  * signed difference of the work bytes 0x801DA02D and 0x801DA030 clamped to 1
  * through 0x14 gives, saves and ramps the work bytes 0x801DA0A5 through
  * 0x801DA0A7 around its drawing call and then writes the saved bytes back.
  * @source 0x801D2978
  */
-extern void func_801D2978(void);
+extern void rampWorkBytesDraw(void);
 
 /* The overlay's step accumulator, part of the work block 0x801DA028..0x801DA12D:
  * initializeUiRecords clears it while setting up that
@@ -31,7 +31,7 @@ extern u8 D_801DA04E; /* @source 0x801DA04E @kind data */
  *           back and lowering the byte to zero; a word whose low twelve bits are
  *           already zero is left untouched and raises that byte to one. It then
  *           calls the record ramp and draw step
- *           func_801D2978
+ *           rampWorkBytesDraw
  *           with no arguments. Its
  *           only in-image reference is the word 0x801D2C84 at 0x801D9728, entry
  *           2 of the step handler run based at 0x801D9720 that the dispatcher at
@@ -55,5 +55,5 @@ void alignWorkWordStep(void)
         D_801DA04E = 1;
     }
 
-    func_801D2978();
+    rampWorkBytesDraw();
 }

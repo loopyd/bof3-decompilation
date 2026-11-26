@@ -2,7 +2,7 @@
 
 /* Local slot-grid draw routine at 0x801F0274. Its own entry takes no arguments
  * and keeps a 0x38-byte frame; this caller discards its result. */
-extern void func_801F0274(void); /* @source 0x801F0274 */
+extern void renderSlotGrid(void); /* @source 0x801F0274 */
 
 /* Scratchpad work-object pointer cell, shared by this overlay's step handlers.
  * The row lives in this target's map. */
@@ -39,7 +39,7 @@ extern void func_801E5988(void); /* @source 0x801E5988 @kind function */
  */
 void runSlotGridHelper(
     void) {
-  func_801F0274();
+  renderSlotGrid();
   if ((g_battle_work[9] += 1) == 0x70) {
     func_801E5988();
   }

@@ -15,7 +15,7 @@ extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind data */
  * cursor cell at 0x8014598C with one colour on the top edge and the other on
  * the bottom edge, advances that cursor by 0x24 and returns nothing. Splat
  * binds the address through this target's map row. */
-void func_801F5428(s32 color);
+void fillScreenGradient(s32 color);
 
 /* @source 0x801F4C90
  * @behavior Overlay step handler. It re-reads the scratchpad work pointer cell
@@ -52,7 +52,7 @@ void renderScreenRampColor(
   color = 0x10000000u | ((u32)(level / 5 + 6) << 10) |
           ((u32)(level / 5) << 5) | (u32)(5 - (u8)((u32)level / 24));
   D_8014933A = 0;
-  func_801F5428((s32)color);
+  fillScreenGradient((s32)color);
   incCell = workRecordCursor1F800044;
   incCell[9]++;
   gateCell = workRecordCursor1F800044;

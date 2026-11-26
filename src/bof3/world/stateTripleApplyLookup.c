@@ -63,7 +63,7 @@ extern void func_8014D6B8(u32 resource);
  * next step of the same state sequence rather than an unknown callee.
  * @source 0x801F3B98
  */
-extern void func_801F3B98(void);
+extern void stateApplyModeVelocity(void);
 
 /* @source 0x801F3A68
  * @behavior Entry step of this overlay's two-entry state-byte dispatch pair: it
@@ -145,5 +145,5 @@ void stateTripleApplyLookup(
   D_1F800044[0x2A] = 0;
   func_8014D6B8(D_801F43D8[(u32)D_1F800044[6]].resource_02);
   D_1F800044[1] = 1;
-  func_801F3B98();
+  stateApplyModeVelocity();
 }

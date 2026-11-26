@@ -32,10 +32,10 @@ segments:
     - '@behavior: Calls the handler that unsigned work byte 1 selects from a local pair seeded with 0x801EED04 and 0x801EEE50, then publishes each occupied record of the 48-record pool at 0x801F050C as the work object and the record word 0x74 into 0x801EB4E0, runs its byte-1 step through 0x801EF510 and restores both cells.'
   - - 260
     - asm
-    - func_801EED04
+    - resetRecordPoolFlags
   - - 592
     - asm
-    - func_801EEE50
+    - armGateWhileIdle
   - - 668
     - c
     - dispatchStateByte1Table04

@@ -4,7 +4,7 @@ void func_801E567C(void);
 
 /* @source 0x800C2244
  * @behavior Overlay handler referenced by the function-pointer table word at
- * 0x800C35E8 (inside the func_800C34D4 boundary): calls the engine scratch-state
+ * 0x800C35E8 (inside the modeScalePairTable boundary): calls the engine scratch-state
  * reset at 0x801E567C, then repeats its two stores on the scratchpad work object
  * published by the pointer cell at 0x1F800044 - byte +1 = 2, byte +2 = 0.
  * The original materialises the cell address twice (`lui`/`lw` pair at

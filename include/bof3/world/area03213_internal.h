@@ -86,9 +86,9 @@ extern s8 D_801490C7;
 /* @source 0x801F3F6C @kind table — handler table selected by scratch cursor
  * byte 1 at 0x801F2C04; the adjacent table at 0x801F3F80 is the one byte 1
  * selects at 0x801F30A8. */
-extern void (*D_801F3F6C[])(void);
+extern void (*recordHandlerTable[])(void);
 /* @source 0x801F3F80 @kind table */
-extern void (*D_801F3F80[])(void);
+extern void (*scratchHandlerTable[])(void);
 /* @source 0x801F3F8C @kind unknown — local data script that stateArmEffectPair
  * hands to func_801A4D54 while activating the two selected work records. */
 extern u8 D_801F3F8C[];

@@ -60,7 +60,7 @@ segments:
     - func_801EF3A0
   - - 2236
     - asm
-    - func_801EF4BC
+    - renderComposeWorkMatrix
   - - 2412
     - c
     - dispatchStateByte1Table0
@@ -85,10 +85,10 @@ segments:
     - '@behavior: Decrement work byte 9; on zero decrement global work byte 0xB and call helper 0x801E5988.'
   - - 2848
     - asm
-    - func_801EF720
+    - renderFadeTriangleFan
   - - 3584
     - asm
-    - func_801EFA00
+    - renderFadeQuadFan
   - - 4400
     - c
     - dispatchStateByte2Table0
@@ -124,5 +124,5 @@ segments:
     # @behavior Draw eight translucent Gouraud triangles at the radius argument around the work screen pair.
   - - 8348
     - textbin
-    - D_801F0C9C
+    - tablePaletteColorRamp
 - - 8512

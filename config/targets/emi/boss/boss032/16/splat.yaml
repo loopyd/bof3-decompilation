@@ -61,13 +61,13 @@ segments:
     - c
     - publishHooksOwnerRecord
     - '@source: src/bof3/boss/publishHooksOwnerRecord.c'
-    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the unlifted handler func_800C1A08 into 0x801463A4, the battle setup hook publishOwnerRecordResource into 0x801463A8, and the zero-result accessor zeroResult36 into 0x801463AC.'
+    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the unlifted handler installBattleHooks into 0x801463A4, the battle setup hook publishOwnerRecordResource into 0x801463A8, and the zero-result accessor zeroResult36 into 0x801463AC.'
   - - 512
     - c
     - zeroResult36
   - - 520
     - asm
-    - func_800C1A08
+    - installBattleHooks
   - - 1004
     - c
     - publishOwnerRecordResource

@@ -1,7 +1,7 @@
 #include "base/types.h"
 
-extern void func_801F07B0(u32 mode); /* @source 0x801F07B0 @kind function */
-extern void func_801F0164(u32 mode); /* @source 0x801F0164 @kind function */
+extern void renderOffsetTilePair(u32 mode); /* @source 0x801F07B0 @kind function */
+extern void renderSpriteRowQuads(u32 mode); /* @source 0x801F0164 @kind function */
 extern u8* g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* @source 0x801EEE28
@@ -22,8 +22,8 @@ void callPairDecrementRearm(void) {
   u8* rearm;
   u8* step;
 
-  func_801F07B0(2);
-  func_801F0164(2);
+  renderOffsetTilePair(2);
+  renderSpriteRowQuads(2);
   work = g_battle_work;
   if (--work[9] == 0) {
     rearm = g_battle_work;

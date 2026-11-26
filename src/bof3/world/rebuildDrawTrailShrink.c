@@ -10,7 +10,7 @@ void stateHeadingsAverageAngles(
  * it walks the same record buffer and emits the run of fading translucent
  * gouraud fans and semi-transparent G4 quads through the PsyQ primitive
  * cursors. */
-extern void func_801F3258(u8 *arg0); /* @source 0x801F3258 @kind function */
+extern void renderTrailFan(u8 *arg0); /* @source 0x801F3258 @kind function */
 
 /* Size seed of the trail buffer, the halfword entry 0x1F of the size run the
  * 0x801F2F28 walk copies into every record: entry 0 of the work-byte-1 handler
@@ -83,7 +83,7 @@ void rebuildDrawTrailShrink(
 
   stateHeadingsAverageAngles(
       PSX_PTR(u8, 0x800E4800u));
-  func_801F3258(PSX_PTR(u8, 0x800E4800u));
+  renderTrailFan(PSX_PTR(u8, 0x800E4800u));
   seed = D_800E4B3E;
   work = scratchpadWorkRecord;
   seed = (u16)(seed - 6);

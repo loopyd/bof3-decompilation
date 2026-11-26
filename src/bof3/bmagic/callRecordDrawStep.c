@@ -37,7 +37,7 @@ extern void renderRotatedPublishedCenter(
     void); /* @source 0x801EFCD8 @kind function */
 extern void renderRotatedSpokesCenter(
     s32 arg0, s32 arg1); /* @source 0x801EF80C @kind function */
-extern void func_801EFA40(s32 arg0, s32 arg1); /* @source 0x801EFA40 @kind function */
+extern void dispatchRecordStepHandler(s32 arg0, s32 arg1); /* @source 0x801EFA40 @kind function */
 
 /* @source 0x801EF37C
  * @behavior Dispatches one frame of this overlay's work record and then runs
@@ -71,7 +71,7 @@ void callRecordDrawStep(void) {
     if (((u16 *)D_801F17B0)[6] & 3u) {
       renderRotatedSpokesCenter(
           (u16)(D_80143E6C >> 1), D_801F17B0[6]);
-      func_801EFA40((u16)((D_80143E6C >> 1) + 4),
+      dispatchRecordStepHandler((u16)((D_80143E6C >> 1) + 4),
                     D_801F17B0[6] + (D_801F17B0[6] >> 1));
     }
   }

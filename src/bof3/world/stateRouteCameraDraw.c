@@ -8,7 +8,7 @@ extern s32 D_80145EC4; /* @source 0x80145EC4 @kind data */
 extern s32 D_80145EC8; /* @source 0x80145EC8 @kind data */
 extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 extern s32 func_8015B5D4(u32 bank, s32 index); /* @source 0x8015B5D4 @kind function */
-extern void func_801F3324(void); /* @source 0x801F3324 @kind function */
+extern void renderDistanceSizedQuad(void); /* @source 0x801F3324 @kind function */
 
 /* @source 0x801F2EDC
  * @behavior Clears work halfword 0x30 and probes flag 0x0F in bank 0x80144ED0.
@@ -43,5 +43,5 @@ void stateRouteCameraDraw(void) {
       work[2] = 3;
     }
   }
-  func_801F3324();
+  renderDistanceSizedQuad();
 }

@@ -18,5 +18,5 @@ checkHitsAnyBox = 0x801F3CF0;
 dispatchWorkByte1Handler = 0x801F3E14;
 storeWorkCursorDistance = 0x801F3E58;
 drawWorkCursorQuad = 0x801F3EA4;
-func_801F3EEC = 0x801F3EEC;
+drawProjectedQuad = 0x801F3EEC;
 D_801F41F8 = 0x801F41F8;

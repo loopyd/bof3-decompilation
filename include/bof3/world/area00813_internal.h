@@ -100,7 +100,7 @@ extern World00Area008Handler modeHandlerTable[];
  * @kind: table — 15 area-state mode handler pointers. */
 extern World00Area008Handler areaModeHandlerTable[];
 /* @source 0x801F46EC @kind unknown */
-extern World00Area008Handler D_801F46EC[];
+extern World00Area008Handler workByte1HandlerTable[];
 
 /* Shared primitive cursor (PsyQ SDK global, owned by the main exe). A named
  * symbol (not a fixed-address macro) so codegen emits the symbol-relative

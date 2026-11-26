@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x801F31BC @kind function */
-extern void func_801F31BC(void);
+extern void renderSignedScaleQuads(void);
 
 /* @source 0x801F2FE0
  * @behavior Word 2 of all three state-byte-2 handler runs this payload carries,
@@ -49,5 +49,5 @@ void stateAdvanceWorkCall31(
   if ((s16)offset >= 0x80) {
     work[2]++;
   }
-  func_801F31BC();
+  renderSignedScaleQuads();
 }

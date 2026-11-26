@@ -20,7 +20,7 @@ extern void (*D_801FCFE0[])(void);
  * scales it by four and dispatches through the overlay-local handler table at
  * 0x801FCFE0, so that byte selects which of the overlay's primary-state entries
  * runs this frame (slots 0 and 6 are the exact handlers
- * noopPrimarySlot and func_801FC690, the latter being
+ * noopPrimarySlot and stateStartSceneSix, the latter being
  * reached through the record dispatcher to request state 6). It reads no state
  * other than that byte and writes none, takes no arguments and returns nothing
  * of its own, and its 0x18-byte frame exists only to hold $ra across the

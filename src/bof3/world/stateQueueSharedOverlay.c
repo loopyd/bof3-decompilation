@@ -15,7 +15,7 @@ extern u8 D_80143BB0; /* @source 0x80143BB0 @kind data */
 extern void func_8015DF18(u16 cue); /* @source 0x8015DF18 */
 
 /* @source 0x801F31BC @kind function */
-extern void func_801F31BC(void);
+extern void renderSignedScaleQuads(void);
 
 /* @source 0x801F36FC
  * @behavior Entry 1 of the state-byte-2 handler run based at 0x801F4AA0 of this
@@ -71,5 +71,5 @@ void stateQueueSharedOverlay(
     work = *(u8**)SPAD_ADDR(u8, 0x44u);
     work[2]++;
   }
-  func_801F31BC();
+  renderSignedScaleQuads();
 }

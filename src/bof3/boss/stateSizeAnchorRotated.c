@@ -24,7 +24,7 @@ void func_8015DF18(u32 cue_id); /* @source 0x8015DF18 */
  * (0x340, 0x100) through GetTPage, takes the drawn quad's size from record
  * words +0x0C/+0x10, its anchor from +0x18/+0x1C and its spin from the byte it
  * is handed, and gives the quad the 0xBF-by-0x68 texture UV rectangle. */
-void func_800C23D4(u8 spin); /* @source 0x800C23D4 */
+void renderSpinQuad(u8 spin); /* @source 0x800C23D4 */
 
 /* @source 0x800C1A78
  * @behavior Rotating-quad step of this overlay: it runs the shared readiness
@@ -90,6 +90,6 @@ void stateSizeAnchorRotated(
   FIELD_REF(s32, work, 0x1Cu) = anchor_y;
   FIELD_REF(u8, record, 0x24u) |= 0x88u;
   func_8015DF18(0x602u);
-  func_800C23D4(D_1F800044[9]);
+  renderSpinQuad(D_1F800044[9]);
   D_1F800044[3]++;
 }

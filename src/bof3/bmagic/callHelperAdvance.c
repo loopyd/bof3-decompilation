@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
-extern void func_801EF348(void); /* @source 0x801EF348 @kind function */
+extern void fillScreenTranslucent(void); /* @source 0x801EF348 @kind function */
 
 /* @source 0x801EF260
  * @behavior Tests unsigned scratchpad work-object byte 9 against 12. Below
@@ -17,7 +17,7 @@ extern void func_801EF348(void); /* @source 0x801EF348 @kind function */
  */
 void callHelperAdvance(void) {
   if (g_battle_work[9] < 12) {
-    func_801EF348();
+    fillScreenTranslucent();
     g_battle_work[9] += 4;
   } else {
     g_battle_work[2]++;

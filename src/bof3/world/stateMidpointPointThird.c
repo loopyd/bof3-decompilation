@@ -6,7 +6,6 @@
  * first fourteen rows of that table and hands each one to the shared
  * three-word projector at 0x801AFF04. Only the part this step proves is
  * modelled.
- * @source 0x801F3D80 @kind table
  */
 typedef struct World03Area14413Point {
   s32 x;
@@ -15,7 +14,7 @@ typedef struct World03Area14413Point {
   s32 unk_0C;
 } World03Area14413Point;
 
-extern World03Area14413Point D_801F3D80[];
+extern World03Area14413Point pointRowsTable[]; /* @source 0x801F3D80 @kind table */
 
 /* @source 0x801F376C
  * @behavior Componentwise midpoint of three point rows of this overlay's own
@@ -48,7 +47,7 @@ extern World03Area14413Point D_801F3D80[];
  */
 void stateMidpointPointThird(
     u8 arg0, u8 arg1, u8 arg2) {
-  D_801F3D80[arg2].x = (D_801F3D80[arg0].x + D_801F3D80[arg1].x) >> 1;
-  D_801F3D80[arg2].y = (D_801F3D80[arg0].y + D_801F3D80[arg1].y) >> 1;
-  D_801F3D80[arg2].z = (D_801F3D80[arg0].z + D_801F3D80[arg1].z) >> 1;
+  pointRowsTable[arg2].x = (pointRowsTable[arg0].x + pointRowsTable[arg1].x) >> 1;
+  pointRowsTable[arg2].y = (pointRowsTable[arg0].y + pointRowsTable[arg1].y) >> 1;
+  pointRowsTable[arg2].z = (pointRowsTable[arg0].z + pointRowsTable[arg1].z) >> 1;
 }

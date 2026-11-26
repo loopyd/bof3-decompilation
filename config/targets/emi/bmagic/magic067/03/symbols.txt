@@ -28,4 +28,4 @@ stateBytesAdvance = 0x801F03EC;
 callAdvanceSet = 0x801F043C;
 callHelperWrapper = 0x801F0498;
 func_801F04B8 = 0x801F04B8;
-func_801F04D8 = 0x801F04D8;
+workByte2HandlerTable = 0x801F04D8;

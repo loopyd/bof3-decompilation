@@ -82,7 +82,7 @@ extern u8 D_80144F28;
 /* @source 0x801F3AB4 @kind table */
 extern void (*handlerTable[])(void);
 /* @source 0x801F3ABC @kind table */
-extern void (*D_801F3ABC[])(void);
+extern void (*handlerTable2[])(void);
 
 void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 u8   func_8019601C(void);
@@ -107,7 +107,7 @@ void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);
 
 /* @source 0x8015DF18 @kind unknown — shared frontend cue dispatcher called by
- * the local work-table seeder func_801F2C74 with cue id 0x206. */
+ * the local work-table seeder seedTrailRecords with cue id 0x206. */
 void func_8015DF18(u16 arg0);
 
 /* @source 0x8015C088 — shared front-end startup helper run by this area.
@@ -129,24 +129,24 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
  * declare the same prototype (it is absent from the shipped headers). */
 void func_801A4BC0(s16 x, s16 y, u32 size);
 
-void func_801F2E3C(void* arg0);
+void projectTrailHead(void* arg0);
 void emitTrailStrip(const void* arg0);
 /* @source 0x80196070 — shared work-area reset helper this area's work-trail
  * stepper calls when its scratch-work countdown reaches zero. */
 void func_80196070(void);
-void func_801F304C(void* arg0);
+void fillProjectedTrail(void* arg0);
 void emitMarkerPair(void);
-void func_801F33A8(void);
+void renderAnchorMarker(void);
 POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2);
-void func_801F3618(void);
-void func_801F3650(void);
-void func_801F3690(void);
-void func_801F36D0(void);
-void func_801F3710(void);
+void stateArmStage2(void);
+void stateProgress5Or6(void);
+void stateProgress91Or90(void);
+void stateProgress92Or93(void);
+void claimRecordSlot(void);
 /* @source 0x801F376C — queues the 2x3 shared world-marker block of this area. */
-void func_801F376C(void);
+void queueMarkerBlock(void);
 /* @source 0x801F37E4 — runs this area's five-step shared front-end startup. */
-void func_801F37E4(void);
+void stateStartupSequenceFirst(void);
 
 #define WORLD00_AREA027_WORK_BASE     PSX_PTR(World00Area027Work, 0x800e4800u)
 #define WORLD00_AREA027_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)

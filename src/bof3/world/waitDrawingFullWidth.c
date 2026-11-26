@@ -27,7 +27,7 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
  * and `8 * byte9` in its second, so the first argument is the quantity this
  * function passes at full value 0x80 and the second is the paired offset it
  * passes as zero. */
-void func_801F3768(u32 arg0, u32 arg1); /* @source 0x801F3768 */
+void renderBandColumns(u32 arg0, u32 arg1); /* @source 0x801F3768 */
 
 /* @source 0x801F368C
  * @behavior State-byte-2 handler of this overlay: word 1 of the payload's
@@ -55,5 +55,5 @@ void waitDrawingFullWidth(
     D_1F800044[9] = 0;
     D_1F800044[2]++;
   }
-  func_801F3768(0x80, 0);
+  renderBandColumns(0x80, 0);
 }

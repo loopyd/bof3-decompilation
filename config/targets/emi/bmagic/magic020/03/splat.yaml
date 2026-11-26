@@ -132,5 +132,5 @@ segments:
     - '@source: src/bof3/bmagic/renderFullscreenFifteenGraph.c'
   - - 4792
     - textbin
-    - D_801EFEB8
+    - outerHandlerTable
 - - 4813

@@ -1,7 +1,7 @@
 callCompanionHandler = 0x800F500C;
-func_800F5048 = 0x800F5048;
-func_800F50B4 = 0x800F50B4;
-func_800F510C = 0x800F510C;
+dispatchPhasePanelSetup = 0x800F5048;
+enterFrontendModePhase = 0x800F50B4;
+restartPhaseOnGate = 0x800F510C;
 handlerTable = 0x800F71F0;
 D_800F723C = 0x800F723C;
 D_800F7240 = 0x800F7240;

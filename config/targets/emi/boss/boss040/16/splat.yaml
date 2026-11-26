@@ -103,5 +103,5 @@ segments:
     - noopHandler43
   - - 796
     - textbin
-    - D_800C1B1C
+    - stateHandlerPointerTable
 - - 936

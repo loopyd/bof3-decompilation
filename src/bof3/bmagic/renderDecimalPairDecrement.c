@@ -1,7 +1,7 @@
 #include "base/types.h"
 
-extern void func_801F07B0(u32 mode); /* @source 0x801F07B0 @kind function */
-extern void func_801F0164(u32 mode); /* @source 0x801F0164 @kind function */
+extern void renderOffsetTilePair(u32 mode); /* @source 0x801F07B0 @kind function */
+extern void renderSpriteRowQuads(u32 mode); /* @source 0x801F0164 @kind function */
 extern void renderGreyDecimalLeft(u8 value);
 extern u8* g_battle_work; /* @source 0x1F800044 @kind data */
 
@@ -22,9 +22,9 @@ void renderDecimalPairDecrement(void) {
   u8* work;
   u8* step;
 
-  func_801F07B0(0);
+  renderOffsetTilePair(0);
   renderGreyDecimalLeft(g_battle_work[0xA]);
-  func_801F0164(0);
+  renderSpriteRowQuads(0);
   work = g_battle_work;
   if (--work[9] == 0) {
     step = g_battle_work;

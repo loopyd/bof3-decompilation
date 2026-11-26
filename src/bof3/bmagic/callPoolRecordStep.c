@@ -15,7 +15,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* Record pool of this overlay at 0x801F050C: 48 records of stride 0x78, the
  * pool reserveFirstFreeRecord claims from and the
- * asm row func_801EED04 clears at the same stride. Byte 0 of each record is the
+ * asm row resetRecordPoolFlags clears at the same stride. Byte 0 of each record is the
  * in-use flag this sweep tests and the word at 0x74 of each record holds the
  * work pointer stored there when the record was claimed. The flags read
  * re-materialises this base, while the word-0x74 read folds the same base and
@@ -33,8 +33,8 @@ extern u8 D_801F050C[]; /* @source 0x801F050C @kind data */
  * func_801E5988. No jal and no pointer word in this payload names 0x801EEC04, so
  * the overlay loader is its only caller and both handler roles stay structural;
  * both entries take no arguments and return nothing. */
-extern void func_801EED04(void); /* @source 0x801EED04 @kind function */
-extern void func_801EEE50(void); /* @source 0x801EEE50 @kind function */
+extern void resetRecordPoolFlags(void); /* @source 0x801EED04 @kind function */
+extern void armGateWhileIdle(void); /* @source 0x801EEE50 @kind function */
 
 /* This target's byte-1 step dispatcher at 0x801EF510, defined in
  * src/bof3/bmagic/magic14403DispatchTables.c: it calls the handler that the
@@ -65,7 +65,7 @@ extern void callStateByte1Handlers(void); /* @source 0x801EF510 @kind function *
  */
 void callPoolRecordStep(
     void) {
-  void (*handlers[2])(void) = {func_801EED04, func_801EEE50};
+  void (*handlers[2])(void) = {resetRecordPoolFlags, armGateWhileIdle};
   u8 *record;
   u8 *saved_work;
   u8 *saved_pointer;

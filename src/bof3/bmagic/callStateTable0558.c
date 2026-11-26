@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
-extern u8 *D_801F20DC; /* @source 0x801F20DC @kind data */
-extern void (*D_801F0558[])(void); /* @source 0x801F0558 @kind data */
+extern u8 *stateWorkRecordPointer; /* @source 0x801F20DC @kind data */
+extern void (*tableStageHandlers[])(void); /* @source 0x801F0558 @kind data */
 
 /* @source 0x801EF710
  * @behavior Dispatches the current work record through the local handler table
@@ -13,5 +13,5 @@ extern void (*D_801F0558[])(void); /* @source 0x801F0558 @kind data */
  * @residual none
  */
 void callStateTable0558(void) {
-    D_801F0558[D_801F20DC[1]]();
+    tableStageHandlers[stateWorkRecordPointer[1]]();
 }

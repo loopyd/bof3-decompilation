@@ -8,7 +8,7 @@ typedef void (*Boss03816Handler)(void);
  * are the inert handlers of this overlay, and entry 3 = 0x800C1980 is the step
  * setup that publishes this overlay's step handler and raises its work state to
  * 2. The base is the eighteenth word of the thirty-five-word in-image code
- * pointer run the textbin row D_800C1C10 covers (0x800C1C10 to 0x800C1C9C), so
+ * pointer run the textbin row tableStepDataRow covers (0x800C1C10 to 0x800C1C9C), so
  * it binds as its own data symbol rather than a row boundary, as the run stays
  * one reviewed row. The generated undefined_syms_auto.txt row for D_800C1C54
  * already binds the word the scaled index is added to, so this declaration

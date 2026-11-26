@@ -5,7 +5,7 @@ typedef void (*Boss03416StepHandler)(u8 index);
 /* This overlay's reviewed data row at 0x800C26B8, the `textbin` row that ends
  * the segment and spans 0x800C26B8 through 0x800C277B. This function publishes
  * the row base into the work record. */
-extern u8 D_800C26B8; /* @source 0x800C26B8 @kind data */
+extern u8 stateStepDataTable; /* @source 0x800C26B8 @kind data */
 
 /* Word +0x0C of that same row, the byte run 0x00 0x06 0x00 0x06 followed by
  * 0xFFFFFFFF, inside the five-word record that opens the row: not a row
@@ -58,7 +58,7 @@ void func_8014D978(void);
 void publishWorkStepPair(void) {
   u8 *work = D_801EB4E8;
 
-  FIELD_REF(void *, work, 0xECu) = &D_800C26B8;
+  FIELD_REF(void *, work, 0xECu) = &stateStepDataTable;
   FIELD_REF(Boss03416StepHandler, work, 0xE4u) =
       callIndexedHandler37;
   FIELD_REF(void *, work, 0xE8u) = &D_800C26C4;

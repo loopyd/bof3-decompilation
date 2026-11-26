@@ -29,7 +29,7 @@ extern void func_8015DF18(u16 cue);
  * literals.
  * @source 0x801F4158 @kind function
  */
-extern void func_801F4158(s32 index, s8 mode);
+extern void setEntryPairMode(s32 index, s8 mode);
 
 /* @source 0x801F40D8
  * @behavior Byte-2 state handler reached through the handler run based at
@@ -68,8 +68,8 @@ extern void func_801F4158(s32 index, s8 mode);
  *
  * Shape evidence: the exact sibling 0x801F38A4 fixes the named-cell accessor,
  * the halfword read-modify-write, the sign test on the stored halfword and the
- * cue gate; the exact neighbour 0x801F3DB0 fixes the `func_801F4158(0, 1)` and
- * `func_801F4158(1, 2)` call pair and its argument placement.
+ * cue gate; the exact neighbour 0x801F3DB0 fixes the `setEntryPairMode(0, 1)` and
+ * `setEntryPairMode(1, 2)` call pair and its argument placement.
  * @status exact
  * @match 100.00
  * @residual none
@@ -89,6 +89,6 @@ void decrementFrontendPhasePair(
     work = workRecordCursor1F800044;
     work[2] = 1;
   }
-  func_801F4158(0, 1);
-  func_801F4158(1, 2);
+  setEntryPairMode(0, 1);
+  setEntryPairMode(1, 2);
 }

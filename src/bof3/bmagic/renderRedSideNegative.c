@@ -56,7 +56,7 @@ typedef struct BmagicMagic15003EffectTransform {
   s16 radius;
 } BmagicMagic15003EffectTransform;
 
-extern BmagicMagic15003EffectTransform T_801EFA9C; /* @source 0x801EFA9C @kind data */
+extern BmagicMagic15003EffectTransform effectOriginState; /* @source 0x801EFA9C @kind data */
 
 /* @source 0x801EF040
  * @behavior Draws this overlay's effect band as a ring of sixteen translucent
@@ -118,7 +118,7 @@ void renderRedSideNegative(
 
   phase = 0;
   i = 0;
-  transform = &T_801EFA9C;
+  transform = &effectOriginState;
   do {
     prim = (POLY_F4 *)g_PrimCursor;
     func_8017A9A4(prim);

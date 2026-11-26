@@ -66,10 +66,10 @@ segments:
     - func_801EF108
   - - 1368
     - asm
-    - func_801EF158
+    - renderRecordStep
   - - 2948
     - asm
-    - func_801EF784
+    - applyRecordTransform
   - - 3124
     - c
     - callStateTable0080
@@ -89,7 +89,7 @@ segments:
     - '@behavior: Entry 2 of this overlay three-address work-byte-2 handler table based at 0x801F0080, so it runs while the work object byte 2 holds 2. It runs the target-local slot-grid draw routine at 0x801EF984 through a 0x18-byte frame that keeps only the return address, then adds one to the scratchpad work-object byte at offset 0x9 modulo 256 and tests that truncated byte for equality with 0x80, and only on that match invokes the shared battle helper at 0x801E5988; takes no arguments and returns nothing.'
   - - 3460
     - asm
-    - func_801EF984
+    - renderAcceptedSlots
   - - 4296
     - c
     - renderUpGreyPer

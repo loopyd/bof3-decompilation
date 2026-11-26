@@ -2,7 +2,7 @@
 
 /*
  * Handler run based at 0x801F0CA4, the run this dispatcher selects from. It is
- * the tail of the reviewed `textbin` row D_801F0C98: that row holds fourteen
+ * the tail of the reviewed `textbin` row substateHandlerTable: that row holds fourteen
  * code pointers from 0x801F0C98 through 0x801F0CD0 before the scalar 0x60, and
  * 0x801F0CA4 is its fourth word, so this dispatcher's base is entry 3 of the
  * run while entry 0 is 0x801EEC94. The extern is declared at the indexed word

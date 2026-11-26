@@ -135,7 +135,7 @@ segments:
     - '@behavior: Scans the overlay work record array at 0x801F13B4 in order, widening an unsigned 16-bit index for the 0x1C-byte stride, and returns as soon as a record byte 0 is non-zero, which marks a record the local helper at 0x801F03D8 has already claimed by storing 1 there. When all 0xC0 records the unsigned bound allows are still unclaimed, reads the shared battle work record pointer at 0x801EB4E0 once, clears bit 0 of its byte 0xB at byte width, and calls the shared helper at 0x801E5988 with that store in the call delay slot. The payload pointer word at 0x801EEC6C, offset 0x6C of the run based at 0x801EEC04, is its only in-image reference, so it consumes no arguments and its result is unused; the 0x18-byte frame only keeps $ra at 0x10.'
   - - 6104
     - asm
-    - func_801F03D8
+    - resourceClaimWorkRecord
   - - 6216
     - c
     - callWorkRecordHandler
@@ -202,5 +202,5 @@ segments:
   - [9912, c, textDiagonalOffsetCoordinates] # @source 0x801F12B8 @behavior Converts diagonal offsets to valid nonzero map-cell coordinates or writes zero bytes.
   - - 10124
     - textbin
-    - D_801F138C
+    - tablePartyPositionOffsets
 - - 15544

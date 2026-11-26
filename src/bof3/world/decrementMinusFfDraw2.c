@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F3324(void);
+void renderDistanceSizedQuad(void);
 
 /* @source 0x801F3114
  * @behavior Byte-2 state handler entry 2 of the six-entry handler table based
@@ -33,5 +33,5 @@ void decrementMinusFfDraw(
   if ((s16)half < -0xFF) {
     work[2]++;
   }
-  func_801F3324();
+  renderDistanceSizedQuad();
 }

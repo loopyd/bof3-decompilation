@@ -3,7 +3,7 @@
 typedef void (*BossBoss05116Handler)(void);
 
 /* Handler run this dispatcher selects from, based at 0x800C1DFC, the 0x4C-byte
- * offset inside the data row that the Splat `textbin` row D_800C1DB0 places at
+ * offset inside the data row that the Splat `textbin` row stateDispatchTable places at
  * the end of this payload. Its three in-payload words are this overlay's inert
  * handlers 0x800C19FC, 0x800C1A04 and 0x800C1A0C, and the payload ends one word
  * past the last entry at 0x800C1E08, so this declaration binds only the word the

@@ -5,7 +5,7 @@ extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind data */
 
 /* Overlay screen-gradient helper; each packed five-bit channel becomes 0xF8
  * when the supplied word is -1. */
-extern void func_801F5428(s32 color);
+extern void fillScreenGradient(s32 color);
 
 /* Main-executable cue dispatcher, also used by this overlay's other steps. */
 extern void func_8015DF18(u16 cue);
@@ -25,7 +25,7 @@ extern void func_8015DF18(u16 cue);
 void renderScreenWhiteQueue(
     void) {
   D_8014933A = 0;
-  func_801F5428(-1);
+  fillScreenGradient(-1);
   func_8015DF18(0x202);
   func_8015DF18(0x200);
   workRecordCursor1F800044[9] = 0;

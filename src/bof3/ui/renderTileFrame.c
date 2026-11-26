@@ -25,7 +25,7 @@ extern void func_801AF2A0(s16 x, s16 y, u8 sprite_id, u8 flags);
  *           at (x, y), 0x2A at the right x and y, 0x2D at x and the bottom y,
  *           and 0x2F at the right x and the bottom y. Both counts are read as
  *           bytes, so a zero count skips its edge walk while the four corners
- *           are always drawn. The panel routine func_801D2304 of this same
+ *           are always drawn. The panel routine renderMasterListPanel of this same
  *           payload, an asm row this lift does not claim, is the one in-payload
  *           caller: the jal at 0x801D2390 loads the signed x and y into $a0 and
  *           $a1 and the constants 0x1A and 0x10 into $a2 and $a3, which fixes

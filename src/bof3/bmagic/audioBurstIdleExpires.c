@@ -8,7 +8,7 @@
  * offset-2 halfword, (rand() & 0xFF) << 4 into the offset-4 halfword and 8 into
  * the offset-6 halfword. One call therefore starts an eight-step burst in every
  * idle slot, with radius scale 0x300 and a random angle. */
-extern void func_801EF6F8(void); /* @source 0x801EF6F8 */
+extern void startIdleBurstSlots(void); /* @source 0x801EF6F8 */
 
 /* Slot step routine at 0x801EF8EC, still an asm row in this target's Splat
  * listing. It walks the same 8-record run 0x801EFAB4, and for each active record
@@ -17,7 +17,7 @@ extern void func_801EF6F8(void); /* @source 0x801EF6F8 */
  * the radius scale by -0x60, clears the offset-0 halfword when that scale reaches
  * zero, and returns 1 in $v0 when any record was active. This span ignores that
  * answer, so the call's return value is unused here. */
-extern u32 func_801EF8EC(void); /* @source 0x801EF8EC */
+extern u32 stepBurstSlots(void); /* @source 0x801EF8EC */
 
 /* Scratchpad work-object pointer cell 0x1F800044, shared by all overlays and
  * bound as g_battle_work by this target's own map row and spelled the same way
@@ -51,8 +51,8 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  */
 void audioBurstIdleExpires(
     void) {
-  func_801EF6F8();
-  func_801EF8EC();
+  startIdleBurstSlots();
+  stepBurstSlots();
   if (--g_battle_work[9] == 0) {
     g_battle_work[1]++;
   }

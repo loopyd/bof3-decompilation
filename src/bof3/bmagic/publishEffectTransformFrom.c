@@ -26,7 +26,7 @@ extern u8 *D_801EC2E0; /* @source 0x801EC2E0 @kind unknown */
  * burst radius at +0x12 and the fan angle at +0x14, which the handlers
  * 0x801EEE24, 0x801EEEC4 and 0x801EEF80 then ramp. +0x0C is written by nothing
  * in this overlay's image and stays unnamed. */
-extern s32 T_801EFA9C; /* @source 0x801EFA9C @kind data */
+extern s32 effectOriginState; /* @source 0x801EFA9C @kind data */
 
 extern s32 D_801EFAA0; /* @source 0x801EFAA0 @kind data */
 
@@ -96,7 +96,7 @@ void publishEffectTransformFrom(
   u8 *record;
 
   record = D_801EC2E0;
-  T_801EFA9C = *(s32 *)(*(u8 **)(record + 0x74) + 0x34) + 0x14000;
+  effectOriginState = *(s32 *)(*(u8 **)(record + 0x74) + 0x34) + 0x14000;
   D_801EFAA0 = *(s32 *)(*(u8 **)(record + 0x74) + 0x38);
   D_801EFAA4 = *(s32 *)(*(u8 **)(record + 0x74) + 0x3C) + 0x2C00000;
   D_801EFAAC = 0;

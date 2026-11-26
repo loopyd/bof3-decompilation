@@ -4,14 +4,14 @@
  * 0x801DA0A5 through 0x801DA0A7 on its own frame, raises 0xA5 and 0xA6 by three
  * times the step byte 0x801DA02E up to a ceiling of 0xFF, and lowers 0xA7 by
  * the same amount down to a floor of zero. It then stores one word of the
- * fixed-point table based at T_801D9688 into 0x801DA088 at the index that the
+ * fixed-point table based at mathFixedPointTable into 0x801DA088 at the index that the
  * signed difference of the work bytes 0x801DA02D and 0x801DA030 clamped to 1
- * through 0x14 gives, calls the overlay drawing routine func_801D2308 with the
+ * through 0x14 gives, calls the overlay drawing routine renderRecordSprite with the
  * work record at 0x801DA048, and writes the three saved bytes back before
  * returning.
  * @source 0x801D2978
  */
-extern void func_801D2978(void);
+extern void rampWorkBytesDraw(void);
 
 /* The overlay's step accumulator, part of the work block 0x801DA028..0x801DA12D:
  * initializeUiRecords clears it while setting up that
@@ -26,7 +26,7 @@ extern u32 D_801DA0B4; /* @source 0x801DA0B4 @kind data */
  *           then runs the shared step: it takes the unsigned word at 0x801DA0B4,
  *           adds 0x20 to it and stores it back in the call's delay slot before
  *           calling the record ramp and draw step
- *           func_801D2978
+ *           rampWorkBytesDraw
  *           with no arguments. Its
  *           only in-image reference is the word 0x801D2C50 at 0x801D9724, entry
  *           1 of the step handler run based at 0x801D9720, and no jal in this
@@ -44,5 +44,5 @@ void advanceWorkWordStep(void)
     u32 *workWord = &D_801DA0B4;
 
     *workWord += 0x20;
-    func_801D2978();
+    rampWorkBytesDraw();
 }

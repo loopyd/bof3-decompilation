@@ -4,7 +4,7 @@
 extern u8* workRecordCursor1F800044;
 
 /* @source 0x801F4158 @kind function */
-extern void func_801F4158(s32 index, s8 mode);
+extern void setEntryPairMode(s32 index, s8 mode);
 
 /* @source 0x801F3F54
  * @behavior Reads the scratchpad work pointer at 0x1F800044, adds 0x10 to
@@ -26,6 +26,6 @@ void stateAdvanceCallPair(void) {
   if ((s16)offset >= 0x80) {
     work[2]++;
   }
-  func_801F4158(0, 0);
-  func_801F4158(1, 3);
+  setEntryPairMode(0, 0);
+  setEntryPairMode(1, 3);
 }

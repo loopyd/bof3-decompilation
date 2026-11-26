@@ -2,8 +2,8 @@
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void (*tableHandlerByte2C[])(void); /* @source 0x801F0384 @kind data */
-extern void func_801EF1C8(void); /* @source 0x801EF1C8 @kind function */
-extern void func_801F01A8(void); /* @source 0x801F01A8 @kind function */
+extern void applyWorkProjectedTransform(void); /* @source 0x801EF1C8 @kind function */
+extern void renderTranslucentTriangle(void); /* @source 0x801F01A8 @kind function */
 
 /* @source 0x801F0038
  * @behavior Dispatch the handler indexed by work byte 2 through the table at
@@ -23,8 +23,8 @@ void callByte2ProjectDraw(
     void) {
   tableHandlerByte2C[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
-    func_801EF1C8();
-    func_801F01A8();
+    applyWorkProjectedTransform();
+    renderTranslucentTriangle();
     PopMatrix();
   }
 }

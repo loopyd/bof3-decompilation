@@ -38,7 +38,7 @@ void func_80196070(void);
  *
  * Name evidence: the only in-image reference to 0x801D13F4 is the word at
  * 0x801D3938, which is word 8 of the nine-word code-pointer run based at
- * D_801D3918 (the overlay entry func_801D0C04 shifts work byte +0x1 left by two
+ * stepHandlerTable (the overlay entry func_801D0C04 shifts work byte +0x1 left by two
  * and indexes that base), so this body is entry 8 of the run and no other site
  * names it. The decay, draw and reset roles come from this body's own literals
  * and offsets: +0x2E is the unsigned work halfword the exact siblings

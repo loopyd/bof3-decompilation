@@ -5,7 +5,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 D_80144F5A; /* @source 0x80144F5A @kind unknown */
 extern s16 D_80145EBE; /* @source 0x80145EBE @kind unknown */
 extern s16 D_80145EC0; /* @source 0x80145EC0 @kind unknown */
-extern u8 D_801F398C[]; /* @source 0x801F398C @kind table */
+extern u8 tablePartyModeBytes[]; /* @source 0x801F398C @kind table */
 
 /* Shared front-end record allocator and seeder at 0x8015CB18: takes the next
  * free 0x74-byte record index from func_8019601C and fills record byte +0 = 1,
@@ -49,7 +49,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * D_80144F5A the first of the three shared party-id bytes at 0x80144F5A
  * through 0x80144F5C, so base, selected table byte and the +0x2E/+0x30
  * halfwords all belong to one party member. The table is this payload's
- * byte-entry mode table at the head of the D_801F398C textbin region, which the
+ * byte-entry mode table at the head of the tablePartyModeBytes textbin region, which the
  * neighbouring handlers 0x801F34D4 and 0x801F3554 index the same way, so it
  * binds at the region start. The scratchpad cell is re-read after the call, so
  * the index lands in the record the callee saw rather than in the u8* copy
@@ -60,7 +60,7 @@ void publishBaseSeedRecord(
   u8 result;
 
   D_1F800044 = D_80145E90;
-  result = func_8015CB18(4, 0, D_801F398C[D_80144F5A], D_80145EBE, D_80145EC0);
+  result = func_8015CB18(4, 0, tablePartyModeBytes[D_80144F5A], D_80145EBE, D_80145EC0);
   if (result != 0xFF) {
     D_1F800044[0xB] = result;
   }

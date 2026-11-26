@@ -11,12 +11,12 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * and whose entry 1 is 0x801F2C90 (advance byte 9 by two). Both words are code
  * pointers, and this overlay entry indexes the run with the work record's own
  * byte 2. */
-extern void (*D_801F3554[])(void); /* @source 0x801F3554 @kind data */
+extern void (*tableStepHandlers[])(void); /* @source 0x801F3554 @kind data */
 
 /* Step consumer of this overlay, the span that follows this entry. It takes the
  * work record's step byte in $a0 and moves it into a saved register, so the
  * parameter is a byte value. */
-extern void func_801F2CB0(u8 step); /* @source 0x801F2CB0 */
+extern void stateConsumeStepByte(u8 step); /* @source 0x801F2CB0 */
 
 /* @source 0x801F2C04
  * @behavior Overlay entry of the world03 area142 step handler. The leading two
@@ -45,6 +45,6 @@ extern void func_801F2CB0(u8 step); /* @source 0x801F2CB0 */
  */
 void
 callRunStepConsumer(void) {
-  D_801F3554[D_1F800044[2]]();
-  func_801F2CB0(D_1F800044[9]);
+  tableStepHandlers[D_1F800044[2]]();
+  stateConsumeStepByte(D_1F800044[9]);
 }

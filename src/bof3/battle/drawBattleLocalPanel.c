@@ -6,11 +6,11 @@
  * that same name would let the compiler keep the address in a callee-saved
  * register across the draw calls that follow. The record itself is wider than
  * PanelTask: this function also reads the size bytes at +0x08/+0x09. */
-#undef D_80148648
+#undef panelTaskRoot
 /* The header declares the cell as PanelTask*, which stops at +0x08; this
  * function also reads the size bytes at +0x08/+0x09, so it views the same cell
  * through BattlePanelBoxTask. */
-#define BATTLE_PANEL_BOX ((BattlePanelBoxTask *)D_80148648)
+#define BATTLE_PANEL_BOX ((BattlePanelBoxTask *)panelTaskRoot)
 
 /* @source 0x800B0498
  * @behavior Draws the battle local panel: the box pass for the panel origin

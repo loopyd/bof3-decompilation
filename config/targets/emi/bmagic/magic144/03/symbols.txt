@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 callPoolRecordStep = 0x801EEC04;
-func_801EED04 = 0x801EED04;
-func_801EEE50 = 0x801EEE50;
+resetRecordPoolFlags = 0x801EED04;
+armGateWhileIdle = 0x801EEE50;
 dispatchStateByte1Table04 = 0x801EEE9C;
 func_801EEEE0 = 0x801EEEE0;
 func_801EEF68 = 0x801EEF68;

@@ -67,7 +67,7 @@ segments:
     - func_801EF3D4
   - - 2112
     - asm
-    - func_801EF440
+    - renderComposeWorkMatrix
   - - 2288
     - asm
     - func_801EF4F0
@@ -137,7 +137,7 @@ segments:
     - func_801F026C
   - - 5836
     - asm
-    - func_801F02CC
+    - renderFadeGouraudQuads
   - - 7012
     - c
     - stateModeRestoreMode

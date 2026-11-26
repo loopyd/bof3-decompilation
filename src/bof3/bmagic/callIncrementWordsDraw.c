@@ -18,7 +18,7 @@ extern void (*D_801EFAA8[])(void); /* @source 0x801EFAA8 @kind data */
 /* Local draw routine: picks the draw-mode argument from GetGraphType, sets
  * draw mode, semi-transparency and one POLY_G4 packet and runs the matrix
  * helper at 0x801782FC twelve times. */
-extern void func_801EF330(void); /* @source 0x801EF330 @kind function */
+extern void decrementCountdownInvoke(void); /* @source 0x801EF330 @kind function */
 
 /* @source 0x801EF158
  * @behavior Entry 1 of the ten-pointer handler table at 0x801EFA9C. Reads the
@@ -40,6 +40,6 @@ void callIncrementWordsDraw(void) {
   if (g_battle_work[0] != 0) {
     *(s32 *)(g_battle_work + 0xC) += 1;
     *(s32 *)(g_battle_work + 0x10) += 1;
-    func_801EF330();
+    decrementCountdownInvoke();
   }
 }

@@ -29,14 +29,14 @@ extern u8 D_80145F09[];
 extern u8 D_80146384;
 
 /* Panel label strings in this overlay's own data tail, the 132-byte textbin
- * D_801F0B64 at 0x801F0B64: "WEAK" at 0x801F0B64, "EXP" at 0x801F0B6C, a
+ * textWeakLabel at 0x801F0B64: "WEAK" at 0x801F0B64, "EXP" at 0x801F0B6C, a
  * four-byte cell holding the single glyph code 0x60 at 0x801F0B70, "ITEM" at
  * 0x801F0B74, "POINT" at 0x801F0B7C, a four-byte cell holding the single glyph
  * code 0x5C at 0x801F0B88 and the twelve-glyph 0x5C rule at 0x801F0B8C. Every
  * one of these is a glyph-code string for the two text helpers below.
  * @source 0x801F0B64 @kind string
  */
-extern u8 D_801F0B64[];
+extern u8 textWeakLabel[];
 
 /* @source 0x801F0B6C @kind string */
 extern u8 D_801F0B6C[];
@@ -109,7 +109,7 @@ void renderNameResultLabels(void) {
   func_801EF590(&D_80145F04[*sel * 0x140], 0x70, 0x30);
   D_80145F09[*sel * 0x140] = party;
   renderStringPixelPen(
-      D_801F0B64, 0x5A, 0x44);
+      textWeakLabel, 0x5A, 0x44);
   renderStringPixelPen(
       D_801F0B7C, 0x80, 0x44);
   func_801EF590(D_801F0B8C, 0x70, 0x50);

@@ -16,14 +16,14 @@ extern s8 D_80146870; /* @source 0x80146870 @kind bss */
  * the call site, which widens every argument with andi 0xFFFF/0xFFFF/0xFF/0xFF,
  * not a recovered callee contract.
  * @source 0x801D44C0 */
-extern void func_801D44C0(s32 x, s32 y, s32 kind, s32 mode);
+extern void renderSpritePrimShade(s32 x, s32 y, s32 kind, s32 mode);
 
 /* @source 0x801D460C
  * @behavior Sprite wrapper of the SHISU overlay: when the kind byte equals 4
  *           and the shared scenario state byte 0x80146870, read with a signed
  *           byte load, is at least 8, it replaces that kind with 0xB. It then
  *           widens both unsigned 16-bit coordinates and both byte arguments and
- *           forwards them to the sprite emitter func_801D44C0 with no other
+ *           forwards them to the sprite emitter renderSpritePrimShade with no other
  *           work; its 0x18-byte frame only keeps $ra at 0x10 across that call.
  *           The span has exactly two references in this payload, the jal sites
  *           at 0x801D3844 inside func_801D3320 and at 0x801D7164 inside
@@ -42,5 +42,5 @@ void renderSpriteKindSubstitution(u16 x, u16 y, u8 kind, u8 mode)
     {
         kind = 0xB;
     }
-    func_801D44C0(x, y, kind, mode);
+    renderSpritePrimShade(x, y, kind, mode);
 }

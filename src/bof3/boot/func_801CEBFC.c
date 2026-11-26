@@ -17,7 +17,7 @@
  * live comparison is instruction- and byte-exact.
  */
 void func_801CEBFC(void) {
-  func_801CEDA4();
+  rampCdMixDown();
   func_801D2294();
   func_801CFEA4(0, 0);
   func_801D02BC(D_801EB44C, 0x200);

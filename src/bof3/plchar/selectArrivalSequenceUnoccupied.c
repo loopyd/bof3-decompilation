@@ -49,7 +49,7 @@ u32 func_8014D8D4(u8 route);
  *           payload: its address appears once in the payload's bytes, as word
  *           0x801CF654 at 0x801D0884, entry 11 of the twenty-four-entry
  *           code-pointer run based at 0x801D0858, which is still the textbin
- *           span func_801D0858, and no jal of this payload names it, so the
+ *           span workByte2HandlerTable, and no jal of this payload names it, so the
  *           loader that copies the run or a shared-EXE table that reads it is
  *           the caller, and its argument roles stay structural: it takes no
  *           arguments and returns nothing. The work byte 0x07 is the

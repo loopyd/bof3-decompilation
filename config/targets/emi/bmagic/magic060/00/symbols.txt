@@ -33,4 +33,4 @@ callStateByte2Table0 = 0x801F07E8;
 submitStoreEffectIncrement = 0x801F082C;
 incrementCountersParityCounter = 0x801F08B8;
 decrementCountersParityPublished = 0x801F09E0;
-D_801F0B64 = 0x801F0B64;
+textWeakLabel = 0x801F0B64;

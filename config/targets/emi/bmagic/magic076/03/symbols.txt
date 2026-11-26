@@ -21,6 +21,6 @@ growProjectDecayAccumulate = 0x801EFC30;
 incrementDecayAccumulateParity = 0x801EFD60;
 func_801EFEA8 = 0x801EFEA8;
 renderRadiiTwentySigned = 0x801F00FC;
-func_801F03D4 = 0x801F03D4;
+resourceReserveEntrySlot = 0x801F03D4;
 stateClearWorkBytes2 = 0x801F0438;
 workByte1HandlerTable = 0x801F0488;

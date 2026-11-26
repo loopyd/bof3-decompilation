@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F2F78(s32 *point); /* @source 0x801F2F78 @kind function */
+void drawProjectedQuad(s32 *point); /* @source 0x801F2F78 @kind function */
 
 /* @source 0x801F2F30
  * @behavior Entry 1 of the two-entry step dispatch table based at 0x801F34E8,
@@ -30,5 +30,5 @@ void renderWorkCursorQuad(void) {
   point[0] = *(s32 *)(work + 0x34);
   point[1] = *(s32 *)(work + 0x38);
   point[2] = *(s32 *)(work + 0x3C);
-  func_801F2F78(point);
+  drawProjectedQuad(point);
 }

@@ -10,7 +10,7 @@ void stateHeadingsAverageAngles(
  * it walks the same record buffer and emits the run of fading translucent
  * gouraud fans and semi-transparent G4 quads through the PsyQ primitive
  * cursors. */
-extern void func_801F3258(u8 *arg0); /* @source 0x801F3258 @kind function */
+extern void renderTrailFan(u8 *arg0); /* @source 0x801F3258 @kind function */
 
 /* Work-record pointer cell of the shared scratchpad, this target's map row for
  * 0x1F800044. It stays unqualified: every store in this body goes through a
@@ -72,7 +72,7 @@ void rebuildDrawTrailAdvance(
 
   stateHeadingsAverageAngles(
       PSX_PTR(u8, 0x800E4800u));
-  func_801F3258(PSX_PTR(u8, 0x800E4800u));
+  renderTrailFan(PSX_PTR(u8, 0x800E4800u));
   work = scratchpadWorkRecord;
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;

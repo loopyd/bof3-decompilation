@@ -17,7 +17,7 @@ typedef struct Boss05116PublishWork {
  * The second pointer this publisher installs, 0x800C1DBC, is the +0xC word of
  * that same row, the record 0x01060006, and not a row boundary, so it is
  * referenced as its own data symbol rather than as a row start. */
-extern u8 D_800C1DB0; /* @source 0x800C1DB0 @kind data */
+extern u8 stateDispatchTable; /* @source 0x800C1DB0 @kind data */
 extern u8 D_800C1DBC; /* @source 0x800C1DBC @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -65,7 +65,7 @@ void publishWorkStepFlag2(
   Boss05116PublishWork *work = (Boss05116PublishWork *)D_801EB4E8;
   u8 *state;
 
-  work->data_row = &D_800C1DB0;
+  work->data_row = &stateDispatchTable;
   work->step_handler = callIndexedHandler15;
   work->step_data = &D_800C1DBC;
   state = SPAD_PTR_SLOT(u8, 0x44u);

@@ -9,7 +9,7 @@ typedef void (*Boss03113Handler)(void);
  * 0x80146884 and the scratchpad work-record cursor 0x1F800044, requests
  * resource 1 and then sets the work record byte at offset 0x2A. The third is an
  * inert accessor returning a zero result, which the void slot type drops. */
-void func_800C1A08(void); /* @source 0x800C1A08 */
+void dispatchBattleSetupHook(void); /* @source 0x800C1A08 */
 void publishOwnerRequestResource(
     void); /* @source 0x800C1A6C */
 s32 zeroResult35(void); /* @source 0x800C1A00 */
@@ -23,7 +23,7 @@ extern Boss03113Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C19C8
  * @behavior Publishes this overlay's handler trio into the shared battle hook
- * slots: func_800C1A08 into 0x801463A4, the battle setup hook
+ * slots: dispatchBattleSetupHook into 0x801463A4, the battle setup hook
  * publishOwnerRequestResource
  * into 0x801463A8, and the zero-result accessor
  * zeroResult35 into 0x801463AC; that accessor's s32 result
@@ -44,7 +44,7 @@ extern Boss03113Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * `jr $ra`/`nop` tail are equal.
  */
 void publishHooksOwnerRequest(void) {
-  D_801463A4 = func_800C1A08;
+  D_801463A4 = dispatchBattleSetupHook;
   D_801463A8 = publishOwnerRequestResource;
   D_801463AC = (Boss03113Handler)zeroResult35;
 }

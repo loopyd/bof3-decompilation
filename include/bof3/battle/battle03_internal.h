@@ -172,7 +172,7 @@ typedef struct Battle03EnemyWork {
   u8                       unk_02;
   u8                       unk_03;
   u8                       unk_04;
-  /* func_801E2A88 returns byte unk_05 in its default arm and tests halfword
+  /* selectEnemyResultByte returns byte unk_05 in its default arm and tests halfword
    * unk_80 in cases 1 and 4. Both use the folded D_801EB630 record base. */
   u8                       unk_05;
   u8                       pad_06[0x77];
@@ -200,7 +200,7 @@ typedef struct Battle03EnemyWork {
   /* unk_94 proven by the initDeferredBattlerCountdown path */
   u16                      unk_94;
   u8                       pad_96[0xa];
-  /* unk_a0 proven by the func_801E97A8 ratio path */
+  /* unk_a0 proven by the computePanelRatioByte ratio path */
   u16                      unk_a0;
   u8                       pad_a2[8];
   /* unk_aa below 2 forces the target mode byte 0x80146375 to 0 while
@@ -217,7 +217,7 @@ typedef struct Battle03EnemyWork {
   u8                       unk_f0;
   u8                       pad_f1[4];
   u8                       unk_f5;
-  /* unk_f6 indexes the D_801CA718 kind table in func_801E2A88; the original
+  /* unk_f6 indexes the D_801CA718 kind table in selectEnemyResultByte; the original
    * reads it as lhu %lo(D_801EB726)($at). */
   u16                      unk_f6;
   /* unk_f8/unk_fa/unk_fc proven by the resetFlag80Countdown reset path */
@@ -604,7 +604,7 @@ extern u8               D_801EB068[];
  * D_801EB638 family binds the D_801EB630 record bytes. */
 extern u8               D_801EB0B0[]; /* @source 0x801EB0B0 @kind unknown */
 extern u8               D_801EB0B1[]; /* @source 0x801EB0B1 @kind unknown */
-/* Y deltas of the queued-slot position pairs recomposed by func_801E8DD8: the
+/* Y deltas of the queued-slot position pairs recomposed by deriveQueuedDrawPosition: the
  * first-three-record table pair is selected by record byte +0x79 and the enemy
  * class byte at 0x801EB710 selects the 0x88-byte D_800E40CB row. Each is bound as
  * its own flat symbol because the original reaches them symbol-relative. */
@@ -967,13 +967,13 @@ void resetEnemyScratchState(void);
 void raiseBit80AllocSlot(void);
 void clearQueuedSlotBytes(void);
 void requestFrontSelectorState1(void);
-void enterFrontendMode4(void);
+void enterFrontendMode(void);
 void resetAllQueuedSlots(void);
 void renderRollDigitRun(u8 arg0);
 u8   checkWorkStatusPair(void);
-void func_801E8DD8(void);
+void deriveQueuedDrawPosition(void);
 u8   selectNextMaskBit(void);
-void func_801E97A8(void);
+void computePanelRatioByte(void);
 void renderPanelActivateTask(void);
 void queueModeDependentEvent(void);
 void queueScriptEvent(u32 arg0, u32 arg1);
@@ -987,7 +987,7 @@ void drawSpriteAbrFull(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
 void renderSpritePrim8X8(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u8 arg4);
 void renderSpritePrimFt4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 u8   pickRandomUnblockedId(u8 arg0);
-u8   func_801E2A88(u8 arg0);
+u8   selectEnemyResultByte(u8 arg0);
 u8   pickLowestEnemyId(void);
 u8   pickTargetByMode(u8 arg0);
 u8   pickLowestLocalSlot(void);
@@ -1295,7 +1295,7 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_DISPATCH_QUEUED_RESULT(index)                                   \
   PSX_PTR(const volatile Battle03Handler, 0x801eb270u + ((u32)(index) * 4u))
 
-/* Offset/position tables for queued-slot rendering (func_801E8DD8). */
+/* Offset/position tables for queued-slot rendering (deriveQueuedDrawPosition). */
 /* +0x03 byte of each 0x88-byte class record; non-volatile so GCC keeps the
  * constant as the load displacement (`lui $at; addu $at,idx,$at; lbu %lo`). */
 #define BATTLE_CLASS_BYTE_0C0CE(b)                                             \

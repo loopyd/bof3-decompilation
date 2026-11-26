@@ -31,7 +31,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
  * 0x801F1640, selected by the work-object level byte 0xB minus one, so row n
  * occupies the bytes at 0x801F1640 + n * 2 and 0x801F1641 + n * 2, read as a
  * level lookup. The table base sits at word 4 of the 0x14-byte textbin run
- * D_801F1630 that follows the code, whose generated undefined-syms row already
+ * workByte1WordTable that follows the code, whose generated undefined-syms row already
  * names it, so the run stays one row and no target-map row is added. The first
  * two rows read 4/3 and 3/2. */
 extern u8 D_801F1640[][2]; /* @source 0x801F1640 @kind data */

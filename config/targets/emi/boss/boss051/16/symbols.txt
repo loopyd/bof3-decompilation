@@ -1,5 +1,5 @@
 D_1F800044 = 0x1F800044;
-D_800C1804 = 0x800C1804;
+stateStepHandlerTable = 0x800C1804;
 callStateByte1Table11 = 0x800C1814;
 publishWorkStepFlag2 = 0x800C1858;
 callStateByte2Table8 = 0x800C18BC;
@@ -19,4 +19,4 @@ stateClassRowOffset = 0x800C1B14;
 func_800C1BF0 = 0x800C1BF0;
 pollBattleReadyRequest = 0x800C1CE4;
 raiseInvokeHelperBoss = 0x800C1D7C;
-D_800C1DB0 = 0x800C1DB0;
+stateDispatchTable = 0x800C1DB0;

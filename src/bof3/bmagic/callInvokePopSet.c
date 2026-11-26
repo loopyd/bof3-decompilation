@@ -4,9 +4,9 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void (*D_801F05EC[])(void); /* @source 0x801F05EC @kind data */
 
 /* @source 0x801EF1A8 */
-extern void func_801EF1A8(void);
+extern void renderWorkObjectMatrix(void);
 /* @source 0x801EF508 */
-extern void func_801EF508(void);
+extern void renderWorkObjectVolume(void);
 
 /* @source 0x801EF808
  * @behavior Dispatches the handler indexed by unsigned work byte 2 from the
@@ -27,8 +27,8 @@ void callInvokePopSet(void) {
     D_801F05EC[step_record[2]]();
     draw_record = g_battle_work;
     if (draw_record[0] != 0 && draw_record[2] != 0) {
-        func_801EF1A8();
-        func_801EF508();
+        renderWorkObjectMatrix();
+        renderWorkObjectVolume();
         PopMatrix();
     }
 }

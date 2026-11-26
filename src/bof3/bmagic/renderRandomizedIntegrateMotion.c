@@ -3,8 +3,8 @@
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 extern void func_800AF764(void); /* @source 0x800AF764 @kind function */
-extern void func_801F0BA8(s32 scale); /* @source 0x801F0BA8 @kind function */
-extern void func_801EF794(void); /* @source 0x801EF794 @kind function */
+extern void renderWithScale(s32 scale); /* @source 0x801F0BA8 @kind function */
+extern void installWorkTransform(void); /* @source 0x801EF794 @kind function */
 extern void func_801F050C(void); /* @source 0x801F050C @kind function */
 
 /* @source 0x801F0010
@@ -28,8 +28,8 @@ void renderRandomizedIntegrateMotion(void) {
   u8 *step;
 
   func_800AF764();
-  func_801F0BA8((rand() & 3) | 24);
-  func_801EF794();
+  renderWithScale((rand() & 3) | 24);
+  installWorkTransform();
   func_801F050C();
   PopMatrix();
   if (D_80143E6C & 1) {

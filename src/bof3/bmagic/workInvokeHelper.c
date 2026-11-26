@@ -5,7 +5,7 @@
  * draws every slot the predicate at func_801DB524 accepts; the two handler
  * bodies of this overlay at 0x801EF8C8 and 0x801EF930 both run it first. The
  * call sets no argument registers and discards no return value. */
-extern void func_801EF984(void); /* @source 0x801EF984 */
+extern void renderAcceptedSlots(void); /* @source 0x801EF984 */
 
 /* Shared battle helper called from many overlay step handlers, including the
  * ones this overlay reaches at 0x801EEF00 and 0x801EF108. It lives outside
@@ -51,7 +51,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * @residual none
  */
 void workInvokeHelper(void) {
-  func_801EF984();
+  renderAcceptedSlots();
   if ((g_battle_work[9] += 1) == 0x80) {
     func_801E5988();
   }

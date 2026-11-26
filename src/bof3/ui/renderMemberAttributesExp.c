@@ -26,7 +26,7 @@ extern u8 D_80145AD4[];
  * 0x2C: the attribute value format "%3d", the experience row format "%7d" and
  * the eight-dash placeholder that replaces it at the level cap.
  * @source 0x801D0C04 @kind data */
-extern const char D_801D0C04[];
+extern const char textUiStrings[];
 /* @source 0x801D0C28 @kind data */
 extern const char D_801D0C28[];
 /* @source 0x801D0C2C @kind data */
@@ -149,13 +149,13 @@ void renderMemberAttributesExp(s16 x, s16 y,
   align = flag ? 7 : 0;
   func_801AED54((s16)(x + 2), (s16)(y + 2), 0x86, 0x2A, 0xF1);
   record = (ShisuAttributeBlock*)&D_80144984[index * 164];
-  sprintf((char*)D_80145AD4, D_801D0C04, record->power);
+  sprintf((char*)D_80145AD4, textUiStrings, record->power);
   func_80150098((s16)(x + 0x29), (s16)(y + 5), align, D_80145AD4);
-  sprintf((char*)D_80145AD4, D_801D0C04, record->defense);
+  sprintf((char*)D_80145AD4, textUiStrings, record->defense);
   func_80150098((s16)(x + 0x29), (s16)(y + 0x12), align, D_80145AD4);
-  sprintf((char*)D_80145AD4, D_801D0C04, record->intelligence);
+  sprintf((char*)D_80145AD4, textUiStrings, record->intelligence);
   func_80150098((s16)(x + 0x6F), (s16)(y + 5), align, D_80145AD4);
-  sprintf((char*)D_80145AD4, D_801D0C04, record->agility);
+  sprintf((char*)D_80145AD4, textUiStrings, record->agility);
   func_80150098((s16)(x + 0x6F), (s16)(y + 0x12), align, D_80145AD4);
   func_8014F800((s16)(x + 5), (s16)(y + 3), align, 4, (u32)D_801D9BA8);
   func_8014F800((s16)(x + 5), (s16)(y + 0x10), align, 4,

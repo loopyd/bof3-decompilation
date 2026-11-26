@@ -6,7 +6,7 @@ extern s32 D_80145EC8; /* @source 0x80145EC8 @kind data */
 /* Renderer of the work record, still on its assembled boundary.
  * @source 0x801F3958 @kind function
  */
-extern void func_801F3958(void);
+extern void renderWorkRecord(void);
 
 /* @source 0x801F37D8
  * @behavior Reads the scratchpad work record at 0x1F800044. Route byte +8
@@ -18,7 +18,7 @@ extern void func_801F3958(void);
  *           starts (halfword << 16) and ((halfword + 1) << 16). Work byte +2
  *           is the state selector the overlay's dispatcher at 0x801F344C
  *           indexes the local handler table 0x801F4FBC with, where this body
- *           is entry 3. Calls the record renderer func_801F3958 on every path.
+ *           is entry 3. Calls the record renderer renderWorkRecord on every path.
  *           Takes no arguments and returns nothing. The shared coordinate
  *           words are outside this payload.
  * @status exact
@@ -85,5 +85,5 @@ advance:
     }
   }
 
-  func_801F3958();
+  renderWorkRecord();
 }

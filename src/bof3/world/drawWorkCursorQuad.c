@@ -5,7 +5,7 @@
  * materialises the pointer. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 
-void func_801F3EEC(s32 *point); /* @source 0x801F3EEC @kind function */
+void drawProjectedQuad(s32 *point); /* @source 0x801F3EEC @kind function */
 
 /* @source 0x801F3EA4
  * @behavior Overlay per-frame step handler for the trail quad, reached as entry
@@ -16,7 +16,7 @@ void func_801F3EEC(s32 *point); /* @source 0x801F3EEC @kind function */
  *           published at the scratchpad cell 0x1F800044 and copies that
  *           object's three cursor words at +0x34, +0x38 and +0x3C into a local
  *           twelve-byte point, then passes the address of that point to this
- *           overlay's quad renderer func_801F3EEC, which projects the point
+ *           overlay's quad renderer drawProjectedQuad, which projects the point
  *           through the shared 3D-to-screen projector func_801AFF04 and emits a
  *           semi-transparent G4 through SetPolyG4. The cell pointer is loaded
  *           before the stack frame because nothing between it and the local
@@ -35,5 +35,5 @@ void drawWorkCursorQuad(void) {
   point[0] = *(s32 *)(work + 0x34);
   point[1] = *(s32 *)(work + 0x38);
   point[2] = *(s32 *)(work + 0x3C);
-  func_801F3EEC(point);
+  drawProjectedQuad(point);
 }

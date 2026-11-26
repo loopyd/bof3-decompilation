@@ -18,7 +18,7 @@ void stateRecordActiveFlags(void);
 
 /* @source 0x801D0DD8
  * @behavior Entry 3 of the overlay's step-handler code-pointer run at
- * 0x801D3918 (D_801D3918), which the overlay entry func_801D0C04 selects with
+ * 0x801D3918 (stepHandlerTable), which the overlay entry func_801D0C04 selects with
  * the unsigned work byte at offset +0x1 of the scratchpad work object published
  * at pointer slot 0x1F800044 and calls with no arguments and no result
  * consumed. It subtracts 6 from the unsigned halfword at +0x2E of that object

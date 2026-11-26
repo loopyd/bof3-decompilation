@@ -4,5 +4,5 @@ func_801F2C64 = 0x801F2C64;
 dispatchByte1Table3304 = 0x801F2D18;
 stateStoreCursorDistance = 0x801F2D5C;
 renderCursorQuad = 0x801F2DA8;
-func_801F2DF0 = 0x801F2DF0;
+renderProjectedQuadPrim = 0x801F2DF0;
 D_801F30FC = 0x801F30FC;

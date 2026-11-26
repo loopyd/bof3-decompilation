@@ -19,7 +19,7 @@ extern s16 func_8015477C(s32 arg0, s32 arg1);
  * the record colour byte at 0x03 into the primitive r, g and b bytes and the
  * record halfword at 0x04 as the quad size.
  */
-extern void func_801F46EC(void* record);
+extern void renderPointSpanQuad(void* record);
 
 /* Shared published work-pointer cell: the original re-materialises the cell
  * address and reloads the pointer on every iteration of the sweep below, so the
@@ -165,7 +165,7 @@ s32 stateStampedRampsIntegrate(
       y = record->position_0c + record->velocity_1c;
       record->position_0c = y;
       record->scaled_10 = func_8015477C(record->position_08, y) << 16;
-      func_801F46EC(record);
+      renderPointSpanQuad(record);
     }
     record++;
     i++;

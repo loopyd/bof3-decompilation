@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern void func_801F3F04(s32 arg0); /* @source 0x801F3F04 */
+extern void renderRingQuadFan(s32 arg0); /* @source 0x801F3F04 */
 
 /* @source 0x801F3E18
  * @behavior Third entry of the handler table based at 0x801F4634, which the
@@ -26,7 +26,7 @@ void incrementCountdownUpAdvance(void) {
   u8* work;
   u32 count;
 
-  func_801F3F04(7);
+  renderRingQuadFan(7);
   slots = SPAD_PTR_TABLE(u8);
   work = slots[0x11];
   work[0x09] += 1;

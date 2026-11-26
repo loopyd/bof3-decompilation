@@ -1,5 +1,5 @@
 g_battle_work = 0x1F800044;
-func_800C1804 = 0x800C1804;
+stepHandlerTable = 0x800C1804;
 callStateTable2090Boss = 0x800C1838;
 publishStepStateSetup = 0x800C187C;
 callIndexedHandler29 = 0x800C18E0;
@@ -22,6 +22,6 @@ func_800C1D7C = 0x800C1D7C;
 func_800C1E0C = 0x800C1E0C;
 workPreviousWhileBelow = 0x800C1FA8;
 func_800C2030 = 0x800C2030;
-D_800C2078 = 0x800C2078;
+stepDataRow = 0x800C2078;
 initModeTuple510 = 0x801DDED8;
 initModeTuple520 = 0x801DDF00;

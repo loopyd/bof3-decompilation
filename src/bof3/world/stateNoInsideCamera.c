@@ -27,7 +27,7 @@ extern u8* workRecordCursor1F800044;
  * slot index and a signed mode byte and answers nothing.
  * @source 0x801F4158 @kind function
  */
-extern void func_801F4158(s32 index, s8 mode);
+extern void setEntryPairMode(s32 index, s8 mode);
 
 /* @source 0x801F3FBC
  * @behavior Fourth handler of the state-byte-2 run based at 0x801F4BA0, at word
@@ -106,6 +106,6 @@ void stateNoInsideCamera(
     cursor = workRecordCursor1F800044;
     cursor[2]++;
   }
-  func_801F4158(0, 0);
-  func_801F4158(1, 3);
+  setEntryPairMode(0, 0);
+  setEntryPairMode(1, 3);
 }

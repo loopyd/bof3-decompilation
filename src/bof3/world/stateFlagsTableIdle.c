@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x801F2EF0 @kind function */
-extern s32 func_801F2EF0(void);
+extern s32 stateUpdateWorkTable(void);
 void func_80196070(void);
 
 /* @source 0x801F2D08
@@ -15,7 +15,7 @@ void func_80196070(void);
  * @residual none
  */
 void stateFlagsTableIdle(void) {
-  if ((func_801F2EF0() & 0xFF) == 0) {
+  if ((stateUpdateWorkTable() & 0xFF) == 0) {
     func_80196070();
   }
 }

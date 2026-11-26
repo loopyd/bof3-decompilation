@@ -5,14 +5,14 @@
  * materialises the pointer. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 
-void func_801F2DF0(s32 *point); /* @source 0x801F2DF0 @kind function */
+void renderProjectedQuadPrim(s32 *point); /* @source 0x801F2DF0 @kind function */
 
 /* @source 0x801F2DA8
  * @behavior Overlay step handler for state 1 of the local dispatch table based
  * at 0x801F3304: it loads the work-object pointer published at the scratchpad
  * cell 0x1F800044 and copies that object's three cursor words at +0x34, +0x38
  * and +0x3C into a local twelve-byte point, then passes the address of that
- * point to this overlay's quad renderer func_801F2DF0. That renderer projects
+ * point to this overlay's quad renderer renderProjectedQuadPrim. That renderer projects
  * the three words as a position through func_801AFF04 and emits one
  * semi-transparent G4 through SetPolyG4/SetSemiTrans from g_PrimCursor, so the
  * copy is local: the callee receives the address of this frame slot, not the
@@ -45,5 +45,5 @@ void renderCursorQuad(void) {
   point[0] = *(s32 *)(work + 0x34);
   point[1] = *(s32 *)(work + 0x38);
   point[2] = *(s32 *)(work + 0x3C);
-  func_801F2DF0(point);
+  renderProjectedQuadPrim(point);
 }

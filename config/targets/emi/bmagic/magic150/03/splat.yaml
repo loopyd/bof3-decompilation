@@ -73,7 +73,7 @@ segments:
     - '@behavior: The overlay ring pass of the draw setup 0x801EF254. It walks sixteen phases of the 0x1000 circle in 0x100 steps around the effect transform at 0x801EFA9C: each station is the phase truncated to a halfword and handed to the phase samplers 0x801783C8 and 0x801782FC, whose answers times the signed radius halfword at +0x10 shift right four on the transform y word and left four on its z word, and the same point with 0x100000 added to its x word gives the band far edge. Every step takes the shared primitive cursor anew, seeds it through the flat-quad setter 0x8017A9A4, turns semi-transparency on, projects the near and far edges of the current phase and then of the phase one 0x100 step further through 0x801AFF04 into one screen entry and copies the four pairs into the quad vertices, storing 0x80 in the red channel and clearing green and blue. It passes the first three vertex pairs to the shared cross-product test 0x801AFF90 and appends the 0x18-byte packet at ordering table index 1 only while that answer reads negative, so a step whose answer is zero or positive leaves the cursor untouched and its quad is dropped. It takes no arguments and returns nothing.'
   - - 1620
     - asm
-    - func_801EF254
+    - renderOverlayFrame
   - - 1728
     - asm
     - func_801EF2C0
@@ -90,7 +90,7 @@ segments:
     - '@behavior: Publishes the eight-slot table base 0x801EFAB4 into the cursor cell 0x801EFAF4, then walks the eight 8-byte slots with an unsigned byte counter in a bottom-tested loop, clearing each slot leading state halfword and publishing the advanced cursor back into the cell after every slot; no arguments, no frame, no call, returns nothing.'
   - - 2808
     - asm
-    - func_801EF6F8
+    - startIdleBurstSlots
   - - 2960
     - c
     - renderRedRadialArc
@@ -98,8 +98,8 @@ segments:
     - '@behavior: Draws one closed translucent red disc of sixteen gouraud triangles that share a passed centre point and cover a whole turn in 0x100 steps of the 0x1000 circle. Each step reloads the cursor primitive from g_PrimCursor, seeds it with 0x8017A97C, turns semi-transparency on and writes the three vertices of a POLY_G3: the centre pair, the arc point at the step angle and the arc point one step further, each arc coordinate being the centre coordinate plus the two-argument radius times the sampler of that angle shifted right twelve, with 0x801783C8 sampling x and 0x801782FC sampling y. Only the red channel carries shade, the centre vertex taking 0x80 in its only caller and the two arc vertices taking the fifth argument, while green and blue of every vertex are cleared. The 0x1C-byte POLY_G3 is appended at ordering-table index 1. The counter is a full-word phase, the current angle truncated from it before the first sampler pair, while the arc point is the phase one 0x100 step ahead truncated only where it is sampled and where the loop test compares it against 0x1000, so sixteen triangles are emitted. It takes two wide centre coordinates, a signed radius and two shade bytes, the last on the stack, and returns nothing.'
   - - 3308
     - asm
-    - func_801EF8EC
+    - stepBurstSlots
   - - 3740
     - textbin
-    - T_801EFA9C
+    - effectOriginState
 - - 3888

@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 /* This overlay's handler run starts at 0x800C1CD8, the first code-pointer word of
- * the 184-byte `textbin` row D_800C1CB0 that Splat places after this payload's
+ * the 184-byte `textbin` row workStepPointerTable that Splat places after this payload's
  * code; the ten words before it are byte-sized game data, not pointers. From
  * 0x800C1CD8 the run starts with this payload's step publisher 0x800C1860, then
  * the shared main-program handlers 0x801E52E8, 0x801E35D8, 0x801E3638,

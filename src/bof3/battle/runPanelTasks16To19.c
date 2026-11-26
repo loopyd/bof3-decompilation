@@ -16,7 +16,7 @@ void runPanelTasks16To19(void) {
   base = D_80148330;
   do {
     ptr = (u8*)((u32)taskIndex * 0x24u + (u32)base);
-    D_80148648 = (PanelTask*)ptr;
+    panelTaskRoot = (PanelTask*)ptr;
     taskIndex += 1;
     func_80158E20();
   } while (taskIndex < 0x14);

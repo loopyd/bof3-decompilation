@@ -156,7 +156,7 @@ segments:
     - '@behavior: Claims records up to shared work byte A, seeds ordinal fields and work pointers, and increments work byte B.'
   - - 5476
     - asm
-    - func_801F0164
+    - renderSpriteRowQuads
   - - 6128
     - c
     - renderPixelGlyphScreen
@@ -169,7 +169,7 @@ segments:
     - '@behavior: Draws the byte remainder by ten and optional nonzero quotient as grey 12-pixel glyphs left of the work screen pair.'
   - - 7088
     - asm
-    - func_801F07B0
+    - renderOffsetTilePair
   # @source 0x801F09C4
   # @behavior Reserves the first free 0x78-byte record among 32 slots.
   - - 7620
@@ -180,5 +180,5 @@ segments:
     - clearWorkHead
   - - 7800
     - textbin
-    - D_801F0A78
+    - offsetTripletTable
 - - 11832

@@ -8,7 +8,7 @@
  * rectangle in the first four words and one scratch argument word. This body
  * only calls it, with the five constants below.
  * @source 0x801F765C @kind function */
-extern void func_801F765C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+extern void renderDigitCounterPanel(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 
 /* Line-text drawer of the main executable at 0x8014FF0C: it takes the pen
  * position, a colour word and the text buffer, and is the same callee the
@@ -44,7 +44,7 @@ extern u8 D_801FD288;
  *           0x801FD178 and holds the only in-image reference to this span, the
  *           jal at 0x801F75A4, while no pointer word anywhere in the payload
  *           names 0x801F75EC. The body first arms a textured frame through
- *           func_801F765C at the rectangle origin (0x8A, 0x1E), width 0x2D,
+ *           renderDigitCounterPanel at the rectangle origin (0x8A, 0x1E), width 0x2D,
  *           height 0x14 and scratch argument 1; then it formats the low byte of
  *           the overlay halfword D_801FD288 - read with lbu, so zero-extended -
  *           through sprintf with this overlay's own "%03d" format at payload
@@ -66,7 +66,7 @@ extern u8 D_801FD288;
 void renderFramedDigitCounter(void) {
   u8* buffer;
 
-  func_801F765C(0x8A, 0x1E, 0x2D, 0x14, 1);
+  renderDigitCounterPanel(0x8A, 0x1E, 0x2D, 0x14, 1);
   buffer = D_80145AD4;
   sprintf((char*)buffer, D_801F6C04, D_801FD288);
   func_8014FF0C(0x95, 0x22, 0, buffer);

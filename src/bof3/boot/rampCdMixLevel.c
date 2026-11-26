@@ -9,7 +9,7 @@
  * @residual none
  * live comparison is instruction- and byte-exact.
  */
-void func_801CED48(void) {
+void rampCdMixLevel(void) {
   s32 level;
 
   for (level = 0; level <= 0x80; level += 2) {

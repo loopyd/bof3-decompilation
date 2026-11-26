@@ -24,4 +24,4 @@ func_801EFA2C = 0x801EFA2C;
 decrementTwoHelperZero = 0x801EFA94;
 incrementEvenWordsOdd = 0x801EFAE8;
 renderRingsSixtyUnit = 0x801EFB34;
-D_801EFFE0 = 0x801EFFE0;
+bandPaletteTable = 0x801EFFE0;

@@ -4,7 +4,7 @@
 extern u8* workRecordCursor1F800044;
 
 /* @source 0x801F3914 @kind function */
-extern void func_801F3914(void);
+extern void advanceWorkStep(void);
 
 /* @source 0x801F3738
  * @behavior Reads the scratchpad work pointer at 0x1F800044, adds 0x10 to
@@ -25,5 +25,5 @@ void stateAdvanceWorkCall3914(void) {
   if ((s16)offset >= 0x80) {
     work[2]++;
   }
-  func_801F3914();
+  advanceWorkStep();
 }

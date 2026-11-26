@@ -4,7 +4,7 @@
  * listing. Its own bytes return $a1, which is set to 1 only on a pass that
  * processed an active entry of the overlay table 0x801EFAB4 and stays 0 when
  * every entry was idle; this span tests that answer's low byte. */
-extern u32 func_801EF8EC(void); /* @source 0x801EF8EC */
+extern u32 stepBurstSlots(void); /* @source 0x801EF8EC */
 
 /* Scratchpad work-object pointer cell 0x1F800044, shared by all overlays and
  * bound as g_battle_work by this family's map row in the sibling target
@@ -38,7 +38,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  */
 void stepSlotsNoneActive(
     void) {
-  if ((u8)func_801EF8EC() == 0) {
+  if ((u8)stepBurstSlots() == 0) {
     g_battle_work[9] = 4;
     g_battle_work[1]++;
   }

@@ -2,7 +2,7 @@
 
 /* Work-record pointer cell of this overlay. func_801172D0 seeds a record in it,
  * claimEveryFourthFrame and lowerMirrorEveryFourth publish the record they claim in it, and the
- * record pass func_80117900 walks the sixteen records of the 0x800E4800 table
+ * record pass stateRunRecordPass walks the sixteen records of the 0x800E4800 table
  * by repointing it. The word is zero in the image and lies inside the Splat
  * textbin row D_8011818C, so this declaration binds through the generated
  * undefined_syms_auto.txt row and owes no target-map row. A store through the

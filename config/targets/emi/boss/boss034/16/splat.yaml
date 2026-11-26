@@ -37,22 +37,22 @@ segments:
     - c
     - publishWorkStepPair
     - '@source: src/bof3/boss/publishWorkStepPair.c'
-    - '@behavior: Step-0 setup of this overlay work state machine. Loads the current enemy work record from 0x801EB4E8 and publishes three words into it: the data row pointer 0x800C26B8 into +0xEC, the byte-indexed handler dispatcher 0x800C1D60 into +0xE4 and the in-row data word 0x800C26C4 into +0xE8. It then loads the work record the main program publishes at the scratchpad pointer cell 0x1F800044, stores 2 into that record state byte at offset 1 and calls func_8014D978. That state byte is the value this overlay byte-1 dispatcher 0x800C181C scales by four against the handler run at the 0x800C26CC interior word of the reviewed row D_800C26B8, and that run entry 0 is this function itself, so writing 2 moves the next dispatch off this installer to 0x801E35D8, a main-program handler. No jal names 0x800C1860; the run word at 0x800C26CC is its only in-image reference, so the overlay entry calls it.'
+    - '@behavior: Step-0 setup of this overlay work state machine. Loads the current enemy work record from 0x801EB4E8 and publishes three words into it: the data row pointer 0x800C26B8 into +0xEC, the byte-indexed handler dispatcher 0x800C1D60 into +0xE4 and the in-row data word 0x800C26C4 into +0xE8. It then loads the work record the main program publishes at the scratchpad pointer cell 0x1F800044, stores 2 into that record state byte at offset 1 and calls func_8014D978. That state byte is the value this overlay byte-1 dispatcher 0x800C181C scales by four against the handler run at the 0x800C26CC interior word of the reviewed row stateStepDataTable, and that run entry 0 is this function itself, so writing 2 moves the next dispatch off this installer to 0x801E35D8, a main-program handler. No jal names 0x800C1860; the run word at 0x800C26CC is its only in-image reference, so the overlay entry calls it.'
   - - 184
     - c
     - dispatchByte2Table26fc
     - '@source: src/bof3/boss/dispatchByte2Table26fc.c'
-    - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C26FC of the reviewed row D_800C26B8, with no arguments. The payload holds no jal naming 0x800C18B8; the one pointer word that names it is the run entry at 0x800C26E4.'
+    - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C26FC of the reviewed row stateStepDataTable, with no arguments. The payload holds no jal naming 0x800C18B8; the one pointer word that names it is the run entry at 0x800C26E4.'
   - - 252
     - c
     - callStateTable2714Boss
     - '@source: src/bof3/boss/callStateTable2714Boss.c'
-    - '@behavior: Overlay state dispatch on work-record byte 3: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 3, scales it by four and calls the matching entry of this overlay''s handler run based at the interior word 0x800C2714 of the reviewed row D_800C26B8, with no arguments. The payload holds no jal naming 0x800C18FC; the one pointer word that names it is the run entry at 0x800C270C.'
+    - '@behavior: Overlay state dispatch on work-record byte 3: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 3, scales it by four and calls the matching entry of this overlay''s handler run based at the interior word 0x800C2714 of the reviewed row stateStepDataTable, with no arguments. The payload holds no jal naming 0x800C18FC; the one pointer word that names it is the run entry at 0x800C270C.'
   - - 320
     - c
     - stateHelperReturnsNonzero
     - '@source: src/bof3/boss/stateHelperReturnsNonzero.c'
-    - '@behavior: Entry 0 of this overlay''s byte-3 handler run, the word 0x800C2714 inside its reviewed textbin row D_800C26B8: callStateTable2714Boss scales the work record unsigned byte 3 by four and calls that entry with no arguments, and no jal in the payload names 0x800C1940. It calls the shared main-program helper func_8014D978 with no arguments and keeps the low byte of the returned word; while that byte is nonzero it writes 0x40 into work byte 9, 0x20 into work byte 0xA and 1 into work byte 3, the state index the byte-3 dispatcher reads, through the scratchpad pointer cell 0x1F800044, and writes nothing when the masked byte is zero.'
+    - '@behavior: Entry 0 of this overlay''s byte-3 handler run, the word 0x800C2714 inside its reviewed textbin row stateStepDataTable: callStateTable2714Boss scales the work record unsigned byte 3 by four and calls that entry with no arguments, and no jal in the payload names 0x800C1940. It calls the shared main-program helper func_8014D978 with no arguments and keeps the low byte of the returned word; while that byte is nonzero it writes 0x40 into work byte 9, 0x20 into work byte 0xA and 1 into work byte 3, the state index the byte-3 dispatcher reads, through the scratchpad pointer cell 0x1F800044, and writes nothing when the masked byte is zero.'
   - - 412
     - asm
     - func_800C199C
@@ -89,7 +89,7 @@ segments:
     - c
     - callStateTable273Boss
     - '@source: src/bof3/boss/callStateTable273Boss.c'
-    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C273C of the reviewed row D_800C26B8, with no arguments. The payload holds no word or jal naming 0x800C1DB0, so its caller is outside this overlay.'
+    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C273C of the reviewed row stateStepDataTable, with no arguments. The payload holds no word or jal naming 0x800C1DB0, so its caller is outside this overlay.'
   - - 1524
     - c
     - publishStepDataFlag
@@ -116,13 +116,13 @@ segments:
     - '@behavior: Overlay installer: it loads the shared byte D_80181B14 once, walks the three 0x140-byte party records of the run 0x80145E90 reading each record''s byte 0x13C through the cell D_80145FCC, and for every slot whose 0x13C byte equals that shared byte it stores the slot number into this overlay''s byte D_800C2778; it then stores 0x800C20A8, 0x800C22D0 and 0x800C1F30 into the shared hook slots 0x801463A4, 0x801463A8 and 0x801463AC. No word of this payload holds this function''s address and no jal reaches it, so the overlay loader is what calls it.'
   - - 1840
     - asm
-    - func_800C1F30
+    - dispatchBattleModeStep
   - - 2216
     - asm
-    - func_800C20A8
+    - stateProgressUnitRecords
   - - 2768
     - asm
-    - func_800C22D0
+    - setupSceneWorkRecord
   - - 2880
     - c
     - publishBattleHooks22
@@ -141,8 +141,8 @@ segments:
     - noopHandler167
   - - 3028
     - asm
-    - func_800C23D4
+    - renderSpinQuad
   - - 3768
     - textbin
-    - D_800C26B8
+    - stateStepDataTable
 - - 3964

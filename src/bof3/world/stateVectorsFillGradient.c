@@ -28,7 +28,7 @@ void func_801F46C8(s32 first_row, s32 row_limit, s32 matrix_seed, s32 row_scale)
  * cell at 0x8014598C with one colour on the top edge and the other on the
  * bottom edge, advances that cursor by 0x24 and returns nothing. Splat binds
  * the address through this target's map row. */
-void func_801F5428(s32 color);
+void fillScreenGradient(s32 color);
 
 /* @source 0x801F4F88
  * @behavior Overlay step handler, entry index 9 of the sixteen-pointer step
@@ -72,7 +72,7 @@ void stateVectorsFillGradient(
   SPAD_REF(s16, 0x20u) = (s16)(D_80143E6C << 5);
   func_801F46C8(work[9] << 2, 0x1F, 0, 0x18);
   D_8014933A = 0;
-  func_801F5428(0x10001805);
+  fillScreenGradient(0x10001805);
   tick = workRecordCursor1F800044;
   tick[9]++;
   step = workRecordCursor1F800044;

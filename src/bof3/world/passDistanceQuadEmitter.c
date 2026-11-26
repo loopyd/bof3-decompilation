@@ -10,13 +10,13 @@
  * pair plus the radius those quads spread by.
  * @source 0x801F30A8 @kind function
  */
-extern void func_801F30A8(s32* position);
+extern void drawProjectedQuad(s32* position);
 
 /* @source 0x801F3060
  * @behavior Overlay step handler: reads the work record published at the
  * scratchpad pointer cell 0x1F800044 and copies its three words at +0x34, +0x38
  * and +0x3C unchanged into a three-word stack triple, then passes a pointer to
- * that triple to the overlay quad emitter func_801F30A8. Takes no arguments and
+ * that triple to the overlay quad emitter drawProjectedQuad. Takes no arguments and
  * returns nothing; the pointer load is hoisted above the 0x28-byte frame setup,
  * each of the three loads carries a stall nop before its 0x10, 0x14 and 0x18
  * stack store, and the third store fills the call delay slot.
@@ -55,5 +55,5 @@ void passDistanceQuadEmitter(void) {
   position[0] = FIELD_REF(s32, work, 0x34u);
   position[1] = FIELD_REF(s32, work, 0x38u);
   position[2] = FIELD_REF(s32, work, 0x3Cu);
-  func_801F30A8(position);
+  drawProjectedQuad(position);
 }

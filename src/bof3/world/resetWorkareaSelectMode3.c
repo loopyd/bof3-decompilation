@@ -2,7 +2,7 @@
 #include "game/workarea.h"
 
 /* @source 0x801F2D3C
- * @behavior mode-3 handler of the entry mode dispatch table (D_801F33EC):
+ * @behavior mode-3 handler of the entry mode dispatch table (workByte1HandlerTable):
  * calls the shared work-area reset helper.
  * @status exact
  * @match 100.00

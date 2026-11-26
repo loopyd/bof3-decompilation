@@ -27,7 +27,7 @@ extern s32 D_80145EC8; /* @source 0x80145EC8 @kind data */
 
 /* Renderer of the work record, called on every path of this step; its name is
  * this target's own map row for the span at 0x801F3958. */
-extern void func_801F3958(void);
+extern void renderWorkRecord(void);
 
 /* Measured representation notes for the seeding block. Reading the pointer cell
  * as a local pointer slot instead of the cell symbol left the body at 78/107 and
@@ -147,5 +147,5 @@ void stateTablesStampInside(
   FIELD_REF(u8, gate, 0x02) = 3;
 
 draw:
-  func_801F3958();
+  renderWorkRecord();
 }

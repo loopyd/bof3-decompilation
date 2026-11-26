@@ -7,7 +7,7 @@
  * and MulMatrix2 over the shared matrix at 0x801492E8, and installs the result
  * with SetRotMatrix and SetTransMatrix. It takes no arguments and returns
  * nothing; the PopMatrix that closes its PushMatrix is this function's. */
-extern void func_801EF784(void); /* @source 0x801EF784 */
+extern void applyRecordTransform(void); /* @source 0x801EF784 */
 
 /* This overlay's work-record draw step at 0x801EF158 (0x62C bytes, still an asm
  * span of this target). It picks its draw-mode tpage from GetGraphType, seeds
@@ -15,7 +15,7 @@ extern void func_801EF784(void); /* @source 0x801EF784 */
  * work byte 0xB index into the scratchpad cells the shared primitives read, and
  * emits the record's quads and triangles. It takes no arguments and returns
  * nothing. */
-extern void func_801EF158(void); /* @source 0x801EF158 */
+extern void renderRecordStep(void); /* @source 0x801EF158 */
 
 /* Scratchpad work-object pointer cell, bound at 0x1F800044 by this target's
  * map. The original materialises the cell with its own lui / lw pair before the
@@ -86,8 +86,8 @@ void callPopWhileRunning(
   D_801F006C[g_battle_work[2]]();
   record = D_801EB4E0;
   if (record[0xB] != 0xFF) {
-    func_801EF784();
-    func_801EF158();
+    applyRecordTransform();
+    renderRecordStep();
     PopMatrix();
   }
 }

@@ -98,5 +98,5 @@ segments:
     - '@behavior: Owner-zero battle entry of this overlay: takes the owner-0 work record after stripping its 0x40 flag, publishes it into the scratchpad work-record cursor 0x1F800044, clears the record byte at offset 0x2A, requests resource 4, then clears the owner-record heads for ids 1 and 2 through the 0x800AC934 helper.'
   - - 1200
     - textbin
-    - D_800C1CB0
+    - workStepPointerTable
 - - 1384

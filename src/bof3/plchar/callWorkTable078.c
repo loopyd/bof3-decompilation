@@ -7,7 +7,7 @@
  * 0x801D078C, so the run is only referenced here. This dispatcher indexes the run
  * from its first word, so its base is entry 0 and the entries it can reach are
  * entry 0 = 0x801CE448 through entry 23 = 0x801D006C. */
-extern void (*func_801D078C[])(void); /* @source 0x801D078C @kind data */
+extern void (*workByte2HandlerTable[])(void); /* @source 0x801D078C @kind data */
 
 /* Seeded from the lift of the same body at plp349/00 0x801CE404, which measured
  * exact before this seed was written. That payload's 68 bytes at offset 4 agree
@@ -33,4 +33,4 @@ extern void (*func_801D078C[])(void); /* @source 0x801D078C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable078, func_801D078C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable078, workByte2HandlerTable);

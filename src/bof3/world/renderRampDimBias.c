@@ -25,7 +25,7 @@ extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind data */
  * cursor cell at 0x8014598C with one colour on the top edge and the other on
  * the bottom edge, advances that cursor by 0x24 and returns nothing. Splat
  * binds the address through this target's map row. */
-void func_801F5428(s32 color);
+void fillScreenGradient(s32 color);
 
 /* Overlay palette helper at 0x801F5388: multiplies every 5-bit channel of the
  * 0x100 palette entries by the signed caller scale, shifts each product right
@@ -79,7 +79,7 @@ void renderRampDimBias(
           ((u32)(0x19 - level * 27 / 100) << 5) |
           (u32)(u8)((u32)level / 17);
   D_8014933A = 0;
-  func_801F5428((s32)color);
+  fillScreenGradient((s32)color);
   scaleCell = workRecordCursor1F800044;
   bias = (u8)((u32)scaleCell[9] / 3);
   mathPaletteChannelScale(0x80 - bias);

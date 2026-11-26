@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
-extern void func_801F03D8(void); /* @source 0x801F03D8 @kind function */
+extern void resourceClaimWorkRecord(void); /* @source 0x801F03D8 @kind function */
 
 /* @source 0x801F01C4
  * @behavior Clears work byte 0xB, reloads the scratchpad work pointer and sets
@@ -15,6 +15,6 @@ extern void func_801F03D8(void); /* @source 0x801F03D8 @kind function */
 void stateByteInvokeHelper(void) {
   g_battle_work[0xB] = 0;
   g_battle_work[9] = 64;
-  func_801F03D8();
+  resourceClaimWorkRecord();
   g_battle_work[2]++;
 }

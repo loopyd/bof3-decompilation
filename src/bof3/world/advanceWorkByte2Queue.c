@@ -22,7 +22,7 @@ extern void func_8015DF18(u16 cue);
  * the same work record, writes scratchpad and GTE state, and answers nothing.
  * @source 0x801F3914 @kind function
  */
-extern void func_801F3914(void);
+extern void advanceWorkStep(void);
 
 /* @source 0x801F35F8
  * @behavior Byte-2 state handler of this overlay, reached through the handler run
@@ -146,5 +146,5 @@ void advanceWorkByte2Queue(
   }
 
 update:
-  func_801F3914();
+  advanceWorkStep();
 }

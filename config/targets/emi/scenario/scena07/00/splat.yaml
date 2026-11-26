@@ -282,7 +282,7 @@ segments:
     - func_801F8F90
   - - 9460
     - asm
-    - func_801F90F4
+    - setupBlockSlotBounds
   - - 10032
     - asm
     - func_801F9330
@@ -309,7 +309,7 @@ segments:
     - func_801F9EFC
   - - 13340
     - asm
-    - func_801FA01C
+    - resetSlotAngleState
   - - 14220
     - asm
     - func_801FA38C

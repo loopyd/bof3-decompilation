@@ -23,7 +23,7 @@ void mathPaletteChannelScale(s32 scale);
  * with one colour on the top edge and the other on the bottom edge, advances
  * that cursor by 0x24 and returns nothing. Splat binds the address through
  * this target's map row. */
-void func_801F5428(s32 color);
+void fillScreenGradient(s32 color);
 
 /* @source 0x801F4A90
  * @behavior Overlay step handler, entry index 1 of the sixteen-pointer step
@@ -53,7 +53,7 @@ void mathHalfFillWhite(
   if (g_ScenarioProgress == 0x26) {
     mathPaletteChannelScale(0x40);
     D_8014933A = 0;
-    func_801F5428(-1);
+    fillScreenGradient(-1);
     workRecordCursor1F800044[9] = 0;
     workRecordCursor1F800044[2]++;
   }

@@ -22,7 +22,7 @@ typedef struct {
     u8 rgb[4][3];
 } Commu0107ChannelPalette;
 
-extern Commu0107ChannelPalette D_801D0C04; /* @source 0x801D0C04 @kind data */
+extern Commu0107ChannelPalette textStatFormat; /* @source 0x801D0C04 @kind data */
 
 /* @source 0x801D2D98
  * @behavior Emits one coloured bar of the commu01/07 entry-detail panel at the
@@ -65,7 +65,7 @@ void renderChannelGradientBar(s16 x, s16 y, s32 width,
     u32 brightness;
     u32 counter;
 
-    palette = D_801D0C04;
+    palette = textStatFormat;
     if (blink != 0) {
         counter = D_80143E6C;
         if (counter & 8) {

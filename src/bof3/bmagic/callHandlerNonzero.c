@@ -4,7 +4,7 @@
 extern u8 *D_1F800044;
 
 /* @source 0x801F04D8 @kind data */
-extern void (*func_801F04D8[])(void);
+extern void (*workByte2HandlerTable[])(void);
 
 /* @source 0x801F00C4 @kind function */
 extern void func_801F00C4(void);
@@ -21,7 +21,7 @@ extern void func_801F00C4(void);
 void callHandlerNonzero(void) {
   u8 *work = D_1F800044;
 
-  func_801F04D8[work[2]]();
+  workByte2HandlerTable[work[2]]();
   work = D_1F800044;
   if (work[0] != 0) {
     func_801F00C4();

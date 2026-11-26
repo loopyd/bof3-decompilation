@@ -17,13 +17,13 @@ struct World03Area14514StepHandlersAndRowTable {
   u8 rows[4][4];
 };
 
-extern struct World03Area14514StepHandlersAndRowTable
-    D_801F5434; /* @source 0x801F5434 @kind data */
+/* @source 0x801F5434 @kind data */
+extern struct World03Area14514StepHandlersAndRowTable workByte1HandlerTable;
 
 /* Drawing helper that projects the record's two point slots at that record's
  * fixed depth words and draws between them; still an asm row in this overlay's
  * Splat listing, so its parameter roles stay structural. */
-extern void func_801F2F30(void *point_a, void *point_b); /* @source 0x801F2F30 */
+extern void renderDepthJitteredSpan(void *point_a, void *point_b); /* @source 0x801F2F30 */
 
 /* @source 0x801F2D44
  * @behavior Overlay state handler 1 of the local work-byte-1 dispatch table
@@ -56,11 +56,11 @@ void renderPointPairsFour(
 
   for (i = 0; i < 4; i++) {
     work = D_1F800044;
-    *(s32 *)(work + 0x0C) = (D_801F5434.rows[i][0] << 16) | 0x8000;
-    *(s32 *)(work + 0x10) = (D_801F5434.rows[i][1] << 16) | 0x8000;
-    *(s32 *)(work + 0x18) = (D_801F5434.rows[i][2] << 16) | 0x8000;
-    *(s32 *)(work + 0x1C) = (D_801F5434.rows[i][3] << 16) | 0x8000;
-    func_801F2F30(work + 0x0C, work + 0x18);
+    *(s32 *)(work + 0x0C) = (workByte1HandlerTable.rows[i][0] << 16) | 0x8000;
+    *(s32 *)(work + 0x10) = (workByte1HandlerTable.rows[i][1] << 16) | 0x8000;
+    *(s32 *)(work + 0x18) = (workByte1HandlerTable.rows[i][2] << 16) | 0x8000;
+    *(s32 *)(work + 0x1C) = (workByte1HandlerTable.rows[i][3] << 16) | 0x8000;
+    renderDepthJitteredSpan(work + 0x0C, work + 0x18);
   }
   D_801F544C[D_1F800044[2]]();
 }

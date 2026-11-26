@@ -51,10 +51,10 @@ segments:
     - c
     - renderCursorQuad
     - '@source: src/bof3/world/renderCursorQuad.c'
-    - '@behavior: loads the work-object pointer published at the scratchpad cell 0x1F800044, copies that object cursor words at +0x34, +0x38 and +0x3C into a local twelve-byte point, and passes the address of that point to the overlay quad renderer func_801F2DF0, which emits one semi-transparent G4 through SetPolyG4. Step handler for state 1 of the local dispatch table based at 0x801F3304. Takes no arguments and returns nothing.'
+    - '@behavior: loads the work-object pointer published at the scratchpad cell 0x1F800044, copies that object cursor words at +0x34, +0x38 and +0x3C into a local twelve-byte point, and passes the address of that point to the overlay quad renderer renderProjectedQuadPrim, which emits one semi-transparent G4 through SetPolyG4. Step handler for state 1 of the local dispatch table based at 0x801F3304. Takes no arguments and returns nothing.'
   - - 496
     - asm
-    - func_801F2DF0
+    - renderProjectedQuadPrim
   - - 1276
     - textbin
     - D_801F30FC

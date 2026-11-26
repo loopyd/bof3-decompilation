@@ -22,7 +22,7 @@ extern u8* g_PrimCursor;
  * reaches, and the four far vertex shades of a quad stay black.
  * @source 0x801F4B2C @kind unknown
  */
-extern u8 D_801F4B2C[];
+extern u8 shadeTripleTable[];
 /* @source 0x801F4B2D @kind unknown */
 extern u8 D_801F4B2D[];
 /* @source 0x801F4B2E @kind unknown */
@@ -109,10 +109,10 @@ void renderBeamBetweenWidths(
   prim->y2 = y0 + ((width0 * func_801782FC(ang0)) >> 12);
   prim->x3 = x1 + ((width1 * func_801783C8(ang1 + 0x800)) >> 12);
   prim->y3 = y1 + ((width1 * func_801782FC(ang1 + 0x800)) >> 12);
-  prim->r0 = D_801F4B2C[(u16)(D_1F800044[6] * 3)];
+  prim->r0 = shadeTripleTable[(u16)(D_1F800044[6] * 3)];
   prim->g0 = D_801F4B2D[(u16)(D_1F800044[6] * 3)];
   prim->b0 = D_801F4B2E[(u16)(D_1F800044[6] * 3)];
-  prim->r1 = D_801F4B2C[(u16)(D_1F800044[6] * 3)];
+  prim->r1 = shadeTripleTable[(u16)(D_1F800044[6] * 3)];
   prim->g1 = D_801F4B2D[(u16)(D_1F800044[6] * 3)];
   prim->b1 = D_801F4B2E[(u16)(D_1F800044[6] * 3)];
   prim->r2 = 0;

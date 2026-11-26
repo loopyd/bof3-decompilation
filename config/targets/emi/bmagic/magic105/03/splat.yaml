@@ -64,7 +64,7 @@ segments:
     - func_801EF2A0
   - - 1776
     - asm
-    - func_801EF2F0
+    - renderProjectRecordPosition
   - - 1952
     - asm
     - func_801EF3A0

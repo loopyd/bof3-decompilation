@@ -65,7 +65,7 @@ extern void func_80150098(s16 arg0, s16 arg1, u32 arg2, const u8 *arg3);
  * layout: the two coordinates, one selector word, the record byte at +0x08 and
  * the record word at +0x10.
  * @source 0x801D4730 */
-extern void func_801D4730(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4);
+extern void renderMemberPortraitPanel(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4);
 
 /* Sprite-record stream emitter of the main executable: the two signed
  * coordinates, the stream blob and the flag byte it carries. This payload only
@@ -111,7 +111,7 @@ extern const u8 D_801D8A3C[]; /* @source 0x801D8A3C @kind data */
  *           "%02d %02d" and drawn at (x + 0x27, y + 0x25), and that same column
  *           draws the three-cell label row "  :" at y + 0x24 and y + 0x27. The
  *           record byte at +0x08 and its word at +0x10 then reach the gauge
- *           helper func_801D4730 at (x + 0x14, y + 0x12) with the selector 0.
+ *           helper renderMemberPortraitPanel at (x + 0x14, y + 0x12) with the selector 0.
  *           Outside the guarded block it reads the record byte at +0x14 and
  *           passes 2, or 0 when either that byte or the record is zero, as the
  *           flag of the sprite stream D_801D8A3C submitted through func_801AF390
@@ -164,7 +164,7 @@ void renderThreeIconPanel(u8 icon, s16 x, s16 y,
     func_80150098((s16)(x + 0x27), (s16)(y + 0x25), 0, D_80145AD4);
     func_80150098((s16)(x + 0x27), (s16)(y + 0x24), 0, D_801D0D90);
     func_80150098((s16)(x + 0x27), (s16)(y + 0x27), 0, D_801D0D90);
-    func_801D4730((u16)(x + 0x14), (u16)(y + 0x12), 0, rec->unk_08, rec->unk_10);
+    renderMemberPortraitPanel((u16)(x + 0x14), (u16)(y + 0x12), 0, rec->unk_08, rec->unk_10);
   }
   do {
     origin_x = (s16)x;

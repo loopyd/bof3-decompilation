@@ -4,7 +4,7 @@ extern u8 D_8014933A; /* @source 0x8014933A @kind data */
 extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind data */
 extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind data */
 
-extern void func_801F5428(s32 color); /* @source 0x801F5428 */
+extern void fillScreenGradient(s32 color); /* @source 0x801F5428 */
 extern void func_8015DF18(u32 cue); /* @source 0x8015DF18 */
 
 /* @source 0x801F4F28
@@ -24,7 +24,7 @@ void renderScreenGradientQueue(
   u8* work;
 
   D_8014933A = 0;
-  func_801F5428(0x10001805);
+  fillScreenGradient(0x10001805);
   if (g_ScenarioProgress == 0x35) {
     work = workRecordCursor1F800044;
     work[2]++;

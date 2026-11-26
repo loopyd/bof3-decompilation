@@ -74,6 +74,6 @@ D_801F4674 = 0x801F4674;
 D_801F4680 = 0x801F4680;
 modeHandlerTable = 0x801F4688;
 areaModeHandlerTable = 0x801F46B0;
-D_801F46EC = 0x801F46EC;
+workByte1HandlerTable = 0x801F46EC;
 D_801F53F0 = 0x801F53F0;
 countdown = 0x801F53F4;

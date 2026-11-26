@@ -57,7 +57,7 @@ segments:
     - '@behavior: The sixth and last word of the six-entry code pointer run at 0x801EEC04, which dispatchWorkByte1Copy copies into its own 0x30-byte frame and selects with scratchpad work byte 1; unconditionally raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments, with the halfword store filling the call delay slot.'
   - - 1352
     - asm
-    - func_801EF148
+    - fillScreenTranslucent
   - - 2040
     - c
     - callStateTable046
@@ -149,10 +149,10 @@ segments:
     - '@behavior: Entry 13 of the fourteen-word byte-1 handler table at 0x801F046C and the sixth and last word of the six-word work-byte-2 run at 0x801F048C, reached through the two-word dispatch base 0x801F049C as its index 1; reads the scratchpad work pointer cell 0x1F800044, adds 2 to work byte 9 at byte width, re-reads the cell, subtracts one from work byte 0xA and tests the truncated stored byte, then invokes the shared helper 0x801E5988 with no arguments only when that countdown reaches zero.'
   - - 5432
     - asm
-    - func_801F0138
+    - setWorkRotationMatrix
   - - 5608
     - asm
-    - func_801F01E8
+    - drawProjectedTexturedQuad
   - - 6252
     - textbin
     - workByte1HandlerTable

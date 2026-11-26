@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8 *D_801F20DC; /* @source 0x801F20DC @kind data */
+extern u8 *stateWorkRecordPointer; /* @source 0x801F20DC @kind data */
 extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern s32 func_801782FC(s32 phase); /* @source 0x801782FC @kind function */
@@ -27,17 +27,17 @@ void mathAccumulateSampleFourth(void) {
   s32 sample;
   u8 count;
 
-  phase = ((u16 *)D_801F20DC)[6] + 1;
-  ((u16 *)D_801F20DC)[6] = phase;
+  phase = ((u16 *)stateWorkRecordPointer)[6] + 1;
+  ((u16 *)stateWorkRecordPointer)[6] = phase;
   SPAD_REF(u16, 0x6u) = (phase & 0x3F) << 6;
   sample = func_801782FC((phase & 0x3F) << 6);
-  ((u16 *)D_801F20DC)[0x10] = ((u16 *)D_801F20DC)[4] + ((sample * 0x18) >> 12);
-  ((u16 *)D_801F20DC)[0x11] += ((u16 *)D_801F20DC)[5];
+  ((u16 *)stateWorkRecordPointer)[0x10] = ((u16 *)stateWorkRecordPointer)[4] + ((sample * 0x18) >> 12);
+  ((u16 *)stateWorkRecordPointer)[0x11] += ((u16 *)stateWorkRecordPointer)[5];
   if ((D_80143E6C & 3u) == 0) {
-    D_801F20DC[6]--;
+    stateWorkRecordPointer[6]--;
   }
-  count = D_801F20DC[5] - 1;
-  D_801F20DC[5] = count;
+  count = stateWorkRecordPointer[5] - 1;
+  stateWorkRecordPointer[5] = count;
   if (count == 0) {
     D_801EB4E0[0x0B]--;
     stateClearRecordBytes5();

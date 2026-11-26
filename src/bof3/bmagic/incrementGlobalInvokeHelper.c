@@ -2,7 +2,7 @@
 
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
-extern void func_801F03D8(void); /* @source 0x801F03D8 @kind function */
+extern void resourceClaimWorkRecord(void); /* @source 0x801F03D8 @kind function */
 
 /* @source 0x801F0310
  * @behavior Reads byte 2 of the shared record pointed to by 0x801EB4E0.
@@ -17,5 +17,5 @@ void incrementGlobalInvokeHelper(void) {
   if (D_801EB4E0[0x2] == 0xA) {
     g_battle_work[2]++;
   }
-  func_801F03D8();
+  resourceClaimWorkRecord();
 }

@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* Use the declared root cell so both original pointer loads remain explicit. */
-#undef D_80148648
+#undef panelTaskRoot
 
 /* @source 0x800B0EC4
  * @behavior Runs the panel-task pass func_800B0F9C, steps signed panel x left
@@ -16,12 +16,12 @@ void panelStepLeftClamp11(void) {
     s16 value;
 
     func_800B0F9C();
-    task = D_80148648;
+    task = panelTaskRoot;
     value = task->x;
     if (value >= 0x12) {
         task->x = value - 0x20;
     }
-    clamp_task = D_80148648;
+    clamp_task = panelTaskRoot;
     if ((s16)clamp_task->x < 0x11) {
         clamp_task->x = 0x11;
     }

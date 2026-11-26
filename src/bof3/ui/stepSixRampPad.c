@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Shared sprite-grid index byte of the main executable, handed straight to the
- * overlay sprite emitter func_801D627C. The original reads it with `lbu` into
+ * overlay sprite emitter renderSpriteGrid. The original reads it with `lbu` into
  * the first argument register ahead of the frame setup. */
 extern u8 D_80144953; /* @source 0x80144953 @kind unknown */
 
@@ -38,21 +38,21 @@ extern u32 D_801D8F00[]; /* @source 0x801D8F00 @kind data */
 
 /* Sprite emitter of this overlay: takes the shared sprite-grid index as its
  * only argument and returns nothing this body consumes. */
-extern void func_801D627C(u32 grid); /* @source 0x801D627C @kind unknown */
+extern void renderSpriteGrid(u32 grid); /* @source 0x801D627C @kind unknown */
 
 /* Panel emitter of this overlay: draws the panel anchored at the signed
  * coordinates the two arguments hold. Its own prologue narrows the pair with
  * `andi 0xFFFF`, so the parameters are declared wide here and the constant
  * arguments keep their bare `addiu` form. */
-extern void func_801D2304(s32 x, s32 y); /* @source 0x801D2304 @kind unknown */
+extern void renderMasterListPanel(s32 x, s32 y); /* @source 0x801D2304 @kind unknown */
 
 /* @source 0x801D2190
  * @behavior Second handler of the BATE overlay phase handler table D_801D8764,
  *           reached once the sub-step phase advanced the shared UI phase byte,
  *           and the same drawing pair its two sibling handlers open with:
  *           every visit passes the shared sprite-grid index byte D_80144953 to
- *           this overlay sprite emitter func_801D627C and draws this overlay
- *           panel at the fixed coordinates 0x37, 0x37 through func_801D2304.
+ *           this overlay sprite emitter renderSpriteGrid and draws this overlay
+ *           panel at the fixed coordinates 0x37, 0x37 through renderMasterListPanel.
  *           It then ramps the six-slot panel values: the shared cursor-kind
  *           byte D_80148658 is the slot index, and while it is below six the
  *           slot's own step byte D_801D8778 raises its value D_801D8F00 by one
@@ -86,8 +86,8 @@ extern void func_801D2304(s32 x, s32 y); /* @source 0x801D2304 @kind unknown */
 void stepSixRampPad(void) {
   s8 *kindp;
 
-  func_801D627C(D_80144953);
-  func_801D2304(0x37, 0x37);
+  renderSpriteGrid(D_80144953);
+  renderMasterListPanel(0x37, 0x37);
   kindp = (s8 *)&D_80148658;
   if (*kindp < 6) {
     D_801D8F00[*kindp] = D_801D8F00[*kindp] + D_801D8778[*kindp];

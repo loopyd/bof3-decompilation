@@ -5,8 +5,8 @@
  * original bytes. The raw-constant g_PanelTaskRoot macro the header defines for
  * that same name would let the compiler keep the address in a callee-saved
  * register across the indirect dispatch instead. */
-#undef D_80148648
-extern PanelTask* D_80148648; /* @source 0x80148648 @kind unknown */
+#undef panelTaskRoot
+extern PanelTask* panelTaskRoot; /* @source 0x80148648 @kind unknown */
 
 /* @source 0x800B2104
  * @behavior Dispatches the handler selected by the panel task's state byte
@@ -18,6 +18,6 @@ extern PanelTask* D_80148648; /* @source 0x80148648 @kind unknown */
  */
 
 void callPanelStateTable64(void) {
-  battlePanelStateHandler[D_80148648->state]();
-  func_800B25C0(D_80148648);
+  battlePanelStateHandler[panelTaskRoot->state]();
+  func_800B25C0(panelTaskRoot);
 }

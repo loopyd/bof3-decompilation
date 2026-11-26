@@ -2,7 +2,7 @@
 
 /*
  * Handler run based at 0x801F0CC0, the run this dispatcher selects from. It is
- * the tail of the reviewed `textbin` row D_801F0C98: that row holds fourteen
+ * the tail of the reviewed `textbin` row substateHandlerTable: that row holds fourteen
  * code pointers from 0x801F0C98 through 0x801F0CD0 before the scalar 0x60, and
  * 0x801F0CC0 is its eleventh word, so this dispatcher's base is entry 10 of the
  * run (0x801EF348 first) while entry 0 is 0x801EEC94. The three words at the

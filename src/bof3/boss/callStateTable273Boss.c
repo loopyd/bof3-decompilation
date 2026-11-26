@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 /* This overlay's byte-1 handler run based at 0x800C273C: the last fifteen code
- * pointers of the reviewed `textbin` row D_800C26B8 (0x800C26B8 through
+ * pointers of the reviewed `textbin` row stateStepDataTable (0x800C26B8 through
  * 0x800C277B). The row's first five words are a small record (0x00000101,
  * 0x02020101, 0x03030000, 0x00060006, 0xFFFFFFFF), the words from 0x800C26CC to
  * 0x800C2774 are in-image code pointers and the last word, 0x800C2778, is zero.

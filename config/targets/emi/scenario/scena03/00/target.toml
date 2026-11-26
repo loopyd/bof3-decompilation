@@ -40,7 +40,7 @@ support_sources = [
     "src/bof3/scenario/dispatchSharedStateHandler.c",
     "src/bof3/scenario/dispatchFrameHandler.c",
     "src/bof3/scenario/forwardRoute47Record.c",
-    "src/bof3/scenario/func_801FC690.c",
+    "src/bof3/scenario/stateStartSceneSix.c",
     "src/bof3/scenario/requestPrimaryArm.c",
     "src/bof3/scenario/callConstantArgPair.c",
     "src/bof3/scenario/callConstantArgOne.c",

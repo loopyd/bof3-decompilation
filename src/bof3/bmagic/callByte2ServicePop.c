@@ -2,8 +2,8 @@
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void (*D_801F0530[])(void); /* @source 0x801F0530 @kind data */
-extern void func_801EFF50(void); /* @source 0x801EFF50 @kind function */
-extern void func_801F0014(void); /* @source 0x801F0014 @kind function */
+extern void renderComposeWorkMatrix(void); /* @source 0x801EFF50 @kind function */
+extern void renderFadeTexturedTriangles(void); /* @source 0x801F0014 @kind function */
 
 /* @source 0x801EF99C
  * @behavior Calls the handler indexed by unsigned work-record byte 2 through
@@ -26,8 +26,8 @@ void callByte2ServicePop(void) {
     D_801F0530[step_record[2]]();
     active_record = g_battle_work;
     if (active_record[0] != 0 && active_record[2] != 0 && active_record[2] != 3) {
-        func_801EFF50();
-        func_801F0014();
+        renderComposeWorkMatrix();
+        renderFadeTexturedTriangles();
         PopMatrix();
     }
 }

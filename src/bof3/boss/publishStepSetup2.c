@@ -8,7 +8,7 @@ typedef void (*Boss03816StepHandler)(u8 index);
  * start at 0x800C1C24, at 0x800C1C54 and at 0x800C1C60. 0x800C1C1C is that
  * run's own +0xC word, inside it and not a row boundary, so it is referenced as
  * its own data symbol rather than as a row start. */
-extern u8 D_800C1C10; /* @source 0x800C1C10 @kind data */
+extern u8 tableStepDataRow; /* @source 0x800C1C10 @kind data */
 extern u8 D_800C1C1C; /* @source 0x800C1C1C @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -67,7 +67,7 @@ void publishStepSetup2(
     void) {
   u8 *work = D_801EB4E8;
 
-  FIELD_REF(void *, work, 0xECu) = &D_800C1C10;
+  FIELD_REF(void *, work, 0xECu) = &tableStepDataRow;
   FIELD_REF(Boss03816StepHandler, work, 0xE4u) =
       dispatchIndexedHandler3;
   FIELD_REF(void *, work, 0xE8u) = &D_800C1C1C;

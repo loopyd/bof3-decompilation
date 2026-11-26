@@ -36,5 +36,5 @@ advanceTaskState2 = 0x801F09D4;
 renderAmountStrip = 0x801F09F4;
 renderCountedListEntry = 0x801F0A74;
 sumRemainingLevelExp = 0x801F0BB0;
-D_801F0C98 = 0x801F0C98;
+substateHandlerTable = 0x801F0C98;
 D_801F0CD0 = 0x801F0CD0;

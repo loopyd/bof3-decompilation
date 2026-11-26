@@ -22,7 +22,7 @@ extern s32 D_80143E6C;
  * maximum value "   /%3d" at byte 0x10, the latter two drawn at one origin so
  * they overlay into a single row.
  * @source 0x801D0C04 @kind data */
-extern const char D_801D0C04[];
+extern const char textUiStrings[];
 /* @source 0x801D0C08 @kind data */
 extern const char D_801D0C08[];
 /* @source 0x801D0C10 @kind data */
@@ -73,7 +73,7 @@ extern void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, u8 arg3);
  * layout: the two zero-extended coordinates, the record index, the record level
  * byte and the record word at +8. Its call is the only fact this body binds.
  * @source 0x801D56D8 */
-extern void func_801D56D8(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4);
+extern void renderMemberPortraitPanel(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4);
 
 /* Icon-sprite emitter of this overlay at 0x801D460C, already lifted in this
  * target: the original zero-extends both coordinates before this call, so this
@@ -135,7 +135,7 @@ typedef struct ShisuPartyStatusRecord {
  *   the 2 shade comes from a current HP below two and, on the MP row, from a
  *   below-a-quarter maximum and from a current MP of zero. It closes with the
  *   sprite stream D_801D97A4 submitted at the panel origin with the flag byte 0
- *   and the portrait func_801D56D8 at (x+0x14, y+0x12) for the record index,
+ *   and the portrait renderMemberPortraitPanel at (x+0x14, y+0x12) for the record index,
  *   its level byte and its word at +8. No jal and no word of this payload names
  *   this span, so it is an overlay entry called from outside the payload; its
  *   0x48-byte frame keeps $s0 through $s7 and $fp beside $ra, spills the index
@@ -159,7 +159,7 @@ void renderPartyMemberBox(u16 x, u16 y, u8 index, u8 flag) {
       (u16)(x + 0x56), (u16)(y + 2), record->icon,
       flag ? 1 : (u8)((record->status.half >> 6) & 2));
   func_8014F800((s16)(x + 0x14), (s16)(y + 3), align, 5, (u32)record);
-  sprintf((char*)D_80145AD4, D_801D0C04, record->level);
+  sprintf((char*)D_80145AD4, textUiStrings, record->level);
   func_80150098((s16)(x + 0x16), (s16)(y + 0x17), align, D_80145AD4);
 
   if ((record->status.word & 0xA0) == 0xA0) {
@@ -226,6 +226,6 @@ void renderPartyMemberBox(u16 x, u16 y, u8 index, u8 flag) {
   func_80150098(textX, textY, align, D_80145AD4);
 
   func_801AF390((s16)x, (s16)y, D_801D97A4, 0);
-  func_801D56D8((u16)(x + 0x14), (u16)(y + 0x12), index, record->level,
+  renderMemberPortraitPanel((u16)(x + 0x14), (u16)(y + 0x12), index, record->level,
                 record->unk_08);
 }

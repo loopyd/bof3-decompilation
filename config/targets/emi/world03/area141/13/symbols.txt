@@ -23,4 +23,4 @@ claimFlagIndexActivate = 0x801F4508;
 func_801F4584 = 0x801F4584;
 func_801F4674 = 0x801F4674;
 func_801F4764 = 0x801F4764;
-D_801F47D4 = 0x801F47D4;
+stateShapeRectTable = 0x801F47D4;

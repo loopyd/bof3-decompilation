@@ -8,13 +8,13 @@
  * with a shared byte offset register, so the columns keep separate array
  * declarations instead of a row view.
  * @source 0x801F5CC0 @kind table */
-extern u8 D_801F5CC0[];
+extern u8 tableStateGateRows[];
 /* @source 0x801F5CC1 @kind table */
-extern u8 D_801F5CC1[];
+extern u8 stateGateSecondKey[];
 /* @source 0x801F5CC2 @kind table */
-extern u8 D_801F5CC2[];
+extern u8 stateGateMatchFlag[];
 /* @source 0x801F5CC3 @kind table */
-extern u8 D_801F5CC3[];
+extern u8 stateGateResultValue[];
 
 /* First main-RAM flag bank tested through func_8015B5D4. The original forms the
  * bank address with one `lui`/`addiu` pair and passes it whole, so the cell
@@ -103,13 +103,13 @@ s32 requestMatchedRowSubstate(
 
   for (i = 0; i < 7; i++) {
     offset = i * 4;
-    if (arg0 != D_801F5CC0[offset]) {
+    if (arg0 != tableStateGateRows[offset]) {
       continue;
     }
-    if (arg1 != D_801F5CC1[offset]) {
+    if (arg1 != stateGateSecondKey[offset]) {
       continue;
     }
-    if ((D_801F5CC2[offset] & 0xF) != *(volatile u8*)&D_80145E98) {
+    if ((stateGateMatchFlag[offset] & 0xF) != *(volatile u8*)&D_80145E98) {
       continue;
     }
     break;
@@ -121,6 +121,6 @@ s32 requestMatchedRowSubstate(
 
   func_8015C088();
   D_801448EB = 0x14;
-  D_801448EC = D_801F5CC3[i * 4];
+  D_801448EC = stateGateResultValue[i * 4];
   return 1;
 }

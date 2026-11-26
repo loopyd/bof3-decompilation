@@ -16,7 +16,7 @@ extern void (*D_8011819C[])(void); /* @source 0x8011819C @kind data */
 /* Record pass of this overlay: sets the draw state up and walks the sixteen
  * records of the 0x800E4800 work table, repointing the record cell workRecordCursor
  * once per record and running the renderer func_801170D8 on each claimed one. */
-extern void func_80117900(void); /* @source 0x80117900 */
+extern void stateRunRecordPass(void); /* @source 0x80117900 */
 
 /* @source 0x80117610
  * @behavior Step dispatch of this overlay on work-record byte 1: loads
@@ -25,7 +25,7 @@ extern void func_80117900(void); /* @source 0x80117900 */
  * matching entry of the handler run based at 0x8011819C, entry 4 of the
  * thirteen-pointer run the Splat textbin row D_8011818C places, with no
  * arguments. The original does not bound the index before the scaled load. Once
- * the handler returns it runs the overlay's record pass func_80117900. It reads
+ * the handler returns it runs the overlay's record pass stateRunRecordPass. It reads
  * no other state and writes none; the pointer-cell load precedes frame creation,
  * the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the slot
  * after the index byte and the slot after the table load stay nops. No call or
@@ -38,4 +38,4 @@ extern void func_80117900(void); /* @source 0x80117900 */
 EMI_DEFINE_DISPATCHER_THEN_RESET(
     EMI_DISPATCH_WORK_BYTE_1,
     callRunRecordPass,
-    D_8011819C, func_80117900);
+    D_8011819C, stateRunRecordPass);

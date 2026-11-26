@@ -29,7 +29,7 @@ typedef struct GameWorkRecord {
 
 /* Published main lookup table base, filled in by the boot initializer. */
 /* @source 0x801459F4 @kind data */
-extern MainLookupRecord* D_801459F4;
+extern MainLookupRecord* tableMainLookupRecords;
 
 /* Entry count for the table above. The original reaches it through a constant
  * address that it keeps in one register across the scan, so the literal stays
@@ -39,15 +39,15 @@ extern MainLookupRecord* D_801459F4;
 /* Per-entry bytes copied into work word 0x70 and work byte 0x2B. Both tables are
  * addressed with the doubled entry id, so the two labels stay separate. */
 /* @source 0x80181484 @kind data */
-extern u8 D_80181484[];
+extern u8 mainLookupWordByte[];
 /* @source 0x80181485 @kind data */
-extern u8 D_80181485[];
+extern u8 mainLookupFieldByte[];
 
 /* @behavior Scans the published main lookup table for the record whose 16-bit
  * entry id matches. On a match it copies that record into the active work
  * record: bytes 0x25-0x28 and the halfword at 0x2C take the record's fields,
- * word 0x70 has its low byte cleared before the per-entry byte from D_80181484
- * replaces it, and byte 0x2B takes the byte from D_80181485. Returns 0 when the
+ * word 0x70 has its low byte cleared before the per-entry byte from mainLookupWordByte
+ * replaces it, and byte 0x2B takes the byte from mainLookupFieldByte. Returns 0 when the
  * record was found and 1 when the scan reaches the entry count without a match.
  * @source 0x8014DD3C
  * @status exact
@@ -60,17 +60,17 @@ s32 applyMainLookupRecord(u16 id) {
   u32 row;
 
   for (index = 0; index < MAIN_LOOKUP_RECORD_COUNT; index++) {
-    matched = D_801459F4[index].id;
+    matched = tableMainLookupRecords[index].id;
     if (matched == id) {
-      ((GameWorkRecord*)g_game_work)->unk_25 = D_801459F4[index].unk_04;
-      ((GameWorkRecord*)g_game_work)->unk_26 = D_801459F4[index].unk_05;
-      ((GameWorkRecord*)g_game_work)->unk_27 = D_801459F4[index].unk_02;
-      ((GameWorkRecord*)g_game_work)->unk_28 = D_801459F4[index].unk_06;
+      ((GameWorkRecord*)g_game_work)->unk_25 = tableMainLookupRecords[index].unk_04;
+      ((GameWorkRecord*)g_game_work)->unk_26 = tableMainLookupRecords[index].unk_05;
+      ((GameWorkRecord*)g_game_work)->unk_27 = tableMainLookupRecords[index].unk_02;
+      ((GameWorkRecord*)g_game_work)->unk_28 = tableMainLookupRecords[index].unk_06;
       row = (u32)matched * 2;
-      ((GameWorkRecord*)g_game_work)->unk_2C = D_801459F4[index].unk_07;
+      ((GameWorkRecord*)g_game_work)->unk_2C = tableMainLookupRecords[index].unk_07;
       ((GameWorkRecord*)g_game_work)->unk_70 &= 0xFFFFFF00u;
-      ((GameWorkRecord*)g_game_work)->unk_70 = D_80181484[row];
-      ((GameWorkRecord*)g_game_work)->unk_2B = D_80181485[row];
+      ((GameWorkRecord*)g_game_work)->unk_70 = mainLookupWordByte[row];
+      ((GameWorkRecord*)g_game_work)->unk_2B = mainLookupFieldByte[row];
       return 0;
     }
   }

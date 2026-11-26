@@ -6,11 +6,11 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* Local polygon helper that emits the four texture-mapped quads of the work
  * record's position band. */
-extern void func_801F2EFC(void); /* @source 0x801F2EFC */
+extern void renderStepBandQuads(void); /* @source 0x801F2EFC */
 
 /* Local polygon helper that emits the work record's quad pair at an offset of
  * sixteen from the position word. */
-extern void func_801F3064(void); /* @source 0x801F3064 */
+extern void renderFixedOffsetQuad(void); /* @source 0x801F3064 */
 
 /* @source 0x801F32FC
  * @behavior Overlay per-frame work-record step: increments the tick byte at
@@ -47,6 +47,6 @@ void stateAlternateParityPolygons(void) {
     *(s32*)(tail + 0x34) = -0x2B80;
     tail[2] = state + 1;
   }
-  func_801F2EFC();
-  func_801F3064();
+  renderStepBandQuads();
+  renderFixedOffsetQuad();
 }

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x801F31C0 */
-extern u32 func_801F31C0(void);
+extern u32 stateStepWorkRecords(void);
 
 /* @source 0x80196070 */
 extern void func_80196070(void);
@@ -9,7 +9,7 @@ extern void func_80196070(void);
 /* @source 0x801F2E94
  * @behavior Third handler of this overlay's state-byte-1 dispatch table at
  *           0x801F44B8: its pointer word is table entry 2 at 0x801F44C0. It
- *           runs the 0x800E4800 work-record step func_801F31C0, which walks
+ *           runs the 0x800E4800 work-record step stateStepWorkRecords, which walks
  *           the 0x10 records of the 0x18-byte-stride block whose occupancy
  *           bytes start at 0x800E4815, draws each occupied record through
  *           func_801F2EC8 and answers 1 when any record was occupied, 0 when
@@ -31,7 +31,7 @@ extern void func_80196070(void);
  * @residual none
  */
 void stepActiveFlagsNone(void) {
-  if ((u8)func_801F31C0() == 0) {
+  if ((u8)stateStepWorkRecords() == 0) {
     func_80196070();
   }
 }

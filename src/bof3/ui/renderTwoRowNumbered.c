@@ -6,7 +6,7 @@
  * counts 7 and 4 (it reads each count as a byte, multiplies it by 8 and adds the
  * 0x2D and 0x18 origin biases), so this body asks for a 7 by 4 cell grid.
  * @source 0x801D7418 */
-extern void func_801D7418(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+extern void renderPanelBacking(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 
 /* Main-executable sprite-record helper: emits the 16 by 16 icon whose id is the
  * first argument at the position given by the next two, with the size pair and
@@ -42,7 +42,7 @@ extern const char D_801D0D7C[]; /* @source 0x801D0D7C @kind data */
  * @behavior Two-row numbered panel of the SHISU overlay, the copy of the shop
  *           value panel in emi/etc/shop/00 at 0x801DDFB0: takes the panel
  *           origin, a flags word, the selected row and a variant byte. It draws
- *           the 7 by 4 cell backing through the overlay's own func_801D7418
+ *           the 7 by 4 cell backing through the overlay's own renderPanelBacking
  *           with the counts 7 and 4, the 16 by 16 icon 0x14 through
  *           func_801644D8 at (x + 7, y + 5) with the size pair 16/16 and the
  *           attribute 128, and the caption through func_8014F800 at
@@ -79,7 +79,7 @@ void renderTwoRowNumbered(s16 x, s16 y, u32 flags, u8 row,
   u32 shade;
   u32 texture;
 
-  func_801D7418(x, y, 7, 4);
+  renderPanelBacking(x, y, 7, 4);
   func_801644D8(20, (u16)(x + 7), (u16)(y + 5), 16, 16, 128);
   shade = 0x1C;
   if (variant == 0) {

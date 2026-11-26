@@ -5,7 +5,7 @@
  * semi-transparent prim from the record words at +0x14 and +0x18, so its only
  * argument is the base pointer the sweep below already walks. The span is still
  * an asm row in this target. */
-void func_801F32A4(u8* record); /* @source 0x801F32A4 */
+void stateStepVelocityBounce(u8* record); /* @source 0x801F32A4 */
 
 /* @source 0x801F3368
  * @behavior Per-frame sweep of the 0x80 entries of the 0x24-byte-stride effect
@@ -16,7 +16,7 @@ void func_801F32A4(u8* record); /* @source 0x801F32A4 */
  *   to -0x2000000 and negates the third step word, so the entry bounces off that
  *   floor. It then lowers the counter at +0x03 by 2, decrements the counter at
  *   +0x02 and clears the in-use flag once that counter reaches zero, draws the
- *   entry through func_801F32A4 with the record base pointer and sets its result
+ *   entry through stateStepVelocityBounce with the record base pointer and sets its result
  *   to 1. It takes no arguments and returns 1 when at least one entry was live
  *   and 0 otherwise; its only in-payload caller is the step handler at
  *   0x801F2DA4, whose jal at 0x801F2E08 tests that result's low byte before it
@@ -86,7 +86,7 @@ s32 stepVelocityBounceCountdowns(
       if (--record[2] == 0) {
         record[0] = 0;
       }
-      func_801F32A4(record);
+      stateStepVelocityBounce(record);
       handled = 1;
     }
     record += 0x24;

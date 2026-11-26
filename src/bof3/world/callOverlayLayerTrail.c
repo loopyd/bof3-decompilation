@@ -11,7 +11,7 @@ extern u8 D_8014933B; /* @source 0x8014933B @kind data */
  * handlers 0x801F2C50, 0x801F2C7C, 0x801F2CC0, 0x801F2CE0, 0x801F2D7C,
  * 0x801F2DE8 and 0x801F2E14, and the word at 0x801F44D4 that follows them is
  * zero. */
-extern void (*D_801F44B8[])(void); /* @source 0x801F44B8 @kind data */
+extern void (*stateLayerHandlerTable[])(void); /* @source 0x801F44B8 @kind data */
 
 /* The two-layer trail draw this overlay entry runs after the selected step. */
 extern void
@@ -21,7 +21,7 @@ renderPairsAdvancedClock(
 /* Textured-quad draw routine of this overlay: it issues SetDrawMode,
  * SetPolyFT4, SetShadeTex and SetSemiTrans packets over its three passes. */
 /* @source 0x801F400C @kind function */
-extern void func_801F400C(void);
+extern void renderTexturedQuadPasses(void);
 
 /* @source 0x801F2C04
  * @behavior Per-frame entry hook of this overlay, the code span directly behind
@@ -46,7 +46,7 @@ extern void func_801F400C(void);
  */
 void callOverlayLayerTrail(
     void) {
-  D_801F44B8[D_8014933B]();
+  stateLayerHandlerTable[D_8014933B]();
   renderPairsAdvancedClock();
-  func_801F400C();
+  renderTexturedQuadPasses();
 }

@@ -13,7 +13,7 @@ s32 func_8014D978(void); /* @source 0x8014D978 */
 
 /* @source 0x800C1940
  * @behavior Entry 0 of the byte-3 handler run this overlay bases at 0x800C2714,
- * the word 0x800C2714 inside its reviewed `textbin` row D_800C26B8:
+ * the word 0x800C2714 inside its reviewed `textbin` row stateStepDataTable:
  * callStateTable2714Boss scales the work record's
  * unsigned byte 3 by four and calls that entry with no arguments, and the run's
  * own void-returning type is what this body returns. No jal in the payload
@@ -30,7 +30,7 @@ s32 func_8014D978(void); /* @source 0x8014D978 */
  * the first and third stores keep the original nop in that slot. Roles of work
  * bytes 9 and 0xA are not established here: the sibling
  * seedQuadSizeAndAnchorThenDrawRotatedQuadAndAdvanceStateBossBoss03416_800C1A78
- * passes work byte 9 to func_800C23D4, which this lane did not lift, so the name
+ * passes work byte 9 to renderSpinQuad, which this lane did not lift, so the name
  * describes the recorded effect.
  *
  * Shape: the 0x3C-byte exact lift

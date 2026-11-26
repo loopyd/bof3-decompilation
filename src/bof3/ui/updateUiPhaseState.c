@@ -7,7 +7,7 @@
 extern u16 D_80143C40;
 
 /* Shared sprite-grid index byte of the main executable, handed straight to the
- * overlay sprite emitter func_801D627C. The original reads it with `lbu` into
+ * overlay sprite emitter renderSpriteGrid. The original reads it with `lbu` into
  * the first argument register ahead of the frame setup.
  * @source 0x80144953 @kind unknown */
 extern u8 D_80144953;
@@ -37,14 +37,14 @@ extern u8 D_80148654;
 /* Sprite emitter of this overlay: takes the shared sprite-grid index as its
  * only argument and returns nothing this body consumes.
  * @source 0x801D627C @kind unknown */
-extern void func_801D627C(u32 grid);
+extern void renderSpriteGrid(u32 grid);
 
 /* Panel emitter of this overlay: draws the panel anchored at the signed
  * coordinates the two arguments hold. Its own prologue narrows the pair with
  * `andi 0xFFFF`, so the parameters are declared wide here and the constant
  * arguments keep their bare `addiu` form.
  * @source 0x801D2304 @kind unknown */
-extern void func_801D2304(s32 x, s32 y);
+extern void renderMasterListPanel(s32 x, s32 y);
 
 /* @source 0x801D2298
  * @behavior Third handler of the BATE overlay phase handler table D_801D8764,
@@ -53,9 +53,9 @@ extern void func_801D2304(s32 x, s32 y);
  *           opens with. It reads the shared front-end effect-busy gate halfword
  *           D_80143C40 once at entry. While that gate is set the handler only
  *           redraws the shared screen: it passes the shared sprite-grid index
- *           byte D_80144953 to this overlay sprite emitter func_801D627C and
+ *           byte D_80144953 to this overlay sprite emitter renderSpriteGrid and
  *           then draws this overlay panel at the fixed coordinates 0x37, 0x37
- *           through func_801D2304. Once the gate is clear it resets the shared
+ *           through renderMasterListPanel. Once the gate is clear it resets the shared
  *           UI phase state instead of drawing: the per-frame phase timer
  *           D_80148654 goes to 0, the shared UI byte D_80148650 is armed with 1,
  *           and the shared UI phase byte D_80148651 and sub-step byte
@@ -73,7 +73,7 @@ void updateUiPhaseState(void) {
     D_80148651 = 0;
     D_80148652 = 0;
   } else {
-    func_801D627C(D_80144953);
-    func_801D2304(0x37, 0x37);
+    renderSpriteGrid(D_80144953);
+    renderMasterListPanel(0x37, 0x37);
   }
 }

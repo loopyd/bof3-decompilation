@@ -95,7 +95,7 @@ extern u32 func_801E590C(u32 arg0, u32 arg1); /* @source 0x801E590C */
 /* Overlay step that follows this body in the payload and stays an asm boundary
  * of this target, so it keeps its raw name and needs no map row; this target
  * map binds the address through the boundary label. */
-extern void func_801F02B0(void); /* @source 0x801F02B0 */
+extern void stateCompactWorkRows(void); /* @source 0x801F02B0 */
 
 /* @source 0x801EF148
  * @behavior Entry 3 of the ten-entry code-pointer run based at 0x801F0988,
@@ -139,7 +139,7 @@ extern void func_801F02B0(void); /* @source 0x801F02B0 */
  *           0x2 exactly as the hit arm does, through one further cell read that
  *           serves both the test and the stores.
  *           It then calls the shared service func_800AF764 and the overlay step
- *           func_801F02B0 unconditionally, re-reads the cell and, while work
+ *           stateCompactWorkRows unconditionally, re-reads the cell and, while work
  *           byte 0x2 is not 1 and work byte 0x4 is zero, forwards the shared
  *           battle target byte 0x80146384 with the flag word 0x10 to the battler
  *           status helper func_800A9610 so that this step raises that flag.
@@ -221,7 +221,7 @@ void renderPointHeadingHit(void) {
     }
   }
   func_800AF764();
-  func_801F02B0();
+  stateCompactWorkRows();
   work = g_battle_work;
   if (work[2] != 1 && work[4] == 0) {
     func_800A9610(D_80146384, 0x10);

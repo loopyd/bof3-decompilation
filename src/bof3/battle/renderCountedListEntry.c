@@ -48,7 +48,7 @@ extern void func_80150098(s16 arg0, s16 arg1, u32 arg2, const u8* arg3);
  * (0x801F0650) calls once per non-zero id of the counted list, which passes
  * the id's high byte as the item type and its low byte as the item index. The
  * 13-byte palette table at 0x801F0CD4 holds 6, 8, 10, 9, 11, 12, 6, 6, 6, 6,
- * 20, 21, 22 and lives in the tail of the reviewed `textbin` row D_801F0C98,
+ * 20, 21, 22 and lives in the tail of the reviewed `textbin` row substateHandlerTable,
  * one byte past the run start of the single unit glyph at 0x801F0CD0.
  */
 void renderCountedListEntry(s16 x, s16 y, s32 flags, u32 item_type,

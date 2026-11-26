@@ -10,7 +10,7 @@
  * per-slot counters at 0x801F00B0 while three times the slot index stays below
  * work byte 9, and masks a counter with 0xF when work byte 2 is 1. The call sets
  * no argument registers and discards no return value. */
-extern void func_801EF984(void); /* @source 0x801EF984 */
+extern void renderAcceptedSlots(void); /* @source 0x801EF984 */
 
 /* Scratchpad work-object pointer cell, bound at 0x1F800044 by this target's
  * map. The cell is re-materialised (lui / lw) after the draw call and again
@@ -54,7 +54,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  */
 void renderSlotGridDraw(
     void) {
-  func_801EF984();
+  renderAcceptedSlots();
   if ((g_battle_work[9] += 1) == 0x60) {
     g_battle_work[2]++;
   }

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
-extern void func_801F3F04(s32 arg0); /* @source 0x801F3F04 */
+extern void renderRingQuadFan(s32 arg0); /* @source 0x801F3F04 */
 extern void func_80196070(void); /* @source 0x80196070 */
 
 /* @source 0x801F3E94
@@ -18,7 +18,7 @@ void callQuarterDecrementReset(void) {
   u8* work;
   u8* step;
 
-  func_801F3F04(scratchpadWorkRecord[9] >> 2);
+  renderRingQuadFan(scratchpadWorkRecord[9] >> 2);
   work = scratchpadWorkRecord;
   work[9] -= 1;
   step = scratchpadWorkRecord;

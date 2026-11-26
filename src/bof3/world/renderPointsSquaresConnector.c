@@ -22,7 +22,7 @@ typedef struct World01Area048Tint {
 } World01Area048Tint;
 
 /* @source 0x801F4D5C @kind data */
-extern World01Area048Tint D_801F4D5C[];
+extern World01Area048Tint tableLineColors[];
 
 /* One 8-byte projected entry: the shared projector writes the halfword pair at
  * +0x00/+0x02 and the trailing four bytes stay unwritten here, and the shared
@@ -129,9 +129,9 @@ void renderPointsSquaresConnector(
   SetSemiTrans(line, 0);
   func_801AFF04(point0, &line->x0);
   func_801AFF04(point1, &line->x1);
-  line->r0 = D_801F4D5C[workRecordCursor1F800044[6]].r;
-  line->g0 = D_801F4D5C[workRecordCursor1F800044[6]].g;
-  line->b0 = D_801F4D5C[workRecordCursor1F800044[6]].b;
+  line->r0 = tableLineColors[workRecordCursor1F800044[6]].r;
+  line->g0 = tableLineColors[workRecordCursor1F800044[6]].g;
+  line->b0 = tableLineColors[workRecordCursor1F800044[6]].b;
   func_8014E5A0(3, 0x10);
 
   heading = func_8017A138(line->y1 - line->y0, line->x1 - line->x0);

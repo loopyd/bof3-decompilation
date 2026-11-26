@@ -9,7 +9,7 @@ typedef struct Area14313SignedPair {
 } Area14313SignedPair;
 
 /* @source 0x801F42E8 @kind data */
-extern Area14313SignedPair D_801F42E8[];
+extern Area14313SignedPair tableRecordPointPairs[];
 
 typedef struct Area14313SeedRecord {
   u8 unk_00;
@@ -45,8 +45,8 @@ void initialize16RecordsSignedPairs(void) {
     record->unk_01 = 0;
     record->unk_02 = rand() | 0xF0;
     record->unk_03 = rand() & 0x1F;
-    record->unk_04 = D_801F42E8[i].x << 16;
-    record->unk_08 = D_801F42E8[i].y << 16;
+    record->unk_04 = tableRecordPointPairs[i].x << 16;
+    record->unk_08 = tableRecordPointPairs[i].y << 16;
     record->unk_0c = func_8015477C(record->unk_04, record->unk_08) << 16;
     flags += 0x14;
     i++;

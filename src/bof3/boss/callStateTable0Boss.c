@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 /* This overlay's handler run at 0x800C1C60: twelve code pointers inside the
- * reviewed `textbin` row D_800C1C10, holding this payload's own func_800C1980
+ * reviewed `textbin` row tableStepDataRow, holding this payload's own func_800C1980
  * followed by the shared main-executable handlers 0x801E52E8, 0x801E35D8,
  * 0x801E3638, 0x801E3980, 0x801E3A00, 0x801E3B68, 0x801E4AE8, 0x801E4D8C,
  * 0x801E4F64, 0x801E52E8 and 0x801E5288; the row's last pointer run at

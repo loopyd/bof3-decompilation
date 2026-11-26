@@ -83,7 +83,7 @@ segments:
     - invokeSharedHelper13
   - - 1864
     - asm
-    - func_801EF348
+    - fillScreenTranslucent
   - - 2356
     - c
     - callWorkByte1Handler10
@@ -108,10 +108,10 @@ segments:
     - '@behavior: Subtracts two from the scratchpad work object byte at offset 0xA and returns while the stored value, truncated to a byte, stays nonzero; at zero it decrements byte 0xB of the shared battle work record reached through 0x801EB4E0 and calls this overlay clear routine at 0x801EFDB0, with the 0x18-byte frame holding only $ra across that call.'
   - - 3068
     - asm
-    - func_801EF7FC
+    - drawRingTrailQuad
   - - 3656
     - asm
-    - func_801EFA48
+    - drawRingPolyQuad
   - - 4428
     - c
     - reservePoolSlot

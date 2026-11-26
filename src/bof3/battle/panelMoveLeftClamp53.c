@@ -10,7 +10,7 @@
 void panelMoveLeftClamp53(void) {
     PanelTask* panel;
 
-    panel = D_80148648;
+    panel = panelTaskRoot;
     panel->x -= 0x20;
     if ((s16)panel->x < 0x53) {
         panel->x = 0x53;

@@ -47,7 +47,7 @@ extern u8 *D_801F1054; /* @source 0x801F1054 @kind data */
  * frame. Both handlers take no arguments and return nothing. */
 extern void statePoolPerEligible(
     void); /* @source 0x801EECF8 */
-extern void func_801EEEE4(void); /* @source 0x801EEEE4 */
+extern void raiseInvokeHelperZero4(void); /* @source 0x801EEEE4 */
 
 /* This target's record byte-1 step dispatcher, exact at 0x801EF340: it scales
  * the published record's unsigned byte at offset 1 by four and invokes the
@@ -94,7 +94,7 @@ void callPublishPoolRecords(
     void) {
   void (*handlers[2])(void) = {
       statePoolPerEligible,
-      func_801EEEE4};
+      raiseInvokeHelperZero4};
   u8 *record;
   u8 *saved_pointer;
   u8 *record_work;

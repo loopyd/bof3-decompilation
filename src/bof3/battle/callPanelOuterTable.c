@@ -8,5 +8,5 @@
  */
 
 void callPanelOuterTable(void) {
-  battlePanelOuterState[D_80148648->unk_00[2]]();
+  battlePanelOuterState[panelTaskRoot->unk_00[2]]();
 }

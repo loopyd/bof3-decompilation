@@ -5,7 +5,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern s16 D_1F800002; /* @source 0x1F800002 @kind data */
 extern s16 D_1F80000E; /* @source 0x1F80000E @kind data */
 extern s16 D_1F800014; /* @source 0x1F800014 @kind data */
-extern u8 D_801F0C9C[]; /* @source 0x801F0C9C @kind data */
+extern u8 tablePaletteColorRamp[]; /* @source 0x801F0C9C @kind data */
 extern u8 D_801F0C9D[]; /* @source 0x801F0C9D @kind data */
 extern u8 D_801F0C9E[]; /* @source 0x801F0C9E @kind data */
 extern u8 D_801F0CCC[]; /* @source 0x801F0CCC @kind data */
@@ -66,7 +66,7 @@ void renderFansOppositeDepths(void) {
     scratch[0] = 80;
     scratch[-1] = 48;
     scratch[6] = (phase - g_battle_work[9]) / 8;
-    scratch[3] = D_801F0C9C[g_battle_work[4] * 12 + scratch[6] * 3];
+    scratch[3] = tablePaletteColorRamp[g_battle_work[4] * 12 + scratch[6] * 3];
     scratch[4] = D_801F0C9D[g_battle_work[4] * 12 + scratch[6] * 3];
     scratch[5] = D_801F0C9E[g_battle_work[4] * 12 + scratch[6] * 3];
     shape[0].vx = 0;

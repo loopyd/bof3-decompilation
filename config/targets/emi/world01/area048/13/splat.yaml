@@ -118,10 +118,10 @@ segments:
     - '@behavior: draws one 8 by 0x78 move block through the emitter at 0x801F41F0 using the record halfword +0x36 and the column byte that the table at 0x801F4E74 holds for the work byte +0x09 halved, advances that byte, and once it reaches 7 clears it and stores 3 into the record''s dispatch state byte +0x02 before passing the halfword +0x36 to the row draw routine at 0x801F4258.'
   - - 5616
     - asm
-    - func_801F41F0
+    - renderSetDrawOrigin
   - - 5720
     - asm
-    - func_801F4258
+    - renderGridRowPrimitives
   - - 7056
     - c
     - stateProgressReleaseOverlay
@@ -170,5 +170,5 @@ segments:
     - '@behavior: requests frontend cue 0x20C through the shared frontend cue dispatcher 0x8015DF18 while the shared front-side byte 0x80143F03 reads 5, and does nothing otherwise; takes no arguments and returns nothing.'
   - - 8540
     - textbin
-    - D_801F4D5C
+    - tableLineColors
 - - 14328

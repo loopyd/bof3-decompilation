@@ -117,7 +117,7 @@ segments:
     start: 0xb78fc
     vram: 0x8014e0fc
     subsegments:
-      - [0xb78fc, c, func_8014E0FC, '@source: src/bof3/io/func_8014E0FC.c']
+      - [0xb78fc, c, resourceLoadImageFile, '@source: src/bof3/io/resourceLoadImageFile.c']
   - [0xb7a2c, bin, post_main_lookup_record]
   - name: slus_function_8014e564
     type: code

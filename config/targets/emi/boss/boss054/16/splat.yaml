@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - textbin
-    - func_800C1804
+    - stepHandlerTable
   - - 56
     - c
     - callStateTable2090Boss
@@ -112,5 +112,5 @@ segments:
     - func_800C2030
   - - 2168
     - textbin
-    - D_800C2078
+    - stepDataRow
 - - 2252

@@ -17,7 +17,7 @@ extern u16 D_80145AA8; /* @source 0x80145AA8 @kind unknown */
  * target: it reads GetGraphType, sets a draw mode, walks the work record's flag
  * bytes and emits SetTile primitives at g_PrimCursor. Its role stays
  * address-anchored here because its own body is not lifted. */
-extern void func_801EF55C(void); /* @source 0x801EF55C @kind function */
+extern void renderTilePrimitives(void); /* @source 0x801EF55C @kind function */
 
 /* @source 0x801EF4A8
  * @behavior Frame step of this overlay's leading handler run: the word at
@@ -50,7 +50,7 @@ extern void func_801EF55C(void); /* @source 0x801EF55C @kind function */
  * @residual none
  */
 void renderTilePrimitivesPad(void) {
-  func_801EF55C();
+  renderTilePrimitives();
   if (D_80145AA8 != 0) {
     g_battle_work[1] = 4;
   }

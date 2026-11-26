@@ -2,6 +2,10 @@
 #include "ui/panel_task.h"
 #include "ui/panel_task_templates.h"
 
+/* The shared task templates spell the panel root `D_80148648`; this target names the
+ * same cell `panelTaskRoot`, so the unit binds one to the other for the templates. */
+#define D_80148648 panelTaskRoot
+
 /* @source 0x800B23F8
  * @behavior Adds 32 to 16-bit panel x; signed results above 17 clamp to 17 and clear state.
  * @status exact

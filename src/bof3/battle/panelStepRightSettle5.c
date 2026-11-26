@@ -13,7 +13,7 @@ void panelStepRightSettle5(void) {
     s16 value;
 
     func_800B0F9C();
-    task = D_80148648;
+    task = panelTaskRoot;
     value = task->x;
     if (value < 0x5B) {
         task->x = value + 0x20;

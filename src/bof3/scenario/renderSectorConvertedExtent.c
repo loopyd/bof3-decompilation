@@ -81,7 +81,7 @@ typedef struct ScenarioSce15ef100ScreenPoint {
  *
  * Name evidence: the only in-image references to 0x801D147C are the three `jal`
  * sites of this payload's work step handlers at 0x801D0CC0, 0x801D0D54 and
- * 0x801D0DD8, entries 1, 2 and 3 of the code-pointer run based at D_801D3918
+ * 0x801D0DD8, entries 1, 2 and 3 of the code-pointer run based at stepHandlerTable
  * that the overlay entry func_801D0C04 indexes with work byte +0x1; all three
  * hand the work object's origin block at +0x64, the halfword at +0x2E and the
  * literal 6, so the mask lights green and red together and no other site names

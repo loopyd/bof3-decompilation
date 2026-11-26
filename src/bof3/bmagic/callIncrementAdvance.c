@@ -2,7 +2,7 @@
 
 /* Local helper at 0x801F08AC. Its own entry takes no arguments and keeps a
  * 0x20-byte frame; this caller discards its result. */
-extern void func_801F08AC(void); /* @source 0x801F08AC @kind function */
+extern void statePublishWorkBytes(void); /* @source 0x801F08AC @kind function */
 
 /* Scratchpad work-object pointer cell, shared by this overlay's step handlers.
  * The row lives in this target's map. */
@@ -32,7 +32,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  */
 void callIncrementAdvance(
     void) {
-  func_801F08AC();
+  statePublishWorkBytes();
   if ((g_battle_work[9] += 1) == 0x10) {
     g_battle_work[2]++;
   }

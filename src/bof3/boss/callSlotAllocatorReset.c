@@ -44,7 +44,7 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  *           store into the branch delay slot, and a nop into the delay slot of
  *           both calls. No jal in this payload names 0x800C198C: its only
  *           in-image reference is the word at 0x800C1DD8, record word 10 of
- *           the payload-final textbin row D_800C1DB0, and which consumer reads
+ *           the payload-final textbin row stateDispatchTable, and which consumer reads
  *           that word is not established by this body, so no caller-supplied
  *           argument role exists and the entry takes none.
  * @status exact

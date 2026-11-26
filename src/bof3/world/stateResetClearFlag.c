@@ -4,7 +4,7 @@
  * work table record by record in workRecordCursor, advances and
  * renders every claimed record of it, and leaves 1 in its return register once
  * it advanced at least one claimed record and 0 when none was claimed. */
-s32 func_80117900(void);
+s32 stateRunRecordPass(void);
 
 /* Shared work-area reset clearWorkFlags in emi/etc/game/00: zeroes work-object
  * bytes 0x00-0x04 and so returns the overlay to work state 0. */
@@ -24,7 +24,7 @@ extern u16 D_80146258;
  * callRunRecordPass indexes
  * from the work object byte at offset 1 once that byte reads 7, the state the
  * state-6 handler lowerMirrorEveryFourth advances to. It runs the overlay
- * record pass func_80117900, which walks the sixteen records of 0x28-byte stride
+ * record pass stateRunRecordPass, which walks the sixteen records of 0x28-byte stride
  * in the 0x800E4800 work table, advancing and rendering each claimed one, and
  * leaves 1 in its return register once it advanced at least one claimed record
  * and 0 when none was claimed. When that result masked to its low byte is zero
@@ -41,7 +41,7 @@ extern u16 D_80146258;
  * @residual none
  */
 void stateResetClearFlag(void) {
-  if ((func_80117900() & 0xFF) == 0) {
+  if ((stateRunRecordPass() & 0xFF) == 0) {
     func_80196070();
     D_80146258 &= 0xFFBF;
   }

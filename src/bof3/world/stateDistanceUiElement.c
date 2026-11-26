@@ -63,7 +63,7 @@ extern void func_801A4BC0(s32 x, s32 y, u32 size);
  * and it takes no arguments and answers nothing.
  * @source 0x801F3914
  */
-extern void func_801F3914(void);
+extern void advanceWorkStep(void);
 
 /* @source 0x801F44F4
  * @behavior Entry 0 of the state-byte-2 handler run based at 0x801F4BB8 of this
@@ -152,5 +152,5 @@ void stateDistanceUiElement(
                 FIELD_REF(s16, workRecordCursor1F800044, 0x3A) + 1,
                 D_801F4BDC[x]);
   workRecordCursor1F800044[2]++;
-  func_801F3914();
+  advanceWorkStep();
 }

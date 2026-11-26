@@ -15,7 +15,7 @@ extern u8* D_1F800044;
  * left-shifted return of func_8015477C into word +0x3C, then clears the lead
  * byte of all 256 entries of the 0x1C-byte-stride effect table at 0x800E4800.
  * It takes no arguments and returns nothing, so this handler reads no result. */
-extern void func_801F35B8(void); /* @source 0x801F35B8 */
+extern void stateClearRecordSlots(void); /* @source 0x801F35B8 */
 
 /* Same-binary cue dispatcher at 0x8015DF18, which the generated
  * undefined_funcs_auto file of this target binds for comparison. */
@@ -50,7 +50,7 @@ void step0ResetEffectRefill(
   u8* work;
   u8* stage;
 
-  func_801F35B8();
+  stateClearRecordSlots();
   work = D_1F800044;
   work[6] = 0;
   stage = D_1F800044;

@@ -39,7 +39,7 @@ sources = [
     "src/bof3/callback/exitCurrentCallbackThread.c",
     "src/bof3/callback/initCallbackSlots.c",
     "src/bof3/render/fadeLoop.c",
-    "src/bof3/io/func_8014E0FC.c",
+    "src/bof3/io/resourceLoadImageFile.c",
     "src/bof3/render/drawGlyphString8x8.c",
     "src/bof3/equipment/adjustBoundedCounter.c",
     "src/bof3/equipment/adjustByteWith100Cap.c",

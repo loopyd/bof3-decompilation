@@ -1,6 +1,6 @@
 fairyProgress = 0x801448EC;
 dispatchSoundCue = 0x8015DF18;
-D_801D0C04 = 0x801D0C04;
+textStatFormat = 0x801D0C04;
 statePublishRequestMode = 0x801D0C68;
 confirmEntryRequest = 0x801D0CAC;
 callScreenStepTable = 0x801D0E44;
@@ -36,5 +36,5 @@ commitIntoActive = 0x801D482C;
 publishTextId = 0x801D49C4;
 publishEntryTextId = 0x801D4AAC;
 saveRequestSelect = 0x801D4B58;
-D_801D4BB8 = 0x801D4BB8;
+tableRowCueValues = 0x801D4BB8;
 commuEntryNameStrings = 0x801D4D34;

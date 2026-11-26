@@ -22,7 +22,7 @@ extern u8 *D_80148210; /* @source 0x80148210 @kind data */
  * byte selected from words +0x18 and +0x1C through the shared cue queue
  * 0x801A4BC0, for the cell and the cell one row up. */
 /* @source 0x801F3C4C */
-extern void func_801F3C4C(s32 x, s32 y);
+extern void statePublishWorkRow(s32 x, s32 y);
 
 /* @source 0x801F3980
  * @behavior Projects the current scratchpad work object's position pair into
@@ -65,7 +65,7 @@ u8 projectCueCellsProgress(
   *x = work[0xD] - 0x8000;
   *y = work[0xE] - 0x8000;
   if (D_80143BB0 == 5) {
-    func_801F3C4C(*x, *y);
+    statePublishWorkRow(*x, *y);
   }
   if (D_80146867 == 0) {
     FIELD_REF(u16, D_80148210, 0x0A) -= 2;

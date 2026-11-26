@@ -7,5 +7,5 @@ setupFrontendState2C = 0x801F2D50;
 dispatchStateByte1Table3 = 0x801F2D90;
 seedWorkWord3C = 0x801F2DD4;
 drawWorkCursorQuad = 0x801F2E20;
-func_801F2E68 = 0x801F2E68;
+renderCursorQuadAt = 0x801F2E68;
 D_801F3174 = 0x801F3174;

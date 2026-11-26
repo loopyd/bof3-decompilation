@@ -4,10 +4,10 @@
  * read by the dispatcher at 0x801EF710 in this overlay, which selects a
  * handler with the record's byte 1. The cell is reloaded once per access, so
  * the original re-materializes its address (lui $v0,0x801F /
- * lw $v0,%lo(D_801F20DC)($v0)) before every byte store. The reviewed trailing
+ * lw $v0,%lo(stateWorkRecordPointer)($v0)) before every byte store. The reviewed trailing
  * data row of this target does not name the cell, so the reference resolves
  * through the target's generated undefined-symbol table. */
-extern u8 *D_801F20DC; /* @source 0x801F20DC @kind data */
+extern u8 *stateWorkRecordPointer; /* @source 0x801F20DC @kind data */
 
 /* @source 0x801F0440
  * @behavior Clears work-record bytes 0x00 through 0x04 of the record published
@@ -21,9 +21,9 @@ extern u8 *D_801F20DC; /* @source 0x801F20DC @kind data */
  * @residual none
  */
 void stateClearRecordBytes5(void) {
-  D_801F20DC[0] = 0;
-  D_801F20DC[1] = 0;
-  D_801F20DC[2] = 0;
-  D_801F20DC[3] = 0;
-  D_801F20DC[4] = 0;
+  stateWorkRecordPointer[0] = 0;
+  stateWorkRecordPointer[1] = 0;
+  stateWorkRecordPointer[2] = 0;
+  stateWorkRecordPointer[3] = 0;
+  stateWorkRecordPointer[4] = 0;
 }

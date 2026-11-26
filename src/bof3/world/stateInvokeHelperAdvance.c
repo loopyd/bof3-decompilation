@@ -3,7 +3,7 @@
 /* @source 0x80148210 @kind unknown */
 extern u16* D_80148210;
 /* @source 0x801F3450 */
-extern void func_801F3450(void);
+extern void stateApplySelection(void);
 
 /* @source 0x801F351C
  * @behavior Overlay handler: loads the work record published at scratchpad
@@ -40,7 +40,7 @@ void stateInvokeHelperAdvance(void) {
         return;
     }
     work[8] = value;
-    func_801F3450();
+    stateApplySelection();
   } else {
     D_80148210[5] += 2;
   }

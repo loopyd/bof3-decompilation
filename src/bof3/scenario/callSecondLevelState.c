@@ -9,7 +9,7 @@ extern s8 D_80146874;
  * begins.
  * @source 0x801FD1C4 @kind table
  */
-extern u32 D_801FD1C4[];
+extern u32 secondLevelHandlerTable[];
 
 /* @source 0x801F886C
  * @behavior Overlay-local second-level state dispatcher: it reads the signed
@@ -37,5 +37,5 @@ extern u32 D_801FD1C4[];
  * @residual none
  */
 void callSecondLevelState(void) {
-  ((void (*)(void))D_801FD1C4[(s8)D_80146874])();
+  ((void (*)(void))secondLevelHandlerTable[(s8)D_80146874])();
 }

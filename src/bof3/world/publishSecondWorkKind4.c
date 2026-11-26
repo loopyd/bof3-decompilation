@@ -5,7 +5,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 D_80144F5B; /* @source 0x80144F5B @kind unknown */
 extern s16 D_80145FFE; /* @source 0x80145FFE @kind unknown */
 extern s16 D_80146000; /* @source 0x80146000 @kind unknown */
-extern u8 D_801F398C[]; /* @source 0x801F398C @kind table */
+extern u8 tablePartyModeBytes[]; /* @source 0x801F398C @kind table */
 
 /* Shared front-end record allocator and seeder at 0x8015CB18: takes the next
  * free 0x74-byte record index from func_8019601C and fills record byte +0 = 1,
@@ -26,7 +26,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  *           +0x0B. Takes no arguments and returns nothing. No jal reaches this
  *           address: its only in-image reference is the code-pointer word at
  *           0x801F5C60, index 11 of the 32-entry state-pointer run at
- *           0x801F5C34 in this payload's D_801F398C textbin blob, which lists
+ *           0x801F5C34 in this payload's tablePartyModeBytes textbin blob, which lists
  *           this overlay's handlers in address order, so the state dispatcher
  *           reaches it indirectly.
  * @status exact
@@ -52,7 +52,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * D_80145E90/D_80145FD0/D_80146110 and D_80144F5B the second of the three
  * shared party-id bytes at 0x80144F5A through 0x80144F5C, so base, selected
  * table byte and the +0x2E/+0x30 halfwords all belong to one party member. The
- * table is this payload's byte-entry mode table at the head of the D_801F398C
+ * table is this payload's byte-entry mode table at the head of the tablePartyModeBytes
  * textbin region, which the neighbouring kind 4 seeds
  * 0x801F3454 (first base) and 0x801F3554 (third base) index the same way, so it
  * binds at the region start. The scratchpad cell is re-read after the call, so
@@ -64,7 +64,7 @@ void publishSecondWorkKind4(
   u8 result;
 
   D_1F800044 = D_80145FD0;
-  result = func_8015CB18(4, 0, D_801F398C[D_80144F5B], D_80145FFE, D_80146000);
+  result = func_8015CB18(4, 0, tablePartyModeBytes[D_80144F5B], D_80145FFE, D_80146000);
   if (result != 0xFF) {
     D_1F800044[0xB] = result;
   }

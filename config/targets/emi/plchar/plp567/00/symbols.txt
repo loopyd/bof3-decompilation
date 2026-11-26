@@ -37,5 +37,5 @@ claimStoreDistanceRow9 = 0x801D04EC;
 checkProjectedAgainstMap = 0x801D05D0;
 callStateHalfword2Table07 = 0x801D0704;
 callStateHalfword2Table072 = 0x801D0748;
-func_801D078C = 0x801D078C;
+workByte2HandlerTable = 0x801D078C;
 func_801D07EC = 0x801D07EC;

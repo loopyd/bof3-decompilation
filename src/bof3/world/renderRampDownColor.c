@@ -15,7 +15,7 @@ extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind data */
  * cursor cell at 0x8014598C with one colour on the top edge and the other on
  * the bottom edge, advances that cursor by 0x24 and returns nothing. Splat
  * binds the address through this target's map row. */
-void func_801F5428(s32 color);
+void fillScreenGradient(s32 color);
 
 /* @source 0x801F4B3C
  * @behavior Overlay step handler, entry index 3 of the sixteen-pointer step
@@ -55,7 +55,7 @@ void renderRampDownColor(
           ((u32)(0x19 - level * 27 / 100) << 5) |
           (u32)(u8)((u32)level / 17);
   D_8014933A = 0;
-  func_801F5428((s32)color);
+  fillScreenGradient((s32)color);
   incCell = workRecordCursor1F800044;
   incCell[9]++;
   gateCell = workRecordCursor1F800044;

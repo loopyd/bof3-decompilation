@@ -64,7 +64,7 @@ segments:
     - '@behavior: When work byte B is 0x80, decrement global work byte B and invoke helper 0x801E5988.'
   - - 2432
     - asm
-    - func_801EF580
+    - renderClutQuadBand
   - - 3416
     - c
     - callStateByte1Table0520
@@ -100,10 +100,10 @@ segments:
     - func_801EFE90
   - - 4944
     - asm
-    - func_801EFF50
+    - renderComposeWorkMatrix
   - - 5140
     - asm
-    - func_801F0014
+    - renderFadeTexturedTriangles
   - - 6308
     - asm
     - func_801F04A4

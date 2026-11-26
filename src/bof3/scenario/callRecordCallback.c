@@ -8,7 +8,7 @@ typedef void (*ScenarioScena1200RecordCallback)(u8 *record, u32 arg1);
  * requestState1Substate10 (0x801FC7D4).
  * @source 0x801FD1EC @kind table
  */
-extern ScenarioScena1200RecordCallback D_801FD1EC[];
+extern ScenarioScena1200RecordCallback recordCallbackTable[];
 
 extern u32 D_8014686C;
 
@@ -40,5 +40,5 @@ extern u32 D_8014686C;
  * @residual none
  */
 void callRecordCallback(u8 *record) {
-  D_801FD1EC[record[0x7A]](record, D_8014686C);
+  recordCallbackTable[record[0x7A]](record, D_8014686C);
 }

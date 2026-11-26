@@ -33,4 +33,4 @@ dispatchWorkByte1Handler2 = 0x801F45CC;
 func_801F4610 = 0x801F4610;
 callTwoSharedHelpers = 0x801F4740;
 func_801F4768 = 0x801F4768;
-D_801F4FDC = 0x801F4FDC;
+stateSpriteLayerTable = 0x801F4FDC;

@@ -8,7 +8,7 @@
  * 0x801F0C98 are claimed here. The run continues to 0x801F0CD0, whose first word
  * is the scalar 0x60 and is not a code pointer.
  */
-extern void (*D_801F0C98[])(void); /* @source 0x801F0C98 @kind data */
+extern void (*substateHandlerTable[])(void); /* @source 0x801F0C98 @kind data */
 
 /* Battle selection substate index maintained outside this overlay; read once,
  * non-volatile, exactly as the original does. */
@@ -28,5 +28,5 @@ extern u8 D_801462E3; /* @source 0x801462E3 @kind unknown */
  * @residual none
  */
 void callStateByteHandler(void) {
-  D_801F0C98[D_801462E3]();
+  substateHandlerTable[D_801462E3]();
 }

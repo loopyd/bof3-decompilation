@@ -98,7 +98,7 @@ segments:
     - '@source: src/bof3/world/renderRibbonAlongSpan.c'
   - - 2400
     - asm
-    - func_801F3560
+    - renderProjectedRecordSprite
   - - 2980
     - c
     - stateRecordDefaultsPosition

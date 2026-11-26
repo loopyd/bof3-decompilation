@@ -37,7 +37,7 @@ extern u16 D_801EFAB0; /* @source 0x801EFAB0 @kind data */
  * installs the draw mode on the primitive cursor, then runs the two draw passes
  * 0x801EF040 and 0x801EF4E0 against the state above, so this call is the frame's
  * whole draw and it takes no arguments and returns nothing. */
-void func_801EF254(void); /* @source 0x801EF254 */
+void renderOverlayFrame(void); /* @source 0x801EF254 */
 
 /* Shared helper of the main executable at 0x800A9820, outside this overlay's
  * image and bound through this target's generated undefined_funcs_auto.txt. It
@@ -83,7 +83,7 @@ void stateParitySpinFan(
     void) {
   D_801EFAAC = ((D_80143E6C & 1) << 4) + 0x100;
   D_801EFAB0 -= 0x200;
-  func_801EF254();
+  renderOverlayFrame();
   if (--g_battle_work[9] == 0) {
     g_battle_work[9] = 4;
     g_battle_work[1]++;

@@ -22,14 +22,14 @@ extern void func_801AFE18(void* arg0);
  * angle and draws one semi-transparent primitive through the shared primitive
  * cursor, taking the two ring offsets as its fourth and fifth arguments.
  */
-extern void func_801F4F0C(void* center, s32 radius, s32 angle, s32 xofs,
+extern void renderFourRingQuads(void* center, s32 radius, s32 angle, s32 xofs,
                          s32 yofs);
 
 /* @source 0x801F4E64
  * @behavior Ring emitter for one work record: first prepares a 0x20-byte
  * projection scratch area through the shared setup at 0x801AFE18, then runs the
  * four-step ring dispatch. For each of the four steps it hands the record's
- * centre triple to the local emitter func_801F4F0C together with the passed
+ * centre triple to the local emitter renderFourRingQuads together with the passed
  * radius, the step angle, and the two signed ring offset tables: the step angle
  * is the step byte shifted by ten and clipped to 0xFC00, so the four steps sit
  * a quarter turn apart in the 12-bit angle space, while D_801F5848/D_801F5858
@@ -69,7 +69,7 @@ void emitFourRingRadius(
 
   i = 0;
   do {
-    func_801F4F0C(center, radius, (i << 10) & 0xFC00, D_801F5848[i],
+    renderFourRingQuads(center, radius, (i << 10) & 0xFC00, D_801F5848[i],
                   D_801F5858[i]);
     i++;
   } while (i < 4);

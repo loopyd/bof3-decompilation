@@ -103,7 +103,7 @@ segments:
     - '@source: src/bof3/world/drawWorkCursorQuad.c'
   - - 4844
     - asm
-    - func_801F3EEC
+    - drawProjectedQuad
   - - 5624
     - textbin
     - D_801F41F8

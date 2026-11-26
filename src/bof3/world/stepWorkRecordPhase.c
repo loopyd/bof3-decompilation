@@ -12,7 +12,7 @@ extern u8* D_1F800044;
 extern void claimFourRecordsAround(void);
 
 /* @source 0x801F31C0 */
-extern void func_801F31C0(void);
+extern void stateStepWorkRecords(void);
 
 /* @source 0x801F2DCC
  * @behavior Phase step of the 0x800E4800 work-record machinery, driven through
@@ -23,7 +23,7 @@ extern void func_801F31C0(void);
  *           once to claim them. It then increments the step byte, and when the
  *           incremented value reaches 4 it wraps the step byte back to zero and
  *           increments the phase counter byte 0x06, so one phase is counted per
- *           four steps. The record step func_801F31C0 then advances every
+ *           four steps. The record step stateStepWorkRecords then advances every
  *           occupied record of the 0x800E4800 table. Finally, when the phase
  *           counter equals the limit the same object carries in byte 0x0B, it
  *           increments the work step byte 0x01. It takes no arguments, answers
@@ -45,7 +45,7 @@ void stepWorkRecordPhase(
     D_1F800044[9] = 0;
     D_1F800044[6] = D_1F800044[6] + 1;
   }
-  func_801F31C0();
+  stateStepWorkRecords();
   if (D_1F800044[6] == D_1F800044[0xB]) {
     D_1F800044[1] = D_1F800044[1] + 1;
   }

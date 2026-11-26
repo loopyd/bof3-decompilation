@@ -17,7 +17,7 @@ typedef struct Boss03416PublishWork {
  * 0xFFFFFFFF, the words from 0x800C26CC to 0x800C2774 are in-image code
  * pointers and the last word, 0x800C2778, is zero. This function publishes the
  * row base into the work record. */
-extern u8 D_800C26B8; /* @source 0x800C26B8 @kind data */
+extern u8 stateStepDataTable; /* @source 0x800C26B8 @kind data */
 
 /* Word +0x0C of that same row, the 0x00060006 pair that closes the record the
  * row opens with: inside the row and not a row boundary, so it is declared at
@@ -79,7 +79,7 @@ void publishStepDataFlag(
   Boss03416PublishWork *work = (Boss03416PublishWork *)D_801EB4E8;
   u8 *state;
 
-  work->data_row = &D_800C26B8;
+  work->data_row = &stateStepDataTable;
   work->step_handler = callIndexedHandler33;
   work->step_data = &D_800C26C4;
   state = SPAD_PTR_SLOT(u8, 0x44u);

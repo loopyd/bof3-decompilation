@@ -2,7 +2,7 @@
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void func_800AF764(void); /* @source 0x800AF764 @kind function */
-extern void func_801EF580(s32 value); /* @source 0x801EF580 @kind function */
+extern void renderClutQuadBand(s32 value); /* @source 0x801EF580 @kind function */
 
 /* @source 0x801EF4A0
  * @behavior Increment work byte 9 modulo 256. When the result is 16,
@@ -26,7 +26,7 @@ void incrementAdvanceCallInvoke(void) {
   } else {
     g_battle_work[4]++;
     func_800AF764();
-    func_801EF580(0);
-    func_801EF580(15);
+    renderClutQuadBand(0);
+    renderClutQuadBand(15);
   }
 }

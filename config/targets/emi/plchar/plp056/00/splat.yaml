@@ -177,7 +177,7 @@ segments:
     - callWorkHalfword2Table
   - - 9304
     - textbin
-    - func_801D0858
+    - workByte2HandlerTable
   - - 9400
     - asm
     - func_801D08B8

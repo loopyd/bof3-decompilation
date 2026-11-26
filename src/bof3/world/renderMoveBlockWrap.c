@@ -26,7 +26,7 @@ extern u8 moveBlockFrameColumn[];
  * unlifted.
  * @source 0x801F41F0
  */
-extern void func_801F41F0(s16 row, u8 column);
+extern void renderSetDrawOrigin(s16 row, u8 column);
 
 /* Per-row draw routine at 0x801F4258, unlifted. Its own bytes index the byte
  * tables at 0x801F4E78, 0x801F4E7C, 0x801F4E80 and 0x801F4E84 with the grid row
@@ -35,7 +35,7 @@ extern void func_801F41F0(s16 row, u8 column);
  * by construction and nothing else is claimed about the body.
  * @source 0x801F4258
  */
-extern void func_801F4258(s16 row);
+extern void renderGridRowPrimitives(s16 row);
 
 /* @source 0x801F4148
  * @behavior Overlay step handler: entry 5, the last of the six-handler run
@@ -100,7 +100,7 @@ void renderMoveBlockWrap(
 
   drawWork = workRecordCursor1F800044;
   step = (u8)((u32)drawWork[0x09] / 2);
-  func_801F41F0(FIELD_REF(s16, drawWork, 0x36),
+  renderSetDrawOrigin(FIELD_REF(s16, drawWork, 0x36),
                 moveBlockFrameColumn[step]);
   incWork = workRecordCursor1F800044;
   incWork[0x09]++;
@@ -111,5 +111,5 @@ void renderMoveBlockWrap(
     resetWork[0x02] = 3;
   }
   rowWork = workRecordCursor1F800044;
-  func_801F4258(FIELD_REF(s16, rowWork, 0x36));
+  renderGridRowPrimitives(FIELD_REF(s16, rowWork, 0x36));
 }

@@ -40,4 +40,4 @@ stateBlinkingLifeVelocity = 0x801D32F4;
 renderBlinkingTintedVelocity = 0x801D34F0;
 callOverlayHelper2 = 0x801D369C;
 renderRadiiOrangeBlack = 0x801D36BC;
-D_801D3918 = 0x801D3918;
+stepHandlerTable = 0x801D3918;

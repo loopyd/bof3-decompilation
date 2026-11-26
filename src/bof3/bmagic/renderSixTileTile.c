@@ -2,7 +2,7 @@
 #include "gpu/prim.h"
 
 /* The overlay's own six-entry tile table, the head of the textbin row that
- * starts at D_801F0B64. Every entry is four bytes: the texel-cell origin of one
+ * starts at textWeakLabel. Every entry is four bytes: the texel-cell origin of one
  * 12x12 cell, its u halfword at +0 and its v halfword at +2. The original walks
  * two halfword pointers four bytes apart, the u pointer one element below the v
  * pointer, and reads each uv store's halfword at zero displacement from them.

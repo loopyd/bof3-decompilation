@@ -38,7 +38,7 @@ extern s32 func_8015B5D4(u32 flag_bank, s32 bit_index);
  * by construction and nothing else is claimed about the body.
  * @source 0x801F4258
  */
-extern void func_801F4258(s16 row);
+extern void renderGridRowPrimitives(s16 row);
 
 /* PsyQ libc random source of the shared main executable, outside this payload.
  * The body keeps only its low bit and uses it to decide one dispatch-state
@@ -134,5 +134,5 @@ void stateIsNonzeroWrap(
     }
   }
   rowWork = workRecordCursor1F800044;
-  func_801F4258(FIELD_REF(s16, rowWork, 0x36));
+  renderGridRowPrimitives(FIELD_REF(s16, rowWork, 0x36));
 }

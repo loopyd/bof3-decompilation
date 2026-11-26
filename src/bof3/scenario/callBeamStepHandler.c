@@ -8,7 +8,7 @@
  * those words, so the run is only referenced here. This dispatcher indexes it
  * from 0x801D3918, while the ten-word run at 0x801D3954 and the eleven-word run
  * at 0x801D397C of the same blob are indexed by the two later dispatchers. */
-extern void (*D_801D3918[])(void); /* @source 0x801D3918 @kind data */
+extern void (*stepHandlerTable[])(void); /* @source 0x801D3918 @kind data */
 
 /* @source 0x801D0C04
  * @behavior First per-frame step dispatcher of this overlay: it loads the
@@ -29,4 +29,4 @@ extern void (*D_801D3918[])(void); /* @source 0x801D3918 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callBeamStepHandler, D_801D3918);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callBeamStepHandler, stepHandlerTable);

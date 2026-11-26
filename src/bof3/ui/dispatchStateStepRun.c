@@ -2,7 +2,7 @@
 
 /* This overlay's step handler run: twenty-four in-image code pointers from
  * 0x801D2C48 through 0x801D32E0, filling the head of the reviewed `textbin` row
- * T_801D9688, which the Splat layout places, so the run is only referenced here.
+ * mathFixedPointTable, which the Splat layout places, so the run is only referenced here.
  * This dispatcher indexes it from 0x801D9720, the run's first word, so the
  * reachable entries are 0x801D2C48 through 0x801D32E0. */
 extern void (*D_801D9720[])(void); /* @source 0x801D9720 @kind data */

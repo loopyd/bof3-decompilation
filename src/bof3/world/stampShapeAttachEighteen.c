@@ -18,7 +18,7 @@ extern u8* D_1F800044;
  * instead of one wider record view.
  * @source 0x801F47D4 @kind table
  */
-extern u8 D_801F47D4[];
+extern u8 stateShapeRectTable[];
 /* @source 0x801F47D5 @kind table */
 extern u8 D_801F47D5[];
 /* @source 0x801F47D6 @kind table */
@@ -114,7 +114,7 @@ void stampShapeAttachEighteen(
   for (row = D_801F47D5[shapeOffset]; row <= D_801F47D7[shapeOffset]; row++) {
     mapWork = PSX_PTR(u8, 0x80104000);
     shapeOffset = FIELD_REF(s16, work, 0x36) * 4;
-    for (col = D_801F47D4[shapeOffset]; col <= D_801F47D6[shapeOffset]; col++) {
+    for (col = stateShapeRectTable[shapeOffset]; col <= D_801F47D6[shapeOffset]; col++) {
       areaBase = ((mapWork[0] * D_80104001 + 1) >> 1) * 4 + (u32)mapWork;
       biasBase = D_80104002 * 4;
       cellOffset = col * 2 + (biasBase + row * mapWork[0] * 2);

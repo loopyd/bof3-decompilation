@@ -9,7 +9,7 @@ extern u8 D_80145FCC[]; /* @source 0x80145FCC @kind data */
  * of the 0xA4-byte records at 0x80144968, the same kind of index a work
  * record's byte 0x13C holds. */
 extern u8 D_80181B14; /* @source 0x80181B14 @kind data */
-/* This overlay's selected party slot, in the reviewed data row D_800C26B8. */
+/* This overlay's selected party slot, in the reviewed data row stateStepDataTable. */
 extern u8 D_800C2778; /* @source 0x800C2778 @kind data */
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -21,9 +21,9 @@ extern Boss03416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* Overlay entry points this installer publishes, all still unmatched rows of
  * this payload. */
-void func_800C20A8(void); /* @source 0x800C20A8 */
-void func_800C22D0(void); /* @source 0x800C22D0 */
-void func_800C1F30(void); /* @source 0x800C1F30 */
+void stateProgressUnitRecords(void); /* @source 0x800C20A8 */
+void setupSceneWorkRecord(void); /* @source 0x800C22D0 */
+void dispatchBattleModeStep(void); /* @source 0x800C1F30 */
 
 /* @source 0x800C1EA8
  * @behavior Overlay installer that selects a party slot and then publishes this
@@ -66,7 +66,7 @@ void stateMatchingHookTrio(void) {
     }
     i++;
   } while (i < 3);
-  D_801463A4 = func_800C20A8;
-  D_801463A8 = func_800C22D0;
-  D_801463AC = func_800C1F30;
+  D_801463A4 = stateProgressUnitRecords;
+  D_801463A8 = setupSceneWorkRecord;
+  D_801463AC = dispatchBattleModeStep;
 }

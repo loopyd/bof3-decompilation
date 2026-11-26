@@ -39,12 +39,12 @@ segments:
     - c
     - stepWorkRecordPhase
     - '@source: src/bof3/world/stepWorkRecordPhase.c'
-    - '@behavior: Phase step of the 0x800E4800 work-record machinery driven through the scratchpad work object 0x1F800044: claims the four phase records while the step byte 0x09 reads zero, increments that step byte and wraps it to zero while counting a phase in byte 0x06 at 4, runs the record step func_801F31C0, then increments the work step byte 0x01 when the phase counter reaches the limit in byte 0x0B.'
+    - '@behavior: Phase step of the 0x800E4800 work-record machinery driven through the scratchpad work object 0x1F800044: claims the four phase records while the step byte 0x09 reads zero, increments that step byte and wraps it to zero while counting a phase in byte 0x06 at 4, runs the record step stateStepWorkRecords, then increments the work step byte 0x01 when the phase counter reaches the limit in byte 0x0B.'
   - - 660
     - c
     - stepActiveFlagsNone
     - '@source: src/bof3/world/stepActiveFlagsNone.c'
-    - '@behavior: Third handler of this overlay''s state-byte-1 dispatch table at 0x801F44B8 (its pointer word is entry 2 at 0x801F44C0): runs the 0x800E4800 work-record step func_801F31C0, which draws each occupied record of the 0x18-byte-stride block and answers whether any record was occupied, and reaches the shared work-flag reset func_80196070 only while that answer reads zero, so the overlay clears the shared flags on a step that finds no active work record.'
+    - '@behavior: Third handler of this overlay''s state-byte-1 dispatch table at 0x801F44B8 (its pointer word is entry 2 at 0x801F44C0): runs the 0x800E4800 work-record step stateStepWorkRecords, which draws each occupied record of the 0x18-byte-stride block and answers whether any record was occupied, and reaches the shared work-flag reset func_80196070 only while that answer reads zero, so the overlay clears the shared flags on a step that finds no active work record.'
   - - 712
     - asm
     - func_801F2EC8
@@ -64,7 +64,7 @@ segments:
     - '@source: src/bof3/world/stateWorkTableByte15.c'
   - - 1472
     - asm
-    - func_801F31C0
+    - stateStepWorkRecords
   - - 1664
     - asm
     - func_801F3280
@@ -97,7 +97,7 @@ segments:
     - func_801F3BA0
   - - 4172
     - asm
-    - func_801F3C4C
+    - statePublishWorkRow
   - - 4388
     - c
     - callRecordSeeder

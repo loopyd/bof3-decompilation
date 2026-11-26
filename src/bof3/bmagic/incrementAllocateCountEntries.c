@@ -7,7 +7,7 @@ extern u8 D_801F04A5[]; /* @source 0x801F04A5 @kind data */
 extern u8 D_801F04AF[]; /* @source 0x801F04AF @kind data */
 extern u8 D_801F0518[]; /* @source 0x801F0518 @kind data */
 extern u8 D_801F04AD[]; /* @source 0x801F04AD @kind data */
-extern u32 func_801F03D4(void); /* @source 0x801F03D4 */
+extern u32 resourceReserveEntrySlot(void); /* @source 0x801F03D4 */
 extern int rand(void);
 
 /* @source 0x801EF4A8
@@ -33,7 +33,7 @@ void incrementAllocateCountEntries(void) {
 
     if (++g_battle_work[9] == 0x10) {
         for (i = 0; i < D_801F049C[g_battle_work[4]]; i++) {
-            slot = func_801F03D4();
+            slot = resourceReserveEntrySlot();
             if (slot != 0xFF) {
                 offset = slot * 0x78;
                 record = D_801EB4E0;

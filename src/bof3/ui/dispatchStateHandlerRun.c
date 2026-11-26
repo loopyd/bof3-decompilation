@@ -2,7 +2,7 @@
 
 /* This overlay's second step handler run: twenty-four in-image code pointers
  * from 0x801D2C48 through 0x801D32E0, filling the head of the reviewed
- * `textbin` row T_801D9688, which the Splat layout places, so the run is only
+ * `textbin` row mathFixedPointTable, which the Splat layout places, so the run is only
  * referenced here. This dispatcher indexes it from the run's sixth word at
  * 0x801D9734, so the reachable entries are 0x801D2DE4 through 0x801D32E0.
  */

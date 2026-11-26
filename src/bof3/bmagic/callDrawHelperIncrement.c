@@ -4,7 +4,7 @@
  * mode through SetDrawMode and emits translucent gouraud quads with SetPolyG4
  * and SetSemiTrans. The original passes no argument (the jal delay slot is a
  * nop) and drops the result, so the prototype keeps the narrow arity. */
-extern void func_801EF148(void); /* @source 0x801EF148 @kind function */
+extern void fillScreenTranslucent(void); /* @source 0x801EF148 @kind function */
 
 /* Shared per-frame counter in main RAM, outside this overlay's image. The
  * shared map owns the address (config/targets/shared/symbols.txt), so this
@@ -46,7 +46,7 @@ void callDrawHelperIncrement(
     void) {
   u8 count;
 
-  func_801EF148();
+  fillScreenTranslucent();
   if (D_80143E6C & 1) {
     if (g_battle_work[0xA] < 0x10) {
       g_battle_work[0xA] += 2;

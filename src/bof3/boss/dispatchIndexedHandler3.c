@@ -3,7 +3,7 @@
 typedef void (*Boss03816Handler)(void);
 
 /* The 0x800C1C90 handler run this dispatcher selects from, the 0x80-byte offset
- * inside the 0x8C-byte in-image data row the Splat `textbin` row D_800C1C10
+ * inside the 0x8C-byte in-image data row the Splat `textbin` row tableStepDataRow
  * covers (0x800C1C10 to 0x800C1C9C). The run holds exactly the three 8-byte
  * inert handlers of this overlay -- 0x800C1A1C, 0x800C1A24 and 0x800C1A2C --
  * and its last entry is the last word of that row, so this declaration binds

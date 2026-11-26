@@ -31,7 +31,7 @@ s32 GetGraphType(void);
  * six three-byte band colours, so the row `work byte 4` and the column of the
  * band counter select one red/green/blue triplet. Its address is this payload's
  * own, and the per-channel reference is the symbol form the original encodes. */
-extern u8 D_801EFFE0[]; /* @source 0x801EFFE0 @kind table */
+extern u8 bandPaletteTable[]; /* @source 0x801EFFE0 @kind table */
 extern u8 D_801EFFE1[]; /* @source 0x801EFFE1 @kind table */
 extern u8 D_801EFFE2[]; /* @source 0x801EFFE2 @kind table */
 
@@ -166,7 +166,7 @@ void renderRingsSixtyUnit(
     rows[0] = band << 5;
     rows[1] = (band + 1) << 5;
     work = g_battle_work;
-    *(u16 *)&rows[5] = D_801EFFE0[row3 + work[4] * 18] * (work[9] >> 1);
+    *(u16 *)&rows[5] = bandPaletteTable[row3 + work[4] * 18] * (work[9] >> 1);
     *(u16 *)&rows[6] = D_801EFFE1[row3 + work[4] * 18] * (work[9] >> 1);
     *(u16 *)&rows[7] = D_801EFFE2[row3 + work[4] * 18] * (work[9] >> 1);
     rows[3] = (D_801F003C[(u16)band] & 0xF) << 8;

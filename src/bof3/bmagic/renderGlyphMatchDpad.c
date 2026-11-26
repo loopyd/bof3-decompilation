@@ -1,6 +1,6 @@
 #include "base/types.h"
 
-extern void func_801F07B0(u32 mode); /* @source 0x801F07B0 @kind function */
+extern void renderOffsetTilePair(u32 mode); /* @source 0x801F07B0 @kind function */
 extern void renderPixelGlyphScreen(u8 index);
 extern u8* g_battle_work; /* @source 0x1F800044 @kind data */
 extern u16 D_80145AA8; /* @source 0x80145AA8 @kind unknown */
@@ -29,7 +29,7 @@ void renderGlyphMatchDpad(void) {
   u8* work;
   u16 pad;
 
-  func_801F07B0(4);
+  renderOffsetTilePair(4);
   renderPixelGlyphScreen(g_battle_work[0xB]);
   pad = D_80145AA8;
   if (pad & 0xF0) {

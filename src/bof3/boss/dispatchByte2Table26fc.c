@@ -1,6 +1,6 @@
 #include "bof3/emi/dispatchers.h"
 
-/* This overlay's handler run: the reviewed `textbin` row D_800C26B8 spans
+/* This overlay's handler run: the reviewed `textbin` row stateStepDataTable spans
  * 0x800C26B8 through 0x800C277B. Its first five words are a small record
  * (0x00000101, 0x02020101, 0x03030000, 0x00060006, 0xFFFFFFFF) and the words from
  * 0x800C26CC to 0x800C2774 are in-image code pointers, this payload's functions

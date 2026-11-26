@@ -14,7 +14,7 @@ extern s32 GetGraphType(void);
  * the original hands them over without a byte truncation, so only the low byte
  * of each reaches the sprite. */
 /* @source 0x801D1670 */
-extern void func_801D1670(s16 x, s16 y, s32 u, s32 v, u8 wide);
+extern void renderPanelTileQuad(s16 x, s16 y, s32 u, s32 v, u8 wide);
 
 /* Texture-origin pair of one cell of the panel grid: the two bytes the cell
  * drawer stores into the sprite, one pair per cell. The three runs the three
@@ -72,7 +72,7 @@ void renderPanelBackgroundTiles(u16 arg0, u16 arg1) {
     GpuAppendPrim(1, 0xC);
 
     for (i = 0; i < 0x10; i++) {
-        func_801D1670(arg0 + i * 0x10, arg1, D_801D199C[i].u, D_801D199C[i].v,
+        renderPanelTileQuad(arg0 + i * 0x10, arg1, D_801D199C[i].u, D_801D199C[i].v,
                       0);
     }
 
@@ -81,17 +81,17 @@ void renderPanelBackgroundTiles(u16 arg0, u16 arg1) {
             /* Row pitch of the middle band, one cell height below its top. */
             dy = j * 0x10 + 0x10;
             y = arg1 + dy;
-            func_801D1670(arg0 + i * 0x40, y,
+            renderPanelTileQuad(arg0 + i * 0x40, y,
                           (D_801D19DC[j].u & 1) << 5,
                           (D_801D19DC[j].u << 3) & 0xF0, 1);
-            func_801D1670(arg0 + i * 0x40 + 0x20, y,
+            renderPanelTileQuad(arg0 + i * 0x40 + 0x20, y,
                           (D_801D19DC[j].v & 1) << 5,
                           (D_801D19DC[j].v << 3) & 0xF0, 1);
         }
     }
 
     for (i = 0; i < 0x10; i++) {
-        func_801D1670(arg0 + i * 0x10, arg1 + 0xB0, D_801D19BC[i].u,
+        renderPanelTileQuad(arg0 + i * 0x10, arg1 + 0xB0, D_801D19BC[i].u,
                       D_801D19BC[i].v, 0);
     }
 }

@@ -4,7 +4,7 @@
 extern u8* workRecordCursor1F800044;
 
 /* @source 0x801F4158 @kind function */
-extern void func_801F4158(s32 index, s8 mode);
+extern void setEntryPairMode(s32 index, s8 mode);
 
 /* @source 0x801F3DB0
  * @behavior First handler in the state-byte-2 table at 0x801F4BA0. Sets work
@@ -25,6 +25,6 @@ void stateStepCallPair(void) {
   FIELD_REF(u32, work, 0x20) = 0x28709126u;
   FIELD_REF(u16, work, 0x30) = 0;
   work[2]++;
-  func_801F4158(0, 1);
-  func_801F4158(1, 2);
+  setEntryPairMode(0, 1);
+  setEntryPairMode(1, 2);
 }

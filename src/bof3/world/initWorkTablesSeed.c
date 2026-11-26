@@ -19,12 +19,12 @@ void clearWorkTableAt800(void);
  * three bytes before the record base from further rand() results. The span is
  * still an asm row in this target, so only the argument forms are declared
  * here. */
-void func_801F3110(u16 start, u16 end, s32* from, s32* to); /* @source 0x801F3110 */
+void setupWorkPositionSeeds(u16 start, u16 end, s32* from, s32* to); /* @source 0x801F3110 */
 
 /* 0x801F34A0 - the same random position seeding for the 0x24-byte-stride table
  * at 0x800E5C00, with the same four arguments and the same rand() per
  * component. The span is still an asm row in this target. */
-void func_801F34A0(u16 start, u16 end, s32* from, s32* to); /* @source 0x801F34A0 */
+void setupEffectPositionSeeds(u16 start, u16 end, s32* from, s32* to); /* @source 0x801F34A0 */
 
 /* 0x8015DF18 - main-executable cue request. The reviewed lifts of that function
  * in this repository pass it one cue number as its only argument. */
@@ -98,8 +98,8 @@ void initWorkTablesSeed(
   to[0] = 0x50000;
   to[1] = 0x770000;
   to[2] = 0x2000000;
-  func_801F3110(0, 0x20, from, to);
-  func_801F34A0(0, 0x20, from, to);
+  setupWorkPositionSeeds(0, 0x20, from, to);
+  setupEffectPositionSeeds(0, 0x20, from, to);
 
   from[0] = 0x50000;
   from[1] = 0x770000;
@@ -107,8 +107,8 @@ void initWorkTablesSeed(
   to[0] = 0xa0000;
   to[1] = 0x770000;
   to[2] = 0x2000000;
-  func_801F3110(0x20, 0x60, from, to);
-  func_801F34A0(0x20, 0x60, from, to);
+  setupWorkPositionSeeds(0x20, 0x60, from, to);
+  setupEffectPositionSeeds(0x20, 0x60, from, to);
 
   from[0] = 0xa0000;
   from[1] = 0x770000;
@@ -116,8 +116,8 @@ void initWorkTablesSeed(
   to[0] = 0xd0000;
   to[1] = 0x770000;
   to[2] = 0x2000000;
-  func_801F3110(0x60, 0x80, from, to);
-  func_801F34A0(0x60, 0x80, from, to);
+  setupWorkPositionSeeds(0x60, 0x80, from, to);
+  setupEffectPositionSeeds(0x60, 0x80, from, to);
 
   func_8015DF18(0x207);
 

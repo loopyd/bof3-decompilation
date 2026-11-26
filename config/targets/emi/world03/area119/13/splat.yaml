@@ -77,7 +77,7 @@ segments:
     - '@behavior: Clears work halfword 0x30, probes flag 0x0F, stamps map cells and sets state 5 when clear; otherwise advances state and selects state 3 with halfword -0x100 inside the camera window, then calls 0x801F3324.'
   - - 1052
     - asm
-    - func_801F301C
+    - stateGateCueDraw
   - - 1300
     - c
     - decrementMinusFfDraw
@@ -98,7 +98,7 @@ segments:
     - func_801F3298
   - - 1828
     - asm
-    - func_801F3324
+    - renderDistanceSizedQuad
   - - 2444
     - c
     - callStateTable4604World
@@ -151,7 +151,7 @@ segments:
     - '@behavior: Calls 0x801F3F04 with work byte 9 shifted right by two, decrements the byte, and calls 0x80196070 when the stored byte is below 8.'
   - - 4868
     - asm
-    - func_801F3F04
+    - renderRingQuadFan
   - - 5432
     - asm
     - func_801F4138

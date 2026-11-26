@@ -24,4 +24,4 @@ func_801EFAF4 = 0x801EFAF4;
 decrementObjectRequestResource = 0x801EFBA0;
 callForwardBattleGlobal = 0x801EFD10;
 renderFullscreenFifteenGraph = 0x801EFD88;
-D_801EFEB8 = 0x801EFEB8;
+outerHandlerTable = 0x801EFEB8;

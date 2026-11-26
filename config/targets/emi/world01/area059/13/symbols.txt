@@ -12,4 +12,4 @@ func_801F2F34 = 0x801F2F34;
 dispatchByte1Table3824 = 0x801F2FD0;
 stateCursorDistance = 0x801F3014;
 passDistanceQuadEmitter = 0x801F3060;
-func_801F30A8 = 0x801F30A8;
+drawProjectedQuad = 0x801F30A8;

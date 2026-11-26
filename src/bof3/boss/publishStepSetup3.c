@@ -19,7 +19,7 @@ typedef struct Boss04016PublishWork {
  * state byte at +1. 0x800C1B28 is that record's +0xC word, inside the row and
  * not a row boundary, so it is referenced as its own data symbol rather than as
  * a row start. */
-extern u8 D_800C1B1C; /* @source 0x800C1B1C @kind data */
+extern u8 stateHandlerPointerTable; /* @source 0x800C1B1C @kind data */
 extern u8 D_800C1B28; /* @source 0x800C1B28 @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -64,7 +64,7 @@ void publishStepSetup3(
   Boss04016PublishWork *work = (Boss04016PublishWork *)D_801EB4E8;
   u8 *state;
 
-  work->data_row = &D_800C1B1C;
+  work->data_row = &stateHandlerPointerTable;
   work->step_handler = dispatchIndexedHandler4;
   work->step_data = &D_800C1B28;
   state = SPAD_PTR_SLOT(u8, 0x44u);

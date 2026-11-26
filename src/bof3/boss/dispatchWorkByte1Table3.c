@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 /* Interior base of the overlay's pointer run: the promoted `textbin` row
- * D_800C1B1C covers 0x800C1B1C to the end of this payload and is placed whole by
+ * stateHandlerPointerTable covers 0x800C1B1C to the end of this payload and is placed whole by
  * the reviewed Splat layout, so only the entry base this dispatcher indexes is
  * named here. From 0x800C1B30 the run holds eleven handler pointers: 0x800C1848,
  * 0x801E52E8, 0x801E35D8, 0x801E3638, 0x801E3980, 0x801E3A00, 0x801E3B68,

@@ -1,6 +1,6 @@
 #include "bof3/emi/dispatchers.h"
 
-/* This overlay's handler run inside the reviewed `textbin` row D_800C26B8, which
+/* This overlay's handler run inside the reviewed `textbin` row stateStepDataTable, which
  * spans 0x800C26B8 through 0x800C277B. The row's first five words are a small
  * record (0x00000101, 0x02020101, 0x03030000, 0x00060006, 0xFFFFFFFF); this
  * dispatcher scales into the run from its word 5, 0x800C26CC, so its entry 0 is

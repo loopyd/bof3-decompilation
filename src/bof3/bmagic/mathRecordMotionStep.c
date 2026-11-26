@@ -5,7 +5,7 @@
  * at 0x801EEC28. This body is entry 6 of the stage handler table at 0x801EEC04
  * and re-reads the cell before each access group, so the record pointer is never
  * live across a call. The address sits inside the trailing `textbin` row
- * labelled D_801F00B8, so the reference binds through this target's generated
+ * labelled motionOffsetPairTable, so the reference binds through this target's generated
  * undefined-symbol table and needs no map row. */
 extern u8 *D_801F17B0; /* @source 0x801F17B0 @kind data */
 
@@ -25,7 +25,7 @@ struct BmagicMotionPair {
   s16 dx;
   u16 dy;
 };
-extern struct BmagicMotionPair D_801F00B8[]; /* @source 0x801F00B8 @kind data */
+extern struct BmagicMotionPair motionOffsetPairTable[]; /* @source 0x801F00B8 @kind data */
 
 /* Byte table at 0x801F01A4 indexed by the work record entry byte at 0x4; the
  * branch reseeds the record byte at 0x7 from it. No lifted source names it yet,
@@ -82,16 +82,16 @@ void mathRecordMotionStep(
     ((u32 *)D_801F17B0)[7] = ((u32 *)D_801EB4E0)[0xF];
     ((u16 *)D_801F17B0)[0x10] = ((u16 *)D_801EB4E0)[0x17];
     ((u16 *)D_801F17B0)[0x11] = ((u16 *)D_801EB4E0)[0x18];
-    if (D_801F00B8[((u8 *)D_801F17B0)[7] & 0x1F].dx < 0) {
+    if (motionOffsetPairTable[((u8 *)D_801F17B0)[7] & 0x1F].dx < 0) {
       ((u16 *)D_801F17B0)[0x10] +=
-          (u16)D_801F00B8[((u8 *)D_801F17B0)[7] & 0x1F].dx - (rand() & 7);
+          (u16)motionOffsetPairTable[((u8 *)D_801F17B0)[7] & 0x1F].dx - (rand() & 7);
     } else {
       ((u16 *)D_801F17B0)[0x10] +=
-          (u16)D_801F00B8[((u8 *)D_801F17B0)[7] & 0x1F].dx + (rand() & 7);
+          (u16)motionOffsetPairTable[((u8 *)D_801F17B0)[7] & 0x1F].dx + (rand() & 7);
     }
     ((u16 *)D_801F17B0)[4] = ((u16 *)D_801F17B0)[0x10];
     ((u16 *)D_801F17B0)[0x11] -=
-        D_801F00B8[((u8 *)D_801F17B0)[7] & 0x1F].dy + (rand() & 7);
+        motionOffsetPairTable[((u8 *)D_801F17B0)[7] & 0x1F].dy + (rand() & 7);
     ((u16 *)D_801F17B0)[5] = rand() & 1;
     ((u16 *)D_801F17B0)[6] = rand();
     ((u8 *)D_801F17B0)[7] =

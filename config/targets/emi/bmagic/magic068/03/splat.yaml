@@ -55,7 +55,7 @@ segments:
     - func_801EF4EC
   - - 2396
     - asm
-    - func_801EF55C
+    - renderTilePrimitives
   - - 2876
     - c
     - callStateTablefcc8

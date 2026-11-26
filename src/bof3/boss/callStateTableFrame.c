@@ -17,7 +17,7 @@ typedef struct Boss05416StepTable {
  * dispatcher copies the ten leading words only, so this declaration references
  * that prefix of the reviewed row and not the three words that follow it.
  */
-extern Boss05416StepTable func_800C1804; /* @source 0x800C1804 @kind data */
+extern Boss05416StepTable stepHandlerTable; /* @source 0x800C1804 @kind data */
 
 /* @source 0x800C19C4
  * @behavior Overlay step dispatch on work-record byte 1 from a frame copy of
@@ -42,6 +42,6 @@ extern Boss05416StepTable func_800C1804; /* @source 0x800C1804 @kind data */
 void callStateTableFrame(void) {
   Boss05416StepTable handlers;
 
-  handlers = func_800C1804;
+  handlers = stepHandlerTable;
   handlers.handlers[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
 }

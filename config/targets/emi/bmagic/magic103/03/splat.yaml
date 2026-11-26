@@ -68,7 +68,7 @@ segments:
     - '@behavior: Writes work byte 9 times four plus 0xC0 to scratchpad halfword zero, increments work bytes 0xA and 9, and at byte 9 equal to 0x28 decrements record byte 0xB through 0x801EB4E0 and calls 0x801E5988.'
   - - 1320
     - asm
-    - func_801EF128
+    - setWorkRotationMatrix
   - - 1496
     - c
     - renderEightBandsThirty
@@ -102,7 +102,7 @@ segments:
     - func_801EFD74
   - - 4640
     - asm
-    - func_801EFE20
+    - drawRotatedTexturedQuad
   - - 5820
     - c
     - callHandlerPopSet2
@@ -130,7 +130,7 @@ segments:
     - '@behavior: Increments work byte 9 unless it equals 0x2E, reloads the work pointer and decrements byte 0xA, then on zero decrements byte 0xB through pointer cell 0x801EB4E0 and calls helper 0x801E5988.'
   - - 6368
     - asm
-    - func_801F04E0
+    - drawGouraudTriangleRing
   - - 7060
     - textbin
     - D_801F0794

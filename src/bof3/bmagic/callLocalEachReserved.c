@@ -30,8 +30,8 @@ extern u8 D_801F0F90[]; /* @source 0x801F0F90 @kind data */
  * this target's Splat. Entry 0 clears bytes 0x0, 0x1 and 0x2 of every pool
  * record; entry 1 sets bit 0x04 of the halfword at 0x801462E8 when work byte
  * 0xB reads zero. */
-extern void func_801EED04(void); /* @source 0x801EED04 @kind function */
-extern void func_801EF080(void); /* @source 0x801EF080 @kind function */
+extern void stateClearPoolBytes(void); /* @source 0x801EED04 @kind function */
+extern void raiseFlag4AtZero(void); /* @source 0x801EF080 @kind function */
 
 /* Work-byte-1 dispatcher over this overlay's local handler table at
  * 0x801F0F04, emitted by magic08303DispatchTables.c. */
@@ -57,7 +57,7 @@ callStateTableDispatch(void);
  */
 void callLocalEachReserved(
     void) {
-  void (*handlers[2])(void) = {func_801EED04, func_801EF080};
+  void (*handlers[2])(void) = {stateClearPoolBytes, raiseFlag4AtZero};
   u8 index;
   u8 flags;
   u32 offset;

@@ -19,7 +19,7 @@ extern u8 D_80146867; /* @source 0x80146867 @kind unknown */
 extern u8 D_80146875; /* @source 0x80146875 @kind unknown */
 /* Head of this payload's 0x801F5724 tail byte blob, the 16-entry table this
  * handler indexes with the low nibble of rand(); its row holds only 3, 4 and 5. */
-extern u8 D_801F5724[]; /* @source 0x801F5724 @kind table */
+extern u8 randomPickTable[]; /* @source 0x801F5724 @kind table */
 
 /* @source 0x801F3E8C
  * @behavior Overlay step handler, entry 1 of the five-entry handler run based
@@ -81,6 +81,6 @@ void endThirdExceedsLimit(
     return;
   }
   D_1F800044 = work;
-  *status = D_801F5724[rand() & 0xF];
+  *status = randomPickTable[rand() & 0xF];
   D_1F800044[1] = 2;
 }

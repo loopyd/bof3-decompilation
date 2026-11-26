@@ -57,7 +57,7 @@ segments:
     - func_801F2DB8
   - - 752
     - asm
-    - func_801F2EF0
+    - stateUpdateWorkTable
   - - 992
     - c
     - initialize16RecordsSignedPairs
@@ -168,8 +168,8 @@ segments:
     - '@behavior: Copies the work cursor triple at offsets 0x34, 0x38 and 0x3C into a local point and passes it to the overlay renderer at 0x801F3FDC.'
   - - 5084
     - asm
-    - func_801F3FDC
+    - renderCursorGouraudQuads
   - - 5864
     - textbin
-    - D_801F42E8
+    - tableRecordPointPairs
 - - 10004

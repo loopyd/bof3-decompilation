@@ -90,7 +90,7 @@ segments:
     - '@behavior: Entry 6 of the ten-pointer handler table based at 0x801EFA9C and the fourth step of the work-byte-2 step table based at 0x801EFAA8. Reads the scratchpad work object through the pointer cell at 0x1F800044 before frame creation, decrements its unsigned byte 9 at byte width, tests the truncated stored value and, only when it reaches zero, decrements the shared battle work record byte 0xB at byte width through the pointer at 0x801EB4E0 and invokes the shared helper at 0x801E5988. Takes no arguments, returns nothing and keeps a 0x18-byte frame only to save $ra.'
   - - 1840
     - asm
-    - func_801EF330
+    - decrementCountdownInvoke
   - - 3064
     - c
     - dispatchDrawActive
@@ -113,7 +113,7 @@ segments:
     - '@behavior: Third word of the three-word work-byte-2 handler run based at 0x801EFAB8. Reads the scratchpad work object through the pointer cell at 0x1F800044 before frame creation, subtracts two from its byte 9 at byte width, tests the stored byte truncated with andi 0xFF and, only when that countdown reaches zero, decrements the shared battle work record byte 0xB through the pointer at 0x801EB4E0 and invokes the shared helper at 0x801E5988. Takes no arguments, returns nothing and keeps a 0x18-byte frame only to save $ra.'
   - - 3440
     - asm
-    - func_801EF970
+    - subtractTwoCountdownInvoke
   - - 3740
     - textbin
     - workByte1HandlerTable

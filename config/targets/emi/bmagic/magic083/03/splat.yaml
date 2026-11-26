@@ -32,10 +32,10 @@ segments:
     - '@behavior: Dispatches on byte 0x01 of the published work object through a two-entry local handler pair, then publishes each reserved record of the 24-entry pool in turn, swaps the shared battle record cell to the record word 0x74, runs the work-byte-1 dispatcher and restores both cells.'
   - - 260
     - asm
-    - func_801EED04
+    - stateClearPoolBytes
   - - 1152
     - asm
-    - func_801EF080
+    - raiseFlag4AtZero
   - - 1228
     - c
     - replaceIsNotFour
@@ -74,7 +74,7 @@ segments:
     - '@behavior: Decrements shared work byte 0xB and invokes the helper when scratchpad work byte 0xB is zero.'
   - - 2964
     - asm
-    - func_801EF794
+    - installWorkTransform
   - - 3140
     - asm
     - func_801EF844
@@ -115,7 +115,7 @@ segments:
     - func_801F050C
   - - 8104
     - asm
-    - func_801F0BA8
+    - renderWithScale
   - - 8640
     - c
     - resourceReserveFreeRecord5

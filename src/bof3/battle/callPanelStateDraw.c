@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* Use the named root cell so the post-dispatch access reloads its address. */
-#undef D_80148648
+#undef panelTaskRoot
 
 extern BattleSelectionHandler D_800B6E40[]; /* @source 0x800B6E40 @kind table */
 extern u8 D_80144F5D[]; /* @source 0x80144F5D @kind data */
@@ -20,8 +20,8 @@ void func_800B3324(u8 index, u16 x, u16 y, u32 field_20, u8 flags,
 void callPanelStateDraw(void) {
     PanelTask *panel;
 
-    D_800B6E40[D_80148648->state]();
-    panel = D_80148648;
+    D_800B6E40[panelTaskRoot->state]();
+    panel = panelTaskRoot;
     func_800B3324(D_80181B10[D_80144F5D[FIELD_REF(u8, panel, 0x0C)]],
                   panel->x, panel->field_06, FIELD_REF(u32, panel, 0x20),
                   FIELD_REF(u8, panel, 0x0D), panel);

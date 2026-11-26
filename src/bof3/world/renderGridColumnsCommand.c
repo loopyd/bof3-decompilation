@@ -10,10 +10,10 @@ extern SVECTOR D_1F800014[]; /* @source 0x1F800014 @kind data */
  * column byte at 0x801F4364 and the second at 0x801F4365, both walked with a
  * stride of two. The map names the second column byte, so the first column is
  * that pointer minus one. */
-extern u8 D_801F4365[]; /* @source 0x801F4365 @kind data */
+extern u8 gridCellColumnTable[]; /* @source 0x801F4365 @kind data */
 
 /* The six-byte per-cell command table read with the loop index. */
-extern u8 D_801F4370[]; /* @source 0x801F4370 @kind data */
+extern u8 gridCellCommandTable[]; /* @source 0x801F4370 @kind data */
 
 void func_80155560(u32 arg0, void* arg1, s32 arg2);
 void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
@@ -56,7 +56,7 @@ void renderGridColumnsCommand(
   i = 0;
   vec = D_1F800014;
   depth = -0x88;
-  py = D_801F4365;
+  py = gridCellColumnTable;
   px = py - 1;
   for (; i < 6; i++, py += 2, px += 2) {
     prim = (POLY_FT4*)g_PrimCursor;
@@ -72,7 +72,7 @@ void renderGridColumnsCommand(
     RotTransPers4(vec, vec + 1, vec + 2, vec + 3, (long*)&prim->x0,
                   (long*)&prim->x1, (long*)&prim->x2, (long*)&prim->x3, &p,
                   &flag);
-    func_80155560(D_801F4370[i] | 0xBD500000, (void*)prim, 1);
+    func_80155560(gridCellCommandTable[i] | 0xBD500000, (void*)prim, 1);
     func_80155A08(*px << 16, *py << 16, 0, 0x28);
   }
 }

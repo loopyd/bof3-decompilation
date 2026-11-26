@@ -6,7 +6,7 @@
  * `sw $v0, %lo(D_801F17B0)($at)` at 0x801EECEC. Every access below re-reads the
  * cell, so the original re-materializes the cell address before each access
  * instead of keeping the record pointer live across a store. The cell sits
- * inside the trailing `textbin` row labelled D_801F00B8, which no map row
+ * inside the trailing `textbin` row labelled motionOffsetPairTable, which no map row
  * names, so the reference binds through the target's generated undefined-symbol
  * table. */
 extern u8 *D_801F17B0; /* @source 0x801F17B0 @kind data */

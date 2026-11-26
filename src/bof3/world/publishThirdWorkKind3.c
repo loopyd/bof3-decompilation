@@ -5,7 +5,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 D_80144F5C; /* @source 0x80144F5C @kind unknown */
 extern s16 D_8014613E; /* @source 0x8014613E @kind unknown */
 extern s16 D_80146140; /* @source 0x80146140 @kind unknown */
-extern u8 D_801F398C[]; /* @source 0x801F398C @kind table */
+extern u8 tablePartyModeBytes[]; /* @source 0x801F398C @kind table */
 
 /* Shared front-end record allocator and seeder at 0x8015CB18: takes the next
  * free 0x74-byte record index from func_8019601C and fills record byte +0 = 1,
@@ -19,7 +19,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * @behavior Publishes the third shared work base D_80146110 as the scratchpad
  *           work cursor at 0x1F800044 and then seeds one front-end record of
  *           kind 3 through the shared allocator/seeder func_8015CB18 with word
- *           +0x0C = 0, word +0x10 = D_801F398C[D_80144F5C] and halfwords
+ *           +0x0C = 0, word +0x10 = tablePartyModeBytes[D_80144F5C] and halfwords
  *           +0x2E/+0x30 = D_8014613E/D_80146140; unless the call reports 0xFF
  *           the returned record index is stored in work byte +0x0B of the
  *           record the cell points at after the call. Takes no arguments and
@@ -57,7 +57,7 @@ void publishThirdWorkKind3(
   u8 result;
 
   D_1F800044 = D_80146110;
-  result = func_8015CB18(3, 0, D_801F398C[D_80144F5C], D_8014613E, D_80146140);
+  result = func_8015CB18(3, 0, tablePartyModeBytes[D_80144F5C], D_8014613E, D_80146140);
   if (result != 0xFF) {
     D_1F800044[0xB] = result;
   }

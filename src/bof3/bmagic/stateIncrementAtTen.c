@@ -20,7 +20,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           nothing and reads or writes no other state. No jal in this payload
  *           reaches it: its address is entry 2, zero-based, of the five-entry
  *           handler run at 0x801F0028 (0x801EF524, 0x801EF900, 0x801EF59C,
- *           0x801EF5EC, 0x801EF630) inside the reviewed textbin row D_801EFFE0
+ *           0x801EF5EC, 0x801EF630) inside the reviewed textbin row bandPaletteTable
  *           that the overlay's byte-1 dispatcher at 0x801EF4E0 indexes. Bytes
  *           0x801EF59C..0x801EF5EB are byte-identical to the exact
  *           emi/bmagic/magic082/03 sibling

@@ -56,7 +56,7 @@ segments:
     - '@behavior: When scratchpad work byte B is FF, forward the shared battle byte, set mask 0x4 in the shared battle halfword and invoke the shared helper.'
   - - 1480
     - asm
-    - func_801EF1C8
+    - applyWorkProjectedTransform
   - - 1656
     - c
     - callStateTable0354
@@ -142,7 +142,7 @@ segments:
     - '@behavior: Add work word 0x20 into word 0x14, accumulate the updated word into halfword 0x3E, and invoke the shared helper when the re-read signed word 0x14 is below -16.'
   - - 5544
     - asm
-    - func_801F01A8
+    - renderTranslucentTriangle
   - - 5972
     - textbin
     - workByte1HandlerTable

@@ -91,12 +91,12 @@ u8   func_8019601C(void);
 /* Shared distance helper over the word pair passed as (x, z). */
 s16  func_8015477C(s32 arg0, s32 arg1);
 
-void  func_801F2D3C(void);
+void  drawTrailCenterSolid(void);
 void  seedWorkTable(void);
 void  initSpriteSlot(void* arg0);
 void* scanFreeSlot(void);
 void  refreshSpriteSlots(void);
-void  func_801F318C(s16 arg0);
+void  drawTrailGouraudRing(s16 arg0);
 
 #define WORLD00_AREA028_WORK_PTR (workCursor)
 #define WORLD00_AREA028_WORK_BASE     ((World00Area028Work*)0x800e4800u)

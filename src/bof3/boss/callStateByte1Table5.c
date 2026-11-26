@@ -17,13 +17,13 @@ extern Boss05216Handler D_800C1F50[]; /* @source 0x800C1F50 @kind data */
 /* The twelve bytes 0x800C1804 through 0x800C180F, immediately before this
  * dispatcher, are this overlay's three-entry step-handler table: 0x800C1DF8,
  * 0x800C1E7C and 0x800C1F1C, in that order. They are the whole of the reviewed
- * `textbin` row D_800C1804, which ends where this payload's `c` row begins at
+ * `textbin` row stepHandlerTable, which ends where this payload's `c` row begins at
  * 0x800C1810, so the row is placed by the Splat layout and only referenced
  * here. The payload's consumer is the still unlifted step dispatcher
  * func_800C1D98, which materializes that base with a lui/addiu pair, reads all
  * three words into its 0x28-byte frame and calls the entry selected by
  * work-record byte 2; the run has no other reader. */
-extern Boss05216Handler D_800C1804[]; /* @source 0x800C1804 @kind data */
+extern Boss05216Handler stepHandlerTable[]; /* @source 0x800C1804 @kind data */
 
 /* @source 0x800C1810
  * @behavior Overlay state dispatch on work-record byte 1: loads the work-record

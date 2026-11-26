@@ -12,13 +12,13 @@ void panelStepDownSettle29(void) {
     BattlePanelTask* draw_task;
     s16 value;
 
-    task = (BattlePanelTask*)D_80148648;
+    task = (BattlePanelTask*)panelTaskRoot;
     value = task->field_06;
     if (value < 0x29) {
         task->field_06 = value + 0x10;
     } else {
         task->field_06 = 0x29;
     }
-    draw_task = (BattlePanelTask*)D_80148648;
+    draw_task = (BattlePanelTask*)panelTaskRoot;
     drawBattlePanelSlots((s16)draw_task->x, draw_task->field_06);
 }

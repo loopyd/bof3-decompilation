@@ -7,7 +7,7 @@
 extern u16 D_80143C40;
 
 /* Shared sprite-grid index byte of the main executable, handed straight to the
- * overlay sprite emitter func_801D627C. The original reads it with `lbu` into
+ * overlay sprite emitter renderSpriteGrid. The original reads it with `lbu` into
  * the first argument register ahead of the frame setup.
  * @source 0x80144953 @kind unknown */
 extern u8 D_80144953;
@@ -34,14 +34,14 @@ extern u8 D_80148658;
 /* Sprite emitter of this overlay: takes the shared sprite-grid index as its
  * only argument and returns nothing this body consumes.
  * @source 0x801D627C @kind unknown */
-extern void func_801D627C(u32 grid);
+extern void renderSpriteGrid(u32 grid);
 
 /* Panel emitter of this overlay: draws the panel anchored at the signed
  * coordinates the two arguments hold. Its own prologue broadens the pair with
  * `andi 0xFFFF`, so the parameters are declared wide here and the constant
  * arguments keep their bare `addiu` form.
  * @source 0x801D2304 @kind unknown */
-extern void func_801D2304(s32 x, s32 y);
+extern void renderMasterListPanel(s32 x, s32 y);
 
 /* Slot-ramp seeding of this overlay, called with no arguments once the
  * effect-busy gate has cleared. Its own span zeroes the six words of the
@@ -56,9 +56,9 @@ extern void stateSixRampLimits(void);
  *           UI sub-step byte, and the same drawing pair its sibling handler
  *           func_801D2190 opens with. Every visit first redraws the shared
  *           screen: it passes the shared sprite-grid index byte D_80144953 to
- *           this overlay sprite emitter func_801D627C and then draws this
+ *           this overlay sprite emitter renderSpriteGrid and then draws this
  *           overlay panel at the fixed coordinates 0x37, 0x37 through
- *           func_801D2304. It then reads the shared front-end effect-busy gate
+ *           renderMasterListPanel. It then reads the shared front-end effect-busy gate
  *           halfword D_80143C40 once and, while that gate is set, returns with
  *           the redraw as its whole effect. Once the gate is clear it resets
  *           this overlay's slot-ramp state through
@@ -75,8 +75,8 @@ extern void stateSixRampLimits(void);
 void renderPanelAdvancePhase(void) {
   u8 phase;
 
-  func_801D627C(D_80144953);
-  func_801D2304(0x37, 0x37);
+  renderSpriteGrid(D_80144953);
+  renderMasterListPanel(0x37, 0x37);
   if (D_80143C40 != 0) {
     return;
   }

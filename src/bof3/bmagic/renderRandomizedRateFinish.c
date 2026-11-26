@@ -2,8 +2,8 @@
 
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 extern void func_800AF764(void); /* @source 0x800AF764 @kind function */
-extern void func_801F0BA8(s32 scale); /* @source 0x801F0BA8 @kind function */
-extern void func_801EF794(void); /* @source 0x801EF794 @kind function */
+extern void renderWithScale(s32 scale); /* @source 0x801F0BA8 @kind function */
+extern void installWorkTransform(void); /* @source 0x801EF794 @kind function */
 extern void func_801F050C(void); /* @source 0x801F050C @kind function */
 extern void func_8015D71C(s32 selector); /* @source 0x8015D71C @kind function */
 
@@ -30,11 +30,11 @@ void renderRandomizedRateFinish(void) {
   func_800AF764();
   work = D_1F800044;
   if (*(s32 *)(work + 0xC) == 4 && work[0xA] < 5) {
-    func_801F0BA8((rand() & 3) | 64);
+    renderWithScale((rand() & 3) | 64);
   } else {
-    func_801F0BA8((rand() & 3) | 24);
+    renderWithScale((rand() & 3) | 24);
   }
-  func_801EF794();
+  installWorkTransform();
   func_801F050C();
   PopMatrix();
   work = D_1F800044;

@@ -23,11 +23,11 @@ extern ScenarioScena0300RecordCallback D_801FD00C[];
  * stateFlagSetBit11,
  * stateFlagSetBit12,
  * stateFlagSetBit13,
- * func_801FC5FC, noopCallbackSlot, func_801FC690 and
+ * func_801FC5FC, noopCallbackSlot, stateStartSceneSix and
  * requestPrimaryArm), passing the
  * record pointer unchanged as the first argument
  * and the word held in the shared main-RAM cell D_8014686C as the second
- * (slot 7, func_801FC690, is documented as receiving exactly that pair). It
+ * (slot 7, stateStartSceneSix, is documented as receiving exactly that pair). It
  * reads no other state and writes none: the 0x18-byte frame exists only to
  * keep $ra across the indirect call and the callback's return value in $v0 is
  * discarded. The address is itself word 6 (the word reading 0x801FC46C) of the

@@ -983,7 +983,7 @@ segments:
     - c
     - stateEnemyTargetPublish
     - '@source: src/bof3/battle/stateEnemyTargetPublish.c'
-    - '@behavior: Derives the enemy target mode byte 0x80146375 from the target mode pack table 0x800B51F8 field selected by record byte +0x7E and the low rand bits, forces it to 0 below record halfword +0xAA 2 while 0x801462E8 bit 0x4000 is set, advances it through 0..4 on record halfword +0x80 readiness bits 0x80, 0x40 and 0x20 with a +0xF6 seed from the +0x8C candidate run, picks the target through pickTargetStoreGlobal when record halfword +0x82 bit 0x20 or record word +0x104 bit 0x4000 is set and otherwise through func_801E2A88 into 0x80146384, publishes the record as the current enemy work and runs its +0xE4 handler while 0x801462EA is set, then copies the mode into record byte +0xF5 or clears both when the selected target byte reads 0xFF.'
+    - '@behavior: Derives the enemy target mode byte 0x80146375 from the target mode pack table 0x800B51F8 field selected by record byte +0x7E and the low rand bits, forces it to 0 below record halfword +0xAA 2 while 0x801462E8 bit 0x4000 is set, advances it through 0..4 on record halfword +0x80 readiness bits 0x80, 0x40 and 0x20 with a +0xF6 seed from the +0x8C candidate run, picks the target through pickTargetStoreGlobal when record halfword +0x82 bit 0x20 or record word +0x104 bit 0x4000 is set and otherwise through selectEnemyResultByte into 0x80146384, publishes the record as the current enemy work and runs its +0xE4 handler while 0x801462EA is set, then copies the mode into record byte +0xF5 or clears both when the selected target byte reads 0xFF.'
   - - 73032
     - c
     - name: pickTargetStoreGlobal
@@ -994,8 +994,8 @@ segments:
     - '@source: src/bof3/battle/pickRandomUnblockedId.c'
   - - 73352
     - c
-    - func_801E2A88
-    - '@source: src/bof3/battle/func_801E2A88.c'
+    - selectEnemyResultByte
+    - '@source: src/bof3/battle/selectEnemyResultByte.c'
     - '@behavior: Selects a target or result byte from the current enemy state byte 0x80146375 and the chosen enemy kind, delegating the special cases to the pickTargetOrFf, pickTargetByMode, pickLowestEnemyId, pickLowestLocalSlot and func_801E2E30 picker helpers.'
   - - 73892
     - c
@@ -1035,7 +1035,7 @@ segments:
     - c
     - setupFrontScriptHooks
     - '@source: src/bof3/battle/setupFrontScriptHooks.c'
-    - '@behavior: Publishes D_801EB288 as the current enemy work script pointer at +0xEC, registers requestFrontSelectorState1 and enterFrontendMode4 as the battle hooks at 0x801463A4/0x801463A8, runs the enemy script byte helper func_801E2314 for class argument 0, raises bit 0x40 of scratch work byte +0x00, submits the positional 0x80 effect for the work flags halfword +0x82, then increments scratch work byte +0x01.'
+    - '@behavior: Publishes D_801EB288 as the current enemy work script pointer at +0xEC, registers requestFrontSelectorState1 and enterFrontendMode as the battle hooks at 0x801463A4/0x801463A8, runs the enemy script byte helper func_801E2314 for class argument 0, raises bit 0x40 of scratch work byte +0x00, submits the positional 0x80 effect for the work flags halfword +0x82, then increments scratch work byte +0x01.'
   - - 75436
     - c
     - callByte2Table3
@@ -1293,8 +1293,8 @@ segments:
     - '@behavior: When the shared battle state byte 0x80146328 has bit 0 set and the front-end gate halfword 0x80143F04 reads 0xBD, requests front-selector primary state 1 with secondary sub-state 0x19 in the shared bytes 0x80146874/0x80146875, then runs the shared front-end startup helper func_8015C088 and initializes the shared 5/3/0 mode tuple through initModeTuple530; otherwise it does nothing. Takes no arguments and returns nothing.'
   - - 84936
     - c
-    - enterFrontendMode4
-    - '@source: src/bof3/battle/enterFrontendMode4.c'
+    - enterFrontendMode
+    - '@source: src/bof3/battle/enterFrontendMode.c'
     - '@behavior: Sets frontend mode 4 and increments the volatile global battle byte when state bit 0 is set and gate 0xBD matches.'
   - - 85028
     - c
@@ -1541,8 +1541,8 @@ segments:
     - '@behavior: Clears work flag 0x40 and advances the work countdown word +0x40 by 0x2000; when that word has already reached 0x10000 it instead clears work byte +0x48, masks flag 0x2000 out of the 0x140-stride flag record selected by work byte +0x05, masks 0xFFFCFFF9 into that record''s second flag word, and clears the queued-slot bytes.'
   - - 98776
     - c
-    - func_801E8DD8
-    - '@source: src/bof3/battle/func_801E8DD8.c'
+    - deriveQueuedDrawPosition
+    - '@source: src/bof3/battle/deriveQueuedDrawPosition.c'
     - '@behavior: Derives the rendering position of the queued work record published at 0x801EB4E0 into the scratch work halfwords: for the first three records the x delta is the signed byte at D_801EB0B0 indexed by record byte +0x08 * 2 plus the +0x79 byte of the 0x140-stride local work record * 8, the y delta is D_801EB108[byte79 * 2] while record byte +0x08 is below two and D_801EB109[byte79 * 2] otherwise, and record halfwords +0x2E/+0x30 become scratch +0x2E/+0x30 with those deltas applied (+0x30 also minus 8) while +0x32 is copied across; enemy records take the x delta from the signed byte at D_801EB712 and the y delta from the class table D_800E40CB row selected by the D_801EB710 class byte of the same 0x118-stride record.'
   - - 99240
     - c
@@ -1609,8 +1609,8 @@ segments:
     - '@behavior: Dispatches the panel handler selected by state byte +0x03 through the four-entry table at 0x801D0FD0, forwards the state field pointers and the selected enemy work record halfwords +0x94/+0xA0 to callPanelForwardingTable, advances state byte +0x03 to 3 when checkBattlerInactiveFlag4000 hits while state byte +0x0D is clear, then sets or clears bit 0x2000 of that record flags halfword +0x82 from the quarter comparison of halfwords +0x94/+0xA0.'
   - - 101288
     - c
-    - func_801E97A8
-    - '@source: src/bof3/battle/func_801E97A8.c'
+    - computePanelRatioByte
+    - '@source: src/bof3/battle/computePanelRatioByte.c'
     - '@behavior: Rescales the enemy work record selected by panel byte +0x0A into panel byte +0x0B and mirrors that record halfwords +0x94/+0xA0 into panel halves +0x14/+0x1C.'
   - - 101648
     - c

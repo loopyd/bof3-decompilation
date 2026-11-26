@@ -1,6 +1,6 @@
 #include "bof3/emi/dispatchers.h"
 
-/* This overlay's handler run: the payload's reviewed `textbin` row D_800C1CB0
+/* This overlay's handler run: the payload's reviewed `textbin` row workStepPointerTable
  * spans 0x800C1CB0 to the payload's last word, and its code pointers start at
  * 0x800C1CD8. This dispatcher indexes the run from the interior word
  * 0x800C1D2C, so the run stays one reviewed row and this declaration binds only

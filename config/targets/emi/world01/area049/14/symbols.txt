@@ -27,4 +27,4 @@ publishThirdWorkKind3 = 0x801F376C;
 queueUiBlockEight = 0x801F37EC;
 stateStartupRequestFive = 0x801F3884;
 stateStartupRequestSix = 0x801F3908;
-D_801F398C = 0x801F398C;
+tablePartyModeBytes = 0x801F398C;

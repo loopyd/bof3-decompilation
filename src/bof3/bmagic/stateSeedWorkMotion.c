@@ -32,7 +32,7 @@ typedef struct BmagicMagic17303PairRow {
 
 /* Pair table in this overlay's trailing read-only block. Splat binds the address
  * through the generated undefined_syms_auto.txt row that the remaining asm spans
- * func_801EF4EC, func_801EFA34 and func_801F02B0 still reference. */
+ * func_801EF4EC, func_801EFA34 and stateCompactWorkRows still reference. */
 extern BmagicMagic17303PairRow D_801F09B0[]; /* @source 0x801F09B0 @kind data */
 
 /* Shared battle record pointer in main RAM, outside this overlay image; the

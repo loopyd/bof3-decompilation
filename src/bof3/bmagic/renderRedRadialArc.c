@@ -44,7 +44,7 @@ s32 func_801783C8(s32 arg0); /* @source 0x801783C8 */
  *   centre and arc shades, the last of the two on the stack and read back with
  *   an unsigned byte load - and returns nothing. It writes no state outside
  *   the primitives it emits through the cursor.
- *   Its only in-image caller is the draw of 0x801EFA18 inside func_801EF8EC,
+ *   Its only in-image caller is the draw of 0x801EFA18 inside stepBurstSlots,
  *   which was still an asm row when this body was written: it projects a slot of
  *   the table at 0x801EFAB4, hands over the projected pair and the slot's
  *   radius halfword with 0x80 as the centre shade and 0 for the arc, so the

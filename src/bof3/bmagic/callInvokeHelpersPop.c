@@ -3,9 +3,9 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void (*D_801F0D1C[])(void); /* @source 0x801F0D1C @kind data */
 
-extern void func_801EF4BC(void); /* @source 0x801EF4BC @kind function */
-extern void func_801EFA00(void); /* @source 0x801EFA00 @kind function */
-extern void func_801EF720(void); /* @source 0x801EF720 @kind function */
+extern void renderComposeWorkMatrix(void); /* @source 0x801EF4BC @kind function */
+extern void renderFadeQuadFan(void); /* @source 0x801EFA00 @kind function */
+extern void renderFadeTriangleFan(void); /* @source 0x801EF720 @kind function */
 
 /* @source 0x801EF5B0
  * @behavior Dispatches the handler selected by unsigned work-record byte 2
@@ -30,9 +30,9 @@ void callInvokeHelpersPop(void) {
     D_801F0D1C[step_record[2]]();
     active_record = g_battle_work;
     if (active_record[0] != 0) {
-        func_801EF4BC();
-        func_801EFA00();
-        func_801EF720();
+        renderComposeWorkMatrix();
+        renderFadeQuadFan();
+        renderFadeTriangleFan();
         PopMatrix();
     }
 }

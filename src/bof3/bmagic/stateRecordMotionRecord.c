@@ -42,7 +42,7 @@ typedef struct BmagicMagic06403OffsetPair {
   s8 y;
 } BmagicMagic06403OffsetPair;
 
-extern BmagicMagic06403OffsetPair D_801F138C[]; /* @source 0x801F138C @kind table */
+extern BmagicMagic06403OffsetPair tablePartyPositionOffsets[]; /* @source 0x801F138C @kind table */
 
 /* @source 0x801F04A0
  * @behavior Seeds the motion fields of the bmagic work record and advances its
@@ -90,9 +90,9 @@ void stateRecordMotionRecord(void) {
   *(s32 *)(record + 0x18) = 0x19800;
   index = D_80146374[0] * 0x140;
   *(s32 *)(record + 0x4) =
-      *(s16 *)(D_80145EBE + index) + D_801F138C[D_80145E98[index]].x;
+      *(s16 *)(D_80145EBE + index) + tablePartyPositionOffsets[D_80145E98[index]].x;
   index = D_80146374[0] * 0x140;
   *(s32 *)(record + 0x8) =
-      *(s16 *)(D_80145EC0 + index) + D_801F138C[D_80145E98[index]].y;
+      *(s16 *)(D_80145EC0 + index) + tablePartyPositionOffsets[D_80145E98[index]].y;
   record[0x1]++;
 }

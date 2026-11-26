@@ -31,7 +31,7 @@ extern s32 func_8015B5D4(u32 flag_bank, s32 bit_index);
  * unlifted.
  * @source 0x801F41F0
  */
-extern void func_801F41F0(s16 row, u8 column);
+extern void renderSetDrawOrigin(s16 row, u8 column);
 
 /* @source 0x801F3DA4
  * @behavior Entry 0, the first of the six handlers of the byte-+0x02 run based
@@ -104,12 +104,12 @@ void stateMoveBlockFlag(
   gateWork = workRecordCursor1F800044;
   if (FIELD_REF(s16, gateWork, 0x36) == 0 &&
       func_8015B5D4((u32)&D_80144F28, 0xD) != 0) {
-    func_801F41F0(0, 3);
+    renderSetDrawOrigin(0, 3);
     stateWork = workRecordCursor1F800044;
     stateWork[0x02] = 3;
   } else {
     drawWork = workRecordCursor1F800044;
-    func_801F41F0(FIELD_REF(s16, drawWork, 0x36), 0);
+    renderSetDrawOrigin(FIELD_REF(s16, drawWork, 0x36), 0);
     stateWork = workRecordCursor1F800044;
     stateWork[0x02] = 1;
   }

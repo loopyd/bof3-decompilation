@@ -40,10 +40,10 @@ segments:
     - func_801F2E3C
   - - 764
     - asm
-    - func_801F2EFC
+    - renderStepBandQuads
   - - 1124
     - asm
-    - func_801F3064
+    - renderFixedOffsetQuad
   - - 1452
     - c
     - dispatchByte2Table42ec

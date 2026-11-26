@@ -18,7 +18,7 @@ typedef struct BossBoss05416PublishWork {
  * before the three-word run at 0x800C20C0. 0x800C2084 is that row's +0xC word
  * inside the row and not a row boundary, so it is referenced as the word the
  * row itself carries. */
-extern u8 D_800C2078; /* @source 0x800C2078 @kind data */
+extern u8 stepDataRow; /* @source 0x800C2078 @kind data */
 extern u8 D_800C2084; /* @source 0x800C2084 @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -63,7 +63,7 @@ void publishStepStateSetup(
   BossBoss05416PublishWork *work = (BossBoss05416PublishWork *)D_801EB4E8;
   u8 *state;
 
-  work->data_row = &D_800C2078;
+  work->data_row = &stepDataRow;
   work->step_handler = callIndexedHandler29;
   work->step_data = &D_800C2084;
   state = SPAD_PTR_SLOT(u8, 0x44u);

@@ -214,5 +214,5 @@ segments:
     - '@behavior: Overlay quad ring emitter: GetTPage(0, 1, 0x2C0, 0x100) with SetDrawMode dfe 0 and dtd 0 at the g_PrimCursor packet, func_8014E5A0(2, 0xC) arming the draw mode and func_801AFE18 filling the 0x20-byte sort scratch; then the caller point at its first argument translated in x by the orange radius and by the black radius, each shifted left four and projected through func_801AFF04 into a screen entry; then thirty-two iterations of one semi-transparent POLY_G4 whose vertices 0 and 1 take the previous corner pair and whose vertices 2 and 3 take the pair recomputed at the phase advanced by 0x80, each corner being the caller point translated by the radius rotated through the 0x1000-unit cosine 0x801783C8 for x and sine 0x801782FC for y with the product shifted right eight, vertices 0 and 2 carrying the colour triplet 0xFF/0x7F/0x00 and vertices 1 and 3 black, each 0x24-byte packet appended through func_8014E5A0 under OT slot 2.'
   - - 11544
     - textbin
-    - D_801D3918
+    - stepHandlerTable
 - - 13496

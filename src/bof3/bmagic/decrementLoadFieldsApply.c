@@ -6,7 +6,7 @@
  * re-reads the cell, so the record pointer is never live across a store or a
  * call and the original re-materialises the cell address before each access
  * group. The cell sits inside the payload's trailing `textbin` row labelled
- * D_801F05A4, so the reference binds through this target's generated
+ * tableMotionDeltaPairs, so the reference binds through this target's generated
  * undefined-symbol table and needs no map row. */
 extern u8 *D_801F21F0; /* @source 0x801F21F0 @kind data */
 
@@ -27,7 +27,7 @@ struct BmagicMotionPair {
   s16 dx;
   u16 dy;
 };
-extern struct BmagicMotionPair D_801F05A4[]; /* @source 0x801F05A4 @kind data */
+extern struct BmagicMotionPair tableMotionDeltaPairs[]; /* @source 0x801F05A4 @kind data */
 
 /* Byte table at 0x801F0664, indexed by the work record byte at 0x4; the tail of
  * this body reseeds the record byte at 0x7 from it. Its first two entries are 6
@@ -104,16 +104,16 @@ void decrementLoadFieldsApply(
     ((u32 *)D_801F21F0)[7] = ((u32 *)D_801EB4E0)[0xF];
     ((u16 *)D_801F21F0)[0x10] = ((u16 *)D_801EB4E0)[0x17];
     ((u16 *)D_801F21F0)[0x11] = ((u16 *)D_801EB4E0)[0x18];
-    if (D_801F05A4[((u8 *)D_801F21F0)[7] & 0x1F].dx < 0) {
+    if (tableMotionDeltaPairs[((u8 *)D_801F21F0)[7] & 0x1F].dx < 0) {
       ((u16 *)D_801F21F0)[0x10] +=
-          (u16)D_801F05A4[((u8 *)D_801F21F0)[7] & 0x1F].dx - (rand() & 7);
+          (u16)tableMotionDeltaPairs[((u8 *)D_801F21F0)[7] & 0x1F].dx - (rand() & 7);
     } else {
       ((u16 *)D_801F21F0)[0x10] +=
-          (u16)D_801F05A4[((u8 *)D_801F21F0)[7] & 0x1F].dx + (rand() & 7);
+          (u16)tableMotionDeltaPairs[((u8 *)D_801F21F0)[7] & 0x1F].dx + (rand() & 7);
     }
     ((u16 *)D_801F21F0)[4] = ((u16 *)D_801F21F0)[0x10];
     ((u16 *)D_801F21F0)[0x11] -=
-        D_801F05A4[((u8 *)D_801F21F0)[7] & 0x1F].dy + (rand() & 7);
+        tableMotionDeltaPairs[((u8 *)D_801F21F0)[7] & 0x1F].dy + (rand() & 7);
     ((u16 *)D_801F21F0)[5] = rand() & 1;
     ((u16 *)D_801F21F0)[6] = rand();
     ((u8 *)D_801F21F0)[7] = D_801F0664[((u8 *)D_801F21F0)[4]] + (rand() & 6);

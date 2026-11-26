@@ -14,7 +14,7 @@ typedef struct KeySlotRecord {
 /* @source 0x8018DBFE @kind bss */
 extern KeySlotRecord D_8018DBFE[];
 /* @source 0x8018E264 @kind bss */
-extern u8 D_8018E264;
+extern u8 audioKeySlotCount;
 /* @source 0x8018E7F2 @kind bss */
 extern u16 D_8018E7F2;
 
@@ -31,7 +31,7 @@ extern u16 D_8018E7F2;
 void releaseOwnerVoices(s16 owner) {
   u8 i;
 
-  for (i = 0; i < D_8018E264; i++) {
+  for (i = 0; i < audioKeySlotCount; i++) {
     if (D_8018DBFE[i].unk_00 == owner) {
       D_8018E7F2 = i;
       _SsVmKeyOffNow(0);

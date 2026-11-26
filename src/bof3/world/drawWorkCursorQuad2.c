@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
-extern void func_801F3FDC(s32 *point); /* @source 0x801F3FDC @kind function */
+extern void renderCursorGouraudQuads(s32 *point); /* @source 0x801F3FDC @kind function */
 
 /* @source 0x801F3F94
  * @behavior Copies the current work object's three cursor words at offsets
@@ -21,5 +21,5 @@ void drawWorkCursorQuad(void) {
   point[0] = *(s32 *)(work + 0x34);
   point[1] = *(s32 *)(work + 0x38);
   point[2] = *(s32 *)(work + 0x3C);
-  func_801F3FDC(point);
+  renderCursorGouraudQuads(point);
 }

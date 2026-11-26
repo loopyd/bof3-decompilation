@@ -33,7 +33,7 @@ extern u8 D_801D9B64[];
  * Splat layout, so only this call is bound here: it takes the panel origin and
  * the cell counts this site passes as 9 and 10.
  * @source 0x801D7418 */
-extern void func_801D7418(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+extern void renderPanelBacking(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 
 /* Main-executable panel icon drawer, called here with the icon id 0, the panel
  * cell anchor and the constants 16, 16 and 0x80.
@@ -57,7 +57,7 @@ extern u32 func_801AF20C(const void* arg0);
 
 /* @source 0x801D3F0C
  * @behavior Equipment panel of the SHISU overlay: it draws the panel backing
- *           through this overlay's drawer func_801D7418 at (x, y) with the size
+ *           through this overlay's drawer renderPanelBacking at (x, y) with the size
  *           pair 9/10, selects the 164-byte field record D_80144968[index]
  *           whose item bytes it then reads, draws the 16x16 icon through
  *           func_801644D8 at (x+7, y+5) with the constants 16, 16 and 0x80 and
@@ -77,7 +77,7 @@ extern u32 func_801AF20C(const void* arg0);
  *           payload invokes it. One payload cmp proved these 0x24C bytes equal
  *           the drawEquipPanelBate00_801D2F64 span at 0x801D2F64 apart from
  *           three words - the jal at +0x40 to this overlay's own panel drawer
- *           func_801D7418 where the BATE copy calls func_801D6470, and the two
+ *           renderPanelBacking where the BATE copy calls func_801D6470, and the two
  *           literal low halves at +0x6C (caption D_801D9B64) and +0x1D0 (id
  *           table D_801D9B5C) - and the same three words are the only
  *           difference from the emi/etc/shop/00 span at 0x801D8A0C, so this is
@@ -97,7 +97,7 @@ void renderEquipPanel(s16 x, s16 y, u8 index) {
   u32 mask;
   u16 row;
 
-  func_801D7418(x, y, 9, 10);
+  renderPanelBacking(x, y, 9, 10);
   record = &D_80144968[index * 164];
   func_8014F800((s16)(x + 0x2E), (s16)(y + 7), 0, 0xFF, (u32)D_801D9B64);
   func_801644D8(0, (u16)(x + 7), (u16)(y + 5), 16, 16, 128);

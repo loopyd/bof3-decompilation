@@ -9,7 +9,7 @@ typedef void (*PlcharPlp05600WorkStateHandler)(void);
  * function of this payload (entry 0 = 0x801CE448, entry 1 = 0x801CE628,
  * entry 14 = 0x801CF934, entry 23 = 0x801D02F4).
  */
-extern PlcharPlp05600WorkStateHandler func_801D0858[]; /* @source 0x801D0858 @kind data */
+extern PlcharPlp05600WorkStateHandler workByte2HandlerTable[]; /* @source 0x801D0858 @kind data */
 
 /* @source 0x801CE404
  * @behavior Overlay work-byte-2 dispatcher and entry point: reads the
@@ -28,4 +28,4 @@ extern PlcharPlp05600WorkStateHandler func_801D0858[]; /* @source 0x801D0858 @ki
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkHandler, func_801D0858);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkHandler, workByte2HandlerTable);

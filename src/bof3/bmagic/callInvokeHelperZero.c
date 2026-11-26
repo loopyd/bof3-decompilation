@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern void func_801F08AC(void); /* @source 0x801F08AC @kind function */
+extern void statePublishWorkBytes(void); /* @source 0x801F08AC @kind function */
 extern void func_801E5988(void); /* @source 0x801E5988 @kind function */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
@@ -18,7 +18,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  */
 void callInvokeHelperZero(
     void) {
-  func_801F08AC();
+  statePublishWorkBytes();
   if (--g_battle_work[0x09] == 0) {
     func_801E5988();
   }

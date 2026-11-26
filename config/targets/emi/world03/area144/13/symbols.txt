@@ -23,4 +23,4 @@ claimStoreIndexLower = 0x801F3BAC;
 publishViewViewRecompute = 0x801F3C78;
 stateStatusProgress23Gate = 0x801F3CE4;
 stateStatusUnlessGate = 0x801F3D14;
-D_801F3D80 = 0x801F3D80;
+pointRowsTable = 0x801F3D80;

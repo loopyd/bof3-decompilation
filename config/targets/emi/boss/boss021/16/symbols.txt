@@ -17,6 +17,6 @@ publishBattleHooks16 = 0x800C1AD0;
 func_800C1B08 = 0x800C1B08;
 setupTupleFlagProgress = 0x800C1C18;
 publishOwnerRequestOwner = 0x800C1C64;
-D_800C1CB0 = 0x800C1CB0;
+workStepPointerTable = 0x800C1CB0;
 initModeTuple510 = 0x801DDED8;
 initModeTuple520 = 0x801DDF00;

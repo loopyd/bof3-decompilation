@@ -11,7 +11,7 @@ extern int rand(void);
  * seeding record halfword +0xF6 from the eight-byte candidate run at +0x8C when
  * the kind path opens. A record whose halfword +0x82 holds bit 0x20, or whose
  * word +0x104 holds bit 0x4000, keeps mode 1 and picks a target through
- * pickTargetStoreGlobal; otherwise func_801E2A88 supplies the selected target
+ * pickTargetStoreGlobal; otherwise selectEnemyResultByte supplies the selected target
  * byte 0x80146384. While the battle mode byte 0x801462EA is set it also
  * publishes the record as the current enemy work (0x801EB4E8 and scratchpad
  * +0x44) and runs its +0xE4 handler. It ends by copying the mode into record
@@ -70,7 +70,7 @@ void stateEnemyTargetPublish(u8 arg0) {
       pickTargetStoreGlobal(arg0);
     }
   } else if (func_800A9304((u8)(arg0 + 3)) != 0) {
-    D_80146384 = func_801E2A88(arg0);
+    D_80146384 = selectEnemyResultByte(arg0);
   }
   if (BATTLE_GLOBAL_BYTE_62EA != 0) {
     work = &D_801EB630[arg0];

@@ -15,7 +15,7 @@ extern u8 D_80145AD4[];
 /* Value format of this overlay's leading data blob, at payload byte 4: the
  * three-character decimal field "%3d" that all four value rows use.
  * @source 0x801D0C04 @kind data */
-extern const char D_801D0C04[];
+extern const char textUiStrings[];
 
 /* Caption rows of this overlay's trailing data blob, the four four-byte runs
  * starting "Pwr", "Def", "Int" and "Agl" at payload bytes 0x8F4C, 0x8F50,
@@ -152,19 +152,19 @@ void renderPartyMemberParameter(u16 x, u16 y, u8 index) {
   record = (ShisuParameterPanelRecord*)(base + 0x16) + index;
 
   func_8014F800((s16)(x + 0xB), (s16)(y + 8), 0, 0xFF, (u32)D_801D9B4C);
-  sprintf((char*)D_80145AD4, D_801D0C04, record->power);
+  sprintf((char*)D_80145AD4, textUiStrings, record->power);
   func_80150098((s16)(x + 0x30), (s16)(y + 0xA), 0, D_80145AD4);
 
   func_8014F800((s16)(x + 0xB), (s16)(y + 0x15), 0, 0xFF, (u32)D_801D9B50);
-  sprintf((char*)D_80145AD4, D_801D0C04, record->defense);
+  sprintf((char*)D_80145AD4, textUiStrings, record->defense);
   func_80150098((s16)(x + 0x30), (s16)(y + 0x17), 0, D_80145AD4);
 
   func_8014F800((s16)(x + 0x53), (s16)(y + 8), 0, 0xFF, (u32)D_801D9B54);
-  sprintf((char*)D_80145AD4, D_801D0C04, record->intelligence);
+  sprintf((char*)D_80145AD4, textUiStrings, record->intelligence);
   func_80150098((s16)(x + 0x78), (s16)(y + 0xA), 0, D_80145AD4);
 
   func_8014F800((s16)(x + 0x53), (s16)(y + 0x15), 0, 0xFF, (u32)D_801D9B58);
-  sprintf((char*)D_80145AD4, D_801D0C04, record->agility);
+  sprintf((char*)D_80145AD4, textUiStrings, record->agility);
   func_80150098((s16)(x + 0x78), (s16)(y + 0x17), 0, D_80145AD4);
 
   if ((record->badge & 0xFF) != 0xFF) {

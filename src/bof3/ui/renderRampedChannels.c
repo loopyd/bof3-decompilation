@@ -2,11 +2,11 @@
 
 /* The overlay's fixed-point table: twelve 16.16 words from 0x801D9688 followed
  * by the in-image code pointer run that fills the head of the reviewed
- * `textbin` row T_801D9688. This body indexes it with the work byte 0x801DA033,
+ * `textbin` row mathFixedPointTable. This body indexes it with the work byte 0x801DA033,
  * which no other code of this payload reads, so the reachable index range stays
  * unbounded here.
  */
-extern u32 T_801D9688[]; /* @source 0x801D9688 @kind table */
+extern u32 mathFixedPointTable[]; /* @source 0x801D9688 @kind table */
 
 /* The panel step byte of the work block 0x801DA028..0x801DA12D: this body
  * multiplies it by three to step the record's three channels; the sibling step
@@ -40,17 +40,17 @@ extern u8 D_801DA0C0[]; /* @source 0x801DA0C0 @kind data */
  * word at +0x40 into the colour vector and draw the record it is handed.
  * @source 0x801D2308
  */
-extern void func_801D2308(void *record);
+extern void renderRecordSprite(void *record);
 
 /* @source 0x801D2ADC
  * @behavior Drawing step of the SHISU overlay for its second work record at
  *           0x801DA0C0: it stores the 16.16 word that the work byte 0x801DA033
- *           indexes in the fixed-point table based at T_801D9688 into the
+ *           indexes in the fixed-point table based at mathFixedPointTable into the
  *           record cell 0x801DA100, saves the record's three channel bytes
  *           0x801DA11D through 0x801DA11F on its frame, steps the first and
  *           third down by three times the panel byte 0x801DA02F to a floor of
  *           zero and the second up by the same amount to a ceiling of 0xFF,
- *           calls the shared drawing routine func_801D2308 with the record at
+ *           calls the shared drawing routine renderRecordSprite with the record at
  *           0x801DA0C0, and writes the three saved bytes back, so the stepping
  *           reaches the drawing call while the record keeps its stored values.
  *           This payload reaches it from the five jal sites at 0x801D2E08,
@@ -77,7 +77,7 @@ void renderRampedChannels(void)
 {
     u8 saved[3];
 
-    D_801DA100 = T_801D9688[D_801DA033];
+    D_801DA100 = mathFixedPointTable[D_801DA033];
     saved[0] = D_801DA11D;
     saved[1] = D_801DA11E;
     saved[2] = D_801DA11F;
@@ -98,7 +98,7 @@ void renderRampedChannels(void)
         else
             *q = 0;
     }
-    func_801D2308(D_801DA0C0);
+    renderRecordSprite(D_801DA0C0);
     D_801DA11D = saved[0];
     D_801DA11E = saved[1];
     D_801DA11F = saved[2];

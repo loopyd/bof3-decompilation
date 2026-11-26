@@ -14,7 +14,7 @@ void func_8014D6B8(u8 request);
  * byte +0x27 to 0xFF and byte +0x0A to 0x3C and requests the D_801EB494 table
  * byte of that index, publishing the index at scratch byte +0x0B when it
  * changed. It then clears scratch byte +1 when the selected record's 0x58 group
- * bits are clear, derives the queued work position with func_801E8DD8, runs
+ * bits are clear, derives the queued work position with deriveQueuedDrawPosition, runs
  * func_8014D978 and func_8014D4E0, and clears scratch byte +1 again when the
  * selected battler is unavailable while work byte +0 has bit 0 clear.
  * @status exact
@@ -62,7 +62,7 @@ void countdownGroupSelectionRefresh(void) {
     ((u8*)D_1F800044)[1] = 0;
   }
 
-  func_801E8DD8();
+  deriveQueuedDrawPosition();
   func_8014D978();
   func_8014D4E0();
 

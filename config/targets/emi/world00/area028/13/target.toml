@@ -8,19 +8,19 @@ splat = "config/targets/emi/world00/area028/13/splat.yaml"
 load_address = 0x801f2c00
 
 sources = [
-    "src/bof3/world/func_801F2C48.c",
+    "src/bof3/world/seedWorkAdvanceSlot.c",
     "src/bof3/world/area02813DispatchTables.c",
-    "src/bof3/world/func_801F2C80.c",
+    "src/bof3/world/stateProgress25Gate.c",
     "src/bof3/world/resetWorkareaSelectMode2.c",
     "src/bof3/world/seedWorkTable.c",
     "src/bof3/world/initSpriteSlot.c",
     "src/bof3/world/scanFreeSlot.c",
     "src/bof3/world/refreshSpriteSlots.c",
-    "src/bof3/world/func_801F2D3C_area02813.c",
-    "src/bof3/world/func_801F318C.c",
+    "src/bof3/world/drawTrailCenterSolid.c",
+    "src/bof3/world/drawTrailGouraudRing.c",
     "src/bof3/world/func_801F3414.c",
     "src/bof3/world/func_801F341C.c",
-    "src/bof3/world/func_801F3424_area02813.c",
+    "src/bof3/world/spawnFrontRecord.c",
 ]
 support_sources = [
     "src/bof3/support/area02813_symbols.c",

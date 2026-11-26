@@ -15,7 +15,7 @@ void panelStepRightCall2(void) {
     s16 value;
 
     func_800B1728();
-    task = D_80148648;
+    task = panelTaskRoot;
     value = task->x;
     if (value >= 0x143) {
         func_80158E20();

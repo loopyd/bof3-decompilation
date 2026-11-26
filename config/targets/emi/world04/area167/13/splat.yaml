@@ -53,7 +53,7 @@ segments:
     - func_801F314C
   - - 1468
     - asm
-    - func_801F31BC
+    - renderSignedScaleQuads
   - - 2528
     - c
     - dispatchByte2Table4aa0
@@ -167,5 +167,5 @@ segments:
     - '@behavior: Requests the shared state entry 0x20 with progress 0x1E and stores 0x980 into the shared halfword 0x8014932C only while front-side byte 0x80143F03 reads zero and, through the shared flag tester 0x8015B5D4, bit 0x8F of the main-RAM flag bank 0x80144F28 is set and bit 0x90 is clear.'
   - - 7784
     - textbin
-    - D_801F4A68
+    - distanceTermTable
 - - 15544

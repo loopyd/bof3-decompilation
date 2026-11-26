@@ -14,7 +14,7 @@ extern u8* D_1F800044;
  * row index by two.
  * @source 0x801F4A68 @kind data
  */
-extern u16 D_801F4A68[];
+extern u16 distanceTermTable[];
 
 /* Word row table of the same tail at 0x801F4A70: row k is the value the body
  * stores into record word +0x20.
@@ -46,7 +46,7 @@ extern s16 func_8015477C(s32 x, s32 y);
  * it, and it takes no arguments and answers nothing.
  * @source 0x801F31BC
  */
-extern void func_801F31BC(void);
+extern void renderSignedScaleQuads(void);
 
 /* @source 0x801F3624
  * @behavior Entry 0 of the state-byte-2 handler run based at 0x801F4AA0 of this
@@ -59,7 +59,7 @@ extern void func_801F31BC(void);
  *           index. Hands the record position pair at +0x34 and +0x38 to the
  *           shared distance helper func_8015477C, halves the returned signed
  *           distance with the sign-fixup sequence, subtracts the unsigned row
- *           term D_801F4A68[index] and stores that into record halfword +0x3E.
+ *           term distanceTermTable[index] and stores that into record halfword +0x3E.
  *           Stores the word row term D_801F4A70[index] into record word +0x20,
  *           clears record halfword +0x30, increments record byte +0x02 so the
  *           next dispatch of the same run takes its entry 1 at 0x801F36FC, and
@@ -111,9 +111,9 @@ void stateStoreDistanceWord(
   FIELD_REF(u16, D_1F800044, 0x3A) = D_801F4A81[x * 2];
   distance = func_8015477C(FIELD_REF(u32, D_1F800044, 0x34),
                            FIELD_REF(u32, D_1F800044, 0x38));
-  FIELD_REF(u16, D_1F800044, 0x3E) = -distance / 2 - D_801F4A68[x];
+  FIELD_REF(u16, D_1F800044, 0x3E) = -distance / 2 - distanceTermTable[x];
   FIELD_REF(u32, D_1F800044, 0x20) = D_801F4A70[x];
   FIELD_REF(u16, D_1F800044, 0x30) = 0;
   D_1F800044[2]++;
-  func_801F31BC();
+  renderSignedScaleQuads();
 }

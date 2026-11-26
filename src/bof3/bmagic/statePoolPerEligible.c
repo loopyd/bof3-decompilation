@@ -65,7 +65,7 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
 
 /* @source 0x801EECF8
  * @behavior Init stage 0 of this overlay. The frame entry func_801EEC18 copies
- *           the two-word pointer run {func_801EECF8, func_801EEEE4} into its
+ *           the two-word pointer run {func_801EECF8, raiseInvokeHelperZero4} into its
  *           frame and calls the word selected by work-object byte 0x01, so this
  *           body runs while that byte is 0. It first resets the flags pool at
  *           0x801F0454 - 0x60 records of stride 0x20 - by clearing record bytes

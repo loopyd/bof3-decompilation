@@ -12,5 +12,5 @@ void callPanelTaskTable69(void)
     BattlePanelTaskDispatchTable handlers;
 
     handlers = D_800969E4;
-    handlers.handlers[D_80148648->unk_00[2]]();
+    handlers.handlers[panelTaskRoot->unk_00[2]]();
 }

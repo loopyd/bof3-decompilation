@@ -85,10 +85,10 @@ segments:
     - c
     - passDistanceQuadEmitter
     - '@source: src/bof3/world/passDistanceQuadEmitter.c'
-    - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044 and copies its words at +0x34, +0x38 and +0x3C unchanged into a three-word stack triple, then passes a pointer to that triple to the overlay quad emitter func_801F30A8; takes no arguments and returns nothing.'
+    - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044 and copies its words at +0x34, +0x38 and +0x3C unchanged into a three-word stack triple, then passes a pointer to that triple to the overlay quad emitter drawProjectedQuad; takes no arguments and returns nothing.'
   - - 1192
     - asm
-    - func_801F30A8
+    - drawProjectedQuad
 - - 1972
   - bin
   - tail

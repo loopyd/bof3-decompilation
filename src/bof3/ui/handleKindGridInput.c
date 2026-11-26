@@ -21,7 +21,7 @@ extern u8 D_801455C3; /* @source 0x801455C3 @kind data */
 extern u8 D_801457A8[][8]; /* @source 0x801457A8 @kind data */
 
 /* Text id of each request row, indexed by the signed request row byte. */
-extern u16 D_801D4BB8[]; /* @source 0x801D4BB8 @kind data */
+extern u16 tableRowCueValues[]; /* @source 0x801D4BB8 @kind data */
 
 /* Kind grid each request row selects, indexed by the signed request row byte;
  * 0xFF marks a row that has no target kind grid. */
@@ -165,7 +165,7 @@ void handleKindGridInput(void) {
       dispatchSoundCue(0x100);
     }
     srow = D_801D4E28;
-    D_801D4E0C = D_801D4BB8[srow];
+    D_801D4E0C = tableRowCueValues[srow];
   }
   renderEntryListScreen();
   cursor = &D_801448ED;

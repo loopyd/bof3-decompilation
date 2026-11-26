@@ -3,8 +3,8 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void (*D_801F0BCC[])(void); /* @source 0x801F0BCC @kind data */
 
-extern void func_801EF440(void); /* @source 0x801EF440 @kind function */
-extern void func_801F02CC(void); /* @source 0x801F02CC @kind function */
+extern void renderComposeWorkMatrix(void); /* @source 0x801EF440 @kind function */
+extern void renderFadeGouraudQuads(void); /* @source 0x801F02CC @kind function */
 
 /* @source 0x801F0140
  * @behavior Calls the handler indexed by unsigned work byte 2 through the
@@ -25,8 +25,8 @@ void callInvokePopNonzero(void) {
     D_801F0BCC[step_record[2]]();
     active_record = g_battle_work;
     if (active_record[0] != 0) {
-        func_801EF440();
-        func_801F02CC();
+        renderComposeWorkMatrix();
+        renderFadeGouraudQuads();
         PopMatrix();
     }
 }

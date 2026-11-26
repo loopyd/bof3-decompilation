@@ -26,7 +26,7 @@ void panelStepLeftRight(void) {
   BattlePanelStepTask* task;
 
   drawBattleLocalPanel();
-  task = (BattlePanelStepTask*)D_80148648;
+  task = (BattlePanelStepTask*)panelTaskRoot;
   if (task->unk_0A == 0) {
     if (task->x < 0x43) {
       task->x = 0x42;

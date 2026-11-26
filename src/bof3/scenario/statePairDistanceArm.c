@@ -32,7 +32,7 @@ extern s32 func_8015477C(s32 x, s32 y);
  * reads no argument: every use of $a0 in its body is a write.
  * @source 0x801FA01C
  */
-extern void func_801FA01C(void);
+extern void resetSlotAngleState(void);
 
 /* @source 0x801F7D6C
  * @behavior One-shot overlay handler, word 0 of the ten-word in-image
@@ -90,7 +90,7 @@ void statePairDistanceArm(void) {
   pairA = *(volatile s32*)&work[0x34];
   *(s32*)&work[0x38] = pairB;
   *(s32*)&workPointerCell[0x3C] = func_8015477C(pairA, pairB) << 16;
-  func_801FA01C();
+  resetSlotAngleState();
   *(s32*)&workPointerCell[0x0C] = 0x78;
   workPointerCell[2]++;
 }

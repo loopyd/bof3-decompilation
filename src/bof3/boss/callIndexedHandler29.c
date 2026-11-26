@@ -5,7 +5,7 @@ typedef void (*Boss05416Handler)(void);
 /* This payload's byte-indexed handler run at 0x800C20C0, the interior word the
  * scaled index adds to: its three entries are 0x800C1918, 0x800C1920 and
  * 0x800C1928, this overlay's inert handlers, and the run ends at the payload
- * end 0x800C20CC. The word is interior to the reviewed `textbin` row D_800C2078
+ * end 0x800C20CC. The word is interior to the reviewed `textbin` row stepDataRow
  * (0x800C2078 through 0x800C20CB), whose first six words are the small record
  * 0x01010000, 0x01010404, 0, 0x06000600, 0xFFFF0602, 0x00000601 and whose
  * twelve-word step-handler run starts at 0x800C2090, so the row stays one data

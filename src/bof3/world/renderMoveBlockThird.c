@@ -15,7 +15,7 @@ extern u8* workRecordCursor1F800044;
  * then call func_8014E5A0(6, 0x18). Both argument roles stay described by that
  * arithmetic because the emitter itself is unlifted.
  */
-void func_801F41F0(s16 row, u8 column);
+void renderSetDrawOrigin(s16 row, u8 column);
 
 /* Per-step draw-move column table at 0x801F4E70: one byte per step, read with the
  * work record's byte +0x09 divided by three, so each entry covers three frames.
@@ -51,7 +51,7 @@ void renderMoveBlockThird(
 
   drawWork = workRecordCursor1F800044;
   step = (u8)((u32)drawWork[0x09] / 3);
-  func_801F41F0(FIELD_REF(s16, drawWork, 0x36),
+  renderSetDrawOrigin(FIELD_REF(s16, drawWork, 0x36),
                 moveBlockColumnTable801[step]);
   incWork = workRecordCursor1F800044;
   incWork[0x09]++;

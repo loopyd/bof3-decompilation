@@ -9,7 +9,7 @@ void func_80196070(void);
  * scratch halfword at 0x36 and emits one tinted quad per selected column through
  * RotTransPers, writing its first argument into the primitive colour bytes
  * 0x04-0x06 of each packet; the second argument is overwritten before any use. */
-extern void func_80117E78(s32 shade, s32 arg1); /* @source 0x80117E78 */
+extern void renderShadedBandQuads(s32 shade, s32 arg1); /* @source 0x80117E78 */
 
 /* Shared per-frame counter at 0x80143E6C in main RAM, the cell the composed map
  * already binds; bit 0 is the frame parity this tree masks for every-other-frame
@@ -35,7 +35,7 @@ extern u8* D_1F800044;
  * or more it resets the work object through the shared func_80196070
  * (clearWorkFlags in emi/etc/game/00), which zeroes work-object bytes 0x00-0x04
  * and so returns the overlay to work state 0. Every frame, taken or not, it then
- * runs the overlay band draw func_80117E78 with 0x80 minus that byte and a zero
+ * runs the overlay band draw renderShadedBandQuads with 0x80 minus that byte and a zero
  * second argument, so the bands it emits fade out as the byte climbs toward
  * 0x80. The counter word is read before the frame is created, the 0x18-byte
  * frame only keeps $ra at 0x10 across the two calls, and the slots after each
@@ -56,5 +56,5 @@ void stateFramesComplementShade(
     func_80196070();
   }
 
-  func_80117E78(0x80 - D_1F800044[9], 0);
+  renderShadedBandQuads(0x80 - D_1F800044[9], 0);
 }

@@ -22,7 +22,7 @@ extern u8 *D_801F17B0; /* @source 0x801F17B0 @kind data */
  * twelve times the record byte 0x04 plus three times the record byte 0x03,
  * recomputed in full at each of the three loads. No other span of this overlay
  * references these bytes. */
-extern u8 D_801F0158[]; /* @source 0x801F0158 @kind table */
+extern u8 paletteChannelTable[]; /* @source 0x801F0158 @kind table */
 extern u8 D_801F0159[]; /* @source 0x801F0159 @kind table */
 extern u8 D_801F015A[]; /* @source 0x801F015A @kind table */
 
@@ -140,7 +140,7 @@ void renderRotatedPublishedCenter(
   *(u16 *)0x1F800000 = *(u16 *)(D_801F17B0 + 0x20);
   *(u16 *)0x1F800002 = *(u16 *)(D_801F17B0 + 0x22);
   *(u16 *)0x1F800008 =
-      D_801F0158[D_801F17B0[4] * 12 + D_801F17B0[3] * 3] * D_801F17B0[5];
+      paletteChannelTable[D_801F17B0[4] * 12 + D_801F17B0[3] * 3] * D_801F17B0[5];
   *(u16 *)0x1F80000A =
       D_801F0159[D_801F17B0[4] * 12 + D_801F17B0[3] * 3] * D_801F17B0[5];
   *(u16 *)0x1F80000C =

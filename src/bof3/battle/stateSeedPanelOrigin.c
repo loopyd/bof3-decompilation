@@ -11,7 +11,7 @@ void stateSeedPanelOrigin(void) {
   BattlePanelTask* task;
   u8 state;
 
-  task = (BattlePanelTask*)D_80148648;
+  task = (BattlePanelTask*)panelTaskRoot;
   task->x = 0x5A;
   state = task->state;
   task->field_06 = -0x17;

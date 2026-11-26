@@ -25,7 +25,7 @@ void func_8014AFC0(void);
 void dispatchCallbackSlots(void);
 void initCallbackSlots(void);
 void func_8014E22C(void);
-s32  func_8014E0FC(const char* path);
+s32  resourceLoadImageFile(const char* path);
 void clearRenderRect(s16 x, s16 y, s16 width, s16 height);
 void func_8014E6D0(void);
 void func_8014EA80(void);

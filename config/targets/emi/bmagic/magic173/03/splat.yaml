@@ -55,7 +55,7 @@ segments:
     - c
     - renderPointHeadingHit
     - '@source: src/bof3/bmagic/renderPointHeadingHit.c'
-    - '@behavior: Entry 3 of the ten-entry code-pointer run based at 0x801F0988, indexed by scratchpad work-object byte 1 through callStateTable0988, so it takes no arguments and returns nothing. It raises work byte 0xA by one while that byte is below 8, projects the record at 0x8014638C into a stack point triple of word 0x34 and 0x38 shifted right nine and biased by minus 0x4000 and word 0x3C plus 0x800000 shifted right 17, passes the triple with the frame word 0x24 it never writes and the size 0xC0 to func_800AF3A0, copies work word 0xC into work word 0x10, stores the heading func_8017A138 returns for the record-minus-work word differences into work word 0xC, and then either copies record words 0x34 and 0x38 into the work words on a hit of func_800AF66C with the bound 0x8000 or, off a hit, stores the low-12-bit difference of work words 0x10 and 0xC back as its own magnitude and repeats the copy only while that magnitude minus 0x601 is below 0x3FF unsigned, raising work byte 0x2 in both cases. It calls func_800AF764 and func_801F02B0, forwards the battle target byte 0x80146384 with flag word 0x10 to func_800A9610 while work byte 0x2 is not 1 and work byte 0x4 is zero, and while work byte 0x2 is 2 claims an action slot through func_801E590C(1, 0x18) and fills its byte 0x01, pointer word 0x74, work word triplet 0x34, 0x38 and 0x3C and the record byte 0xB count without testing the 0xFF answer.'
+    - '@behavior: Entry 3 of the ten-entry code-pointer run based at 0x801F0988, indexed by scratchpad work-object byte 1 through callStateTable0988, so it takes no arguments and returns nothing. It raises work byte 0xA by one while that byte is below 8, projects the record at 0x8014638C into a stack point triple of word 0x34 and 0x38 shifted right nine and biased by minus 0x4000 and word 0x3C plus 0x800000 shifted right 17, passes the triple with the frame word 0x24 it never writes and the size 0xC0 to func_800AF3A0, copies work word 0xC into work word 0x10, stores the heading func_8017A138 returns for the record-minus-work word differences into work word 0xC, and then either copies record words 0x34 and 0x38 into the work words on a hit of func_800AF66C with the bound 0x8000 or, off a hit, stores the low-12-bit difference of work words 0x10 and 0xC back as its own magnitude and repeats the copy only while that magnitude minus 0x601 is below 0x3FF unsigned, raising work byte 0x2 in both cases. It calls func_800AF764 and stateCompactWorkRows, forwards the battle target byte 0x80146384 with flag word 0x10 to func_800A9610 while work byte 0x2 is not 1 and work byte 0x4 is zero, and while work byte 0x2 is 2 claims an action slot through func_801E590C(1, 0x18) and fills its byte 0x01, pointer word 0x74, work word triplet 0x34, 0x38 and 0x3C and the record byte 0xB count without testing the 0xFF answer.'
   - - 2008
     - asm
     - func_801EF3D8
@@ -72,7 +72,7 @@ segments:
     - func_801EFA34
   - - 5808
     - asm
-    - func_801F02B0
+    - stateCompactWorkRows
   - - 6048
     - c
     - stateInsertRecordRow

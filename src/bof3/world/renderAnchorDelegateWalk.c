@@ -22,9 +22,9 @@ extern s8 D_80181B01[]; /* @source 0x80181B01 @kind table */
  * reaches the three columns through one four-byte offset, and the original
  * re-materialises each column base from its own symbol, so no record view is
  * used here. The three rows of the target map bind the addresses. */
-extern u8 D_801F5CDC[]; /* @source 0x801F5CDC @kind table */
-extern u8 D_801F5CDD[]; /* @source 0x801F5CDD @kind table */
-extern u8 D_801F5CDE[]; /* @source 0x801F5CDE @kind table */
+extern u8 tableWalkDirectionIndex[]; /* @source 0x801F5CDC @kind table */
+extern u8 tableWalkLimit[]; /* @source 0x801F5CDD @kind table */
+extern u8 tableWalkFlag[]; /* @source 0x801F5CDE @kind table */
 
 /* Draw request of this payload at 0x801F5190, lifted in
  * claimEndPointPair.c:
@@ -112,14 +112,14 @@ u8 renderAnchorDelegateWalk(
   elapsed = (s32)arg0 - 5;
   t = (u16)elapsed;
   off = ((s32)D_80147AC4 >> 7) & 0xC;
-  limit = D_801F5CDD[off];
-  dx = (s8)D_80181B00[D_801F5CDC[off] * 2] << 16;
+  limit = tableWalkLimit[off];
+  dx = (s8)D_80181B00[tableWalkDirectionIndex[off] * 2] << 16;
   mx = elapsed;
   if (limit < t) {
     mx = limit;
   }
   x = D_80147A8C + dx * (u16)mx;
-  dy = (s8)D_80181B01[D_801F5CDC[off] * 2] << 16;
+  dy = (s8)D_80181B01[tableWalkDirectionIndex[off] * 2] << 16;
   my = elapsed;
   if (limit < t) {
     my = limit;
@@ -127,15 +127,15 @@ u8 renderAnchorDelegateWalk(
   y = D_80147A90 + dy * (u16)my;
   claimEndPointPair(
       0x3D8000, 0x638000, x, y);
-  if (t < D_801F5CDD[off]) {
+  if (t < tableWalkLimit[off]) {
     return 1;
   }
-  if (D_801F5CDE[off] == 0) {
+  if (tableWalkFlag[off] == 0) {
     return 1;
   }
-  if (t == D_801F5CDD[off]) {
+  if (t == tableWalkLimit[off]) {
     func_8015DF18(0x206);
   }
   return drawRecordAnchorStage(
-      t, D_801F5CDE[off]);
+      t, tableWalkFlag[off]);
 }

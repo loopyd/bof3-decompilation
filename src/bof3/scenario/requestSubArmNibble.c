@@ -24,7 +24,7 @@ void func_8015C088(void);
  * the shared sub-state byte D_80146875 and arms the shared unsigned halfword
  * countdown D_80146876 with 0x1E (30), then answers 1; the shared primary state
  * byte D_80146874 is left unchanged, unlike its table neighbours
- * func_801FC690 and requestPrimaryArm,
+ * stateStartSceneSix and requestPrimaryArm,
  * which request a primary state of their own. The 0x18-byte frame only keeps
  * $ra across the call, each of the two stores materialises the 0x8014 page in
  * $at on its own, and both returned constants are materialised in $v0 by li.

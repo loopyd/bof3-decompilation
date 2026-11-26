@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 /* Interior base of the overlay's pointer run: the promoted `textbin` row
- * D_800C1B1C covers 0x800C1B1C to the end of this payload at 0x800C1BA8 and the
+ * stateHandlerPointerTable covers 0x800C1B1C to the end of this payload at 0x800C1BA8 and the
  * reviewed Splat layout places it whole, so only the entry base this dispatcher
  * indexes is named here. From 0x800C1B6C the run holds twelve handler pointers,
  * read from this payload's own bytes: 0x800C1940 (this overlay's second
@@ -26,7 +26,7 @@ extern void (*D_800C1B6C[])(void); /* @source 0x800C1B6C @kind data */
  * stay nops. It writes no state and returns whatever the called handler leaves in
  * $v0; the pointer-cell load precedes frame creation, and the 0x18-byte frame
  * only keeps $ra at 0x10 across the indirect call. Entry 0 of the run is the
- * installer at 0x800C1940, which stores D_800C1B1C into record offset 0xEC,
+ * installer at 0x800C1940, which stores stateHandlerPointerTable into record offset 0xEC,
  * 0x800C19A4 into 0xE4 and D_800C1B28 into 0xE8, raises flag 0x8 in the word at
  * 0x104, writes work byte 1 as 2 and calls func_8014D978; the remaining eleven
  * entries are main-executable handlers. No word of this payload holds 0x800C18FC,

@@ -3,7 +3,7 @@
 extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
-extern void func_801F03D8(void); /* @source 0x801F03D8 @kind function */
+extern void resourceClaimWorkRecord(void); /* @source 0x801F03D8 @kind function */
 
 /* @source 0x801F0278
  * @behavior Calls the local helper at 0x801F03D8, then tests bit 0 of
@@ -19,7 +19,7 @@ void callHelperByteBoth(void) {
   u8 *work;
   u32 count;
 
-  func_801F03D8();
+  resourceClaimWorkRecord();
   if ((D_80143E6C & 1) == 0) {
     work = g_battle_work;
     count = work[0xB];

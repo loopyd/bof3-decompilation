@@ -16,7 +16,7 @@ extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind data */
  * cursor cell at 0x8014598C with one colour on the top edge and the other on
  * the bottom edge, advances that cursor by 0x24 and returns nothing. Splat
  * binds the address through this target's map row. */
-void func_801F5428(s32 color);
+void fillScreenGradient(s32 color);
 
 /* Draw helper, the overlay's own routine at 0x801F4430. Its body rotates and
  * projects the work record fields +0x30/+0x32/+0x34, draws a run of four
@@ -52,7 +52,7 @@ void renderScreenGradientAdjust(
   u8* step;
 
   D_8014933A = 0;
-  func_801F5428(0x10001805);
+  fillScreenGradient(0x10001805);
   work = workRecordCursor1F800044;
   *(u16*)(work + 0x32) =
       (*(u16*)(work + 0x32) - *(s32*)(work + 0x14) / 10000) & 0xFFD;

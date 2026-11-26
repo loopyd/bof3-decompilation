@@ -20,7 +20,7 @@ extern void func_8017AA80(void *primitive);
  *           from (x, y + 5) to (x + 10, y + 5), so the two arms cross at the
  *           centre (x + 5, y + 5) with five pixels on each side. Both helper
  *           addresses lie outside this EMI payload; the payload's only call to
- *           this span is in func_801D2304, which passes its own x argument plus
+ *           this span is in renderMasterListPanel, which passes its own x argument plus
  *           0x94 and its row y. Its 0x28-byte frame keeps $s0 to $s3 and $ra
  *           across the four calls.
  * @status partial

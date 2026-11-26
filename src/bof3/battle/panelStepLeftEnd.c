@@ -10,7 +10,7 @@
 void panelStepLeftEnd(void) {
     PanelTask* task;
 
-    task = D_80148648;
+    task = panelTaskRoot;
     task->x -= 0x20;
     if ((s16)task->x < -0xC8) {
         *(s16*)&task->x = -0xC8;

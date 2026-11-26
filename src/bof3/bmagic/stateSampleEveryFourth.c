@@ -7,7 +7,7 @@
  * 0x801EECC8. Every access below re-reads the cell, so the original
  * re-materialises the cell address before each access instead of keeping the
  * record pointer live across a store. The cell sits inside the payload's
- * trailing `textbin` row labelled D_801F05A4, which no map row names, so the
+ * trailing `textbin` row labelled tableMotionDeltaPairs, which no map row names, so the
  * reference binds through the target's generated undefined-symbol table. */
 extern u8 *D_801F21F0; /* @source 0x801F21F0 @kind data */
 

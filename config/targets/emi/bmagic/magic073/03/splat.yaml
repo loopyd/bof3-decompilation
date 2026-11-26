@@ -119,5 +119,5 @@ segments:
     - func_801F04A4
   - - 6564
     - textbin
-    - D_801F05A4
+    - tableMotionDeltaPairs
 - - 13812

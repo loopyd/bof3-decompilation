@@ -8,7 +8,7 @@
  * one pointer load after the rand call and reads every field of that record
  * through it; the loop re-materialises the cell for the primitive linker because
  * a call sits between the two groups. The cell sits inside the payload's
- * trailing `textbin` row labelled D_801F05A4, which no map row names, so the
+ * trailing `textbin` row labelled tableMotionDeltaPairs, which no map row names, so the
  * reference binds through this target's generated undefined-symbol table. */
 extern u8 *D_801F21F0; /* @source 0x801F21F0 @kind data */
 

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
-extern void func_801F3F04(s32 arg0); /* @source 0x801F3F04 */
+extern void renderRingQuadFan(s32 arg0); /* @source 0x801F3F04 */
 
 /* @source 0x801F3D90
  * @behavior Second handler in the table at 0x801F4634, indexed by work byte 2.
@@ -18,7 +18,7 @@ void callWorkIncrementAdvance(void) {
   u8* step;
   u8* tail;
 
-  func_801F3F04(scratchpadWorkRecord[9]);
+  renderRingQuadFan(scratchpadWorkRecord[9]);
   work = scratchpadWorkRecord;
   work[9] += 1;
   step = scratchpadWorkRecord;

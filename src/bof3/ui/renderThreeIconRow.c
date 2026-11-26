@@ -47,7 +47,7 @@ extern int sprintf(char *buffer, const char *format, ...);
  * the mode byte. Its row is still an `asm` row of this target's Splat layout, so
  * only its call is bound here.
  * @source 0x801D44C0 */
-extern void func_801D44C0(s32 x, s32 y, s32 kind, s32 mode);
+extern void renderSpritePrimShade(s32 x, s32 y, s32 kind, s32 mode);
 
 /* Panel icon emitter of this overlay, already lifted in this target. The
  * original zero-extends both icon coordinates (andi 0xFFFF), so this call site
@@ -65,7 +65,7 @@ extern void func_80150098(s16 arg0, s16 arg1, u32 arg2, const u8 *arg3);
  * record byte at +0x08 and the record word at +0x10. Its row is still an `asm`
  * row of this target's Splat layout.
  * @source 0x801D56D8 */
-extern void func_801D56D8(u16 arg0, u16 arg1, u32 arg2, u8 arg3, u32 arg4);
+extern void renderMemberPortraitPanel(u16 arg0, u16 arg1, u32 arg2, u8 arg3, u32 arg4);
 
 /* Sprite-record stream emitter of the main executable: the two signed
  * coordinates, the stream blob and the flag byte it carries. This payload only
@@ -101,7 +101,7 @@ extern const u8 D_801D9A60[]; /* @source 0x801D9A60 @kind data */
  *           at (x + 9, y + 5) with the icon id plus 3 as its kind, the 0x1E
  *           texture row, the clut GetClut(0x10, 0x1E0) and the attribute 0x80.
  *           It then draws the record's three sprite kinds: for every slot below
- *           3 whose byte is not 0xFF it calls func_801D44C0 at (x + 0x56 plus 41
+ *           3 whose byte is not 0xFF it calls renderSpritePrimShade at (x + 0x56 plus 41
  *           per slot, y + 2) with that byte as the kind and the mode 0. The
  *           five-cell name run of the record is submitted through func_8014F800
  *           at (x + 0x15, y + 3) with the alignment 0, then the record byte at
@@ -110,7 +110,7 @@ extern const u8 D_801D9A60[]; /* @source 0x801D9A60 @kind data */
  *           with "%02d %02d" and drawn at (x + 0x27, y + 0x25), and that same
  *           column draws the three-cell label row "  :" at y + 0x24 and y + 0x27.
  *           The record byte at +0x08 and its word at +0x10 then reach the gauge
- *           helper func_801D56D8 at (x + 0x14, y + 0x12) with the selector 0.
+ *           helper renderMemberPortraitPanel at (x + 0x14, y + 0x12) with the selector 0.
  *           Outside the guarded block it reads the record byte at +0x14 and
  *           passes 2, or 0 when either that byte or the record is zero, as the
  *           flag of the sprite stream D_801D9A60 submitted through
@@ -122,7 +122,7 @@ extern const u8 D_801D9A60[]; /* @source 0x801D9A60 @kind data */
  *           0x801D8208 in emi/etc/bate/00 and at 0x801DDCB0 in emi/etc/shop/00:
  *           a payload cmp of the three spans found 185 of their 192 words equal,
  *           and the seven that differ are the three jal words to each copy's own
- *           func_801D44C0, emitPanelIconPrim and func_801D56D8,
+ *           renderSpritePrimShade, emitPanelIconPrim and renderMemberPortraitPanel,
  *           which move with the copy's own address delta, plus the four low
  *           halves of the two format strings, the label row and the stream blob,
  *           which carry each payload's own blob base, so the three are one body
@@ -152,7 +152,7 @@ void renderThreeIconRow(u8 icon, s16 x, s16 y,
         (u16)GetClut(0x10, 0x1E0), 0x80);
     for (i = 0; i < 3; i++) {
       if (rec->sprite[i] != 0xFF) {
-        func_801D44C0((u16)(x + 0x56 + i * 41), (u16)(y + 2), rec->sprite[i], 0);
+        renderSpritePrimShade((u16)(x + 0x56 + i * 41), (u16)(y + 2), rec->sprite[i], 0);
       }
     }
     func_8014F800((s16)(x + 0x15), (s16)(y + 3), 0, 5, (u32)rec);
@@ -162,7 +162,7 @@ void renderThreeIconRow(u8 icon, s16 x, s16 y,
     func_80150098((s16)(x + 0x27), (s16)(y + 0x25), 0, D_80145AD4);
     func_80150098((s16)(x + 0x27), (s16)(y + 0x24), 0, D_801D0D74);
     func_80150098((s16)(x + 0x27), (s16)(y + 0x27), 0, D_801D0D74);
-    func_801D56D8((u16)(x + 0x14), (u16)(y + 0x12), 0, rec->unk_08, rec->unk_10);
+    renderMemberPortraitPanel((u16)(x + 0x14), (u16)(y + 0x12), 0, rec->unk_08, rec->unk_10);
   }
   do {
     origin_x = (s16)x;

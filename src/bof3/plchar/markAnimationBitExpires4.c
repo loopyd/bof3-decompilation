@@ -51,7 +51,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * nonzero.
  * @source 0x801CFCF8
  */
-extern u8 func_801CFCF8(s16 col, s16 row);
+extern u8 claimMapCell(s16 col, s16 row);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
  * body calls it last on every path and discards the returned byte.
@@ -74,7 +74,7 @@ u8 func_8014DAEC(void);
  *           of the animation byte 0x74 of the found work record through the
  *           column base 0x801468FC and the slot stride 0x98. It then claims a
  *           map cell record at the projected point through this payload claim
- *           handler func_801CFCF8, passing the high half of each projected word
+ *           handler claimMapCell, passing the high half of each projected word
  *           as a signed half: when that claim fails and the first word has a
  *           nonzero low half it retries one unit further on that axis, and when
  *           the retry also fails and the second word has a nonzero low half it
@@ -102,5 +102,5 @@ PLCHAR_DEFINE_COUNTDOWN_PROJECTED_CELL_CLAIM(
     markAnimationBitExpires4,
     D_1F800044, D_80181B94, D_80181B98, D_801468FC,
     func_801BDE14,
-    func_801CFCF8,
+    claimMapCell,
     func_8014DAEC)

@@ -73,7 +73,7 @@ extern void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, u8 arg3);
  * layout: the two zero-extended coordinates, the record index, the record level
  * byte and the record word at +8. Its call is the only fact this body binds.
  * @source 0x801D4730 */
-extern void func_801D4730(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4);
+extern void renderMemberPortraitPanel(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4);
 
 /* Icon-sprite emitter of this overlay at 0x801D3664, already lifted exact in
  * this target: the original zero-extends both coordinates before this call, so
@@ -136,7 +136,7 @@ typedef struct BatePartyStatusRecord {
  *   from that stored bit while the 2 shade comes from a current HP below two
  *   and, on the MP row, from a below-a-quarter maximum and from a current MP of
  *   zero. It closes with the sprite stream D_801D8780 submitted at the panel
- *   origin with the flag byte 0 and the portrait func_801D4730 at
+ *   origin with the flag byte 0 and the portrait renderMemberPortraitPanel at
  *   (x+0x14, y+0x12) for the record index, its level byte and its word at +8.
  *   No jal and no word of any extracted payload names this span, so it is an
  *   overlay entry called from outside the payload and its four arguments have
@@ -237,6 +237,6 @@ void renderPartyStatusBox(u16 x, u16 y, u8 index, u8 flag) {
   func_80150098(textX, textY, align, D_80145AD4);
 
   func_801AF390((s16)x, (s16)y, D_801D8780, 0);
-  func_801D4730((u16)(x + 0x14), (u16)(y + 0x12), index, record->level,
+  renderMemberPortraitPanel((u16)(x + 0x14), (u16)(y + 0x12), index, record->level,
                 record->unk_08);
 }

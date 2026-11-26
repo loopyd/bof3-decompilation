@@ -19,7 +19,7 @@ extern void (*D_801F0CB0[])(void); /* @source 0x801F0CB0 @kind data */
 
 /* Target-local block at 0x801EF44C; its own row is still assembly, so the name
  * stays address-anchored. */
-extern void func_801EF44C(void); /* @source 0x801EF44C @kind function */
+extern void stateSelectDrawMode(void); /* @source 0x801EF44C @kind function */
 
 /* @source 0x801EF054
  * @behavior Dispatches one work-byte-2 step of the overlay sequence: reads the
@@ -47,6 +47,6 @@ void callGlobalByteNot(
     void) {
   D_801F0CB0[g_battle_work[2]]();
   if (D_801EB4E0[0xB] != 0xFF && g_battle_work[2] != 0) {
-    func_801EF44C();
+    stateSelectDrawMode();
   }
 }

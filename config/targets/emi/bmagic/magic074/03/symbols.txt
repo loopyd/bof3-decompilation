@@ -20,5 +20,5 @@ func_801F00B0 = 0x801F00B0;
 func_801F03D4 = 0x801F03D4;
 stateClearRecordBytes5 = 0x801F0440;
 D_801F0490 = 0x801F0490;
-D_801F0558 = 0x801F0558;
-D_801F20DC = 0x801F20DC;
+tableStageHandlers = 0x801F0558;
+stateWorkRecordPointer = 0x801F20DC;

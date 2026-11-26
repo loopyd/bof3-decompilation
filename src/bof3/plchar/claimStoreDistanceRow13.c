@@ -61,7 +61,7 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           halfword 0x3E, and finally clears row byte 0x0B. Nothing is
  *           returned and a full table leaves every row untouched. The three
  *           in-image call sites are 0x801CFD68, 0x801CFDE4 and 0x801CFE20,
- *           all inside the still-unlifted map cell claim handler func_801CFCF8
+ *           all inside the still-unlifted map cell claim handler claimMapCell
  *           of this payload: the first and third pass state 0 with the cell pair
  *           that handler narrowed from its own arguments, the second passes
  *           state 1 with the sign-extended halves of those two arguments, and

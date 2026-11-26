@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 callPublishPoolRecords = 0x801EEC18;
 statePoolPerEligible = 0x801EECF8;
-func_801EEEE4 = 0x801EEEE4;
+raiseInvokeHelperZero4 = 0x801EEEE4;
 callStateTable0400 = 0x801EEF30;
 callCopiedStepTable = 0x801EEF74;
 copyBattlerPoolCount = 0x801EEFE4;

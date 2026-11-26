@@ -205,7 +205,7 @@ segments:
     - callStateHalfword2Table072
   - - 9100
     - textbin
-    - func_801D078C
+    - workByte2HandlerTable
   - - 9196
     - asm
     - func_801D07EC

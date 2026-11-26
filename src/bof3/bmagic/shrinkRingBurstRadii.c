@@ -29,7 +29,7 @@ extern u16 D_801EFAAE; /* @source 0x801EFAAE @kind data */
  * installs the draw mode on the primitive cursor and runs the overlay's draw
  * passes against the state above, so this call is the frame's whole draw and it
  * takes no arguments and returns nothing. */
-void func_801EF254(void); /* @source 0x801EF254 */
+void renderOverlayFrame(void); /* @source 0x801EF254 */
 
 /* @source 0x801EEF80
  * @behavior Magic-150 effect handler, the entry at 0x801EEC18 of the overlay
@@ -67,7 +67,7 @@ void shrinkRingBurstRadii(
 
   *ring_radius -= 0x40;
   D_801EFAAE -= 0x60;
-  func_801EF254();
+  renderOverlayFrame();
   if (--g_battle_work[9] == 0) {
     g_battle_work[1]++;
   }

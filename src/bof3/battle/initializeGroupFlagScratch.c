@@ -46,7 +46,7 @@ void initializeGroupFlagScratch(void) {
     motion_work->unk_18 = 0x666;
     motion_work->unk_0c = 0;
     ((u8*)motion_work)[0x0a] = 0x3c;
-    func_801E8DD8();
+    deriveQueuedDrawPosition();
     func_8014D6B8(D_801EB494[index]);
     D_1F800044->unk_01 += 2;
 }

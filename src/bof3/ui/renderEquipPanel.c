@@ -31,7 +31,7 @@ extern u8 D_801D8B40[];
  * passes the same wide form, and the widths below are the widths observed at
  * these call sites rather than a recovered callee contract.
  * @source 0x801D6470 @kind unknown */
-extern void func_801D6470(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+extern void renderPanelBacking(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 
 /* Main-exe panel icon drawer, called here with the icon anchor of the equipped
  * panel and the constant arguments 0, 16, 16 and 0x80 it is called with at the
@@ -55,7 +55,7 @@ extern u32 func_801AF20C(const void* arg0);
 
 /* @source 0x801D2F64
  * @behavior Equipment panel of the BATE overlay: it draws the panel backing
- *           through this overlay's drawer func_801D6470 at (x, y) with the size
+ *           through this overlay's drawer renderPanelBacking at (x, y) with the size
  *           pair 9/10, selects the 164-byte field record D_80144968[index]
  *           whose item bytes it then reads, draws the 16x16 icon through
  *           func_801644D8 at (x+7, y+5) with the constants 16, 16 and 0x80 and
@@ -74,7 +74,7 @@ extern u32 func_801AF20C(const void* arg0);
  *           arguments have the roles their uses give them: a caller outside the
  *           payload invokes it. The 0x24C bytes equal under cmp the
  *           emi/etc/shop/00 span at 0x801D8A0C apart from three words - the jal
- *           at +0x40 to this overlay's own panel drawer func_801D6470 where the
+ *           at +0x40 to this overlay's own panel drawer renderPanelBacking where the
  *           shop copy calls func_801DBF18, and the two literal low halves at
  *           +0x6C (caption D_801D8B40) and +0x1D0 (id table D_801D8B38), each
  *           0x3304 below the shop copy's own literals while the lui halves stay
@@ -94,7 +94,7 @@ void renderEquipPanel(s16 x, s16 y, u8 index) {
   u32 mask;
   u16 row;
 
-  func_801D6470(x, y, 9, 10);
+  renderPanelBacking(x, y, 9, 10);
   record = &D_80144968[index * 164];
   func_8014F800((s16)(x + 0x2E), (s16)(y + 7), 0, 0xFF, (u32)D_801D8B40);
   func_801644D8(0, (u16)(x + 7), (u16)(y + 5), 16, 16, 128);

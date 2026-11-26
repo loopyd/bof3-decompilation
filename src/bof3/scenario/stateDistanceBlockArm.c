@@ -32,7 +32,7 @@ extern s32 func_8015477C(s32 x, s32 y);
  * discards the call's result.
  * @source 0x801F90F4
  */
-extern void func_801F90F4(u8* block);
+extern void setupBlockSlotBounds(u8* block);
 
 /* @source 0x801F7BE0
  * @behavior One-shot overlay handler, word 0 of the twelve-word in-image
@@ -113,7 +113,7 @@ void stateDistanceBlockArm(
   dist3c = *(s32*)(saved + 0x3C);
   PSX_REF(u16, 0x800E5134u) = 0x800;
   PSX_REF(s32, 0x800E4C2Cu) = dist3c + 0x2000000;
-  func_801F90F4(PSX_PTR(u8, 0x800E4C24u));
+  setupBlockSlotBounds(PSX_PTR(u8, 0x800E4C24u));
   advance = workPointerCell;
   *(s32*)(advance + 0x0C) = 0x28;
   advance[2]++;

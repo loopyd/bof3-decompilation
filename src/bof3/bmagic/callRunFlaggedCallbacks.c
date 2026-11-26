@@ -5,7 +5,7 @@ typedef struct BmagicMagic07403FlaggedTable {
   BmagicMagic07403FlaggedHandler handlers[3];
 } BmagicMagic07403FlaggedTable;
 extern BmagicMagic07403FlaggedTable D_801EEC1C; /* @source 0x801EEC1C @kind data */
-extern u8 *D_801F20DC; /* @source 0x801F20DC @kind data */
+extern u8 *stateWorkRecordPointer; /* @source 0x801F20DC @kind data */
 extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 extern void func_801F00B0(void); /* @source 0x801F00B0 @kind function */
 extern void func_801EFBE4(u16 phase, u16 amount); /* @source 0x801EFBE4 @kind function */
@@ -29,17 +29,17 @@ void callRunFlaggedCallbacks(void) {
   u8 *dispatchRecord;
   u8 *record;
 
-  dispatchRecord = D_801F20DC;
+  dispatchRecord = stateWorkRecordPointer;
   handlers = D_801EEC1C;
   handlers.handlers[dispatchRecord[2]]();
-  record = D_801F20DC;
+  record = stateWorkRecordPointer;
   if ((record[0] & 1) && record[2] != 0) {
     func_801F00B0();
-    record = D_801F20DC;
+    record = stateWorkRecordPointer;
     if (FIELD_REF(u16, record, 0x0Cu) & 3) {
       func_801EFBE4((u16)(D_80143E6C >> 1), record[6]);
       func_801EFE18((u16)((D_80143E6C >> 1) + 4),
-                   D_801F20DC[6] + (D_801F20DC[6] >> 1));
+                   stateWorkRecordPointer[6] + (stateWorkRecordPointer[6] >> 1));
     }
   }
 }

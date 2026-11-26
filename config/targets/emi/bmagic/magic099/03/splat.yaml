@@ -59,7 +59,7 @@ segments:
     - '@source: src/bof3/bmagic/magic09903DispatchTables.c'
   - - 1456
     - asm
-    - func_801EF1B0
+    - installWorkTransform
   - - 1636
     - c
     - callDrawPopActive

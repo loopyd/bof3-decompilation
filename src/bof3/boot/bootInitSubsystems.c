@@ -20,7 +20,7 @@ void bootInitSubsystems(s32 work_base, u_long disc_lba) {
   D_801EB450 = work_base + 0x10480;
   CdReadSync(0, 0);
   PadInit(0);
-  func_801CE7F4();
-  func_801CE930(disc_lba);
-  func_801CED48();
+  setupStreamDisplay();
+  startStreamDecoder(disc_lba);
+  rampCdMixLevel();
 }

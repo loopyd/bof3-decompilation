@@ -42,7 +42,7 @@ segments:
     - '@behavior: Advances the scratchpad work-object byte at offset 0x09 by two at byte width. The pointer cell at 0x1F800044 is loaded once and the same work pointer serves both the byte load and the byte store, so this body keeps one cell load where its neighbour at 0x801F2C60 re-materializes the cell for each of its two accesses. The span is entry 1 of the two-word handler run at the table base 0x801F3554, whose entry 0 is 0x801F2C60. The overlay entry at 0x801F2C04 indexes that run with the work object''s byte 2 scaled by four before dispatching, so byte 0x09 is the step byte this handler advances before 0x801F2CB0 consumes it. Takes no arguments and returns nothing.'
   - - 176
     - asm
-    - func_801F2CB0
+    - stateConsumeStepByte
   - - 1304
     - c
     - renderWarpNearPoint
@@ -65,5 +65,5 @@ segments:
     - '@behavior: Runs when the shared mode byte at 0x80143BB0 is not 3. It clears the work-record flag bit 0x40 published through the pointer cell at 0x1F800044 by loading record byte 0 into a value register, masking the bit off and storing the value back through the record pointer, then passes record byte 8 of a freshly loaded record pointer to the resource helper func_8014D6B8 and writes 0 into record byte 4 through a third load of the same cell. Whatever the mode byte reads it subtracts 2 from the halfword at 0x0A of the record published through the global pointer cell 0x80148210. Takes no arguments and returns nothing.'
   - - 2388
     - textbin
-    - D_801F3554
+    - tableStepHandlers
 - - 3972

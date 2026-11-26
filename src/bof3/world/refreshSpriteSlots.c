@@ -26,7 +26,7 @@ void refreshSpriteSlots(void) {
       if (WORLD00_AREA028_WORK_PTR->scale < 0x80) {
         WORLD00_AREA028_WORK_PTR->unk_00[0] = 0u;
       }
-      func_801F2D3C();
+      drawTrailCenterSolid();
     }
 
     WORLD00_AREA028_WORK_PTR =

@@ -1,4 +1,4 @@
-D_800C1804 = 0x800C1804;
+stepHandlerTable = 0x800C1804;
 callStateByte1Table5 = 0x800C1810;
 func_800C1854 = 0x800C1854;
 callStateByte2Table4 = 0x800C18B8;

@@ -13,7 +13,7 @@ extern u8* D_1F800044;
  * heading between the two projections, masked to 16 bits.
  * @source 0x801F3320 @kind function
  */
-extern u16 func_801F3320(u8* from, u8* to);
+extern u16 mathHeadingBetweenPoints(u8* from, u8* to);
 
 /* @source 0x801F3378
  * @behavior Claims one record of the 0x20-entry, 0x2C-byte-stride work table at
@@ -86,5 +86,5 @@ void claimSizeHeadingObject(
   record[5] = 0x20;
   next = D_1F800044;
   *(s32*)(record + 0x24) = step;
-  *(u16*)(record + 0x6) = func_801F3320(next + 0x34, next + 0xC);
+  *(u16*)(record + 0x6) = mathHeadingBetweenPoints(next + 0x34, next + 0xC);
 }

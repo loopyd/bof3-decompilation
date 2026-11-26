@@ -19,6 +19,6 @@ publishFlagHooks2 = 0x800C1B7C;
 zeroResult2 = 0x800C1BB4;
 func_800C1BBC = 0x800C1BBC;
 noopHandler8 = 0x800C1C08;
-D_800C1C10 = 0x800C1C10;
+tableStepDataRow = 0x800C1C10;
 initModeTuple510 = 0x801DDED8;
 initModeTuple520 = 0x801DDF00;

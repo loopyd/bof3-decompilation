@@ -15,7 +15,7 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
  * +0x18/+0x1C and the rotation angle from the halfword it is handed, which it
  * masks to 16 bits and scales by 16, and gives the quad the 0xBF-by-0x68
  * texture UV rectangle. */
-void func_800C23D4(u16 angle); /* @source 0x800C23D4 */
+void renderSpinQuad(u16 angle); /* @source 0x800C23D4 */
 
 /* @source 0x800C1B40
  * @behavior Overlay state 3 handler, entry 3 of the handler run based at
@@ -71,7 +71,7 @@ void accumulateSpinShrinkSpin(
   if (FIELD_REF(s32, work, 0x10u) >= 0x29) {
     FIELD_REF(s32, work, 0x10u)--;
   }
-  func_800C23D4(FIELD_REF(u16, D_1F800044, 0x20u));
+  renderSpinQuad(FIELD_REF(u16, D_1F800044, 0x20u));
   if (D_80143E6C & 7u) {
     record = D_1F800044;
     FIELD_REF(u8, record, 0x0Au)++;

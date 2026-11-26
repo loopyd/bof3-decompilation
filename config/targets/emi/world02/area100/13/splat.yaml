@@ -48,10 +48,10 @@ segments:
     - c
     - renderCursorQuadLocal
     - '@source: src/bof3/world/renderCursorQuadLocal.c'
-    - '@behavior: loads the work-object pointer published at the scratchpad cell 0x1F800044, copies that object cursor words at +0x34, +0x38 and +0x3C into a local twelve-byte point, and passes the address of that point to the overlay quad renderer func_801F2D60, which emits one semi-transparent G4 through SetPolyG4. Takes no arguments and returns nothing.'
+    - '@behavior: loads the work-object pointer published at the scratchpad cell 0x1F800044, copies that object cursor words at +0x34, +0x38 and +0x3C into a local twelve-byte point, and passes the address of that point to the overlay quad renderer renderCursorQuadPrim, which emits one semi-transparent G4 through SetPolyG4. Takes no arguments and returns nothing.'
   - - 352
     - asm
-    - func_801F2D60
+    - renderCursorQuadPrim
   - - 1136
     - c
     - dispatchWorkByte1Handler3
@@ -143,7 +143,7 @@ segments:
     - '@behavior: overlay step handler, entry 1 of the handler table based at 0x801F4F68 that dispatchWorkByte1Handler4 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array and calls the overlay draw routine at 0x801F3D70 with that array, which projects it through func_801AFF04 and emits one semi-transparent G4 through SetPolyG4. It advances no state byte and returns nothing.'
   - - 4464
     - asm
-    - func_801F3D70
+    - renderProjectedQuadPrim
   - - 5244
     - rodata
     - T_801F407C

@@ -6,7 +6,7 @@ extern void (*workByte2PopTable[])(void); /* @source 0x801F09C0 @kind data */
 /* @source 0x800AF764 */
 extern void func_800AF764(void);
 /* @source 0x801EF1B0 */
-extern void func_801EF1B0(void);
+extern void installWorkTransform(void);
 /* @source 0x801F043C */
 extern void func_801F043C(void);
 /* @source 0x801F070C */
@@ -27,7 +27,7 @@ void callHandlerPopActive(void) {
     workByte2PopTable[g_battle_work[2]]();
     func_800AF764();
     if (g_battle_work[2] != 0) {
-        func_801EF1B0();
+        installWorkTransform();
         func_801F043C();
         func_801F070C();
         PopMatrix();

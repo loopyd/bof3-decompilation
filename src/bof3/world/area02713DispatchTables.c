@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 extern void (*handlerTable[])(void); /* @source 0x801F3AB4 @kind data */
-extern void (*D_801F3ABC[])(void); /* @source 0x801F3ABC @kind data */
+extern void (*handlerTable2[])(void); /* @source 0x801F3ABC @kind data */
 
 /* @behavior dispatches the scratch mode byte at offset 1 through the local
  * handler table at 0x801F3AB4.
@@ -19,4 +19,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchScratchMode1, handlerTab
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchScratchMode2, D_801F3ABC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchScratchMode2, handlerTable2);

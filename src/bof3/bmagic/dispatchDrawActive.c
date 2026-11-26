@@ -9,7 +9,7 @@ extern void (*D_801EFAB8[])(void); /* @source 0x801EFAB8 @kind data */
 
 /* The target-local draw routine sets draw mode, emits a semitransparent
  * full-screen quad tinted by work byte 9, and restores draw mode. */
-extern void func_801EF970(void); /* @source 0x801EF970 @kind function */
+extern void subtractTwoCountdownInvoke(void); /* @source 0x801EF970 @kind function */
 
 /* @source 0x801EF7F8
  * @behavior Calls the handler selected by unsigned work byte 2 from the
@@ -25,6 +25,6 @@ void dispatchDrawActive(
     void) {
   D_801EFAB8[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
-    func_801EF970();
+    subtractTwoCountdownInvoke();
   }
 }

@@ -103,7 +103,7 @@ segments:
     - '@source: src/bof3/world/stateTripleApplyLookup.c'
   - - 3992
     - asm
-    - func_801F3B98
+    - stateApplyModeVelocity
   - - 4556
     - c
     - mathFixedToUnits

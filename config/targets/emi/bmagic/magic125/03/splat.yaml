@@ -55,13 +55,13 @@ segments:
     - func_801EF148
   - - 1448
     - asm
-    - func_801EF1A8
+    - renderWorkObjectMatrix
   - - 1624
     - asm
     - func_801EF258
   - - 2312
     - asm
-    - func_801EF508
+    - renderWorkObjectVolume
   - - 3080
     - c
     - callInvokePopSet

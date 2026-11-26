@@ -58,12 +58,12 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * literals and symbol bindings are written here. The published work base, the
  * selector byte, the two forwarded +0x2E/+0x30 halfwords and the store of the
  * returned index are identical to that sibling. The sibling's own notes record
- * this split: 0x801F5114 alone reads the D_801F5874 row while the other five
+ * this split: 0x801F5114 alone reads the modeRowTable row while the other five
  * seeders of this overlay read D_801F5868, and the kind-1 members are this
  * address, 0x801F53EC and 0x801F546C. All five siblings are still asm rows and
  * each carries a different literal pair, so no byte-identical twin exists in
  * any target and the clone lever does not apply. The table at 0x801F5868 sits
- * 0x144 bytes inside the D_801F5724 textbin run and keeps the generated
+ * 0x144 bytes inside the randomPickTable textbin run and keeps the generated
  * undefined_syms_auto row because four asm siblings still read it.
  */
 void publishFromModeTable(

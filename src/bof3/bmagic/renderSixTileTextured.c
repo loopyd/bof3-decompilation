@@ -20,15 +20,15 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * renderSevenTileTile
  * reads the sibling table 0x801EF13C, six entries further on, the same way, so
  * the run belongs to the overlay and keeps its address-qualified name. */
-extern u8 D_801EF124[]; /* @source 0x801EF124 @kind unknown */
+extern u8 tableTileUvPairs[]; /* @source 0x801EF124 @kind unknown */
 
 /* Matching note: the scaled table offset belongs in a separate `offset` local.
- * With the stride inline in the D_801EF124 subscript gcc hoists the whole
+ * With the stride inline in the tableTileUvPairs subscript gcc hoists the whole
  * symbol address into two saved registers (`lui/addiu` of 0x801EF124 and of
  * 0x801EF124+2 in the prologue, then a bare `addu` plus a zero-displacement
  * load per access) and the frame grows to 0x30 bytes (measured 82/114
  * instructions, 424 bytes). Naming the product keeps the original folded form
- * `lui $at,%hi(D_801EF124); addu $at,$at,$v1; lhu/lbu %lo($at)` per iteration
+ * `lui $at,%hi(tableTileUvPairs); addu $at,$at,$v1; lhu/lbu %lo($at)` per iteration
  * with $v1 holding the counter times four (measured 114/114, 456 bytes, first
  * mismatch none), which is the same narrowing the exact scenario lift
  * copyRecordPartyBytesThenInvokeHelperScenarioScena0900_801FE234 records for
@@ -90,14 +90,14 @@ void renderSixTileTextured(
     prim->tpage = GetTPage(0, 1, 0x3C0, 0x100);
     prim->clut = GetClut(0, 0x1E0);
     offset = i * 4;
-    prim->u0 = *(u16 *)(D_801EF124 + offset);
-    prim->v0 = *(u16 *)(D_801EF124 + offset + 2);
-    prim->u1 = D_801EF124[offset] + 0xC;
-    prim->v1 = *(u16 *)(D_801EF124 + offset + 2);
-    prim->u2 = *(u16 *)(D_801EF124 + offset);
-    prim->v2 = D_801EF124[offset + 2] + 0xC;
-    prim->u3 = D_801EF124[offset] + 0xC;
-    prim->v3 = D_801EF124[offset + 2] + 0xC;
+    prim->u0 = *(u16 *)(tableTileUvPairs + offset);
+    prim->v0 = *(u16 *)(tableTileUvPairs + offset + 2);
+    prim->u1 = tableTileUvPairs[offset] + 0xC;
+    prim->v1 = *(u16 *)(tableTileUvPairs + offset + 2);
+    prim->u2 = *(u16 *)(tableTileUvPairs + offset);
+    prim->v2 = tableTileUvPairs[offset + 2] + 0xC;
+    prim->u3 = tableTileUvPairs[offset] + 0xC;
+    prim->v3 = tableTileUvPairs[offset + 2] + 0xC;
     GpuAppendPrim(2, 0x28);
   }
 }

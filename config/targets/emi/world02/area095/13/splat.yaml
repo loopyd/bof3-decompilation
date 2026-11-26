@@ -57,7 +57,7 @@ segments:
     - func_801F336C
   - - 2128
     - asm
-    - func_801F3450
+    - stateApplySelection
   - - 2332
     - c
     - stateInvokeHelperAdvance

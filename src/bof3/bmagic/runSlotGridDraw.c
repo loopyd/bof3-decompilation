@@ -2,7 +2,7 @@
 
 /* Local three-by-eight slot-grid draw routine. Its entry reads no arguments;
  * this caller ignores its result. */
-extern void func_801F0274(void); /* @source 0x801F0274 */
+extern void renderSlotGrid(void); /* @source 0x801F0274 */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* @source 0x801F009C
@@ -20,7 +20,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  */
 void runSlotGridDraw(
     void) {
-  func_801F0274();
+  renderSlotGrid();
   if ((g_battle_work[9] += 1) == 0x60) {
     g_battle_work[2]++;
   }

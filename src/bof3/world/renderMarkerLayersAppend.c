@@ -42,7 +42,7 @@ extern u8* g_PrimCursor;
 /* Sprite-layer table carrying the masks and record indices drawn below.
  * @source 0x801F4FDC @kind unknown
  */
-extern const World03Area11513MarkerEntry D_801F4FDC[];
+extern const World03Area11513MarkerEntry stateSpriteLayerTable[];
 
 /* Local drawer that emits one semi-transparent sprite layer. */
 void emitSemiTransSprite(
@@ -109,19 +109,19 @@ void renderMarkerLayersAppend(
     emitSemiTransSprite(
         (s16)(arg0 + 0x30), (s16)arg1, 1);
     for (i = 0; i < 6; i++) {
-      if (D_80145AB4 & (D_801F4FDC[i].mask)) {
+      if (D_80145AB4 & (stateSpriteLayerTable[i].mask)) {
         emitSemiTransSprite(
             (s16)(arg0 + 0x38), (s16)(arg1 + 0x8),
-            (u8)(D_801F4FDC[i].field_02 + 1));
+            (u8)(stateSpriteLayerTable[i].field_02 + 1));
         break;
       }
     }
   } else {
     for (i = 0; i < 6; i++) {
-      if (D_80145AB4 & (D_801F4FDC[i].mask)) {
+      if (D_80145AB4 & (stateSpriteLayerTable[i].mask)) {
         emitSemiTransSprite(
             (s16)(arg0 + 0x38), (s16)(arg1 + 0x8),
-            D_801F4FDC[i].field_02);
+            stateSpriteLayerTable[i].field_02);
         break;
       }
     }
@@ -131,19 +131,19 @@ void renderMarkerLayersAppend(
     emitSemiTransSprite(
         (s16)(arg0 + 0x30), (s16)(arg1 + 0x10), 2);
     for (i = 0; i < 8; i++) {
-      if (D_80145AC0 & (D_801F4FDC[i].mask)) {
+      if (D_80145AC0 & (stateSpriteLayerTable[i].mask)) {
         emitSemiTransSprite(
             (s16)(arg0 + 0x38), (s16)(arg1 + 0x10),
-            (u8)(D_801F4FDC[i].field_02 + 1));
+            (u8)(stateSpriteLayerTable[i].field_02 + 1));
         break;
       }
     }
   } else {
     for (i = 0; i < 8; i++) {
-      if (D_80145AC0 & (D_801F4FDC[i].mask)) {
+      if (D_80145AC0 & (stateSpriteLayerTable[i].mask)) {
         emitSemiTransSprite(
             (s16)(arg0 + 0x38), (s16)(arg1 + 0x10),
-            D_801F4FDC[i].field_02);
+            stateSpriteLayerTable[i].field_02);
         break;
       }
     }

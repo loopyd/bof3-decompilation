@@ -11,11 +11,11 @@ s32 func_8015B5D4(u32 arg0, s32 arg1);
 
 /* Local polygon helper that emits the four texture-mapped quads of the work
  * record's position band. */
-extern void func_801F2EFC(void); /* @source 0x801F2EFC */
+extern void renderStepBandQuads(void); /* @source 0x801F2EFC */
 
 /* Local polygon helper that emits the work record's quad pair at an offset of
  * sixteen from the position word. */
-extern void func_801F3064(void); /* @source 0x801F3064 */
+extern void renderFixedOffsetQuad(void); /* @source 0x801F3064 */
 
 /* @source 0x801F3290
  * @behavior Overlay per-frame work-record step: probes flag 5 of the shared
@@ -45,6 +45,6 @@ void stateTickStepPolygons(void) {
     state = step[2];
     step[2] = state + 1;
   }
-  func_801F2EFC();
-  func_801F3064();
+  renderStepBandQuads();
+  renderFixedOffsetQuad();
 }

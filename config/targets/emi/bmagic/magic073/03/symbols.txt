@@ -20,4 +20,4 @@ renderPublishedCenterPlus = 0x801F00C4;
 resourceReserveWideStride = 0x801F03E8;
 stateClearRecordBytes4 = 0x801F0454;
 func_801F04A4 = 0x801F04A4;
-D_801F05A4 = 0x801F05A4;
+tableMotionDeltaPairs = 0x801F05A4;

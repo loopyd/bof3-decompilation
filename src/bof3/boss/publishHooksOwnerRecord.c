@@ -9,7 +9,7 @@ typedef void (*Boss03216Handler)(void);
  * hook, which clears the 0x40 flag of owner record 0, publishes the record into
  * 0x80146884 and 0x1F800044 and requests resource 0. The third is an inert
  * accessor returning a zero result, which the void slot type drops. */
-void func_800C1A08(void); /* @source 0x800C1A08 */
+void installBattleHooks(void); /* @source 0x800C1A08 */
 void publishOwnerRecordResource(
     void); /* @source 0x800C1BEC */
 s32 zeroResult36(void); /* @source 0x800C1A00 */
@@ -23,7 +23,7 @@ extern Boss03216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C19C8
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
- * the unlifted handler func_800C1A08 (0x18-byte frame, tests the 0x2 bit of the
+ * the unlifted handler installBattleHooks (0x18-byte frame, tests the 0x2 bit of the
  * byte at 0x80146328) into 0x801463A4, the battle setup hook
  * publishOwnerRecordResource (clears the
  * 0x40 flag of owner record 0, publishes the owner-0 record into 0x80146884 and
@@ -40,7 +40,7 @@ extern Boss03216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishHooksOwnerRecord(void) {
-  D_801463A4 = func_800C1A08;
+  D_801463A4 = installBattleHooks;
   D_801463A8 = publishOwnerRecordResource;
   D_801463AC = (Boss03216Handler)zeroResult36;
 }

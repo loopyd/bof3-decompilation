@@ -3,7 +3,7 @@
 /* Overlay entry dispatcher at 0x800C1814.
  *
  * The dispatcher selects its handler from the pointer run this overlay binds as
- * the reviewed `textbin` row D_800C1DB0 (0x800C1DB0 through the end of the
+ * the reviewed `textbin` row stateDispatchTable (0x800C1DB0 through the end of the
  * payload at 0x800C1E08). The word the scaled index is added to is the table
  * base 0x800C1DC4, the run's word 5, so the run stays one row and this
  * declaration binds only that word. Its entry 0 is this payload's step publisher

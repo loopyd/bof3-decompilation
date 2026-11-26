@@ -32,7 +32,7 @@ void swapWords(u32* arg0, u32* arg1);
 
 /* @source 0x801D12A0
  * @behavior Entry 7 of the overlay's step-handler code-pointer run at
- * 0x801D3918 (D_801D3918), which the overlay entry func_801D0C04 selects with
+ * 0x801D3918 (stepHandlerTable), which the overlay entry func_801D0C04 selects with
  * the unsigned work byte at offset +0x1 of the scratchpad work object published
  * at pointer slot 0x1F800044 and calls with no arguments and no result
  * consumed. It advances that object's frame byte at +0x6 by one and, when the
@@ -55,7 +55,7 @@ void swapWords(u32* arg0, u32* arg1);
  *
  * Name evidence: the only in-image reference to 0x801D12A0 is the word at
  * 0x801D3934, which is element 7 of the nine-word code-pointer run based at
- * D_801D3918 (read from the original bytes: 0x801D0C48, 0x801D0CC0, 0x801D0D54,
+ * stepHandlerTable (read from the original bytes: 0x801D0C48, 0x801D0CC0, 0x801D0D54,
  * 0x801D0DD8, 0x801D0F10, 0x801D0FEC, 0x801D106C, 0x801D12A0, 0x801D13F4), so
  * this body is entry 7 of that run and no other site names it. The claim,
  * exchange, draw and progress-gated arming roles come from this body's own

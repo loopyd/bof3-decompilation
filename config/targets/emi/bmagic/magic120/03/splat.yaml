@@ -75,7 +75,7 @@ segments:
     - '@behavior: Increments work-object byte B, decrements work-object byte 4 and increments work-object byte 9 through the scratchpad pointer cell at 0x1F800044 and, when that stored byte reaches 0x88, stores 0xFF into byte B of the shared record at 0x801EB4E0 and invokes the shared helper at 0x801E5988.'
   - - 2124
     - asm
-    - func_801EF44C
+    - stateSelectDrawMode
   - - 4384
     - c
     - stateDrawModeHandler
@@ -119,7 +119,7 @@ segments:
     # @behavior Invokes helper 0x801F08AC, decrements work byte 9, and invokes shared helper 0x801E5988 on zero.
   - - 5748
     - asm
-    - func_801F0274
+    - renderSlotGrid
   - - 6320
     - c
     - renderUpSixGrey
@@ -132,7 +132,7 @@ segments:
     - '@behavior: Projects the work position and installs an axis turn selected by work byte 8.'
   - - 7340
     - asm
-    - func_801F08AC
+    - statePublishWorkBytes
   - - 7540
     - asm
     - func_801F0974

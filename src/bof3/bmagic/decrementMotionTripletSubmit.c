@@ -3,7 +3,7 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void func_801DD350(u8 *work); /* @source 0x801DD350 */
 extern s32 func_8019651C(void *work, s32 x, s32 y, s32 z, s32 mode); /* @source 0x8019651C */
-extern s8 D_801F0A78[]; /* @source 0x801F0A78 @kind data */
+extern s8 offsetTripletTable[]; /* @source 0x801F0A78 @kind data */
 extern s8 D_801F0A79[]; /* @source 0x801F0A79 @kind data */
 extern s8 D_801F0A7A[]; /* @source 0x801F0A7A @kind data */
 
@@ -49,7 +49,7 @@ void decrementMotionTripletSubmit(void) {
     g_battle_work[0x5F] = -(g_battle_work[0xB] << 4);
     g_battle_work[0x5E] = -(g_battle_work[0xB] << 4);
     index = g_battle_work[0xB] * 3;
-    func_8019651C(g_battle_work, D_801F0A78[index], D_801F0A79[index], D_801F0A7A[index], 1);
+    func_8019651C(g_battle_work, offsetTripletTable[index], D_801F0A79[index], D_801F0A7A[index], 1);
     g_battle_work[2]++;
   }
 }

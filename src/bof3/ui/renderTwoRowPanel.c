@@ -3,7 +3,7 @@
 /* Panel backing drawer of this overlay: takes the panel origin and the cell
  * counts 7 and 4, which this body passes as its cell grid.
  * @source 0x801D6470 */
-extern void func_801D6470(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+extern void renderPanelBacking(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 
 /* Main-exe sprite-record helper: emits the 16 by 16 icon whose id is the first
  * argument at the position given by the next two, with the size pair and the
@@ -42,7 +42,7 @@ extern const char D_801D0D98[]; /* @source 0x801D0D98 @kind data */
  * @behavior Two-row numbered panel of the BATE overlay, the copy of the shop
  *           value panel in emi/etc/shop/00 at 0x801DDFB0: takes the panel
  *           origin, a flags word, the selected row and a variant byte. It draws
- *           the 7 by 4 cell backing through this overlay's own func_801D6470
+ *           the 7 by 4 cell backing through this overlay's own renderPanelBacking
  *           with the counts 7 and 4, emits the 16 by 16 icon 0x14 through
  *           func_801644D8 at (x + 7, y + 5) with the size pair 16/16 and the
  *           attribute 128, and the caption through func_8014F800 at
@@ -63,7 +63,7 @@ extern const char D_801D0D98[]; /* @source 0x801D0D98 @kind data */
  *           its arguments have the roles their uses give them. A cmp of this
  *           0x1D8-byte span against the emi/etc/shisu/00 copy at 0x801D94B0,
  *           itself exact with the shop copy, left three words different: the
- *           jal to this payload's own func_801D6470 where that copy calls
+ *           jal to this payload's own renderPanelBacking where that copy calls
  *           0x801D7418, and the two literal low halves at +0x120 and +0x178,
  *           each 0x1C above that copy's row strings 0x801D0D78 and 0x801D0D7C,
  *           so this is one body with this overlay's bindings.
@@ -81,7 +81,7 @@ void renderTwoRowPanel(s16 x, s16 y, u32 flags, u8 row,
   u32 shade;
   u32 texture;
 
-  func_801D6470(x, y, 7, 4);
+  renderPanelBacking(x, y, 7, 4);
   func_801644D8(20, (u16)(x + 7), (u16)(y + 5), 16, 16, 128);
   shade = 0x1C;
   if (variant == 0) {

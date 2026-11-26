@@ -4,7 +4,7 @@ extern s32 D_80145EC4; /* @source 0x80145EC4 @kind data */
 extern s32 D_80145EC8; /* @source 0x80145EC8 @kind data */
 
 /* @source 0x801F31BC @kind function */
-extern void func_801F31BC(void);
+extern void renderSignedScaleQuads(void);
 
 /* @source 0x801F303C
  * @behavior Reads the scratchpad work record at 0x1F800044. Route byte +8
@@ -80,5 +80,5 @@ advance:
     }
   }
 
-  func_801F31BC();
+  renderSignedScaleQuads();
 }

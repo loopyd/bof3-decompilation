@@ -26,7 +26,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           No jal in this payload reaches it. Its address is the fourth
  *           pointer word, zero-based entry 3, of the four-entry handler run at
  *           0x801F005C (0x801EF990, 0x801EF9DC, 0x801EFA2C, 0x801EFA94) that
- *           ends the reviewed textbin row D_801EFFE0, and no instruction in
+ *           ends the reviewed textbin row bandPaletteTable, and no instruction in
  *           this payload materialises that run's base, so its caller is the
  *           overlay loader or a script-invoked callback.
  *

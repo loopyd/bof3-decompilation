@@ -39,7 +39,7 @@ segments:
     - '@source: src/bof3/bmagic/statePoolPerEligible.c'
   - - 740
     - asm
-    - func_801EEEE4
+    - raiseInvokeHelperZero4
   - - 816
     - c
     - callStateTable0400

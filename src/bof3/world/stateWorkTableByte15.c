@@ -12,7 +12,7 @@
  *           scan queryFreeRecordByte15
  *           returns the first record of the same 0x10-entry/0x18-byte-stride
  *           block whose byte 0x15 is zero (`lbu $v0, 0x15($v1)` at 0x801F3164,
- *           `beqz $v0` at 0x801F316C), and func_801F31C0 walks the same block
+ *           `beqz $v0` at 0x801F316C), and stateStepWorkRecords walks the same block
  *           from 0x800E4815 and skips every record whose flag is zero
  *           (`lbu $v0, 0x0($s0)` at 0x801F31F8 with $s0 = 0x800E4815), so this
  *           function releases the whole block. Its only in-payload caller is

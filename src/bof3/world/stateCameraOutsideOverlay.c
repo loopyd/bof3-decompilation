@@ -5,7 +5,7 @@ extern s32 D_80145EC8; /* @source 0x80145EC8 @kind data */
 extern u8 D_8014933B;  /* @source 0x8014933B @kind data */
 
 /* @source 0x801F31BC @kind function */
-extern void func_801F31BC(void);
+extern void renderSignedScaleQuads(void);
 
 /* @source 0x801F38F0
  * @behavior Entry 3 of the state-byte-2 handler run based at 0x801F4AB0 of
@@ -115,5 +115,5 @@ advance:
     }
   }
 
-  func_801F31BC();
+  renderSignedScaleQuads();
 }

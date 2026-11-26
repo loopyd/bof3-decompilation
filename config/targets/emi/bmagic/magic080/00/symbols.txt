@@ -4,4 +4,4 @@ stateChannelDistanceRandom = 0x801EEC5C;
 decayDrawRaiseExpires = 0x801EECE4;
 renderSixTileTextured = 0x801EED94;
 renderSevenTileTile = 0x801EEF5C;
-D_801EF124 = 0x801EF124;
+tableTileUvPairs = 0x801EF124;

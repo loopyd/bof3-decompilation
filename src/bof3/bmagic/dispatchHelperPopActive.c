@@ -8,7 +8,7 @@ typedef struct BmagicMagic10503Byte2DispatchTable {
 
 extern BmagicMagic10503Byte2DispatchTable D_801EEC04; /* @source 0x801EEC04 @kind data */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
-extern void func_801EF2F0(void); /* @source 0x801EF2F0 @kind function */
+extern void renderProjectRecordPosition(void); /* @source 0x801EF2F0 @kind function */
 extern void func_801EF3A0(void); /* @source 0x801EF3A0 @kind function */
 
 /* @source 0x801EEFBC
@@ -31,7 +31,7 @@ void dispatchHelperPopActive(void) {
     handlers.handlers[g_battle_work[2]]();
     work = g_battle_work;
     if (work[0] != 0 && work[2] != 3) {
-        func_801EF2F0();
+        renderProjectRecordPosition();
         func_801EF3A0();
         PopMatrix();
     }

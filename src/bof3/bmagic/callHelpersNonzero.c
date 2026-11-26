@@ -3,8 +3,8 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void (*D_801EFE08[])(void); /* @source 0x801EFE08 @kind data */
 extern void func_800AF764(void); /* @source 0x800AF764 @kind function */
-extern void func_801EF7FC(void); /* @source 0x801EF7FC @kind function */
-extern void func_801EFA48(void); /* @source 0x801EFA48 @kind function */
+extern void drawRingTrailQuad(void); /* @source 0x801EF7FC @kind function */
+extern void drawRingPolyQuad(void); /* @source 0x801EFA48 @kind function */
 
 /* @source 0x801EF578
  * @behavior Calls the handler indexed by unsigned work byte 2 in the local
@@ -23,7 +23,7 @@ void callHelpersNonzero(void) {
     work = g_battle_work;
     if (work[0] != 0 && work[2] != 0) {
         func_800AF764();
-        func_801EF7FC();
-        func_801EFA48();
+        drawRingTrailQuad();
+        drawRingPolyQuad();
     }
 }

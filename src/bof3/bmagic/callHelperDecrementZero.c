@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
-extern void func_801F03D8(void); /* @source 0x801F03D8 @kind function */
+extern void resourceClaimWorkRecord(void); /* @source 0x801F03D8 @kind function */
 
 /* @source 0x801F0214
  * @behavior Calls the target-local helper at 0x801F03D8, decrements unsigned
@@ -17,7 +17,7 @@ void callHelperDecrementZero(void) {
   u8 countdown;
   u8 *object;
 
-  func_801F03D8();
+  resourceClaimWorkRecord();
   work = g_battle_work;
   countdown = work[9] - 1;
   work[9] = countdown;

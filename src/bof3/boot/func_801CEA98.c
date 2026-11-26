@@ -12,7 +12,7 @@
  * D_801EB4A8, 0x18 wide and 0xF0 high, resets the DCT decoder, submits the CD
  * work buffer of the current D_801EB458 index, decodes the bitstream into the
  * buffer selected by the toggled index, advances the decoder stream position,
- * advances the frame column through func_801CEC88 when the previous frame
+ * advances the frame column through waitStreamTransfer when the previous frame
  * number left the 0xAD..0xFE window, then waits two vsyncs, flips the display
  * buffer and returns whether the previous frame number reached 0xDC.
  * @status exact
@@ -54,9 +54,9 @@ s32 func_801CEA98(void) {
   DecDCTvlc(data, D_801EB44C_BUFFERS[index]);
   func_801D2464(data);
   if ((D_801EB464 - 0xAD) >= 0x52) {
-    func_801CEC88();
+    waitStreamTransfer();
   }
   VSync(2);
-  func_801CE8DC();
+  flipStreamBuffer();
   return finished;
 }

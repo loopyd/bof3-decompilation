@@ -63,7 +63,7 @@ segments:
     - c
     - callRunRecordPass
     - '@source: src/bof3/world/callRunRecordPass.c'
-    - '@behavior: Step dispatch of this overlay on work-record byte 1: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the overlay''s handler run based at 0x8011819C, entry 4 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries raiseFlagReseedRecords through stateFramesComplementShade). The original bounds no index before the scaled load. Once the handler returns it runs the overlay''s record pass func_80117900. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the slot after the index byte and the slot after the table load stay nops. No call or pointer word in the payload names this function, so it is an overlay entry rather than an in-payload callee. Takes no arguments and returns nothing.'
+    - '@behavior: Step dispatch of this overlay on work-record byte 1: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the overlay''s handler run based at 0x8011819C, entry 4 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries raiseFlagReseedRecords through stateFramesComplementShade). The original bounds no index before the scaled load. Once the handler returns it runs the overlay''s record pass stateRunRecordPass. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the slot after the index byte and the slot after the table load stay nops. No call or pointer word in the payload names this function, so it is an overlay entry rather than an in-payload callee. Takes no arguments and returns nothing.'
   - - 1628
     - c
     - raiseFlagReseedRecords
@@ -83,7 +83,7 @@ segments:
     - c
     - stateResetClearFlag
     - '@source: src/bof3/world/stateResetClearFlag.c'
-    - '@behavior: Step handler 7 of the thirteen in-image pointers the Splat textbin row D_8011818C places: word 7 at 0x801181A8, the base callRunRecordPass indexes from the work object byte at offset 1 once that byte reads 7, the state the state-6 handler lowerMirrorEveryFourth advances to. It runs the overlay record pass func_80117900, which walks the sixteen records of 0x28-byte stride in the 0x800E4800 work table, advancing and rendering each claimed one, and leaves 1 in its return register once it advanced at least one claimed record and 0 when none was claimed. When that result masked to its low byte is zero it resets the work object through the shared func_80196070 (clearWorkFlags in emi/etc/game/00), which zeroes work-object bytes 0x00-0x04 and so returns the overlay to work state 0, and then clears bit 0x40 of the shared world/mode flag halfword 0x80146258, the bit the state-4 handler raiseFlagReseedRecords raised. The 0x18-byte frame only keeps $ra at 0x10 across the two calls, the reset and the flag clear are reached only on the zero path, and the slots after both calls stay nops. Takes no arguments and returns nothing.'
+    - '@behavior: Step handler 7 of the thirteen in-image pointers the Splat textbin row D_8011818C places: word 7 at 0x801181A8, the base callRunRecordPass indexes from the work object byte at offset 1 once that byte reads 7, the state the state-6 handler lowerMirrorEveryFourth advances to. It runs the overlay record pass stateRunRecordPass, which walks the sixteen records of 0x28-byte stride in the 0x800E4800 work table, advancing and rendering each claimed one, and leaves 1 in its return register once it advanced at least one claimed record and 0 when none was claimed. When that result masked to its low byte is zero it resets the work object through the shared func_80196070 (clearWorkFlags in emi/etc/game/00), which zeroes work-object bytes 0x00-0x04 and so returns the overlay to work state 0, and then clears bit 0x40 of the shared world/mode flag halfword 0x80146258, the bit the state-4 handler raiseFlagReseedRecords raised. The 0x18-byte frame only keeps $ra at 0x10 across the two calls, the reset and the flag clear are reached only on the zero path, and the slots after both calls stay nops. Takes no arguments and returns nothing.'
   - - 2148
     - c
     - claimRecordSeedPosition
@@ -96,7 +96,7 @@ segments:
     - '@behavior: Work-record claim scan of this overlay''s 0x800E4800 work table: returns the address of the first of its 16 records of 0x28-byte stride whose lead byte (the record claim flag) reads zero, or zero when all 16 records are claimed. The unsigned byte counter is read back masked to 0xFF and compared below 0x10 at the loop back edge; takes no arguments, reads each record''s lead byte only, writes nothing and makes no call.'
   - - 2304
     - asm
-    - func_80117900
+    - stateRunRecordPass
   - - 2608
     - c
     - callWorkByte2Table8
@@ -130,10 +130,10 @@ segments:
     - c
     - stateFramesComplementShade
     - '@source: src/bof3/world/stateFramesComplementShade.c'
-    - '@behavior: State-12 handler of the thirteen in-image pointers the Splat textbin row D_8011818C places: word 12 at 0x801181BC, the last entry of the run. On a frame whose shared per-frame counter 0x80143E6C has bit 0 clear it increments the work object''s byte at offset 9, the byte this overlay''s earlier handlers arm as a countdown, and here ramps upward instead. Once that byte reads 0x80 or more it resets the work object through the shared func_80196070 (clearWorkFlags in emi/etc/game/00), which zeroes work-object bytes 0x00-0x04 and so returns the overlay to work state 0. Every frame it then runs the overlay band draw func_80117E78 with 0x80 minus that byte and a zero second argument. The counter word is read before the frame is created, the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the slots after each pointer-cell load and after the countdown byte load stay nops. No call or pointer word in the payload names this function, so it is an overlay entry rather than an in-payload callee. Takes no arguments and returns nothing.'
+    - '@behavior: State-12 handler of the thirteen in-image pointers the Splat textbin row D_8011818C places: word 12 at 0x801181BC, the last entry of the run. On a frame whose shared per-frame counter 0x80143E6C has bit 0 clear it increments the work object''s byte at offset 9, the byte this overlay''s earlier handlers arm as a countdown, and here ramps upward instead. Once that byte reads 0x80 or more it resets the work object through the shared func_80196070 (clearWorkFlags in emi/etc/game/00), which zeroes work-object bytes 0x00-0x04 and so returns the overlay to work state 0. Every frame it then runs the overlay band draw renderShadedBandQuads with 0x80 minus that byte and a zero second argument. The counter word is read before the frame is created, the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the slots after each pointer-cell load and after the countdown byte load stay nops. No call or pointer word in the payload names this function, so it is an overlay entry rather than an in-payload callee. Takes no arguments and returns nothing.'
   - - 3704
     - asm
-    - func_80117E78
+    - renderShadedBandQuads
   - - 4492
     - textbin
     - D_8011818C
