@@ -79,6 +79,9 @@ class RenamePlan:
     # legal only when every member's reviewed bytes are identical.
     group: frozenset[str] = frozenset()
     shared_with: list[dict] = field(default_factory=list)
+    # Owner -> sources outside this target that spell the old name. A rename writes
+    # them too, so one spelling holds across every unit that calls it.
+    foreign: dict[str, list[str]] = field(default_factory=dict)
 
     @property
     def passed(self) -> bool:
@@ -484,6 +487,10 @@ def load_manifests_for(plan: RenamePlan):
     return plan.manifests
 
 
+MAX_FOREIGN_FILES = 60
+MAX_FOREIGN_TARGETS = 12
+
+
 def _check_consumers(plan: RenamePlan, root: Path, target: str, old: str) -> None:
     try:
         mentions, owned = _census(
@@ -498,7 +505,15 @@ def _check_consumers(plan: RenamePlan, root: Path, target: str, old: str) -> Non
         plan.refuse("consumers", f"consumer scan failed: {error}")
         return
     for owner, source in findings:
-        plan.refuse("fan-out", f"{owner} references {old} in {source}")
+        plan.foreign.setdefault(owner, []).append(source)
+    files = sum(len(paths) for paths in plan.foreign.values())
+    if files > MAX_FOREIGN_FILES or len(plan.foreign) > MAX_FOREIGN_TARGETS:
+        plan.refuse(
+            "fan-out",
+            f"{files} files in {len(plan.foreign)} other targets spell {old}; the "
+            f"transaction holds at {MAX_FOREIGN_FILES} files and "
+            f"{MAX_FOREIGN_TARGETS} targets",
+        )
 
 
 def plan_report(root: Path, target: str, old: str, new: str) -> dict:
@@ -508,41 +523,73 @@ def plan_report(root: Path, target: str, old: str, new: str) -> dict:
     return _payload(root, plan, applied=False, proof=(), attempted=False)
 
 
+def _foreign_proof(plan: RenamePlan) -> str | None:
+    """Prove the targets whose units the rename rewrote still build and link.
+
+    Compiling is not enough: a payload resolves a foreign symbol through a generated
+    stub, which only follows the new spelling after a rebuild. Each foreign target is
+    therefore re-checked, and any link finding fails the transaction.
+    """
+    from harness.build.compilation import compile_object
+    from harness.io import repo_layout
+    from harness.match._asm_resolve import object_path_for_source
+
+    layout = repo_layout(plan.root)
+    for _owner, paths in sorted(plan.foreign.items()):
+        for relative in paths:
+            path = plan.root / relative
+            if not path.is_file() or path.suffix != ".c":
+                continue
+            try:
+                output = object_path_for_source(layout, path)
+            except (OSError, ValueError):
+                continue
+            try:
+                result = compile_object(plan.root, path, output)
+            except (OSError, RuntimeError) as error:
+                return f"{relative}: {str(error)[:160]}"
+            if result.returncode != 0:
+                detail = (result.stderr or result.stdout or "").strip().splitlines()
+                return f"{relative}: {detail[-1][:160] if detail else 'build failed'}"
+    from .inspection import check_report
+
+    for owner in sorted(plan.foreign):
+        report = check_report(plan.root, owner, (), manifests=plan.manifests)
+        broken = [row for row in report["findings"] if row["code"] == "native"]
+        if broken:
+            return f"{owner} no longer links: {broken[0]['message'][:120]}"
+    return None
+
+
 def apply_report(root: Path, target: str, old: str, new: str) -> dict:
     """Apply the rename and prove its measurement did not change."""
     root = root.resolve()
     plan = _resolve(root, target, old, new)
     if not plan.passed:
         return _payload(root, plan, applied=False, proof=(), attempted=True)
+    journal = _Journal(root)
     try:
         with acquire_writer(root):
-            wrote = False
             try:
                 before = _measure(plan, plan.source)
-                wrote = True
                 try:
-                    _write(plan, old, new)
+                    _write(plan, old, new, journal)
                 except (RuntimeError, ValueError, OSError) as error:
                     raise RuntimeError(f"write refused: {error}") from error
+                broken = _foreign_proof(plan)
+                if broken:
+                    raise RuntimeError(f"foreign build failed: {broken}")
                 # The manifest lists claimed unit paths, so the generation that
                 # describes the renamed tree is the one the proof must read.
                 plan.manifests = load_target_manifests(root)
                 plan.manifest = plan.manifests.get(plan.target) or plan.manifest
                 after = _measure(plan, _source_after(plan))
+                if before != after:
+                    raise RuntimeError("proof: the renamed source no longer measures the same")
             except (RuntimeError, ValueError, OSError) as error:
-                if wrote:
-                    try:
-                        _write(plan, new, old)
-                    except (RuntimeError, ValueError, OSError):
-                        pass
+                journal.rollback()
                 plan.refuse("measure", str(error).strip()[:200])
                 return _payload(root, plan, applied=False, proof=(), attempted=True)
-            if before != after:
-                _write(plan, new, old)
-                plan.refuse("proof", "the renamed source no longer measures the same")
-                return _payload(
-                    root, plan, applied=False, proof=(before, after), attempted=True
-                )
     except RuntimeError as error:
         plan.refuse("lease", str(error))
         return _payload(root, plan, applied=False, proof=(), attempted=True)
@@ -788,6 +835,7 @@ def apply_group(root: Path, new: str, selections: list[tuple[str, str]], *, jobs
         root, [plan.source for plan in plans if plan.source is not None], jobs=jobs
     )
     written: list[tuple[RenamePlan, dict]] = []
+    journal = _Journal(root)
     try:
         with acquire_writer(root):
             for plan in plans:
@@ -795,10 +843,12 @@ def apply_group(root: Path, new: str, selections: list[tuple[str, str]], *, jobs
                     continue
                 try:
                     before = _measure(plan, plan.source)
-                    _write(plan, plan.old, plan.new)
+                    _write(plan, plan.old, plan.new, journal)
+                    broken = _foreign_proof(plan)
+                    if broken:
+                        raise RuntimeError(f"foreign build failed: {broken}")
                 except (RuntimeError, ValueError, OSError) as error:
-                    for done, _proof in reversed(written):
-                        _write(done, done.new, done.old)
+                    journal.rollback()
                     plan.refuse("write", str(error).strip()[:200])
                     payload["refusals"].append({"target": plan.target, **plan.refusals[-1]})
                     payload["members"] = [
@@ -827,8 +877,7 @@ def apply_group(root: Path, new: str, selections: list[tuple[str, str]], *, jobs
                     break
                 proofs.append((plan, before, after))
             if failure is not None:
-                for plan, _before in reversed(written):
-                    _write(plan, plan.new, plan.old)
+                journal.rollback()
                 failing, message = failure
                 failing.refuse(message.split(":")[0], message.split(": ", 1)[-1])
                 payload["refusals"].append({"target": failing.target, **failing.refusals[-1]})
@@ -846,8 +895,7 @@ def apply_group(root: Path, new: str, selections: list[tuple[str, str]], *, jobs
             payload["applied"] = True
             payload["passed"] = True
     except RuntimeError as error:
-        for plan, _before in reversed(written):
-            _write(plan, plan.new, plan.old)
+        journal.rollback()
         payload["refusals"].append({"target": "", "code": "lease", "message": str(error)})
         payload["members"] = [
             _payload(root, item, applied=False, proof=(), attempted=True) for item in plans
@@ -877,6 +925,7 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
         root, [plan.source for plan in ready if plan.source is not None], jobs=jobs
     )
     results: list[tuple[RenamePlan, dict]] = []
+    journals: dict[int, _Journal] = {}
     try:
         with acquire_writer(root):
             for index, plan in enumerate(ready):
@@ -891,9 +940,14 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                 except (OSError, ValueError):
                     pass
                 try:
+                    row_journal = _Journal(root)
                     before = _measure(plan, plan.source)
-                    _write(plan, plan.old, plan.new)
+                    _write(plan, plan.old, plan.new, row_journal)
+                    broken = _foreign_proof(plan)
+                    if broken:
+                        raise RuntimeError(f"foreign build failed: {broken}")
                 except (FileNotFoundError, ValueError) as error:
+                    row_journal.rollback()
                     # A batch's plan can lose its unit to an earlier row's rename;
                     # re-resolve this row against the tree and try it once more.
                     fresh = _resolve(root, plan.target, plan.old, plan.new)
@@ -901,8 +955,13 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                         ready[index] = fresh
                         try:
                             before = _measure(fresh, fresh.source)
-                            _write(fresh, fresh.old, fresh.new)
+                            row_journal = _Journal(root)
+                            _write(fresh, fresh.old, fresh.new, row_journal)
+                            broken = _foreign_proof(fresh)
+                            if broken:
+                                raise RuntimeError(f"foreign build failed: {broken}")
                         except (RuntimeError, ValueError, OSError) as again:
+                            row_journal.rollback()
                             fresh.refuse("write", str(again).strip()[:200])
                             payloads.append(
                                 _payload(
@@ -910,6 +969,7 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                                 )
                             )
                             continue
+                        journals[id(fresh)] = row_journal
                         results.append((fresh, before))
                         continue
                     plan.refuse("write", str(error).strip()[:200])
@@ -918,11 +978,13 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                     )
                     continue
                 except (RuntimeError, OSError) as error:
+                    row_journal.rollback()
                     plan.refuse("write", str(error).strip()[:200])
                     payloads.append(
                         _payload(root, plan, applied=False, proof=(), attempted=True)
                     )
                     continue
+                journals[id(plan)] = row_journal
                 results.append((plan, before))
 
             if results:
@@ -930,7 +992,7 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                     generation = load_target_manifests(root)
                 except (ValueError, OSError) as error:
                     for plan, _before in results:
-                        _write(plan, plan.new, plan.old)
+                        journals[id(plan)].rollback()
                         plan.refuse("manifests", str(error).strip()[:200])
                     return payloads + [
                         _payload(root, plan, applied=False, proof=(), attempted=True)
@@ -949,14 +1011,14 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                 try:
                     after = _measure(plan, _source_after(plan))
                 except (RuntimeError, ValueError, OSError) as error:
-                    _write(plan, plan.new, plan.old)
+                    journals[id(plan)].rollback()
                     plan.refuse("measure", str(error).strip()[:200])
                     payloads.append(
                         _payload(root, plan, applied=False, proof=(before,), attempted=True)
                     )
                     continue
                 if before != after:
-                    _write(plan, plan.new, plan.old)
+                    journals[id(plan)].rollback()
                     plan.refuse("proof", "the renamed source no longer measures the same")
                     payloads.append(
                         _payload(
@@ -972,6 +1034,7 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
         for plan in ready:
             if not any(row is plan for row, _ in results):
                 continue
+            journals[id(plan)].rollback()
             plan.refuse("lease", str(error))
         payloads.extend(
             _payload(root, plan, applied=False, proof=(), attempted=True)
@@ -1025,8 +1088,65 @@ def _measure(plan: RenamePlan, source: Path | None) -> dict:
     return result
 
 
-def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
-    """Rewrite the owned surface, then move the source file (undo reverses)."""
+class _Journal:
+    """Record every byte a transaction replaces, so any failure restores the tree.
+
+    A rename touches the owning target, the foreign units that spell the same name
+    and the files it moves. Reversing those writes one at a time is how a partial
+    rename survived a failed group, so each path is captured before it is written and
+    the whole journal is replayed on failure.
+    """
+
+    def __init__(self, root: Path) -> None:
+        self.root = root
+        self.entries: dict[Path, bytes | None] = {}
+
+    def capture(self, path: Path) -> None:
+        if path in self.entries:
+            return
+        self.entries[path] = path.read_bytes() if path.is_file() else None
+
+    def write_text(self, path: Path, text: str) -> None:
+        self.capture(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+
+    def move(self, before: Path, after: Path) -> None:
+        self.capture(before)
+        self.capture(after)
+        before.rename(after)
+
+    def rollback(self) -> list[str]:
+        restored = []
+        for path, content in reversed(list(self.entries.items())):
+            try:
+                if content is None:
+                    if path.exists():
+                        path.unlink()
+                elif path.read_bytes() != content:
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(content)
+                restored.append(path.relative_to(self.root).as_posix())
+            except OSError:
+                restored.append(f"{path}: unconfirmed")
+        _CENSUS.pop(self.root, None)
+        _MEASURED.clear()
+        return restored
+
+
+def _write(
+    plan: RenamePlan,
+    source_name: str,
+    target_name: str,
+    journal: _Journal | None = None,
+) -> None:
+    """Rewrite the owned surface and the foreign spellings, then move the unit.
+
+    With a journal every write is captured first, so a caller can restore the tree
+    exactly; without one the caller is responsible for reversing the write.
+    """
+    _CENSUS.pop(plan.root, None)
+    _MEASURED.clear()
     forward = source_name == plan.old
     if forward:
         # Check every planned unit before touching a file, so a stale plan cannot
@@ -1078,14 +1198,33 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
         if before_key and path == plan.root / CONFIGURATION_PATH:
             rewritten = rewritten.replace(before_key, after_key)
         if rewritten != text:
-            path.write_text(rewritten, encoding="utf-8")
+            if journal is None:
+                path.write_text(rewritten, encoding="utf-8")
+            else:
+                journal.write_text(path, rewritten)
+    for _owner, paths in sorted(plan.foreign.items()):
+        for relative in paths:
+            path = plan.root / relative
+            if not path.is_file():
+                continue
+            text = path.read_text(encoding="utf-8")
+            rewritten = text.replace(source_name, target_name)
+            if rewritten == text:
+                continue
+            if journal is None:
+                path.write_text(rewritten, encoding="utf-8")
+            else:
+                journal.write_text(path, rewritten)
     if forward:
         seen = set()
         for before, after in plan.renames:
             if (before, after) in seen:
                 continue
             seen.add((before, after))
-            before.rename(after)
+            if journal is None:
+                before.rename(after)
+            else:
+                journal.move(before, after)
 
 
 def _payload(

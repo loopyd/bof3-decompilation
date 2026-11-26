@@ -186,7 +186,7 @@ def test_group_rename_records_an_outside_owner(tmp_path: Path) -> None:
     }
 
 
-def test_foreign_consumer_refuses_the_rename(tmp_path: Path) -> None:
+def test_foreign_consumer_is_part_of_the_transaction(tmp_path: Path) -> None:
     root = _repo(tmp_path)
     _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherTargetRow",))
     other = root / "src" / "bof3" / "battle" / "other.c"
@@ -194,5 +194,24 @@ def test_foreign_consumer_refuses_the_rename(tmp_path: Path) -> None:
         f"extern void {OLD}(void);\nvoid otherConsumer(void) {{ {OLD}(); }}\n",
         encoding="utf-8",
     )
-    codes = [row["code"] for row in _plan(root, "stateRaiseFlag4")["refusals"]]
-    assert codes and set(codes) == {"fan-out"}
+    plan = rename._resolve(root, "exe/game", OLD, "stateRaiseFlag4")
+    # The other target spells the symbol, so the rename owns that surface too.
+    assert plan.passed is True, plan.refusals
+    assert plan.foreign == {"exe/other": ["src/bof3/battle/other.c"]}
+
+
+def test_a_failed_write_restores_every_captured_byte(tmp_path: Path) -> None:
+    root = _repo(tmp_path)
+    _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherTargetRow",))
+    other = root / "src" / "bof3" / "battle" / "other.c"
+    other.write_text(
+        f"extern void {OLD}(void);\nvoid otherConsumer(void) {{ {OLD}(); }}\n",
+        encoding="utf-8",
+    )
+    before = other.read_text()
+    plan = rename._resolve(root, "exe/game", OLD, "stateRaiseFlag4")
+    journal = rename._Journal(root)
+    rename._write(plan, plan.old, plan.new, journal)
+    assert OLD not in other.read_text()
+    journal.rollback()
+    assert other.read_text() == before
