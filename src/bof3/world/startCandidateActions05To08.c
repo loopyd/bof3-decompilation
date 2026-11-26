@@ -19,12 +19,12 @@ extern u8 D_80143BB0;
  * original bytes hold 2, 4, 8, 5.
  * @source 0x801F4300 @kind table
  */
-extern u8 D_801F4300[];
+extern u8 func_801F4300[];
 /* Four action halfwords started for the candidate that matched; the original
  * bytes hold 0x05, 0x06, 0x07 and 0x08.
  * @source 0x801F4304 @kind table
  */
-extern s16 D_801F4304[];
+extern s16 statePublishedSharedIs[];
 
 /* Shared front-end action starter of the main executable, outside this payload:
  * it starts the action whose id it is given. Prototype form and argument type
@@ -67,7 +67,7 @@ void func_80150224(s32 arg0);
  * @match 100.00
  * @residual none
  */
-void startActionForFirstPresentPartyCandidateActions05To08World04Area19613_801F4054(
+void startCandidateActions05To08(
     void) {
   u8 i;
   u8 j;
@@ -76,8 +76,8 @@ void startActionForFirstPresentPartyCandidateActions05To08World04Area19613_801F4
   for (i = 0; i < 4; i++) {
     for (j = 0; j < D_80146254; j++) {
       offset = j * 0x140;
-      if (D_80145F09[offset] == D_801F4300[i]) {
-        func_80150224(D_801F4304[i]);
+      if (D_80145F09[offset] == func_801F4300[i]) {
+        func_80150224(statePublishedSharedIs[i]);
         D_80143BB0 = 2;
         return;
       }

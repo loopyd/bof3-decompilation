@@ -28,4 +28,4 @@ extern PlcharPlp05600WorkStateHandler func_801D0858[]; /* @source 0x801D0858 @ki
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkHandler, func_801D0858);
+EMI_DEFINE_DISPATCHER(callWorkHandler, callWorkHandler, func_801D0858);

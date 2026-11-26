@@ -41,6 +41,6 @@ extern void (*D_801CFDA4[])(void); /* @source 0x801CFDA4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2,
+EMI_DEFINE_DISPATCHER(callWorkTablefda4,
                       callWorkTablefda4,
                       D_801CFDA4);

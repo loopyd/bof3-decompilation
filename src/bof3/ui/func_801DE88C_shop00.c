@@ -16,7 +16,7 @@ void func_801DE88C(void) {
   u8 previous;
 
   if (D_80143C40 == 0) {
-    appendFullscreenDimTileB();
+    appendDimTileB();
     /* The original reads the sub-step byte before the phaseTimer store and
      * writes it back incremented afterwards (sibling shape:
      * statePhaseSavedPhase). */

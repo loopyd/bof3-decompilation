@@ -63,7 +63,7 @@ segments:
     - func_801F36A0
   - - 3024
     - c
-    - dispatchStateByte1Table5T2
+    - dispatchByte1Table5Tail
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 3092
     - c
@@ -103,7 +103,7 @@ segments:
     - func_801F3D98
   - - 4640
     - c
-    - dispatchStateByte1Table5T2
+    - dispatchByte1Table5Tail2
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 4708
     - c

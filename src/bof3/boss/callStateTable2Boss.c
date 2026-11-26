@@ -37,4 +37,4 @@ extern void (*D_800C2CAC[])(void); /* @source 0x800C2CAC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable2Boss, D_800C2CAC);
+EMI_DEFINE_DISPATCHER(callStateTable2Boss, callStateTable2Boss, D_800C2CAC);

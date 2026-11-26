@@ -38,4 +38,4 @@ extern void (*D_800C3220[])(void); /* @source 0x800C3220 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable3220Boss, D_800C3220);
+EMI_DEFINE_DISPATCHER(callStateTable3220Boss, callStateTable3220Boss, D_800C3220);

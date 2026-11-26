@@ -9,4 +9,4 @@ extern void (*D_801F4200[])(void); /* @source 0x801F4200 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchScratchMode, D_801F4200);
+EMI_DEFINE_DISPATCHER(dispatchScratchMode, dispatchScratchMode, D_801F4200);

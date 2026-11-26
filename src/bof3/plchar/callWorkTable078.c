@@ -33,4 +33,4 @@ extern void (*func_801D078C[])(void); /* @source 0x801D078C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable078, func_801D078C);
+EMI_DEFINE_DISPATCHER(callWorkTable078, callWorkTable078, func_801D078C);

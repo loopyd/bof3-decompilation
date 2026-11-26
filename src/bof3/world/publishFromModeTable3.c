@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8 D_80145FD0[]; /* @source 0x80145FD0 @kind unknown */
+extern u8 areaState[]; /* @source 0x80145FD0 @kind unknown */
 extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind unknown */
 extern u8 D_80144F5B; /* @source 0x80144F5B @kind unknown */
 extern s16 D_80145FFE; /* @source 0x80145FFE @kind unknown */
@@ -16,7 +16,7 @@ extern u8 D_801F3430[]; /* @source 0x801F3430 @kind table */
 u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
 
 /* @source 0x801F2F50
- * @behavior Publishes the second shared work base D_80145FD0 as the scratchpad
+ * @behavior Publishes the second shared work base areaState as the scratchpad
  *           work cursor at 0x1F800044 and then seeds one front-end record of
  *           kind 1 through the shared allocator/seeder func_8015CB18 with word
  *           +0x0C = 0, word +0x10 = the per-party byte table at 0x801F3430
@@ -52,11 +52,11 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * 0x801F3424, twelve bytes past the kind-2 member's table head, and it binds at
  * its own address through the generated symbol row.
  */
-void publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13613_801F2F50(
+void publishFromModeTable(
     void) {
   u8 result;
 
-  workRecordCursor1F800044 = D_80145FD0;
+  workRecordCursor1F800044 = areaState;
   result = func_8015CB18(1, 0, D_801F3430[D_80144F5B], D_80145FFE, D_80146000);
   if (result != 0xFF) {
     workRecordCursor1F800044[0xB] = result;

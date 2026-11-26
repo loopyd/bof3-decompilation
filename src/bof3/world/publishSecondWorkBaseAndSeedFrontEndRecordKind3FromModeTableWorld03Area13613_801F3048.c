@@ -34,7 +34,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  *
  * Shape notes from the original bytes: this 0x80-byte body is instruction
  * identical to the exact sibling
- * publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13613_801F2F50
+ * stateSeedParty1B
  * at 0x801F2F50 in this same payload with one shipped word differing, the kind
  * immediate this one passes (3 here, 1 there); the remaining member of the
  * family in this payload, at 0x801F2E50, differs in that word as well as in the

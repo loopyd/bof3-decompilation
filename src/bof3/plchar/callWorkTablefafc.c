@@ -29,4 +29,4 @@ extern void (*codePointerTablefafc[])(void); /* @source 0x801CFAFC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefafc, codePointerTablefafc);
+EMI_DEFINE_DISPATCHER(callWorkTablefafc, callWorkTablefafc, codePointerTablefafc);

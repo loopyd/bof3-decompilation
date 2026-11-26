@@ -19,4 +19,4 @@ extern void (*D_801D07A4[])(void); /* @source 0x801D07A4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable07, D_801D07A4);
+EMI_DEFINE_DISPATCHER(callStateTable07, callStateTable07, D_801D07A4);

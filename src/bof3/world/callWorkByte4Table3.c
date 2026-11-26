@@ -31,6 +31,6 @@ extern void (*workByte4HandlersWorld03Area14213[])(void); /* @source 0x801F3B7C 
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4,
+EMI_DEFINE_DISPATCHER(callWorkByte4Table3,
                       callWorkByte4Table3,
                       workByte4HandlersWorld03Area14213);

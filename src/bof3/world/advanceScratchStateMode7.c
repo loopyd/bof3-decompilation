@@ -23,7 +23,7 @@ extern u8 D_80146888[];
  * @match 100.00
  * @residual none
  */
-void advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C(void) {
+void advanceScratchStateMode7(void) {
   u8** slots;
   u8* saved;
   u8* work;

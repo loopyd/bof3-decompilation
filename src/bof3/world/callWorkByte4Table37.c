@@ -31,6 +31,6 @@ extern void (*workByte4DispatchTable[])(void); /* @source 0x801F37F8 @kind data 
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4,
+EMI_DEFINE_DISPATCHER(callWorkByte4Table37,
                       callWorkByte4Table37,
                       workByte4DispatchTable);

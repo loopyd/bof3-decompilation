@@ -36,6 +36,6 @@ extern void (*D_800C275C[])(void); /* @source 0x800C275C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1,
+EMI_DEFINE_DISPATCHER(callStateTable275Boss,
                       callStateTable275Boss,
                       D_800C275C);

@@ -11,7 +11,7 @@ void func_801DE8E8(void) {
   volatile u8* p = &phaseTimer;
   u8 val;
 
-  appendFullscreenDimTileB();
+  appendDimTileB();
   val = *p - 1;
   *p = val;
   if (val == 0) {

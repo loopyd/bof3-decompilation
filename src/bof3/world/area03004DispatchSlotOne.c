@@ -10,7 +10,7 @@ extern void (*D_801E1CD4[])(void); /* @source 0x801E1CD4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchCursorModeTable, D_801E1D20);
+EMI_DEFINE_DISPATCHER(dispatchCursorModeTable, dispatchCursorModeTable, D_801E1D20);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * third local handler table at 0x801E1D78.
@@ -19,7 +19,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchCursorModeTable, D_801E1
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1d78, D_801E1D78);
+EMI_DEFINE_DISPATCHER(dispatchByte1Table1d78, dispatchByte1Table1d78, D_801E1D78);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D80.
@@ -28,7 +28,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1d78, D_801E1D
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1d80, D_801E1D80);
+EMI_DEFINE_DISPATCHER(dispatchByte1Table1d80, dispatchByte1Table1d80, D_801E1D80);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D8C.
@@ -37,7 +37,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1d80, D_801E1D
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchTable1d8c, D_801E1D8C);
+EMI_DEFINE_DISPATCHER(dispatchTable1d8c, dispatchTable1d8c, D_801E1D8C);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1F78.
@@ -46,7 +46,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchTable1d8c, D_801E1D8C);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1f78, D_801E1F78);
+EMI_DEFINE_DISPATCHER(dispatchByte1Table1f78, dispatchByte1Table1f78, D_801E1F78);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D10.
@@ -55,7 +55,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1f78, D_801E1F
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1d10, D_801E1D10);
+EMI_DEFINE_DISPATCHER(dispatchByte1Table1d10, dispatchByte1Table1d10, D_801E1D10);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E21E0.
@@ -64,7 +64,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1d10, D_801E1D
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table21e0, D_801E21E0);
+EMI_DEFINE_DISPATCHER(dispatchByte2Table21e0, dispatchByte2Table21e0, D_801E21E0);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E2340.
@@ -73,7 +73,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table21e0, D_801E21
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table2340, D_801E2340);
+EMI_DEFINE_DISPATCHER(dispatchByte2Table2340, dispatchByte2Table2340, D_801E2340);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E2348.
@@ -82,7 +82,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table2340, D_801E23
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table2348, D_801E2348);
+EMI_DEFINE_DISPATCHER(dispatchByte2Table2348, dispatchByte2Table2348, D_801E2348);
 
 
 /* @source 0x801D0C98
@@ -94,4 +94,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table2348, D_801E23
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table1cd4, D_801E1CD4);
+EMI_DEFINE_DISPATCHER(dispatchByte1Table1cd4, dispatchByte1Table1cd4, D_801E1CD4);

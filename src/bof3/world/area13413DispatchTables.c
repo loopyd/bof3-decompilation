@@ -17,7 +17,7 @@ extern void (*D_801F5838[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5744World03, D_801F5744);
+EMI_DEFINE_DISPATCHER(callStateTable5744World03, callStateTable5744World03, D_801F5744);
 
 /* @source 0x801F3560
  * @behavior Overlay step dispatch: reads the state byte at +1 of the work
@@ -33,7 +33,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5744World03, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable57World03, D_801F57A4);
+EMI_DEFINE_DISPATCHER(callStateTable57World03, callStateTable57World03, D_801F57A4);
 
 /* @source 0x801F3E0C
  * @behavior Overlay step dispatch: reads the work-record state byte at offset
@@ -50,7 +50,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable57World03, D_801F5
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5804World03, D_801F5804);
+EMI_DEFINE_DISPATCHER(callStateTable5804World03, callStateTable5804World03, D_801F5804);
 
 /* @source 0x801F41D0
  * @behavior Overlay step dispatch: reads the work-record state byte at offset
@@ -73,7 +73,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5804World03, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable581World03, D_801F581C);
+EMI_DEFINE_DISPATCHER(callStateTable581World03, callStateTable581World03, D_801F581C);
 
 /* @source 0x801F4344
  * @behavior Overlay step dispatch: reads the work-record state byte at offset
@@ -98,7 +98,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable581World03, D_801F
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5828World03, D_801F5828);
+EMI_DEFINE_DISPATCHER(callStateTable5828World03, callStateTable5828World03, D_801F5828);
 
 /* @source 0x801F455C
  * @behavior Overlay step dispatch: reads the state byte at +1 of the work record
@@ -109,4 +109,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5828World03, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5838World03, D_801F5838);
+EMI_DEFINE_DISPATCHER(callStateTable5838World03, callStateTable5838World03, D_801F5838);

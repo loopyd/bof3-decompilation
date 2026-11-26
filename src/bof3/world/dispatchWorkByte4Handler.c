@@ -19,4 +19,4 @@ extern void (*workByte4SequenceTable[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, dispatchWorkByte4Handler, workByte4SequenceTable);
+EMI_DEFINE_DISPATCHER(dispatchWorkByte4Handler, dispatchWorkByte4Handler, workByte4SequenceTable);

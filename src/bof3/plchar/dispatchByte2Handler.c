@@ -23,4 +23,4 @@ extern void (*D_801D09A8[])(void); /* @source 0x801D09A8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Handler, D_801D09A8);
+EMI_DEFINE_DISPATCHER(dispatchByte2Handler, dispatchByte2Handler, D_801D09A8);

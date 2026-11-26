@@ -25,4 +25,4 @@ extern void (*workStepTable[])(void); /* @source 0x801D0564 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable0564, workStepTable);
+EMI_DEFINE_DISPATCHER(callWorkTable0564, callWorkTable0564, workStepTable);

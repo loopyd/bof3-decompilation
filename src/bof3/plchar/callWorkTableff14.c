@@ -27,4 +27,4 @@ extern void (*D_801CFF14[])(void); /* @source 0x801CFF14 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTableff14, D_801CFF14);
+EMI_DEFINE_DISPATCHER(callWorkTableff14, callWorkTableff14, D_801CFF14);

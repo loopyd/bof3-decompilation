@@ -58,7 +58,7 @@ void func_80150224(s32 arg0);
  * @match 100.00
  * @residual none
  */
-void startActionForFirstPresentPartyCandidateActions1ETo21World04Area19713_801F3E78(
+void startActions1ETo21(
     void) {
   u8 i;
   u8 j;

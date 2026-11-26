@@ -18,4 +18,4 @@ extern void (*workByte4StepTable[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4Table0, workByte4StepTable);
+EMI_DEFINE_DISPATCHER(callWorkByte4Table0, callWorkByte4Table0, workByte4StepTable);

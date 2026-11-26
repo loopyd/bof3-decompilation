@@ -17,4 +17,4 @@ extern void (*D_801F1630[])(void); /* @source 0x801F1630 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1Word, D_801F1630);
+EMI_DEFINE_DISPATCHER(dispatchWorkByte1Word, dispatchWorkByte1Word, D_801F1630);

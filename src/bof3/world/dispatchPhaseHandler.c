@@ -14,4 +14,4 @@ extern void (*tableByte4Handlers[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, dispatchPhaseHandler, tableByte4Handlers);
+EMI_DEFINE_DISPATCHER(dispatchPhaseHandler, dispatchPhaseHandler, tableByte4Handlers);

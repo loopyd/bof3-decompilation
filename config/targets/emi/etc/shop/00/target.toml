@@ -9,7 +9,7 @@ load_address = 0x801d0c00
 
 sources = [
     "src/bof3/ui/appendFullscreenDimTile.c",
-    "src/bof3/ui/appendFullscreenDimTileB.c",
+    "src/bof3/ui/appendDimTileB.c",
     "src/bof3/ui/dispatchCommand.c",
     "src/bof3/ui/drawShopEquipPanel.c",
     "src/bof3/ui/drawExpRowPanelShop00_801D8C58.c",

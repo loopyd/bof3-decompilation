@@ -26,7 +26,7 @@ PANEL_ADVANCE_FIELD6(advancePanelField6To16, 0x10)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_FIELD6(retreatPanelField6ToNeg20B, 0x10, -0x14)
+PANEL_RETREAT_FIELD6(retreatField6Neg20B, 0x10, -0x14)
 
 /* @source 0x801E2A70
  * @behavior advances the panel task at offset 6 by 0x10, clamps to max 0x26, and
@@ -44,7 +44,7 @@ PANEL_ADVANCE_FIELD6(advancePanelField6To38, 0x26)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_FIELD6_FLOOR(retreatPanelField6ToNeg20C, 0x10, -0x14)
+PANEL_RETREAT_FIELD6_FLOOR(retreatField6Neg20C, 0x10, -0x14)
 
 /* @source 0x801E2B54
  * @behavior advances the panel task at offset 6 by 0x10, clamps to max 0x26, and
@@ -261,7 +261,7 @@ PANEL_ADVANCE_X(advancePanelXTo100, 0x64)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X_CLAMP(retreatPanelXTo17B, 0x11)
+PANEL_RETREAT_X_CLAMP(retreatXTo17B, 0x11)
 
 /* @source 0x801E438C
  * @behavior Adds 32 to 16-bit panel x; signed results above 320 clamp to 320 and clear state.

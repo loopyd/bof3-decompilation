@@ -38,4 +38,4 @@ extern void (*workByte2HandlerRun[])(void); /* @source 0x801CF6D8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablef6, workByte2HandlerRun);
+EMI_DEFINE_DISPATCHER(callWorkTablef6, callWorkTablef6, workByte2HandlerRun);

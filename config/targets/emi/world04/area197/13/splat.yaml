@@ -110,8 +110,8 @@ segments:
     - func_801F3DB4
   - - 4728
     - c
-    - startActionForFirstPresentPartyCandidateActions1ETo21World04Area19713_801F3E78
-    - '@source: src/bof3/world/startActionForFirstPresentPartyCandidateActions1ETo21World04Area19713_801F3E78.c'
+    - startActions1ETo21
+    - '@source: src/bof3/world/startActions1ETo21.c'
     - '@behavior: Overlay party-scan action starter of the 0x1E to 0x21 action group: it walks the four candidate party bytes of the local table at 0x801F4A74 and, for each one, scans the D_80146254 live 0x140-byte work records for a row whose party byte +0x79 equals the candidate, then starts the paired halfword action of the local table at 0x801F4A78 through func_80150224, publishes phase 2 in the shared front-end phase byte D_80143BB0 and returns.'
   - - 4924
     - c

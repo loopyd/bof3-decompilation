@@ -59,8 +59,8 @@ segments:
     - '@behavior: Compares signed work words at 0x801468BC and 0x80145EC4, publishes 0x80145E90 at 0x80146250, preserves the scratchpad work-pointer handoffs and selects saved state 6 or state 13 with byte 9 cleared.'
   - - 828
     - c
-    - advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C
-    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C.c'
+    - advanceScratchStateMode7
+    - '@source: src/bof3/world/advanceScratchStateMode7.c'
     - '@behavior: Overlay work-record handoff: saves the scratchpad pointer cell 0x1F800044, publishes the record at 0x80146888 in its place, ramps the record word at offset 0x34 by 0x4000 four times with an unsigned-byte counter in a bottom-tested loop, then arms the saved record state byte at offset 0x01 with 7 and republishes the saved record; the same 0x54-byte shape as the exact sibling advanceWorkWordSet apart from that immediate.'
   - - 912
     - c
@@ -69,8 +69,8 @@ segments:
     - '@behavior: Compares signed work words at 0x801468BC and 0x80145EC4, publishes 0x80145E90 at 0x80146250, preserves the scratchpad work-pointer handoffs and selects saved state 8 or state 13 with byte 9 cleared.'
   - - 1040
     - c
-    - advanceWorkWordAndSetScratchStateToMode9World03Area13413_801F3010
-    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode9World03Area13413_801F3010.c'
+    - advanceScratchStateMode9
+    - '@source: src/bof3/world/advanceScratchStateMode9.c'
     - '@behavior: Overlay work-record handoff: saves the scratchpad pointer cell 0x1F800044, publishes the record at 0x80146888 in its place, ramps the record word at offset 0x34 by 0x4000 four times with an unsigned-byte counter in a bottom-tested loop, then arms the saved record state byte at offset 0x01 with 9 and republishes the saved record; the same 0x54-byte shape as the exact sibling advanceWorkWordSet apart from that immediate.'
   - - 1124
     - c
@@ -150,8 +150,8 @@ segments:
     - func_801F35D4
   - - 2800
     - c
-    - advanceWorkWordAndSetScratchStateToMode3World03Area13413_801F36F0
-    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode3World03Area13413_801F36F0.c'
+    - advanceScratchStateMode3
+    - '@source: src/bof3/world/advanceScratchStateMode3.c'
     - '@behavior: Publishes the work record at 0x80146920, adds 0x4000 four times to its word at offset 0x34, sets the saved record state byte to mode 3 and restores the scratchpad work pointer.'
   - - 2884
     - c
@@ -160,13 +160,13 @@ segments:
     - '@behavior: Saves the scratchpad work pointer, publishes the record at 0x80146920, compares its signed word at offset 0x34 against the signed word at 0x80145EC4 and publishes 0x80145E90 at 0x80146250, then restores the saved pointer with a brief 0x80145E90 republish and a second restore; selects state byte 1 = 4 when the work word is smaller, otherwise 13 with byte 9 cleared through the reloaded scratchpad pointer.'
   - - 3012
     - c
-    - advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F37C4
-    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F37C4.c'
+    - advanceScratchStateMode5
+    - '@source: src/bof3/world/advanceScratchStateMode5.c'
     - '@behavior: Publishes the work record at 0x80146920, adds 0x4000 four times to its word at offset 0x34, sets the saved record state byte to mode 5 and restores the scratchpad work pointer.'
   - - 3096
     - c
-    - selectScratchState6Or13ByWorkWordWorld03Area13413_801F3818
-    - '@source: src/bof3/world/selectScratchState6Or13ByWorkWordWorld03Area13413_801F3818.c'
+    - selectOr13WorkWord
+    - '@source: src/bof3/world/selectOr13WorkWord.c'
     - '@behavior: Saves the scratchpad work pointer, publishes the record at 0x80146920, compares its signed word at offset 0x34 against the signed word at 0x80145EC4 and publishes 0x80145E90 at 0x80146250, then restores the saved pointer with a brief 0x80145E90 republish and a second restore; selects state byte 1 = 6 when the work word is smaller, otherwise 13 with byte 9 cleared through the reloaded scratchpad pointer.'
   - - 3224
     - c
@@ -380,8 +380,8 @@ segments:
     - setTwo
   - - 9728
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F5200
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F5200.c'
+    - publishFromModeTable
+    - '@source: src/bof3/world/publishFromModeTable2.c'
     - '@behavior: Overlay seeder reached through the sixth pointer of the run at 0x801F6330: publishes the first shared work base 0x80145E90 as the scratchpad work cursor at 0x1F800044 and seeds one front-end record of kind 1 through the shared allocator/seeder at 0x8015CB18 with word 0x0C = 0, word 0x10 = the selector-indexed byte D_801F5868[D_80144F5A] and the published base halfwords 0x2E/0x30, then stores the returned index in the record work byte 0x0B unless it is 0xFF.'
   - - 9856
     - c

@@ -33,4 +33,4 @@ extern void (*codePointerTable0988[])(void); /* @source 0x801D0988 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable0988, codePointerTable0988);
+EMI_DEFINE_DISPATCHER(callWorkTable0988, callWorkTable0988, codePointerTable0988);

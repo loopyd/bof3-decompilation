@@ -65,7 +65,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * neither a `jal` nor a table word, so the overlay reaches this handler from
  * outside its payload.
  */
-void publishThirdWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area11713_801F3EF0(
+void publishFromModeTable(
     void) {
   u8 result;
 

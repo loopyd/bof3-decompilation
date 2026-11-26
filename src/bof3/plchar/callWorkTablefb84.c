@@ -31,4 +31,4 @@ extern void (*codePointerTablefb84[])(void); /* @source 0x801CFB84 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefb84, codePointerTablefb84);
+EMI_DEFINE_DISPATCHER(callWorkTablefb84, callWorkTablefb84, codePointerTablefb84);

@@ -3,7 +3,7 @@
 /* Shared published work-pointer cell: retain each original handoff and reload. */
 extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 workRecordAt80146920World03Area13413[]; /* @source 0x80146920 @kind unknown */
-extern s32 D_80146954;
+extern s32 workSeedWord80146954;
 extern s32 D_80145EC4;
 extern u8 D_80145E90[];
 extern u8* D_80146250;
@@ -20,13 +20,13 @@ extern u8* D_80146250;
  * @match 100.00
  * @residual none
  */
-void selectScratchState6Or13ByWorkWordWorld03Area13413_801F3818(void) {
+void selectOr13WorkWord(void) {
   u8* saved;
   s32 smaller;
 
   saved = D_1F800044;
   D_1F800044 = workRecordAt80146920World03Area13413;
-  smaller = D_80146954 < D_80145EC4;
+  smaller = workSeedWord80146954 < D_80145EC4;
   D_80146250 = D_80145E90;
   D_1F800044 = saved;
   D_1F800044 = D_80145E90;

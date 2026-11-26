@@ -28,4 +28,4 @@ extern void (*D_800C2DAC[])(void); /* @source 0x800C2DAC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateByte2Table5, D_800C2DAC);
+EMI_DEFINE_DISPATCHER(callStateByte2Table5, callStateByte2Table5, D_800C2DAC);

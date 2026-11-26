@@ -12,7 +12,7 @@ extern u8 workRecordAt80146920World03Area13413[];
  * @match 100.00
  * @residual none
  */
-void advanceWorkWordAndSetScratchStateToMode3World03Area13413_801F36F0(void) {
+void advanceScratchStateMode3(void) {
   u8** slots;
   u8* saved;
   u8* work;

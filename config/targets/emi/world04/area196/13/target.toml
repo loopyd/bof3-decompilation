@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/world/area19613DispatchTables.c",
     "src/bof3/world/incrementStepOneDraw.c",
     "src/bof3/world/startActionFirstPresent3.c",
-    "src/bof3/world/startActionForFirstPresentPartyCandidateActions05To08World04Area19613_801F4054.c",
+    "src/bof3/world/startCandidateActions05To08.c",
     "src/bof3/world/emitMoveOffsetHalf.c",
     "src/bof3/support/area196_13_psyq.c",
 ]

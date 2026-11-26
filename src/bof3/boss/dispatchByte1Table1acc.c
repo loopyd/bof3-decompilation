@@ -40,6 +40,6 @@ extern void (*D_800C1ACC[])(void); /* @source 0x800C1ACC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1,
+EMI_DEFINE_DISPATCHER(dispatchByte1Table1acc,
                       dispatchByte1Table1acc,
                       D_800C1ACC);

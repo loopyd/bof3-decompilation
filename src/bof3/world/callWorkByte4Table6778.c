@@ -13,4 +13,4 @@ extern void (*D_801F6778[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4Table6778, D_801F6778);
+EMI_DEFINE_DISPATCHER(callWorkByte4Table6778, callWorkByte4Table6778, D_801F6778);

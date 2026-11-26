@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/world/decrementBelowMinusDraw.c",
     "src/bof3/world/initArea11713State.c",
     "src/bof3/world/publishThirdWorkBase.c",
-    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area11713_801F3EF0.c",
+    "src/bof3/world/publishFromModeTable.c",
     "src/bof3/world/publishModeStatusProgress.c",
     "src/bof3/world/publishModeStatusFrom.c",
 ]

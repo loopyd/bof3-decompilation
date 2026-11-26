@@ -31,4 +31,4 @@ extern void (*D_800C20BC[])(void); /* @source 0x800C20BC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable20Boss, D_800C20BC);
+EMI_DEFINE_DISPATCHER(callStateTable20Boss, callStateTable20Boss, D_800C20BC);

@@ -19,4 +19,4 @@ extern Scena1500FrameHandler D_801FE590[];
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1Handler6, D_801FE590);
+EMI_DEFINE_DISPATCHER(dispatchWorkByte1Handler6, dispatchWorkByte1Handler6, D_801FE590);

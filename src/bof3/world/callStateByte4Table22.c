@@ -8,4 +8,4 @@
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callStateByte4Table22, D_801E22F0);
+EMI_DEFINE_DISPATCHER(callStateByte4Table22, callStateByte4Table22, D_801E22F0);

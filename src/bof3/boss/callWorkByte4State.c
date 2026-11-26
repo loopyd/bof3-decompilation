@@ -33,4 +33,4 @@ extern void (*D_800C26B0[])(void); /* @source 0x800C26B0 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4State, D_800C26B0);
+EMI_DEFINE_DISPATCHER(callWorkByte4State, callWorkByte4State, D_800C26B0);

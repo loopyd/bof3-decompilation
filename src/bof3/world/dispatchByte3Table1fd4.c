@@ -11,4 +11,4 @@ extern void (*stateByte3HandlerTable[])(void); /* @source 0x801E1FD4 @kind data 
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_3, dispatchByte3Table1fd4, stateByte3HandlerTable);
+EMI_DEFINE_DISPATCHER(dispatchByte3Table1fd4, dispatchByte3Table1fd4, stateByte3HandlerTable);

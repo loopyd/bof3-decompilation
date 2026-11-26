@@ -77,7 +77,7 @@ segments:
     - func_801EFA64
   - - 4484
     - c
-    - dispatchStateByte1Table0Tail
+    - dispatchByte1Table0Tail
     - '@source: src/bof3/bmagic/magic22603DispatchTables.c'
   - - 4552
     - c

@@ -14,4 +14,4 @@ extern void (*dispatchHandlerTable801EFE58[])(void); /* @source 0x801EFE58 @kind
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkByte1Handler11, dispatchHandlerTable801EFE58);
+EMI_DEFINE_DISPATCHER(callWorkByte1Handler11, callWorkByte1Handler11, dispatchHandlerTable801EFE58);

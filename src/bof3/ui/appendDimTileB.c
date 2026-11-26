@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void appendFullscreenDimTileB(void) {
+void appendDimTileB(void) {
   TILE* prim = (TILE*)g_PrimCursor;
   SetTile(prim);
   SetSemiTrans(prim, 0);

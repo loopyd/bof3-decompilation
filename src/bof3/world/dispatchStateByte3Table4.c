@@ -24,4 +24,4 @@ extern void (*D_801F4D84[])(void); /* @source 0x801F4D84 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_3, dispatchStateByte3Table4, D_801F4D84);
+EMI_DEFINE_DISPATCHER(dispatchStateByte3Table4, dispatchStateByte3Table4, D_801F4D84);

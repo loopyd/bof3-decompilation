@@ -26,4 +26,4 @@ extern void (*D_801CFF08[])(void); /* @source 0x801CFF08 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTableff08, D_801CFF08);
+EMI_DEFINE_DISPATCHER(callWorkTableff08, callWorkTableff08, D_801CFF08);

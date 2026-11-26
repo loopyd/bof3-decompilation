@@ -30,7 +30,7 @@ support_sources = [
     "src/bof3/world/claimEndPointPair.c",
     "src/bof3/world/stepSpanDelegateWalk.c",
     "src/bof3/world/startActionFirstPresent.c",
-    "src/bof3/world/startActionForFirstPresentPartyCandidateActions0BTo0EWorld03Area14514_801F41C4.c",
+    "src/bof3/world/startBTo0E.c",
     "src/bof3/world/drawRecordAnchorStage.c",
     "src/bof3/world/requestMatchedRowSubstate.c",
     "src/bof3/world/renderFullSkyNavy.c",

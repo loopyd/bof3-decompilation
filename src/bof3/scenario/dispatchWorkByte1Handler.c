@@ -11,4 +11,4 @@
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1Handler, D_801FC980);
+EMI_DEFINE_DISPATCHER(dispatchWorkByte1Handler, dispatchWorkByte1Handler, D_801FC980);

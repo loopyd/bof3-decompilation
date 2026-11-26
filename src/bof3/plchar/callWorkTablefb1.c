@@ -25,4 +25,4 @@ extern void (*D_801CFB1C[])(void); /* @source 0x801CFB1C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefb1, D_801CFB1C);
+EMI_DEFINE_DISPATCHER(callWorkTablefb1, callWorkTablefb1, D_801CFB1C);

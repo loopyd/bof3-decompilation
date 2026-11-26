@@ -35,4 +35,4 @@ extern void (*D_801D27C0[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callByteStepHandler, D_801D27C0);
+EMI_DEFINE_DISPATCHER(callByteStepHandler, callByteStepHandler, D_801D27C0);

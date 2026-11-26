@@ -8,4 +8,4 @@
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_3, callStateByte3Table2074, D_801E2074);
+EMI_DEFINE_DISPATCHER(callStateByte3Table2074, callStateByte3Table2074, D_801E2074);

@@ -18,4 +18,4 @@ extern void (*codePointerTable0a54[])(void); /* @source 0x801D0A54 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable0, codePointerTable0a54);
+EMI_DEFINE_DISPATCHER(callStateTable0, callStateTable0, codePointerTable0a54);

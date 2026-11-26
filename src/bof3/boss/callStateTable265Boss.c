@@ -29,6 +29,6 @@ extern void (*D_800C265C[])(void); /* @source 0x800C265C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1,
+EMI_DEFINE_DISPATCHER(callStateTable265Boss,
                       callStateTable265Boss,
                       D_800C265C);

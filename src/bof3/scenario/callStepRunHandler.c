@@ -35,4 +35,4 @@ extern void (*D_801D1B2C[])(void); /* @source 0x801D1B2C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStepRunHandler, D_801D1B2C);
+EMI_DEFINE_DISPATCHER(callStepRunHandler, callStepRunHandler, D_801D1B2C);

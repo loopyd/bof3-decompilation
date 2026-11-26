@@ -37,4 +37,4 @@ extern ScenarioScena0400WorkObjectHandler D_801FA1E4[];
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callObjectHandler, D_801FA1E4);
+EMI_DEFINE_DISPATCHER(callObjectHandler, callObjectHandler, D_801FA1E4);

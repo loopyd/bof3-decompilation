@@ -25,4 +25,4 @@ extern void (*D_801D0A80[])(void); /* @source 0x801D0A80 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table0a80, D_801D0A80);
+EMI_DEFINE_DISPATCHER(dispatchByte2Table0a80, dispatchByte2Table0a80, D_801D0A80);

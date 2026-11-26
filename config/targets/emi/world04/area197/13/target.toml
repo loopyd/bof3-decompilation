@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndAdvanceStateByte1World04Area19713_801F2C48.c",
     "src/bof3/world/armSelectLowerShared.c",
-    "src/bof3/world/startActionForFirstPresentPartyCandidateActions1ETo21World04Area19713_801F3E78.c",
+    "src/bof3/world/startActions1ETo21.c",
     "src/bof3/world/stepSharedStartSelector.c",
     "src/bof3/world/stateWorkTableStride28.c",
     "src/bof3/world/advanceHalfword0By3Work.c",

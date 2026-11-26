@@ -66,7 +66,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * 0x144 bytes inside the D_801F5724 textbin run and keeps the generated
  * undefined_syms_auto row because four asm siblings still read it.
  */
-void publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F5200(
+void publishFromModeTable(
     void) {
   u8 result;
 

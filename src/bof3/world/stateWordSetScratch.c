@@ -12,7 +12,7 @@ extern u8 D_80146888[];
  * with 3 and republishes the saved record, so the saved record is current again
  * with mode 3 selected. The statement shape came from the same-target siblings
  * advanceWorkWordSet and
- * advanceWorkWordAndSetScratchStateToMode3World03Area13413_801F36F0, which
+ * advanceWorkWord38Set2, which
  * carry the identical body over this record base and over the next record
  * entry at 0x80146920; this span's own payload words supply the record literal
  * and the mode immediate. The record base 0x80146888 is the shared 0x98-byte

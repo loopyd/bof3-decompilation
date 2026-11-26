@@ -28,4 +28,4 @@ extern void (*func_801CF900[])(void); /* @source 0x801CF900 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Tablef900, func_801CF900);
+EMI_DEFINE_DISPATCHER(dispatchByte2Tablef900, dispatchByte2Tablef900, func_801CF900);

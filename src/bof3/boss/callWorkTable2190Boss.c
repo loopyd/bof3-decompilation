@@ -31,4 +31,4 @@ extern void (*D_800C2190[])(void); /* @source 0x800C2190 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTable2190Boss, D_800C2190);
+EMI_DEFINE_DISPATCHER(callWorkTable2190Boss, callWorkTable2190Boss, D_800C2190);
