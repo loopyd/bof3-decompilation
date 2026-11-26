@@ -214,7 +214,12 @@ def _collect_files(plan: RenamePlan, root: Path, manifest) -> None:
     )
 
     grouped = False
-    if plan.source is not None and _stem_base(plan.source.stem) == _stem_base(plan.old):
+    # A shared unit carries its target as a discriminator suffix:
+    # `integrateMotionOrResetState_battle03.c` is the unit named by the old spelling.
+    if plan.source is not None and (
+        _stem_base(plan.source.stem) == _stem_base(plan.old)
+        or plan.source.stem.startswith(plan.old + "_")
+    ):
         text = plan.source.read_text(encoding="utf-8")
         # One metadata block can still carry several definitions: a dispatch
         # table unit names many handlers. Any such unit keeps its filename.

@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-void integrateMotionOrResetState(void) {
+void integrateMotionReset(void) {
   Battle03LocalWork* work;
 
   work = (Battle03LocalWork*)D_1F800044;

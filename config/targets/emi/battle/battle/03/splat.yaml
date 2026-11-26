@@ -1051,8 +1051,8 @@ segments:
     - '@behavior: Clears bit 6, invokes the local reset handler, and initializes battle-local state.'
   - - 75672
     - c
-    - integrateMotionOrResetState
-    - '@source: src/bof3/battle/integrateMotionOrResetState_battle03.c'
+    - integrateMotionReset
+    - '@source: src/bof3/battle/integrateMotionReset.c'
     - '@behavior: Integrates the scratch work motion pair while signed +0x40 stays at or below 0xFFFF; otherwise clears work byte +0x48 and resets the scratch dispatch state to 3/0/0, then runs enemyReadyOrHelper1.'
   - - 75832
     - c
@@ -1405,8 +1405,8 @@ segments:
     - clearByte9AdvanceByte1
   - - 89536
     - c
-    - broadcastByte9DrawDigitsAndAdvance
-    - '@source: src/bof3/battle/broadcastByte9DrawDigitsAndAdvance_battle03.c'
+    - broadcastDrawDigits
+    - '@source: src/bof3/battle/broadcastDrawDigits.c'
     - '@behavior: Copies byte +0x09 of the scratchpad-selected object into scratchpad bytes 0x00 through 0x02, calls drawScratchColorTile(0, 0, 0xB), then increments that object''s byte +0x09 and increments byte +0x01 when the incremented value is 0xFF.'
   - - 89684
     - c

@@ -75,7 +75,7 @@ void renderMirroredGraphType(void);
  * @match 100.00
  * @residual none
  */
-void loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area16913_801F2C48(
+void loadWorkCellState(
     void) {
   u8* work;
   u16 halfword3e;

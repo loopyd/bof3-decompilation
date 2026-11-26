@@ -11,7 +11,7 @@ sources = [
     "src/bof3/world/findWorkPositionBounds2.c",
     "src/bof3/world/stateFrontSideIs.c",
     "src/bof3/world/stateAdvanceHalfwordDraw.c",
-    "src/bof3/world/loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area16913_801F2C48.c",
+    "src/bof3/world/loadWorkCellState.c",
 ]
 support_sources = [
     "src/bof3/support/area169_13_psyq.c",

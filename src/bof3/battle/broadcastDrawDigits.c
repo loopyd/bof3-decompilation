@@ -9,7 +9,7 @@
  * @match 100.00
  * @residual none
  */
-void broadcastByte9DrawDigitsAndAdvance(void)
+void broadcastDrawDigits(void)
 {
     u8 value;
     u8 next;
