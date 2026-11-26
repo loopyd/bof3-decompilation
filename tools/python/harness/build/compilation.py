@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import fcntl
+from contextlib import contextmanager
+
 import os
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -51,14 +54,33 @@ def configured_command(
     return arguments, environment
 
 
+@contextmanager
+def _output_lock(output: Path):
+    """Serialise writers of one object path.
+
+    Two checks of different targets may compile a shared unit into the same object, so
+    the path itself is the lock: without it one reader sees a half-written object and
+    reports a link failure that does not exist.
+    """
+    lock_path = output.with_suffix(output.suffix + ".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(lock_path, "w") as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
+
+
 def compile_object(
     root: Path, source: Path, output: Path
 ) -> subprocess.CompletedProcess[str]:
     """Run the guarded native driver even when an old object already exists."""
     arguments, environment = configured_command(root, source, output)
-    result = run_bounded(
-        root, arguments, env=environment, output_limit=64 * 1024 * 1024
-    )
+    with _output_lock(output):
+        result = run_bounded(
+            root, arguments, env=environment, output_limit=64 * 1024 * 1024
+        )
     if result["failure"]:
         raise RuntimeError(f"object compiler failed: {result['failure']}")
     completed = subprocess.CompletedProcess(

@@ -58,7 +58,11 @@ def run_build_object(
     object_path = object_path_for_source(layout, source_path)
     stat = source_path.stat()
     key = (source_path, stat.st_mtime_ns, stat.st_size)
-    if object_path.is_file() and object_path.stat().st_mtime >= stat.st_mtime:
+    if (
+        object_path.is_file()
+        and object_path.stat().st_size > 0
+        and object_path.stat().st_mtime >= stat.st_mtime
+    ):
         # A parallel precompile may have produced it already.
         _BUILT.add(key)
         return

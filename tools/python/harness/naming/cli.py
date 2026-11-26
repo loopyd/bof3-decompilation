@@ -57,7 +57,19 @@ def check_in_parallel(root, targets: list[str], jobs: int) -> list[dict]:
     for chunk_reports in results:
         for report in chunk_reports:
             by_target[report["scope"]["target"]] = report
-    return [by_target[target] for target in targets if target in by_target]
+    ordered = [by_target[target] for target in targets if target in by_target]
+    # Concurrent builds can report a link failure that a quiet tree does not have, so
+    # every target that reported one is confirmed serially before it is believed.
+    suspect = [
+        report["scope"]["target"]
+        for report in ordered
+        if any(finding["code"] == "native" for finding in report["findings"])
+    ]
+    if suspect:
+        for report in check_batch(root, suspect):
+            by_target[report["scope"]["target"]] = report
+        ordered = [by_target[target] for target in targets if target in by_target]
+    return ordered
 
 
 def _check_chunk(job) -> list[dict]:
