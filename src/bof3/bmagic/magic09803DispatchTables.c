@@ -12,4 +12,4 @@ extern void (*workByte1HandlerTable[])(void); /* @source 0x801F0340 @kind table 
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable0340, callStateTable0340, workByte1HandlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable0340, workByte1HandlerTable);

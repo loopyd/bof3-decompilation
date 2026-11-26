@@ -15,4 +15,4 @@ extern void (*byte4HandlerTableB[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkByte4Table49, callWorkByte4Table49, byte4HandlerTableB);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4Table49, byte4HandlerTableB);

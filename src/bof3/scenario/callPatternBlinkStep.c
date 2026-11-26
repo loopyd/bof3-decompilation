@@ -27,4 +27,4 @@ extern void (*D_801D3954[])(void); /* @source 0x801D3954 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callPatternBlinkStep, callPatternBlinkStep, D_801D3954);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callPatternBlinkStep, D_801D3954);

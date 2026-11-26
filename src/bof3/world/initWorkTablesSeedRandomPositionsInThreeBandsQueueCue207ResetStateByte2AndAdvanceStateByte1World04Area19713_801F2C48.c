@@ -7,7 +7,7 @@
  * the same reload point measured exact in this target's step at 0x801F3FC0. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void stateWorkTableStride28(void);
+void clearWorkTableAt800E4800Stride28World04Area19713_801F30E4(void);
 void clearWorkTableAt800(void);
 
 /* 0x801F3110 - this overlay's random position seeder for the 0x28-byte-stride
@@ -59,7 +59,7 @@ void func_8015DF18(u32 cue);
  *   byte at +0x02 that the second dispatcher at 0x801F3628 reads, so it is the
  *   init step of both runs. The tables it clears and seeds are the ones this
  *   target's own reviewed helpers empty: 0x800E4800 through
- *   stateWorkTableStride28 and 0x800E5C00
+ *   clearWorkTableAt800E4800Stride28World04Area19713_801F30E4 and 0x800E5C00
  *   through clearWorkTableAt800, which is why the
  *   name keeps that module vocabulary. Cue 0x207 is the immediate this body
  *   passes to func_8015DF18; its game meaning is not established by any reviewed
@@ -89,7 +89,7 @@ void initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndA
   u8* secondRun;
   u8* firstRun;
 
-  stateWorkTableStride28();
+  clearWorkTableAt800E4800Stride28World04Area19713_801F30E4();
   clearWorkTableAt800();
 
   from[0] = 0x20000;

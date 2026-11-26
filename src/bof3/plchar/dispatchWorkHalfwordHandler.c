@@ -44,4 +44,4 @@ extern void (*D_801CFFE0[])(void); /* @source 0x801CFFE0 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchWorkHalfwordHandler, dispatchWorkHalfwordHandler, D_801CFFE0);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchWorkHalfwordHandler, D_801CFFE0);

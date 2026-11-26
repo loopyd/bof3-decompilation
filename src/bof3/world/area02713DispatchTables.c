@@ -10,7 +10,7 @@ extern void (*D_801F3ABC[])(void); /* @source 0x801F3ABC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchScratchMode1, dispatchScratchMode1, handlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchScratchMode1, handlerTable);
 
 /* @behavior dispatches the scratch mode byte at offset 2 through the local
  * handler table at 0x801F3ABC.
@@ -19,4 +19,4 @@ EMI_DEFINE_DISPATCHER(dispatchScratchMode1, dispatchScratchMode1, handlerTable);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchScratchMode2, dispatchScratchMode2, D_801F3ABC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchScratchMode2, D_801F3ABC);

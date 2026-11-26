@@ -32,4 +32,4 @@ extern void (*codePointerTablefcb4[])(void); /* @source 0x801CFCB4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkTablefcb4, callWorkTablefcb4, codePointerTablefcb4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefcb4, codePointerTablefcb4);

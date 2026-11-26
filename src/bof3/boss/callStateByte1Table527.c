@@ -31,6 +31,6 @@ extern void (*D_800C1DA4[])(void); /* @source 0x800C1DA4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateByte1Table527,
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1,
                       callStateByte1Table527,
                       D_800C1DA4);

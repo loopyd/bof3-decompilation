@@ -38,6 +38,6 @@ extern void (*byte4DispatchTable[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchWorkByte4Table3,
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4,
                       dispatchWorkByte4Table3,
                       byte4DispatchTable);

@@ -24,4 +24,4 @@ extern void (*D_801F4F90[])(void); /* @source 0x801F4F90 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchWorkStep3Handler, dispatchWorkStep3Handler, D_801F4F90);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_3, dispatchWorkStep3Handler, D_801F4F90);

@@ -39,4 +39,4 @@ extern ScenarioScena0400WorkByte1Handler workByte1StepTable[];
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkStepHandler, callWorkStepHandler, workByte1StepTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkStepHandler, workByte1StepTable);

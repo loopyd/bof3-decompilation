@@ -28,4 +28,4 @@ extern void (*D_801D397C[])(void); /* @source 0x801D397C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callEffectRecordStep, callEffectRecordStep, D_801D397C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callEffectRecordStep, D_801D397C);

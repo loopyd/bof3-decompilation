@@ -12,4 +12,4 @@ extern void (*D_801EFA44[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTablefa44, callStateTablefa44, D_801EFA44);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTablefa44, D_801EFA44);

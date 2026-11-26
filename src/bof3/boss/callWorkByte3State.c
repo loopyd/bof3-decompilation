@@ -32,6 +32,6 @@ extern void (*D_800C1EBC[])(void); /* @source 0x800C1EBC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkByte3State,
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_3,
                       callWorkByte3State,
                       D_800C1EBC);

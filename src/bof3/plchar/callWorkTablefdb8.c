@@ -46,6 +46,6 @@ extern void (*D_801CFDB8[])(void); /* @source 0x801CFDB8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkTablefdb8,
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2,
                       callWorkTablefdb8,
                       D_801CFDB8);

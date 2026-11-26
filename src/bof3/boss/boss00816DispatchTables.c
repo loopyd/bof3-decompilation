@@ -18,7 +18,7 @@ extern void (*D_800C2690[])(void); /* @source 0x800C2690 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable2660Boss, callStateTable2660Boss, D_800C2660);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable2660Boss, D_800C2660);
 
 /* @source 0x800C1CD8
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -34,7 +34,7 @@ EMI_DEFINE_DISPATCHER(callStateTable2660Boss, callStateTable2660Boss, D_800C2660
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callByte1Table26cc, callByte1Table26cc, D_800C26CC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callByte1Table26cc, D_800C26CC);
 
 /* @source 0x800C1DC4
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -50,7 +50,7 @@ EMI_DEFINE_DISPATCHER(callByte1Table26cc, callByte1Table26cc, D_800C26CC);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable2708Boss, callStateTable2708Boss, D_800C2708);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable2708Boss, D_800C2708);
 
 /* @source 0x800C18A0
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -63,4 +63,4 @@ EMI_DEFINE_DISPATCHER(callStateTable2708Boss, callStateTable2708Boss, D_800C2708
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable2690Boss, callStateTable2690Boss, D_800C2690);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable2690Boss, D_800C2690);

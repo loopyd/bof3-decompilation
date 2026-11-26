@@ -38,4 +38,4 @@ extern ScenarioScena0400WorkByte1Handler D_801FA198[];
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStepSeventhWord, callStepSeventhWord, D_801FA198);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStepSeventhWord, D_801FA198);

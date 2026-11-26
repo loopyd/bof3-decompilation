@@ -13,7 +13,7 @@ extern void (*D_801F0700[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable06, callStateTable06, D_801F06DC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable06, D_801F06DC);
 
 /* @source 0x801EFF60
  * @behavior Overlay step dispatch: reads the state byte at +1 of
@@ -25,4 +25,4 @@ EMI_DEFINE_DISPATCHER(callStateTable06, callStateTable06, D_801F06DC);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable0700, callStateTable0700, D_801F0700);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable0700, D_801F0700);

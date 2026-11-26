@@ -26,4 +26,4 @@ extern void (*D_801CF90C[])(void); /* @source 0x801CF90C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchByte2Tablef90c, dispatchByte2Tablef90c, D_801CF90C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Tablef90c, D_801CF90C);

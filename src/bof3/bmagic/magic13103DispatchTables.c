@@ -14,4 +14,4 @@ extern void (*twelveStepHandlerTable[])(void); /* @source 0x801F1BC4 @kind data 
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkByte1Handler30, callWorkByte1Handler30, twelveStepHandlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkByte1Handler30, twelveStepHandlerTable);

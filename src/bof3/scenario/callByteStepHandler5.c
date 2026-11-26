@@ -48,4 +48,4 @@ extern u8 workStepHandlerTable[];
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callByteStepHandler5, callByteStepHandler5, D_801D2800);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callByteStepHandler5, D_801D2800);

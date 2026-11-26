@@ -19,4 +19,4 @@ extern void (*workByte4HandlerTable[])(void); /* @source 0x801F3DF0 @kind data *
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkByte4Table, callWorkByte4Table, workByte4HandlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4, callWorkByte4Table, workByte4HandlerTable);

@@ -37,4 +37,4 @@ extern void (*D_801D1B48[])(void); /* @source 0x801D1B48 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callCountdownStepHandler, callCountdownStepHandler, D_801D1B48);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callCountdownStepHandler, D_801D1B48);

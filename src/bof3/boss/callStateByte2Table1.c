@@ -39,4 +39,4 @@ extern void (*D_800C21EC[])(void); /* @source 0x800C21EC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateByte2Table1, callStateByte2Table1, D_800C21EC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateByte2Table1, D_800C21EC);

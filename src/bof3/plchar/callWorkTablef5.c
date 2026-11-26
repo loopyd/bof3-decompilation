@@ -36,4 +36,4 @@ extern void (*func_801CF5EC[])(void); /* @source 0x801CF5EC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkTablef5, callWorkTablef5, func_801CF5EC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablef5, func_801CF5EC);

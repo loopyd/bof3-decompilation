@@ -33,4 +33,4 @@ extern void (*workByte2RunTail[])(void); /* @source 0x801CFAF8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkTablefab8, callWorkTablefab8, T_801CFAB8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefab8, T_801CFAB8);

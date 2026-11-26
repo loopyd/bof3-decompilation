@@ -12,4 +12,4 @@ extern void (*D_801F046C[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable046, callStateTable046, D_801F046C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable046, D_801F046C);

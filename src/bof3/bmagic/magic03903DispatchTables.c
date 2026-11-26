@@ -21,4 +21,4 @@ extern void (*D_801F0424[])(void); /* @source 0x801F0424 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkByte1Handler6, callWorkByte1Handler6, D_801F0424);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callWorkByte1Handler6, D_801F0424);

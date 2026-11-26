@@ -28,4 +28,4 @@ extern void (*D_801CFEE8[])(void); /* @source 0x801CFEE8 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkTablefee8, callWorkTablefee8, D_801CFEE8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkTablefee8, D_801CFEE8);

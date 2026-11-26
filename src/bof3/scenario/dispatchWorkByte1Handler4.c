@@ -31,4 +31,4 @@ extern ScenarioScena1300WorkStateHandler D_801FBF10[]; /* @source 0x801FBF10 @ki
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchWorkByte1Handler4, dispatchWorkByte1Handler4, D_801FBF10);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1Handler4, D_801FBF10);

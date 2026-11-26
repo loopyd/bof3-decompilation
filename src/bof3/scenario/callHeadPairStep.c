@@ -26,4 +26,4 @@ extern void (*D_801D396C[])(void); /* @source 0x801D396C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callHeadPairStep, callHeadPairStep, D_801D396C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callHeadPairStep, D_801D396C);

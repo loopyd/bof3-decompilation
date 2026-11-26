@@ -41,6 +41,6 @@ extern void (*D_801CFD98[])(void); /* @source 0x801CFD98 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkTablefd98,
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2,
                       callWorkTablefd98,
                       D_801CFD98);

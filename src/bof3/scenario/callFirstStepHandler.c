@@ -41,6 +41,6 @@ extern ScenarioScena0500WorkByte1Handler D_801FD5A8[];
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callFirstStepHandler,
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1,
                       callFirstStepHandler,
                       D_801FD5A8);

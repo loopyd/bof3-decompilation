@@ -47,4 +47,4 @@ extern Boss05216Handler D_800C1804[]; /* @source 0x800C1804 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateByte1Table5, callStateByte1Table5, D_800C1F50);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateByte1Table5, D_800C1F50);

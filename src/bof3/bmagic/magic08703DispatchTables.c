@@ -14,7 +14,7 @@ extern void (*D_801F0520[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable0508, callStateTable0508, D_801F0508);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable0508, D_801F0508);
 
 /* @source 0x801EF0EC
  * @behavior Overlay step dispatch: reads the state byte at +2 of
@@ -26,7 +26,7 @@ EMI_DEFINE_DISPATCHER(callStateTable0508, callStateTable0508, D_801F0508);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateTable050, callStateTable050, D_801F050C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable050, D_801F050C);
 
 /* @source 0x801EF958
  * @behavior Overlay step dispatch: reads the state byte at +1 of
@@ -38,4 +38,4 @@ EMI_DEFINE_DISPATCHER(callStateTable050, callStateTable050, D_801F050C);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callStateByte1Table0520, callStateByte1Table0520, D_801F0520);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateByte1Table0520, D_801F0520);

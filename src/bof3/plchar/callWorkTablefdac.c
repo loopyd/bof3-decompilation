@@ -41,6 +41,6 @@ extern void (*D_801CFDAC[])(void); /* @source 0x801CFDAC @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkTablefdac,
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2,
                       callWorkTablefdac,
                       D_801CFDAC);

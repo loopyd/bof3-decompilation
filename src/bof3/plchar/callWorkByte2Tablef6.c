@@ -38,4 +38,4 @@ extern void (*D_801CF6E4[])(void); /* @source 0x801CF6E4 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callWorkByte2Tablef6, callWorkByte2Tablef6, D_801CF6E4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callWorkByte2Tablef6, D_801CF6E4);

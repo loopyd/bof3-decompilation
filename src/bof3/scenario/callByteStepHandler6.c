@@ -41,4 +41,4 @@ extern void (*D_801D280C[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(callByteStepHandler6, callByteStepHandler6, D_801D280C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callByteStepHandler6, D_801D280C);

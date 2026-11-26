@@ -12,7 +12,7 @@ extern void (*D_801F3F80[])(void); /* @source 0x801F3F80 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchByte1Handlers, dispatchByte1Handlers, D_801F3F6C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Handlers, D_801F3F6C);
 
 /* @behavior dispatches the scratch work byte at offset 1 of the scratchpad
  * cursor record through the local handler table at 0x801F3F80.
@@ -21,4 +21,4 @@ EMI_DEFINE_DISPATCHER(dispatchByte1Handlers, dispatchByte1Handlers, D_801F3F6C);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(dispatchScratchWorkByte1, dispatchScratchWorkByte1, D_801F3F80);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchScratchWorkByte1, D_801F3F80);
