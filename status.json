@@ -48,8 +48,8 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "4925745c971bda660343b1ebc2bc0f00087fd730",
-  "published_at": "2026-11-26T09:57:29.886004+00:00",
+  "revision": "65f1f330f37939cfe0fe2a05a72b20d5c54a1cdb",
+  "published_at": "2026-11-26T10:36:31.776750+00:00",
   "counts": {
     "completed": 6961,
     "partial": 376,
@@ -57,8 +57,8 @@
     "invalid": 0,
     "total": 10438,
     "symbols": {
-      "named": 7550,
-      "raw": 4029,
+      "named": 7824,
+      "raw": 3755,
       "total": 11579
     }
   },
@@ -68170,8 +68170,8 @@
       "invalid": 0,
       "total": 546,
       "symbols": {
-        "named": 214,
-        "raw": 146,
+        "named": 243,
+        "raw": 117,
         "total": 360
       },
       "binary": {
@@ -73238,7 +73238,7 @@
               {
                 "address": 2149285188,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801B7D44.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/resetWorkNextHandler.c#L12"
               }
             ]
           },
@@ -73368,7 +73368,7 @@
               {
                 "address": 2149286452,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801B8234.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/publishStateByteTwo.c#L10"
               }
             ]
           },
@@ -73459,7 +73459,7 @@
               {
                 "address": 2149287788,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801B876C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/setupRouteWorkMode.c#L10"
               }
             ]
           },
@@ -73537,7 +73537,7 @@
               {
                 "address": 2149290056,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801B9048.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/publishStateByteSix.c#L11"
               }
             ]
           },
@@ -73641,7 +73641,7 @@
               {
                 "address": 2149293832,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801B9F08.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/resolveCommandCodeShort.c#L14"
               }
             ]
           },
@@ -73654,7 +73654,7 @@
               {
                 "address": 2149294712,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BA278.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/resolveCommandCodeLong.c#L14"
               }
             ]
           },
@@ -73706,7 +73706,7 @@
               {
                 "address": 2149299952,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BB6F0_game00.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/checkRouteIndexSelector.c#L12"
               }
             ]
           },
@@ -73732,7 +73732,7 @@
               {
                 "address": 2149300144,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BB7B0_game00.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/decodeNibbleKindCode.c#L10"
               }
             ]
           },
@@ -73745,7 +73745,7 @@
               {
                 "address": 2149300252,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BB81C.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/compareTypeNibbleBytes.c#L12"
               }
             ]
           },
@@ -73823,7 +73823,7 @@
               {
                 "address": 2149309380,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BDBC4_game00.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/publishSharedFrontendWord.c#L16"
               }
             ]
           },
@@ -73959,7 +73959,7 @@
               {
                 "address": 2149312800,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BE920.c#L8"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/swapWorkRecords.c#L8"
               }
             ]
           },
@@ -74154,7 +74154,7 @@
               {
                 "address": 2149320972,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C090C_game00.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/publishAdjustedWorkPair.c#L16"
               }
             ]
           },
@@ -74167,7 +74167,7 @@
               {
                 "address": 2149321320,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C0A68.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchEnabledRecordHandler.c#L10"
               }
             ]
           },
@@ -74206,7 +74206,7 @@
               {
                 "address": 2149322036,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C0D34.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/submitWorkRequestFour.c#L10"
               }
             ]
           },
@@ -74232,7 +74232,7 @@
               {
                 "address": 2149322312,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C0E48_game00.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advancePendingWorkRequest.c#L18"
               }
             ]
           },
@@ -74245,7 +74245,7 @@
               {
                 "address": 2149322652,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C0F9C.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/commitPendingWorkRequest.c#L19"
               }
             ]
           },
@@ -74310,7 +74310,7 @@
               {
                 "address": 2149324864,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C1840.c#L9"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/clearStateGridBytes.c#L9"
               }
             ]
           },
@@ -74388,7 +74388,7 @@
               {
                 "address": 2149326668,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C1F4C_game00.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advanceUnclaimedSlotCounter.c#L14"
               }
             ]
           },
@@ -74427,7 +74427,7 @@
               {
                 "address": 2149327928,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C2438.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/markPaletteRowEntries.c#L15"
               }
             ]
           },
@@ -74492,7 +74492,7 @@
               {
                 "address": 2149329044,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C2894_game00.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/raiseWorkTintChannels.c#L18"
               }
             ]
           },
@@ -74583,7 +74583,7 @@
               {
                 "address": 2149331284,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C3154.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/copyClutRowShadow.c#L16"
               }
             ]
           },
@@ -74687,7 +74687,7 @@
               {
                 "address": 2149333236,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C38F4.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/countRecordGroupMatches.c#L15"
               }
             ]
           },
@@ -74700,7 +74700,7 @@
               {
                 "address": 2149333464,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C39D8.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchAlternateQuery.c#L11"
               }
             ]
           },
@@ -74791,7 +74791,7 @@
               {
                 "address": 2149336876,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C472C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchTileQueryMode.c#L10"
               }
             ]
           },
@@ -74973,7 +74973,7 @@
               {
                 "address": 2149340504,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C5558.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advanceAnimationPosition.c#L11"
               }
             ]
           },
@@ -75051,7 +75051,7 @@
               {
                 "address": 2149341240,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C5838.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchMainStateHandler.c#L13"
               }
             ]
           },
@@ -75285,7 +75285,7 @@
               {
                 "address": 2149347284,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801C6FD4.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/readBitmapPixel.c#L16"
               }
             ]
           },
@@ -84317,8 +84317,8 @@
       "invalid": 0,
       "total": 231,
       "symbols": {
-        "named": 130,
-        "raw": 146,
+        "named": 211,
+        "raw": 65,
         "total": 276
       },
       "binary": {
@@ -84851,7 +84851,7 @@
               {
                 "address": 2149399268,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3AE4.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/retreatPanelStripStep.c#L20"
               }
             ]
           },
@@ -84916,7 +84916,7 @@
               {
                 "address": 2149400716,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D408C_shop00.c#L22"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/selectorPanelPhaseStep.c#L22"
               }
             ]
           },
@@ -84929,7 +84929,7 @@
               {
                 "address": 2149401008,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D41B0.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiPhaseTable1.c#L10"
               }
             ]
           },
@@ -84968,7 +84968,7 @@
               {
                 "address": 2149401508,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D43A4.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dimTilePhaseStep1.c#L15"
               }
             ]
           },
@@ -85020,7 +85020,7 @@
               {
                 "address": 2149402132,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D4614_shop00.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/resetFramePhaseStep.c#L17"
               }
             ]
           },
@@ -85033,7 +85033,7 @@
               {
                 "address": 2149402276,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D46A4.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiSubTable1.c#L10"
               }
             ]
           },
@@ -85046,7 +85046,7 @@
               {
                 "address": 2149402336,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D46E0_shop00.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advancePanelSubstep.c#L12"
               }
             ]
           },
@@ -85059,7 +85059,7 @@
               {
                 "address": 2149402412,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D472C_shop00.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/archiveSubstepReset.c#L15"
               }
             ]
           },
@@ -85085,7 +85085,7 @@
               {
                 "address": 2149402992,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D4970.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/retreatValuePanelStep.c#L21"
               }
             ]
           },
@@ -85137,7 +85137,7 @@
               {
                 "address": 2149404084,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D4DB4_shop00.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/retreatPanelRowStep.c#L19"
               }
             ]
           },
@@ -85189,7 +85189,7 @@
               {
                 "address": 2149405584,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D5390.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advancePanelRowStep.c#L20"
               }
             ]
           },
@@ -85280,7 +85280,7 @@
               {
                 "address": 2149408152,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D5D98.c#L25"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/confirmPanelExitStep.c#L25"
               }
             ]
           },
@@ -85306,7 +85306,7 @@
               {
                 "address": 2149408792,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D6018.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/phaseGateBranchStep.c#L16"
               }
             ]
           },
@@ -85319,7 +85319,7 @@
               {
                 "address": 2149408944,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D60B0.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advancePanelStripStep.c#L18"
               }
             ]
           },
@@ -85332,7 +85332,7 @@
               {
                 "address": 2149409156,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D6184.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiPhaseTable2.c#L10"
               }
             ]
           },
@@ -85371,7 +85371,7 @@
               {
                 "address": 2149410208,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D65A0.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dimTilePhaseStep2.c#L14"
               }
             ]
           },
@@ -85397,7 +85397,7 @@
               {
                 "address": 2149410408,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D6668_shop00.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/rebuildFieldRecordsStep.c#L13"
               }
             ]
           },
@@ -85488,7 +85488,7 @@
               {
                 "address": 2149412068,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D6CE4_shop00.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/copyPanelRecordState.c#L10"
               }
             ]
           },
@@ -85540,7 +85540,7 @@
               {
                 "address": 2149412992,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D7080_shop00.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/formatShopHeaderRow.c#L15"
               }
             ]
           },
@@ -85566,7 +85566,7 @@
               {
                 "address": 2149413700,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D7344.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiPhaseTable3.c#L10"
               }
             ]
           },
@@ -85579,7 +85579,7 @@
               {
                 "address": 2149413760,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D7380.c#L34"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/finishSlotListStep.c#L34"
               }
             ]
           },
@@ -85631,7 +85631,7 @@
               {
                 "address": 2149415652,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D7AE4.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/setupSlotListStep.c#L17"
               }
             ]
           },
@@ -85644,7 +85644,7 @@
               {
                 "address": 2149415796,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D7B74_shop00.c#L22"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/commitSlotRowFlag.c#L22"
               }
             ]
           },
@@ -85657,7 +85657,7 @@
               {
                 "address": 2149416136,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D7CC8.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/rollbackSlotRowStep.c#L18"
               }
             ]
           },
@@ -85670,7 +85670,7 @@
               {
                 "address": 2149416264,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D7D48.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/retreatSlotRowStep.c#L20"
               }
             ]
           },
@@ -85813,7 +85813,7 @@
               {
                 "address": 2149421324,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D910C_shop00.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/mapShopIconKind.c#L13"
               }
             ]
           },
@@ -85878,7 +85878,7 @@
               {
                 "address": 2149425164,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DA00C_shop00.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/emitGraySpriteTile.c#L14"
               }
             ]
           },
@@ -85969,7 +85969,7 @@
               {
                 "address": 2149427652,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DA9C4.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/lookupShopValueRecord.c#L13"
               }
             ]
           },
@@ -85982,7 +85982,7 @@
               {
                 "address": 2149427832,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DAA78.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/sumShopRowValues.c#L10"
               }
             ]
           },
@@ -86008,7 +86008,7 @@
               {
                 "address": 2149428112,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DAB90.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawShopPanelFrame.c#L15"
               }
             ]
           },
@@ -86034,7 +86034,7 @@
               {
                 "address": 2149431608,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DB938_shop00.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawEquipPanelTask.c#L21"
               }
             ]
           },
@@ -86164,7 +86164,7 @@
               {
                 "address": 2149441456,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DDFB0.c#L31"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawShopValuePanel.c#L31"
               }
             ]
           },
@@ -86177,7 +86177,7 @@
               {
                 "address": 2149441928,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DE188.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiPhaseTable4.c#L10"
               }
             ]
           },
@@ -86190,7 +86190,7 @@
               {
                 "address": 2149441988,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DE1C4.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiSubTable2.c#L10"
               }
             ]
           },
@@ -86216,7 +86216,7 @@
               {
                 "address": 2149442504,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DE3C8_shop00.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/setFrontendModeStep.c#L12"
               }
             ]
           },
@@ -86229,7 +86229,7 @@
               {
                 "address": 2149442572,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DE40C_shop00.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/finishListCursorsStep.c#L12"
               }
             ]
           },
@@ -86242,7 +86242,7 @@
               {
                 "address": 2149442652,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DE45C.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/refreshListBackgroundStep.c#L17"
               }
             ]
           },
@@ -86268,7 +86268,7 @@
               {
                 "address": 2149443664,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DE850.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiSubTable3.c#L10"
               }
             ]
           },
@@ -86281,7 +86281,7 @@
               {
                 "address": 2149443724,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DE88C_shop00.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/gateDimTileSubstep.c#L15"
               }
             ]
           },
@@ -86294,7 +86294,7 @@
               {
                 "address": 2149443816,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DE8E8.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dimTileCountdownStep.c#L10"
               }
             ]
           },
@@ -86320,7 +86320,7 @@
               {
                 "address": 2149445152,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DEE20.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/resetShopStateGate.c#L10"
               }
             ]
           },
@@ -86411,7 +86411,7 @@
               {
                 "address": 2149448056,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DF978.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiPhaseTable5.c#L10"
               }
             ]
           },
@@ -86424,7 +86424,7 @@
               {
                 "address": 2149448116,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DF9B4_shop00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/rebuildListPhaseStep.c#L11"
               }
             ]
           },
@@ -86450,7 +86450,7 @@
               {
                 "address": 2149449144,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801DFDB8.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiSubTable4.c#L10"
               }
             ]
           },
@@ -86528,7 +86528,7 @@
               {
                 "address": 2149452076,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E092C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiSubTable5.c#L10"
               }
             ]
           },
@@ -86541,7 +86541,7 @@
               {
                 "address": 2149452136,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E0968.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/wrapPanelInitStep.c#L10"
               }
             ]
           },
@@ -86658,7 +86658,7 @@
               {
                 "address": 2149456844,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E1BCC.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/normalizeSkillBankPairs.c#L18"
               }
             ]
           },
@@ -86684,7 +86684,7 @@
               {
                 "address": 2149457284,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E1D84.c#L26"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/orderSkillNotesCost.c#L26"
               }
             ]
           },
@@ -86710,7 +86710,7 @@
               {
                 "address": 2149457932,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E200C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiPhaseTable6.c#L10"
               }
             ]
           },
@@ -86723,7 +86723,7 @@
               {
                 "address": 2149457992,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2048.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiSubTable6.c#L10"
               }
             ]
           },
@@ -86736,7 +86736,7 @@
               {
                 "address": 2149458052,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2084_shop00.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/initShopUiSubstep.c#L14"
               }
             ]
           },
@@ -86749,7 +86749,7 @@
               {
                 "address": 2149458124,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E20CC.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/clearSubstepCountdown.c#L10"
               }
             ]
           },
@@ -86762,7 +86762,7 @@
               {
                 "address": 2149458196,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2114.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiSubTable7.c#L10"
               }
             ]
           },
@@ -86801,7 +86801,7 @@
               {
                 "address": 2149459276,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E254C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/rewindSubstepTimer.c#L10"
               }
             ]
           },
@@ -86814,7 +86814,7 @@
               {
                 "address": 2149459344,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2590.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchUiSubTable8.c#L10"
               }
             ]
           },
@@ -86879,7 +86879,7 @@
               {
                 "address": 2149459748,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2724.c#L23"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/initShopPanelRecords.c#L23"
               }
             ]
           },
@@ -86892,7 +86892,7 @@
               {
                 "address": 2149459900,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E27BC.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/callPanelByteTable.c#L11"
               }
             ]
           },
@@ -86957,7 +86957,7 @@
               {
                 "address": 2149460424,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E29C8_shop00.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchCommandRowState.c#L20"
               }
             ]
           },
@@ -86996,7 +86996,7 @@
               {
                 "address": 2149460656,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2AB0_shop00.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchMoneyPanelState.c#L19"
               }
             ]
           },
@@ -87048,7 +87048,7 @@
               {
                 "address": 2149460932,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2BC4_shop00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/emitTaskBorderRect.c#L11"
               }
             ]
           },
@@ -87061,7 +87061,7 @@
               {
                 "address": 2149461016,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2C18_shop00.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchParameterState.c#L21"
               }
             ]
           },
@@ -87113,7 +87113,7 @@
               {
                 "address": 2149461340,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2D5C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advancePanelFieldStep.c#L10"
               }
             ]
           },
@@ -87126,7 +87126,7 @@
               {
                 "address": 2149461428,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2DB4_shop00.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchEquipPanelState.c#L21"
               }
             ]
           },
@@ -87165,7 +87165,7 @@
               {
                 "address": 2149461680,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E2EB0_shop00.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchPriceListState.c#L17"
               }
             ]
           },
@@ -87243,7 +87243,7 @@
               {
                 "address": 2149463800,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E36F8.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/forwardPanelTask1.c#L11"
               }
             ]
           },
@@ -87256,7 +87256,7 @@
               {
                 "address": 2149463840,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E3720_shop00.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchPanelState1.c#L19"
               }
             ]
           },
@@ -87308,7 +87308,7 @@
               {
                 "address": 2149464956,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E3B7C_shop00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/forwardPanelTask2.c#L11"
               }
             ]
           },
@@ -87321,7 +87321,7 @@
               {
                 "address": 2149464996,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E3BA4_shop00.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchPanelState2.c#L18"
               }
             ]
           },
@@ -87386,7 +87386,7 @@
               {
                 "address": 2149465336,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E3CF8_shop00.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchPanelState3.c#L18"
               }
             ]
           },
@@ -87451,7 +87451,7 @@
               {
                 "address": 2149465676,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E3E4C_shop00.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchFieldListState.c#L21"
               }
             ]
           },
@@ -87490,7 +87490,7 @@
               {
                 "address": 2149465908,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E3F34_shop00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/forwardSortOptionTask.c#L11"
               }
             ]
           },
@@ -87516,7 +87516,7 @@
               {
                 "address": 2149466660,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E4224_shop00.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchListBuildState.c#L19"
               }
             ]
           },
@@ -87568,7 +87568,7 @@
               {
                 "address": 2149466936,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E4338_shop00.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchPanelFrameState.c#L20"
               }
             ]
           },
@@ -87607,7 +87607,7 @@
               {
                 "address": 2149467148,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E440C_shop00.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchFieldIconState.c#L20"
               }
             ]
           },
@@ -87646,7 +87646,7 @@
               {
                 "address": 2149467360,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E44E0_shop00.c#L22"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchInkPanelState.c#L22"
               }
             ]
           },
@@ -87698,7 +87698,7 @@
               {
                 "address": 2149469228,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E4C2C.c#L26"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/checkShopEntryRequirement.c#L26"
               }
             ]
           },
@@ -87724,7 +87724,7 @@
               {
                 "address": 2149469684,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E4DF4.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawShopTexturePanel.c#L18"
               }
             ]
           },
@@ -87737,7 +87737,7 @@
               {
                 "address": 2149469852,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801E4E9C.c#L29"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawFieldGridPanel.c#L29"
               }
             ]
           },
@@ -88524,8 +88524,8 @@
       "invalid": 0,
       "total": 46,
       "symbols": {
-        "named": 12,
-        "raw": 66,
+        "named": 48,
+        "raw": 30,
         "total": 78
       },
       "binary": {
@@ -88612,7 +88612,7 @@
               {
                 "address": 2149387732,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D0DD4.c#L27"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/updateEntrySelectPanel.c#L27"
               }
             ]
           },
@@ -88625,7 +88625,7 @@
               {
                 "address": 2149388460,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D10AC_sisyou00.c#L25"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/updateEntryActionPanel.c#L25"
               }
             ]
           },
@@ -88638,7 +88638,7 @@
               {
                 "address": 2149389052,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D12FC_sisyou00.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advancePanelSlideIndex.c#L13"
               }
             ]
           },
@@ -88651,7 +88651,7 @@
               {
                 "address": 2149389380,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D1444_sisyou00.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/renderMasterSummaryPanel.c#L19"
               }
             ]
           },
@@ -88664,7 +88664,7 @@
               {
                 "address": 2149390204,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D177C_sisyou00.c#L28"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/renderMasterListRow.c#L28"
               }
             ]
           },
@@ -88677,7 +88677,7 @@
               {
                 "address": 2149391144,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D1B28_sisyou00.c#L23"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/renderEntryValueLine.c#L23"
               }
             ]
           },
@@ -88690,7 +88690,7 @@
               {
                 "address": 2149391428,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D1C44.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/sumValueRowPrefix.c#L11"
               }
             ]
           },
@@ -88703,7 +88703,7 @@
               {
                 "address": 2149391552,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D1CC0_sisyou00.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/renderSelectedEntryBorder.c#L17"
               }
             ]
           },
@@ -88716,7 +88716,7 @@
               {
                 "address": 2149391956,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D1E54_sisyou00.c#L25"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/renderPanelStrip.c#L25"
               }
             ]
           },
@@ -88729,7 +88729,7 @@
               {
                 "address": 2149393312,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D23A0_sisyou00.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/emitPanelKindSprite.c#L18"
               }
             ]
           },
@@ -88755,7 +88755,7 @@
               {
                 "address": 2149393880,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D25D8.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchModeHandler.c#L10"
               }
             ]
           },
@@ -88768,7 +88768,7 @@
               {
                 "address": 2149393940,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D2614_sisyou00.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/selectMasterEntryMode.c#L13"
               }
             ]
           },
@@ -88781,7 +88781,7 @@
               {
                 "address": 2149394056,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D2688.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchModeOneStep.c#L10"
               }
             ]
           },
@@ -88794,7 +88794,7 @@
               {
                 "address": 2149394116,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D26C4_sisyou00.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startMasterBaseAction.c#L12"
               }
             ]
           },
@@ -88807,7 +88807,7 @@
               {
                 "address": 2149394232,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D2738_sisyou00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/enterEntryClaimMode.c#L11"
               }
             ]
           },
@@ -88820,7 +88820,7 @@
               {
                 "address": 2149394316,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D278C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchModeTwoStep.c#L10"
               }
             ]
           },
@@ -88833,7 +88833,7 @@
               {
                 "address": 2149394376,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D27C8_sisyou00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startEntryActionFive.c#L11"
               }
             ]
           },
@@ -88846,7 +88846,7 @@
               {
                 "address": 2149394476,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D282C_sisyou00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startEntryActionSix.c#L11"
               }
             ]
           },
@@ -88859,7 +88859,7 @@
               {
                 "address": 2149394608,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D28B0_sisyou00.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/waitAllEntriesOwned.c#L16"
               }
             ]
           },
@@ -88872,7 +88872,7 @@
               {
                 "address": 2149394888,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D29C8_sisyou00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startEntryActionEight.c#L11"
               }
             ]
           },
@@ -88885,7 +88885,7 @@
               {
                 "address": 2149395020,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D2A4C_sisyou00.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/waitNoEntriesOwned.c#L16"
               }
             ]
           },
@@ -88898,7 +88898,7 @@
               {
                 "address": 2149395300,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D2B64_sisyou00.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startEntryActionFour.c#L12"
               }
             ]
           },
@@ -88911,7 +88911,7 @@
               {
                 "address": 2149395432,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D2BE8.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchModeThreeStep.c#L10"
               }
             ]
           },
@@ -88924,7 +88924,7 @@
               {
                 "address": 2149395492,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D2C24.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startEntryClaimPanel.c#L10"
               }
             ]
           },
@@ -88950,7 +88950,7 @@
               {
                 "address": 2149395620,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D2CA4_sisyou00.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/claimSelectedEntry.c#L19"
               }
             ]
           },
@@ -88963,7 +88963,7 @@
               {
                 "address": 2149396676,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D30C4_sisyou00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startEntryActionEleven.c#L11"
               }
             ]
           },
@@ -88976,7 +88976,7 @@
               {
                 "address": 2149396808,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3148_sisyou00.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/recheckAllEntriesOwned.c#L15"
               }
             ]
           },
@@ -89002,7 +89002,7 @@
               {
                 "address": 2149397204,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D32D4.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchModeFourStep.c#L10"
               }
             ]
           },
@@ -89015,7 +89015,7 @@
               {
                 "address": 2149397264,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3310.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startEntryReleasePanel.c#L10"
               }
             ]
           },
@@ -89041,7 +89041,7 @@
               {
                 "address": 2149397392,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3390_sisyou00.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/releaseSelectedEntry.c#L17"
               }
             ]
           },
@@ -89054,7 +89054,7 @@
               {
                 "address": 2149398292,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3714_sisyou00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/startEntryActionThirteen.c#L11"
               }
             ]
           },
@@ -89067,7 +89067,7 @@
               {
                 "address": 2149398424,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3798_sisyou00.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/recheckNoEntriesOwned.c#L15"
               }
             ]
           },
@@ -89093,7 +89093,7 @@
               {
                 "address": 2149398820,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3924.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/dispatchModeFiveStep.c#L10"
               }
             ]
           },
@@ -89106,7 +89106,7 @@
               {
                 "address": 2149398880,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3960_sisyou00.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/restartEntryActionFive.c#L11"
               }
             ]
           },
@@ -89132,7 +89132,7 @@
               {
                 "address": 2149399076,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3A24_sisyou00.c#L35"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/confirmSelectedEntry.c#L35"
               }
             ]
           },
@@ -89145,7 +89145,7 @@
               {
                 "address": 2149400176,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801D3E70.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/advanceEntryCursor.c#L10"
               }
             ]
           },
@@ -97584,8 +97584,8 @@
       "invalid": 0,
       "total": 24,
       "symbols": {
-        "named": 7,
-        "raw": 21,
+        "named": 24,
+        "raw": 4,
         "total": 28
       },
       "binary": {
@@ -97651,7 +97651,7 @@
               {
                 "address": 2149387932,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D0E9C.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/dispatchByte2Handlers.c#L12"
               }
             ]
           },
@@ -97677,7 +97677,7 @@
               {
                 "address": 2149388204,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D0FAC.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderModeBands.c#L12"
               }
             ]
           },
@@ -97690,7 +97690,7 @@
               {
                 "address": 2149388340,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D1034.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/reseedScratchRotationDistance.c#L15"
               }
             ]
           },
@@ -97703,7 +97703,7 @@
               {
                 "address": 2149388488,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D10C8.c#L9"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/advanceScratchProgressUntil18.c#L9"
               }
             ]
           },
@@ -97729,7 +97729,7 @@
               {
                 "address": 2149388704,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D11A0.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/tickScratchProgressAdvance.c#L11"
               }
             ]
           },
@@ -97742,7 +97742,7 @@
               {
                 "address": 2149388824,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D1218.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderModeBandsRadial.c#L12"
               }
             ]
           },
@@ -97781,7 +97781,7 @@
               {
                 "address": 2149389360,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D1430.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/advanceOrbitOuterTimer.c#L16"
               }
             ]
           },
@@ -97794,7 +97794,7 @@
               {
                 "address": 2149389636,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D1544.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/advanceOrbitOuterProgress.c#L17"
               }
             ]
           },
@@ -97807,7 +97807,7 @@
               {
                 "address": 2149389916,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D165C.c#L66"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderTranslucentRadialBands.c#L66"
               }
             ]
           },
@@ -97820,7 +97820,7 @@
               {
                 "address": 2149391704,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D1D58.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderModeRandomRadial.c#L12"
               }
             ]
           },
@@ -97833,7 +97833,7 @@
               {
                 "address": 2149391840,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D1DE0.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/reseedScratchRotationOffset.c#L19"
               }
             ]
           },
@@ -97846,7 +97846,7 @@
               {
                 "address": 2149392124,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D1EFC.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/advanceScratchProgressHold.c#L10"
               }
             ]
           },
@@ -97859,7 +97859,7 @@
               {
                 "address": 2149392208,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D1F50.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/advanceOrbitInnerTimer.c#L16"
               }
             ]
           },
@@ -97872,7 +97872,7 @@
               {
                 "address": 2149392484,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D2064.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/advanceOrbitMiddleProgress.c#L17"
               }
             ]
           },
@@ -97885,7 +97885,7 @@
               {
                 "address": 2149392780,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D218C.c#L24"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderRandomRadialBands.c#L24"
               }
             ]
           },
@@ -97911,7 +97911,7 @@
               {
                 "address": 2149394008,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801D2658.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/projectScratchScreenPosition.c#L11"
               }
             ]
           },
@@ -99757,8 +99757,8 @@
       "invalid": 0,
       "total": 63,
       "symbols": {
-        "named": 19,
-        "raw": 61,
+        "named": 63,
+        "raw": 17,
         "total": 80
       },
       "binary": {
@@ -99889,7 +99889,7 @@
               {
                 "address": 2149544872,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F73A8.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateDecayWorkTint.c#L14"
               }
             ]
           },
@@ -99902,7 +99902,7 @@
               {
                 "address": 2149545024,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7440.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/dispatchObjectFrameStage.c#L16"
               }
             ]
           },
@@ -99941,7 +99941,7 @@
               {
                 "address": 2149545584,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7670.c#L39"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderTrailCursorSweep.c#L39"
               }
             ]
           },
@@ -99954,7 +99954,7 @@
               {
                 "address": 2149546188,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F78CC.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateResetWorkFlags2.c#L13"
               }
             ]
           },
@@ -99967,7 +99967,7 @@
               {
                 "address": 2149546220,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F78EC.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderCursorPairQuad.c#L20"
               }
             ]
           },
@@ -99980,7 +99980,7 @@
               {
                 "address": 2149546520,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7A18.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/dispatchTrailFrameStage.c#L18"
               }
             ]
           },
@@ -99993,7 +99993,7 @@
               {
                 "address": 2149546588,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7A5C.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateSeedTrailPhase.c#L20"
               }
             ]
           },
@@ -100006,7 +100006,7 @@
               {
                 "address": 2149546764,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7B0C.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderFirstEntryEffect.c#L14"
               }
             ]
           },
@@ -100019,7 +100019,7 @@
               {
                 "address": 2149546880,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7B80.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderSecondEntryEffect.c#L16"
               }
             ]
           },
@@ -100032,7 +100032,7 @@
               {
                 "address": 2149547060,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7C34.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderThirdEntryEffect.c#L18"
               }
             ]
           },
@@ -100058,7 +100058,7 @@
               {
                 "address": 2149547464,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7DC8.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderFifthEntryEffect.c#L20"
               }
             ]
           },
@@ -100071,7 +100071,7 @@
               {
                 "address": 2149547744,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7EE0.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderSixthEntryEffect.c#L20"
               }
             ]
           },
@@ -100084,7 +100084,7 @@
               {
                 "address": 2149548052,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F8014.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderSeventhEntryEffect.c#L18"
               }
             ]
           },
@@ -100097,7 +100097,7 @@
               {
                 "address": 2149548352,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F8140.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderEighthEntryEffect.c#L21"
               }
             ]
           },
@@ -100110,7 +100110,7 @@
               {
                 "address": 2149548724,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F82B4.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateEntryFadeTick.c#L18"
               }
             ]
           },
@@ -100123,7 +100123,7 @@
               {
                 "address": 2149548896,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F8360.c#L34"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderEntrySpinShapes.c#L34"
               }
             ]
           },
@@ -100136,7 +100136,7 @@
               {
                 "address": 2149549480,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F85A8.c#L33"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/renderEntryFlare.c#L33"
               }
             ]
           },
@@ -100149,7 +100149,7 @@
               {
                 "address": 2149549896,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F8748.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/dispatchFadeStepHandler.c#L15"
               }
             ]
           },
@@ -100162,7 +100162,7 @@
               {
                 "address": 2149549964,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F878C.c#L22"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateSeedTrailQuad.c#L22"
               }
             ]
           },
@@ -100175,7 +100175,7 @@
               {
                 "address": 2149550124,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F882C.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateFadeTrailColumn.c#L20"
               }
             ]
           },
@@ -100188,7 +100188,7 @@
               {
                 "address": 2149550384,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F8930.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateFadeTrailRow.c#L18"
               }
             ]
           },
@@ -100201,7 +100201,7 @@
               {
                 "address": 2149550576,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F89F0.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateSeedWorkRecord.c#L18"
               }
             ]
           },
@@ -100214,7 +100214,7 @@
               {
                 "address": 2149550776,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F8AB8.c#L28"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateTrailProjectStep.c#L28"
               }
             ]
           },
@@ -100227,7 +100227,7 @@
               {
                 "address": 2149551052,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/emitWorkObjectTexturedQuad_801F8BCC.c#L31"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/emitObjectTexturedQuad.c#L31"
               }
             ]
           },
@@ -100240,7 +100240,7 @@
               {
                 "address": 2149551472,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F8D70.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/callLinkedCursorBeam.c#L16"
               }
             ]
           },
@@ -100266,7 +100266,7 @@
               {
                 "address": 2149552444,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F913C.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/dispatchStageStateByte.c#L14"
               }
             ]
           },
@@ -100292,7 +100292,7 @@
               {
                 "address": 2149552860,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F92DC.c#L49"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateRouteStageHandler.c#L49"
               }
             ]
           },
@@ -100305,7 +100305,7 @@
               {
                 "address": 2149553732,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F9644.c#L25"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/statePathTwoSetup.c#L25"
               }
             ]
           },
@@ -100318,7 +100318,7 @@
               {
                 "address": 2149554280,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F9868.c#L32"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/statePathThreeStep.c#L32"
               }
             ]
           },
@@ -100331,7 +100331,7 @@
               {
                 "address": 2149555096,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F9B98.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/dispatchPrimarySubstateByte.c#L15"
               }
             ]
           },
@@ -100344,7 +100344,7 @@
               {
                 "address": 2149555156,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F9BD4.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/noopPrimaryStateZero.c#L13"
               }
             ]
           },
@@ -100357,7 +100357,7 @@
               {
                 "address": 2149555164,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F9BDC.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/noopPrimaryStateOne.c#L13"
               }
             ]
           },
@@ -100370,7 +100370,7 @@
               {
                 "address": 2149555172,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F9BE4.c#L23"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/statePrimaryStageChain.c#L23"
               }
             ]
           },
@@ -100383,7 +100383,7 @@
               {
                 "address": 2149556152,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F9FB8.c#L30"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateSecondaryStageChain.c#L30"
               }
             ]
           },
@@ -100396,7 +100396,7 @@
               {
                 "address": 2149556860,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FA27C.c#L33"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateProgressCueChain.c#L33"
               }
             ]
           },
@@ -100409,7 +100409,7 @@
               {
                 "address": 2149558232,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FA7D8.c#L50"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateCameraStageChain.c#L50"
               }
             ]
           },
@@ -100422,7 +100422,7 @@
               {
                 "address": 2149560172,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FAF6C.c#L22"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateRouteExitChain.c#L22"
               }
             ]
           },
@@ -100435,7 +100435,7 @@
               {
                 "address": 2149560836,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FB204.c#L34"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateRouteEntryChain.c#L34"
               }
             ]
           },
@@ -100448,7 +100448,7 @@
               {
                 "address": 2149561888,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FB620.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateFlagSixReset.c#L18"
               }
             ]
           },
@@ -100461,7 +100461,7 @@
               {
                 "address": 2149561980,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FB67C.c#L22"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateCueCountdownTick.c#L22"
               }
             ]
           },
@@ -100474,7 +100474,7 @@
               {
                 "address": 2149562180,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FB744.c#L28"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateWorldOffsetEntry.c#L28"
               }
             ]
           },
@@ -100487,7 +100487,7 @@
               {
                 "address": 2149562660,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FB924.c#L53"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateTurnInputChain.c#L53"
               }
             ]
           },
@@ -100513,7 +100513,7 @@
               {
                 "address": 2149564444,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FC01C.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateSeedRecordChannels.c#L14"
               }
             ]
           },
@@ -100526,7 +100526,7 @@
               {
                 "address": 2149565344,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FC3A0.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateAdvanceRecordChannels.c#L10"
               }
             ]
           },
@@ -118539,8 +118539,8 @@
       "invalid": 0,
       "total": 48,
       "symbols": {
-        "named": 21,
-        "raw": 37,
+        "named": 50,
+        "raw": 8,
         "total": 58
       },
       "binary": {
@@ -118679,7 +118679,7 @@
               {
                 "address": 2149527416,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2F78_area00813.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/rearmCountdownSelect.c#L14"
               }
             ]
           },
@@ -118692,7 +118692,7 @@
               {
                 "address": 2149527568,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3010_area00813.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateCueSelectMode7.c#L17"
               }
             ]
           },
@@ -118705,7 +118705,7 @@
               {
                 "address": 2149527736,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F30B8_area00813.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/armCountdownSelectMode8.c#L19"
               }
             ]
           },
@@ -118718,7 +118718,7 @@
               {
                 "address": 2149527932,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F317C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateSecondaryByteSelect2.c#L10"
               }
             ]
           },
@@ -118731,7 +118731,7 @@
               {
                 "address": 2149528016,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F31D0_area00813.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/clearStateFlagReset.c#L16"
               }
             ]
           },
@@ -118770,7 +118770,7 @@
               {
                 "address": 2149528236,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F32AC.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/clearEntityActivitySelect.c#L10"
               }
             ]
           },
@@ -118783,7 +118783,7 @@
               {
                 "address": 2149528388,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3344_area00813.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateSecondaryResourceSelect.c#L17"
               }
             ]
           },
@@ -118796,7 +118796,7 @@
               {
                 "address": 2149528560,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F33F0_area00813.c#L23"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advanceSelectorCueSelect.c#L23"
               }
             ]
           },
@@ -118822,7 +118822,7 @@
               {
                 "address": 2149528956,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F357C_area00813.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/armEntityActivitySelect.c#L18"
               }
             ]
           },
@@ -118835,7 +118835,7 @@
               {
                 "address": 2149529172,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3654.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/noopMode6.c#L12"
               }
             ]
           },
@@ -118848,7 +118848,7 @@
               {
                 "address": 2149529180,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F365C.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/checkEntityPairSelect8.c#L14"
               }
             ]
           },
@@ -118861,7 +118861,7 @@
               {
                 "address": 2149529308,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F36DC_area00813.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/armEntityActivitySelect2.c#L17"
               }
             ]
           },
@@ -118874,7 +118874,7 @@
               {
                 "address": 2149529524,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F37B4.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/noopMode9.c#L12"
               }
             ]
           },
@@ -118887,7 +118887,7 @@
               {
                 "address": 2149529532,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F37BC_area00813.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/requestEntityPairSelect.c#L16"
               }
             ]
           },
@@ -118900,7 +118900,7 @@
               {
                 "address": 2149529692,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F385C_area00813.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/checkEntityPairSelect12.c#L13"
               }
             ]
           },
@@ -118913,7 +118913,7 @@
               {
                 "address": 2149529820,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F38DC_area00813.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/armEntityActivitySelect3.c#L17"
               }
             ]
           },
@@ -118926,7 +118926,7 @@
               {
                 "address": 2149530036,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F39B4.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/noopMode13.c#L12"
               }
             ]
           },
@@ -118939,7 +118939,7 @@
               {
                 "address": 2149530044,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F39BC_area00813.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/armEntityActivityReset.c#L17"
               }
             ]
           },
@@ -118965,7 +118965,7 @@
               {
                 "address": 2149530280,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3AA8.c#L9"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/resetScratchTimerAdvance.c#L9"
               }
             ]
           },
@@ -118978,7 +118978,7 @@
               {
                 "address": 2149530344,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3AE8.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawStatusCountdown.c#L12"
               }
             ]
           },
@@ -118991,7 +118991,7 @@
               {
                 "address": 2149530548,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3BB4_area00813.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/disableFlagStopEffect.c#L16"
               }
             ]
           },
@@ -119043,7 +119043,7 @@
               {
                 "address": 2149532372,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F42D4.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/statePublishModeProgress.c#L11"
               }
             ]
           },
@@ -119056,7 +119056,7 @@
               {
                 "address": 2149532468,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F4334_area00813.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/queueWorldMarkerTriple.c#L11"
               }
             ]
           },
@@ -119069,7 +119069,7 @@
               {
                 "address": 2149532540,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F437C_area00813.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/textPublishMaskedCount.c#L11"
               }
             ]
           },
@@ -119082,7 +119082,7 @@
               {
                 "address": 2149532616,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F43C8_area00813.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/textPublishCountCue.c#L12"
               }
             ]
           },
@@ -119095,7 +119095,7 @@
               {
                 "address": 2149532708,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F4424_area00813.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateClaimFrontendSlot.c#L14"
               }
             ]
           },
@@ -119212,7 +119212,7 @@
               {
                 "address": 2149533212,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F461C_area00813.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/queueWorldMarkerBlock.c#L12"
               }
             ]
           },
@@ -119834,8 +119834,8 @@
       "invalid": 0,
       "total": 34,
       "symbols": {
-        "named": 13,
-        "raw": 40,
+        "named": 34,
+        "raw": 19,
         "total": 53
       },
       "binary": {
@@ -119875,7 +119875,7 @@
               {
                 "address": 2149526584,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2C38_area01613.c#L25"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/loadEquipNameEntries.c#L25"
               }
             ]
           },
@@ -119901,7 +119901,7 @@
               {
                 "address": 2149527648,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3060_area01613.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/initializeWorkCycle.c#L11"
               }
             ]
           },
@@ -119914,7 +119914,7 @@
               {
                 "address": 2149527788,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F30EC_area01613.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/selectCellWorkSequence.c#L16"
               }
             ]
           },
@@ -119927,7 +119927,7 @@
               {
                 "address": 2149528100,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3224_area01613.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advanceWorkRamp.c#L13"
               }
             ]
           },
@@ -119940,7 +119940,7 @@
               {
                 "address": 2149528224,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F32A0_area01613.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/rearmWorkRamp.c#L16"
               }
             ]
           },
@@ -119953,7 +119953,7 @@
               {
                 "address": 2149528416,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3360_area01613.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/retreatWorkRamp.c#L15"
               }
             ]
           },
@@ -120031,7 +120031,7 @@
               {
                 "address": 2149528844,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F350C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/armScratchHeightState02.c#L10"
               }
             ]
           },
@@ -120070,7 +120070,7 @@
               {
                 "address": 2149529096,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3608.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/retreatScratchHeightState02.c#L12"
               }
             ]
           },
@@ -120096,7 +120096,7 @@
               {
                 "address": 2149529296,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F36D0_area01613.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/resetScratchHeightState03.c#L10"
               }
             ]
           },
@@ -120109,7 +120109,7 @@
               {
                 "address": 2149529424,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3750_area01613.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/lowerScratchHeightState03.c#L14"
               }
             ]
           },
@@ -120122,7 +120122,7 @@
               {
                 "address": 2149529640,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3828_area01613.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/holdScratchHeightState03.c#L14"
               }
             ]
           },
@@ -120135,7 +120135,7 @@
               {
                 "address": 2149529896,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3928_area01613.c#L9"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/liftScratchHeightState03.c#L9"
               }
             ]
           },
@@ -120161,7 +120161,7 @@
               {
                 "address": 2149530368,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3B00.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawMaskedMarkerLayers.c#L10"
               }
             ]
           },
@@ -120187,7 +120187,7 @@
               {
                 "address": 2149531844,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F40C4.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/emitMarkerSpritePair.c#L10"
               }
             ]
           },
@@ -120213,7 +120213,7 @@
               {
                 "address": 2149532092,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F41BC_area01613.c#L23"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/claimRandomFrontRecords.c#L23"
               }
             ]
           },
@@ -120226,7 +120226,7 @@
               {
                 "address": 2149532408,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F42F8_area01613.c#L24"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/seedWorkSequenceStep.c#L24"
               }
             ]
           },
@@ -120239,7 +120239,7 @@
               {
                 "address": 2149532968,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F4528_area01613.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advanceWorkSequenceStep.c#L14"
               }
             ]
           },
@@ -120265,7 +120265,7 @@
               {
                 "address": 2149533200,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F4610_area01613.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stampMapCellCode.c#L18"
               }
             ]
           },
@@ -120291,7 +120291,7 @@
               {
                 "address": 2149533544,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F4768_area01613.c#L60"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/renderTexturedPanelGrid.c#L60"
               }
             ]
           },
@@ -125936,8 +125936,8 @@
       "invalid": 0,
       "total": 23,
       "symbols": {
-        "named": 6,
-        "raw": 22,
+        "named": 23,
+        "raw": 5,
         "total": 28
       },
       "binary": {
@@ -126016,7 +126016,7 @@
               {
                 "address": 2149527140,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2E64.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/renderFanRadiusExpires.c#L13"
               }
             ]
           },
@@ -126042,7 +126042,7 @@
               {
                 "address": 2149527300,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2F04.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/renderGouraudFanTriangles.c#L11"
               }
             ]
           },
@@ -126068,7 +126068,7 @@
               {
                 "address": 2149527788,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F30EC_area03213.c#L37"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateArmEffectPair.c#L37"
               }
             ]
           },
@@ -126081,7 +126081,7 @@
               {
                 "address": 2149528704,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3480.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateCountdownReleasePair.c#L14"
               }
             ]
           },
@@ -126094,7 +126094,7 @@
               {
                 "address": 2149529012,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F35B4_area03213.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/submitWorkRecordPair.c#L12"
               }
             ]
           },
@@ -126107,7 +126107,7 @@
               {
                 "address": 2149529148,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F363C_area03213.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/publishWorkBaseGate.c#L17"
               }
             ]
           },
@@ -126120,7 +126120,7 @@
               {
                 "address": 2149529248,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F36A0.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateSeedGateProgress.c#L11"
               }
             ]
           },
@@ -126133,7 +126133,7 @@
               {
                 "address": 2149529316,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F36E4.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/dispatchByte4Table4900.c#L11"
               }
             ]
           },
@@ -126146,7 +126146,7 @@
               {
                 "address": 2149529384,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3728_area03213.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateArmCursorPalette.c#L12"
               }
             ]
           },
@@ -126159,7 +126159,7 @@
               {
                 "address": 2149529484,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F378C_area03213.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateQueryLevelGate.c#L19"
               }
             ]
           },
@@ -126172,7 +126172,7 @@
               {
                 "address": 2149529600,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3800.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/dispatchByte4Table4908.c#L11"
               }
             ]
           },
@@ -126185,7 +126185,7 @@
               {
                 "address": 2149529668,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3844_area03213.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateBootPositionalEffect.c#L15"
               }
             ]
           },
@@ -126198,7 +126198,7 @@
               {
                 "address": 2149529888,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3920_area03213.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateAdvanceLevelBytes.c#L15"
               }
             ]
           },
@@ -126211,7 +126211,7 @@
               {
                 "address": 2149530232,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3A78_area03213.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/spawnEntryQuarterTurn.c#L17"
               }
             ]
           },
@@ -126224,7 +126224,7 @@
               {
                 "address": 2149530648,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3C18_area03213.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/spawnEntryWorkLink.c#L15"
               }
             ]
           },
@@ -126237,7 +126237,7 @@
               {
                 "address": 2149530920,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3D28_area03213.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/spawnEntryKindTag.c#L13"
               }
             ]
           },
@@ -126250,7 +126250,7 @@
               {
                 "address": 2149531084,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3DCC_area03213.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/spawnEntryHalfTurn.c#L17"
               }
             ]
           },
