@@ -967,8 +967,8 @@ segments:
     - func_801A852C
   - - 77524
     - c
-    - dispatchRecordCallbackByByte7A
-    - '@source: src/bof3/ui/dispatchRecordCallbackByByte7A_game00_801A86D4.c'
+    - dispatchRecordCallback
+    - '@source: src/bof3/ui/dispatchRecordCallback.c'
     - '@behavior: dispatches through the handler table at D_801C85F0 indexed by the work byte at 0x7A, passing D_80144F28 as the second argument.'
   - - 77588
     - c
@@ -1870,8 +1870,8 @@ segments:
     - '@behavior: Dispatches the indexed handler for the current scenario.'
   - - 181896
     - c
-    - countActiveRecordsForSlot
-    - '@source: src/bof3/ui/countActiveRecordsForSlot_game00_801C1E88.c'
+    - countActiveRecords
+    - '@source: src/bof3/ui/countActiveRecords2.c'
     - '@behavior: counts the active front-end records claimed by an entry slot whose kind byte is 4 and whose argument byte equals arg0, then increments the supplied counter when no record claims a matching slot.'
   - - 182092
     - c

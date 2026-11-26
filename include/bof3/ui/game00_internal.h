@@ -126,7 +126,7 @@ void func_801F45BC(void);
 void func_801F4B00(void);
 
 int func_801C0F9C(s32 arg0);
-void countActiveRecordsForSlot(u8 arg0, s32* counter);
+void countActiveRecords(u8 arg0, s32* counter);
 void func_801C1F4C(u8 arg0);
 void func_801C2438(void);
 void func_801C2538(void);
@@ -355,7 +355,7 @@ typedef struct RecordSlot {
   u8 pad[0x6E]; /* 0x74 - 6 */
 } RecordSlot;
 
-/* Work record passed to dispatchRecordCallbackByByte7A; only the handler selector byte at
+/* Work record passed to dispatchRecordCallback; only the handler selector byte at
  * 0x7A is proven. */
 typedef struct GameIndexedWork {
   u8 pad_00[0x7A];

@@ -14,7 +14,7 @@ sources = [
     "src/bof3/bmagic/stateRaiseFlagStep.c",
     "src/bof3/bmagic/raiseFlag4InvokeHelper.c",
     "src/bof3/bmagic/callActingEnemyScript.c",
-    "src/bof3/bmagic/callAFC54ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic00100_801EEF34.c",
+    "src/bof3/bmagic/clearRecordFlagAdvance.c",
 ]
 support_sources = [
     "src/bof3/bmagic/callHelpersRetreatReady.c",

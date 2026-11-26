@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void countdownWorkByte9ClearQueuedSlot(void) {
+void countdownByte9ClearSlot(void) {
   u16* flags;
 
   func_8014DAEC();

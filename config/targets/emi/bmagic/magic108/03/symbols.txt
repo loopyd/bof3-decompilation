@@ -1,5 +1,5 @@
 g_battle_work = 0x1F800044;
-dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04 = 0x801EEC04;
+dispatchLocalHandlers = 0x801EEC04;
 queueActionPointerTriplet = 0x801EEC5C;
 func_801EED1C = 0x801EED1C;
 callTwoMatrixPasses = 0x801EED7C;

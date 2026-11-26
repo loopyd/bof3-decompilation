@@ -41,7 +41,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
  * @match 100.00
  * @residual none
  */
-void callAFC54ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZero(void) {
+void clearRecordFlagAdvance(void) {
   if (D_1F800044[0xB] == 0) {
     func_800AFC54();
     D_801EB4E0[0] &= 0xBF;

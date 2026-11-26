@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void countdownWorkByte9DecayTripleEnemyReady(void)
+void countdownByte9EnemyReady(void)
 {
     if (D_1F800044->unk_09 != 0) {
         D_1F800044->unk_09--;

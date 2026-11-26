@@ -214,12 +214,7 @@ def _collect_files(plan: RenamePlan, root: Path, manifest) -> None:
     )
 
     grouped = False
-    # A shared unit carries its target as a discriminator suffix:
-    # `integrateMotionOrResetState_battle03.c` is the unit named by the old spelling.
-    if plan.source is not None and (
-        _stem_base(plan.source.stem) == _stem_base(plan.old)
-        or plan.source.stem.startswith(plan.old + "_")
-    ):
+    if plan.source is not None and _carries_spelling(plan.source.stem, plan.old):
         text = plan.source.read_text(encoding="utf-8")
         # One metadata block can still carry several definitions: a dispatch
         # table unit names many handlers. Any such unit keeps its filename.
@@ -273,6 +268,23 @@ def _collect_files(plan: RenamePlan, root: Path, manifest) -> None:
                 f"{path.relative_to(root).as_posix()} names a file after {plan.old} "
                 "but no owned unit carries that stem",
             )
+
+
+TAIL = re.compile(r"(?:Bmagic|Bboss|World\d\d|Plchar|Scenario|Scena|Emi|Batl|Commpo)\w*\d+$")
+
+def _carries_spelling(stem: str, old: str) -> bool:
+    """True when a unit's file name carries the map spelling it renames.
+
+    A unit may keep a discriminator (`_battle03`) or the machine tail it was harvested
+    with (`BmagicMagic00100_801EEF34`); both still name the same row.
+    """
+    base = _stem_base(stem)
+    target = _stem_base(old)
+    if base == target or stem.startswith(target + "_"):
+        return True
+    if not base.startswith(target):
+        return False
+    return bool(TAIL.match(base[len(target):]))
 
 
 def _stem_base(stem: str) -> str:

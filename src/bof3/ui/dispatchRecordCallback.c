@@ -7,6 +7,6 @@
  * @match 100.00
  * @residual none
  */
-s32 dispatchRecordCallbackByByte7A(GameIndexedWork* work) {
+s32 dispatchRecordCallback(GameIndexedWork* work) {
   return D_801C85F0[work->handler_index_7A](work, D_80144F28);
 }

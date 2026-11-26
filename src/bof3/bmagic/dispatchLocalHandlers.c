@@ -46,7 +46,7 @@ void func_801EED1C(void);
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04(void) {
+void dispatchLocalHandlers(void) {
   void (*handlers[2])(void) = {
       queueActionPointerTriplet,
       func_801EED1C};

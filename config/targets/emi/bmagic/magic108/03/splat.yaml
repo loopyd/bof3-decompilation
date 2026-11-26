@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04
-    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04.c'
+    - dispatchLocalHandlers
+    - '@source: src/bof3/bmagic/dispatchLocalHandlers.c'
   - - 92
     - c
     - queueActionPointerTriplet

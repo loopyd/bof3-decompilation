@@ -1,6 +1,6 @@
 dispatchWorkByte1Slot = 0x801EEC64;
 stateSelectedBattlerRaise = 0x801EECC4;
-callAFC54ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZero = 0x801EEF34;
+clearRecordFlagAdvance = 0x801EEF34;
 stateRaiseFlagStep = 0x801EEFA4;
 callStateTable04 = 0x801EEFD8;
 func_801EF01C = 0x801EF01C;

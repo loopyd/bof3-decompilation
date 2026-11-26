@@ -1060,8 +1060,8 @@ segments:
     - '@source: src/bof3/battle/callByte3Table32.c'
   - - 75900
     - c
-    - applyModeOffsetPairToWork
-    - '@source: src/bof3/battle/applyModeOffsetPairToWork_battle03.c'
+    - applyModeOffsetPair
+    - '@source: src/bof3/battle/applyModeOffsetPair.c'
     - '@behavior: Clears scratch work flag bit 6, runs the enemy script byte helper func_801E2314 for class 0, mirrors the work pair +0x34/+0x38 into +0x18/+0x1C, subtracts the mode-rotated 8.0 offset pair from +0x34, republishes the mode-rotated 0.5 offset pair at +0x0C/+0x10, then advances scratch work byte +0x02.'
   - - 76076
     - c
@@ -1146,8 +1146,8 @@ segments:
     - '@behavior: Clears the current enemy work halfword +0xF8, publishes the scratch work pair +0x0C/+0x10 as -0x2000/0, mode-transforms that pair, reloads scratch work byte +0x0A to 4, runs enemyReadyOrHelper1 and func_8015DF18(0x205), then advances scratch work byte +0x03.'
   - - 80196
     - c
-    - countdownWorkByteAdvancePairEnemyReady
-    - '@source: src/bof3/battle/countdownWorkByteAdvancePairEnemyReady_battle03.c'
+    - countdownPairEnemyReady
+    - '@source: src/bof3/battle/countdownPairEnemyReady.c'
     - '@behavior: Counts down scratch work byte +0x0A, reloading it to 4 and advancing work byte +0x03 when it expires, then advances the work position pair +0x34/+0x38 by the delta pair +0x0C/+0x10 and runs enemyReadyOrHelper1.'
   - - 80348
     - c
@@ -1248,8 +1248,8 @@ segments:
     - '@behavior: Initializes the mode-transformed work pair, toggles mode bit 1, seeds countdowns and the decay triple, submits the positional helper and cue 0x102, runs enemy readiness and advances work byte +0x02.'
   - - 83136
     - c
-    - countdownWorkByte9DecayTripleEnemyReady
-    - '@source: src/bof3/battle/countdownWorkByte9DecayTripleEnemyReady_battle03_801E50C0.c'
+    - countdownByte9EnemyReady
+    - '@source: src/bof3/battle/countdownByte9EnemyReady.c'
     - '@behavior: Counts down scratch work byte +0x09 and returns while it is nonzero; otherwise counts down work byte +0x0A, advancing work byte +0x02 when that expires and otherwise stepping the work triple +0x5D/+0x5E/+0x5F down by 0x10, integrating the motion pair +0x0C/+0x10 into +0x34/+0x38 and running enemyReadyOrHelper1.'
   - - 83420
     - c
@@ -1430,8 +1430,8 @@ segments:
     - '@behavior: Increments scratch work state after a successful battle predicate.'
   - - 90144
     - c
-    - countdownWorkByte9ClearQueuedSlot
-    - '@source: src/bof3/battle/countdownWorkByte9ClearQueuedSlot_battle03.c'
+    - countdownByte9ClearSlot
+    - '@source: src/bof3/battle/countdownByte9ClearSlot.c'
     - '@behavior: Counts down the scratch work byte at +0x09, then raises flag bit 0x20 of the battle global halfword and clears the queued slot bytes when it expires.'
   - - 90244
     - c

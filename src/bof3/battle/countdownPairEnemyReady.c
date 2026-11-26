@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void countdownWorkByteAdvancePairEnemyReady(void)
+void countdownPairEnemyReady(void)
 {
     if (--D_1F800044->pad_0a[0] == 0u) {
         D_1F800044->pad_0a[0] = 4;

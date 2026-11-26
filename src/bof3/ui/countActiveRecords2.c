@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-void countActiveRecordsForSlot(u8 arg0, s32* counter) {
+void countActiveRecords(u8 arg0, s32* counter) {
   u8  count;
   s32 slot;
   s32 offset;

@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void applyModeOffsetPairToWork(void)
+void applyModeOffsetPair(void)
 {
     Battle03LocalWork *first_work;
     Battle03LocalWork *pair_work;
