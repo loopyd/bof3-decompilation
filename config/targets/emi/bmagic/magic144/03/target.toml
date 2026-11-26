@@ -16,7 +16,7 @@ sources = [
     "src/bof3/bmagic/stateFrameParityStep.c",
     "src/bof3/bmagic/stateAdvanceFlagTest.c",
     "src/bof3/bmagic/stateCountdownGlobalClear.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic14403_801F046C.c",
+    "src/bof3/bmagic/reserveFirstFreeRecord2.c",
     "src/bof3/bmagic/decrementSubmitForwardGlobal.c",
     "src/bof3/bmagic/incrementWorkByteSet.c",
     "src/bof3/bmagic/workByte9AdvanceAt10.c",

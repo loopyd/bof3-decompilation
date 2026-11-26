@@ -78,8 +78,8 @@ segments:
     - func_801EF71C
   - - 3380
     - c
-    - reserveFirstFreeRecordBmagicMagic21903_801EF934
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic21903_801EF934.c'
+    - reserveFirstFreeRecord
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecord9.c'
   - - 3480
     - c
     - stateWorkThrough4

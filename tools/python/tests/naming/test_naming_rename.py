@@ -113,13 +113,17 @@ def test_shared_map_claim_refuses_the_rename(tmp_path: Path) -> None:
     ]
 
 
-def test_cross_target_name_refuses_the_rename(tmp_path: Path) -> None:
+def test_cross_target_name_is_recorded_and_allowed(tmp_path: Path) -> None:
     root = _repo(tmp_path)
     _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherRow", "stateRaiseFlag4"))
-    other = root / "src/bof3/battle" / "other.c"
+    other = root / "src" / "bof3" / "battle" / "other.c"
     other.write_text("void stateRaiseFlag4(void) {}\n", encoding="utf-8")
-    codes = [row["code"] for row in _plan(root, "stateRaiseFlag4")["refusals"]]
-    assert codes == ["cross-target-name"]
+    payload = _plan(root, "stateRaiseFlag4")
+    assert payload["passed"] is True, payload["refusals"]
+    # One source parent carries the same roles in each overlay, so the spelling is
+    # shared and the pairing is recorded instead of refused.
+    assert [row["target"] for row in payload["shared_with"]] == ["exe/other"]
+    assert payload["shared_with"][0]["bytes"] in {"identical", "different"}
 
 
 def test_batch_plan_names_every_row(tmp_path: Path) -> None:
@@ -164,7 +168,7 @@ def test_group_rename_dry_run_names_every_member(tmp_path: Path) -> None:
     assert (root / "src" / "bof3" / "battle" / f"{OLD}.c").is_file()
 
 
-def test_group_rename_refuses_an_outside_owner(tmp_path: Path) -> None:
+def test_group_rename_records_an_outside_owner(tmp_path: Path) -> None:
     root = _repo(tmp_path)
     _target(root, "exe/other", ["src/bof3/battle/other.c"], rows=("otherRow",))
     _target(root, "exe/third", ["src/bof3/battle/third.c"], rows=("outsideRow", "stateRaiseFlag4"))
@@ -175,9 +179,11 @@ def test_group_rename_refuses_an_outside_owner(tmp_path: Path) -> None:
     payload = rename.plan_group(
         root, "stateRaiseFlag4", [("exe/game", OLD), ("exe/other", "otherRow")]
     )
-    codes = {row["code"] for row in payload["refusals"]}
-    assert payload["passed"] is False
-    assert codes == {"cross-target-name"}
+    assert payload["passed"] is True, payload["refusals"]
+    assert {member["scope"]["target"] for member in payload["members"]} == {
+        "exe/game",
+        "exe/other",
+    }
 
 
 def test_foreign_consumer_refuses_the_rename(tmp_path: Path) -> None:

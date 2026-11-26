@@ -23,5 +23,5 @@ workByte9AdvanceAt10 = 0x801F00A0;
 stateAdvanceFlagTest = 0x801F00F0;
 stateCountdownGlobalClear = 0x801F0134;
 func_801F01D0 = 0x801F01D0;
-reserveFirstFreeRecordBmagicMagic14403_801F046C = 0x801F046C;
+reserveFirstFreeRecord = 0x801F046C;
 T_801F04D0 = 0x801F04D0;

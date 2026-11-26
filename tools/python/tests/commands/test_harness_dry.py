@@ -407,7 +407,10 @@ def test_function_collision_matrix() -> None:
         ]
     )
     assert not any(f.verdict == "reject" for f in same)
-    assert any(f.verdict == "reject" for f in rejected)
+    # One source parent repeats the same roles across its overlays, so a spelling it
+    # shares with different bytes names the role and is recorded, not rejected.
+    assert not any(f.verdict == "reject" for f in rejected)
+    assert any(f.verdict == "allow" and f.rule == "same_parent_role" for f in rejected)
     assert not any(f.verdict == "reject" for f in allowed)
     same_target = collision_findings(
         [

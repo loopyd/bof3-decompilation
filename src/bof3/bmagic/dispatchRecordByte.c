@@ -32,6 +32,6 @@ extern void (*D_801F01AC[])(void); /* @source 0x801F01AC @kind data */
  * @match 100.00
  * @residual none
  */
-void callWorkRecordByte1(void) {
+void dispatchRecordByte(void) {
   D_801F01AC[D_801F17B0[1]]();
 }

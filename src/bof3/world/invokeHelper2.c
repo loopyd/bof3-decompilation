@@ -8,6 +8,6 @@ void func_801F2C04(void);
  * @match 100.00
  * @residual none
  */
-void invokeHelperWorld02Area11013_801F2D2C(void) {
+void invokeHelper(void) {
   func_801F2C04();
 }

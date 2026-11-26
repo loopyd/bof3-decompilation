@@ -61,7 +61,7 @@ extern void func_801EFA40(s32 arg0, s32 arg1); /* @source 0x801EFA40 @kind funct
  * @match 100.00
  * @residual none
  */
-void callWorkRecordByte2(void) {
+void callRecordDrawStep(void) {
   BmagicMagic16203Byte2DispatchTable handlers;
 
   handlers = D_801EEC1C;

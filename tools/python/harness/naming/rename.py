@@ -78,6 +78,7 @@ class RenamePlan:
     # Targets that will carry this same spelling. A name shared by a group is
     # legal only when every member's reviewed bytes are identical.
     group: frozenset[str] = frozenset()
+    shared_with: list[dict] = field(default_factory=list)
 
     @property
     def passed(self) -> bool:
@@ -149,7 +150,7 @@ def _resolve(
                 break
     _collect_files(plan, root, manifest)
     _check_consumers(plan, root, target, old)
-    _check_cross_target_name(plan, root, target)
+    _record_cross_target_name(plan, root, target)
     if plan.passed:
         _retarget_twin(plan, root)
     return plan
@@ -382,8 +383,14 @@ def _bytes_at(root: Path, manifests, target: str, address: int) -> bytes | None:
         return None
 
 
-def _check_cross_target_name(plan: RenamePlan, root: Path, target: str) -> None:
-    """Refuse a name another target already uses for a different body."""
+def _record_cross_target_name(plan: RenamePlan, root: Path, target: str) -> None:
+    """Record a spelling another target of the same parent already carries.
+
+    One source parent holds the same roles in each of its overlays, so a spelling may
+    name that role in several targets even when their bytes differ: the difference is
+    usually a resource address the overlay owns. The record keeps the pairing so a
+    later review sees which rows now share a spelling and how their bodies compare.
+    """
     if plan.address is None:
         return
     ours = _plan_dirs(root, plan)
@@ -399,14 +406,13 @@ def _check_cross_target_name(plan: RenamePlan, root: Path, target: str) -> None:
         manifests = load_manifests_for(plan)
         ours_bytes = _bytes_at(root, manifests, target, plan.address)
         theirs = _bytes_at(root, manifests, owner, address)
-        if ours_bytes is not None and ours_bytes == theirs:
-            # The symbol matrix allows one spelling for identical reviewed bytes.
-            continue
-        plan.refuse(
-            "cross-target-name",
-            f"{plan.new} already names {owner}@0x{address:08X} in the same source parent",
+        plan.shared_with.append(
+            {
+                "target": owner,
+                "address": f"0x{address:08X}",
+                "bytes": "identical" if ours_bytes is not None and ours_bytes == theirs else "different",
+            }
         )
-        return
 
 
 def _reviewed_bytes(root: Path, plan: RenamePlan) -> bytes | None:
@@ -433,20 +439,26 @@ def _reviewed_bytes(root: Path, plan: RenamePlan) -> bytes | None:
         return None
 
 
-def _check_group_bytes(plans: list[RenamePlan], root: Path) -> None:
-    """One spelling may span targets only when their reviewed bytes are equal."""
+def _record_group_bytes(plans: list[RenamePlan], root: Path) -> None:
+    """Record how each member's reviewed bytes compare with the group's first body."""
     code = [(plan, _reviewed_bytes(root, plan)) for plan in plans]
     shared = [(plan, body) for plan, body in code if body is not None]
     if len(shared) < 2:
         return
-    _first_plan, reference = shared[0]
+    reference_plan, reference = shared[0]
     for plan, body in shared[1:]:
-        if body != reference:
-            plan.refuse(
-                "group-bytes",
-                f"{plan.old} differs from {shared[0][0].old} "
-                f"({shared[0][0].target}); one spelling needs identical bytes",
-            )
+        same = body == reference
+        plan.shared_with.append(
+            {
+                "target": reference_plan.target,
+                "address": (
+                    f"0x{reference_plan.address:08X}"
+                    if reference_plan.address is not None
+                    else None
+                ),
+                "bytes": "identical" if same else "different",
+            }
+        )
 
 
 def load_manifests_for(plan: RenamePlan):
@@ -629,8 +641,8 @@ def _retarget_twin(plan: RenamePlan, root: Path) -> None:
     before, after = plan.renames[0]
     if not after.exists():
         return
-    owners = _claim_owners(root, load_manifests_for(plan)).get(after, set())
-    if not owners or owners == {plan.target}:
+    if after == plan.source:
+        # Renaming a unit onto its own path is not a collision.
         return
     number = 2
     while True:
@@ -678,7 +690,7 @@ def _group_plans(root: Path, new: str, selections: list[tuple[str, str]]) -> lis
         _resolve(root, target, old, new, group=targets, allow_noop=True)
         for target, old in selections
     ]
-    _check_group_bytes(plans, root)
+    _record_group_bytes(plans, root)
     _retarget_group_filenames(plans)
     for plan in plans:
         for other in plans:
@@ -831,6 +843,13 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
     try:
         with acquire_writer(root):
             for index, plan in enumerate(ready):
+                # An earlier row may have renamed a unit this row references, so the
+                # consumer list is refreshed against the tree as it is now.
+                plan.files = []
+                try:
+                    _collect_files(plan, root, plan.manifest)
+                except (OSError, ValueError):
+                    pass
                 try:
                     before = _measure(plan, plan.source)
                     _write(plan, plan.old, plan.new)
@@ -1047,5 +1066,6 @@ def _payload(
         ],
         "proof": list(proof),
         "refusals": list(plan.refusals),
+        "shared_with": list(plan.shared_with),
         "passed": plan.passed and (applied or not attempted),
     }

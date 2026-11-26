@@ -31,7 +31,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  * @match 100.00
  * @residual none
  */
-void incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22303_801EF148(void) {
+void incrementByteBLow(void) {
   if (D_801EB4E0[0xB] < 2u) {
     SPAD_PTR_SLOT(u8, 0x44u)[2]++;
   }

@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 16
     - c
-    - dispatchWorkByte1HandlerBmagicMagic22203_801EEC10
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic22203_801EEC10.c'
+    - dispatchWorkByte1Handler
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Handler5.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read before the frame is created, its state byte at offset 1 selects an entry of the three-entry code pointer table at 0x801EEC04 (0x801EEC70, 0x801EEE20, 0x801EEE80), and that entry is invoked with no arguments. The three table words are copied into its own 0x28-byte frame first, so the call target is read back from the copy; the index is not bounds-checked, it reads no other state and writes none.'
   - - 112
     - asm

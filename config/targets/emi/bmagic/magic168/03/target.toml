@@ -11,7 +11,7 @@ sources = [
     "src/bof3/bmagic/stateClearRecordSlot.c",
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic16803_801EF048.c",
     "src/bof3/bmagic/stateSetByte9Rearm.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16803_801EFFFC.c",
+    "src/bof3/bmagic/reserveFirstFreeRecord6.c",
 ]
 support_sources = [
     "src/bof3/support/magic168_03_psyq.c",

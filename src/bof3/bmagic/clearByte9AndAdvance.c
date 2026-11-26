@@ -10,7 +10,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * @match 100.00
  * @residual none
  */
-void clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic22303_801EF0B8(void) {
+void clearByte9AndAdvance(void) {
   g_battle_work[9] = 0;
   g_battle_work[0xA] = 0x88;
   g_battle_work[2]++;

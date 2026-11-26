@@ -72,8 +72,8 @@ segments:
     - func_801EF7A0
   - - 3052
     - c
-    - reserveFirstFreeRecordBmagicMagic21303_801EF7EC
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic21303_801EF7EC.c'
+    - reserveFirstFreeRecord
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecord8.c'
   - - 3152
     - c
     - clearWorkBytes

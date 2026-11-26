@@ -19,11 +19,11 @@ extern void (*D_801EFC30[])(void); /* @source 0x801EFC30 @kind data */
 
 /* This overlay's fullscreen quad draw step at 0x801EF1E8, lifted exact from
  * this span's own bytes in
- * src/bof3/bmagic/drawFullscreenTranslucentGouraudQuadTintedByWorkByte9TimesEightAtVerticesZeroAndThreeMirroredByGlobalWorkByte8BitZeroThenRearmGraphTypeDrawModeBmagicMagic22303_801EF1E8.c.
+ * src/bof3/bmagic/renderFullscreenVerticesMirrored.c.
  * It selects the graph-type draw mode, arms SetDrawMode on the primitive
  * cursor, appends a semi-transparent POLY_G4 covering the 320x240 screen
  * rectangle tinted from work byte 9, then re-arms the draw mode. */
-void drawFullscreenTranslucentGouraudQuadTintedByWorkByte9TimesEightAtVerticesZeroAndThreeMirroredByGlobalWorkByte8BitZeroThenRearmGraphTypeDrawModeBmagicMagic22303_801EF1E8(
+void renderFullscreenVerticesMirrored(
     void);
 
 /* @source 0x801EF050
@@ -51,13 +51,13 @@ void drawFullscreenTranslucentGouraudQuadTintedByWorkByte9TimesEightAtVerticesZe
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte2HandlerThenDrawFullscreenQuadWhenWorkByte0SetBmagicMagic22303_801EF050(
+void dispatchQuadByte0Set(
     void) {
   u8 *work = g_battle_work;
 
   D_801EFC30[work[2]]();
   work = g_battle_work;
   if (work[0] != 0) {
-    drawFullscreenTranslucentGouraudQuadTintedByWorkByte9TimesEightAtVerticesZeroAndThreeMirroredByGlobalWorkByte8BitZeroThenRearmGraphTypeDrawModeBmagicMagic22303_801EF1E8();
+    renderFullscreenVerticesMirrored();
   }
 }

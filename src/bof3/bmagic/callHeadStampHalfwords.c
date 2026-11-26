@@ -86,7 +86,7 @@ typedef struct BmagicMagic15403QueuedRecordHead {
  * @behavior Entry 0 of the four-entry work byte 1 handler run at 0x801EEC04
  *           (0x801EEC90, 0x801EEE94, 0x801EEFE0, 0x801EF060), a run that lives
  *           in the overlay's own table words and that the exact sibling
- *           dispatcher dispatchWorkByte1HandlerBmagicMagic15403_801EEC24 copies
+ *           dispatcher dispatchWorkByte1Handler copies
  *           into its 0x28-byte frame and invokes with the work record's unsigned
  *           byte 1 scaled by four, so no jal in this payload names this address:
  *           an overlay dispatch entry, not a called function. It first

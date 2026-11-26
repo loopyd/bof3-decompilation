@@ -59,13 +59,13 @@ segments:
     - func_801EF2D8
   - - 1848
     - c
-    - callWorkRecordByte1
-    - '@source: src/bof3/bmagic/callWorkRecordByte1.c'
+    - dispatchRecordByte
+    - '@source: src/bof3/bmagic/dispatchRecordByte.c'
     - '@behavior: Handler dispatch of the bmagic frame loop. Reads the work record pointer from the cell at 0x801F17B0 before reserving its 0x18-byte frame, loads the record unsigned byte at offset 0x1, scales it by four and calls the entry of the handler table based at 0x801F01AC that the byte selects, passing no arguments; the only table word on disc sits at index 0 and holds 0x801EF37C. Reads no other state, writes none, and keeps only $ra in the frame. Its 68-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF338.'
   - - 1916
     - c
-    - callWorkRecordByte2
-    - '@source: src/bof3/bmagic/callWorkRecordByte2.c'
+    - callRecordDrawStep
+    - '@source: src/bof3/bmagic/callRecordDrawStep.c'
     - '@behavior: Entry handler of the bmagic work record. Reads the record pointer cell at 0x801F17B0 before reserving its 0x28-byte frame, copies the three-word step table at 0x801EEC1C into the frame, scales the record unsigned byte at offset 2 by four and calls the selected copy with no arguments; the only record bytes the table covers are 0, 1 and 2, holding 0x801EF478, 0x801EF678 and 0x801EF728. While the reloaded record byte 0 has bit 0 set and byte 2 is non-zero it runs the eight-triangle draw at 0x801EFCD8, and while the reloaded record unsigned halfword at 0xC has either low bit set it runs the four-spoke draw at 0x801EF80C with half of the shared frame counter at 0x80143E6C narrowed to 16 bits and record byte 6, then func_801EFA40 with that halved counter plus four and with record byte 6 added to half itself. Takes no arguments, returns nothing, writes no state, and keeps only $ra and the copied table in the frame. Its 252-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF37C.'
   - - 2168
     - c
@@ -95,8 +95,8 @@ segments:
     - '@behavior: Drawing step of the battle-magic overlay, reached only from the draw branch of the dispatcher at 0x801EF37C when the work record byte 0 has bit 0 set and the record byte 2 is non-zero. It picks the draw-mode tpage argument from GetGraphType, 0xA5 for types 1 and 2 and 0x35 otherwise, seeds SetDrawMode at g_PrimCursor with dfe 0 and dtd 1, links the 0xC-byte draw-mode packet at the record words 0x14 and 0x18 with kind 2, then publishes the scratchpad cells the loop reads: the radius cell 0x1F800004 takes record byte 0x06 plus the low two bits of rand, the centre cells 0x1F800000 and 0x1F800002 take record halfwords 0x20 and 0x22, the tint cells 0x1F800008, 0x1F80000A and 0x1F80000C take the three bytes of the palette row at 0x801F0158 selected by record byte 0x03 times three plus record byte 0x04 times twelve, each scaled by record byte 0x05, and cell 0x1F80000E takes record byte 0x05. It then runs eight triangles: each iteration takes a fresh g_PrimCursor primitive, seeds it through func_8017A97C, marks it semi-transparent, writes the published centre into halfwords 0x08 and 0x0A, the func_801782FC and func_801783C8 samples of the counter shifted left 9 scaled by the radius cell and shifted right 12 into halfwords 0x10 and 0x12, increments the counter, writes the same two samples of the incremented counter into halfwords 0x18 and 0x1A, writes the palette triplet into bytes 0x04, 0x05 and 0x06, writes the 0x1F80000E cell into bytes 0x0C, 0x0D, 0x0E, 0x14, 0x15 and 0x16, and links the 0x1C-byte POLY_G3 packet at the record words 0x14 and 0x18 with kind 2. Takes no arguments, returns nothing and keeps a 0x30-byte frame.'
   - - 5116
     - c
-    - reserveFirstFreeRecordBmagicMagic16203_801EFFFC
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16203_801EFFFC.c'
+    - reserveFirstFreeRecord
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecord4.c'
   - - 5224
     - c
     - stateClearRecordHead

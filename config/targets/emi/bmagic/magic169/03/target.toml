@@ -11,7 +11,7 @@ sources = [
     "src/bof3/bmagic/decrementClearingStampingPublishing.c",
     "src/bof3/bmagic/renderGreyTwelveRim.c",
     "src/bof3/bmagic/decrementZeroByteZero.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16903_801F0368.c",
+    "src/bof3/bmagic/reserveFirstFreeRecord7.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16903_801EF03C.c",
 ]
 support_sources = [

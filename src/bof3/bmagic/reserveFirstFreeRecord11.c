@@ -18,7 +18,7 @@ extern u8 D_801EFC60[]; /* @source 0x801EFC60 @kind data */
  * @match 100.00
  * @residual none
  */
-u8 reserveFirstFreeRecordBmagicMagic22303_801EFB78(void) {
+u8 reserveFirstFreeRecord(void) {
   u8 index;
   u8 flags;
   u32 offset;

@@ -1,6 +1,6 @@
 func_801E5988 = 0x801E5988;
 callWorkHandlerTable801 = 0x801EEC14;
-dispatchWorkByte1HandlerBmagicMagic15403_801EEC24 = 0x801EEC24;
+dispatchWorkByte1Handler = 0x801EEC24;
 callHeadStampHalfwords = 0x801EEC90;
 stateObjectSixPointer = 0x801EEE94;
 callRaiseBattleTarget = 0x801EEFE0;
@@ -15,5 +15,5 @@ callWorkByte2Nonzero = 0x801EF4B4;
 stateSeedByte9Advance = 0x801EF544;
 decrementReadinessReadyGlobal = 0x801EF58C;
 decrementGlobalHelperReady = 0x801EF648;
-invokeHelperBmagicMagic15403_801EF6AC = 0x801EF6AC;
+invokeHelper = 0x801EF6AC;
 func_801EF6CC = 0x801EF6CC;

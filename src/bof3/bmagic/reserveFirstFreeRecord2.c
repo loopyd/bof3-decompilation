@@ -12,7 +12,7 @@ extern u8 D_801F050C[]; /* @source 0x801F050C @kind data */
  * @match 100.00
  * @residual none
  */
-u8 reserveFirstFreeRecordBmagicMagic14403_801F046C(void) {
+u8 reserveFirstFreeRecord(void) {
     u8 index;
     u8 flags;
     u32 offset;

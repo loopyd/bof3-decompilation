@@ -23,9 +23,12 @@ offset or width belongs to the typed view, not to the name. A raw placeholder
 (`func_801CE404`, `D_801CE404`) is not a semantic name and stays as it is; an
 unevidenced role keeps that placeholder rather than an address-anchored spelling.
 
-One name per address, unique inside the target, and no two targets of one source
-parent may use one spelling for different bodies. Identical reviewed bytes may share
-one spelling: `bin/harness naming rename TARGET OLD NEW --with TARGET=OLD ...` applies
+One name per address, unique inside the target. Two targets of one source parent may
+share one spelling whether or not their bytes are identical: the spelling names the
+role both overlays carry, and their bytes differ by the resources each overlay owns.
+The rename records the pairing in `shared_with` (`identical` or `different`), and the
+identity matrix reports it as `same_parent_role`. One role spelled two ways is still
+refused as `case_variant`. Identical reviewed bytes may share one spelling: `bin/harness naming rename TARGET OLD NEW --with TARGET=OLD ...` applies
 it to every member together, and a member that already carries the spelling is an
 anchor that owes no write. Two identical units of one family cannot share a file, so
 the twin keeps the shared identifier and takes the smallest free numbered filename

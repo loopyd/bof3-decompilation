@@ -99,8 +99,8 @@ segments:
     - '@behavior: Grows work words 0x40 and 0x44, steps position words 0x34 and 0x38 from angle word 0x14, and counts down byte 9 before clearing work bytes at zero.'
   - - 5844
     - c
-    - reserveFirstFreeRecordBmagicMagic22503_801F02D4
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic22503_801F02D4.c'
+    - reserveFirstFreeRecord
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecord12.c'
     - '@behavior: Reserves the first of 32 stride-0x78 records with flags bit 0 clear, sets that bit and returns its byte index or 0xFF when full.'
   - - 5944
     - c

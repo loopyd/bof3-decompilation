@@ -41,7 +41,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1HandlerBmagicMagic15403_801EEC24(void) {
+void dispatchWorkByte1Handler(void) {
   BmagicMagic15403WorkByte1DispatchTable handlers;
 
   handlers = D_801EEC04;

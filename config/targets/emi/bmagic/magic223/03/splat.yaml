@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 16
     - c
-    - dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic22303_801EEC10
-    - '@source: src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic22303_801EEC10.c'
+    - dispatchOccupiedRecordStep
+    - '@source: src/bof3/bmagic/dispatchOccupiedRecordStep.c'
     - '@behavior: Per-frame entry of this overlay that no jal and no payload word names, so the overlay loader reaches it: copies the three code-pointer words at 0x801EEC04 (0x801EED18, 0x801EEF4C, 0x801EEFB4) into its 0x38-byte frame and calls the entry that unsigned byte 1 of the work object at 0x1F800044 selects, without a bound check, then sweeps the 64 records of stride 0x78 at 0x801EFC60 and, for each record whose flags bit 0 is set, publishes the record as the work object and its word 0x74 into 0x801EB4E0, runs the record step dispatcher at 0x801EF3C0 and restores both cells. Takes no arguments and returns nothing.'
   - - 280
     - asm
@@ -48,22 +48,22 @@ segments:
     - '@source: src/bof3/bmagic/magic22303DispatchTables.c'
   - - 1104
     - c
-    - dispatchWorkByte2HandlerThenDrawFullscreenQuadWhenWorkByte0SetBmagicMagic22303_801EF050
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawFullscreenQuadWhenWorkByte0SetBmagicMagic22303_801EF050.c'
+    - dispatchQuadByte0Set
+    - '@source: src/bof3/bmagic/dispatchQuadByte0Set.c'
     - '@behavior: Overlay work step reached as entry 0 of the nine-word handler run at 0x801EFC2C: reads the scratchpad work-object pointer cell at 0x1F800044, calls the handler pointer at work byte 2 of the table based at 0x801EFC30, then re-reads the cell and, when work byte 0 is set, calls the fullscreen quad drawer at 0x801EF1E8. Takes no arguments and returns nothing.'
   - - 1208
     - c
-    - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic22303_801EF0B8
-    - '@source: src/bof3/bmagic/clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic22303_801EF0B8.c'
+    - clearByte9AndAdvance
+    - '@source: src/bof3/bmagic/clearByte9AndAdvance.c'
   - - 1272
     - c
-    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic22303_801EF0F8
-    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic22303_801EF0F8.c'
+    - incrementByte9Advance2
+    - '@source: src/bof3/bmagic/incrementByte9Advance2.c'
     - '@behavior: Per-frame overlay work-step handler reached as entry 2 of the nine-word handler run at 0x801EFC2C: advances work-object byte 9 through the scratchpad pointer cell at 0x1F800044 and, when the stored byte equals 0x10, re-reads the cell and increments work-object byte 2, with no frame, arguments or return value.'
   - - 1352
     - c
-    - incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22303_801EF148
-    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22303_801EF148.c'
+    - incrementByteBLow
+    - '@source: src/bof3/bmagic/incrementByteBLow.c'
     - '@behavior: Battle work step reached as word 3 of the nine-word handler table based at 0x801EFC2C that increments the scratchpad work object''s byte 2 when byte 0xB of the shared record at 0x801EB4E0 is below two, with no frame, arguments or return value.'
   - - 1420
     - asm
@@ -96,8 +96,8 @@ segments:
     - func_801EF7A8
   - - 3960
     - c
-    - reserveFirstFreeRecordBmagicMagic22303_801EFB78
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic22303_801EFB78.c'
+    - reserveFirstFreeRecord
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecord11.c'
     - '@behavior: Reserves the first free record among 64 records of stride 0x78 in the pool at 0x801EFC60, sets that record''s flags bit 0 and returns its index, or returns 0xFF when every record is occupied.'
   - - 4060
     - c

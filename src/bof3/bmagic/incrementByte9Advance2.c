@@ -36,7 +36,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * @match 100.00
  * @residual none
  */
-void incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic22303_801EF0F8(void) {
+void incrementByte9Advance2(void) {
   u8 *work;
   u8 counter;
 

@@ -127,8 +127,8 @@ segments:
     - func_801F01D0
   - - 6252
     - c
-    - reserveFirstFreeRecordBmagicMagic14403_801F046C
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic14403_801F046C.c'
+    - reserveFirstFreeRecord
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecord2.c'
     - '@behavior: Reserves the first of 48 stride-0x78 records at 0x801F050C with flag bit 0 clear, sets that bit and returns its byte index, or 0xFF when full.'
   - - 6352
     - textbin

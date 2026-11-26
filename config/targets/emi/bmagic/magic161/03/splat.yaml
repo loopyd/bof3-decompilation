@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 36
     - c
-    - dispatchWorkByte1HandlerBmagicMagic16103_801EEC24
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic16103_801EEC24.c'
+    - dispatchWorkByte1Handler
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Handler3.c'
     - '@behavior: Overlay entry dispatcher. It reads the scratchpad work-object pointer cell at 0x1F800044 before creating its 0x28-byte frame, copies the three-entry handler pointer run at 0x801EEC04 (0x801EEC84, 0x801EEE9C, 0x801EEF08) into that frame, and calls the entry its work byte at offset 1 selects. The selector is not bounds-checked, nothing outside the frame is written, and no value is returned.'
   - - 132
     - c
@@ -79,7 +79,7 @@ segments:
     - '@behavior: Entry 3 (index 3) of the five-entry handler run at 0x801EEC10 (0x801EF024, 0x801EF06C, 0x801EF0E8, 0x801EF158, 0x801EF1BC), which the work byte 2 dispatcher at 0x801EEF80 copies into its own 0x30-byte frame and invokes with the entry that scratchpad work-object byte 2 selects, with no bounds test and no jal in the payload naming this body. It calls the shared readiness helper at 0x8014DAEC and tests the returned byte truncated to eight bits; while the helper reports not-ready it does nothing, and once it reports ready it loads the shared battle work-record pointer cell at 0x801EB4E0 and decrements that record byte 0xB at byte width, then re-reads the work-object pointer cell at 0x1F800044 and increments work byte 2 with a byte-width add, advancing dispatch to run entry 4 at 0x801EF1BC. The 0x18-byte frame only keeps the return address at 0x10 across the helper call; it takes no arguments, returns nothing and reads or writes no other state. The 100-byte body is byte-identical to the span at 0x801EFA70 of emi/bmagic/magic004/03 and differs from the span at 0x801EF648 of emi/bmagic/magic154/03 only in the record byte offset, 0x9 there against 0xB here (payload byte comparison).'
   - - 1468
     - c
-    - invokeHelperBmagicMagic16103_801EF1BC
+    - invokeHelper
   - - 1500
     - c
     - renderGradedDarkType

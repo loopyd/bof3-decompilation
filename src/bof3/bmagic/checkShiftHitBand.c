@@ -2,7 +2,7 @@
 
 /* Scratchpad work-object pointer cell 0x1F800044, already bound at that address
  * by this target's map as g_battle_work, the name this target's exact lifts
- * reserveFirstFreeRecordBmagicMagic21903_801EF934,
+ * reserveFirstFreeRecord,
  * stateWorkThrough4 and
  * decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZero
  * BmagicMagic21903_801EF5DC use. This body reads the cell once per access

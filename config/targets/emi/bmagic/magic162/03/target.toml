@@ -11,13 +11,13 @@ sources = [
     "src/bof3/bmagic/callWorkByte1Records.c",
     "src/bof3/bmagic/stateSetByte9Advance.c",
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EF048.c",
-    "src/bof3/bmagic/callWorkRecordByte2.c",
+    "src/bof3/bmagic/callRecordDrawStep.c",
 ]
 support_sources = [
     "src/bof3/support/magic162_03_psyq.c",
-    "src/bof3/bmagic/callWorkRecordByte1.c",
+    "src/bof3/bmagic/dispatchRecordByte.c",
     "src/bof3/bmagic/stateClearRecordHead.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16203_801EFFFC.c",
+    "src/bof3/bmagic/reserveFirstFreeRecord4.c",
     "src/bof3/bmagic/stateSampleIntoLimit.c",
     "src/bof3/bmagic/mathByte9EffectSubmit.c",
     "src/bof3/bmagic/mathRecordMotionStep.c",

@@ -20,6 +20,6 @@ mathGrowPositionWord = 0x801EFBC4;
 func_801EFCF4 = 0x801EFCF4;
 renderGreyTwelveRim = 0x801EFE3C;
 func_801F0090 = 0x801F0090;
-reserveFirstFreeRecordBmagicMagic16903_801F0368 = 0x801F0368;
+reserveFirstFreeRecord = 0x801F0368;
 stateWorkBytes = 0x801F03CC;
 T_801F041C = 0x801F041C;

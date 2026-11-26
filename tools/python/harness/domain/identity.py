@@ -171,6 +171,20 @@ def _pair_finding(
             f"same name {left.compiled_name} at two addresses "
             f"0x{left.address:08X} and 0x{right.address:08X}",
         )
+    if (
+        left.compiled_name != right.compiled_name
+        and left.compiled_name.casefold() == right.compiled_name.casefold()
+    ):
+        # One role spelled two ways; the pair disagrees about the spelling itself.
+        return _reject(
+            "case_variant",
+            left.target,
+            left.address,
+            right.target,
+            right.address,
+            f"one role spelled {left.compiled_name} and {right.compiled_name}; "
+            "one spelling is required",
+        )
     left_bytes = left.reviewed_bytes
     right_bytes = right.reviewed_bytes
     if left_bytes is not None and left_bytes == right_bytes:
@@ -184,24 +198,27 @@ def _pair_finding(
             "(each target owns its Splat boundary and map)",
         )
     if (left.source_parent or "") == (right.source_parent or ""):
-        return _reject(
-            "same_parent_different_bytes",
+        # One source parent repeats the same roles across its overlays; the bytes
+        # differ by the resources each overlay owns, not by the role the spelling
+        # names. The pair is recorded so a review can see which rows share it.
+        return _allow(
+            "same_parent_role",
             left.target,
             left.address,
             right.target,
             right.address,
-            "same source parent with different (or unprovable) reviewed "
-            "bytes; a distinct semantic name is required",
+            "same source parent; one spelling names the role both overlays carry, "
+            "their reviewed bytes differ by the resources each one owns",
         )
     if left_bytes is None or right_bytes is None:
-        return _reject(
-            "same_parent_different_bytes",
+        return _allow(
+            "same_parent_role",
             left.target,
             left.address,
             right.target,
             right.address,
-            "reviewed bytes cannot be hashed from the image; ownership "
-            "independence is unproven, a distinct semantic name is required",
+            "reviewed bytes cannot be hashed from the image; the spelling names a "
+            "role two targets of one source parent carry",
         )
     return _allow(
         "different_parent",

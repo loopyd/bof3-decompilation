@@ -12,7 +12,7 @@ typedef struct BmagicMagic16203DispatchTable {
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* The overlay's battle-magic record pool at 0x801F01B0: 128 records of stride
- * 0x2C, the pool reserveFirstFreeRecordBmagicMagic16203_801EFFFC hands out.
+ * 0x2C, the pool reserveFirstFreeRecord hands out.
  * Byte 0 bit 0 is the in-use flag this sweep tests, and the word at record
  * offset 0x28 (0x801F01D8 for the first record) is the work pointer installed
  * into 0x801EB4E0 for the record's step. The flags read re-materialises this
@@ -42,11 +42,11 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern BmagicMagic16203DispatchTable D_801EEC04; /* @source 0x801EEC04 @kind data */
 
 /* This target's record byte-1 step dispatcher at 0x801EF338, exact in
- * src/bof3/bmagic/callWorkRecordByte1.c: it
+ * src/bof3/bmagic/dispatchRecordByte.c: it
  * reads the record published at 0x801F17B0 and runs the handler that record's
  * unsigned byte 1 selects, so publishing a record there makes it run that
  * record's step. */
-extern void callWorkRecordByte1(void); /* @source 0x801EF338 @kind function */
+extern void dispatchRecordByte(void); /* @source 0x801EF338 @kind function */
 
 /* @source 0x801EEC28
  * @behavior Per-frame entry of this overlay. It copies the six code-pointer
@@ -76,7 +76,7 @@ extern void callWorkRecordByte1(void); /* @source 0x801EF338 @kind function */
  *           same-shape entry emi/bmagic/magic021/03 0x801EEC28 uses, which
  *           publishes into the scratchpad work cell instead of the record cell;
  *           the pool sweep follows this target's own exact
- *           reserveFirstFreeRecordBmagicMagic16203_801EFFFC for the stride,
+ *           reserveFirstFreeRecord for the stride,
  *           slot count and mask arithmetic.
  * @status exact
  * @match 100.00
@@ -100,7 +100,7 @@ void callWorkByte1Records(void) {
       recordWork = *(u8 **)&magic16203RecordFlags[offset + 0x28];
       D_801F17B0 = record;
       D_801EB4E0 = recordWork;
-      callWorkRecordByte1();
+      dispatchRecordByte();
       D_801EB4E0 = savedRecord;
     }
   }

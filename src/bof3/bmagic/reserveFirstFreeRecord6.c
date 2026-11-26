@@ -27,7 +27,7 @@ extern u8 magic16803RecordFlags[]; /* @source 0x801F01B0 @kind data */
  * @match 100.00
  * @residual none
  */
-u8 reserveFirstFreeRecordBmagicMagic16803_801EFFFC(void) {
+u8 reserveFirstFreeRecord(void) {
   u8 index;
   u8 flags;
   u32 offset;

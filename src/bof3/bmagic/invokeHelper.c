@@ -8,6 +8,6 @@ void func_801E5988(void);
  * @match 100.00
  * @residual none
  */
-void invokeHelperBmagicMagic15403_801EF6AC(void) {
+void invokeHelper(void) {
   func_801E5988();
 }

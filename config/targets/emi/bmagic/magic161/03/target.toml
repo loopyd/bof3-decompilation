@@ -19,8 +19,8 @@ sources = [
 ]
 support_sources = [
     "src/bof3/bmagic/callHelperDrawRun.c",
-    "src/bof3/bmagic/invokeHelperBmagicMagic16103_801EF1BC.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic16103_801EEC24.c",
+    "src/bof3/bmagic/invokeHelper2.c",
+    "src/bof3/bmagic/dispatchWorkByte1Handler3.c",
     "src/bof3/bmagic/magic16103DispatchTables.c",
     "src/bof3/support/magic161_03_psyq.c",
 ]

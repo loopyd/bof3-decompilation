@@ -41,7 +41,7 @@ extern void func_800A9610(u8 target, s32 flags); /* @source 0x800A9610 @kind fun
  * @behavior Entry 2 of the four-entry work byte 1 handler run at 0x801EEC04
  *           (0x801EEC90, 0x801EEE94, 0x801EEFE0, 0x801EF060), a run that
  *           occupies the overlay's own table words and that the exact sibling
- *           dispatcher dispatchWorkByte1HandlerBmagicMagic15403_801EEC24 copies
+ *           dispatcher dispatchWorkByte1Handler copies
  *           into its frame and invokes with no arguments, so the payload holds
  *           no jal to this address: an overlay dispatch entry, not a called
  *           function. It reads the scratchpad work-object pointer cell at

@@ -43,7 +43,7 @@ extern BmagicMagic22203DispatchTable D_801EEC04; /* @source 0x801EEC04 @kind dat
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1HandlerBmagicMagic22203_801EEC10(void) {
+void dispatchWorkByte1Handler(void) {
     BmagicMagic22203DispatchTable handlers;
 
     handlers = D_801EEC04;

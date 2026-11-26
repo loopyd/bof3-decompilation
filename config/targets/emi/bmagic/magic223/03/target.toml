@@ -8,18 +8,18 @@ splat = "config/targets/emi/bmagic/magic223/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic22303_801EEC10.c",
-    "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic22303_801EF0F8.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawFullscreenQuadWhenWorkByte0SetBmagicMagic22303_801EF050.c",
+    "src/bof3/bmagic/dispatchOccupiedRecordStep.c",
+    "src/bof3/bmagic/incrementByte9Advance2.c",
+    "src/bof3/bmagic/dispatchQuadByte0Set.c",
     "src/bof3/bmagic/callWorkHandlerSet.c",
 ]
 support_sources = [
     "src/bof3/bmagic/renderFullscreenVerticesMirrored.c",
-    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic22303_801EFB78.c",
-    "src/bof3/bmagic/clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic22303_801EF0B8.c",
+    "src/bof3/bmagic/reserveFirstFreeRecord11.c",
+    "src/bof3/bmagic/clearByte9AndAdvance.c",
     "src/bof3/bmagic/stateWorkBytes0Through4.c",
     "src/bof3/support/magic223_03_psyq.c",
     "src/bof3/bmagic/magic22303DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22303_801EF148.c",
+    "src/bof3/bmagic/incrementByteBLow.c",
 ]
 psyq_source = "src/bof3/support/magic223_03_psyq.c"

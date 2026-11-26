@@ -14,7 +14,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* Record pool of this overlay at 0x801F050C: 48 records of stride 0x78, the
- * pool reserveFirstFreeRecordBmagicMagic14403_801F046C claims from and the
+ * pool reserveFirstFreeRecord claims from and the
  * asm row func_801EED04 clears at the same stride. Byte 0 of each record is the
  * in-use flag this sweep tests and the word at 0x74 of each record holds the
  * work pointer stored there when the record was claimed. The flags read

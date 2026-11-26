@@ -30,8 +30,8 @@ segments:
   subsegments:
   - - 16
     - c
-    - dispatchWorkByte1HandlerBmagicMagic21600_801EEC10
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic21600_801EEC10.c'
+    - dispatchWorkByte1Handler
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Handler4.c'
     - '@behavior: copies the three handler pointers at 0x801EEC04 into a local table and calls the entry selected by unsigned work byte 1 of the record held in scratchpad cell 0x1F800044. The entries are 0x801EEC70, 0x801EECDC and 0x801EEF58. The indirect call sets no argument registers.'
   - - 112
     - c

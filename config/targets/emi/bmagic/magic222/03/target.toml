@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic222/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic22203_801EEC10.c",
+    "src/bof3/bmagic/dispatchWorkByte1Handler5.c",
     "src/bof3/bmagic/callDrawTransformedPop.c",
     "src/bof3/bmagic/incrementProjectPairAngle.c",
     "src/bof3/bmagic/renderMirroredRibbonInner.c",

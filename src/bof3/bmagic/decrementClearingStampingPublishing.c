@@ -19,7 +19,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 D_80145E90[]; /* @source 0x80145E90 @kind table */
 
 /* Record pool at 0x801F0424 inside this overlay image: the 80 records of
- * 0x78-byte stride that reserveFirstFreeRecordBmagicMagic16903_801F0368 scans
+ * 0x78-byte stride that reserveFirstFreeRecord scans
  * and that entry stage 0 clears. The original reaches each field of the claimed
  * record as `lui $at,%hi(field address)` / `addu $at,$at,index*0x78` / store
  * `%lo(field address)($at)`, so every addressed field keeps its own
@@ -33,7 +33,7 @@ extern u8 D_801F0498[]; /* @source 0x801F0498 @kind data */
 /* Claims the first record of that pool whose flags byte has bit 0 clear, sets
  * the bit and returns its index, or returns 0xFF when all 80 records are taken.
  * Its own source in this module already gated exact. */
-extern u8 reserveFirstFreeRecordBmagicMagic16903_801F0368(void); /* @source 0x801F0368 */
+extern u8 reserveFirstFreeRecord(void); /* @source 0x801F0368 */
 
 /* @source 0x801EF2CC
  * @behavior Decrements scratchpad work byte 0x9 with a byte-width
@@ -47,7 +47,7 @@ extern u8 reserveFirstFreeRecordBmagicMagic16903_801F0368(void); /* @source 0x80
  *           byte 0xA and increments work byte 0x2, the handler-index advance
  *           this overlay dispatches on. A loop of 0x18 iterations then claims
  *           one pool record per iteration through
- *           reserveFirstFreeRecordBmagicMagic16903_801F0368 and skips the
+ *           reserveFirstFreeRecord and skips the
  *           iteration when that claim returns 0xFF. The returned index is
  *           scaled by the 0x78-byte record stride and the claimed record is
  *           seeded: byte 0x1 is cleared, byte 0xB receives the loop ordinal,
@@ -105,7 +105,7 @@ void decrementClearingStampingPublishing(
         g_battle_work[0x02]++;
 
         for (i = 0; i < 0x18; i++) {
-            index = reserveFirstFreeRecordBmagicMagic16903_801F0368();
+            index = reserveFirstFreeRecord();
             if (index == 0xFF) {
                 continue;
             }

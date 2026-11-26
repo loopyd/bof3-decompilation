@@ -13,7 +13,7 @@ typedef struct BmagicMagic22303DispatchTable {
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Record pool of this overlay at 0x801EFC60: 64 records of stride 0x78, the
- * same pool reserveFirstFreeRecordBmagicMagic22303_801EFB78 claims from. Byte 0
+ * same pool reserveFirstFreeRecord claims from. Byte 0
  * bit 0 is the in-use flag this sweep tests, and the word at 0x74 of a record
  * holds the work pointer stored when the record was claimed. The flags read
  * re-materialises this base, so the array keeps the pool name. */
@@ -72,7 +72,7 @@ extern void callStateTablefc40(
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic22303_801EEC10(
+void dispatchOccupiedRecordStep(
     void) {
   BmagicMagic22303DispatchTable handlers;
   u8 index;

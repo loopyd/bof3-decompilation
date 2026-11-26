@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 D_80145FB8 = 0x80145FB8;
-dispatchWorkByte1HandlerBmagicMagic15103_801EEC50 = 0x801EEC50;
+dispatchWorkByte1Handler = 0x801EEC50;
 func_801EECB0 = 0x801EECB0;
 callLocalPair = 0x801EEDE0;
 func_801EEE38 = 0x801EEE38;

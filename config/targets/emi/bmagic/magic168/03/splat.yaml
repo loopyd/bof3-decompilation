@@ -82,8 +82,8 @@ segments:
     - func_801EFCD8
   - - 5116
     - c
-    - reserveFirstFreeRecordBmagicMagic16803_801EFFFC
-    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16803_801EFFFC.c'
+    - reserveFirstFreeRecord
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecord6.c'
     - '@behavior: Reserves the first of 128 records in the 0x801F01B0 pool whose flags byte has bit 0 clear, sets that bit with one sb and returns the record index, re-materializing the pool address for the load and again for the store, and returns 0xFF once all 128 records of stride 0x2C are occupied. Takes no arguments, returns the slot index as an unsigned byte and touches no other state.'
   - - 5224
     - c
