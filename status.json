@@ -48,17 +48,17 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "65f1f330f37939cfe0fe2a05a72b20d5c54a1cdb",
-  "published_at": "2026-11-26T10:36:31.776750+00:00",
+  "revision": "124a8c518f31d41fb430433a823984a955e900dd",
+  "published_at": "2026-11-26T18:04:28.081442+00:00",
   "counts": {
     "completed": 6961,
     "partial": 376,
-    "unlifted": 3101,
+    "unlifted": 3097,
     "invalid": 0,
-    "total": 10438,
+    "total": 10434,
     "symbols": {
-      "named": 7824,
-      "raw": 3755,
+      "named": 8045,
+      "raw": 3534,
       "total": 11579
     }
   },
@@ -75,8 +75,8 @@
       "invalid": 0,
       "total": 31,
       "symbols": {
-        "named": 24,
-        "raw": 10,
+        "named": 25,
+        "raw": 9,
         "total": 34
       },
       "binary": {
@@ -809,8 +809,8 @@
       "invalid": 0,
       "total": 374,
       "symbols": {
-        "named": 368,
-        "raw": 121,
+        "named": 371,
+        "raw": 118,
         "total": 489
       },
       "binary": {
@@ -3644,7 +3644,7 @@
               {
                 "address": 2149460616,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/func_801E2A88.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/selectEnemyResultByte.c#L13"
               }
             ]
           },
@@ -4502,7 +4502,7 @@
               {
                 "address": 2149472200,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/enterFrontendMode4.c#L9"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/enterFrontendMode.c#L9"
               }
             ]
           },
@@ -5217,7 +5217,7 @@
               {
                 "address": 2149486040,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/func_801E8DD8.c#L26"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/deriveQueuedDrawPosition.c#L26"
               }
             ]
           },
@@ -5425,7 +5425,7 @@
               {
                 "address": 2149488552,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/func_801E97A8.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/computePanelRatioByte.c#L13"
               }
             ]
           },
@@ -12021,7 +12021,7 @@
               {
                 "address": 2148212948,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L48"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L52"
               }
             ]
           },
@@ -12086,7 +12086,7 @@
               {
                 "address": 2148213272,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L25"
               }
             ]
           },
@@ -12112,7 +12112,7 @@
               {
                 "address": 2148213420,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L30"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L34"
               }
             ]
           },
@@ -12151,7 +12151,7 @@
               {
                 "address": 2148213688,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L66"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L70"
               }
             ]
           },
@@ -12164,7 +12164,7 @@
               {
                 "address": 2148213752,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L16"
               }
             ]
           },
@@ -12216,7 +12216,7 @@
               {
                 "address": 2148214028,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L39"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L43"
               }
             ]
           },
@@ -12229,7 +12229,7 @@
               {
                 "address": 2148214092,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L57"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/battle/panelTasksBattle15.c#L61"
               }
             ]
           },
@@ -13227,8 +13227,8 @@
       "invalid": 0,
       "total": 36,
       "symbols": {
-        "named": 26,
-        "raw": 13,
+        "named": 29,
+        "raw": 10,
         "total": 39
       },
       "binary": {
@@ -16266,8 +16266,8 @@
       "invalid": 0,
       "total": 48,
       "symbols": {
-        "named": 44,
-        "raw": 9,
+        "named": 45,
+        "raw": 8,
         "total": 53
       },
       "binary": {
@@ -17192,8 +17192,8 @@
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 19,
-        "raw": 7,
+        "named": 20,
+        "raw": 6,
         "total": 26
       },
       "binary": {
@@ -17564,8 +17564,8 @@
       "invalid": 0,
       "total": 22,
       "symbols": {
-        "named": 18,
-        "raw": 6,
+        "named": 21,
+        "raw": 3,
         "total": 24
       },
       "binary": {
@@ -22856,8 +22856,8 @@
       "invalid": 0,
       "total": 34,
       "symbols": {
-        "named": 31,
-        "raw": 4,
+        "named": 32,
+        "raw": 3,
         "total": 35
       },
       "binary": {
@@ -23770,8 +23770,8 @@
       "invalid": 0,
       "total": 26,
       "symbols": {
-        "named": 18,
-        "raw": 10,
+        "named": 19,
+        "raw": 9,
         "total": 28
       },
       "binary": {
@@ -24161,8 +24161,8 @@
       "invalid": 0,
       "total": 46,
       "symbols": {
-        "named": 26,
-        "raw": 21,
+        "named": 28,
+        "raw": 19,
         "total": 47
       },
       "binary": {
@@ -25022,8 +25022,8 @@
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 8,
-        "raw": 13,
+        "named": 11,
+        "raw": 10,
         "total": 21
       },
       "binary": {
@@ -25329,8 +25329,8 @@
       "invalid": 0,
       "total": 29,
       "symbols": {
-        "named": 23,
-        "raw": 6,
+        "named": 24,
+        "raw": 5,
         "total": 29
       },
       "binary": {
@@ -25747,8 +25747,8 @@
       "invalid": 0,
       "total": 15,
       "symbols": {
-        "named": 10,
-        "raw": 6,
+        "named": 11,
+        "raw": 5,
         "total": 16
       },
       "binary": {
@@ -27164,8 +27164,8 @@
       "invalid": 0,
       "total": 22,
       "symbols": {
-        "named": 15,
-        "raw": 8,
+        "named": 16,
+        "raw": 7,
         "total": 23
       },
       "binary": {
@@ -27503,8 +27503,8 @@
       "invalid": 0,
       "total": 21,
       "symbols": {
-        "named": 9,
-        "raw": 15,
+        "named": 11,
+        "raw": 13,
         "total": 24
       },
       "binary": {
@@ -28013,8 +28013,8 @@
       "invalid": 0,
       "total": 24,
       "symbols": {
-        "named": 16,
-        "raw": 9,
+        "named": 17,
+        "raw": 8,
         "total": 25
       },
       "binary": {
@@ -29155,8 +29155,8 @@
       "invalid": 0,
       "total": 5,
       "symbols": {
-        "named": 4,
-        "raw": 2,
+        "named": 5,
+        "raw": 1,
         "total": 6
       },
       "binary": {
@@ -29548,8 +29548,8 @@
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 12,
-        "raw": 14,
+        "named": 16,
+        "raw": 10,
         "total": 26
       },
       "binary": {
@@ -29920,8 +29920,8 @@
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 13,
-        "raw": 15,
+        "named": 17,
+        "raw": 11,
         "total": 28
       },
       "binary": {
@@ -30298,8 +30298,8 @@
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 22,
-        "raw": 9,
+        "named": 24,
+        "raw": 7,
         "total": 31
       },
       "binary": {
@@ -30696,8 +30696,8 @@
       "invalid": 0,
       "total": 23,
       "symbols": {
-        "named": 9,
-        "raw": 15,
+        "named": 12,
+        "raw": 12,
         "total": 24
       },
       "binary": {
@@ -31042,8 +31042,8 @@
       "invalid": 0,
       "total": 23,
       "symbols": {
-        "named": 12,
-        "raw": 14,
+        "named": 13,
+        "raw": 13,
         "total": 26
       },
       "binary": {
@@ -31982,8 +31982,8 @@
       "invalid": 0,
       "total": 26,
       "symbols": {
-        "named": 23,
-        "raw": 7,
+        "named": 24,
+        "raw": 6,
         "total": 30
       },
       "binary": {
@@ -33511,8 +33511,8 @@
       "invalid": 0,
       "total": 26,
       "symbols": {
-        "named": 16,
-        "raw": 14,
+        "named": 17,
+        "raw": 13,
         "total": 30
       },
       "binary": {
@@ -34582,8 +34582,8 @@
       "invalid": 0,
       "total": 24,
       "symbols": {
-        "named": 16,
-        "raw": 9,
+        "named": 19,
+        "raw": 6,
         "total": 25
       },
       "binary": {
@@ -35241,8 +35241,8 @@
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 10,
-        "raw": 9,
+        "named": 11,
+        "raw": 8,
         "total": 19
       },
       "binary": {
@@ -36340,8 +36340,8 @@
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 21,
-        "raw": 11,
+        "named": 24,
+        "raw": 8,
         "total": 32
       },
       "binary": {
@@ -36757,8 +36757,8 @@
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 17,
-        "raw": 4,
+        "named": 19,
+        "raw": 2,
         "total": 21
       },
       "binary": {
@@ -37064,8 +37064,8 @@
       "invalid": 0,
       "total": 31,
       "symbols": {
-        "named": 19,
-        "raw": 13,
+        "named": 21,
+        "raw": 11,
         "total": 32
       },
       "binary": {
@@ -38777,8 +38777,8 @@
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 17,
-        "raw": 11,
+        "named": 20,
+        "raw": 8,
         "total": 28
       },
       "binary": {
@@ -40176,8 +40176,8 @@
       "invalid": 0,
       "total": 23,
       "symbols": {
-        "named": 12,
-        "raw": 12,
+        "named": 14,
+        "raw": 10,
         "total": 24
       },
       "binary": {
@@ -43368,8 +43368,8 @@
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 19,
-        "raw": 7,
+        "named": 21,
+        "raw": 5,
         "total": 26
       },
       "binary": {
@@ -44202,8 +44202,8 @@
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 11,
-        "raw": 7,
+        "named": 14,
+        "raw": 4,
         "total": 18
       },
       "binary": {
@@ -46006,8 +46006,8 @@
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 13,
-        "raw": 7,
+        "named": 16,
+        "raw": 4,
         "total": 20
       },
       "binary": {
@@ -47730,8 +47730,8 @@
       "invalid": 0,
       "total": 19,
       "symbols": {
-        "named": 13,
-        "raw": 8,
+        "named": 14,
+        "raw": 7,
         "total": 21
       },
       "binary": {
@@ -55017,8 +55017,8 @@
       "invalid": 0,
       "total": 18,
       "symbols": {
-        "named": 16,
-        "raw": 4,
+        "named": 17,
+        "raw": 3,
         "total": 20
       },
       "binary": {
@@ -57418,8 +57418,8 @@
       "invalid": 0,
       "total": 12,
       "symbols": {
-        "named": 10,
-        "raw": 3,
+        "named": 11,
+        "raw": 2,
         "total": 13
       },
       "binary": {
@@ -57615,8 +57615,8 @@
       "invalid": 0,
       "total": 12,
       "symbols": {
-        "named": 10,
-        "raw": 2,
+        "named": 11,
+        "raw": 1,
         "total": 12
       },
       "binary": {
@@ -58243,8 +58243,8 @@
       "invalid": 0,
       "total": 30,
       "symbols": {
-        "named": 23,
-        "raw": 9,
+        "named": 28,
+        "raw": 4,
         "total": 32
       },
       "binary": {
@@ -59659,8 +59659,8 @@
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 18,
-        "raw": 3,
+        "named": 19,
+        "raw": 2,
         "total": 21
       },
       "binary": {
@@ -59960,8 +59960,8 @@
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 19,
-        "raw": 2,
+        "named": 20,
+        "raw": 1,
         "total": 21
       },
       "binary": {
@@ -60439,8 +60439,8 @@
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 18,
-        "raw": 3,
+        "named": 19,
+        "raw": 2,
         "total": 21
       },
       "binary": {
@@ -60969,8 +60969,8 @@
       "invalid": 0,
       "total": 19,
       "symbols": {
-        "named": 17,
-        "raw": 4,
+        "named": 19,
+        "raw": 2,
         "total": 21
       },
       "binary": {
@@ -61263,8 +61263,8 @@
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 10,
-        "raw": 9,
+        "named": 11,
+        "raw": 8,
         "total": 19
       },
       "binary": {
@@ -61527,12 +61527,12 @@
       "entry": "16",
       "completed": 14,
       "partial": 1,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
-      "total": 23,
+      "total": 22,
       "symbols": {
-        "named": 15,
-        "raw": 9,
+        "named": 17,
+        "raw": 7,
         "total": 24
       },
       "binary": {
@@ -61554,24 +61554,11 @@
           {
             "start": 4,
             "end": 56,
-            "category": "code-unlifted",
-            "detail": "Indexed function",
-            "functions": [
-              {
-                "address": 2148276228,
-                "status": "unlifted",
-                "source": null
-              }
-            ]
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 56,
-            "end": 60,
-            "category": "unknown",
-            "detail": "Conflicting evidence: code-lifted, code-unlifted"
-          },
-          {
-            "start": 60,
             "end": 124,
             "category": "code-lifted",
             "detail": "Indexed function",
@@ -61877,8 +61864,8 @@
       "invalid": 0,
       "total": 43,
       "symbols": {
-        "named": 44,
-        "raw": 4,
+        "named": 45,
+        "raw": 3,
         "total": 48
       },
       "binary": {
@@ -62483,8 +62470,8 @@
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 31,
-        "raw": 6,
+        "named": 35,
+        "raw": 2,
         "total": 37
       },
       "binary": {
@@ -65431,8 +65418,8 @@
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 36,
-        "raw": 2,
+        "named": 38,
+        "raw": 0,
         "total": 38
       },
       "binary": {
@@ -66118,8 +66105,8 @@
       "invalid": 0,
       "total": 52,
       "symbols": {
-        "named": 32,
-        "raw": 22,
+        "named": 33,
+        "raw": 21,
         "total": 54
       },
       "binary": {
@@ -67946,8 +67933,8 @@
       "invalid": 0,
       "total": 9,
       "symbols": {
-        "named": 6,
-        "raw": 5,
+        "named": 7,
+        "raw": 4,
         "total": 11
       },
       "binary": {
@@ -82794,8 +82781,8 @@
       "invalid": 0,
       "total": 47,
       "symbols": {
-        "named": 38,
-        "raw": 7,
+        "named": 44,
+        "raw": 1,
         "total": 45
       },
       "binary": {
@@ -91949,12 +91936,12 @@
       "entry": "00",
       "completed": 38,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 40,
+      "total": 39,
       "symbols": {
-        "named": 38,
-        "raw": 2,
+        "named": 39,
+        "raw": 1,
         "total": 40
       },
       "binary": {
@@ -92470,15 +92457,8 @@
           {
             "start": 9304,
             "end": 9400,
-            "category": "code-unlifted",
-            "detail": "Indexed function",
-            "functions": [
-              {
-                "address": 2149386328,
-                "status": "unlifted",
-                "source": null
-              }
-            ]
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 9400,
@@ -94954,12 +94934,12 @@
       "entry": "00",
       "completed": 23,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 25,
+      "total": 24,
       "symbols": {
-        "named": 23,
-        "raw": 2,
+        "named": 24,
+        "raw": 1,
         "total": 25
       },
       "binary": {
@@ -95280,15 +95260,8 @@
           {
             "start": 5376,
             "end": 5440,
-            "category": "code-unlifted",
-            "detail": "Indexed function",
-            "functions": [
-              {
-                "address": 2149382400,
-                "status": "unlifted",
-                "source": null
-              }
-            ]
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 5440,
@@ -96137,12 +96110,12 @@
       "entry": "00",
       "completed": 38,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 40,
+      "total": 39,
       "symbols": {
-        "named": 38,
-        "raw": 2,
+        "named": 39,
+        "raw": 1,
         "total": 40
       },
       "binary": {
@@ -96658,15 +96631,8 @@
           {
             "start": 9100,
             "end": 9196,
-            "category": "code-unlifted",
-            "detail": "Indexed function",
-            "functions": [
-              {
-                "address": 2149386124,
-                "status": "unlifted",
-                "source": null
-              }
-            ]
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 9196,
@@ -97062,8 +97028,8 @@
       "invalid": 0,
       "total": 37,
       "symbols": {
-        "named": 31,
-        "raw": 7,
+        "named": 32,
+        "raw": 6,
         "total": 38
       },
       "binary": {
@@ -98191,8 +98157,8 @@
       "invalid": 0,
       "total": 40,
       "symbols": {
-        "named": 37,
-        "raw": 4,
+        "named": 38,
+        "raw": 3,
         "total": 41
       },
       "binary": {
@@ -102770,8 +102736,8 @@
       "invalid": 0,
       "total": 83,
       "symbols": {
-        "named": 85,
-        "raw": 10,
+        "named": 86,
+        "raw": 9,
         "total": 95
       },
       "binary": {
@@ -103637,7 +103603,7 @@
               {
                 "address": 2149566096,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801FC690.c#L24"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateStartSceneSix.c#L24"
               }
             ]
           },
@@ -106454,8 +106420,8 @@
       "invalid": 0,
       "total": 106,
       "symbols": {
-        "named": 62,
-        "raw": 49,
+        "named": 64,
+        "raw": 47,
         "total": 111
       },
       "binary": {
@@ -111342,8 +111308,8 @@
       "invalid": 0,
       "total": 67,
       "symbols": {
-        "named": 64,
-        "raw": 7,
+        "named": 67,
+        "raw": 4,
         "total": 71
       },
       "binary": {
@@ -114787,8 +114753,8 @@
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 21,
-        "raw": 2,
+        "named": 23,
+        "raw": 0,
         "total": 23
       },
       "binary": {
@@ -114952,7 +114918,7 @@
               {
                 "address": 2149545872,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7790_scena16.c#L41"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateWindowFadeIntro.c#L41"
               }
             ]
           },
@@ -114965,7 +114931,7 @@
               {
                 "address": 2149547204,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/func_801F7CC4_scena16.c#L53"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/stateWindowFadeHold.c#L53"
               }
             ]
           },
@@ -118539,8 +118505,8 @@
       "invalid": 0,
       "total": 48,
       "symbols": {
-        "named": 50,
-        "raw": 8,
+        "named": 51,
+        "raw": 7,
         "total": 58
       },
       "binary": {
@@ -121374,8 +121340,8 @@
       "invalid": 0,
       "total": 24,
       "symbols": {
-        "named": 17,
-        "raw": 12,
+        "named": 25,
+        "raw": 4,
         "total": 29
       },
       "binary": {
@@ -121428,7 +121394,7 @@
               {
                 "address": 2149526676,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2C94_area02613.c#L25"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/serviceScratchWorkCursor.c#L25"
               }
             ]
           },
@@ -121467,7 +121433,7 @@
               {
                 "address": 2149526876,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2D5C_area02613.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/dispatchRingSteps.c#L13"
               }
             ]
           },
@@ -121480,7 +121446,7 @@
               {
                 "address": 2149527044,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2E04_area02613.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/renderFlatTriangleRing.c#L20"
               }
             ]
           },
@@ -121493,7 +121459,7 @@
               {
                 "address": 2149527564,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F300C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/selectModeTableProgress.c#L10"
               }
             ]
           },
@@ -121506,7 +121472,7 @@
               {
                 "address": 2149527644,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F305C.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/resetStateSelectProgress.c#L10"
               }
             ]
           },
@@ -121675,7 +121641,7 @@
               {
                 "address": 2149528248,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F32B8.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/publishWorkCursorByte.c#L13"
               }
             ]
           },
@@ -121701,7 +121667,7 @@
               {
                 "address": 2149528416,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3360_area02613.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/claimFrontEndRecord2.c#L15"
               }
             ]
           },
@@ -121726,8 +121692,8 @@
       "invalid": 0,
       "total": 21,
       "symbols": {
-        "named": 6,
-        "raw": 17,
+        "named": 23,
+        "raw": 0,
         "total": 23
       },
       "binary": {
@@ -121767,7 +121733,7 @@
               {
                 "address": 2149526644,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2C74_area02713.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/seedTrailRecords.c#L13"
               }
             ]
           },
@@ -121780,7 +121746,7 @@
               {
                 "address": 2149526876,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2D5C_area02713.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advanceTrailRecords.c#L17"
               }
             ]
           },
@@ -121793,7 +121759,7 @@
               {
                 "address": 2149527100,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2E3C.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/projectTrailHead.c#L13"
               }
             ]
           },
@@ -121819,7 +121785,7 @@
               {
                 "address": 2149527628,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F304C.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/fillProjectedTrail.c#L13"
               }
             ]
           },
@@ -121845,7 +121811,7 @@
               {
                 "address": 2149527908,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3164_area02713.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/pollLoaderRequest.c#L12"
               }
             ]
           },
@@ -121871,7 +121837,7 @@
               {
                 "address": 2149528240,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F32B0_area02713.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advanceCursorMarkers.c#L13"
               }
             ]
           },
@@ -121884,7 +121850,7 @@
               {
                 "address": 2149528488,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F33A8_area02713.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/renderAnchorMarker.c#L16"
               }
             ]
           },
@@ -121910,7 +121876,7 @@
               {
                 "address": 2149529056,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F35E0.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateArmStage1.c#L10"
               }
             ]
           },
@@ -121923,7 +121889,7 @@
               {
                 "address": 2149529112,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3618.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateArmStage2.c#L10"
               }
             ]
           },
@@ -121936,7 +121902,7 @@
               {
                 "address": 2149529168,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3650.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateProgress5Or6.c#L10"
               }
             ]
           },
@@ -121949,7 +121915,7 @@
               {
                 "address": 2149529232,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3690.c#L7"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateProgress91Or90.c#L7"
               }
             ]
           },
@@ -121962,7 +121928,7 @@
               {
                 "address": 2149529296,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F36D0.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateProgress92Or93.c#L10"
               }
             ]
           },
@@ -121975,7 +121941,7 @@
               {
                 "address": 2149529360,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3710.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/claimRecordSlot.c#L11"
               }
             ]
           },
@@ -121988,7 +121954,7 @@
               {
                 "address": 2149529452,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F376C_area02713.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/queueMarkerBlock.c#L14"
               }
             ]
           },
@@ -122001,7 +121967,7 @@
               {
                 "address": 2149529572,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F37E4_area02713.c#L23"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateStartupSequenceFirst.c#L23"
               }
             ]
           },
@@ -122014,7 +121980,7 @@
               {
                 "address": 2149529932,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F394C_area02713.c#L23"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateStartupSequenceSecond.c#L23"
               }
             ]
           },
@@ -122039,8 +122005,8 @@
       "invalid": 0,
       "total": 13,
       "symbols": {
-        "named": 7,
-        "raw": 7,
+        "named": 12,
+        "raw": 2,
         "total": 14
       },
       "binary": {
@@ -122080,7 +122046,7 @@
               {
                 "address": 2149526600,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2C48.c#L10"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/seedWorkAdvanceSlot.c#L10"
               }
             ]
           },
@@ -122093,7 +122059,7 @@
               {
                 "address": 2149526656,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2C80.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateProgress25Gate.c#L12"
               }
             ]
           },
@@ -122119,7 +122085,7 @@
               {
                 "address": 2149526844,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F2D3C_area02813.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawTrailCenterSolid.c#L20"
               }
             ]
           },
@@ -122184,7 +122150,7 @@
               {
                 "address": 2149527948,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F318C.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawTrailGouraudRing.c#L16"
               }
             ]
           },
@@ -122223,7 +122189,7 @@
               {
                 "address": 2149528612,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_801F3424_area02813.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/spawnFrontRecord.c#L15"
               }
             ]
           },
@@ -125767,8 +125733,8 @@
       "invalid": 0,
       "total": 8,
       "symbols": {
-        "named": 4,
-        "raw": 6,
+        "named": 7,
+        "raw": 3,
         "total": 10
       },
       "binary": {
@@ -125815,7 +125781,7 @@
               {
                 "address": 2148487240,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_800F5048.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/dispatchPhasePanelSetup.c#L13"
               }
             ]
           },
@@ -125828,7 +125794,7 @@
               {
                 "address": 2148487348,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_800F50B4.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/enterFrontendModePhase.c#L12"
               }
             ]
           },
@@ -125841,7 +125807,7 @@
               {
                 "address": 2148487436,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/func_800F510C.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/restartPhaseOnGate.c#L13"
               }
             ]
           },
@@ -125936,8 +125902,8 @@
       "invalid": 0,
       "total": 23,
       "symbols": {
-        "named": 23,
-        "raw": 5,
+        "named": 25,
+        "raw": 3,
         "total": 28
       },
       "binary": {
@@ -126970,8 +126936,8 @@
       "invalid": 0,
       "total": 7,
       "symbols": {
-        "named": 5,
-        "raw": 3,
+        "named": 6,
+        "raw": 2,
         "total": 8
       },
       "binary": {
@@ -128123,8 +128089,8 @@
       "invalid": 0,
       "total": 37,
       "symbols": {
-        "named": 26,
-        "raw": 14,
+        "named": 30,
+        "raw": 10,
         "total": 40
       },
       "binary": {
@@ -129701,8 +129667,8 @@
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 23,
-        "raw": 15,
+        "named": 26,
+        "raw": 12,
         "total": 38
       },
       "binary": {
@@ -130197,8 +130163,8 @@
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 19,
-        "raw": 8,
+        "named": 21,
+        "raw": 6,
         "total": 27
       },
       "binary": {
@@ -130563,8 +130529,8 @@
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 25,
-        "raw": 4,
+        "named": 26,
+        "raw": 3,
         "total": 29
       },
       "binary": {
@@ -131193,8 +131159,8 @@
       "invalid": 0,
       "total": 26,
       "symbols": {
-        "named": 15,
-        "raw": 12,
+        "named": 17,
+        "raw": 10,
         "total": 27
       },
       "binary": {
@@ -132329,8 +132295,8 @@
       "invalid": 0,
       "total": 15,
       "symbols": {
-        "named": 10,
-        "raw": 5,
+        "named": 11,
+        "raw": 4,
         "total": 15
       },
       "binary": {
@@ -136916,8 +136882,8 @@
       "invalid": 0,
       "total": 55,
       "symbols": {
-        "named": 39,
-        "raw": 2,
+        "named": 40,
+        "raw": 1,
         "total": 41
       },
       "binary": {
@@ -138733,8 +138699,8 @@
       "invalid": 0,
       "total": 48,
       "symbols": {
-        "named": 40,
-        "raw": 10,
+        "named": 41,
+        "raw": 9,
         "total": 50
       },
       "binary": {
@@ -140251,8 +140217,8 @@
       "invalid": 0,
       "total": 14,
       "symbols": {
-        "named": 4,
-        "raw": 11,
+        "named": 5,
+        "raw": 10,
         "total": 15
       },
       "binary": {
@@ -141755,8 +141721,8 @@
       "invalid": 0,
       "total": 30,
       "symbols": {
-        "named": 21,
-        "raw": 10,
+        "named": 23,
+        "raw": 8,
         "total": 31
       },
       "binary": {
@@ -144955,8 +144921,8 @@
       "invalid": 0,
       "total": 21,
       "symbols": {
-        "named": 9,
-        "raw": 13,
+        "named": 10,
+        "raw": 12,
         "total": 22
       },
       "binary": {
@@ -145531,8 +145497,8 @@
       "invalid": 0,
       "total": 34,
       "symbols": {
-        "named": 25,
-        "raw": 10,
+        "named": 26,
+        "raw": 9,
         "total": 35
       },
       "binary": {
@@ -146014,8 +145980,8 @@
       "invalid": 0,
       "total": 13,
       "symbols": {
-        "named": 11,
-        "raw": 2,
+        "named": 12,
+        "raw": 1,
         "total": 13
       },
       "binary": {
@@ -147079,8 +147045,8 @@
       "invalid": 0,
       "total": 43,
       "symbols": {
-        "named": 29,
-        "raw": 15,
+        "named": 32,
+        "raw": 12,
         "total": 44
       },
       "binary": {
@@ -147679,8 +147645,8 @@
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 21,
-        "raw": 8,
+        "named": 22,
+        "raw": 7,
         "total": 29
       },
       "binary": {
@@ -150280,8 +150246,8 @@
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 20,
-        "raw": 9,
+        "named": 21,
+        "raw": 8,
         "total": 29
       },
       "binary": {
@@ -150797,8 +150763,8 @@
       "invalid": 0,
       "total": 94,
       "symbols": {
-        "named": 86,
-        "raw": 10,
+        "named": 90,
+        "raw": 6,
         "total": 96
       },
       "binary": {
@@ -153040,8 +153006,8 @@
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 12,
-        "raw": 14,
+        "named": 13,
+        "raw": 13,
         "total": 26
       },
       "binary": {
@@ -153412,8 +153378,8 @@
       "invalid": 0,
       "total": 8,
       "symbols": {
-        "named": 8,
-        "raw": 2,
+        "named": 10,
+        "raw": 0,
         "total": 10
       },
       "binary": {
@@ -153557,8 +153523,8 @@
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 25,
-        "raw": 11,
+        "named": 28,
+        "raw": 8,
         "total": 36
       },
       "binary": {
@@ -154053,8 +154019,8 @@
       "invalid": 0,
       "total": 24,
       "symbols": {
-        "named": 19,
-        "raw": 6,
+        "named": 20,
+        "raw": 5,
         "total": 25
       },
       "binary": {
@@ -154264,7 +154230,7 @@
               {
                 "address": 2149529452,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateMidpointPointThird.c#L49"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stateMidpointPointThird.c#L48"
               }
             ]
           },
@@ -154418,8 +154384,8 @@
       "invalid": 0,
       "total": 42,
       "symbols": {
-        "named": 33,
-        "raw": 23,
+        "named": 42,
+        "raw": 14,
         "total": 56
       },
       "binary": {
@@ -155011,8 +154977,8 @@
       "invalid": 0,
       "total": 9,
       "symbols": {
-        "named": 7,
-        "raw": 3,
+        "named": 8,
+        "raw": 2,
         "total": 10
       },
       "binary": {
@@ -158866,8 +158832,8 @@
       "invalid": 0,
       "total": 34,
       "symbols": {
-        "named": 23,
-        "raw": 12,
+        "named": 25,
+        "raw": 10,
         "total": 35
       },
       "binary": {
@@ -159355,8 +159321,8 @@
       "invalid": 0,
       "total": 32,
       "symbols": {
-        "named": 24,
-        "raw": 9,
+        "named": 27,
+        "raw": 6,
         "total": 33
       },
       "binary": {
@@ -161554,8 +161520,8 @@
       "invalid": 0,
       "total": 45,
       "symbols": {
-        "named": 34,
-        "raw": 12,
+        "named": 36,
+        "raw": 10,
         "total": 46
       },
       "binary": {
@@ -165996,8 +165962,8 @@
       "invalid": 0,
       "total": 31,
       "symbols": {
-        "named": 22,
-        "raw": 14,
+        "named": 26,
+        "raw": 10,
         "total": 36
       },
       "binary": {
@@ -166440,8 +166406,8 @@
       "invalid": 0,
       "total": 22,
       "symbols": {
-        "named": 13,
-        "raw": 12,
+        "named": 14,
+        "raw": 11,
         "total": 25
       },
       "binary": {
@@ -166779,8 +166745,8 @@
       "invalid": 0,
       "total": 15,
       "symbols": {
-        "named": 12,
-        "raw": 5,
+        "named": 14,
+        "raw": 3,
         "total": 17
       },
       "binary": {
@@ -167033,8 +166999,8 @@
       "invalid": 0,
       "total": 55,
       "symbols": {
-        "named": 49,
-        "raw": 27,
+        "named": 56,
+        "raw": 20,
         "total": 76
       },
       "binary": {
@@ -168072,7 +168038,7 @@
               {
                 "address": 2149378036,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/func_801CE7F4.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/setupStreamDisplay.c#L13"
               }
             ]
           },
@@ -168085,7 +168051,7 @@
               {
                 "address": 2149378268,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/func_801CE8DC.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/flipStreamBuffer.c#L13"
               }
             ]
           },
@@ -168098,7 +168064,7 @@
               {
                 "address": 2149378352,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/func_801CE930.c#L25"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/startStreamDecoder.c#L25"
               }
             ]
           },
@@ -168137,7 +168103,7 @@
               {
                 "address": 2149379208,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/func_801CEC88.c#L13"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/waitStreamTransfer.c#L13"
               }
             ]
           },
@@ -168150,7 +168116,7 @@
               {
                 "address": 2149379236,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/func_801CECA4.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/streamDecodeCallback.c#L17"
               }
             ]
           },
@@ -168176,7 +168142,7 @@
               {
                 "address": 2149379492,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/func_801CEDA4.c#L12"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boot/rampCdMixDown.c#L12"
               }
             ]
           },
@@ -169205,8 +169171,8 @@
       "invalid": 0,
       "total": 122,
       "symbols": {
-        "named": 230,
-        "raw": 369,
+        "named": 235,
+        "raw": 364,
         "total": 599
       },
       "binary": {
@@ -171534,7 +171500,7 @@
               {
                 "address": 2148851964,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/io/func_8014E0FC.c#L26"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/io/resourceLoadImageFile.c#L26"
               }
             ]
           },
