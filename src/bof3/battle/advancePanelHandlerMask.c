@@ -14,12 +14,12 @@ void advancePanelHandlerMask(void) {
   u8* mask;
   s16 state;
 
-  state = *(s16*)&D_80148648[6];
+  state = *(s16*)&((u8*)panelTaskRoot)[6];
   if (state == -0x16) {
     mask = &D_80146329;
     *mask &= (u8)~D_801EB4DC[1];
     func_80158E20();
   } else {
-    *(s16*)&D_80148648[6] = state - 8;
+    *(s16*)&((u8*)panelTaskRoot)[6] = state - 8;
   }
 }

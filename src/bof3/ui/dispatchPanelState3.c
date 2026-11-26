@@ -2,12 +2,10 @@
 
 /* Both accesses need the target-local symbol relocation, rather than the shared
  * constant view used by the other panel task code: reading the cell twice
- * through g_PanelTaskRoot folds the address into one hoisted callee-saved base. */
-#undef D_80148648
-
+ * through panelTaskRoot folds the address into one hoisted callee-saved base. */
 /* @source 0x801E3CF8
  * @behavior panel state dispatcher sibling of dispatchPriceListState, dispatchPanelState1 and
- *           dispatchPanelState2: calls the handler D_801E5E5C[D_80148648->state]
+ *           dispatchPanelState2: calls the handler D_801E5E5C[panelTaskRoot->state]
  *           selected by the panel task root state byte with no arguments
  *           (framed jalr), then forwards the same panel task root to the shop
  *           panel step func_801E1710.
@@ -16,6 +14,6 @@
  * @residual none
  */
 void dispatchPanelState3(void) {
-  D_801E5E5C[D_80148648->state]();
-  func_801E1710(D_80148648);
+  D_801E5E5C[panelTaskRoot->state]();
+  func_801E1710(panelTaskRoot);
 }

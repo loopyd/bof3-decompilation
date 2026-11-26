@@ -8,7 +8,7 @@
  */
 void statePanelRingDiffers(void) {
     if (uiRingTail != uiRingHead) {
-        ((u8*)D_80148648)[3]++;
+        ((u8*)panelTaskRoot)[3]++;
         D_801EC2E4 = 1;
     }
 }

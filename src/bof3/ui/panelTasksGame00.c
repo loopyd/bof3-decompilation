@@ -70,7 +70,7 @@ void advancePanelField6To16(void) {
   PanelTask* task;
   u16        next;
 
-  task = D_80148648;
+  task = panelTaskRoot;
   next = task->field_06 + 0x10;
   task->field_06 = next;
   if ((s16)next >= 0x11) {

@@ -33,7 +33,7 @@ void applyPanelHpOffsets(void) {
   u8  b1;
   u8  flags;
 
-  panel = D_80148648;
+  panel = panelTaskRoot;
   index = panel[0xA];
   b0 = D_80145E98[index * 0x140];
   b1 = D_80145F09[index * 0x140];
@@ -41,28 +41,28 @@ void applyPanelHpOffsets(void) {
                      *(s8*)&D_801EB0B0[b1 * 8 + b0 * 2] +
                      (b0 == 0 || b0 == 3 ? D_801EAEA4 : D_801EAEA6);
 
-  *(s16*)&D_80148648[6] =
-      *(u16*)&D_80145EC0[D_80148648[0xA] * 0x140] +
+  *(s16*)&((u8*)panelTaskRoot)[6] =
+      *(u16*)&D_80145EC0[((u8*)panelTaskRoot)[0xA] * 0x140] +
       (s8)D_801EB0B1[b1 * 8 + b0 * 2] + 12;
 
   if (D_801462EF != 0) {
     flags = *D_801EB4D8;
     if ((flags & 0xC0) == 0) {
-      if (flags != D_80148648[0xA]) {
-        D_80148648[0xF] = 0;
-        D_80148648[3] -= 1;
+      if (flags != ((u8*)panelTaskRoot)[0xA]) {
+        ((u8*)panelTaskRoot)[0xF] = 0;
+        ((u8*)panelTaskRoot)[3] -= 1;
         return;
       }
     } else if ((flags & 0x80) == 0) {
-      D_80148648[0xF] = 0;
-      D_80148648[3] -= 1;
+      ((u8*)panelTaskRoot)[0xF] = 0;
+      ((u8*)panelTaskRoot)[3] -= 1;
       return;
     }
   } else {
-    D_80148648[0xF] = 0;
-    D_80148648[3] -= 1;
+    ((u8*)panelTaskRoot)[0xF] = 0;
+    ((u8*)panelTaskRoot)[3] -= 1;
     return;
   }
-  renderShadowedBattlerHp(*(s16*)&D_80148648[4],
-                                   *(s16*)&D_80148648[6], D_80148648[0xA]);
+  renderShadowedBattlerHp(*(s16*)&((u8*)panelTaskRoot)[4],
+                                   *(s16*)&((u8*)panelTaskRoot)[6], ((u8*)panelTaskRoot)[0xA]);
 }

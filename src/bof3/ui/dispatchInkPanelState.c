@@ -3,15 +3,13 @@
 /* Both accesses need the target-local symbol relocation, matching the sibling
  * state dispatchers dispatchPriceListState, dispatchPanelState1, dispatchPanelState2, dispatchPanelState3,
  * dispatchListBuildState, dispatchPanelFrameState and dispatchFieldIconState: reading the cell twice
- * through the shared g_PanelTaskRoot view folds the address into one hoisted
+ * through the shared panelTaskRoot view folds the address into one hoisted
  * callee-saved base. */
-#undef D_80148648
-
 /* @source 0x801E44E0
  * @behavior panel state dispatcher sibling of dispatchPriceListState, dispatchPanelState1,
  *           dispatchPanelState2, dispatchPanelState3, dispatchListBuildState, dispatchPanelFrameState and
  *           dispatchFieldIconState: calls the handler selected by the panel task root
- *           state byte (D_801E5F3C[D_80148648->state]) with no arguments
+ *           state byte (D_801E5F3C[panelTaskRoot->state]) with no arguments
  *           (framed jalr), then draws the shop ink panel at the same task
  *           root's x and field-6 halfwords through drawShopInkPanel, reading
  *           both fields as signed halfwords so they reach the drawer with `lh`.
@@ -20,6 +18,6 @@
  * @residual none
  */
 void dispatchInkPanelState(void) {
-  D_801E5F3C[D_80148648->state]();
-  drawShopInkPanel((s16)D_80148648->x, (s16)D_80148648->field_06);
+  D_801E5F3C[panelTaskRoot->state]();
+  drawShopInkPanel((s16)panelTaskRoot->x, (s16)panelTaskRoot->field_06);
 }

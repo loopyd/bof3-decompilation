@@ -119,7 +119,7 @@ def test_repository_metadata_preflight() -> None:
     # Semantic filenames resolve as lifts; raw func_<ADDR> filenames resolve
     # only through their @source tag (both repaired above).
     assert source_address(root / "src/bof3/world/stateMaskedCoordinateSteps.c") == 0x801DFFEC
-    assert source_address(root / "src/bof3/world/func_801F36A0.c") == 0x801F36A0
+    assert source_address(root / "src/bof3/battle/func_8009FFF8.c") == 0x8009FFF8
     assert any(path.name == "seedMenuScratch.c" for path in accepted), (
         "a reviewed semantic-named lift did not resolve"
     )

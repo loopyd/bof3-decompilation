@@ -25,5 +25,5 @@ void stateAgeActorCountdowns(void) {
     index += 1u;
   } while (index < 7u);
 
-  drawBattlerCountdownEntries(*(s16*)&D_80148648[4], *(s16*)&D_80148648[6]);
+  drawBattlerCountdownEntries(*(s16*)&((u8*)panelTaskRoot)[4], *(s16*)&((u8*)panelTaskRoot)[6]);
 }

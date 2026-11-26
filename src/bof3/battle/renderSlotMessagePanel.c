@@ -17,12 +17,12 @@
 void renderSlotMessagePanel(void) {
   u8 count;
 
-  count = countMessageTokens(D_801EB4F4[D_80148648[0xA]].unk_00);
+  count = countMessageTokens(D_801EB4F4[((u8*)panelTaskRoot)[0xA]].unk_00);
 
-  renderBattlePanelMessage(*(s16*)&D_80148648[4] - 0x10,
-                              *(s16*)&D_80148648[6]);
-  func_8014F800((s16)(*(u16*)&D_80148648[4] - count * 4 + 0x26),
-                (s16)(*(u16*)&D_80148648[6] + 3),
-                D_801EB4F4[D_80148648[0xA]].unk_06, 0x12,
-                (u32)D_801EB4F4[D_80148648[0xA]].unk_00);
+  renderBattlePanelMessage(*(s16*)&((u8*)panelTaskRoot)[4] - 0x10,
+                              *(s16*)&((u8*)panelTaskRoot)[6]);
+  func_8014F800((s16)(*(u16*)&((u8*)panelTaskRoot)[4] - count * 4 + 0x26),
+                (s16)(*(u16*)&((u8*)panelTaskRoot)[6] + 3),
+                D_801EB4F4[((u8*)panelTaskRoot)[0xA]].unk_06, 0x12,
+                (u32)D_801EB4F4[((u8*)panelTaskRoot)[0xA]].unk_00);
 }

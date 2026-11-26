@@ -12,5 +12,5 @@ void callStateByte2Table(void)
     Battle03EightDispatchTable handlers;
 
     handlers = D_801D0F80;
-    handlers.handlers[((u8*)D_80148648)[2]]();
+    handlers.handlers[((u8*)panelTaskRoot)[2]]();
 }

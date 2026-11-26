@@ -15,12 +15,12 @@ void drawPanelStripEvent(void) {
   Battle03DispatchTable handlers;
 
   handlers = D_801D0FF8;
-  handlers.handlers[D_80148648[3]]();
+  handlers.handlers[((u8*)panelTaskRoot)[3]]();
 
-  drawBattlePanelStrip(FIELD_REF(s16, D_80148648, 4),
-                       FIELD_REF(s16, D_80148648, 6));
-  func_8014F800((s16)(FIELD_REF(u16, D_80148648, 4) + 4u),
-                (s16)(FIELD_REF(u16, D_80148648, 6) + 3u),
-                D_801EB4F4[D_80148648[0xA]].unk_06, 0xffu,
-                *(u32*)(void*)&D_801EB4F4[D_80148648[0xA]]);
+  drawBattlePanelStrip(FIELD_REF(s16, panelTaskRoot, 4),
+                       FIELD_REF(s16, panelTaskRoot, 6));
+  func_8014F800((s16)(FIELD_REF(u16, panelTaskRoot, 4) + 4u),
+                (s16)(FIELD_REF(u16, panelTaskRoot, 6) + 3u),
+                D_801EB4F4[((u8*)panelTaskRoot)[0xA]].unk_06, 0xffu,
+                *(u32*)(void*)&D_801EB4F4[((u8*)panelTaskRoot)[0xA]]);
 }

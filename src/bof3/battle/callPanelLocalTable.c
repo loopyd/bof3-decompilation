@@ -1,7 +1,4 @@
 #include "bof3/bof3.h"
-
-extern u8 *D_80148648;
-
 /* Battle-end panel handler this shim selects: the overlay's next function at
  * 0x801EFE5C, which drives the panel through renderPanelFrame,
  * func_801EF928 and the overlay's 0x801EEC40 string run. Still an
@@ -27,5 +24,5 @@ void callPanelLocalTable(void) {
   void (*table[2])(void);
 
   table[0] = func_801EFE5C;
-  table[((u8 *)D_80148648)[3]]();
+  table[((u8 *)panelTaskRoot)[3]]();
 }

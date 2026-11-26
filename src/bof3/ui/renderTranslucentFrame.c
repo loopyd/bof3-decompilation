@@ -29,7 +29,7 @@ extern void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
  *           GetClut, func_8014E5A0 and func_801AEBA0 are main-executable calls;
  *           the payload names this span only from the jal at 0x801D306C inside
  *           func_801D2DA8, which passes the two halfwords at 0x4 and 0x6 of the
- *           D_80148648 record, the width 0x118, the height 0x13 and the scratch
+ *           panelTaskRoot record, the width 0x118, the height 0x13 and the scratch
  *           byte D_80144952. One payload cmp proves its 0x54C bytes equal
  *           func_801DAB90 at 0x801DAB90 in emi/etc/shop/00, func_801D1E54 at
  *           0x801D1E54 in emi/etc/sisyou/00, func_801D50E8 at 0x801D50E8 in

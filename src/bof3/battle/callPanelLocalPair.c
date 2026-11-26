@@ -1,7 +1,4 @@
 #include "bof3/bof3.h"
-
-extern u8 *D_80148648;
-
 /* Panel-state handler seeded as entry 0: increments the shared panel state byte
  * (byte +0x03 of the object published at 0x80148648), which is the byte this
  * shim indexes. Declared here for its address. */
@@ -36,7 +33,7 @@ void callPanelLocalPair(void) {
   u8 *task;
 
   do {
-    task = (u8 *)D_80148648;
+    task = (u8 *)panelTaskRoot;
   } while (0);
   table[0] = advanceTaskState;
   table[1] = func_801F07E0;

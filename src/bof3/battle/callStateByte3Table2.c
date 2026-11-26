@@ -12,5 +12,5 @@ void callStateByte3Table2(void) {
   Battle03DispatchTable handlers;
 
   handlers = D_801D0FAC;
-  handlers.handlers[((u8*)D_80148648)[3]]();
+  handlers.handlers[((u8*)panelTaskRoot)[3]]();
 }

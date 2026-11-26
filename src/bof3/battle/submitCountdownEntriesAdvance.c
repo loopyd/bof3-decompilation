@@ -33,14 +33,14 @@ void submitCountdownEntriesAdvance(void) {
     inset = countdown >> 1;
     dimension = 16 - countdown;
     func_801644D8(index,
-                 (u16)(inset + (*(u16*)&D_80148648[4] + x_offset)),
-                 (u16)(inset + (*(u16*)&D_80148648[6] + y_offset)),
+                 (u16)(inset + (*(u16*)&((u8*)panelTaskRoot)[4] + x_offset)),
+                 (u16)(inset + (*(u16*)&((u8*)panelTaskRoot)[6] + y_offset)),
                  dimension, dimension, 128);
     index++;
   } while (index < 5);
 
   if (D_801462FC[0] == 0) {
-    D_80148648[3]++;
+    ((u8*)panelTaskRoot)[3]++;
   } else {
     index = 0;
     do {

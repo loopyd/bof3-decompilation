@@ -141,7 +141,6 @@ typedef struct BattleRecord {
   u8 unk_104[0x14];
 } BattleRecord;
 
-extern PanelTask*   panelTaskRoot; /* @source 0x80148648 @kind unknown */
 
 /* Scratchpad work-area pointer (volatile cell at 0x1F800044).
  * Reloaded per access to match original codegen. */
@@ -666,7 +665,6 @@ void func_801DEA64(s32 arg0);
   PSX_REF(volatile u16, 0x801ca71cu + ((kind) * 0x14u))
 #define BATTLE_SELECTION_KIND_NAME_ID(kind)                                    \
   PSX_REF(volatile u16, 0x801ca71eu + ((kind) * 0x14u))
-#define panelTaskRoot g_PanelTaskRoot
 #define BATTLE_SECONDARY_GROUP_TABLE(index)                                    \
   PSX_REF(volatile u8*, 0x801c893cu + ((index) * 4u))
 #define BATTLE_SELECTION_PANEL_FLAGS(index)                                    \

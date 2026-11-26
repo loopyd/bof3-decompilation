@@ -20,24 +20,24 @@ void syncPanelHandFields(void) {
   u32                   offset;
 
   local_20 = D_801D0FE0;
-  local_20.handlers[D_80148648[3]]();
+  local_20.handlers[((u8*)panelTaskRoot)[3]]();
 
   work_base = (u8*)D_80145E90 + 0x74;
-  index = D_80148648[0xA];
+  index = ((u8*)panelTaskRoot)[0xA];
   record = work_base + index * 0x140;
-  callPanelForwardingTable(D_80148648 + 0xB, (s16*)(record + 0x1C),
-                (s16*)(D_80148648 + 0x1C), (s16*)(D_80148648 + 0x14),
-                (s16*)(record + 0x14), D_80148648 + 0xD,
-                (s16*)(D_80148648 + 0x18), D_80148648 + 0x8);
+  callPanelForwardingTable(((u8*)panelTaskRoot) + 0xB, (s16*)(record + 0x1C),
+                (s16*)(((u8*)panelTaskRoot) + 0x1C), (s16*)(((u8*)panelTaskRoot) + 0x14),
+                (s16*)(record + 0x14), ((u8*)panelTaskRoot) + 0xD,
+                (s16*)(((u8*)panelTaskRoot) + 0x18), ((u8*)panelTaskRoot) + 0x8);
 
-  index = D_80148648[0xA];
+  index = ((u8*)panelTaskRoot)[0xA];
   record = work_base + index * 0x140;
-  callPanelForwardingTable(D_80148648 + 0xC, (s16*)(record + 0x1E),
-                (s16*)(D_80148648 + 0x1E), (s16*)(D_80148648 + 0x16),
-                (s16*)(record + 0x16), D_80148648 + 0xE,
-                (s16*)(D_80148648 + 0x1A), D_80148648 + 0x9);
+  callPanelForwardingTable(((u8*)panelTaskRoot) + 0xC, (s16*)(record + 0x1E),
+                (s16*)(((u8*)panelTaskRoot) + 0x1E), (s16*)(((u8*)panelTaskRoot) + 0x16),
+                (s16*)(record + 0x16), ((u8*)panelTaskRoot) + 0xE,
+                (s16*)(((u8*)panelTaskRoot) + 0x1A), ((u8*)panelTaskRoot) + 0x9);
 
-  offset = (((u32)D_80148648[0xA] << 2) + D_80148648[0xA]) << 6;
+  offset = (((u32)((u8*)panelTaskRoot)[0xA] << 2) + ((u8*)panelTaskRoot)[0xA]) << 6;
   if (*(volatile u16*)&D_80145F18[offset] <
       (*(volatile u16*)&D_80145F20[offset] >> 2)) {
     *(volatile u16*)&D_80145F10[offset] |= 0x2000u;

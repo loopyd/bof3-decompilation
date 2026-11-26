@@ -10,5 +10,5 @@
  */
 void dispatchPanelTaskHandler(void)
 {
-    D_801C7BEC[g_PanelTaskRoot->unk_00[2]]();
+    D_801C7BEC[panelTaskRoot->unk_00[2]]();
 }

@@ -9,7 +9,7 @@
  * @residual Halfword-state and flag-constant register allocation differ at unchanged 96-byte size.
  */
 void advancePanelFlaggedDraw(void) {
-    u8* panel = (u8*)D_80148648;
+    u8* panel = (u8*)panelTaskRoot;
     s16 state;
 
     D_801EC2E4 = 1;

@@ -2,11 +2,9 @@
 
 /* The panel-task root cell at 0x80148648 is read here through its symbol name:
  * each access then materializes the cell address separately, matching the
- * original bytes. The raw-constant g_PanelTaskRoot macro the header defines for
+ * original bytes. The raw-constant panelTaskRoot macro the header defines for
  * that same name would let the compiler keep the address in a callee-saved
  * register across the indirect dispatch instead. */
-#undef panelTaskRoot
-extern PanelTask* panelTaskRoot; /* @source 0x80148648 @kind unknown */
 
 /* @source 0x800B2478
  * @behavior Dispatches the handler selected by the panel task state byte +0x03

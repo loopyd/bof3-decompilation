@@ -2,6 +2,7 @@
 #define EMI_BATTLE_03_INTERNAL_H
 
 #include "bof3/bof3.h"
+#include "panel/task.h"
 #include "battle/ability.h"
 #include "battle/ram.h"
 
@@ -481,7 +482,6 @@ extern u8                            D_801EC2E4; /* @source 0x801EC2E4 */
 extern volatile Battle03UiRingEntry uiRingEntries[]; /* @source 0x801EB5B0 */
 /* @kind: bss (map symbol: uiRingTail) — UI ring producer index. */
 extern volatile u8                   uiRingTail; /* @source 0x801EC328 */
-extern u8*                           D_80148648; /* @source 0x80148648 */
 extern u8                            D_801462E5; /* @source 0x801462E5 */
 extern u8                            D_801462EE; /* @source 0x801462EE @kind unknown */
 extern volatile u8                   D_801462EF; /* @source 0x801462EF @kind unknown */

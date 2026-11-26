@@ -8,7 +8,7 @@
  */
 
 void panelStepRightClamp62(void) {
-  PanelTask* task = g_PanelTaskRoot;
+  PanelTask* task = panelTaskRoot;
   s16        value;
 
   value = task->x + 0x20;

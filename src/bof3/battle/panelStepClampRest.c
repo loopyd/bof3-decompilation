@@ -1,8 +1,6 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* Use the declared root cell so both original pointer loads remain explicit. */
-#undef panelTaskRoot
-
 /* @source 0x800B0F30
  * @behavior Runs the panel-task pass func_800B0F9C, steps signed panel x right
  * by 0x20 while it is below 0x5B, then clamps a signed x of 0x5C or more back

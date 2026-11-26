@@ -1,7 +1,4 @@
 #include "bof3/bof3.h"
-
-extern u8 *D_80148648;
-
 /* @source 0x801F07C0
  * @behavior Advances the shared panel state byte of the battle-end panel: reads
  *           the object published at 0x80148648, increments its byte +0x03 (the
@@ -14,5 +11,5 @@ extern u8 *D_80148648;
  * callPanelLocalPair.
  */
 void advanceTaskState(void) {
-  ((u8 *)D_80148648)[3]++;
+  ((u8 *)panelTaskRoot)[3]++;
 }

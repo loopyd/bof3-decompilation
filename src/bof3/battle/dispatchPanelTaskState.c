@@ -11,5 +11,5 @@ void NO_SIBLING_CALLS dispatchPanelTaskState(void) {
   Battle03FourDispatchTable table;
 
   table = stateByte3Handlers1004;
-  table.handlers[D_80148648[3]]();
+  table.handlers[((u8*)panelTaskRoot)[3]]();
 }

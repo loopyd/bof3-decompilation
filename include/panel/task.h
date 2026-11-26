@@ -11,6 +11,6 @@ typedef struct PanelTask {
   u16 field_06;
 } PanelTask;
 
-#define g_PanelTaskRoot PSX_REF(PanelTask*, 0x80148648u)
+#define panelTaskRoot PSX_REF(PanelTask*, 0x80148648u)
 
 #endif

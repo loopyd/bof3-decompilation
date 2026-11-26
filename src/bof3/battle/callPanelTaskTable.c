@@ -14,8 +14,6 @@ extern PanelHandlerRunBatlEnd00 D_801EEC28; /* @source 0x801EEC28 @kind table */
 /* The shared panel task root cell published at 0x80148648: this shim indexes
  * byte +0x02 of that object, the panel task byte, the same byte the battle
  * overlay dispatchers index. */
-extern PanelTask *D_80148648;
-
 /* @source 0x801EFD98
  * @behavior Battle-end panel task dispatch through a local copy of the
  *   overlay's panel handler run: copies the six handler words at 0x801EEC28
@@ -37,7 +35,7 @@ void callPanelTaskTable(void) {
   PanelHandlerRunBatlEnd00 handlers;
   PanelTask *task;
 
-  task = D_80148648;
+  task = panelTaskRoot;
   handlers = D_801EEC28;
   handlers.handlers[task->unk_00[2]]();
 }

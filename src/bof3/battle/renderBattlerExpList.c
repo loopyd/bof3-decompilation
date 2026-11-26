@@ -1,7 +1,4 @@
 #include "bof3/bof3.h"
-
-extern u8 *D_80148648;
-
 /* Volatile party-size byte at 0x801462F0. The original loads it once for the
  * entry test and again on every loop test, so the load is never hoisted. */
 extern volatile u8 localBattlerCount;
@@ -101,7 +98,7 @@ void renderBattlerExpList(void) {
   s32 offset;
 
   y = 0x2c;
-  renderPanelFrame(0x14, 0x28, 0x118, ((u8 *)D_80148648)[9]);
+  renderPanelFrame(0x14, 0x28, 0x118, ((u8 *)panelTaskRoot)[9]);
   if (localBattlerCount != 0) {
     i = 0;
     buffer = D_80149118;

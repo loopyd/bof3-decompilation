@@ -2,12 +2,10 @@
 
 /* Both accesses need the target-local symbol relocation, matching the sibling
  * state dispatcher dispatchPriceListState: reading the cell twice through the shared
- * g_PanelTaskRoot view folds the address into one hoisted callee-saved base. */
-#undef D_80148648
-
+ * panelTaskRoot view folds the address into one hoisted callee-saved base. */
 /* @source 0x801E2AB0
  * @behavior panel state dispatcher sibling of dispatchPriceListState: calls the handler
- *           D_801E5DCC[D_80148648->state] selected by the panel task root state
+ *           D_801E5DCC[panelTaskRoot->state] selected by the panel task root state
  *           byte with no arguments (framed jalr), then draws the shop money
  *           panel through drawShopMoneyPanel with the same task root's x and
  *           field-6 halfwords, the constant 0 and the main-RAM value
@@ -17,6 +15,6 @@
  * @residual none
  */
 void dispatchMoneyPanelState(void) {
-  D_801E5DCC[D_80148648->state]();
-  drawShopMoneyPanel(D_80148648->x, D_80148648->field_06, 0, D_80144F50);
+  D_801E5DCC[panelTaskRoot->state]();
+  drawShopMoneyPanel(panelTaskRoot->x, panelTaskRoot->field_06, 0, D_80144F50);
 }

@@ -8,7 +8,7 @@
  * @residual none
  */
 void callPanelPositionHandler(void) {
-  u8* panel = (u8*)g_PanelTaskRoot;
+  u8* panel = (u8*)panelTaskRoot;
 
   func_800B4220(FIELD_REF(s16, panel, 4), FIELD_REF(s16, panel, 6),
                 FIELD_REF(u8, panel, 0xB));

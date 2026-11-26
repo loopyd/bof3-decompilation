@@ -26,7 +26,7 @@ void consumeUiRingEntry(void) {
   if ((uiRingEntries[head].unk_00 & 1) != 0) {
     if (D_80145AA8 != 0) {
       if ((advanceUiRingCheck() & 0xff) != 0) {
-        D_80148648[3] = 3;
+        ((u8*)panelTaskRoot)[3] = 3;
       }
     }
   }
@@ -41,7 +41,7 @@ void consumeUiRingEntry(void) {
       uiRingEntries[head].unk_01 = next;
       if ((next & 0xff) == 0) {
         if ((advanceUiRingCheck() & 0xff) != 0) {
-          D_80148648[3] = 3;
+          ((u8*)panelTaskRoot)[3] = 3;
         }
       }
     }

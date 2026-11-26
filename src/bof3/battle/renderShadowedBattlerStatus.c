@@ -66,7 +66,7 @@ void renderShadowedBattlerStatus(s32 arg0, s32 arg1, s32 arg2) {
   y = arg1;
   if (D_801EB6AF[index * 0x118] == 1) {
     renderBattlerStatusGauge((s16)(arg0 + 6), (s16)(arg1 + 0xa),
-                              D_80148648[0xb], D_80148648[0xd], 1);
+                              ((u8*)panelTaskRoot)[0xb], ((u8*)panelTaskRoot)[0xd], 1);
   } else {
     drawDecimalGlyphRun((s16)(arg0 + 0x24), (s16)(arg1 + 0xc), 0, 0xffff);
   }

@@ -17,9 +17,9 @@ void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
  * Live audit: 32/32 instructions, 128/128 bytes, live byte match.
  */
 void drawPanelRingPrim(void) {
-  drawBattlePanelStrip(FIELD_REF(s16, D_80148648, 4),
-                       FIELD_REF(s16, D_80148648, 6));
-  func_8014F800((s16)(FIELD_REF(u16, D_80148648, 4) + 4u),
-                (s16)(FIELD_REF(u16, D_80148648, 6) + 3u), 0, 0xffu,
+  drawBattlePanelStrip(FIELD_REF(s16, panelTaskRoot, 4),
+                       FIELD_REF(s16, panelTaskRoot, 6));
+  func_8014F800((s16)(FIELD_REF(u16, panelTaskRoot, 4) + 4u),
+                (s16)(FIELD_REF(u16, panelTaskRoot, 6) + 3u), 0, 0xffu,
                 uiRingEntries[uiRingHead].unk_04);
 }

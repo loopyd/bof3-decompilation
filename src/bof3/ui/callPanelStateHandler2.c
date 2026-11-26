@@ -1,13 +1,11 @@
 #include "bof3/ui/game00_internal.h"
 
 /* Both accesses need the target-local symbol relocation rather than the shared
- * g_PanelTaskRoot constant view: reading the panel task root cell twice through
+ * panelTaskRoot constant view: reading the panel task root cell twice through
  * the shared view folds its address into one hoisted callee-saved base. */
-#undef D_80148648
-
 /* @source 0x801996A8
  * @behavior front-end panel state dispatcher: calls the handler selected by the
- * panel task root state byte (D_801C7C0C[D_80148648->state]) with no arguments
+ * panel task root state byte (D_801C7C0C[panelTaskRoot->state]) with no arguments
  * (framed jalr), then runs the panel task update over the same task root
  * through func_801D7AD0.
  * @status exact
@@ -15,6 +13,6 @@
  * @residual none
  */
 void callPanelStateHandler2(void) {
-  D_801C7C0C[D_80148648->state]();
-  func_801D7AD0(D_80148648);
+  D_801C7C0C[panelTaskRoot->state]();
+  func_801D7AD0(panelTaskRoot);
 }

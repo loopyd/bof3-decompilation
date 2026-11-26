@@ -17,11 +17,11 @@ void activatePanelTaskUnless(void) {
   if (D_801462EF == 0) {
     return;
   }
-  if (checkBattlerInactiveFlag4000(D_80148648[0xA]) != 0 &&
+  if (checkBattlerInactiveFlag4000(((u8*)panelTaskRoot)[0xA]) != 0 &&
       selectionSetupEnabled() == 0 && selectionSetupEnabledB() == 0) {
     return;
   }
-  if (*D_801EB4D8 == D_80148648[0xA]) {
+  if (*D_801EB4D8 == ((u8*)panelTaskRoot)[0xA]) {
     activatePanelTask();
   }
   if ((*D_801EB4D8 & 0x80) != 0) {

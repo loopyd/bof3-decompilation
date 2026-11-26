@@ -1,8 +1,6 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* Use the named root cell so the post-dispatch access reloads its address. */
-#undef panelTaskRoot
-
 extern BattleSelectionHandler D_800B6E40[]; /* @source 0x800B6E40 @kind table */
 extern u8 D_80144F5D[]; /* @source 0x80144F5D @kind data */
 extern u8 D_80181B10[]; /* @source 0x80181B10 @kind data */

@@ -38,8 +38,6 @@ typedef struct ShopIconTile {
 
 /* @source 0x80148648
  * @kind unknown */
-extern PanelTask* D_80148648;
-#define D_80148648 g_PanelTaskRoot
 
 /* Main-RAM byte tested by the sub-step handler confirmPanelExitStep before it clears
  * the halfword cells D_80145AC8/D_80145AC6 and arms sub-step 0x14; it has no
@@ -311,7 +309,7 @@ extern u8 D_80148655;
 extern volatile u16 D_801490A4;
 
 /* Panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by
  * renderStripSubmitTexture, which calls the selected handler with no
  * arguments (framed jalr) and then draws the panel strip and this panel task's
  * texture. The three pointer entries present in the shipped payload are
@@ -323,7 +321,7 @@ extern volatile u16 D_801490A4;
 extern void (*panelField6HandlerTable[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by the
  * sibling dispatcher dispatchCommandRowState, which calls the selected handler with no
  * arguments (framed jalr) and then draws the command row at the same task
  * root's x/field-6 coordinates, bytes 0xA/0xB and the constant 0 through
@@ -337,7 +335,7 @@ extern void (*panelField6HandlerTable[])(void);
 extern void (*D_801E5DC0[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by the
  * sibling dispatcher dispatchMoneyPanelState, which calls the selected handler with no
  * arguments (framed jalr) and then draws the panel at the same task root's
  * x/field-6 coordinates through drawShopMoneyPanel. The three pointer entries
@@ -356,7 +354,7 @@ extern void (*D_801E5DCC[])(void);
 extern u16 D_801E5DD8[];
 
 /* Panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell) read as an unsigned byte
+ * (panelTaskRoot->state, the shared panelTaskRoot cell) read as an unsigned byte
  * and scaled by 4; dispatched by the sibling dispatcher dispatchParameterState, which
  * calls the selected handler with no arguments (framed jalr) and then forwards
  * the same task root's x and field-6 halfwords, the field-record index
@@ -372,7 +370,7 @@ extern u16 D_801E5DD8[];
 extern void (*D_801E5DDC[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by the
  * sibling dispatcher dispatchEquipPanelState, which calls the selected handler with no
  * arguments (framed jalr) and then draws the shop panel through
  * drawShopEquipPanel with the same task root's x and field-6 halfwords and the
@@ -386,7 +384,7 @@ extern void (*D_801E5DDC[])(void);
 extern void (*D_801E5DF0[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by
  * dispatchPriceListState, which calls the selected handler with no arguments and then
  * steps the same task through drawShopPriceListPanel. The four entries present
  * in the shipped image are panelNoop, advancePanelXTo320, retreatPanelXTo132
@@ -406,7 +404,7 @@ extern void (*D_801E5DFC[])(void);
 extern u8 D_801E5E0C[];
 
 /* Second panel handler table indexed with the panel task root's state byte
- * (D_80148648->state); dispatched by the sibling dispatcher dispatchPanelState1,
+ * (panelTaskRoot->state); dispatched by the sibling dispatcher dispatchPanelState1,
  * which calls the selected handler with no arguments and then forwards the
  * same task root to func_801DC6FC. The three pointer entries present in the
  * shipped payload are panelNoop (0x801E2800), statePanelXTo320
@@ -416,7 +414,7 @@ extern u8 D_801E5E0C[];
 extern void (*D_801E5E2C[])(void);
 
 /* Third panel handler table indexed with the panel task root's state byte
- * (D_80148648->state); dispatched by the sibling dispatcher dispatchPanelState2,
+ * (panelTaskRoot->state); dispatched by the sibling dispatcher dispatchPanelState2,
  * which calls the selected handler with no arguments and then forwards the
  * same task root to the shop panel step func_801E112C. The five pointer
  * entries present in the shipped payload are panelNoop (0x801E2800),
@@ -429,7 +427,7 @@ extern void (*D_801E5E2C[])(void);
 extern void (*D_801E5E48[])(void);
 
 /* Fourth panel handler table indexed with the panel task root's state byte
- * (D_80148648->state); dispatched by the sibling dispatcher dispatchPanelState3,
+ * (panelTaskRoot->state); dispatched by the sibling dispatcher dispatchPanelState3,
  * which calls the selected handler with no arguments (framed jalr) and then
  * forwards the same task root to the shop panel step func_801E1710. The five
  * pointer entries present in the shipped payload are panelNoop (0x801E2800),
@@ -440,7 +438,7 @@ extern void (*D_801E5E48[])(void);
 extern void (*D_801E5E5C[])(void);
 
 /* Panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by the
  * sibling dispatcher dispatchFieldListState, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root's x and field-6
  * halfwords, byte 0xA and the constants 0 and 0 to the shop field-list emitter
@@ -453,7 +451,7 @@ extern void (*D_801E5E5C[])(void);
 extern void (*D_801E5E70[])(void);
 
 /* Fifth panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by the
  * sibling dispatcher dispatchListBuildState, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root to the shop
  * panel step func_801E45C0. The thirteen pointer entries present in the
@@ -468,7 +466,7 @@ extern void (*D_801E5E70[])(void);
 extern void (*D_801E5F14[])(void);
 
 /* Sixth panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by the
  * sibling dispatcher dispatchPanelFrameState, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root to the shop
  * panel emitter drawShopTexturePanel. The nine pointer entries present in the shipped
@@ -483,7 +481,7 @@ extern void (*D_801E5F14[])(void);
 extern void (*D_801E5F24[])(void);
 
 /* Seventh panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by the
  * sibling dispatcher dispatchFieldIconState, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root to the shop
  * panel emitter drawFieldGridPanel. The six pointer entries present in the shipped
@@ -497,7 +495,7 @@ extern void (*D_801E5F24[])(void);
 extern void (*D_801E5F30[])(void);
 
 /* Eighth panel handler table indexed with the panel task root's state byte
- * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
+ * (panelTaskRoot->state, the shared panelTaskRoot cell); dispatched by the
  * sibling dispatcher dispatchInkPanelState, which calls the selected handler with no
  * arguments (framed jalr) and then draws the panel at the same task root's
  * x/field-6 coordinates through drawShopInkPanel. The three pointer entries
@@ -1701,7 +1699,7 @@ extern void (*D_801E5D5C[])(void);
 
 /* @source 0x801E5D68
  * @kind table — handler pointers (this EMI); dispatched by callPanelByteTable
- * with panel task byte 2 (g_PanelTaskRoot->unk_00[2]) as index. */
+ * with panel task byte 2 (panelTaskRoot->unk_00[2]) as index. */
 extern void (*D_801E5D68[])(void);
 
 /* Shop screen draw (lifted); called with no arguments by the phase step

@@ -22,7 +22,7 @@ void renderShadowedSlotStatus(void) {
   s16 value;
   u8  flags;
 
-  panel = D_80148648;
+  panel = panelTaskRoot;
   index = panel[0xA] - 3;
   offset = (u32)index * 0x118;
 
@@ -35,14 +35,14 @@ void renderShadowedSlotStatus(void) {
 
   value = *(u16*)&D_801EB660[(u32)index * 0x118] +
           (s8)D_801EB713[(u32)index * 0x118] + 12;
-  *(s16*)&D_80148648[6] = value;
-  renderShadowedBattlerStatus(*(s16*)&D_80148648[4], value,
-                                 D_80148648[0xA]);
+  *(s16*)&((u8*)panelTaskRoot)[6] = value;
+  renderShadowedBattlerStatus(*(s16*)&((u8*)panelTaskRoot)[4], value,
+                                 ((u8*)panelTaskRoot)[0xA]);
 
   if (D_801462EF != 0) {
     flags = *D_801EB4D8;
     if ((flags & 0xC0) == 0) {
-      if (flags == D_80148648[0xA]) {
+      if (flags == ((u8*)panelTaskRoot)[0xA]) {
         return;
       }
     } else if ((flags & 0x40) != 0) {

@@ -1,6 +1,4 @@
 #include "bof3/bof3.h"
-
-extern u8 *D_80148648;
 extern u8 D_80146327; /* @source 0x80146327 @kind data */
 extern u8 D_80146354[]; /* @source 0x80146354 @kind data */
 
@@ -51,9 +49,9 @@ void renderCountedListPanel(void) {
   s32 x_inset;
   s32 y_inset;
 
-  renderPanelFrame(*(s16 *)((u8 *)D_80148648 + 4),
-                                   *(s16 *)((u8 *)D_80148648 + 6), 0x118,
-                                   ((u8 *)D_80148648)[9]);
+  renderPanelFrame(*(s16 *)((u8 *)((u8*)panelTaskRoot) + 4),
+                                   *(s16 *)((u8 *)((u8*)panelTaskRoot) + 6), 0x118,
+                                   ((u8 *)panelTaskRoot)[9]);
 
   count = &D_80146327;
   if (*count == 0) {
@@ -68,8 +66,8 @@ void renderCountedListPanel(void) {
       x_inset = (i & 1) * 138 + 5;
       y_inset = (i >> 1) * 13 + 4;
       renderCountedListEntry(
-          (s16)(*(u16 *)((u8 *)D_80148648 + 4) + x_inset),
-          (s16)(*(u16 *)((u8 *)D_80148648 + 6) + y_inset), 0, id >> 8, id & 0xff,
+          (s16)(*(u16 *)((u8 *)((u8*)panelTaskRoot) + 4) + x_inset),
+          (s16)(*(u16 *)((u8 *)((u8*)panelTaskRoot) + 6) + y_inset), 0, id >> 8, id & 0xff,
           D_80146354[i], 0);
     }
     i += 1;

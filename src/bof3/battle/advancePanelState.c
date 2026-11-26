@@ -8,7 +8,7 @@
  * @residual none
  */
 void advancePanelState(void) {
-    u8* panel = (u8*)D_80148648;
+    u8* panel = (u8*)panelTaskRoot;
     s16 state = FIELD_REF(s16, panel, 6);
 
     if (state == 0x12) {

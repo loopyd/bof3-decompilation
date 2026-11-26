@@ -15,15 +15,15 @@
 void advancePanelRingPrim(void) {
   s16 state;
 
-  state = *(s16*)&D_80148648[6];
+  state = *(s16*)&((u8*)panelTaskRoot)[6];
   if (state == -0x16) {
     D_801EC2E4 = 0;
-    D_80148648[3] = 0;
+    ((u8*)panelTaskRoot)[3] = 0;
   } else {
-    *(s16*)&D_80148648[6] = state - 8;
+    *(s16*)&((u8*)panelTaskRoot)[6] = state - 8;
   }
-  drawBattlePanelStrip(*(s16*)&D_80148648[4], *(s16*)&D_80148648[6]);
-  func_8014F800((s16)(*(u16*)&D_80148648[4] + 4u),
-                (s16)(*(u16*)&D_80148648[6] + 3u), 0, 0xffu,
+  drawBattlePanelStrip(*(s16*)&((u8*)panelTaskRoot)[4], *(s16*)&((u8*)panelTaskRoot)[6]);
+  func_8014F800((s16)(*(u16*)&((u8*)panelTaskRoot)[4] + 4u),
+                (s16)(*(u16*)&((u8*)panelTaskRoot)[6] + 3u), 0, 0xffu,
                 uiRingEntries[(uiRingHead - 1u) & 0xFu].unk_04);
 }

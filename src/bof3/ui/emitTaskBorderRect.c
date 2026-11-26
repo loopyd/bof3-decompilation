@@ -12,7 +12,7 @@ void emitTaskBorderRect(void) {
   PanelTask* task;
   u32 index;
 
-  task = D_80148648;
+  task = panelTaskRoot;
   index = *((u8*)task + 0xA);
   emitLineRectangleBorder(task->x, task->field_06, D_801E5DD8[index], 0x34,
                 *((u8*)task + 0xB), 6);

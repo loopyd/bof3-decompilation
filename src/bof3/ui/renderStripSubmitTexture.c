@@ -2,17 +2,15 @@
 
 /* Every panel task root access re-materialises its own target-local symbol
  * relocation, matching the sibling state dispatchers dispatchCommandRowState and
- * dispatchMoneyPanelState: reading the cell through the shared g_PanelTaskRoot view
+ * dispatchMoneyPanelState: reading the cell through the shared panelTaskRoot view
  * folds its address into one hoisted base. */
-#undef D_80148648
-
 /* The texture id sits at task offset 0x10, past the shared 8-byte PanelTask
  * prefix, so it is reached through a byte pointer at the original offset; its
  * role is recovered only as far as selecting the func_801502D0 handle. */
 /* @source 0x801E2808
  * @behavior panel handler at entry 0 of the handler table D_801E5D68, which
  *           callPanelByteTable dispatches with panel task byte 2: calls the handler
- *           panelField6HandlerTable[D_80148648->state] selected by the panel
+ *           panelField6HandlerTable[panelTaskRoot->state] selected by the panel
  *           task root state byte with no arguments (framed jalr), then draws
  *           the shop panel strip through drawShopPanelFrame with the same task
  *           root's x and field-6 halfwords, the constants 0x118 and 0x13 and
@@ -35,15 +33,15 @@
 void renderStripSubmitTexture(void) {
   s16 textureId;
 
-  panelField6HandlerTable[D_80148648->state]();
-  drawShopPanelFrame(D_80148648->x, D_80148648->field_06, 0x118, 0x13, D_80144952);
-  if (*((s16*)((u8*)D_80148648 + 0x10)) != 0) {
-    func_8014F800((s16)(D_80148648->x + 7), (s16)(D_80148648->field_06 + 3), 0,
+  panelField6HandlerTable[panelTaskRoot->state]();
+  drawShopPanelFrame(panelTaskRoot->x, panelTaskRoot->field_06, 0x118, 0x13, D_80144952);
+  if (*((s16*)((u8*)((u8*)panelTaskRoot) + 0x10)) != 0) {
+    func_8014F800((s16)(panelTaskRoot->x + 7), (s16)(panelTaskRoot->field_06 + 3), 0,
                   0xFF,
-                  func_801502D0((u16)*((s16*)((u8*)D_80148648 + 0x10))));
-    textureId = *((s16*)((u8*)D_80148648 + 0x10));
+                  func_801502D0((u16)*((s16*)((u8*)((u8*)panelTaskRoot) + 0x10))));
+    textureId = *((s16*)((u8*)((u8*)panelTaskRoot) + 0x10));
     if (textureId == 0x36 || (u16)(textureId - 0x49) < 2 || textureId == 0x52) {
-      func_8014F800((s16)(D_80148648->x + 7), (s16)(D_80148648->field_06 + 3),
+      func_8014F800((s16)(panelTaskRoot->x + 7), (s16)(panelTaskRoot->field_06 + 3),
                     0, 0xFF, func_801502D0(0xF));
     }
   }

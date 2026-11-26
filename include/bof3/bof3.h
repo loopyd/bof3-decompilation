@@ -2,6 +2,7 @@
 #define BOF3_H
 
 #include "bof3/context.h"
+#include "panel/task.h"
 #include "base/types.h"
 #include "base/compiler.h"
 #include "bof3/core.h"

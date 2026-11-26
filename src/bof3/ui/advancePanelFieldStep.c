@@ -14,7 +14,7 @@ void advancePanelFieldStep(void) {
   s32 signed_next;
   s32 limit;
 
-  task_root = D_80148648;
+  task_root = panelTaskRoot;
   next_val = (u16)(task_root->field_06 + 0x10);
   index = *((u8*)task_root + 0xA);
   task_root->field_06 = next_val;

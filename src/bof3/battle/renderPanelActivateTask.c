@@ -10,11 +10,11 @@
  * @residual none
  */
 void renderPanelActivateTask(void) {
-  drawBattlerStatusPanel(*(s16 *)&D_80148648[4], *(s16 *)&D_80148648[6],
-                         D_80148648[0xA]);
+  drawBattlerStatusPanel(*(s16 *)&((u8*)panelTaskRoot)[4], *(s16 *)&((u8*)panelTaskRoot)[6],
+                         ((u8*)panelTaskRoot)[0xA]);
 
   if (D_801462EF != 0) {
-    if (*D_801EB4D8 == D_80148648[0xA]) {
+    if (*D_801EB4D8 == ((u8*)panelTaskRoot)[0xA]) {
       activatePanelTask();
     }
     if ((*D_801EB4D8 & 0x40) != 0) {

@@ -9,7 +9,7 @@
  * @residual none
  */
 void stateClampPanelState(void) {
-    u8* panel = (u8*)D_80148648;
+    u8* panel = (u8*)panelTaskRoot;
     s16 state = FIELD_REF(s16, panel, 6);
 
     if (state < 0xC9) {
@@ -18,5 +18,5 @@ void stateClampPanelState(void) {
     } else {
         FIELD_REF(s16, panel, 6) = state - 4;
     }
-    drawBattlerStatusColumns(*(s16*)&D_80148648[4], *(s16*)&D_80148648[6]);
+    drawBattlerStatusColumns(*(s16*)&((u8*)panelTaskRoot)[4], *(s16*)&((u8*)panelTaskRoot)[6]);
 }

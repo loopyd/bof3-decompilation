@@ -2,7 +2,7 @@
  *
  * Each macro below emits one complete panel wrapper, so include this header from
  * the target source that owns the wrapper and nothing else. The target header
- * must already define the panel root alias D_80148648 and, for PANEL_ICON_PRIM,
+ * must already define the panel root alias panelTaskRoot and, for PANEL_ICON_PRIM,
  * the primitive cursor and draw helpers; the templates never name a target.
  */
 
@@ -15,7 +15,7 @@
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
     u16        next_x;                                                         \
-    task_root = D_80148648;                                                    \
+    task_root = panelTaskRoot;                                                    \
     next_x = (u16)(task_root->x + 32u);                                        \
     task_root->x = next_x;                                                     \
     if ((s16)next_x >= (limit) + 1) {                                          \
@@ -28,7 +28,7 @@
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
     s16        next_x;                                                         \
-    task_root = D_80148648;                                                    \
+    task_root = panelTaskRoot;                                                    \
     next_x = (s16)((s32)task_root->x - 0x20);                                  \
     task_root->x = (u16)next_x;                                                \
     if (next_x < (min)) {                                                      \
@@ -41,7 +41,7 @@
 #define PANEL_APPLY_POSITION(func)                                             \
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
-    task_root = D_80148648;                                                    \
+    task_root = panelTaskRoot;                                                    \
     func_801647C4(task_root->x, task_root->field_06, 0);                       \
   }
 
@@ -49,7 +49,7 @@
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
     u16        next_val;                                                       \
-    task_root = D_80148648;                                                    \
+    task_root = panelTaskRoot;                                                    \
     next_val = (u16)(task_root->x - 0x20);                                     \
     task_root->x = next_val;                                                   \
     if ((s16)next_val < (limit)) {                                             \
@@ -62,7 +62,7 @@
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
     u16        next_val;                                                       \
-    task_root = D_80148648;                                                    \
+    task_root = panelTaskRoot;                                                    \
     next_val = (u16)(task_root->field_06 + 0x10);                              \
     task_root->field_06 = next_val;                                            \
     if ((s16)next_val >= (limit) + 1) {                                        \
@@ -75,7 +75,7 @@
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
     s16        next_val;                                                       \
-    task_root = D_80148648;                                                    \
+    task_root = panelTaskRoot;                                                    \
     next_val = (s16)(task_root->field_06 - (step));                            \
     task_root->field_06 = (u16)next_val;                                       \
     if (next_val < (min)) {                                                    \
@@ -92,7 +92,7 @@
 #define PANEL_ADVANCE_FIELD6_ONCE(func, limit)                                 \
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
-    task_root = D_80148648;                                                    \
+    task_root = panelTaskRoot;                                                    \
     if ((s16)(*(u16*)((u8*)task_root + 6) =                                    \
                   (u16)(*(u16*)((u8*)task_root + 6) + 0x10)) >=                \
         (limit) + 1) {                                                         \
@@ -105,7 +105,7 @@
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
     u16        next_val;                                                       \
-    task_root = D_80148648;                                                    \
+    task_root = panelTaskRoot;                                                    \
     next_val = (u16)((*(u16*)((u8*)task_root + 6)) - (step));                  \
     *(u16*)((u8*)task_root + 6) = next_val;                                    \
     if ((s16)next_val >= (min) + 1) {                                          \
