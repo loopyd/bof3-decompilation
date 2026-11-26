@@ -128,13 +128,13 @@ segments:
     - '@behavior: Overlay effect entry draw pass that the effect draw pass 0x801F44B4 calls once for each of the 0x10 entries of the 0x2C-byte-stride effect table at 0x800E48C0: it stamps the shared primitive cursor 0x8014598C through 0x8017A97C, flags it semi-transparent, projects the entry position words 0 4 and 8 into the first vertex of a POLY_G3 at cursor offset 8 through 0x801AFF04, rotates the signed-halfword extent pairs at 0x10 and 0x18 by the spin angle at 0x24 into the vertices at cursor offsets 0x10 and 0x18 with the extent words scaled by the halfword at 0x28 and translated by the entry position, then clamps the shade halfword 0x2A into the red and green bytes at cursor offsets 4 and 5, writes half of it into the blue byte at 6, clears the colour bytes of the second and third vertices and appends the 0x1C-byte primitive through 0x8014E5A0 for ordering-table index 2.'
   - - 6036
     - c
-    - seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394
-    - '@source: src/bof3/world/seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394.c'
+    - seedEffectEntryFrom
+    - '@source: src/bof3/world/seedEffectEntryFrom.c'
     - '@behavior: Overlay effect entry seeder that the progress handler 0x801F3484 calls once for each of the 0x10 entries of the 0x2C-byte-stride effect table at 0x800E48C0 on the frame its countdown expires: it copies the 0x34 0x38 0x3C position words of the scratchpad work object behind 0x1F800044 into the entry words 0 4 and 8, seeds the corner offset SVECTORs at 0x10 and 0x18 from the shared angular pair 0x801783C8 and 0x801782FC at 0x10 and -0x10, takes three random Euler angles, builds the scratch rotation matrix through 0x801AFF64 and 0x80179C58 0x80179DF8 with the middle angle negated and 0x80179F98, rotates both offsets in place through ApplyMatrixSV, arms the scale halfword 0x28 with (rand() & 2) + 3, clears 0x20 0x22 and 0x24 and writes 0x20 into the shade halfword 0x2A that the draw pass 0x801F40F4 clamps into the red and green bytes of its primitive.'
   - - 6324
     - c
-    - drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4
-    - '@source: src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4.c'
+    - drawEffectEntriesAdvance
+    - '@source: src/bof3/world/drawEffectEntriesAdvance.c'
     - '@behavior: Overlay effect draw pass: arms the shared draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor 0x8014598C, appends the 0xC-byte draw-mode primitive through 0x8014E5A0 for ordering-table index 2, fills the 0x20-byte projection scratch at frame offset 0x18 through 0x801AFE18 and then walks the 0x10 entries of the 0x2C-byte-stride effect table at 0x800E48C0, drawing each entry through 0x801F40F4 and adding 0x10 to the unsigned halfword at entry byte 0x24.'
   - - 6504
     - c

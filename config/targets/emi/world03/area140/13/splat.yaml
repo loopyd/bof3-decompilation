@@ -45,8 +45,8 @@ segments:
     - '@behavior: Entry 2 of the state-byte +0x02 handler table at 0x801F47C4 subtracts 0x20 from the work halfword at +0x30 and, once the stored signed halfword falls below -0xFF, advances the state byte at +0x02 before calling the draw routine at 0x801F3050.'
   - - 704
     - c
-    - advanceWorkByte2WhenCameraOutsideRecordCellWindowThenDrawWorld03Area14013_801F2EC0
-    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCellWindowThenDrawWorld03Area14013_801F2EC0.c'
+    - advanceCellWindowDraw
+    - '@source: src/bof3/world/advanceCellWindowDraw.c'
     - '@behavior: Entry 3 of the state-byte +0x02 handler table at 0x801F47C4 advances that state byte when the shared camera word 0x80145EC4 leaves the cell centre built from the work halfword +0x36 or 0x80145EC8 leaves both row starts built from the halfword +0x3A, then calls the draw routine 0x801F3050.'
   - - 892
     - c

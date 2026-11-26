@@ -81,7 +81,7 @@ void func_8015DF18(u32 arg0); /* @source 0x8015DF18 */
  * @match 100.00
  * @residual none
  */
-void publishEffectTransformFromSavedWorkObjectZeroRadiiResetEffectSlotsArmCountdownAdvanceWorkByte1AndSubmitCue100BmagicMagic15003_801EECA4(
+void publishEffectTransformFrom(
     void) {
   /* The three origin stores are one statement group and the three halfword
    * clears are the next one, in the order the original's own stores show: the

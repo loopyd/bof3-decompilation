@@ -54,7 +54,7 @@ u8 func_8019601C(void);
  * triple. The statement order, the single row base pointer, the byte-local
  * allocator result and the pointer local for the work object come from the
  * family exact siblings, above all
- * seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C.
+ * seedFrontEndRecord.
  *
  * Clone lever declined: the 0x8C-byte span at 0x801F560C in this same payload
  * differs from this body in exactly one byte - the low byte of the

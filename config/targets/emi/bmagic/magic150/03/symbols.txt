@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 callWorkByte1Handlers = 0x801EEC20;
-publishEffectTransformFromSavedWorkObjectZeroRadiiResetEffectSlotsArmCountdownAdvanceWorkByte1AndSubmitCue100BmagicMagic15003_801EECA4 = 0x801EECA4;
+publishEffectTransformFrom = 0x801EECA4;
 audioBurstIdleExpires = 0x801EED60;
 stepSlotsNoneActive = 0x801EEDCC;
 func_801EEE24 = 0x801EEE24;

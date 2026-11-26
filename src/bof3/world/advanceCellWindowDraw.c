@@ -64,7 +64,7 @@ extern void func_801F3050(void);
  * @match 100.00
  * @residual none
  */
-void advanceWorkByte2WhenCameraOutsideRecordCellWindowThenDrawWorld03Area14013_801F2EC0(void) {
+void advanceCellWindowDraw(void) {
     u16 *work;
 
     work = g_WorkRecordWorld03Area14013;

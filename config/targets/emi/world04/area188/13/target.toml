@@ -20,7 +20,7 @@ support_sources = [
     "src/bof3/world/stateWorkTableByte0.c",
     "src/bof3/world/claimFreeWorkRecord.c",
     "src/bof3/world/claimWorkRecordEvery.c",
-    "src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4.c",
+    "src/bof3/world/drawEffectEntriesAdvance.c",
     "src/bof3/world/seedWorkWords18To20.c",
     "src/bof3/world/selectCrossedFrontSide2.c",
     "src/bof3/world/claimFrontEndRecord.c",
@@ -37,7 +37,7 @@ support_sources = [
     "src/bof3/world/renderConvertedCentreRim.c",
     "src/bof3/world/toggleShadeExpiryShade.c",
     "src/bof3/world/dispatchSharedModeByte4.c",
-    "src/bof3/world/seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394.c",
+    "src/bof3/world/seedEffectEntryFrom.c",
     "src/bof3/world/renderRotatedOffsetsBlue.c",
 ]
 psyq_source = "src/bof3/support/area188_13_psyq.c"

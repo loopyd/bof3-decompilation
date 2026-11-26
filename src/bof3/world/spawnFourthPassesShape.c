@@ -17,7 +17,7 @@ void claimFreeWorkRecord(void);
  * that ticks and draws the active records; 0x801F44B4 is the 0x800E48C0-table
  * effect draw pass. */
 void func_801F3E7C(void);
-void drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4(void);
+void drawEffectEntriesAdvance(void);
 
 /* Overlay quad renderer of this area: it primes a semi-transparent four-vertex
  * primitive through the shared primitive cursor, takes the record's three-word
@@ -93,7 +93,7 @@ void spawnFourthPassesShape(
     claimFreeWorkRecord();
   }
   func_801F3E7C();
-  drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4();
+  drawEffectEntriesAdvance();
   func_801F3ADC(D_1F800044 + 0x18, D_1F800044 + 0x34, 0x40);
   if (g_ScenarioProgress == 3) {
     if (D_1F800044[9] == 0x10) {

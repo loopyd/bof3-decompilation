@@ -14,7 +14,7 @@ extern u8* area12114WorkCursor_1F800044;
  */
 extern u8* D_80146250;
 
-void probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03Area12114_801F5380(
+void probeReseedBumpTurn(
     void);
 void func_801B0DFC(void);
 
@@ -31,11 +31,11 @@ void func_801B0DFC(void);
  * @match 100.00
  * @residual none
  */
-void setRecordByte12bThenReseedWhenByte9ExpiresElseDecrementByte9World03Area12114_801F5324(
+void setElseDecrementByte9(
     void) {
   D_80146250[0x12B] = 1;
   if (area12114WorkCursor_1F800044[9] == 0) {
-    probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03Area12114_801F5380();
+    probeReseedBumpTurn();
   } else {
     area12114WorkCursor_1F800044[9] -= 1;
     func_801B0DFC();

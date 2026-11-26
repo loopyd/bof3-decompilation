@@ -17,7 +17,7 @@ sources = [
     "src/bof3/world/queryRecordIndexPosition.c",
     "src/bof3/world/decrementMinusFfDraw4.c",
     "src/bof3/world/stateRecordSetDraw.c",
-    "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCellWindowThenDrawWorld03Area14013_801F2EC0.c",
+    "src/bof3/world/advanceCellWindowDraw.c",
     "src/bof3/world/runFrontEndStartup.c",
 ]
 support_sources = [

@@ -26,7 +26,7 @@ sources = [
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F53EC.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F546C.c",
     "src/bof3/world/stateRunHelperDispatch.c",
-    "src/bof3/world/seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C.c",
+    "src/bof3/world/seedFrontEndRecord2.c",
     "src/bof3/world/stateEndRowPosition.c",
     "src/bof3/world/seedFrontEndRecordHandler99FromWorkPositionWorld03Area13413_801F5698.c",
     "src/bof3/world/stateFrontRowPosition.c",

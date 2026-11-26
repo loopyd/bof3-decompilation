@@ -57,7 +57,7 @@ u8 func_8019601C(void);
  * writes there stays anchored to the row offset in the name. The statement
  * order, the single row base pointer, the byte-local allocator result and the
  * pointer local for the work object come from this payload's exact sibling
- * seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C, which
+ * seedFrontEndRecord, which
  * runs the same claim/set/copy order over the same table and stride; it
  * differs only in its selector immediate and by not clearing row byte +1, so
  * both are written here from this function's own bytes. The cross-target

@@ -63,7 +63,7 @@ void func_801AFE18(void* arg0);
  * @match 100.00
  * @residual none
  */
-void drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4(void) {
+void drawEffectEntriesAdvance(void) {
   u8 scratch[0x20];
   u8* entry;
   u8 index;

@@ -206,8 +206,8 @@ segments:
     - '@behavior: Returns one only when the world state halfword 0x80143F00 is 0x79 and the range-1 record lookup at the work position words 0x34 and 0x38 of the scratchpad pointer cell 0x1F800044 resolves a slot that the facing step of 0x801F5028 reports as settled. On that path it runs the shared update at 0x801C24D0, decrements work byte 0x09, runs 0x801B0DFC, writes 1 to byte 0x12B of the record published at 0x80146250 and sets work byte 0x02 to 1. Any other world state, or a facing step that reports zero, returns zero.'
   - - 10020
     - c
-    - setRecordByte12bThenReseedWhenByte9ExpiresElseDecrementByte9World03Area12114_801F5324
-    - '@source: src/bof3/world/setRecordByte12bThenReseedWhenByte9ExpiresElseDecrementByte9World03Area12114_801F5324.c'
+    - setElseDecrementByte9
+    - '@source: src/bof3/world/setElseDecrementByte9.c'
     - '@behavior: Byte-1 state handler 3 of the handler table 0x801F6894 and byte-2 state handler 1 of the overlapping table 0x801F689C, so the overlay step dispatches at 0x801F45E0 and 0x801F4B00 both reach it with no arguments. It raises byte 0x12B of the record published at 0x80146250 and then reads work byte 0x09 of the scratchpad pointer cell 0x1F800044: a zero byte runs the map-code reseed probe at 0x801F5380, while any other value stores that byte minus one and runs the shared update at 0x801B0DFC. Takes no arguments and returns nothing.'
   - - 10112
     - c

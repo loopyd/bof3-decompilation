@@ -86,7 +86,7 @@ void func_80179F98(s32 arg0, MATRIX* arg1);
  * which advances one byte pointer by 0x2C per iteration and passes it in $a0,
  * so the argument is that table entry. The table base is 0x800E48C0, the same
  * 0x2C-byte-stride effect table the exact neighbour
- * drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4 walks with
+ * drawEffectEntriesAdvance walks with
  * this same counter and cursor shape, and the exact same-target tables claim
  * 0x801F40F4 as that table draw pass.
  *
@@ -94,7 +94,7 @@ void func_80179F98(s32 arg0, MATRIX* arg1);
  * @match 100.00
  * @residual none
  */
-void seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394(
+void seedEffectEntryFrom(
     u8* entry) {
   u8* work;
   MATRIX matrix;

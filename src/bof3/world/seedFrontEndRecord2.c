@@ -70,7 +70,7 @@ u8 func_8019601C(void);
  * @match 100.00
  * @residual none
  */
-void seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C(void) {
+void seedFrontEndRecord(void) {
   u8* record;
   u8* work;
   u8 index;
