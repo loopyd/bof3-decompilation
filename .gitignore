@@ -131,3 +131,18 @@ compile_commands.json
 
 # Splat regenerates this file through file_presets.
 include/include_asm.h
+
+# Ghidra batch decompiler scratch (a review export, not a source file)
+*.c.combine
+*.c.cse
+*.c.cse2
+*.c.dbr
+*.c.flow
+*.c.greg
+*.c.jump
+*.c.jump2
+*.c.loop
+*.c.lreg
+*.c.rtl
+*.c.sched
+*.c.sched2
