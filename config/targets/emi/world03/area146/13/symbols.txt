@@ -1,11 +1,11 @@
 func_8015C088 = 0x8015C088;
-requestFrontSelectorContextWorld03Area14613_801F2C04 = 0x801F2C04;
-clearWorkByte48ThenSubmitRecordWorld03Area14613_801F2C34 = 0x801F2C34;
+requestFrontSelectorContext = 0x801F2C04;
+clearWorkByte48Submit = 0x801F2C34;
 statePublishSharedInto = 0x801F2C68;
 func_801F2C9C = 0x801F2C9C;
 initArea14613State = 0x801F2D50;
-dispatchStateByte1Table3b00World03Area14613_801F2D90 = 0x801F2D90;
-seedWorkWord3CScaledDistanceAndAdvanceStateByte1World03Area14613_801F2DD4 = 0x801F2DD4;
-drawWorkCursorQuadWorld03Area14613_801F2E20 = 0x801F2E20;
+dispatchStateByte1Table3 = 0x801F2D90;
+seedWorkWord3C = 0x801F2DD4;
+drawWorkCursorQuad = 0x801F2E20;
 func_801F2E68 = 0x801F2E68;
 D_801F3174 = 0x801F3174;

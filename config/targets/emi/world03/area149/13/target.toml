@@ -15,7 +15,7 @@ sources = [
     "src/bof3/world/stateSharedSceneFlags.c",
 ]
 support_sources = [
-    "src/bof3/world/invokeHelperWorld03Area14913_801F2CB4.c",
+    "src/bof3/world/invokeHelper8.c",
     "src/bof3/world/area14913DispatchTables.c",
     "src/bof3/world/copyWords7Work34383World03.c",
     "src/bof3/world/requestStepHelperDecrement.c",

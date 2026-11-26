@@ -37,7 +37,7 @@ segments:
     - '@source: src/bof3/bmagic/forwardRaiseInvokeIs.c'
   - - 616
     - c
-    - dispatchStateByte1Table0c38BmagicMagic12103_801EEE68
+    - dispatchStateByte1Table0
     - '@source: src/bof3/bmagic/magic12103DispatchTables.c'
   - - 684
     - asm
@@ -64,8 +64,8 @@ segments:
     - func_801EF35C
   - - 1960
     - c
-    - decrementWorkByteBIfNonZeroThenDecrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic12103_801EF3A8
-    - '@source: src/bof3/bmagic/decrementWorkByteBIfNonZeroThenDecrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic12103_801EF3A8.c'
+    - decrementWorkByteB
+    - '@source: src/bof3/bmagic/decrementWorkByteB.c'
   - - 2068
     - c
     - renderDriftingSizedCounted

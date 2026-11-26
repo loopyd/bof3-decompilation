@@ -10,7 +10,7 @@ load_address = 0x801F6C00
 sources = [
     "src/bof3/scenario/dispatchWorkByte1Handler5.c",
     "src/bof3/scenario/dispatchWorkByte1Handler6.c",
-    "src/bof3/scenario/clearWorkTableAt800E4800ScenarioScena1500_801F75AC.c",
+    "src/bof3/scenario/clearWorkTableAt800.c",
     "src/bof3/scenario/callHelperTwiceHelper.c",
     "src/bof3/scenario/stateNoEntryCleared.c",
     "src/bof3/scenario/callStartupIncrementRecord.c",

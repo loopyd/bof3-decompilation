@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void clearWorkTableAt800E4800World03Area13413_801F4974(void);
+void clearWorkTableAt800(void);
 
 /* Shared published work-pointer cell: the original re-materialises the cell
  * address and reloads the pointer for every store group below. */
@@ -40,7 +40,7 @@ void stateFirstStampCount(
   u32 count;
 
   if (D_801F5818 == 0u) {
-    clearWorkTableAt800E4800World03Area13413_801F4974();
+    clearWorkTableAt800();
   }
   work = D_1F800044;
   work[9] = 0x80;

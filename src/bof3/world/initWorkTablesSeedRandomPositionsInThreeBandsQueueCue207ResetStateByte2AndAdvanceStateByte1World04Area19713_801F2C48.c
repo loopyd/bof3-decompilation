@@ -8,7 +8,7 @@
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 void clearWorkTableAt800E4800Stride28World04Area19713_801F30E4(void);
-void clearWorkTableAt800E5C00World04Area19713_801F3474(void);
+void clearWorkTableAt800(void);
 
 /* 0x801F3110 - this overlay's random position seeder for the 0x28-byte-stride
  * table at 0x800E4800. It walks the entry index from the first argument while
@@ -60,7 +60,7 @@ void func_8015DF18(u32 cue);
  *   init step of both runs. The tables it clears and seeds are the ones this
  *   target's own reviewed helpers empty: 0x800E4800 through
  *   clearWorkTableAt800E4800Stride28World04Area19713_801F30E4 and 0x800E5C00
- *   through clearWorkTableAt800E5C00World04Area19713_801F3474, which is why the
+ *   through clearWorkTableAt800, which is why the
  *   name keeps that module vocabulary. Cue 0x207 is the immediate this body
  *   passes to func_8015DF18; its game meaning is not established by any reviewed
  *   record of this target, so the name keeps the number.
@@ -90,7 +90,7 @@ void initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndA
   u8* firstRun;
 
   clearWorkTableAt800E4800Stride28World04Area19713_801F30E4();
-  clearWorkTableAt800E5C00World04Area19713_801F3474();
+  clearWorkTableAt800();
 
   from[0] = 0x20000;
   from[1] = 0x770000;

@@ -10,7 +10,7 @@ extern u16 D_80145AA4;
  * halfword - the original has no mask instruction - and the first constant is
  * materialized before the first branch while the second and third fill the
  * following branch delay slots. The stored byte is the state byte the exact
- * siblings resetScratchStateToMode1World03Area13413_801F35A4 (mode 1),
+ * siblings resetScratchStateMode1 (mode 1),
  * countdownScratchStateToMode15World03Area13413_801F3B7C (mode 0x0F) and
  * countdownScratchStateMode17 (mode 0x11) arm
  * through the same cell, so this handler arms mode 1 of that family when the

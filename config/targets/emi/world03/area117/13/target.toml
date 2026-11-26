@@ -14,16 +14,16 @@ support_sources = [
     "src/bof3/world/stampMapCellsDraw.c",
     "src/bof3/world/publishThirdBaseEnd.c",
     "src/bof3/world/stateStatusEntryGate.c",
-    "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area11713_801F40CC.c",
+    "src/bof3/world/setProgress5GateClear.c",
     "src/bof3/support/area117_13_psyq.c",
     "src/bof3/world/area11713DispatchTables.c",
     "src/bof3/world/queryPositionBoundsIndex.c",
     "src/bof3/world/decrementBelowMinusDraw.c",
     "src/bof3/world/initArea11713State.c",
-    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind5FromModeTableWorld03Area11713_801F3E70.c",
+    "src/bof3/world/publishThirdWorkBase.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area11713_801F3EF0.c",
     "src/bof3/world/publishModeStatusProgress.c",
-    "src/bof3/world/publishModeStatusFromTable55e4ThenProgressAAndCue205ForModes0To4Except2AndProgress14ForMode2World03Area11713_801F4048.c",
+    "src/bof3/world/publishModeStatusFrom.c",
 ]
 psyq_source = "src/bof3/support/area117_13_psyq.c"
 

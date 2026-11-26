@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/bmagic/magic12103DispatchTables.c",
     "src/bof3/bmagic/incrementWordAdvance.c",
     "src/bof3/bmagic/workByte4AdvanceAt10.c",
-    "src/bof3/bmagic/decrementWorkByteBIfNonZeroThenDecrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic12103_801EF3A8.c",
+    "src/bof3/bmagic/decrementWorkByteB.c",
     "src/bof3/bmagic/forwardRaiseInvokeIs.c",
     "src/bof3/bmagic/renderDashesPerpendicularDrifting.c",
     "src/bof3/bmagic/renderDriftingSizedCounted.c",

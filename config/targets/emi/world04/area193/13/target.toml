@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/area193_13_psyq.c",
     "src/bof3/world/stateEffectBankShared.c",
-    "src/bof3/world/clearWorkAnimBit0ThenRunStartupAndIncrementWorkHalfword7EIfPartyByte7World04Area19313_801F2E38.c",
+    "src/bof3/world/clearWorkAnimBit0.c",
     "src/bof3/world/audioEitherPackedWord.c",
 ]
 psyq_source = "src/bof3/support/area193_13_psyq.c"

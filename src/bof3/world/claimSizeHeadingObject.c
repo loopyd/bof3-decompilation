@@ -42,7 +42,7 @@ extern u16 func_801F3320(u8* from, u8* to);
  * touched.
  *
  * Name evidence: this target's claim scan
- * findFreeWorkRecordByte3At800E4800World04Area17413_801F2E88 returns the first
+ * findFreeWorkRecord returns the first
  * record of that table whose byte 3 reads zero, and both of its callers in this
  * payload - jal 0x801F2E88 at 0x801F2CCC inside func_801F2CA8 and at 0x801F2D8C
  * inside func_801F2D68 - discard a zero answer and otherwise pass the returned

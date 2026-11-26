@@ -12,7 +12,7 @@ extern u8 D_80146888[];
  * with 7 and republishes the saved record, so the saved record is current again
  * with mode 7 selected. The body is the 0x54-byte shape of the exact
  * same-target sibling
- * advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68 and is
+ * advanceWorkWordSet and is
  * instruction-identical to it except for the immediate the state byte receives:
  * 7 here instead of 5. The byte armed is the record state byte the
  * dispatchStateByte1Table* siblings dispatch through; 7 is decimal here. The

@@ -13,7 +13,7 @@ extern void (*D_801F0520[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table04f8BmagicMagic06903_801EEE90, D_801F04F8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table04, D_801F04F8);
 
 /* @source 0x801EF520
  * @behavior Overlay step dispatch: reads the state byte at +2 of

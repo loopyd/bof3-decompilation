@@ -1,0 +1,14 @@
+#include "bof3/bof3.h"
+
+void renderTexturedQuad64Clut1(s32 arg0, s32 arg1);
+
+/* @source 0x801F4E68
+ * @behavior Thin overlay wrapper calling the helper at 0x801F4E8C with the
+ * constant arguments 0xDC and 0xC8; takes no arguments and returns nothing.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void invokeHelperArgs(void) {
+  renderTexturedQuad64Clut1(0xDC, 0xC8);
+}

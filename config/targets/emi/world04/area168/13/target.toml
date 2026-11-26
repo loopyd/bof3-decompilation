@@ -9,28 +9,28 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
-    "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16813_801F3794.c",
+    "src/bof3/world/advanceRecordCoordinateWindow4.c",
     "src/bof3/world/stateAdvanceCallPair.c",
     "src/bof3/world/decrementFrontendPhasePair.c",
     "src/bof3/world/stateAdvanceWorkCall3914.c",
     "src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1ThenCall3914World04Area16813_801F38A4.c",
     "src/bof3/world/stateStepCallPair.c",
     "src/bof3/world/stateEntrySubstateRow.c",
-    "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808.c",
+    "src/bof3/world/setEntryGateClear3.c",
     "src/bof3/world/stateStatusSharedOverlay.c",
-    "src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0DAndSetOverlayByteBit1World04Area16813_801F48B4.c",
-    "src/bof3/world/setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980.c",
+    "src/bof3/world/setOverlayByteBit1.c",
+    "src/bof3/world/setProgressGateClear.c",
     "src/bof3/world/stateStatusGateOverlay.c",
     "src/bof3/support/area168_13_psyq.c",
     "src/bof3/world/area16813DispatchTables.c",
-    "src/bof3/world/advanceWorkByte2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenCall3914World04Area16813_801F35F8.c",
+    "src/bof3/world/advanceWorkByte2Queue.c",
     "src/bof3/world/stateStatusFlagGate.c",
     "src/bof3/world/stateDistanceUiElement.c",
-    "src/bof3/world/dispatchSharedModeByteTable2C04World04Area16813_801F4A0C.c",
+    "src/bof3/world/dispatchSharedModeByte3.c",
     "src/bof3/world/renderBeamBetweenWidths.c",
     "src/bof3/world/stateStatus12Or14Gate.c",
     "src/bof3/world/stateNoInsideCamera.c",
-    "src/bof3/world/queueSharedUiElementColumn10x18To11Size89ThenSetWorkByte1To1World04Area16813_801F2C7C.c",
+    "src/bof3/world/queueSharedUiElement3.c",
 ]
 psyq_source = "src/bof3/support/area168_13_psyq.c"
 

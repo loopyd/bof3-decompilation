@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/bmagic/magic17203DispatchTables.c",
     "src/bof3/bmagic/forwardBattleIdleFlag2.c",
     "src/bof3/bmagic/add2ToWorkByteBAdd2ToWorkByteAWhenBelow10ThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic17203_801EF3A4.c",
-    "src/bof3/bmagic/decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17203_801EF4BC.c",
+    "src/bof3/bmagic/decrementWorkByte9Two.c",
     "src/bof3/bmagic/callWorkByte2Draw.c",
     "src/bof3/bmagic/decrementCopyTripletDirection.c",
     "src/bof3/bmagic/raisePointHeadingIs.c",

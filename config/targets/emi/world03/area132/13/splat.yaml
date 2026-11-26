@@ -39,14 +39,14 @@ segments:
     - func_801F2C6C
   - - 424
     - c
-    - noopHandlerWorld03Area13213_801F2DA8
+    - noopHandler
   - - 432
     - c
-    - dispatchStateByte1Table3de4WorldWorld03Area13213_801F2DB0
+    - dispatchStateByte1Table3
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 500
     - c
-    - dispatchStateByte2Table3decWorldWorld03Area13213_801F2DF4
+    - dispatchStateByte2Table3
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 568
     - c
@@ -65,15 +65,15 @@ segments:
     - '@behavior: Entry 2 of the byte-2 handler pointer run based at 0x801F3DEC: runs the record update and draw pass at 0x801F38B0, masks its returned byte with 0xFF and, when that byte reads zero because the overlay work table at 0x800E4800 held no claimed record on this frame, calls the shared work-area reset at 0x80196070, which clears work-object bytes 0x00-0x04 and returns the overlay to work state 0; it takes no argument, returns nothing and keeps only $ra across the two calls in an 0x18-byte frame.'
   - - 852
     - c
-    - dispatchStateByte2Table3df8WorldWorld03Area13213_801F2F54
+    - dispatchStateByte2Table3Tail
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 920
     - asm
     - func_801F2F98
   - - 1096
     - c
-    - clearWorkFlagsWhenNoRecordDrawnTable3df8World03Area13213_801F3048
-    - '@source: src/bof3/world/clearWorkFlagsWhenNoRecordDrawnTable3df8World03Area13213_801F3048.c'
+    - clearWorkFlagsNo
+    - '@source: src/bof3/world/clearWorkFlagsNo.c'
     - '@behavior: Entry 1 of the byte-2 handler pointer run based at 0x801F3DF8: runs the record update and draw pass at 0x801F38B0, masks its returned byte with 0xFF and, when that byte reads zero because the overlay work table at 0x800E4800 held no claimed record on this frame, calls the shared work-area reset at 0x80196070, which clears work-object bytes 0x00-0x04 and returns the overlay to work state 0; it takes no argument, returns nothing and keeps only $ra across the two calls in an 0x18-byte frame.'
   - - 1148
     - c
@@ -105,8 +105,8 @@ segments:
     - '@source: src/bof3/world/stateRecordDefaultsPosition.c'
   - - 3072
     - c
-    - findFreeWorkRecordWorld03Area13213_801F3800
-    - '@source: src/bof3/world/findFreeWorkRecordWorld03Area13213_801F3800.c'
+    - findFreeWorkRecord
+    - '@source: src/bof3/world/findFreeWorkRecord.c'
     - '@behavior: Work-record free-entry scan: publishes the base 0x800E4800 of the 0x18-byte-stride work table in main RAM into this overlay cursor cell 0x801F4A88, then walks at most 0x20 records, reloading the published cursor and reading the claim byte at offset 0 of the record it names; the first record whose claim byte reads zero is returned with the cursor left pointing at it, and each claimed record advances the published cursor by 0x18 under an unsigned byte counter, so an exhausted walk returns zero with the cursor one stride past the last record; it takes no arguments, makes no call and reads no state beyond the table it publishes.'
   - - 3164
     - c
@@ -134,8 +134,8 @@ segments:
     - func_801F3C1C
   - - 4256
     - c
-    - clearOverlayStateByteWorld03Area13213_801F3CA0
-    - '@source: src/bof3/world/clearOverlayStateByteWorld03Area13213_801F3CA0.c'
+    - clearOverlayStateByte
+    - '@source: src/bof3/world/clearOverlayStateByte.c'
   - - 4272
     - asm
     - func_801F3CB0

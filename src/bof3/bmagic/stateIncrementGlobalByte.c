@@ -23,7 +23,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * from two exact siblings in this same overlay: the guard is the
  * incrementGlobalByte form with
  * this function's own immediate, and the two-statement body is
- * clearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F0000 unchanged.
+ * clearWorkByte9Increment unchanged.
  * @status exact
  * @match 100.00
  * @residual none

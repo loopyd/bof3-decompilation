@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 92
     - c
-    - dispatchStateByte2Table3f5cWorld04Area17113_801F2C5C
+    - dispatchStateByte2Table3
     - '@source: src/bof3/world/area17113DispatchTables.c'
   - - 160
     - asm
@@ -45,13 +45,13 @@ segments:
     - '@behavior: Byte-2 state handler entry 2 of the five-word handler run based at 0x801F3F5C, the run the overlay dispatcher at 0x801F2C5C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044: adds 0x10 to that record unsigned halfword at offset 0x30, stores the truncated halfword, and, once the stored value read as a signed halfword reaches 0xC0, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 at 0x801F2F5C; it then calls the payload draw routine at 0x801F3070 with argument 0, that routine base-only stage. Takes no arguments and returns nothing.'
   - - 860
     - c
-    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17113_801F2F5C
-    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17113_801F2F5C.c'
+    - advanceRecordCoordinateWindow
+    - '@source: src/bof3/world/advanceRecordCoordinateWindow7.c'
     - '@behavior: Byte-2 state handler entry 3 of the five-word handler run based at 0x801F3F5C, the run the overlay dispatcher at 0x801F2C5C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044: it builds the cell centre of the record signed halfword at offset 0x36 as (((halfword + 1) << 16) | 0x8000) and increments that record state byte when its absolute difference from the shared camera word D_80145EC4 exceeds 0x20000; only when that check passes does it take the record signed halfword at offset 0x3A with the camera word D_80145EC8 and increment the same byte when the absolute difference from both that halfword shifted into the cell start (halfword << 16) and the next cell start ((halfword + 1) << 16) exceeds 0x20000. It carries no route-byte dispatch, calls nothing and keeps no frame. Takes no arguments and returns nothing.'
   - - 1024
     - c
-    - decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWorld04Area17113_801F3000
-    - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWorld04Area17113_801F3000.c'
+    - decrementByte2To1Draw
+    - '@source: src/bof3/world/decrementByte2To1Draw2.c'
     - '@behavior: Byte-2 state handler entry 4 of the five-word handler run based at 0x801F3F5C, the run the overlay dispatcher at 0x801F2C5C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044: subtracts 0x10 from that record unsigned halfword at offset 0x30, stores the truncated halfword, and, once the stored value read as a signed halfword reaches zero or below, queues sound cue 0x201 through func_8015DF18 while the front-end phase byte D_80143BB0 reads zero and sets the record state byte at offset 0x02 to 1 so the next dispatch takes entry 1 at 0x801F2E1C; it then calls the payload draw routine at 0x801F3070 with argument 0, that routine base-only stage. Takes no arguments and returns nothing.'
   - - 1136
     - asm
@@ -81,8 +81,8 @@ segments:
     - '@behavior: Handler of this payload handler table at 0x801F3F5C, registered by the pointer word 0x801F3764 at 0x801F4184 (entry 138), so no jal of the payload reaches it and the overlay dispatcher 0x801F2C5C indexes the table by the state byte at +0x02 of the work record published at the scratchpad pointer cell 0x1F800044. It reads the shared front-side byte D_80143F03 of the main executable and, on every value other than 3, clears flag 0x74 of the main-RAM flag bank D_80144F28 through the shared flag-bit clear helper func_8015B5A8; on the value 3 it clears nothing. Takes no arguments and returns nothing.'
   - - 2972
     - c
-    - findWorkPositionBoundsIndexWorld04Area17113_801F379C
-    - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld04Area17113_801F379C.c'
+    - findWorkPositionBounds
+    - '@source: src/bof3/world/findWorkPositionBounds3.c'
   - - 3176
     - c
     - syncBoundsMirrorChange

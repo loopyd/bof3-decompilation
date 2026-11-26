@@ -27,7 +27,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable4World03, D_801F4F
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table4f64World03Area11513_801F34CC, D_801F4F64);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table4, D_801F4F64);
 
 /* @source 0x801F4178
  * @behavior Overlay step dispatch: reads the state byte at +1 of
@@ -39,7 +39,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table4f64World
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table4ff4World03Area11513_801F4178, D_801F4FF4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table4, D_801F4FF4);
 
 /* @source 0x801F45CC
  * @behavior Overlay step dispatch: reads the state byte at +1 of

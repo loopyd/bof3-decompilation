@@ -50,7 +50,7 @@ extern u8 D_801F5724[]; /* @source 0x801F5724 @kind table */
  *
  * Name and shape evidence: the first 0x20 instructions of this body are
  * instruction-identical to the exact same-target sibling
- * endAreaWhenThirdWorkWord34ExceedsLimitElseStepWorkByte9AndArmMode1World03Area13413_801F40C8,
+ * endByte9ArmMode1,
  * which fixes the statement order, the status-pointer local in $s0, the
  * volatile scratchpad cell and the signed comparison against 0x33FFFF; the two
  * members differ only in their else branch. That sibling is entry 3 of the same

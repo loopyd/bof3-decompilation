@@ -175,8 +175,8 @@ segments:
     - '@behavior: Overlay per-frame handler dispatcher: reads the scratchpad work object from the pointer cell at 0x1F800044, takes that object''s unsigned byte at offset 0x2, scales it by four and invokes the selected entry of the four-word in-image handler run based at 0x801F1394 (0x801F0DA8, 0x801F0DD8, 0x801F0E50, 0x801F0E90) with no arguments. Reads no other state and writes none; the work-object pointer is loaded before the 0x18-byte frame is created and that frame only keeps $ra across the indirect call, whose index load is followed by a load-delay nop.'
   - - 8616
     - c
-    - clearWorkByte9AndIncrementWorkByte2BmagicMagic06403_801F0DA8
-    - '@source: src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic06403_801F0DA8.c'
+    - clearWorkByte9Increment
+    - '@source: src/bof3/bmagic/clearWorkByte9Increment2.c'
     - '@behavior: Clears the scratchpad work-object byte at offset 0x9 with sb $zero and then increments the work-object byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb scheduled into the $ra delay slot). The pointer cell at 0x1F800044 is re-materialized and reloaded once per access, so the original keeps two separate lui $vN,0x1F80 / lw $vN,0x44($vN) pairs. Reads and writes no other state and the function has no frame.'
   - - 8664
     - c

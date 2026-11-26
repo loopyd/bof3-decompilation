@@ -10,7 +10,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 /* Shared scenario progress byte the world overlays branch on. */
 extern u8 g_ScenarioProgress; /* @source 0x80146864 */
 
-void claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0(void);
+void claimFreeWorkRecord(void);
 
 /* Per-frame passes this overlay's progress handlers run, still anchored to
  * their addresses. 0x801F3E7C is the record pass over the 0x800E4800 table
@@ -71,7 +71,7 @@ void func_8015DF18(u16 arg0);
  * byte, and no in-payload code reads it as data, so the run fixes this
  * function as the state-7 progress handler and the caller stays outside the
  * payload. The every-fourth-frame cadence and the two-pass order are the ones
- * this target's exact claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0
+ * this target's exact claimFreeWorkRecord
  * records for its four step-handler callers, and the renderer 0x801F3ADC is
  * this overlay's own quad renderer, whose 0x18/0x34 argument pair reads the
  * same record triples that 0x801F3DE0 seeds. Work byte 0x09 is the countdown
@@ -90,7 +90,7 @@ void spawnFourthPassesShape(
 
   tick = D_1F800044[6]++;
   if ((tick & 3) == 0) {
-    claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0();
+    claimFreeWorkRecord();
   }
   func_801F3E7C();
   drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4();

@@ -17,7 +17,7 @@ void func_8015DF18(u16 arg0);
  * reaches the address; the only image word holding it is the pointer word at
  * vram 0x801F5318 (payload 0x2718), the entry immediately after its set half
  * in the run of overlay code pointers that carries the exact sibling
- * advanceCounter2By2World03Area11913_801F41B8 at vram 0x801F52F0.
+ * advanceCounter2By2 at vram 0x801F52F0.
  * @status exact
  * @match 100.00
  * @residual none

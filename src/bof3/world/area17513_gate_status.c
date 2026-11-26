@@ -32,7 +32,7 @@ WORLD_DEFINE_GATE_STATUS(stateStatus70GateWorld04, D_801490C7, D_801490A8, 0x70,
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatus70IfGateElseFFFFWorld04Area17513_801F3A5C, D_801490C7, D_801490A8, 0x70, 0xFFFF)
+WORLD_DEFINE_GATE_STATUS(setStatus70IfGate, D_801490C7, D_801490A8, 0x70, 0xFFFF)
 
 /* @source 0x801F3B4C
  * @behavior Loads the shared gate byte D_801490C7 and stores 0x7E into the
@@ -52,7 +52,7 @@ WORLD_DEFINE_GATE_STATUS(stateStatus7GateWorld04, D_801490C7, D_801490A8, 0x7E, 
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatus7EIfGateElseFFFFWorld04Area17513_801F3B74, D_801490C7, D_801490A8, 0x7E, 0xFFFF)
+WORLD_DEFINE_GATE_STATUS(setStatus7EIf, D_801490C7, D_801490A8, 0x7E, 0xFFFF)
 
 /* @source 0x801F3C4C
  * @behavior Loads the shared gate byte D_801490C7 and stores 0x8A into the
@@ -72,7 +72,7 @@ WORLD_DEFINE_GATE_STATUS(stateStatus8GateWorld04, D_801490C7, D_801490A8, 0x8A, 
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74, D_801490C7, D_801490A8, 0x8A, 0xFFFF)
+WORLD_DEFINE_GATE_STATUS(setStatus8IfGate, D_801490C7, D_801490A8, 0x8A, 0xFFFF)
 
 /* @source 0x801F3CA4
  * @behavior Loads the shared gate byte D_801490C7 and stores 0xA0 into the
@@ -92,4 +92,4 @@ WORLD_DEFINE_GATE_STATUS(stateStatusA0Gate, D_801490C7, D_801490A8, 0xA0, 0x9F)
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_GATE_STATUS(setStatusF8IfGateElseF9World04Area17513_801F3E28, D_801490C7, D_801490A8, 0xF8, 0xF9)
+WORLD_DEFINE_GATE_STATUS(setStatus8If, D_801490C7, D_801490A8, 0xF8, 0xF9)

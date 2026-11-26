@@ -8,15 +8,15 @@ splat = "config/targets/emi/world03/area146/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/seedWorkWord3CScaledDistanceAndAdvanceStateByte1World03Area14613_801F2DD4.c",
+    "src/bof3/world/seedWorkWord3C.c",
 ]
 support_sources = [
     "src/bof3/support/area146_13_psyq.c",
-    "src/bof3/world/requestFrontSelectorContextWorld03Area14613_801F2C04.c",
+    "src/bof3/world/requestFrontSelectorContext4.c",
     "src/bof3/world/area14613DispatchTables.c",
     "src/bof3/world/initArea14613State.c",
     "src/bof3/world/statePublishSharedInto.c",
-    "src/bof3/world/drawWorkCursorQuadWorld03Area14613_801F2E20.c",
-    "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld03Area14613_801F2C34.c",
+    "src/bof3/world/drawWorkCursorQuad4.c",
+    "src/bof3/world/clearWorkByte48Submit3.c",
 ]
 psyq_source = "src/bof3/support/area146_13_psyq.c"

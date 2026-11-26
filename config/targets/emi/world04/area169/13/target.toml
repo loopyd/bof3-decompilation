@@ -8,7 +8,7 @@ splat = "config/targets/emi/world04/area169/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/findWorkPositionBoundsIndexWorld04Area16913_801F355C.c",
+    "src/bof3/world/findWorkPositionBounds2.c",
     "src/bof3/world/stateFrontSideIs.c",
     "src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C.c",
     "src/bof3/world/loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area16913_801F2C48.c",
@@ -16,7 +16,7 @@ sources = [
 support_sources = [
     "src/bof3/support/area169_13_psyq.c",
     "src/bof3/world/area16913DispatchTables.c",
-    "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16913_801F2F68.c",
+    "src/bof3/world/advanceRecordCoordinateWindow5.c",
     "src/bof3/world/stateFrontSideClear.c",
     "src/bof3/world/renderMirroredGraphType.c",
 ]

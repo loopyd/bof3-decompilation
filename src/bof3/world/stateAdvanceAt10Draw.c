@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area12114_801F35D0(void);
+void setWorkState2To3(void);
 
 /* @source 0x801F3574
  * @behavior Advances the work halfword at offset 0x2E, published through the
@@ -22,5 +22,5 @@ void stateAdvanceAt10Draw(void) {
   if (*half >= 0x10) {
     cursor[2]++;
   }
-  setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area12114_801F35D0();
+  setWorkState2To3();
 }

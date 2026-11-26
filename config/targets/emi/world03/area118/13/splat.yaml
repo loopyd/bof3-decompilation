@@ -69,8 +69,8 @@ segments:
     - '@behavior: Byte-2 state handler that the first byte-2 dispatch table of this overlay (0x801F516C, indexed by the dispatcher at 0x801F3014) lists at entry 1; that dispatcher indexes the work record published at the scratchpad pointer cell 0x1F800044 by its state byte at offset 0x02. When the shared front-side byte 0x80143F03 reads zero and the record byte at offset 0x0A equals the shared state byte 0x8014933B, it queues sound cue 0x200 through the resident cue dispatcher 0x8015DF18 while the front-end phase byte 0x80143BB0 is zero and stores 2 into that state byte. The record route byte at offset 0x08 then selects the camera word 0x80145EC8 against the cell centre of the halfword at 0x3A, or 0x80145EC4 against the centre of the halfword at 0x36, where the centre is (((halfword + 1) << 16) | 0x8000); a distance above 0x8000 leaves the step at its draw call, otherwise the other axis halfword and its camera word feed the shared tail, which stores 2 into the state byte when the camera lies within 0x10000 of that halfword cell start (halfword << 16) or of the next cell start ((halfword + 1) << 16) and queues cue 0x200 under the same phase gate. Every path finishes with the overlay record draw routine 0x801F381C called with mode 1.'
   - - 2356
     - c
-    - decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11813_801F3534
-    - '@source: src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11813_801F3534.c'
+    - decrementMinusFfDraw
+    - '@source: src/bof3/world/decrementMinusFfDraw.c'
     - '@behavior: Byte-2 state handler that both byte-2 dispatch tables of this overlay list at entry 2 (0x801F516C, indexed by the dispatcher at 0x801F3014, and 0x801F5184, indexed by the dispatcher at 0x801F3C10); either table indexes the work record published at the scratchpad pointer cell 0x1F800044 by its state byte at offset 0x02. Subtracts 0x20 from that record unsigned halfword at offset 0x30, stores the truncated halfword, and, once the stored value read as a signed halfword falls below -0xFF, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 of the same table (0x801F3590 on the 0x801F516C table, 0x801F3FD0 on the 0x801F5184 table). It then calls the overlay record draw routine at 0x801F381C with a zero mode argument, taking that routine zero branch; the callee reads the same halfword at offset 0x30 as a sprite screen offset.'
   - - 2448
     - c
@@ -79,8 +79,8 @@ segments:
     - '@behavior: When the shared front-side byte 0x80143F03 reads zero, returns without touching the work record published at the scratchpad pointer cell 0x1F800044 when its byte 0x0A equals the shared overlay state byte 0x8014933B. Otherwise reads the record route byte 0x08 once: a non-zero route compares the shared camera word 0x80145EC8 with the record halfword 0x3A and a zero route compares 0x80145EC4 with the record halfword 0x36, both against the cell centre ((halfword + 1) << 16) | 0x8000 at a 0x20000 threshold, and stores 4 into the record state byte 0x02 when the camera lies outside. When that first check passes, the other axis halfword and its camera word test both the cell start (halfword << 16) and the next cell start ((halfword + 1) << 16) at the same threshold before storing 4 into the state byte.'
   - - 2740
     - c
-    - incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11813_801F36B4
-    - '@source: src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11813_801F36B4.c'
+    - incrementNonNegativeDraw
+    - '@source: src/bof3/world/incrementNonNegativeDraw2.c'
   - - 2888
     - c
     - stampColumnNeighbourCell
@@ -152,8 +152,8 @@ segments:
     - '@behavior: Publishes the shared work base 0x80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 1 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of this payload byte table 0x801F51B8 and halfwords +0x2E/+0x30 = 0x80145EBE/0x80145EC0; unless the call reports 0xFF the returned record index is stored in work byte +0x0B, the byte the byte-2 handlers of this overlay read as their flag-number index. No jal reaches this address: its only in-image reference is the code-pointer word at 0x801F5990 in this payload textbin blob D_801F511C, where it follows the three data pointers 0x801F595C/0x801F5968/0x801F5974 and directly precedes the six-byte bounds records starting at 0x801F5994.'
   - - 8200
     - c
-    - findWorkPositionBoundsIndexWorld03Area11813_801F4C08
-    - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld03Area11813_801F4C08.c'
+    - findWorkPositionBounds
+    - '@source: src/bof3/world/findWorkPositionBounds.c'
   - - 8400
     - c
     - syncAgainstBoundsMirror

@@ -10,7 +10,7 @@
  *           emitLineRectangleBorder as the even value
  *           (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 1 and 6;
  *           finally tests the byte counter
- *           tickPhaseTimerThenAdvanceWorkCounter(&D_80148656[5],
+ *           tickPhaseTimerAdvance(&D_80148656[5],
  *           D_8014865F) and, when that counter returns a nonzero low byte, rolls
  *           the UI phase byte D_80148651 back by six.
  * @status exact
@@ -25,7 +25,7 @@ void func_801D7D48(void) {
   buildSlotList(0);
   emitLineRectangleBorder(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80,
                               0x34, 1, 6);
-  if ((u8)tickPhaseTimerThenAdvanceWorkCounter(work + 5, D_8014865F)) {
+  if ((u8)tickPhaseTimerAdvance(work + 5, D_8014865F)) {
     D_80148651 -= 6;
   }
 }

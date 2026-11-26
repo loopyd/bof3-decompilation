@@ -16,7 +16,7 @@ extern u16 workSeedHalfword801469EA;
  * @behavior Overlay step handler: entry 3 of the seven-word handler run based
  * at 0x801F3ED8 and entry 0 of the run based at 0x801F3EE4, the table this
  * target's exact dispatcher
- * dispatchStateByte1Table3ee4World03Area13013_801F31E8 indexes with the work
+ * dispatchStateByte1Table3 indexes with the work
  * record's state byte at +1. Arms the record's frame byte at +0x09 with 0x14,
  * clears the record's words at +0x0C and +0x10, copies the shared halfwords at
  * 0x801469E6/0x801469E8/0x801469EA into the record's halfwords at

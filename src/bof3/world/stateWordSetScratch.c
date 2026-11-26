@@ -11,7 +11,7 @@ extern u8 D_80146888[];
  * bottom-tested loop, then arms the saved record's state byte at offset 0x01
  * with 3 and republishes the saved record, so the saved record is current again
  * with mode 3 selected. The statement shape came from the same-target siblings
- * advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68 and
+ * advanceWorkWordSet and
  * advanceWorkWordAndSetScratchStateToMode3World03Area13413_801F36F0, which
  * carry the identical body over this record base and over the next record
  * entry at 0x80146920; this span's own payload words supply the record literal

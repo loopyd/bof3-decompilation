@@ -35,7 +35,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           guarded byte-2 advance of
  *           incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11003_801EF8F8,
  *           and the store-then-advance pair with the cell re-read between them
- *           of setWorkByte29AndIncrementWorkByte2BmagicMagic11103_801EF0C0.
+ *           of setWorkByte29Increment.
  * @status exact
  * @match 100.00
  * @residual none

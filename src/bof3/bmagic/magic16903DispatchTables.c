@@ -2,7 +2,7 @@
 
 extern void (*D_801F041C[])(void);
 extern void (*D_801F0420[])(void);
-extern void dispatchWorkByte2HandlerThenDrawBetweenGraphTypeDrawModesAroundHelpersWhenWorkBytes0And2SetBmagicMagic16903_801EF8A4(void); /* @source 0x801EF8A4 @kind function */
+extern void dispatchWorkByte2Handler(void); /* @source 0x801EF8A4 @kind function */
 
 /* @source 0x801EF210
  * @behavior Overlay step dispatch: reads the state byte at +1 of

@@ -10,7 +10,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  *           0x18-byte-stride record table based at 0x800E4800 - the main-RAM
  *           work area this overlay shares with the world and scenario overlays,
  *           whose 0x18-stride lead-byte boundary this target's exact
- *           clearWorkTableAt800E4800World04Area17213_801F38BC also clears - and
+ *           clearWorkTableAt800 also clears - and
  *           claims the first entry whose byte at offset 0 reads zero, storing 1
  *           there. It then seeds that record: byte 1 takes 0, byte 2 takes
  *           0x20, the triple at 0x04/0x08/0x0C takes the published scratch work
@@ -31,7 +31,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * no established role in this payload, so it stays described by offset. Byte
  * 0x5D of the work object is the lead byte of the signed level triple
  * 0x5D/0x5E/0x5F that this overlay's
- * armScratchWorkLevelTripleWorld04Area17213_801F4AAC and
+ * armScratchWorkLevel and
  * stateLevelAccumulatorsMarker
  * step, so byte 0x16 receives the work object's current level.
  *

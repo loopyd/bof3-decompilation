@@ -5,7 +5,7 @@
  * each access re-materialises the cell address with its own lui, which is what
  * the original does before and after the two calls; the exact target siblings
  * stateByteAdvanceOverlay
- * and clearWorkByte48ThenSubmitRecordWorld03Area14313_801F3C40 declare the same
+ * and clearWorkByte48Submit declare the same
  * cell this way. */
 extern u8* scratchWorkRecordPointer_1F800044; /* @source 0x1F800044 @kind data */
 

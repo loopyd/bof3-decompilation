@@ -13,7 +13,7 @@ void renderFullscreenColorTile(void);
 
 /* @source 0x801F2DBC
  * @behavior Entry 2 of the four-word work-byte-1 handler table at 0x801F3C54,
- * the entry the neighbouring dispatchStateByte1Table3c54World04Area19113_801F2C80
+ * the entry the neighbouring dispatchStateByte1Table3
  * dispatcher selects with byte 0x01 of the scratch work record published at the
  * scratchpad pointer cell 0x1F800044. It reads the shared main-RAM phase byte
  * D_80143BB0 with `lbu` (`lui $v1,0x8014` / `lbu $v1,0x3BB0($v1)`) and compares

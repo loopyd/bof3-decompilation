@@ -35,8 +35,8 @@ segments:
     - '@behavior: copies the three handler pointers at 0x801EEC04 into a local table and calls the entry selected by unsigned work byte 1 of the record held in scratchpad cell 0x1F800044. The entries are 0x801EEC70, 0x801EECDC and 0x801EEF58. The indirect call sets no argument registers.'
   - - 112
     - c
-    - copyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic21600_801EEC70
-    - '@source: src/bof3/bmagic/copyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic21600_801EEC70.c'
+    - copyRecordByte8Word
+    - '@source: src/bof3/bmagic/copyRecordByte8Word.c'
     - '@behavior: copies record byte 8 and the record word triplet at 0x34, 0x38 and 0x3C, read through the shared record pointer at 0x801EB4E0, into the scratchpad work object published at the pointer cell 0x1F800044, clears work byte 0xB and increments work byte 1. The record and work cells are re-read after the byte copy; the third record word is held in a local so its load precedes the byte 0xB clear and its store follows it; the work cell is re-read once more before the byte 1 increment.'
   - - 220
     - asm

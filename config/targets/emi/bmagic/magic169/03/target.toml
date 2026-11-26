@@ -12,7 +12,7 @@ sources = [
     "src/bof3/bmagic/renderGreyTwelveRim.c",
     "src/bof3/bmagic/decrementZeroByteZero.c",
     "src/bof3/bmagic/reserveFirstFreeRecord7.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16903_801EF03C.c",
+    "src/bof3/bmagic/raiseFlag4InvokeHelper4.c",
 ]
 support_sources = [
     "src/bof3/bmagic/mathGrowPositionWord.c",

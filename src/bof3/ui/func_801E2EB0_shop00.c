@@ -9,12 +9,12 @@
  * @behavior panel state dispatcher: calls the handler selected by the panel
  *           task root's state byte (D_801E5DFC[D_80148648->state]) with no
  *           arguments (framed jalr), then steps the same panel task root
- *           through drawShopPriceListPanel.
+ *           through drawShopPriceList.
  * @status exact
  * @match 100.00
  * @residual none
  */
 void func_801E2EB0(void) {
   D_801E5DFC[D_80148648->state]();
-  drawShopPriceListPanel(D_80148648);
+  drawShopPriceList(D_80148648);
 }

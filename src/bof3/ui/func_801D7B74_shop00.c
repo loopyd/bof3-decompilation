@@ -9,7 +9,7 @@
  *           with 0, then forwards the same work-block index byte read signed to
  *           the shop panel helper emitLineRectangleBorder as the even value
  *           (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6;
- *           when the byte counter tickPhaseTimerThenAdvanceWorkCounter(
+ *           when the byte counter tickPhaseTimerAdvance(
  *           &D_80148656[5], 0xF) returns a
  *           nonzero low byte it publishes 1 << (s8)D_8014865D into the byte at
  *           D_80144981 + 164 * D_80145FCC[(s8)D_80148656[0] * 0x140], rebuilds
@@ -29,7 +29,7 @@ void func_801D7B74(void) {
   buildSlotList(0);
   emitLineRectangleBorder(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80,
                               0x34, 0, 6);
-  if ((u8)tickPhaseTimerThenAdvanceWorkCounter(work + 5, 0xF)) {
+  if ((u8)tickPhaseTimerAdvance(work + 5, 0xF)) {
     offset = (s8)work[0] * 0x140;
     record_offset = D_80145FCC[offset] * 164;
     D_80144981[record_offset] = 1 << (s8)D_8014865D;

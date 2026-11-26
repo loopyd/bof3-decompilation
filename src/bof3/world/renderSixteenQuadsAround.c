@@ -67,7 +67,7 @@ typedef struct World03Area14514ScreenPoint {
  *   and the 0x50-byte projection scratch at 0x48, whose address is the only one
  *   of the body's local addresses that escapes; the save block at 0x98 fixes the
  *   local span and therefore the scratch size.
- * Name evidence: the caller drawWorkCursorQuadWorld03Area14514_801F3938 copies
+ * Name evidence: the caller drawWorkCursorQuad copies
  *   the work record's cursor triple at +0x34/+0x38/+0x3C into the point it hands
  *   over and documents this address as the overlay's quad renderer, and the body
  *   emits sixteen translucent gouraud quads around that point, so the name

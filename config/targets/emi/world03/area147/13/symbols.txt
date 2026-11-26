@@ -1,8 +1,8 @@
 callStateTable358World03 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2DF4 = 0x801F2DF4;
-advanceHalfword30By10AndAdvanceState2At80ThenDrawWithHalfword32ModeWorld03Area14713_801F2F34 = 0x801F2F34;
+advanceDrawHalfword32Mode = 0x801F2F34;
 func_801F2FB0 = 0x801F2FB0;
 func_801F30AC = 0x801F30AC;
-drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithHalfword30SpreadAndRow32QuadWorld03Area14713_801F313C = 0x801F313C;
+drawTwoPassTextured = 0x801F313C;
 D_801F358C = 0x801F358C;

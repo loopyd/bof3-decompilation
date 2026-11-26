@@ -46,7 +46,7 @@ segments:
     - func_801F331C
   - - 2300
     - c
-    - dispatchStateByte1Table5f7cWorld02Area09813_801F34FC
+    - dispatchStateByte1Table5
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 2368
     - c
@@ -63,7 +63,7 @@ segments:
     - func_801F36A0
   - - 3024
     - c
-    - dispatchStateByte1Table5f88World02Area09813_801F37D0
+    - dispatchStateByte1Table5T2
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 3092
     - c
@@ -76,7 +76,7 @@ segments:
     - c
     - callBlockTickCountdown
     - '@source: src/bof3/world/callBlockTickCountdown.c'
-    - '@behavior: Overlay progress step handler, entry 2 of the handler row based at 0x801F5F88 which dispatchStateByte1Table5f88World02Area09813_801F37D0 indexes with the work record state byte at +0x01: calls the draw helper 0x801F46EC with the work record block at +0x64, the signed halfword at +0x2E and the channel mask 6, decrements the countdown byte at +0x09 as an unsigned byte and returns while it is nonzero, and on the frame it reaches zero re-arms that byte with 0x20 and increments the state byte at +0x01, which hands the record to entry 3.'
+    - '@behavior: Overlay progress step handler, entry 2 of the handler row based at 0x801F5F88 which dispatchStateByte1Table5 indexes with the work record state byte at +0x01: calls the draw helper 0x801F46EC with the work record block at +0x64, the signed halfword at +0x2E and the channel mask 6, decrements the countdown byte at +0x09 as an unsigned byte and returns while it is nonzero, and on the frame it reaches zero re-arms that byte with 0x20 and increments the state byte at +0x01, which hands the record to entry 3.'
   - - 3476
     - asm
     - func_801F3994
@@ -103,7 +103,7 @@ segments:
     - func_801F3D98
   - - 4640
     - c
-    - dispatchStateByte1Table5facWorld02Area09813_801F3E20
+    - dispatchStateByte1Table5T2
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 4708
     - c

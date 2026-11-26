@@ -34,7 +34,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  *
  * Shape notes from the original bytes: this 0x80-byte body is instruction
  * identical to the exact sibling
- * publishSecondWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area13613_801F2E50
+ * publishSecondWorkBase
  * at 0x801F2E50 in this same payload - the two ranges differ in exactly two
  * shipped words, the kind immediate this one passes (1 here, 2 there) and the
  * low half of the lbu displacement of its per-party byte table (0x3430 here,

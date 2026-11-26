@@ -39,7 +39,7 @@ segments:
     - func_801F2C84
   - - 288
     - c
-    - invokeHelperArgThenHelperWorld04Area17213_801F2D20
+    - invokeHelperArgHelper
   - - 328
     - asm
     - func_801F2D48
@@ -111,8 +111,8 @@ segments:
     - func_801F36C0
   - - 3260
     - c
-    - clearWorkTableAt800E4800World04Area17213_801F38BC
-    - '@source: src/bof3/world/clearWorkTableAt800E4800World04Area17213_801F38BC.c'
+    - clearWorkTableAt800
+    - '@source: src/bof3/world/clearWorkTableAt8002.c'
     - '@behavior: Clears the lead byte of each of the first 8 entries of the 0x18-byte-stride work table at 0x800E4800.'
   - - 3304
     - c
@@ -152,8 +152,8 @@ segments:
     - '@behavior: Overlay radial fade disc run by two work-step handlers of this overlay. It arms the draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor g_PrimCursor with frame-buffer dithering on, appends the 0xC-byte draw-mode primitive at ordering table index 1 through 0x8014E5A0, and then stamps a fan of thirty-two translucent Gouraud triangles: the phase starts at zero and advances by 0x80 per triangle through a word accumulator truncated to an unsigned halfword at each use, so the wedges close the whole 0x1000 turn, each triangle keeps its first vertex on the passed centre pair and its two arc vertices offset by the radius scaled through the shared rotation helpers 0x801783C8 for x and 0x801782FC for y and shifted down by twelve, and the clamped fourth argument tints the centre vertex while the clamped fifth tints both arc vertices. Each 0x1C-byte POLY_G3 is marked semi-transparent and appended at the same ordering table index, and the 0x40-byte frame keeps $ra, $fp and $s0-$s7 across the calls.'
   - - 5924
     - c
-    - clearSharedFlagBit4EWorld04Area17213_801F4324
-    - '@source: src/bof3/world/clearSharedFlagBit4EWorld04Area17213_801F4324.c'
+    - clearSharedFlagBit4
+    - '@source: src/bof3/world/clearSharedFlagBit4.c'
     - '@behavior: Clears bit 0x4E of the shared main-RAM flag bank at 0x80144F28 through the shared bit-clear helper func_8015B5A8; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 5964
     - c
@@ -182,8 +182,8 @@ segments:
     - '@behavior: Calls the local handler selected by the work byte at offset 0x04 of the record published at the scratchpad pointer cell 0x1F800044; the unchecked handler table based at 0x801F6778 holds the routines at 0x801F4760 and 0x801F47F0. Takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 7008
     - c
-    - armScratchWorkMin80LevelTripleThenAdvanceAndSelectHandler1World04Area17213_801F4760
-    - '@source: src/bof3/world/armScratchWorkMin80LevelTripleThenAdvanceAndSelectHandler1World04Area17213_801F4760.c'
+    - armScratchWorkMin80
+    - '@source: src/bof3/world/armScratchWorkMin80.c'
     - '@behavior: Arms the scratch work record published through the pointer cell at 0x1F800044 like its neighbour: sets flag bit 0x20 of record byte 0, then clears flag bit 0x40, writes 1 into the 0x5C marker byte, and writes -0x80 into the signed level bytes 0x5F, 0x5E and 0x5D through one load of the cell. It then calls the advance handler at 0x801F47F0 on the same record and writes 1 into the handler byte at 0x04 that the local dispatcher indexes its table with. Takes no arguments and returns nothing; its 0x18-byte frame keeps $ra and the $s0 that holds the shared 1 constant.'
   - - 7152
     - c
@@ -202,8 +202,8 @@ segments:
     - '@behavior: Asks the shared free-record selector func_8019601C for an index, masks the result to a byte and, unless that byte is 0xFF, claims the selected 0x74-byte front-end record at 0x80143FC8: marks it occupied (byte 0x00 = 1), writes handler selector 0x92 into byte 0x05, writes 4 into byte 0x29, clears the halfwords at 0x2E and 0x30, and stores the index of the current work record (the 0x80146884 minus 0x80146888 pointer difference over the 0x98-byte work-record stride) into byte 0x0B. Takes no arguments and returns nothing; its only in-image reference is word 6 of the pointer run based at 0x801F6708.'
   - - 7852
     - c
-    - armScratchWorkLevelTripleWorld04Area17213_801F4AAC
-    - '@source: src/bof3/world/armScratchWorkLevelTripleWorld04Area17213_801F4AAC.c'
+    - armScratchWorkLevel
+    - '@source: src/bof3/world/armScratchWorkLevel.c'
     - '@behavior: Sets flag bit 0x20 of the scratch work record byte 0, writes 1 into its 0x5C marker byte, and writes -0x40 into the signed level bytes 0x5D-0x5F.'
   - - 7924
     - c
@@ -234,7 +234,7 @@ segments:
     - '@source: src/bof3/world/area17213DispatchTables.c'
   - - 8644
     - c
-    - setScratchWorkStateWorld04Area17213_801F4DC4
+    - setScratchWorkState
   - - 8672
     - c
     - stateSetAt191Draw
@@ -242,7 +242,7 @@ segments:
     - '@behavior: Advances the work halfword at 0x2E by 0x0A and, once it reads at least 0x191, increments the shared counter byte at 0x80146875 and sets state byte 1 to 2; then draws through 0x801F4E8C(0xDC, 0xC8) and 0x801F4F70(halfword 0x2E, 0xC8).'
   - - 8808
     - c
-    - invokeHelperArgsWorld04Area17213_801F4E68
+    - invokeHelperArgs
   - - 8844
     - c
     - renderTexturedQuad64Clut1

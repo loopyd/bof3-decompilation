@@ -13,15 +13,15 @@ sources = [
     "src/bof3/world/stateWorkProgress0.c",
     "src/bof3/world/fixedPointUnitsWorld04.c",
     "src/bof3/world/stateAfterScalePass.c",
-    "src/bof3/world/invokeHelperWithWorkWorld04Area19813_801F2FD4.c",
-    "src/bof3/world/requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C.c",
+    "src/bof3/world/invokeHelperWithWork.c",
+    "src/bof3/world/requestResourceFromScript.c",
     "src/bof3/world/callFrontPhaseLower.c",
     "src/bof3/world/stateRescaleBlocksUnity.c",
 ]
 support_sources = [
     "src/bof3/support/area198_13_psyq.c",
     "src/bof3/world/area19813DispatchTables.c",
-    "src/bof3/world/scalePaletteBlocksWorld04Area19813_801F2D28.c",
+    "src/bof3/world/scalePaletteBlocks.c",
     "src/bof3/world/publishIndexSeedPosition.c",
 ]
 psyq_source = "src/bof3/support/area198_13_psyq.c"

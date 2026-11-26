@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-u8* findFreeWorkRecordWorld03Area13213_801F3800(void);
+u8* findFreeWorkRecord(void);
 void stateRecordDefaultsPosition(u8* record);
 u32 tickDrawActiveRecords(void);
 
@@ -54,7 +54,7 @@ void claimEveryFourthPass(
 
   work = D_1F800044;
   if ((work[9] & 3) == 0) {
-    record = findFreeWorkRecordWorld03Area13213_801F3800();
+    record = findFreeWorkRecord();
     if (record != 0) {
       stateRecordDefaultsPosition(record);
     }

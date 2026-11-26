@@ -58,8 +58,8 @@ segments:
     - func_801F752C
   - - 2476
     - c
-    - clearWorkTableAt800E4800ScenarioScena1500_801F75AC
-    - '@source: src/bof3/scenario/clearWorkTableAt800E4800ScenarioScena1500_801F75AC.c'
+    - clearWorkTableAt800
+    - '@source: src/bof3/scenario/clearWorkTableAt800.c'
     - '@behavior: Overlay init helper: clears the lead byte of each of the 0x80 entries of the 0x14-byte-stride work table at 0x800E4800, walking the table with an unsigned byte counter in a bottom-tested loop; it takes no arguments, returns nothing and reads no other state. Its 44 bytes are byte-identical to clearWorkTableAt800E4800ScenarioScena0100_801F7AB8 (0x801F7AB8 in emi/scenario/scena01/00).'
   - - 2520
     - asm

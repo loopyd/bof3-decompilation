@@ -1,7 +1,7 @@
 callOverlayLayerTrail = 0x801F2C04;
 stateWorkScrollWord = 0x801F2C50;
 decrementBackgroundVerticalScrolled = 0x801F2C7C;
-invokeZeroArgWorld04Area19913_801F2CC0 = 0x801F2CC0;
+invokeZeroArg = 0x801F2CC0;
 func_801F2CE0 = 0x801F2CE0;
 stateTripletOverlayBytes = 0x801F2D7C;
 audioLayerTrailOverlay = 0x801F2DE8;
@@ -12,6 +12,6 @@ func_801F36DC = 0x801F36DC;
 func_801F3AB0 = 0x801F3AB0;
 renderRadialSixtyBlack = 0x801F3EA0;
 func_801F400C = 0x801F400C;
-setStatusFFFFSubstate1IfGateElse0World04Area19913_801F4478 = 0x801F4478;
+setIfGateElse0 = 0x801F4478;
 trailLayerPushCursors = 0x801F44B4;
 D_801F44B8 = 0x801F44B8;

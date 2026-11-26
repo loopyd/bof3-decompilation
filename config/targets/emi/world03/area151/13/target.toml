@@ -8,27 +8,27 @@ splat = "config/targets/emi/world03/area151/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World03Area15113_801F3798.c",
+    "src/bof3/world/advanceWorkByte9To0.c",
     "src/bof3/world/decrementRetreatExpiry.c",
-    "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area15113_801F3A70.c",
-    "src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948.c",
+    "src/bof3/world/drawMarkerSpriteLayers.c",
+    "src/bof3/world/emitSemiTransSprite3.c",
     "src/bof3/world/stateFacingPairResource.c",
-    "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld03Area15113_801F2C04.c",
+    "src/bof3/world/setIfGateClear.c",
     "src/bof3/world/renderPulsingScrollingFocus.c",
-    "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld03Area15113_801F3640.c",
-    "src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld03Area15113_801F34CC.c",
+    "src/bof3/world/setState3UnlessGated3.c",
+    "src/bof3/world/advanceDrawHalfword2E.c",
     "src/bof3/world/retreatResetIsDraw.c",
-    "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area15113_801F3898.c",
-    "src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World03Area15113_801F36C0.c",
-    "src/bof3/world/prepareWorkRecordForLookup1D1AndArmState1World03Area15113_801F2FD0.c",
+    "src/bof3/world/advanceGatedDrawHalfword302.c",
+    "src/bof3/world/decrementGatedDrawHalfword302.c",
+    "src/bof3/world/prepareWorkRecordLookup1.c",
 ]
 support_sources = [
-    "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area15113_801F347C.c",
+    "src/bof3/world/setWorkHalfword2E2.c",
     "src/bof3/world/area15113_work_state.c",
     "src/bof3/world/area15113DispatchTables.c",
     "src/bof3/world/invokeTwoHelpersWorld03Area15113_801F46AC.c",
-    "src/bof3/world/invokeTwoHelpersWorld03Area15113_801F3410.c",
-    "src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area15113_801F3528.c",
+    "src/bof3/world/invokeTwoHelpers3.c",
+    "src/bof3/world/setWorkState2To32.c",
     "src/bof3/support/area151_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area151_13_psyq.c"

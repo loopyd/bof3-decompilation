@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void clearWorkTableByte3At800E4800World04Area17413_801F2E5C(void);
+void clearWorkTableByte3(void);
 
 /* Published scratchpad work-record pointer cell. Entry 0 of this payload's
  * work-byte-1 handler table reads it three times: once for the mode byte that
@@ -16,7 +16,7 @@ extern u8* D_1F800044;
 /* @source 0x801F2C48
  * @behavior Run initialiser of this overlay's work-byte-1 state machine: entry 0
  *           of the handler table based at 0x801F4FAC, which this target's exact
- *           dispatcher dispatchStateByte1Table4facWorld04Area17413_801F2C04
+ *           dispatcher dispatchStateByte1Table4
  *           indexes with the work record's state byte at +1. That base is a
  *           pointer run inside the payload textbin blob, so this span is reached
  *           by the word at 0x801F4FAC alone and no jal in the payload names it.
@@ -47,7 +47,7 @@ extern u8* D_1F800044;
 void stateTableSetClear(
     void) {
   if (D_1F800044[6] != 0) {
-    clearWorkTableByte3At800E4800World04Area17413_801F2E5C();
+    clearWorkTableByte3();
   }
   D_1F800044[9] = 0;
   D_1F800044[1] += 1;

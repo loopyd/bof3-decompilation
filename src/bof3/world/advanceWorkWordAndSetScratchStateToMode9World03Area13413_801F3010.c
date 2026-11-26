@@ -12,7 +12,7 @@ extern u8 D_80146888[];
  * with 9 and republishes the saved record, so the saved record is current again
  * with mode 9 selected. The body is the 0x54-byte shape of the exact
  * same-target sibling
- * advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68 and is
+ * advanceWorkWordSet and is
  * instruction-identical to it across the whole 0x54-byte span except for the
  * immediate the state byte receives (word 15 of the span: 0x09000224 here
  * against 0x05000224 there). The byte armed is the record state byte the

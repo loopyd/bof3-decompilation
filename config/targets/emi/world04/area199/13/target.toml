@@ -15,9 +15,9 @@ sources = [
 ]
 support_sources = [
     "src/bof3/world/renderScrolledBackgroundTiled.c",
-    "src/bof3/world/invokeZeroArgWorld04Area19913_801F2CC0.c",
+    "src/bof3/world/invokeZeroArg.c",
     "src/bof3/world/stateTripletOverlayBytes.c",
-    "src/bof3/world/setStatusFFFFSubstate1IfGateElse0World04Area19913_801F4478.c",
+    "src/bof3/world/setIfGateElse0.c",
     "src/bof3/world/renderRadialSixtyBlack.c",
     "src/bof3/world/renderPairsAdvancedClock.c",
     "src/bof3/world/stateWorkScrollWord.c",

@@ -12,7 +12,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/bmagic/clearWorkBytes.c",
-    "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic21303_801EF23C.c",
+    "src/bof3/bmagic/incrementWorkByteRecord3.c",
     "src/bof3/support/magic213_03_psyq.c",
     "src/bof3/bmagic/magic21303DispatchTables.c",
     "src/bof3/bmagic/reserveFirstFreeRecord8.c",

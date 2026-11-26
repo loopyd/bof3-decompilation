@@ -40,8 +40,8 @@ segments:
     - func_801F2F2C
   - - 904
     - c
-    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area15713_801F2F88
-    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area15713_801F2F88.c'
+    - advanceRecordCoordinateWindow
+    - '@source: src/bof3/world/advanceRecordCoordinateWindow2.c'
     - '@behavior: Advance work byte 2 when the camera is outside the record coordinate window, then run the overlay routine at 0x801F3108.'
   - - 1176
     - asm
@@ -69,8 +69,8 @@ segments:
     - func_801F3760
   - - 3172
     - c
-    - decrementHalfword30By20AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1World04Area15713_801F3864
-    - '@source: src/bof3/world/decrementHalfword30By20AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1World04Area15713_801F3864.c'
+    - decrementWorkByte2To1
+    - '@source: src/bof3/world/decrementWorkByte2To1.c'
     - '@behavior: Byte-2 state handler 4 of the local handler table based at 0x801F3924, the word that table stores at 0x801F3934, for the work record published at the scratchpad pointer cell 0x1F800044: it subtracts 0x20 from the record halfword at 0x30 and, once that stored signed halfword reaches zero or below, queues cue 0x201 through func_8015DF18 only while the front-end phase byte D_80143BB0 reads zero and then sets the record state byte at 0x02 to 1.'
   - - 3276
     - textbin

@@ -34,7 +34,7 @@ sources = [
     "src/bof3/ui/renderComposedLabelRows.c",
     "src/bof3/ui/callStepByte0Table.c",
     "src/bof3/ui/audioLatchAlreadyBusy.c",
-    "src/bof3/ui/dispatchStepByte1TableE00.c",
+    "src/bof3/ui/dispatchStepByte1Table00.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords.c",

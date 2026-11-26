@@ -6,7 +6,7 @@
  *           renderShopPriceList with the work-block index byte
  *           D_80148656[0], 0x98, 0x3F, 0 and 0xFF, then buildSlotList with 0,
  *           then tests the byte counter
- *           tickPhaseTimerThenAdvanceWorkCounter(&D_80148656[5], 0x10); when
+ *           tickPhaseTimerAdvance(&D_80148656[5], 0x10); when
  *           that counter returns a
  *           nonzero low byte the step rolls the UI phase byte D_80148651 back
  *           by two and clears the frame timer phaseTimer, and when it returns
@@ -21,7 +21,7 @@ void func_801D7CC8(void) {
   work = D_80148656;
   renderShopPriceList(work[0], 0x98, 0x3F, 0, 0xFF);
   buildSlotList(0);
-  if ((u8)tickPhaseTimerThenAdvanceWorkCounter(work + 5, 0x10)) {
+  if ((u8)tickPhaseTimerAdvance(work + 5, 0x10)) {
     phaseTimer = 0;
     D_80148651 -= 2;
   }

@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table3dfcWorld04Area19813_801F2C04
+    - dispatchStateByte2Table3
     - '@source: src/bof3/world/area19813DispatchTables.c'
   - - 72
     - c
@@ -44,23 +44,23 @@ segments:
     - '@behavior: Overlay step handler, entry 2 of the handler run that opens the reviewed textbin row D_801F3DFC; its first three words are code pointers and the rest is table data, so no jal names this body. It advances the palette scale in byte 0x09 of the work record published at the scratchpad pointer cell 0x1F800044, republishes both 0x100-entry colour palette blocks through the payload scaler with that new byte as the scale (0x80 is unity), and once the byte reaches 0x80 calls the shared main-executable reset func_80196070, which clears the scratchpad work-area header. Takes no arguments and returns nothing; the 0x18-byte frame keeps only $ra at 0x10 across the two calls.'
   - - 296
     - c
-    - scalePaletteBlocksWorld04Area19813_801F2D28
-    - '@source: src/bof3/world/scalePaletteBlocksWorld04Area19813_801F2D28.c'
+    - scalePaletteBlocks
+    - '@source: src/bof3/world/scalePaletteBlocks.c'
   - - 516
     - asm
     - func_801F2E04
   - - 604
     - c
-    - requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C
-    - '@source: src/bof3/world/requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C.c'
+    - requestResourceFromScript
+    - '@source: src/bof3/world/requestResourceFromScript.c'
     - '@behavior: State handler reached only as entry 1 of the thirteen-word pointer run at 0x801F4268 in the textbin row D_801F3F10; no jal names it. Indexes the world record table 0x8017F974 with the shared id 0x80143F00, takes word 0x10 as a per-state script pointer table, picks the entry with front-record byte 0x03 and adds front-record halfword 0x0A as the script byte offset. Requests the command byte at 0x02 through func_8014D6DC with the work record halfword 0x58 lowered by two, copies the command byte at 0x03 into work byte 0x2A, then advances the front-record halfword 0x0A by two. Takes no arguments and returns nothing.'
   - - 772
     - asm
     - func_801F2F04
   - - 980
     - c
-    - invokeHelperWithWorkWorld04Area19813_801F2FD4
-    - '@source: src/bof3/world/invokeHelperWithWorkWorld04Area19813_801F2FD4.c'
+    - invokeHelperWithWork
+    - '@source: src/bof3/world/invokeHelperWithWork.c'
     - '@behavior: Thin overlay wrapper: loads the work-record pointer from the scratchpad pointer cell at byte offset 0x44, cell 0x11 of the pointer table, and passes it to the main-executable helper 0x8014E4BC as its only argument. Takes no arguments and returns nothing; the 0x18-byte frame only keeps $ra at 0x10 across that call. Entry 3 of the thirteen-word code-pointer run at 0x801F4268 inside the textbin row D_801F3F10, so no jal in this payload names it.'
   - - 1020
     - asm

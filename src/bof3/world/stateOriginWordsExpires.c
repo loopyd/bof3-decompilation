@@ -79,7 +79,7 @@ void func_801F5308(void);
  * of the nine-word handler row based at 0x801F5F88 (0x801F3814, 0x801F3878,
  * 0x801F3910, 0x801F3994, 0x801F3AA8, 0x801F3B5C, 0x801F3BD4, 0x801F3CDC,
  * 0x801F3D98; the next dispatcher row starts at 0x801F5FAC). The exact
- * dispatcher dispatchStateByte1Table5f88World02Area09813_801F37D0 scales the
+ * dispatcher dispatchStateByte1Table5 scales the
  * work record state byte at +0x01 by four, loads that word from the row and
  * jalrs it, so the row fixes this function as the state-4 progress handler and
  * its caller stays outside the payload. Entry 5 of the same row, 0x801F3B5C,

@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table3e68World03Area14413_801F2C04
+    - dispatchStateByte1Table3
     - '@source: src/bof3/world/area14413DispatchTables.c'
   - - 72
     - c
@@ -50,7 +50,7 @@ segments:
     - '@source: src/bof3/world/copyWorkIncrementWork.c'
   - - 368
     - c
-    - incrementWorkByte1World03Area14413_801F2D70
+    - incrementWorkByte1
   - - 400
     - c
     - incrementWorkByte1World03Area14413_801F2D90
@@ -99,8 +99,8 @@ segments:
     - '@behavior: Overlay handler word at 0x801F4900 of the local pointer run based at 0x801F48F4: when the shared main-RAM byte at 0x80146189 reads 4, advances the halfword at offset 0x0A of the work record published through the global pointer cell 0x80148210 by 3; no frame, no call and no pointer table of its own.'
   - - 3820
     - c
-    - advanceHalfword0aBy3WhenSharedByte2World03Area14413_801F3AEC
-    - '@source: src/bof3/world/advanceHalfword0aBy3WhenSharedByte2World03Area14413_801F3AEC.c'
+    - advanceHalfword0By3Shared
+    - '@source: src/bof3/world/advanceHalfword0By3Shared.c'
     - '@behavior: Overlay handler reached from the handler table word at 0x801F4904: when the shared main-RAM byte at 0x80146189 reads 2, advances the halfword at offset 0x0A of the work record published through the global pointer cell 0x80148210 by 3.'
   - - 3876
     - asm

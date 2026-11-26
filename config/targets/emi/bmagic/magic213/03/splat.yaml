@@ -36,7 +36,7 @@ segments:
     - func_801EEF74
   - - 960
     - c
-    - dispatchStateByte1Tablef8a0BmagicMagic21303_801EEFC0
+    - dispatchStateByte1Tablef8
     - '@source: src/bof3/bmagic/magic21303DispatchTables.c'
   - - 1028
     - c
@@ -47,8 +47,8 @@ segments:
     - func_801EF048
   - - 1596
     - c
-    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic21303_801EF23C
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic21303_801EF23C.c'
+    - incrementWorkByteRecord
+    - '@source: src/bof3/bmagic/incrementWorkByteRecord3.c'
   - - 1864
     - asm
     - func_801EF348
@@ -59,7 +59,7 @@ segments:
     - '@behavior: Decrements shared work byte 0xB and invokes the helper when scratchpad work byte 0xB is zero.'
   - - 2272
     - c
-    - dispatchStateByte1Tablef8b4BmagicMagic21303_801EF4E0
+    - dispatchStateByte1Tablef8Tail
     - '@source: src/bof3/bmagic/magic21303DispatchTables.c'
   - - 2340
     - asm

@@ -35,7 +35,7 @@ u32 func_80166140(u32 arg0);
  *
  * Shape evidence: statement order, operand forms and declaration style are
  * taken from the in-target sibling
- * setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808 (0x801F4808)
+ * setEntryGateClear (0x801F4808)
  * for the gated status halfword store and the `lb` gate read, and from
  * setStatus4AndModeIndex6IfGateElseFFFFWorld03Area11613_801F2CCC (0x801F2CCC)
  * for the inverted gate whose 0xFFFF arm is emitted out of line after the

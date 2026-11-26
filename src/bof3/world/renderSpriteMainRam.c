@@ -3,7 +3,7 @@
 /* @source 0x8014832E @kind unknown */
 extern u8 D_8014832E;
 
-void emitSemiTransSpriteFromIndexedEntryTableWorld03Area12114_801F39F0(
+void emitSemiTransSprite(
     s16 arg0, s16 arg1, u8 arg2);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 
@@ -27,9 +27,9 @@ void renderSpriteMainRam(
 
   if ((D_8014832E & 0x1bu) != 0u) {
     y = arg1;
-    emitSemiTransSpriteFromIndexedEntryTableWorld03Area12114_801F39F0(
+    emitSemiTransSprite(
         arg0, y, 4u);
-    emitSemiTransSpriteFromIndexedEntryTableWorld03Area12114_801F39F0(
+    emitSemiTransSprite(
         (s16)(arg0 + 0x80), y, 5u);
     func_8014F800((s16)(arg0 + 4), (s16)(arg1 + 4), 0, 0xffu,
                   0x80010000u + PSX_PTR(u16, 0x80010000u)[0]);

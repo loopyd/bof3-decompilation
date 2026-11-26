@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-u8* findFreeWorkRecordAt800E4800World03Area13413_801F4938(void);
+u8* findFreeWorkRecord(void);
 
 /* Shared published work-pointer cell: the original re-materialises the cell
  * address and reloads the pointer for the byte-6 read and again for the
@@ -30,7 +30,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
  * at 0x801F42AC inside the unlifted handler func_801F4288, which reaches it
  * only when (published work byte 9 & 3) == 0, i.e. every fourth tick of the
  * countdown byte the same overlay arms with 0x80. The callee is this target's
- * exact lift findFreeWorkRecordAt800E4800World03Area13413_801F4938, whose
+ * exact lift findFreeWorkRecord, whose
  * recorded role is the free-entry scan of that table and whose lead byte is the
  * claim flag, and the shape is the 0x800E4800-table sibling of the scenario
  * overlay's exact claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C
@@ -57,7 +57,7 @@ void claimFreeSeedPosition(void) {
   u8* record;
   u8* work;
 
-  record = findFreeWorkRecordAt800E4800World03Area13413_801F4938();
+  record = findFreeWorkRecord();
   if (record == 0) {
     return;
   }

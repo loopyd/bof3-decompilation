@@ -15,7 +15,7 @@ sources = [
     "src/bof3/bmagic/resourceReserveFreeRecord9.c",
     "src/bof3/bmagic/stateTintTripletCountdown.c",
     "src/bof3/bmagic/workByteAdvanceThreshold.c",
-    "src/bof3/bmagic/incrementWorkByteAThenSubtract4FromByte9AndDecrementGlobalByteBAndClearWhenZeroBmagicMagic12403_801F0368.c",
+    "src/bof3/bmagic/incrementWorkByteSubtract4.c",
     "src/bof3/bmagic/forwardRaiseInvokeZero.c",
     "src/bof3/bmagic/renderQuadsScaledRadii.c",
 ]

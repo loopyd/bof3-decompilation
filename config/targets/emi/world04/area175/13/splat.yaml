@@ -40,8 +40,8 @@ segments:
     - func_801F2CD8
   - - 524
     - c
-    - invokeHelperWorld04Area17513_801F2E0C
-    - '@source: src/bof3/world/invokeHelperWorld04Area17513_801F2E0C.c'
+    - invokeHelper
+    - '@source: src/bof3/world/invokeHelper10.c'
   - - 556
     - asm
     - func_801F2E2C
@@ -139,7 +139,7 @@ segments:
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3676
     - c
-    - setStatus70IfGateElseFFFFWorld04Area17513_801F3A5C
+    - setStatus70IfGate
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3716
     - c
@@ -157,12 +157,12 @@ segments:
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3956
     - c
-    - setStatus7EIfGateElseFFFFWorld04Area17513_801F3B74
+    - setStatus7EIf
     - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x7E into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 3996
     - c
-    - noopHandlerWorld04Area17513_801F3B9C
+    - noopHandler
   - - 4004
     - asm
     - func_801F3BA4
@@ -178,7 +178,7 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x8A into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 4212
     - c
-    - setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74
+    - setStatus8IfGate
     - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x8A into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 4252
@@ -215,7 +215,7 @@ segments:
     - '@behavior: Reads the shared gate byte D_801490C7. When zero, stores 0xFFFF into D_801490A8 and clears D_801F294C. Otherwise stores 0xF7 into D_801490A8 and 4 into D_801F294C.'
   - - 4648
     - c
-    - setStatusF8IfGateElseF9World04Area17513_801F3E28
+    - setStatus8If
     - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xF8 into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xF9 when the gate byte is zero.'
   - - 4688
@@ -231,7 +231,7 @@ segments:
     - '@behavior: Compares the integer halves of two 16.16 position arguments against one tile rectangle (first half in 0x41..0x44, second half in 0x14..0x17); outside it stores 1 into the latch byte 0x801455C7, and inside it acts only while that latch is nonzero, clearing the latch, queueing front-end cue 0x20C through func_8015DF18 and requesting the front selector context from the shared halfword 0x80145048 with 0x80145040 and 0x80145044 as kind 4 through func_8019FA28; returns 0 on every path.'
   - - 5052
     - c
-    - invokeHelperArgWorld04Area17513_801F3FBC
+    - invokeHelperArg
   - - 5084
     - c
     - copyXXRange

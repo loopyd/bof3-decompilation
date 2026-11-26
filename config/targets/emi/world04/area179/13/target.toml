@@ -11,9 +11,9 @@ sources = [
     "src/bof3/world/initAreaModuleAndQueueFrontCue20CWorld04Area17913_801F32D8.c",
 ]
 support_sources = [
-    "src/bof3/world/invokeHelperArgWorld04Area17913_801F3328.c",
-    "src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area17913_801F3348.c",
-    "src/bof3/world/selectAreaStateForMatchedArgumentsWorld04Area17913_801F3378.c",
+    "src/bof3/world/invokeHelperArg6.c",
+    "src/bof3/world/copySharedXWork4.c",
+    "src/bof3/world/selectStateMatchedArguments3.c",
     "src/bof3/support/area179_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area179_13_psyq.c"

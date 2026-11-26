@@ -37,7 +37,7 @@ segments:
     - '@source: src/bof3/bmagic/forwardBattleIdleFlag2.c'
   - - 568
     - c
-    - dispatchStateByte1Table0b74BmagicMagic17203_801EEE38
+    - dispatchStateByte1Table0
     - '@source: src/bof3/bmagic/magic17203DispatchTables.c'
   - - 636
     - asm
@@ -57,8 +57,8 @@ segments:
     - func_801EF430
   - - 2236
     - c
-    - decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17203_801EF4BC
-    - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17203_801EF4BC.c'
+    - decrementWorkByte9Two
+    - '@source: src/bof3/bmagic/decrementWorkByte9Two.c'
   - - 2328
     - c
     - callWorkByte2Draw

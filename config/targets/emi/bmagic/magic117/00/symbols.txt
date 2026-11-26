@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 callWorkByte1Handler29 = 0x801EEC24;
-submitRecordStoreEffectByteBClearWorkByte9SetByteATo2ThenAdvanceWorkByte1BmagicMagic11700_801EEC90 = 0x801EEC90;
+submitAdvanceWorkByte1 = 0x801EEC90;
 incrementByteRecordCounters2 = 0x801EED2C;
 decrementCountersSubmitStep = 0x801EEE40;
 func_801EEFB8 = 0x801EEFB8;

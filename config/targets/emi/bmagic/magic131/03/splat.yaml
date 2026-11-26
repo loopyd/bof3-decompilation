@@ -104,7 +104,7 @@ segments:
     - '@source: src/bof3/bmagic/callHandlerDrawActive.c'
   - - 5496
     - c
-    - clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178
+    - clearWorkByte9Increment
   - - 5544
     - c
     - workAdvanceAt10

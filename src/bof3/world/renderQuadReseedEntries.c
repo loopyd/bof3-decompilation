@@ -28,7 +28,7 @@ void func_801F36C0(u8* position, s32 angle, s32 flags);
 void stateCornerRotationScale(
     u8* entry);
 
-void clearWorkTableAt800E4800World04Area17213_801F38BC(void);
+void clearWorkTableAt800(void);
 
 /* @source 0x801F30F8
  * @behavior Overlay progress step handler, entry 7 of the state byte 1 handler
@@ -71,7 +71,7 @@ void renderQuadReseedEntries(
   work = D_1F800044;
   func_801F36C0(work + 0x34, *(s16*)(work + 0x2e), 7);
   if (g_ScenarioProgress == 0xa) {
-    clearWorkTableAt800E4800World04Area17213_801F38BC();
+    clearWorkTableAt800();
     PushMatrix();
     entry = PSX_PTR(u8, 0x800E48C0u);
     index = 0u;

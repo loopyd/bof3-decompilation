@@ -1,8 +1,8 @@
 callStateTable3320World02 = 0x801F2C04;
 queueAdvanceWorkPrimary = 0x801F2C48;
-advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C94 = 0x801F2C94;
+advanceWorkByte2Draw = 0x801F2C94;
 func_801F2CDC = 0x801F2CDC;
-advanceWorkByte9ResetWorkAreaWhenSharedStateByteClearThenDrawThreeCellQuadsWorld02Area10513_801F2D38 = 0x801F2D38;
+advanceWorkByte9Reset = 0x801F2D38;
 renderTexturedQuadsShifted = 0x801F2D9C;
 setupFrontMode9 = 0x801F3140;
 stepReleaseOverlayChange = 0x801F3180;

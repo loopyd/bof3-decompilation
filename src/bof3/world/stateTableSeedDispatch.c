@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void clearWorkTableAt800E4800World03Area13413_801F4974(void);
+void clearWorkTableAt800(void);
 
 /* Shared published work-pointer cell: the original re-materialises the cell
  * address and reloads the pointer for the saved-word group and again for the
@@ -31,7 +31,7 @@ extern void dispatchSoundCue(u32 cue_id);
  * +0x3C into its words at +0x0C, +0x10 and +0x14 and starts the interpolated
  * word at +0x1C from that same +0x3C copy, clears the halfword at +0x20, stores
  * 0x01000000 in the word at +0x24 - the step the next handler
- * advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13413_801F4400
+ * advanceWorkWord1C
  * adds to +0x1C and clamps against +0x14 - and arms the countdown byte at +0x09
  * with 0x40, four times that handler's 0x10 re-arm. It finally reads the cell
  * again, advances the record's state byte at +0x01 by one so the next frame
@@ -82,7 +82,7 @@ void stateTableSeedDispatch(
   s32 at38;
   s32 at3c;
 
-  clearWorkTableAt800E4800World03Area13413_801F4974();
+  clearWorkTableAt800();
   do {
     work = D_1F800044;
     at34 = *(s32*)(work + 0x34);

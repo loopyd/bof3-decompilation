@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/stateClearRecordSlot.c",
-    "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic16803_801EF048.c",
+    "src/bof3/bmagic/incrementWorkByteRecord2.c",
     "src/bof3/bmagic/stateSetByte9Rearm.c",
     "src/bof3/bmagic/reserveFirstFreeRecord6.c",
 ]

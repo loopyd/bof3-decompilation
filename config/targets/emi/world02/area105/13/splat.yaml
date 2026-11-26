@@ -36,16 +36,16 @@ segments:
     - '@behavior: entry 0 of the work-byte-2 handler table at 0x801F3320: while the shared primary-state and sub-state byte pair at 0x80146874 reads anything but 0x20C (primary state 0x0C, sub-state 2) it returns without writing, and once the pair matches it queues cue 0x202 through the shared cue dispatcher at 0x8015DF18 and then advances the work record state byte at +2, reached through the scratchpad pointer cell 0x1F800044, so the next dispatch selects the cell-quad draw at 0x801F2C94.'
   - - 148
     - c
-    - advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C94
-    - '@source: src/bof3/world/advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C94.c'
+    - advanceWorkByte2Draw
+    - '@source: src/bof3/world/advanceWorkByte2Draw.c'
     - '@behavior: state-1 handler of the work-byte-2 dispatch: while the shared main-executable byte 0x8014933B reads anything but 1 it returns without writing, and once it reads 1 it advances the work record state byte at +2, reached through the scratchpad pointer cell 0x1F800044, and calls this overlay''s cell-quad draw with a zero displacement.'
   - - 220
     - asm
     - func_801F2CDC
   - - 312
     - c
-    - advanceWorkByte9ResetWorkAreaWhenSharedStateByteClearThenDrawThreeCellQuadsWorld02Area10513_801F2D38
-    - '@source: src/bof3/world/advanceWorkByte9ResetWorkAreaWhenSharedStateByteClearThenDrawThreeCellQuadsWorld02Area10513_801F2D38.c'
+    - advanceWorkByte9Reset
+    - '@source: src/bof3/world/advanceWorkByte9Reset.c'
     - '@behavior: state-3 handler of the work-byte-2 dispatch: it advances the work record counter byte at +9, reached through the scratchpad pointer cell 0x1F800044, calls the shared work-area reset helper at 0x80196070 while the shared overlay state byte 0x8014933B reads zero, then re-reads the pointer cell and calls this overlay''s three-cell-quad draw with that counter byte as the displacement.'
   - - 412
     - c

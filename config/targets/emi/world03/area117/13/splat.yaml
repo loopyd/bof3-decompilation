@@ -94,8 +94,8 @@ segments:
     - func_801F3DF0
   - - 4720
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind5FromModeTableWorld03Area11713_801F3E70
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind5FromModeTableWorld03Area11713_801F3E70.c'
+    - publishThirdWorkBase
+    - '@source: src/bof3/world/publishThirdWorkBase.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 5 through the shared allocator 0x8015CB18 with word +0x0C = 0, word +0x10 = the byte D_801F466C[D_80144F5C] and halfwords +0x2E/+0x30 = D_8014613E/D_80146140; unless the call reports 0xFF the returned record index is stored in work byte +0x0B; takes no arguments and returns nothing.'
   - - 4848
     - c
@@ -118,13 +118,13 @@ segments:
     - '@behavior: loads the shared mode byte 0x801490C7 with a signed byte read, scales it by two and indexes the overlay halfword status table at 0x801F55D8, publishing the selected halfword into the shared status halfword 0x801490A8; modes 0 through 4 also store 0x0A into the shared scenario progress byte 0x80146864 and request frontend cue 0x205 through the resident dispatcher 0x8015DF18; takes no arguments and returns nothing.'
   - - 5192
     - c
-    - publishModeStatusFromTable55e4ThenProgressAAndCue205ForModes0To4Except2AndProgress14ForMode2World03Area11713_801F4048
-    - '@source: src/bof3/world/publishModeStatusFromTable55e4ThenProgressAAndCue205ForModes0To4Except2AndProgress14ForMode2World03Area11713_801F4048.c'
+    - publishModeStatusFrom
+    - '@source: src/bof3/world/publishModeStatusFrom.c'
     - '@behavior: loads the shared mode byte 0x801490C7 with a signed byte read, scales it by two and indexes the overlay halfword status table at 0x801F55E4, publishing the selected halfword into the shared status halfword 0x801490A8; it then bounds the same signed mode with one unsigned compare against 6 and dispatches through the six-word absolute jump table at 0x801F2C04, where modes 0, 1, 3 and 4 store 0x0A into the shared scenario progress byte 0x80146864 and request frontend cue 0x205 through the resident dispatcher 0x8015DF18, mode 2 stores 0x14 into that byte, and mode 5 jumps straight to the epilogue; takes no arguments and returns nothing.'
   - - 5324
     - c
-    - setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area11713_801F40CC
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area11713_801F40CC.c'
+    - setProgress5GateClear
+    - '@source: src/bof3/world/setProgress5GateClear.c'
     - '@behavior: stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, when the shared gate byte at 0x801490C7 is zero, writes the shared state-entry tuple 0x801448EB = 0x0A, 0x801448EC = 5 and 0x801448ED = 0xFF; takes no arguments and returns nothing.'
   - - 5392
     - c

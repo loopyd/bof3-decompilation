@@ -35,11 +35,11 @@ segments:
     - '@behavior: World-overlay area-module entry: when the signed scenario-state byte 0x80146870 reads at least 8 it runs the shared record/effect setup routine 0x801EECA4, then clears the byte 0x801455C7, and when the front-side byte 0x80143F03 reads nonzero it requests frontend cue 0x20C through the shared frontend cue dispatcher 0x8015DF18.'
   - - 1832
     - c
-    - invokeHelperArgWorld04Area17613_801F3328
+    - invokeHelperArg
   - - 1864
     - c
-    - copySharedXToWorkXIfInRangeWorld04Area17613_801F3348
-    - '@source: src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area17613_801F3348.c'
+    - copySharedXWork
+    - '@source: src/bof3/world/copySharedXWork.c'
     - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 1912
     - c

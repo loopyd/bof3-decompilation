@@ -62,7 +62,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5804World03, D_801
  * after it at 0x801F5848 is 1 rather than a code pointer (raw .word row inside
  * the trailing asm blob of this overlay); three of those entries are the
  * already-exact same-target handlers
- * clearWorkFlagsWhenNoCallbackRanWorld03Area13413_801F4310,
+ * clearWorkFlagsNo,
  * invokeHelperWorld03Area13413_801F453C and
  * invokeHelperWorld03Area13413_801F46CC. The sibling at 0x801F3E0C is the same
  * dispatch through the first local handler table 0x801F5804, and the

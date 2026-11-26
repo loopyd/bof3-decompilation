@@ -35,7 +35,7 @@ void func_801F0218(void);
  * @behavior Per-frame work-handler step, entry 2 of the sixteen-word code
  *           pointer run at 0x801F0D54 whose word at 0x801F0D5C holds this
  *           function's address, so the byte-1 dispatcher
- *           dispatchStateByte1Table0d54BmagicMagic22203_801EEEE0 selects it
+ *           dispatchStateByte1Table0 selects it
  *           while the work object's byte 1 is 2 and no jal in this payload
  *           targets this address. It reads the scratchpad work object through
  *           the pointer cell at 0x1F800044 before it creates its frame, takes

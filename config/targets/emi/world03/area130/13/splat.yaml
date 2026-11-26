@@ -42,8 +42,8 @@ segments:
     - func_801F2CDC
   - - 528
     - c
-    - invokeHelperWorld03Area13013_801F2E10
-    - '@source: src/bof3/world/invokeHelperWorld03Area13013_801F2E10.c'
+    - invokeHelper
+    - '@source: src/bof3/world/invokeHelper5.c'
   - - 560
     - c
     - renderTriangleOffsetsBlue
@@ -54,7 +54,7 @@ segments:
     - func_801F30D0
   - - 1512
     - c
-    - dispatchStateByte1Table3ee4World03Area13013_801F31E8
+    - dispatchStateByte1Table3
     - '@source: src/bof3/world/area13013DispatchTables.c'
   - - 1580
     - c
@@ -127,8 +127,8 @@ segments:
     - '@behavior: Publishes the second shared work base at 0x80145FD0 as the scratchpad work cursor, then seeds one kind-1 front-end record through 0x8015CB18 with the mode-table byte D_801F3F00[D_80144F5B] and the base halfwords at 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 3580
     - c
-    - publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F39FC
-    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F39FC.c'
+    - publishThirdWorkBase
+    - '@source: src/bof3/world/publishThirdWorkBase2.c'
     - '@behavior: Publishes the third shared work base D_80146110 as the scratchpad work cursor, then seeds one kind-1 front-end record through 0x8015CB18 with the mode-table byte D_801F3F00[D_80144F5C] and the base halfwords at 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 3708
     - asm
@@ -144,7 +144,7 @@ segments:
     - func_801F3BFC
   - - 4220
     - c
-    - invokeHelperArgWorld03Area13013_801F3C7C
+    - invokeHelperArg
   - - 4252
     - c
     - setupFrontendClearSecond

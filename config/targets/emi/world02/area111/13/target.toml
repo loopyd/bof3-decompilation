@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world/renderPartsCountdownExpiry.c",
-    "src/bof3/world/dispatchSharedModeByteTable2C04World02Area11113_801F3EE8.c",
+    "src/bof3/world/dispatchSharedModeByte.c",
     "src/bof3/world/zeroStepClearFlags.c",
     "src/bof3/world/invokeHelper.c",
     "src/bof3/world/copySharedWord7To7.c",

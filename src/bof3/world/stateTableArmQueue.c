@@ -18,7 +18,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  *           whose first three words the payload holds as 0x801F2E38, 0x801F2E88
  *           and 0x801F2F20. The run is indexed with the work record's unsigned
  *           byte at +0x02 by this target's exact dispatcher
- *           dispatchStateByte2Table3decWorldWorld03Area13213_801F2DF4, so this
+ *           dispatchStateByte2Table3, so this
  *           body is the first step of that sequence. It clears every claim byte
  *           of the 0x20-record work table through the exact helper at
  *           0x801F385C, then arms the published record's countdown byte at

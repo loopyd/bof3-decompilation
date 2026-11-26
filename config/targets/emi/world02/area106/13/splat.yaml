@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 72
     - c
-    - dispatchStateByte2Table3eacWorld02Area10613_801F2C48
+    - dispatchStateByte2Table3
     - '@source: src/bof3/world/area10613DispatchTables.c'
   - - 140
     - c

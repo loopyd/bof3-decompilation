@@ -30,7 +30,7 @@ segments:
     - func_801F2C04
   - - 92
     - c
-    - noopHandlerWorld04Area15313_801F2C5C
+    - noopHandler
 - - 100
   - bin
   - tail

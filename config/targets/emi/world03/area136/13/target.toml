@@ -8,18 +8,18 @@ splat = "config/targets/emi/world03/area136/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/setStatusFFFFAndStateEntry13WhenGateClearWorld03Area13613_801F2C3C.c",
-    "src/bof3/world/setStatusFFFFAndStateEntry13Substate1WhenGateClearWorld03Area13613_801F2C94.c",
+    "src/bof3/world/setEntry13GateClear.c",
+    "src/bof3/world/setSubstate1GateClear.c",
 ]
 support_sources = [
     "src/bof3/world/publishModeStatusMode.c",
-    "src/bof3/world/publishModeStatusFromTable43fcAndProgress6InModeZeroWorld03Area13613_801F2D2C.c",
-    "src/bof3/world/queueSharedUiElementBlock9x59To5BSize51World03Area13613_801F2E08.c",
+    "src/bof3/world/publishModeStatusFrom2.c",
+    "src/bof3/world/queueSharedUiElement2.c",
     "src/bof3/world/stateWordByte.c",
-    "src/bof3/world/retreatCounter2By2World03Area13613_801F3148.c",
-    "src/bof3/world/advanceCounter2By2World03Area13613_801F3170.c",
+    "src/bof3/world/retreatCounter2By23.c",
+    "src/bof3/world/advanceCounter2By23.c",
     "src/bof3/world/selectCrossedFrontSide.c",
-    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area13613_801F2E50.c",
+    "src/bof3/world/publishSecondWorkBase2.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13613_801F2F50.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13613_801F3048.c",
     "src/bof3/support/area136_13_psyq.c",

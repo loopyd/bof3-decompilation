@@ -49,7 +49,7 @@ void func_8015C088(void);
  * whose 0x58-byte body carried the identical row-publish tail with the same
  * `lui $at`/`addu $at,$at,index` fold and had no gate-3 tuple block, together
  * with the in-target sibling
- * setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808, whose
+ * setEntryGateClear, whose
  * 0x40-byte body carried the same status store and gated byte-store group. Both
  * are shape evidence rather than clone sources. No byte-identical twin exists:
  * the span matches no other payload under out/binaries, and its row-table

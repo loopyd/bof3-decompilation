@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatusFFFFAndSelectMode2IfGateClearWorld04Area15213_801F2C04
-    - '@source: src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld04Area15213_801F2C04.c'
+    - setIfGateClear
+    - '@source: src/bof3/world/setIfGateClear2.c'
     - '@behavior: Reads the shared gate byte D_801490C7 and, when that byte is zero, writes 2 to the shared mode byte D_801448EC before storing 0xFFFF into the shared status halfword D_801490A8, which every path writes.'
   - - 56
     - asm
@@ -41,8 +41,8 @@ segments:
     - func_801F2DB0
   - - 804
     - c
-    - prepareWorkRecordForLookup1D1AndArmState1World04Area15213_801F2F24
-    - '@source: src/bof3/world/prepareWorkRecordForLookup1D1AndArmState1World04Area15213_801F2F24.c'
+    - prepareWorkRecordLookup1
+    - '@source: src/bof3/world/prepareWorkRecordLookup12.c'
     - '@behavior: Entry 0 of the five-entry work-byte-1 handler run based at 0x801F4D58 in this overlay, which the overlay update 0x801F2DB0 indexes with work record byte 0x01. It stores 0x80 into work byte 0x24 of the record published at the scratchpad pointer cell 0x1F800044, requests main lookup entry 0x1D1 through the shared 0x8014DD3C helper, stores 5 into work byte 0x29, clears work byte 0x2A and work bytes 0x5D, 0x5E and 0x5F, and finally sets work byte 0x01 to 1 so the next dispatch takes entry 1 of the same run at 0x801F2FB0.'
   - - 944
     - asm
@@ -58,7 +58,7 @@ segments:
     - func_801F3224
   - - 1732
     - c
-    - setWorkHalfwordsWorld04Area15213_801F32C4
+    - setWorkHalfwords
     - '@source: src/bof3/world/area15213_work_state.c'
   - - 1760
     - c
@@ -70,62 +70,62 @@ segments:
     - '@source: src/bof3/world/area15213_work_state.c'
   - - 1892
     - c
-    - invokeTwoHelpersWorld04Area15213_801F3364
+    - invokeTwoHelpers
   - - 1932
     - c
-    - dispatchStateByte2Table4d74World04Area15213_801F338C
+    - dispatchStateByte2Table4
     - '@source: src/bof3/world/area15213DispatchTables.c'
   - - 2000
     - c
-    - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld04Area15213_801F33D0
-    - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld04Area15213_801F33D0.c'
+    - setWorkHalfword2E
+    - '@source: src/bof3/world/setWorkHalfword2E3.c'
     - '@behavior: Entry 0 of the work-byte-2 handler run based at 0x801F4D74, the state the dispatcher 0x801F338C reaches while work record byte 0x02 reads 0: returns when the shared mode byte 0x801454F2 reads 2 or bit 0x100 of the shared halfword 0x80146258 is set, and otherwise writes -0x30 to halfword 0x2E of the work record published at the scratchpad pointer cell 0x1F800044 and increments that record byte 0x02.'
   - - 2080
     - c
-    - advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld04Area15213_801F3420
-    - '@source: src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld04Area15213_801F3420.c'
+    - advanceDrawHalfword2E
+    - '@source: src/bof3/world/advanceDrawHalfword2E2.c'
     - '@behavior: Entry 1 of the work-byte-2 handler run based at 0x801F4D74 in this overlay, the state the dispatcher 0x801F338C reaches while work record byte 0x02 reads 1: advances the work halfword 0x2E of the record published at the scratchpad pointer cell 0x1F800044 by 0x10, stores the truncated halfword, increments work record byte 0x02 once that signed value reaches 0x10, and then calls the overlay''s state-2 step 0x801F347C.'
   - - 2172
     - c
-    - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld04Area15213_801F347C
-    - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld04Area15213_801F347C.c'
+    - setWorkState2To3
+    - '@source: src/bof3/world/setWorkState2To33.c'
     - '@behavior: Byte-2 step of the handler run in this overlay: when shared mode byte 0x801454F2 reads 2 it stores 3 into byte 0x02 of the work record published at the scratchpad pointer slot 0x44, then reloads that slot and calls the local drawer 0x801F39C4 with 0x10 and the signed halfword at record offset 0x2E.'
   - - 2252
     - c
-    - decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld04Area15213_801F34CC
-    - '@source: src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld04Area15213_801F34CC.c'
+    - decrementDrawHalfword2E
+    - '@source: src/bof3/world/decrementDrawHalfword2E2.c'
     - '@behavior: Entry 3 of the work-byte-2 handler run based at 0x801F4D74 in this overlay, whose four words read 0x801F33D0, 0x801F3420, 0x801F347C and 0x801F34CC, the last of those also sitting at 0x801F4D80, index 10 of the in-image code-pointer run from 0x801F4D58 through 0x801F4D90, and no jal in the payload names this address. It subtracts 0x10 from the signed halfword at offset 0x2E of the work record published at the scratchpad pointer cell 0x1F800044 and stores the truncated halfword, then clears state byte 0x02 while the stored value stays below -0x2F. Unless the shared byte 0x801454F2 reads 2 it writes 1 to state byte 0x02 through a second read of that cell. Finally it reads the cell again and calls the local drawer 0x801F39C4 with 0x10 and the signed halfword at offset 0x2E. It takes no arguments, uses no result, and its 0x18-byte frame holds the return address only.'
   - - 2384
     - c
-    - dispatchStateByte3Table4d84World04Area15213_801F3550
-    - '@source: src/bof3/world/dispatchStateByte3Table4d84World04Area15213_801F3550.c'
+    - dispatchStateByte3Table4
+    - '@source: src/bof3/world/dispatchStateByte3Table4.c'
   - - 2452
     - c
-    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld04Area15213_801F3594
-    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld04Area15213_801F3594.c'
+    - setState3UnlessGated
+    - '@source: src/bof3/world/setState3UnlessGated4.c'
     - '@behavior: Byte-3 state handler 0 of this overlay handler run based at 0x801F4D84, whose four words are 0x801F3594, 0x801F3614, 0x801F36EC and 0x801F37EC: returns when the shared byte 0x801454F2 is nonzero and work byte 0x0B is nonzero, when the byte at 0x80143BB0 reads 2, or when bit 0x100 of the halfword at 0x80146258 is set, and otherwise writes 0xF0 to the signed work halfword 0x30 and increments work byte 0x03, both through one read of the work record published at scratchpad pointer cell 0x1F800044.'
   - - 2580
     - c
-    - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World04Area15213_801F3614
-    - '@source: src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World04Area15213_801F3614.c'
+    - decrementGatedDrawHalfword30
+    - '@source: src/bof3/world/decrementGatedDrawHalfword303.c'
     - '@behavior: Byte-3 state handler 1 of this overlay handler run based at 0x801F4D84: subtracts 0x0A from the signed halfword at work record offset 0x30 of the record published at scratchpad pointer cell 0x1F800044, increments work byte 0x03 once the stored value falls below 0xC9, writes 3 to work byte 0x03 when the shared byte 0x801454F2 and work byte 0x0B are both nonzero, or when byte 0x80143BB0 is 2, or when bit 0x100 of halfword 0x80146258 is set, then passes mode 0x5C and the signed work halfword 0x30 to the overlay drawer 0x801F3F88.'
   - - 2796
     - c
-    - advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World04Area15213_801F36EC
-    - '@source: src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World04Area15213_801F36EC.c'
+    - advanceWorkByte9To0
+    - '@source: src/bof3/world/advanceWorkByte9To02.c'
     - '@behavior: Byte-3 state handler 2 of this overlay handler run based at 0x801F4D84: while work byte 0x0B of the work record published at scratchpad pointer cell 0x1F800044 is zero it increments work byte 0x09 and, once that stored byte reaches 0x5A, increments work byte 0x0B; it then increments work byte 0x03 when the shared byte 0x801454F2 and work byte 0x0B are both nonzero, or when byte 0x80143BB0 is 2, or when bit 0x100 of halfword 0x80146258 is set, and finally passes mode 0x5C and the signed work halfword 0x30 to the overlay drawer 0x801F3F88.'
   - - 3052
     - c
-    - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World04Area15213_801F37EC
-    - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World04Area15213_801F37EC.c'
+    - advanceGatedDrawHalfword30
+    - '@source: src/bof3/world/advanceGatedDrawHalfword303.c'
     - '@behavior: Byte-3 state handler 3 of this overlay handler run based at 0x801F4D84, whose four words are 0x801F3594, 0x801F3614, 0x801F36EC and 0x801F37EC: adds 0x0A to the signed halfword at work record offset 0x30 of the record published at scratchpad pointer cell 0x1F800044 and clears work byte 0x03 once that stored value reaches 0xF0, writes 1 to work byte 0x03 through a second read of that cell unless the shared byte 0x801454F2 is nonzero, byte 0x80143BB0 reads 2, or bit 0x100 of halfword 0x80146258 is set, then passes mode 0x5C and the signed work halfword 0x30 to the overlay drawer 0x801F3F88.'
   - - 3228
     - asm
     - func_801F389C
   - - 3524
     - c
-    - drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld04Area15213_801F39C4
-    - '@source: src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld04Area15213_801F39C4.c'
+    - drawMarkerSpriteLayers
+    - '@source: src/bof3/world/drawMarkerSpriteLayers2.c'
     - '@behavior: Returns immediately unless the shared byte 0x8014832E has any of the bits 0x1B set; then picks tpage 0x22C when the graph type reads 1 or 2 and 0x9C otherwise, opens that drawing mode on the primitive cursor, reserves twelve bytes through the resident append helper at 0x8014E5A0 and draws the first sprite layer at the two signed arguments; unless the map code probed at the shared coordinates 0x8014930A and 0x8014930E reads 0xA0, 0xA1 or 0xAE or bit 0x1000 of the shared halfword 0x8014625A is set, it also draws a second layer 0x30 to the right with the incremented record index, while those three cases take the plain index; the same split repeats for a third layer 0x10 below over eight entries against the shared mask 0x80145AC0, all layers walking the four-byte table at 0x801F4DEC with the shared mask word 0x80145AB4 for the first pair and indexing its byte at offset 0x02; a fourth layer 0x30 right and 0x18 below follows through the local emitter at 0x801F389C when the map probe still reads zero or bit 0x1000 of 0x8014625A, the masked byte 0x80145024 equal to 0x0C or bit 0x4000 of 0x80146258 is set, and the local matrix-rotated patch at 0x801F3D90 is always appended from 0x18 right and 0x18 below.'
   - - 4496
     - asm
@@ -135,7 +135,7 @@ segments:
     - func_801F3F88
   - - 5176
     - c
-    - dispatchStateByte1Table4e04World04Area15213_801F4038
+    - dispatchStateByte1Table4
     - '@source: src/bof3/world/area15213DispatchTables.c'
   - - 5244
     - c
@@ -147,8 +147,8 @@ segments:
     - func_801F41B8
   - - 6120
     - c
-    - stepWorkPositionPairAndRunSharedUpdatesWorld04Area15213_801F43E8
-    - '@source: src/bof3/world/stepWorkPositionPairAndRunSharedUpdatesWorld04Area15213_801F43E8.c'
+    - stepWorkPositionPair
+    - '@source: src/bof3/world/stepWorkPositionPair.c'
     - '@behavior: Step handler of this overlay work record published at scratchpad pointer cell 0x1F800044: while work byte 0x0B is nonzero it calls the shared helper 0x80196070 and returns once bit 0x80 of work byte 0x00 is set, while work byte 0x0B is zero it stores 1 there when that bit is clear, then it re-reads the cell and adds the work word 0x0C to the word 0x34 and the work word 0x10 to the word 0x38 before calling the shared helpers 0x8014D978 and 0x8014D290 in that order.'
   - - 6284
     - c
@@ -156,16 +156,16 @@ segments:
     - '@source: src/bof3/world/area15213DispatchTables.c'
   - - 6352
     - c
-    - initializeWorkAndStampMapA0UnlessGatedWorld04Area15213_801F44D0
-    - '@source: src/bof3/world/initializeWorkAndStampMapA0UnlessGatedWorld04Area15213_801F44D0.c'
+    - initializeWorkStampMap
+    - '@source: src/bof3/world/initializeWorkStampMap.c'
     - '@behavior: State handler 0 of the local state-1 handler run at 0x801F4E28 that the dispatcher 0x801F448C reads by work byte 0x01; when shared byte 0x8014496D is 9 or bit 0 of shared byte 0x80146871 is set it calls the shared 0x80196070 helper and returns, otherwise it calls the shared 0x8019A194 helper, requests resource 0x205 through the shared 0x8014DD3C helper, clears the work bytes at offsets 0x48, 0x24, 0x2A and 0x5D..0x5F of the record published at scratchpad cell 0x1F800044, stamps 0xA0 into the map byte at the column and row held by the four-byte record at 0x801F4C48 that work byte 0x0B selects (0x8014931C + row * 0x80104000 + column), calls the shared 0x8014D6B8 helper with 0 and sets work byte 0x01 to 1.'
   - - 6656
     - c
     - invokeTwoHelpersWorld04Area15213_801F4600
   - - 6696
     - c
-    - drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628
-    - '@source: src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628.c'
+    - drawPulsingTexturedPanel
+    - '@source: src/bof3/world/drawPulsingTexturedPanel.c'
     - '@behavior: Layer-derived textured cell grid of this overlay: initializes work byte 0x02 and adds the low nibble of the shared frame counter 0x80143E6C to work halfword 0x3A. Returns while bit 4 of shared byte 0x8014832E is clear, otherwise advances work word 0x38 by 0x800 plus the layer value (work byte 0x0B minus two) shifted left ten and wraps work halfword 0x3A to -8 once it passes the map height byte 0x80104001 plus eight. Returns again unless shared focus halfword 0x8014930A or 0x8014930E lies within 0x1A of work halfword 0x36 or 0x3A. Then projects one textured quad at depth -0x300 whose half extent is the layer width plus the shared counter low five bits mirrored around 0xF, opens it with the shared append helper 0x8014E5A0, and draws a grid of semitransparent textured cells from the shared lookup helper 0x801559AC over a layer-derived count, taking texture coordinates from this payloads own trailing byte tables 0x801F4E30, 0x801F4E34 and 0x801F4E38 and closing each cell with the shared helper 0x80155A08 passed the grid coordinate pair shifted left sixteen.'
 - - 8252
   - bin

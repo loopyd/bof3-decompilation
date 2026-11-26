@@ -80,7 +80,7 @@ segments:
     - func_801F3588
   - - 2724
     - c
-    - dispatchStateByte1Table56fcWorld02Area10814_801F36A4
+    - dispatchStateByte1Table56
     - '@source: src/bof3/world/area10814DispatchTables.c'
   - - 2792
     - asm

@@ -27,21 +27,21 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area18713_801F2C04
-    - '@source: src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area18713_801F2C04.c'
+    - setFromGateRow
+    - '@source: src/bof3/world/setFromGateRow2.c'
     - '@behavior: Entry 0 of this payload handler table at 0x801F35D8: reads the shared gate byte D_801490C7, resets the shared status halfword D_801490A8 to 0xFFFF, and copies the two bytes of the gate-selected row of the 0x801F35CC row table into record words +0x18 and +0x1C of the pointer held at D_80148208.'
   - - 92
     - c
-    - setStatusFFFFAndSelectMode2IfGateClearWorld04Area18713_801F2C5C
-    - '@source: src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld04Area18713_801F2C5C.c'
+    - setIfGateClear
+    - '@source: src/bof3/world/setIfGateClear3.c'
     - '@behavior: Entry 1 of this payload pointer run at 0x801F35D8: reads the shared gate byte D_801490C7 and, when it is zero, writes 2 to the shared mode byte D_801448EC; stores 0xFFFF into the shared status halfword D_801490A8 on both arms. Leaf, no frame, no arguments, no return.'
   - - 144
     - c
     - setWorld04Area18713_801F2C90
   - - 164
     - c
-    - releaseOverlayAndClearSharedStateBytesWorld04Area18713_801F2CA4
-    - '@source: src/bof3/world/releaseOverlayAndClearSharedStateBytesWorld04Area18713_801F2CA4.c'
+    - releaseOverlayClearShared
+    - '@source: src/bof3/world/releaseOverlayClearShared.c'
     - '@behavior: Runs the shared front-end release helper func_8015C058 and then writes zero to the three consecutive shared state bytes at 0x801448EB, 0x801448EC and 0x801448ED in ascending address order. Takes no arguments, returns nothing, and the 0x18-byte frame only holds the return address across the call. Called twice by the state dispatcher at 0x801F2CDC (its offsets 0x16C and 0x190).'
   - - 220
     - asm

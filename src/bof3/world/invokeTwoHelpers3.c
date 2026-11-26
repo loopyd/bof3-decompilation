@@ -1,0 +1,15 @@
+#include "bof3/bof3.h"
+
+void func_801F3438(void);
+void callStateByte3Table5458(void);
+
+/* @source 0x801F3410
+ * @behavior Thin overlay wrapper: calls the helpers at 0x801F3438 and 0x801F35FC in sequence and returns.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void invokeTwoHelpers(void) {
+  func_801F3438();
+  callStateByte3Table5458();
+}

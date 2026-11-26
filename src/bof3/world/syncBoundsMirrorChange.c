@@ -65,7 +65,7 @@ void func_801B0DFC(void);
 
 /* Position-bounds query of this payload; it returns the index of the five-byte
  * bounds record holding the given work record's position, or 0xFF. */
-u8 findWorkPositionBoundsIndexWorld04Area17113_801F379C(u8 index);
+u8 findWorkPositionBounds(u8 index);
 
 /* @source 0x801F3868
  * @behavior Per-frame work-record sync of this area. Clears bit 0x2000 of the
@@ -118,7 +118,7 @@ void syncBoundsMirrorChange(
       record = &D_80145E90[index * 0x140];
       D_80146250 = record;
       D_1F800044 = record;
-      if ((bounds = findWorkPositionBoundsIndexWorld04Area17113_801F379C(
+      if ((bounds = findWorkPositionBounds(
                (u8)index)) == 0xFF) {
         if (((saved[0xB] >> index) & 1) != 0) {
           saved[0xB] &= ~(1 << index);

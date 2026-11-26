@@ -57,8 +57,8 @@ segments:
     - func_801F3558
   - - 2616
     - c
-    - clearWorkByte48ThenSubmitRecordWorld02Area11213_801F3638
-    - '@source: src/bof3/world/clearWorkByte48ThenSubmitRecordWorld02Area11213_801F3638.c'
+    - clearWorkByte48Submit
+    - '@source: src/bof3/world/clearWorkByte48Submit.c'
     - '@behavior: Clears byte 0x48 of the scratchpad work record and submits the reloaded record through func_80196718.'
   - - 2668
     - asm
@@ -94,8 +94,8 @@ segments:
     - '@source: src/bof3/world/area11213DispatchTables.c'
   - - 4696
     - c
-    - storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58
-    - '@source: src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58.c'
+    - storeWorkCursorDistance
+    - '@source: src/bof3/world/storeWorkCursorDistance.c'
     - '@behavior: Evaluates the work object''s cursor word pair at +0x34 and +0x38 through the shared distance helper func_801F5477C, stores the answer shifted left 16 into cursor word +0x3C and advances the work state byte at +1 so the next dispatch of table 0x801F493C lands on drawWorkCursorQuad.'
   - - 4772
     - c

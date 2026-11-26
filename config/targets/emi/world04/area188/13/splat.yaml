@@ -39,7 +39,7 @@ segments:
     - func_801F2E10
   - - 748
     - c
-    - dispatchStateByte1Table4df4World04Area18813_801F2EEC
+    - dispatchStateByte1Table4
     - '@source: src/bof3/world/area18813DispatchTables.c'
   - - 816
     - c
@@ -55,8 +55,8 @@ segments:
     - '@source: src/bof3/world/area18813DispatchTables.c'
   - - 1292
     - c
-    - clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F310C
-    - '@source: src/bof3/world/clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F310C.c'
+    - clearWorkByte9Select
+    - '@source: src/bof3/world/clearWorkByte9Select.c'
   - - 1352
     - asm
     - func_801F3148
@@ -81,13 +81,13 @@ segments:
     - '@behavior: Overlay progress step handler, element 3 of the nine-word handler run D_801F4E04 that the dispatcher 0x801F32C0 indexes with work byte 1: it advances the work record origin word 0x6C by 0xC0000, retreats the extent halfword 0x2E by 6, renders the record through 0x801F38E0 with the origin block 0x64 and channel mask 6, decrements the countdown byte 9 and, on the frame it reaches zero, re-arms it with 0x20, clears the frame byte 6, advances work byte 1, clears the record table at 0x800E4800, copies the origin triple 0x64 0x68 0x6C into the position triple 0x34 0x38 0x3C, re-seeds the first 0x10 entries of the 0x2C-stride effect table at 0x800E48C0 and queues the front-end cue 0x215.'
   - - 2456
     - c
-    - seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World04Area18813_801F3598
-    - '@source: src/bof3/world/seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World04Area18813_801F3598.c'
+    - seedWorkWords18To20
+    - '@source: src/bof3/world/seedWorkWords18To20.c'
     - '@behavior: Overlay progress step handler: post-increments work record byte 6 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F3DE0; then runs the per-frame passes 0x801F44B4 and 0x801F3E7C, decrements the countdown byte 9 and, on the frame it reaches zero, sets the step words 0x0C and 0x10 to -0x1000 and -0x400, rewinds the words 0x18 0x1C 0x20 from the origin triple 0x64 0x68 0x6C and advances work byte 1.'
   - - 2636
     - c
-    - claimWorkRecordEveryFourthTickThenArmWorkByte9AndAdvanceWorkByte1World04Area18813_801F364C
-    - '@source: src/bof3/world/claimWorkRecordEveryFourthTickThenArmWorkByte9AndAdvanceWorkByte1World04Area18813_801F364C.c'
+    - claimWorkRecordEvery
+    - '@source: src/bof3/world/claimWorkRecordEvery.c'
     - '@behavior: Overlay progress step handler: post-increments work record byte 6 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F3DE0; then runs the per-frame passes 0x801F44B4 and 0x801F3E7C, arms work byte 9 with 0x20 and advances work byte 1.'
   - - 2756
     - asm
@@ -98,8 +98,8 @@ segments:
     - '@source: src/bof3/world/spawnFourthPassesShape.c'
   - - 3264
     - c
-    - invokeHelperWorld04Area18813_801F38C0
-    - '@source: src/bof3/world/invokeHelperWorld04Area18813_801F38C0.c'
+    - invokeHelper
+    - '@source: src/bof3/world/invokeHelper11.c'
   - - 3296
     - asm
     - func_801F38E0
@@ -111,8 +111,8 @@ segments:
     - stateWorkTableByte0
   - - 4576
     - c
-    - claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0
-    - '@source: src/bof3/world/claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0.c'
+    - claimFreeWorkRecord
+    - '@source: src/bof3/world/claimFreeWorkRecord.c'
   - - 4732
     - asm
     - func_801F3E7C
@@ -143,10 +143,10 @@ segments:
     - '@behavior: Overlay line emitter: reads the shared primitive cursor 0x8014598C once, stamps it through 0x8017AA80 as a line packet and flags it semi-transparent through SetSemiTrans, projects the two points handed as its first two arguments through 0x801AFF04 into one four-byte stack pair and writes them as the packet halfwords at 0x08/0x0A and 0x0C/0x0E, fills the red and green bytes at 0x04 and 0x05 with the shade argument and clears the blue byte at 0x06, then appends 0x10 bytes at ordering-table index 2 through 0x8014E5A0.'
   - - 6680
     - c
-    - setStatusFFFFAndStateEntry2BWhenGateClearWorld04Area18813_801F4618
+    - setBGateClear
   - - 6768
     - c
-    - setStatusFFFFAndStateEntry2BSubstate1WhenGateClearWorld04Area18813_801F4670
+    - setSubstate1GateClear
     - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword 0x801490A8 on every path and, while the shared gate byte 0x801490C7 reads zero, runs the shared front-end startup helper 0x8015C088 and writes the shared state-entry tuple 0x801448EB = 0x2B, 0x801448EC = 0 and 0x801448ED = 1.'
   - - 6860
     - asm
@@ -159,13 +159,13 @@ segments:
     - armWithinLimitRetreat
   - - 7392
     - c
-    - advanceCounter2By2World04Area18813_801F48E0
+    - advanceCounter2By2
   - - 7432
     - c
-    - retreatCounter2By2World04Area18813_801F4908
+    - retreatCounter2By2
   - - 7472
     - c
-    - setTwoWorld04Area18813_801F4930
+    - setTwo
   - - 7500
     - c
     - queueUiElementBlock
@@ -175,8 +175,8 @@ segments:
     - func_801F49A4
   - - 7676
     - c
-    - queueSharedUiElementBlock1CTo1Dx3Size0And1Fx15To16Size50World04Area18813_801F49FC
-    - '@source: src/bof3/world/queueSharedUiElementBlock1CTo1Dx3Size0And1Fx15To16Size50World04Area18813_801F49FC.c'
+    - queueSharedUiElement
+    - '@source: src/bof3/world/queueSharedUiElement4.c'
     - '@behavior: Queues two runs of shared UI elements through the shared marker queue 0x801A4BC0: the two elements at y = 3 of x = 0x1C and 0x1D with size 0, then the two elements at x = 0x1F of y = 0x15 and 0x16 with size 0x50.'
   - - 7764
     - c
@@ -193,13 +193,13 @@ segments:
     - '@behavior: Overlay record seed: asks the shared free-record selector 0x8019601C for an index, masks the answer to a byte and, unless that byte reads 0xFF, marks the selected 0x74-byte front-end record of the shared table 0x80143FC8 occupied with record byte +0 = 1 and stores handler selector 0xB9 in record byte +5.'
   - - 8064
     - c
-    - dispatchSharedModeByteTable2C04World04Area18813_801F4B80
-    - '@source: src/bof3/world/dispatchSharedModeByteTable2C04World04Area18813_801F4B80.c'
+    - dispatchSharedModeByte
+    - '@source: src/bof3/world/dispatchSharedModeByte4.c'
     - '@behavior: Steps the shared front-end mode byte 0x801448EC through this overlay area-entry sequence, selecting the arm from the 14-slot jump table the payload keeps at 0x801F2C04; modes 0, 1, 2, 10, 11, 12 and 13 have bodies and the remaining slots return untouched. Mode 0 queries the shared selector predicate 0x80166140 with 6 and advances to 10 when its masked answer is nonzero, else to 1. Mode 1 waits until the shared phase byte 0x80143BB0 differs from 2, requests master action 0x83 through 0x80150224, latches that phase byte to 2 and advances to 2. Mode 2 waits for the same phase difference and resets the shared state-entry tuple 0x801448EB, 0x801448EC and 0x801448ED before the shared front-end step 0x8015C058 runs. Mode 10 takes the same phase wait, requests action 0x82, latches the phase byte to 2, sets bit 0x69 of the shared main-RAM flag bank 0x80144F28 through the shared setter 0x8015B5F4 and advances to 11. Mode 11 waits for the phase difference and runs the shared helper 0x801BE1B0 with 6 before advancing to 12. Mode 12 waits for the shared byte 0x80146867 to read 0x28 and requests one of two front-selector contexts through 0x8019FA28 with action 0xBC: 0x80000 and 0x220000 as kind 0x88 when byte 0x801448ED is set, otherwise 0x330000 and 0x470000 as kind 0x87; it advances to 13. Mode 13 waits for 0x80146867 to read zero, runs 0x8015C058 and clears the same three state-entry bytes.'
   - - 8584
     - c
-    - selectCrossedFrontSideStateWorld04Area18813_801F4D88
-    - '@source: src/bof3/world/selectCrossedFrontSideStateWorld04Area18813_801F4D88.c'
+    - selectCrossedFrontSide
+    - '@source: src/bof3/world/selectCrossedFrontSide2.c'
     - '@behavior: Selects one of two constants for the shared byte 0x80147ACF from the crossed pair of the staged front-side byte 0x80143F06 and the live front-side byte 0x80143F03: pending 1 with live 4 stores 0x0C, pending 4 with live 1 stores 0x0E, and every other pair writes nothing.'
   - - 8688
     - textbin

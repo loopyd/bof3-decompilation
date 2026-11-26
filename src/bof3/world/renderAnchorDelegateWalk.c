@@ -33,10 +33,10 @@ s32 claimEndPointPair(
     s32 x0, s32 y0, s32 x1, s32 y1);
 
 /* Stage walk of this payload at 0x801F4EDC, lifted in
- * drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4EDC.c:
+ * drawRecordAnchorStage.c:
  * it takes the elapsed step value and the stage code of the stage-entry table and
  * walks that stage until it expires. */
-s32 drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4EDC(
+s32 drawRecordAnchorStage(
     s32 arg0, s32 arg1);
 
 /* Shared cue request of the main executable: it takes the cue id in the low
@@ -136,6 +136,6 @@ u8 renderAnchorDelegateWalk(
   if (t == D_801F5CDD[off]) {
     func_8015DF18(0x206);
   }
-  return drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4EDC(
+  return drawRecordAnchorStage(
       t, D_801F5CDE[off]);
 }

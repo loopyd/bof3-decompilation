@@ -14,7 +14,7 @@ support_sources = [
     "src/bof3/world/copyHalvedPaletteRow.c",
     "src/bof3/world/stateFirstKindUnseeded.c",
     "src/bof3/world/renderWedgesFadingBlack.c",
-    "src/bof3/world/dispatchWorkByte4Table3b44World02Area09113_801F2D6C.c",
+    "src/bof3/world/dispatchWorkByte4Table3.c",
     "src/bof3/world/stateStatus7ModeGate.c",
     "src/bof3/world/stateStatusSevenGate.c",
     "src/bof3/support/area091_13_psyq.c",

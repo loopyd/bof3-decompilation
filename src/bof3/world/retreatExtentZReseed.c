@@ -74,9 +74,9 @@ void stateWorkTableByte0(void);
  * $a0,$zero,0x215.
  *
  * Field roles: the 0x34/0x38/0x3C triple is the record's position, which the
- * exact claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0 seeds a
+ * exact claimFreeWorkRecord seeds a
  * spawned record from and which the exact neighbour lift
- * seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World04Area18813_801F3598
+ * seedWorkWords18To20
  * rewinds from the 0x64/0x68/0x6C origin triple, so that triple is the origin.
  * The 0x2E halfword is the drawn extent: the exact sibling
  * growExtentShapeExpiry

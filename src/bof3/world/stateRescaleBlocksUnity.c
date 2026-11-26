@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Palette block scaler of this overlay: 0x80 is the unity scale. */
-void scalePaletteBlocksWorld04Area19813_801F2D28(s32 scale);
+void scalePaletteBlocks(s32 scale);
 
 /* Shared work-area reset of the main executable: clears the scratchpad game
  * work-area header fields flags_00, unk_01, flags_02 and pad_03. Its generated
@@ -43,7 +43,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 void stateRescaleBlocksUnity(
     void) {
   D_1F800044[9]++;
-  scalePaletteBlocksWorld04Area19813_801F2D28(D_1F800044[9]);
+  scalePaletteBlocks(D_1F800044[9]);
   if (D_1F800044[9] >= 0x80) {
     func_80196070();
   }

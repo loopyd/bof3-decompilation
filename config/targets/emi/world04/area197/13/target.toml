@@ -13,19 +13,19 @@ sources = [
     "src/bof3/world/startActionForFirstPresentPartyCandidateActions1ETo21World04Area19713_801F3E78.c",
     "src/bof3/world/stepSharedStartSelector.c",
     "src/bof3/world/stateWorkTableStride28.c",
-    "src/bof3/world/advanceHalfword0aBy3WhenWorkByte79Is7World04Area19713_801F4124.c",
+    "src/bof3/world/advanceHalfword0By3Work.c",
     "src/bof3/world/stepVelocityBounceCountdowns.c",
     "src/bof3/world/waitDrawingFullWidth.c",
 ]
 support_sources = [
-    "src/bof3/world/clearWorkTableAt800E5C00World04Area19713_801F3474.c",
-    "src/bof3/world/incrementWorkByte2World04Area19713_801F366C.c",
+    "src/bof3/world/clearWorkTableAt8003.c",
+    "src/bof3/world/incrementWorkByte22.c",
     "src/bof3/world/area19713DispatchTables.c",
-    "src/bof3/world/dispatchStateByte4Table4a80World04Area19713_801F3F3C.c",
-    "src/bof3/world/invokeHelperWorld04Area19713_801F2E54.c",
+    "src/bof3/world/dispatchStateByte4Table4.c",
+    "src/bof3/world/invokeHelper14.c",
     "src/bof3/world/stepWordPhaseConsume.c",
     "src/bof3/world/claimFixedHalfwordsIndex.c",
-    "src/bof3/world/startActionForFirstPresentPartyCandidateActions0ATo0DWorld04Area19713_801F3B68.c",
+    "src/bof3/world/startActionFirstPresent4.c",
     "src/bof3/support/area197_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area197_13_psyq.c"

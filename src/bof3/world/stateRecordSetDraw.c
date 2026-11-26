@@ -10,7 +10,7 @@ extern void func_801F3950(s32 arg0, s32 arg1);
 /* @source 0x801F3320
  * @behavior Entry 0 of the handler run based at 0x801F47DC, the table this
  *           target's exact dispatcher
- *           dispatchStateByte2Table47dcWorld03Area14013_801F32DC indexes with
+ *           dispatchStateByte2Table47 indexes with
  *           the work record state byte at +0x02, so no jal reaches this body.
  *           It reads the scratchpad work pointer published at 0x1F800044 and
  *           takes the signed halfword at +0x36 as an index scaled by four into

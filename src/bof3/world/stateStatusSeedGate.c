@@ -36,7 +36,7 @@ extern void func_8015C088(void); /* @source 0x8015C088 */
  *           this payload, whose entry 0 is the exact lift
  *           stateStatusGateSeed
  *           and whose entry 2 is the exact lift
- *           setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4.
+ *           setStateEntry20Progress14.
  *           Stores 0xFFFF into the shared status halfword at 0x801490A8 on
  *           every path and returns straight from there whenever the shared
  *           gate byte at 0x801490C7 reads nonzero; only a zero gate byte runs
@@ -70,7 +70,7 @@ extern void func_8015C088(void); /* @source 0x8015C088 */
  * constants and leaves the meaning to the gate.
  *
  * Shape evidence: the body is transcribed from the exact lift
- * setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4
+ * setStateEntry20Progress14
  * of word 2 of the same handler table, whose statement order, operand forms and
  * declaration style are followed here: the shared status store, the single
  * zero test of the same gate byte, the helper call and the three-byte seed run
@@ -82,7 +82,7 @@ extern void func_8015C088(void); /* @source 0x8015C088 */
  * compared with this one over its full 0x60 bytes: `cmp` of the two payload
  * ranges reported no differing byte, so the two are one body, and that span
  * takes this body as its own exact lift
- * setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3EB4.
+ * setGateByteZero.
  *
  * Clone declined: the byte-identical twin 0x801F3EB4 sits in this same target,
  * where `bin/harness lift clone` refuses with "clone target is the

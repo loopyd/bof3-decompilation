@@ -15,5 +15,5 @@ queryFreeWorkRecord = 0x801F3348;
 stateWorkTableAt800 = 0x801F3384;
 rampIntensityIntegrateRender = 0x801F33B0;
 stateWeightedOthersDistance = 0x801F3504;
-invokeHelperWorld03Area12513_801F362C = 0x801F362C;
+invokeHelper = 0x801F362C;
 D_801F364C = 0x801F364C;

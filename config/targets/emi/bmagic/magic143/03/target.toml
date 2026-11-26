@@ -15,6 +15,6 @@ support_sources = [
     "src/bof3/bmagic/callBandsFanPop.c",
     "src/bof3/bmagic/stateRandomNibbleClear.c",
     "src/bof3/bmagic/stateRaiseFlagInvoke.c",
-    "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14303_801EF100.c",
+    "src/bof3/bmagic/incrementWorkByteB.c",
 ]
 psyq_source = "src/bof3/support/magic143_03_psyq.c"

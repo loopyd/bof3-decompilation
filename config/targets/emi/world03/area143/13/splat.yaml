@@ -49,8 +49,8 @@ segments:
     - '@behavior: Clears the three lead bytes of each of the 0x100 entries of the 0x18-byte-stride work table at 0x800E4800, stepping one base for offset 0x0 and a second base two bytes higher for offsets 0x1 and 0x2 by 0x18 under an unsigned 16-bit counter.'
   - - 380
     - c
-    - findFreeWorkRecordAt800E4800World03Area14313_801F2D7C
-    - '@source: src/bof3/world/findFreeWorkRecordAt800E4800World03Area14313_801F2D7C.c'
+    - findFreeWorkRecord
+    - '@source: src/bof3/world/findFreeWorkRecord3.c'
     - '@behavior: Returns the address of the first record whose lead byte reads zero among the 0x100 records of 0x18-byte stride at 0x800E4800, or zero when all of them are claimed.'
   - - 440
     - asm
@@ -95,10 +95,10 @@ segments:
     - '@behavior: Stores status 0x54 when the gate byte is nonzero, or 0x53 when the gate is zero and D_80145548 differs from 0x3FFFF, also storing mode 6 on both paths; otherwise stores status 0x52 without changing mode.'
   - - 3556
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld03Area14313_801F39E4
+    - setHandlerIndex3Gate
   - - 3604
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld03Area14313_801F3A14
+    - setHandlerIndex5Gate
   - - 3652
     - c
     - stateStatus54ModeGate
@@ -120,19 +120,19 @@ segments:
     - '@behavior: Selects status 0x4C when gated; otherwise starts primary state 8, selects substate 8 and status 0x4B with a work-halfword increment from status 0x44, or substate 0xA and status 0xFFFF.'
   - - 3980
     - c
-    - setStatusFFFFAndStateEntryWhenGateClearWorld03Area14313_801F3B8C
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld03Area14313_801F3B8C.c'
+    - setEntryGateClear
+    - '@source: src/bof3/world/setEntryGateClear.c'
   - - 4044
     - c
-    - setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area14313_801F3BCC
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area14313_801F3BCC.c'
+    - setProgress5GateClear
+    - '@source: src/bof3/world/setProgress5GateClear3.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword at 0x801490A8 and, when the shared gate byte at 0x801490C7 is zero, writes the shared state-entry tuple 0x801448EB = 0x0A, 0x801448EC = 5 and 0x801448ED = 0xFF.'
   - - 4112
     - c
-    - requestFrontSelectorContextWorld03Area14313_801F3C10
+    - requestFrontSelectorContext
   - - 4160
     - c
-    - clearWorkByte48ThenSubmitRecordWorld03Area14313_801F3C40
+    - clearWorkByte48Submit
     # @source 0x801F3C40
     # @behavior Clears work byte 0x48 and submits the reloaded work record.
   - - 4212
@@ -163,8 +163,8 @@ segments:
     - func_801F3F48
   - - 5012
     - c
-    - drawWorkCursorQuadWorld03Area14313_801F3F94
-    - '@source: src/bof3/world/drawWorkCursorQuadWorld03Area14313_801F3F94.c'
+    - drawWorkCursorQuad
+    - '@source: src/bof3/world/drawWorkCursorQuad2.c'
     - '@behavior: Copies the work cursor triple at offsets 0x34, 0x38 and 0x3C into a local point and passes it to the overlay renderer at 0x801F3FDC.'
   - - 5084
     - asm

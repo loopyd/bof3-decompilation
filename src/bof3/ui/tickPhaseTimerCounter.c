@@ -2,7 +2,7 @@
 
 /* @source 0x801D66F8
  * @behavior Literal variant of the sibling byte-counter step
- *           tickPhaseTimerThenAdvanceWorkCounter: reads the counter byte handed
+ *           tickPhaseTimerAdvance: reads the counter byte handed
  *           over through arg0, submits the texture row 0x1C at row 0x16 through
  *           func_8014F800, passing the value returned by func_801502D0(byte +
  *           0x85) as its fifth argument, then counts the shared frame timer
@@ -24,7 +24,7 @@
  * sibling's, whose callers mask it with andi 0xFF.
  *
  * The timer is reached through a local pointer, as in the sibling
- * tickPhaseTimerThenAdvanceWorkCounter: the original materializes the
+ * tickPhaseTimerAdvance: the original materializes the
  * phaseTimer address once into one register and uses that base for the
  * countdown load, its store and the re-arm store, so the re-arm constant is
  * left in the two branch delay slots.

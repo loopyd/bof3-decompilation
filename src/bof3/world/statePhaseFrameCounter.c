@@ -37,7 +37,7 @@ void func_8015DF18(u16 cue);
  *           0x801F3F50 and 0x801F400C are the four entries of the handler row
  *           based at 0x801F5FAC (a read of this payload at that address; the row
  *           ends where the three-word handler row 0x801F5FBC begins), and the
- *           exact dispatchStateByte1Table5facWorld02Area09813_801F3E20 scales
+ *           exact dispatchStateByte1Table5 scales
  *           the work record's state byte at +0x01 by four onto that base and
  *           jalrs the selected entry, so this span is the state-0 progress
  *           handler of that row and its caller stays outside the payload. No jal

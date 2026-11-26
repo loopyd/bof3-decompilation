@@ -24,7 +24,7 @@ void func_801F32A4(u8* record); /* @source 0x801F32A4 */
  *   rand() nowhere, which is what separates it from the 0x800E4800 sweep below.
  *
  * Name evidence: 0x800E5C00 is the work table this target's own init helper
- *   clearWorkTableAt800E5C00World04Area19713_801F3474 empties with the same
+ *   clearWorkTableAt800 empties with the same
  *   0x80-entry, 0x24-byte stride, so the name keeps that module vocabulary. The
  *   sibling sweep at 0x801F2FC4 in this same target walks the 0x800E4800 table
  *   with the same loop skeleton, the same -0x40000 step decrement and the same

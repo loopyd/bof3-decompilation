@@ -54,7 +54,7 @@ extern u8 D_80146875;
  *           are the twelve entries 0x801F3540, 0x801F35B0, 0x801F36A0,
  *           0x801F3814, 0x801F3878, 0x801F3910, 0x801F3994, 0x801F3AA8,
  *           0x801F3B5C, 0x801F3BD4, 0x801F3CDC and 0x801F3D98, and the exact
- *           dispatcher dispatchStateByte1Table5f7cWorld02Area09813_801F34FC
+ *           dispatcher dispatchStateByte1Table5
  *           scales the work record state byte at +0x01 by four onto that base and
  *           jalrs the selected entry, so this span is entry 1 of that row and its
  *           caller stays outside the payload. No jal immediate in this payload

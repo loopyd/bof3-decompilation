@@ -40,7 +40,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
  * (published work byte 9 & 3) == 0 cadence as the every-fourth-tick condition
  * of that 0x80 countdown. The tail callee 0x801F49A0 is still anchored to its
  * address; this target's exact
- * clearWorkFlagsWhenNoCallbackRanWorld03Area13413_801F4310 records it as the
+ * clearWorkFlagsNo records it as the
  * walk over the 0x20 entries of the 0x28-byte-stride work table at 0x800E4800
  * that runs each selected entry's handler and leaves 1 in its return register
  * once at least one entry ran one, so its result is consumed as a status there

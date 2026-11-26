@@ -8,7 +8,7 @@
  * of the three stores uses its own load of 0x1F800044 and the last store fills
  * the $ra delay slot. It takes no arguments, returns nothing and reads no
  * other state. The name comes from the same-target sibling
- * resetScratchStateToMode1World03Area13413_801F35A4, whose exact source
+ * resetScratchStateMode1, whose exact source
  * performs these same three stores on this work object; the two spans are
  * byte-identical in the shipped image.
  * @status exact

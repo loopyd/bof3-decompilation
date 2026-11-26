@@ -32,13 +32,13 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 4 into the shared status halfword D_801490A8; when the gate byte is zero it reads the shared byte D_801454EC and stores 3 into D_801490A8 while that byte is below 6, or 2 while it is 6 or more. The 4 and 3 paths then store 6 into the shared mode byte at 0x801D4285; the 2 path leaves that byte alone.'
   - - 96
     - c
-    - setStatusFFFFAndHandlerIndex3WhenGateWorld02Area11313_801F2C60
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld02Area11313_801F2C60.c'
+    - setHandlerIndex3Gate
+    - '@source: src/bof3/world/setHandlerIndex3Gate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 3 into the shared handler index byte D_801D4286; the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 144
     - c
-    - setStatusFFFFAndHandlerIndex5WhenGateWorld02Area11313_801F2C90
-    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld02Area11313_801F2C90.c'
+    - setHandlerIndex5Gate
+    - '@source: src/bof3/world/setHandlerIndex5Gate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 5 into the shared handler index byte D_801D4286; the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 192
     - c

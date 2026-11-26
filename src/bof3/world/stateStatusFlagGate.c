@@ -54,7 +54,7 @@ void func_8015C088(void);
  *
  * Shape: statement order, operand forms and declaration style are taken from the
  * in-target exact sibling
- * setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980,
+ * setProgressGateClear,
  * whose 0x54-byte body is this 0x60-byte span minus the flag-bank call and with
  * 0x0A in place of this span's zero progress, so that body carried the order of
  * the status store, the hoisted gate load, the startup call and the entry tuple

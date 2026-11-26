@@ -32,7 +32,7 @@ extern u8 D_80143BB0;
  * and takes no arguments.
  * @source 0x801F3370
  */
-extern void setWorkHalfwordsWorld03Area15113_801F3370(void);
+extern void setWorkHalfwords(void);
 
 /* Shared work-area reset of the main executable at 0x80196070, outside this
  * payload: the call site passes nothing and reads no result. Splat binds the
@@ -79,7 +79,7 @@ void decrementRetreatExpiry(
   Area15113WorkRecord* work;
   Area15113WorkRecord* state;
 
-  setWorkHalfwordsWorld03Area15113_801F3370();
+  setWorkHalfwords();
   work = scratchpadWorkRecord;
   work->countdown--;
   work->unk_40 -= 0x2000;

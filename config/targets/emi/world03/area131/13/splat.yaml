@@ -36,47 +36,47 @@ segments:
     - func_801F2CE0
   - - 376
     - c
-    - retreatCounter2By10World03Area13113_801F2D78
+    - retreatCounter2By10
   - - 416
     - c
-    - advanceCounter2By10World03Area13113_801F2DA0
-    - '@source: src/bof3/world/advanceCounter2By10World03Area13113_801F2DA0.c'
+    - advanceCounter2By10
+    - '@source: src/bof3/world/advanceCounter2By10.c'
   - - 456
     - c
-    - retreatCounter2CloneWorld03Area13113_801F2DC8
-    - '@source: src/bof3/world/retreatCounter2CloneWorld03Area13113_801F2DC8.c'
+    - retreatCounter2Clone
+    - '@source: src/bof3/world/retreatCounter2Clone.c'
   - - 496
     - c
-    - advanceCounter2CloneWorld03Area13113_801F2DF0
-    - '@source: src/bof3/world/advanceCounter2CloneWorld03Area13113_801F2DF0.c'
+    - advanceCounter2Clone
+    - '@source: src/bof3/world/advanceCounter2Clone.c'
   - - 536
     - c
-    - retreatCounter2By30World03Area13113_801F2E18
-    - '@source: src/bof3/world/retreatCounter2By30World03Area13113_801F2E18.c'
+    - retreatCounter2By30
+    - '@source: src/bof3/world/retreatCounter2By30.c'
   - - 576
     - c
-    - advanceCounter2By30World03Area13113_801F2E40
-    - '@source: src/bof3/world/advanceCounter2By30World03Area13113_801F2E40.c'
+    - advanceCounter2By30
+    - '@source: src/bof3/world/advanceCounter2By30.c'
   - - 616
     - c
-    - retreatCounter2By2World03Area13113_801F2E68
-    - '@source: src/bof3/world/retreatCounter2By2World03Area13113_801F2E68.c'
+    - retreatCounter2By2
+    - '@source: src/bof3/world/retreatCounter2By22.c'
     - '@behavior: Reads the shared halfword counter2 at 0x8014932A, stores 2 into the area status byte at 0x80149333, then writes counter2 back retreated by 0x02.'
   - - 656
     - c
-    - advanceCounter2By2World03Area13113_801F2E90
-    - '@source: src/bof3/world/advanceCounter2By2World03Area13113_801F2E90.c'
+    - advanceCounter2By2
+    - '@source: src/bof3/world/advanceCounter2By22.c'
     - '@behavior: Reads the shared halfword counter2 at 0x8014932A, stores 2 into the area status byte at 0x80149333, then writes counter2 back advanced by 0x02.'
   - - 696
     - c
-    - copyModeByteWorld03Area13113_801F2EB8
+    - copyModeByte
   - - 720
     - c
-    - retreatCounter3CloneWorld03Area13113_801F2ED0
+    - retreatCounter3Clone
   - - 748
     - c
-    - advanceCounterWorld03Area13113_801F2EEC
-    - '@source: src/bof3/world/advanceCounterWorld03Area13113_801F2EEC.c'
+    - advanceCounter
+    - '@source: src/bof3/world/advanceCounter4.c'
     - '@behavior: increments the shared 32-bit work counter at 0x801468BC by 0x800'
   - - 776
     - c

@@ -44,7 +44,7 @@ segments:
     - func_801EEE80
   - - 736
     - c
-    - dispatchStateByte1Table0d54BmagicMagic22203_801EEEE0
+    - dispatchStateByte1Table0
     - '@source: src/bof3/bmagic/magic22203DispatchTables.c'
   - - 804
     - asm
@@ -82,21 +82,21 @@ segments:
     - func_801EF624
   - - 2612
     - c
-    - decrementWorkByte9ThenCopyWorkWordTripletClearWord14AndByte9SetATo26AndAdvanceWorkByte2BmagicMagic22203_801EF634
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyWorkWordTripletClearWord14AndByte9SetATo26AndAdvanceWorkByte2BmagicMagic22203_801EF634.c'
+    - decrementWorkByte9Copy
+    - '@source: src/bof3/bmagic/decrementWorkByte9Copy.c'
   - - 2760
     - c
     - incrementAdvanceAdvanceBmagic
     - '@source: src/bof3/bmagic/incrementAdvanceAdvanceBmagic.c'
   - - 2852
     - c
-    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801EF724
-    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801EF724.c'
-    - '@behavior: Work-object handler step, entry 12 of the sixteen-word handler-pointer run at 0x801F0D54 whose word at 0x801F0D84 holds this function address, so the byte-1 dispatcher dispatchStateByte1Table0d54BmagicMagic22203_801EEEE0 reaches it while work object byte 1 is 12 and no jal in this payload targets the span. It reads the scratchpad work object through the pointer cell at 0x1F800044 and decrements its unsigned byte 0xA with a byte-width read-modify-write (lbu / addiu -1 / sb), comparing the stored byte with zero (andi 0xFF / bnez). Only when that byte reaches zero it re-reads the cell and increments the object byte 2 with a byte-width add, which moves the byte-2 dispatcher to its next sub-step. The second read of the cell is required because the store through the loaded work pointer may alias the cell. The 0x4C-byte body is byte-identical to the exact sibling decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288. Takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
+    - decrementWorkByteAdvance
+    - '@source: src/bof3/bmagic/decrementWorkByteAdvance.c'
+    - '@behavior: Work-object handler step, entry 12 of the sixteen-word handler-pointer run at 0x801F0D54 whose word at 0x801F0D84 holds this function address, so the byte-1 dispatcher dispatchStateByte1Table0 reaches it while work object byte 1 is 12 and no jal in this payload targets the span. It reads the scratchpad work object through the pointer cell at 0x1F800044 and decrements its unsigned byte 0xA with a byte-width read-modify-write (lbu / addiu -1 / sb), comparing the stored byte with zero (andi 0xFF / bnez). Only when that byte reaches zero it re-reads the cell and increments the object byte 2 with a byte-width add, which moves the byte-2 dispatcher to its next sub-step. The second read of the cell is required because the store through the loaded work pointer may alias the cell. The 0x4C-byte body is byte-identical to the exact sibling decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288. Takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
   - - 2928
     - c
-    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801EF770
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801EF770.c'
+    - decrementInvokeHelperZero
+    - '@source: src/bof3/bmagic/decrementInvokeHelperZero2.c'
     - '@behavior: Work-byte-1 handler, entry 13 of the sixteen-word handler-pointer run at 0x801F0D54. Reads the scratchpad work object through the pointer cell at 0x1F800044 and decrements its unsigned byte 9 in place, so the rest of the body runs only when that countdown reaches zero. On zero it reads the shared battle work record pointer at 0x801EB4E0, decrements that record byte 0xB by one and invokes the shared helper at 0x801E5988, the store filling the call delay slot. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 3020
     - asm
@@ -111,7 +111,7 @@ segments:
     - c
     - callDrawTransformedPop
     - '@source: src/bof3/bmagic/callDrawTransformedPop.c'
-    - '@behavior: Per-frame work-handler step, entry 2 of the sixteen-word code pointer run at 0x801F0D54 whose word at 0x801F0D5C holds this function address, so the byte-1 dispatcher dispatchStateByte1Table0d54BmagicMagic22203_801EEEE0 selects it while work object byte 1 is 2 and no jal in this payload targets this address. It reads the scratchpad work object through the pointer cell at 0x1F800044 before it creates its frame, takes work byte 2, scales it by four and calls that entry of the eight-entry handler table based at 0x801F0D8C (0x801EFE74, 0x801EFF7C, 0x801F0070, 0x801F0584, 0x801F061C, 0x801F066C, 0x801F06C8, 0x801F0730) with no arguments. When that handler returns it re-reads the cell once for both gate bytes, and when work byte 0 and work byte 2 are both non-zero it calls this overlay matrix-setup routine func_801F0168, which pushes the GTE matrix stack and installs the object transform, then this overlay drawing routine func_801F0218, then PopMatrix. The 0x18-byte frame keeps only $ra at 0x10; it takes no arguments, returns nothing, makes no object stores and reads or writes no other state.'
+    - '@behavior: Per-frame work-handler step, entry 2 of the sixteen-word code pointer run at 0x801F0D54 whose word at 0x801F0D5C holds this function address, so the byte-1 dispatcher dispatchStateByte1Table0 selects it while work object byte 1 is 2 and no jal in this payload targets this address. It reads the scratchpad work object through the pointer cell at 0x1F800044 before it creates its frame, takes work byte 2, scales it by four and calls that entry of the eight-entry handler table based at 0x801F0D8C (0x801EFE74, 0x801EFF7C, 0x801F0070, 0x801F0584, 0x801F061C, 0x801F066C, 0x801F06C8, 0x801F0730) with no arguments. When that handler returns it re-reads the cell once for both gate bytes, and when work byte 0 and work byte 2 are both non-zero it calls this overlay matrix-setup routine func_801F0168, which pushes the GTE matrix stack and installs the object transform, then this overlay drawing routine func_801F0218, then PopMatrix. The 0x18-byte frame keeps only $ra at 0x10; it takes no arguments, returns nothing, makes no object stores and reads or writes no other state.'
   - - 4724
     - c
     - stateScaleFifteenAngle

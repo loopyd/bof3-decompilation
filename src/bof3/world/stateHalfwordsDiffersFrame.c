@@ -6,7 +6,7 @@ extern u8 D_80143BB0;
 extern u16 D_80143F10;
 
 /* Local seed at 0x801F3404: writes 0xA0 and 0x50 to the work halfwords. */
-void setWorkHalfwordsWorld03Area11513_801F3404(void);
+void setWorkHalfwords(void);
 
 /* Shared per-frame helper at 0x8014D4E0: the call site passes nothing and
  * consumes no result. */
@@ -36,7 +36,7 @@ void stateHalfwordsDiffersFrame(
     void) {
   u8* record;
 
-  setWorkHalfwordsWorld03Area11513_801F3404();
+  setWorkHalfwords();
   if (D_80143B90 != 1) {
     record = D_1F800044;
     if (record[0x0B] != record[0x07] || D_80143BB0 == 5 ||

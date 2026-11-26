@@ -533,10 +533,16 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
     return _payload(root, plan, applied=True, proof=(before, after), attempted=True)
 
 
-def _batch_rows(rows: list[dict]) -> tuple[list[tuple[str, str, str]], list[dict]]:
-    """Split batch rows into single renames and group renames, validating shape."""
+def _batch_rows(rows: list[dict]) -> tuple[list[tuple[str, str, str]], list[dict], list[dict]]:
+    """Split batch rows into single renames and group renames, validating shape.
+
+    Two rows of one target may not carry one new spelling: the second write would
+    duplicate the map entry, so it is dropped and reported.
+    """
     singles: list[tuple[str, str, str]] = []
     groups: list[dict] = []
+    dropped: list[dict] = []
+    taken: set[tuple[str, str]] = set()
     for index, row in enumerate(rows):
         if not isinstance(row, dict):
             raise ValueError(f"row {index}: expected an object")
@@ -556,14 +562,27 @@ def _batch_rows(rows: list[dict]) -> tuple[list[tuple[str, str, str]], list[dict
             continue
         if not (row.get("target") and row.get("old") and new):
             raise ValueError(f"row {index}: needs target, old and new")
+        key = (str(row["target"]), str(new).casefold())
+        if key in taken:
+            dropped.append(
+                {
+                    "target": key[0],
+                    "old": str(row["old"]),
+                    "new": str(new),
+                    "code": "plan-duplicate",
+                    "message": f"{new} is already claimed by an earlier row of this plan",
+                }
+            )
+            continue
+        taken.add(key)
         singles.append((str(row["target"]), str(row["old"]), str(new)))
-    return singles, groups
+    return singles, groups, dropped
 
 
 def plan_batch(root: Path, rows: list[dict]) -> dict:
     """Dry run for a batch: every single row and every group, nothing written."""
     root = root.resolve()
-    singles, groups = _batch_rows(rows)
+    singles, groups, dropped = _batch_rows(rows)
     records = [
         _payload(
             root,
@@ -585,7 +604,8 @@ def plan_batch(root: Path, rows: list[dict]) -> dict:
         "applied": False,
         "passed": all(record["passed"] for record in records),
         "records": records,
-        "refusals": [
+        "refusals": dropped
+        + [
             {"target": record["scope"]["target"], **refusal}
             for record in records
             for refusal in record["refusals"]
@@ -596,7 +616,7 @@ def plan_batch(root: Path, rows: list[dict]) -> dict:
 def apply_rows(root: Path, rows: list[dict], *, jobs: int = 4) -> dict:
     """Apply a batch: single rows share one manifest and compile pass, groups stay atomic."""
     root = root.resolve()
-    singles, groups = _batch_rows(rows)
+    singles, groups, dropped = _batch_rows(rows)
     records = apply_batch(root, singles, jobs=jobs) if singles else []
     for group in groups:
         applied = apply_group(root, group["new"], group["members"], jobs=jobs)

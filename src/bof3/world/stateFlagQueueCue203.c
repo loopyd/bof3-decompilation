@@ -13,7 +13,7 @@ void func_8015DF18(u16 arg0);
  * frame only keeps $ra across the two calls. No in-image jal reaches the
  * address; the only image word holding it is the pointer word at vram
  * 0x801F5314 (payload 0x2714), entry 11 of the run of overlay code pointers
- * that carries the exact sibling advanceCounter2By2World03Area11913_801F41B8
+ * that carries the exact sibling advanceCounter2By2
  * at vram 0x801F52F0. The clear half of the same flag/cue pair,
  * stateFlagBit3Queue, is the very
  * next word at 0x801F5318.

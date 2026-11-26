@@ -30,12 +30,12 @@ segments:
   subsegments:
   - - 56
     - c
-    - dispatchStateByte1Table4b38World04Area16813_801F2C38
+    - dispatchStateByte1Table4
     - '@source: src/bof3/world/area16813DispatchTables.c'
   - - 124
     - c
-    - queueSharedUiElementColumn10x18To11Size89ThenSetWorkByte1To1World04Area16813_801F2C7C
-    - '@source: src/bof3/world/queueSharedUiElementColumn10x18To11Size89ThenSetWorkByte1To1World04Area16813_801F2C7C.c'
+    - queueSharedUiElement
+    - '@source: src/bof3/world/queueSharedUiElement3.c'
     - '@behavior: Queues one shared world marker per entry of the six-entry byte row table 0x801F4B30 at grid coordinate 0x10 with size 0x89, then stores 1 into work record byte +1 so the state-byte-1 dispatcher 0x801F2C38 takes word 1 of its run.'
   - - 224
     - asm
@@ -53,15 +53,15 @@ segments:
     - '@behavior: Seeds one translucent POLY_G4 at the shared primitive cursor, writes the two screen pairs and lays each far vertex on the 0x801783C8/0x801782FC rotator samples of its own angle scaled by its own signed amplitude, tints the two near vertices from the shade triple at 0x801F4B2C + 3 * work byte 6 with the far shades black, links the 0x24-byte packet through 0x80155A08 over the 0xC/0x10 position pair with kind 1, then copies the packet one size class on, rewrites its two far vertices half a turn round and links it again.'
   - - 2016
     - c
-    - dispatchStateByte2Table4b88World04Area16813_801F33E0
+    - dispatchStateByte2Table4
     - '@source: src/bof3/world/area16813DispatchTables.c'
   - - 2084
     - asm
     - func_801F3424
   - - 2552
     - c
-    - advanceWorkByte2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenCall3914World04Area16813_801F35F8
-    - '@source: src/bof3/world/advanceWorkByte2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenCall3914World04Area16813_801F35F8.c'
+    - advanceWorkByte2Queue
+    - '@source: src/bof3/world/advanceWorkByte2Queue.c'
     - '@behavior: Advances work byte +2 when the camera is inside the record coordinate window, queues cue 0x200 while the shared front-end phase byte is zero, then calls local helper 0x801F3914.'
   - - 2872
     - c
@@ -70,8 +70,8 @@ segments:
     - '@behavior: Adds 0x10 to work halfword +0x30, advances byte +2 at signed 0x80, then calls helper 0x801F3914.'
   - - 2964
     - c
-    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16813_801F3794
-    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16813_801F3794.c'
+    - advanceRecordCoordinateWindow
+    - '@source: src/bof3/world/advanceRecordCoordinateWindow4.c'
     - '@behavior: Advances work byte +2 when the camera is outside the record coordinate window, then calls helper 0x801F3914.'
   - - 3236
     - c
@@ -135,8 +135,8 @@ segments:
     - '@behavior: Stores 0xFFFF into the shared status halfword, and while the shared gate byte equals 3 runs the shared front-end startup helper and writes state entry 0x0A with progress 5 and companion byte 0xFF, then copies the gated row pair from the payload row table into record words 0x18 and 0x1C.'
   - - 7176
     - c
-    - setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808.c'
+    - setEntryGateClear
+    - '@source: src/bof3/world/setEntryGateClear3.c'
   - - 7240
     - c
     - stateStatusSharedOverlay
@@ -144,8 +144,8 @@ segments:
     - '@behavior: Stores 0xFFFF into the shared status halfword when the shared gate byte is nonzero, and while it is zero stores 6 and sets bit 0 of the shared overlay byte at 0x8014933B when the shared selector query for id 0xC answers nonzero, or stores 7 when it answers zero.'
   - - 7348
     - c
-    - setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0DAndSetOverlayByteBit1World04Area16813_801F48B4
-    - '@source: src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0DAndSetOverlayByteBit1World04Area16813_801F48B4.c'
+    - setOverlayByteBit1
+    - '@source: src/bof3/world/setOverlayByteBit1.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword when the shared gate byte is nonzero, and while it is zero stores 6 and sets bit 1 of the shared overlay byte at 0x8014933B when the shared selector query for id 0xD answers nonzero, or stores 7 when it answers zero.'
   - - 7456
     - c
@@ -154,8 +154,8 @@ segments:
     - '@behavior: Stores 0xFFFF into the shared status halfword when the shared gate byte is nonzero, and while it is zero sets bit 0x8F of the shared flag bank at 0x80144F28 through the shared bit helper 0x8015B580, runs the shared front-end startup helper 0x8015C088, then requests state entry 0x3B with progress 0 through the shared state and progress bytes at 0x801448EB and 0x801448EC.'
   - - 7552
     - c
-    - setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980.c'
+    - setProgressGateClear
+    - '@source: src/bof3/world/setProgressGateClear.c'
   - - 7636
     - c
     - stateStatus12Or14Gate
@@ -163,8 +163,8 @@ segments:
     - '@behavior: Publishes the shared status halfword 0x801490A8 from the shared gate byte 0x801490C7: stores 0x12 when the gate reads zero, 0x13 when it reads one, and 0x14 for every other gate value, one store per arm; the original cross-jumps the three identical stores into a single halfword store site.'
   - - 7692
     - c
-    - dispatchSharedModeByteTable2C04World04Area16813_801F4A0C
-    - '@source: src/bof3/world/dispatchSharedModeByteTable2C04World04Area16813_801F4A0C.c'
+    - dispatchSharedModeByte
+    - '@source: src/bof3/world/dispatchSharedModeByte3.c'
     - '@behavior: Steps the shared front-end mode byte 0x801448EC through the 13-slot jump table at 0x801F2C04: mode 0 advances to 1 once the shared phase byte 0x80143BB0 leaves 2, mode 1 seeds one front-selector context through 0x8019FA28 (0xA7, 0xB0000, 0x698000, 0x89) and then clears the state-entry tuple 0x801448EB/0x801448EC, mode 10 runs 0x801C601C(0) and advances to 11, mode 11 queues cue 0x204 and sets bit 0x91 of the shared flag bank 0x80144F28 through 0x8015B580 once the scenario progress byte reads 1 and advances to 12, and mode 12 runs the shared front-end step 0x8015C058 and clears both the scenario progress byte and the state-entry tuple once that byte reads 2.'
   - - 7980
     - textbin

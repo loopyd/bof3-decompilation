@@ -35,7 +35,7 @@ support_sources = [
     "src/bof3/plchar/requestResourceHelperReady5.c",
     "src/bof3/plchar/claimStoreDistanceRow14.c",
     "src/bof3/plchar/pickNearerSignChosen12.c",
-    "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp67800_801CF4F0.c",
+    "src/bof3/plchar/clearIndexRearmWork.c",
     "src/bof3/plchar/selectArrivalRouteReached2.c",
     "src/bof3/plchar/markAnimationBitExpires4.c",
     "src/bof3/plchar/checkAgainstMapCode4.c",

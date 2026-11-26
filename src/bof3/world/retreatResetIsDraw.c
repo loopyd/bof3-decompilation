@@ -3,7 +3,7 @@
 extern u8 D_801454F2;
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area15113_801F3A70(
+void drawMarkerSpriteLayers(
     s16 arg0, s16 arg1);
 
 /* @source 0x801F3578
@@ -21,7 +21,7 @@ void drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area15113_801F
  *           only.
  *           The tail from the mode-byte test on follows the statement shape of
  *           the exact
- *           setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area15113_801F3528
+ *           setWorkState2To3
  *           body with this entry's inverted arm: one cmp of the 0x40-byte tails
  *           at payload offsets 0x9B0 and 0x92C found them equal apart from the
  *           branch opcode, the stored state constant (1 here, 3 there) and the
@@ -52,6 +52,6 @@ void retreatResetIsDraw(
     D_1F800044[2] = 1;
   }
   cursor = D_1F800044;
-  drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area15113_801F3A70(
+  drawMarkerSpriteLayers(
       0x10, FIELD_REF(s16, cursor, 0x2E));
 }

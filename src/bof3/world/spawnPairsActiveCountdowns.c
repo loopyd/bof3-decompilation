@@ -24,7 +24,7 @@ typedef struct Area14313SeedRecord {
 } Area14313SeedRecord;
 
 /* @source 0x801F2D7C @kind function */
-extern u8* findFreeWorkRecordAt800E4800World03Area14313_801F2D7C(void);
+extern u8* findFreeWorkRecord(void);
 
 /* @source 0x801F30A0
  * @behavior Scans 16 seed records at 0x800E6000 with stride 0x14. For
@@ -55,7 +55,7 @@ s32 spawnPairsActiveCountdowns(void) {
       if ((seed->unk_03)-- == 0) {
         j = 0;
         do {
-          record = (Area14313SpawnRecord*)findFreeWorkRecordAt800E4800World03Area14313_801F2D7C();
+          record = (Area14313SpawnRecord*)findFreeWorkRecord();
           if (record != 0) {
             record->unk_00 = 1;
             record->unk_02 = (rand() & 0x1F) + 0x20;

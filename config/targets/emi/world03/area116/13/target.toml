@@ -19,8 +19,8 @@ support_sources = [
     "src/bof3/support/area116_13_psyq.c",
     "src/bof3/world/area11613DispatchTables.c",
     "src/bof3/world/stateStatus4ModeGate.c",
-    "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld03Area11613_801F2D10.c",
+    "src/bof3/world/setStatus4ModeIndex6.c",
     "src/bof3/world/stateStatusHandlerGate.c",
-    "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld03Area11613_801F2C9C.c",
+    "src/bof3/world/setHandlerIndex5Gate2.c",
 ]
 psyq_source = "src/bof3/support/area116_13_psyq.c"

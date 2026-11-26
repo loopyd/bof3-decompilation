@@ -45,8 +45,8 @@ segments:
     - '@behavior: Entry 1 (index 1) of the three-entry code pointer run at 0x801EEC04 (0x801EEC84, 0x801EEE9C, 0x801EEF08) that this overlay''s entry dispatcher copies and selects with the work byte at offset 1. It reads the scratchpad work-object pointer cell at 0x1F800044 before creating its 0x18-byte frame and tests work byte 0xB: while that byte is non-zero nothing happens; when it is zero the handler clears bit 0x40 of byte 0 of the record reached through pointer cell 0x801EB4E0, calls the shared main-executable helper at 0x800AEF98 with the arguments 0x18 and 0, then reloads the work-object pointer and increments work byte 1. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 776
     - c
-    - raiseFlag4AndInvokeHelperBmagicMagic16103_801EEF08
-    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16103_801EEF08.c'
+    - raiseFlag4InvokeHelper
+    - '@source: src/bof3/bmagic/raiseFlag4InvokeHelper3.c'
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988. It is entry 2 of the three-entry handler run at 0x801EEC04 that this overlay entry dispatcher copies and selects with the work byte at offset 1. The original materializes the halfword address once in a register, keeps it live across the call, and writes the read-modify-write through that register, the halfword store filling the call delay slot. The 0x18-byte frame only keeps the return address at 0x10. Nothing is returned and no other state is read or written.'
   - - 828
     - c
@@ -59,8 +59,8 @@ segments:
     - '@behavior: Work byte 2 step dispatcher of this overlay, reached as entry 0 of the one-word work byte 1 table at 0x801EF3E8 that the dispatcher at 0x801EEF3C indexes with the work object''s unsigned byte 1. It reads the scratchpad work-object pointer cell at 0x1F800044 before creating its 0x30-byte frame, copies the five-entry work byte 2 handler run at 0x801EEC10 (0x801EF024, 0x801EF06C, 0x801EF0E8, 0x801EF158, 0x801EF1BC) into that frame, and invokes the copied entry that the work object''s unsigned byte 2 selects, with no bounds test. When the handler returns it re-reads the pointer cell and, if work byte 0 and byte 2 are both non-zero, invokes the shared main-executable service at 0x8014D290. It takes no arguments, returns nothing and reads or writes no other state. All 41 words are identical to the span at 0x801EFF1C of emi/bmagic/magic015/00 except the copied run''s base, 0x801EEC54 there against 0x801EEC10 here (payload byte comparison).'
   - - 1060
     - c
-    - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic16103_801EF024
-    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic16103_801EF024.c'
+    - seedWorkByte9From
+    - '@source: src/bof3/bmagic/seedWorkByte9From.c'
     - '@behavior: Work byte 2 step handler of this overlay. It calls the shared main-executable helper at 0x800AFF98 with no arguments, stores the returned byte in scratchpad work byte 9 through the pointer cell at 0x1F800044, then re-reads that cell and increments work byte 2 at byte width, advancing the dispatch state. The 0x18-byte frame only keeps the return address at 0x10, no other state is read or written, and nothing is returned. The 72-byte body is byte-identical to the bodies at 0x801F133C of emi/bmagic/magic008/00, 0x801EF9A0 of emi/bmagic/magic004/03 and 0x801EF2E0 of emi/bmagic/magic065/00 (payload byte comparison).'
   - - 1132
     - c

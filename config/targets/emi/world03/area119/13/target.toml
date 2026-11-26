@@ -9,22 +9,22 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/retreatScratchClearCountdown.c",
-    "src/bof3/world/advanceWorkWord38AndSetScratchStateToMode2WithCountdownWorld03Area11913_801F2C88.c",
-    "src/bof3/world/advanceWorkWord34AndSetScratchStateToMode5WithCountdownWorld03Area11913_801F2D6C.c",
+    "src/bof3/world/advanceWorkWord38Set.c",
+    "src/bof3/world/advanceWorkWord34Set.c",
     "src/bof3/world/stateCountdownSeedRandom.c",
     "src/bof3/world/stateRestartCycle.c",
 ]
 support_sources = [
     "src/bof3/world/stateWorkSharedSet.c",
     "src/bof3/world/stateRouteCameraDraw.c",
-    "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11913_801F3210.c",
+    "src/bof3/world/incrementNonNegativeDraw3.c",
     "src/bof3/world/callQuarterDecrementReset.c",
     "src/bof3/world/stateWorkQueueAdvance.c",
     "src/bof3/world/callWorkIncrementAdvance.c",
-    "src/bof3/world/setTwoWorld03Area11913_801F4208.c",
+    "src/bof3/world/setTwo.c",
     "src/bof3/world/area11913DispatchTables.c",
-    "src/bof3/world/advanceCounter2By2World03Area11913_801F41B8.c",
-    "src/bof3/world/retreatCounter2By2World03Area11913_801F41E0.c",
+    "src/bof3/world/advanceCounter2By2.c",
+    "src/bof3/world/retreatCounter2By2.c",
     "src/bof3/world/stateFlagQueueCue203.c",
     "src/bof3/world/stateFlagBit3Queue.c",
     "src/bof3/world/area11913_countdown.c",
@@ -33,7 +33,7 @@ support_sources = [
     "src/bof3/world/armCountdownClearShared.c",
     "src/bof3/world/stateStatusOr14Gate.c",
     "src/bof3/world/stateCameraOutsideFixed.c",
-    "src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11913_801F3114.c",
+    "src/bof3/world/decrementMinusFfDraw2.c",
     "src/bof3/world/incrementCountdownUpAdvance.c",
 ]
 psyq_source = "src/bof3/support/area119_13_psyq.c"

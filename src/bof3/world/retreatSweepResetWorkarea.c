@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void drawTexturedRibbonAlongWorkSpanWorld03Area13413_801F4B6C(void);
+void drawTexturedRibbonAlong(void);
 void func_80196070(void);
 
 /* Shared published work-pointer cell: the original re-materialises the cell
@@ -35,7 +35,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
  * byte minus one, stored back through the same pointer and then tested for
  * zero, which emits the andi and the branch of the original), the cell reload
  * points and the statement order follow this target's exact
- * advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13413_801F4400
+ * advanceWorkWord1C
  * and stateTableSeedDispatch;
  * the sweep-then-word-then-call order and the relocated-word store in the call
  * delay slot are read from this function's own original bytes, whose 0x7C-byte
@@ -60,6 +60,6 @@ void retreatSweepResetWorkarea(
     sweep = D_1F800044;
     FIELD_REF(u16, sweep, 0x20) -= 0x200;
     FIELD_REF(u32, sweep, 0x24) += 0xFFF00000;
-    drawTexturedRibbonAlongWorkSpanWorld03Area13413_801F4B6C();
+    drawTexturedRibbonAlong();
   }
 }

@@ -9,6 +9,6 @@ func_801F30D4 = 0x801F30D4;
 callStateTable35World04 = 0x801F3418;
 queryRowResetFields = 0x801F345C;
 func_801F34C8 = 0x801F34C8;
-decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenAdvanceWorkByte2AndDrawWorld04Area16513_801F3518 = 0x801F3518;
+decrementWorkByte2Draw = 0x801F3518;
 D_801F3594 = 0x801F3594;
 workStepRowTable35 = 0x801F35C0;

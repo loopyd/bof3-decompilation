@@ -3,7 +3,7 @@
 /* Scratchpad work-object pointer cell 0x1F800044, already bound at that address
  * by this target's map as g_battle_work, the name this target's exact lifts
  * clearWorkBytes and
- * incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic21303_801EF23C
+ * incrementWorkByteRecord
  * use. This body reads the cell once, so the access stays one plain pointer
  * load that precedes frame creation. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
@@ -22,7 +22,7 @@ extern void func_801E5988(void); /* @source 0x801E5988 @kind function */
 /* @source 0x801EF490
  * @behavior Overlay step handler selected by table, not by call: the pointer
  *           word at 0x801EF8B0 is an entry of the handler run based at
- *           0x801EF8A0, which dispatchStateByte1Tablef8a0BmagicMagic21303_801EEFC0
+ *           0x801EF8A0, which dispatchStateByte1Tablef8
  *           indexes with work byte 0x01 (index 4) and which
  *           callStateByte2Handlers indexes with
  *           work byte 0x02 from the run's second word 0x801EF8A4 (index 3); no

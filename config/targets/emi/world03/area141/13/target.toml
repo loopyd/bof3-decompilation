@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/stateTintTripletMode.c",
     "src/bof3/world/callStateByte4Table4.c",
-    "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area14113_801F3AC0.c",
+    "src/bof3/world/setProgress5GateClear2.c",
     "src/bof3/world/stateHalfword36GateSatisfied.c",
     "src/bof3/world/stateScaledViewStatic.c",
     "src/bof3/world/stepRearmFloorHalfword.c",

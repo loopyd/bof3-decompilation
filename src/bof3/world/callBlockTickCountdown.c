@@ -37,7 +37,7 @@ void func_801F46EC(u8* block, s16 value, s32 channel_mask);
  *           (cmp of the payload word against this address), the third word of
  *           the handler row based at 0x801F5F88 (0x801F3814, 0x801F3878,
  *           0x801F3910, 0x801F3994, 0x801F3AA8, ...), and the exact dispatcher
- *           dispatchStateByte1Table5f88World02Area09813_801F37D0 scales the
+ *           dispatchStateByte1Table5 scales the
  *           work record byte at +0x01 by four onto that base and jalrs the
  *           selected entry with no arguments, so this span is the state-2
  *           handler of that row and its caller stays outside the payload. No

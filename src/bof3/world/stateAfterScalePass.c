@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Palette block scaler of this overlay: 0x80 is the unity scale. */
-void scalePaletteBlocksWorld04Area19813_801F2D28(s32 scale);
+void scalePaletteBlocks(s32 scale);
 
 /* @source 0x801F2C48
  * @behavior Overlay step handler, entry 0 of the work-byte-2 handler table at
@@ -18,6 +18,6 @@ void scalePaletteBlocksWorld04Area19813_801F2D28(s32 scale);
  * @residual none
  */
 void stateAfterScalePass(void) {
-  scalePaletteBlocksWorld04Area19813_801F2D28(0);
+  scalePaletteBlocks(0);
   SPAD_PTR_SLOT(u8, 0x44)[2]++;
 }

@@ -83,7 +83,7 @@ typedef struct Area13413ActiveWorkRecord {
  * Name evidence: the only in-image references to this address are the two tail
  * calls of this target's exact
  * claimEveryFourthTick
- * and clearWorkFlagsWhenNoCallbackRanWorld03Area13413_801F4310, both of which
+ * and clearWorkFlagsNo, both of which
  * record it as the walk over the 0x20 entries of the 0x28-byte-stride table at
  * 0x800E4800 whose result is 1 once at least one entry ran. The stamp test is
  * the claim flag the exact

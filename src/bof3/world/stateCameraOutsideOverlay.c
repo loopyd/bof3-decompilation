@@ -25,7 +25,7 @@ extern void func_801F31BC(void);
  *           outside this payload.
  *
  *           Shape evidence: transcribed from the exact same-target body
- *           advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16713_801F303C,
+ *           advanceRecordCoordinateWindow,
  *           taking that body's flat else arm for the statement order, the
  *           abs() expansion, the cell-centre operand form and the offset-local
  *           spelling, with this span's guard, its fixed 0x36-then-0x3A axis

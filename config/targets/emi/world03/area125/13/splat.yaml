@@ -107,7 +107,7 @@ segments:
     - '@behavior: Weighted record pick of this overlay: it draws rand into the low six bits and walks the eight byte weights at 0x801F37E8, subtracting every weight the draw does not fall below, so the walk stops on a weighted index below 8. It then clears the lead flag byte at offset 0 of the other seven of the first eight 0x98-byte records at 0x80146888, and for a selected index below 8 it draws rand into the low three bits, doubles that into the eight-entry byte-pair table at 0x801F37D8 and stores the pair shifted left 16 into the selected record position words at +0x34 and +0x38, then stores func_8015477C of those two words in the signed halfword at +0x3E. It ends by storing the halfword at 0x80145FB8 minus 5 in the shared halfword at 0x80143F22.'
   - - 2604
     - c
-    - invokeHelperWorld03Area12513_801F362C
+    - invokeHelper
   - - 2636
     - textbin
     - D_801F364C

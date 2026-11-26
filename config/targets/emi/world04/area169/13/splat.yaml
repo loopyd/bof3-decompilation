@@ -44,8 +44,8 @@ segments:
     - '@behavior: Advance the work record halfword at 0x30 by 0x10 and advance the state byte at 0x02 once that stored signed halfword reaches 0xC0, then draw the record''s mirrored quad pair.'
   - - 872
     - c
-    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16913_801F2F68
-    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16913_801F2F68.c'
+    - advanceRecordCoordinateWindow
+    - '@source: src/bof3/world/advanceRecordCoordinateWindow5.c'
     - '@behavior: Advance work byte 2 when the camera is outside the record coordinate window, then draw.'
   - - 1144
     - asm
@@ -65,8 +65,8 @@ segments:
     - '@behavior: Clear bit 0x74 of the shared main-RAM flag bank at 0x80144F28 through the shared bit-clear helper when the shared front-side byte reads anything other than 1.'
   - - 2396
     - c
-    - findWorkPositionBoundsIndexWorld04Area16913_801F355C
-    - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld04Area16913_801F355C.c'
+    - findWorkPositionBounds
+    - '@source: src/bof3/world/findWorkPositionBounds2.c'
     - '@behavior: Overlay query: reads the two position words (+0x34 and +0x38) of the 0x140-byte-stride local work record selected by the byte argument, then walks the two five-byte bounds records of the table at 0x801F3B9C and returns the index of the first record whose byte bounds contain both words, or 0xFF when none does. Takes one byte argument, uses no stack frame and makes no calls.'
   - - 2600
     - asm

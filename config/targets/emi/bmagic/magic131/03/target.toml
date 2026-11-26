@@ -12,7 +12,7 @@ sources = [
     "src/bof3/bmagic/workAdvanceAt10.c",
     "src/bof3/bmagic/decrementByteZero.c",
     "src/bof3/bmagic/stateWordPairFlags.c",
-    "src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178.c",
+    "src/bof3/bmagic/clearWorkByte9Increment3.c",
     "src/bof3/bmagic/magic13103DispatchTables.c",
     "src/bof3/bmagic/callRecordByte1Handler.c",
     "src/bof3/bmagic/callRecordDrawActive.c",

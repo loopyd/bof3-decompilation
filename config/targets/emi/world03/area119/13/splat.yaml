@@ -36,8 +36,8 @@ segments:
     - '@behavior: Entry handler at index 0 of the byte-1 dispatch table based at 0x801F45CC: clears the countdown byte at offset 0x09 of the work record published at the scratchpad pointer cell 0x1F800044, then masks rand() to the low three bits, indexes the 8-entry mode table at 0x801F45C4 with that value and stores the selected byte into the work record state byte at offset 0x01 so the dispatcher at 0x801F2C04 runs the handler that table cell names next; the table bytes 01 04 04 01 01 04 04 01 select state 1 at 0x801F2C88 or state 4 at 0x801F2D6C.'
   - - 136
     - c
-    - advanceWorkWord38AndSetScratchStateToMode2WithCountdownWorld03Area11913_801F2C88
-    - '@source: src/bof3/world/advanceWorkWord38AndSetScratchStateToMode2WithCountdownWorld03Area11913_801F2C88.c'
+    - advanceWorkWord38Set
+    - '@source: src/bof3/world/advanceWorkWord38Set.c'
     - '@behavior: Second handler of the byte-1 dispatch table based at 0x801F45CC: saves the work pointer at scratchpad cell 0x1F800044, publishes the record at 0x80146920, adds 0x400 to that record word 0x38 four times with a bottom-tested unsigned-byte counter, then arms the saved record state byte 1 with mode 2, restores the saved scratchpad pointer and sets the saved record countdown byte 9 to 4.'
   - - 224
     - c
@@ -50,8 +50,8 @@ segments:
     - '@behavior: Third handler of the byte-1 dispatch table based at 0x801F45CC: saves the work pointer at scratchpad cell 0x1F800044, publishes the record at 0x80146920, subtracts 0x400 from that record word 0x38 four times with a bottom-tested unsigned-byte counter, then arms the saved record state byte 1 with mode 7, restores the saved scratchpad pointer and clears the saved record countdown byte 9 to 0.'
   - - 364
     - c
-    - advanceWorkWord34AndSetScratchStateToMode5WithCountdownWorld03Area11913_801F2D6C
-    - '@source: src/bof3/world/advanceWorkWord34AndSetScratchStateToMode5WithCountdownWorld03Area11913_801F2D6C.c'
+    - advanceWorkWord34Set
+    - '@source: src/bof3/world/advanceWorkWord34Set.c'
     - '@behavior: Handler at index 4 of the byte-1 dispatch table based at 0x801F45CC: saves the work pointer at scratchpad cell 0x1F800044, publishes the record at 0x80146920, adds 0x400 to that record word 0x34 four times with a bottom-tested unsigned-byte counter, then arms the saved record state byte 1 with mode 5, restores the saved scratchpad pointer and sets the saved record countdown byte 9 to 4.'
   - - 452
     - c
@@ -68,7 +68,7 @@ segments:
     - '@behavior: Entry 7 of the byte-1 handler table based at 0x801F45CC: compares the shared scenario progress byte at 0x80146864 with 0x28 and, at that value, calls the shared main-executable work-area reset at 0x80196070; otherwise stores 0 into byte 0x01 of the work record published at the scratchpad pointer cell 0x1F800044 so the next dispatch takes entry 0 at 0x801F2C48 and reseeds that byte from the mode table at 0x801F45C4.'
   - - 664
     - c
-    - dispatchStateByte2Table45ecWorldWorld03Area11913_801F2E98
+    - dispatchStateByte2Table45
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 732
     - c
@@ -80,8 +80,8 @@ segments:
     - func_801F301C
   - - 1300
     - c
-    - decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11913_801F3114
-    - '@source: src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11913_801F3114.c'
+    - decrementMinusFfDraw
+    - '@source: src/bof3/world/decrementMinusFfDraw2.c'
     - '@behavior: Byte-2 state handler entry 2 of the six-entry handler table based at 0x801F45EC, the table the overlay dispatcher at 0x801F2E98 indexes by the state byte of the work record published at the scratchpad pointer cell 0x1F800044: subtracts 0x20 from the record unsigned halfword at offset 0x30, stores the truncated halfword, and, once that stored value read as a signed halfword falls below -0xFF, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 at 0x801F3170; it then calls the payload routine at 0x801F3324, which reads the same halfword as a sprite screen offset.'
   - - 1392
     - c
@@ -90,8 +90,8 @@ segments:
     - '@behavior: When the shared overlay state byte at 0x8014933B reads zero, compares the shared camera coordinate words D_80145EC4 and D_80145EC8 with the fixed coordinate window (0x428000 on the first word, 0x3E0000 and 0x3F0000 on the second) at a 0x18000 threshold and stores 4 into byte 0x02 of the work record published at the scratchpad pointer cell 0x1F800044 when the camera lies outside that window. Takes no arguments, calls nothing and returns nothing.'
   - - 1552
     - c
-    - incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11913_801F3210
-    - '@source: src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11913_801F3210.c'
+    - incrementNonNegativeDraw
+    - '@source: src/bof3/world/incrementNonNegativeDraw3.c'
     - '@behavior: Increments work halfword 0x30 by 0x20; when nonnegative calls the camera-window handler, returns on state 2, otherwise sets state 1 and conditionally queues cue 0x201, then draws.'
   - - 1688
     - asm
@@ -157,13 +157,13 @@ segments:
     - func_801F4138
   - - 5560
     - c
-    - advanceCounter2By2World03Area11913_801F41B8
+    - advanceCounter2By2
   - - 5600
     - c
-    - retreatCounter2By2World03Area11913_801F41E0
+    - retreatCounter2By2
   - - 5640
     - c
-    - setTwoWorld03Area11913_801F4208
+    - setTwo
   - - 5668
     - asm
     - func_801F4224

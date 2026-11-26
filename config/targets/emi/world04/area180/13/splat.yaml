@@ -35,16 +35,16 @@ segments:
     - '@behavior: World-overlay area-module entry referenced only by the area-descriptor pointer word at 0x801F37C4. When the signed scenario-state byte 0x80146870 reads at least 8 it runs the shared record/effect setup routine 0x801EECA4, then clears the byte 0x801455C7 and, when the front-side byte 0x80143F03 reads nonzero, requests frontend cue 0x20C through the shared frontend cue dispatcher 0x8015DF18. No arguments and no return value; the original keeps the lbu of 0x80143F03 ahead of the unconditional byte clear and materialises 0x20C in the jal delay slot.'
   - - 1832
     - c
-    - invokeHelperArgWorld04Area18013_801F3328
+    - invokeHelperArg
   - - 1864
     - c
-    - copySharedXToWorkXIfInRangeWorld04Area18013_801F3348
-    - '@source: src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area18013_801F3348.c'
+    - copySharedXWork
+    - '@source: src/bof3/world/copySharedXWork5.c'
     - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 1912
     - c
-    - selectAreaStateForMatchedArgumentsWorld04Area18013_801F3378
-    - '@source: src/bof3/world/selectAreaStateForMatchedArgumentsWorld04Area18013_801F3378.c'
+    - selectStateMatchedArguments
+    - '@source: src/bof3/world/selectStateMatchedArguments4.c'
     - '@behavior: Overlay request gate that selects the shared front-end state entry 0x801448EB: it returns 0 unless both zero-extended halfword arguments read 0x3F and 0x0E (each truncated with `andi 0xFFFF`, so both are u16) and the leading byte of the main-RAM game-mode record 0x80145E98 reads 1. On a match it stores 6 while the signed scenario byte 0x80146870 is below 8 and 0x1A otherwise, then returns 1. The original body selects into one `sb`: 6 while that byte is below 8 and 0x1A otherwise, with the 0x1A `addiu` in the `j` delay slot and the below-8 arm out of line; every failing guard answers through the shared `jr $ra` with `addu $v0,$zero,$zero` in its branch delay slot. No calls, no frame and no other stores.'
   - - 2020
     - asm

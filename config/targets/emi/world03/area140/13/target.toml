@@ -15,13 +15,13 @@ sources = [
     "src/bof3/world/stateFlagBitSubmit.c",
     "src/bof3/world/projectFacingTriggerCell.c",
     "src/bof3/world/queryRecordIndexPosition.c",
-    "src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area14013_801F2E64.c",
+    "src/bof3/world/decrementMinusFfDraw4.c",
     "src/bof3/world/stateRecordSetDraw.c",
     "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCellWindowThenDrawWorld03Area14013_801F2EC0.c",
     "src/bof3/world/runFrontEndStartup.c",
 ]
 support_sources = [
-    "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C.c",
+    "src/bof3/world/incrementNonNegativeDraw4.c",
     "src/bof3/world/stepWorkHalfword3World03.c",
     "src/bof3/support/area140_13_psyq.c",
     "src/bof3/world/area14013DispatchTables.c",

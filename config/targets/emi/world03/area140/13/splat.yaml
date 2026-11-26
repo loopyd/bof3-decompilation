@@ -40,8 +40,8 @@ segments:
     - func_801F2D80
   - - 612
     - c
-    - decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area14013_801F2E64
-    - '@source: src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area14013_801F2E64.c'
+    - decrementMinusFfDraw
+    - '@source: src/bof3/world/decrementMinusFfDraw4.c'
     - '@behavior: Entry 2 of the state-byte +0x02 handler table at 0x801F47C4 subtracts 0x20 from the work halfword at +0x30 and, once the stored signed halfword falls below -0xFF, advances the state byte at +0x02 before calling the draw routine at 0x801F3050.'
   - - 704
     - c
@@ -50,8 +50,8 @@ segments:
     - '@behavior: Entry 3 of the state-byte +0x02 handler table at 0x801F47C4 advances that state byte when the shared camera word 0x80145EC4 leaves the cell centre built from the work halfword +0x36 or 0x80145EC8 leaves both row starts built from the halfword +0x3A, then calls the draw routine 0x801F3050.'
   - - 892
     - c
-    - incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C
-    - '@source: src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C.c'
+    - incrementNonNegativeDraw
+    - '@source: src/bof3/world/incrementNonNegativeDraw4.c'
     - '@behavior: Adds 0x20 to work halfword +0x30, sets state byte +2 to 1 when nonnegative and draws.'
   - - 1004
     - asm
@@ -61,7 +61,7 @@ segments:
     - func_801F3050
   - - 1756
     - c
-    - dispatchStateByte2Table47dcWorld03Area14013_801F32DC
+    - dispatchStateByte2Table47
     - '@source: src/bof3/world/area14013DispatchTables.c'
   - - 1824
     - c
@@ -131,7 +131,7 @@ segments:
     - '@behavior: Runs the shared front-end startup helper 0x8015C088 and then stores progress 5 into the shared progress byte 0x801448EC, unconditionally.'
   - - 6816
     - c
-    - dispatchStateByte1Table4ac4World03Area14013_801F46A0
+    - dispatchStateByte1Table4
     - '@source: src/bof3/world/area14013DispatchTables.c'
   - - 6884
     - c

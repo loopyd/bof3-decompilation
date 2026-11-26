@@ -11,9 +11,9 @@ sources = [
     "src/bof3/world/setupModuleQueueFront.c",
 ]
 support_sources = [
-    "src/bof3/world/invokeHelperArgWorld04Area17713_801F3328.c",
+    "src/bof3/world/invokeHelperArg4.c",
     "src/bof3/world/selectStateMatchedArguments.c",
-    "src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area17713_801F3348.c",
+    "src/bof3/world/copySharedXWork2.c",
     "src/bof3/support/area177_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area177_13_psyq.c"

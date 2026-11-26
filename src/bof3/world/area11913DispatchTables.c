@@ -26,7 +26,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable45World, D_801F45C
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table45ecWorldWorld03Area11913_801F2E98, D_801F45EC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table45, D_801F45EC);
 
 /* @source 0x801F358C
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record

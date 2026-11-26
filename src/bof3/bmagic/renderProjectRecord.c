@@ -3,7 +3,7 @@
 /* Scratchpad work-record pointer cell 0x1F800044, bound by this target's own map
  * row g_battle_work, the name this target's exact lifts
  * reserveFirstFreeRecord and
- * decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZeroBmagicMagic21903_801EF5DC
+ * decrementWorkByteCount
  * already use for it. This body reads the cell once, before any call, so the
  * original materializes one folded `lui $v1,0x1F80` / `lw $v1,0x44($v1)` pair and
  * every later access is a field of the loaded pointer. */

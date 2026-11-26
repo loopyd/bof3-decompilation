@@ -14,7 +14,7 @@ typedef struct Area12114WorkRecord {
 /* @source 0x1F800044 @kind unknown */
 extern Area12114WorkRecord* area12114WorkCursor_1F800044;
 
-void setWorkHalfwordsWorld03Area12114_801F3418(void);
+void setWorkHalfwords(void);
 void func_8014D4E0(void);
 
 /* @source 0x801F323C
@@ -34,7 +34,7 @@ void stateHalfwordsDecrementExpires(
   Area12114WorkRecord* work;
   Area12114WorkRecord* state;
 
-  setWorkHalfwordsWorld03Area12114_801F3418();
+  setWorkHalfwords();
   work = area12114WorkCursor_1F800044;
   work->unk_09--;
   work->unk_40 += 0x2000;

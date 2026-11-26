@@ -47,8 +47,8 @@ segments:
     - '@behavior: Handler at slot 2 of the overlay dispatch table at 0x801F57BC - the pointer word at 0x801F57C4 - stamps the 7x9 glyph grid of the overlay banner into the map cell codes by calling the stamp routine at 0x801F3994 with no arguments, then reads the scratchpad work record from the pointer cell 0x1F800044 and adds one to the record dispatch state byte at offset 0x01, the byte the dispatcher at 0x801F2CF8 scales by four and indexes into that pointer run, so the overlay steps from this slot to the helper slot at 0x801F2F80. Takes no arguments, returns nothing and keeps a 0x18-byte frame holding only the return address.'
   - - 896
     - c
-    - invokeHelperWorld04Area17013_801F2F80
-    - '@source: src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c'
+    - invokeHelper
+    - '@source: src/bof3/world/invokeHelper9.c'
   - - 928
     - c
     - drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0
@@ -96,8 +96,8 @@ segments:
     - func_801F3C2C
   - - 4584
     - c
-    - advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area17013_801F3DE8
-    - '@source: src/bof3/world/advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area17013_801F3DE8.c'
+    - advanceWorkByte2Play
+    - '@source: src/bof3/world/advanceWorkByte2Play4.c'
     - '@behavior: Byte-2 state handler, entry 1 of the five-entry handler table at 0x801F588C: when the camera is inside the record coordinate window it plays cue 0x200 through the front-end phase gate and advances work byte 2, then draws.'
   - - 4904
     - c
@@ -105,13 +105,13 @@ segments:
     - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28.c'
   - - 4996
     - c
-    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17013_801F3F84
-    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17013_801F3F84.c'
+    - advanceRecordCoordinateWindow
+    - '@source: src/bof3/world/advanceRecordCoordinateWindow6.c'
     - '@behavior: Overlay step gate over the scratchpad work record at 0x1F800044. Reads the record route byte at +8 once: when it is non-zero the gate compares the shared camera word D_80145EC8 with the record halfword at +0x3A, and when it is zero it compares D_80145EC4 with the record halfword at +0x36 instead. Both comparisons build the cell centre ((halfword + 1) << 16) | 0x8000, take the absolute difference from the camera word and advance the record step byte at +2 when that difference exceeds 0x20000. When the first check passes, the record halfword of the other axis and the matching camera word become the shared tail operands: the step byte is advanced when the absolute difference from both the halfword cell start and the next cell start exceeds 0x20000. Takes no arguments, returns nothing and keeps no frame.'
   - - 5248
     - c
-    - decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWorld04Area17013_801F4080
-    - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWorld04Area17013_801F4080.c'
+    - decrementByte2To1Draw
+    - '@source: src/bof3/world/decrementByte2To1Draw.c'
     - '@behavior: Byte-2 state handler, entry 4 of the five-entry handler table based at 0x801F588C. Subtracts 0x10 from the work record halfword at 0x30, stores the truncated halfword and tests it as a signed halfword; while it stays above zero the handler only draws. Once the countdown reaches zero or below, the front-end phase byte D_80143BB0 gates sound cue 0x201 through func_8015DF18 and the record state byte at 0x02 is set to 1 so the next dispatch takes entry 1 at 0x801F3DE8 of the same table. The draw routine at 0x801F40F0 runs on every call; the 0x18-byte frame only keeps ra at 0x10 and the pointer cell is re-read after the cue gate.'
   - - 5360
     - c
@@ -147,13 +147,13 @@ segments:
     - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is zero, runs the shared front-end startup helper at 0x8015C088 and then requests state entry 0x25 through the shared state byte at 0x801448EB with progress 5 in the shared byte at 0x801448EC. The gate read with lb is hoisted above the status store, the 0x18-byte frame only keeps ra across the helper call, and the gate-clear path falls through its two byte stores into the epilogue.'
   - - 7588
     - c
-    - setStatusFFFFAndStateEntry25ProgressFWhenGateClearWorld04Area17013_801F49A4
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntry25ProgressFWhenGateClearWorld04Area17013_801F49A4.c'
+    - setFGateClear
+    - '@source: src/bof3/world/setFGateClear.c'
     - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is zero, runs the shared front-end startup helper at 0x8015C088 and then requests state entry 0x25 through the shared state byte at 0x801448EB with progress 0xF in the shared byte at 0x801448EC. The gate read with lb is hoisted above the status store, the 0x18-byte frame only keeps ra across the helper call, and the gate-clear path falls through its two byte stores into the epilogue.'
   - - 7672
     - c
-    - setStatusFFFFAndStateEntry25Progress19WhenGateClearWorld04Area17013_801F49F8
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntry25Progress19WhenGateClearWorld04Area17013_801F49F8.c'
+    - setProgress19GateClear
+    - '@source: src/bof3/world/setProgress19GateClear.c'
     - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is zero, runs the shared front-end startup helper at 0x8015C088 and then requests state entry 0x25 through the shared state byte at 0x801448EB with progress 0x19 in the shared byte at 0x801448EC. The gate read with lb is hoisted above the status store, the 0x18-byte frame only keeps ra across the helper call, and the gate-clear path falls through its two byte stores into the epilogue.'
   - - 7756
     - c
@@ -186,8 +186,8 @@ segments:
     - func_801F5698
   - - 10976
     - c
-    - setSharedFlag67World04Area17013_801F56E0
-    - '@source: src/bof3/world/setSharedFlag67World04Area17013_801F56E0.c'
+    - setSharedFlag67
+    - '@source: src/bof3/world/setSharedFlag67.c'
     - '@behavior: Overlay flag raiser of the byte-2 state machine. It materializes the shared main-RAM flag bank D_80144F28 as a lui/addiu $a0 pair and sets flag 0x67 through the EXE-side flag setter func_8015B580, with 0x67 in the jal delay slot. The in-image consumer is the byte-2 state handler at 0x801F4574 of this same overlay, which tests the same flag of the same bank through func_8015B5D4 and advances the record state byte once the flag is set, so this body arms the condition that handler waits on. Takes no arguments, returns nothing, reads no other state, and the 0x18-byte frame only keeps ra at 0x10 across the setter call.'
   - - 11016
     - c

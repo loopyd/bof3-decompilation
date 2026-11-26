@@ -8,19 +8,19 @@ splat = "config/targets/emi/world04/area192/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/setStatusFFFFAndRequestPrimaryState1Substate14WhenGateClearWorld04Area19213_801F2CA8.c",
+    "src/bof3/world/setSubstate14GateClear.c",
 ]
 support_sources = [
     "src/bof3/world/activateSixCodeBank.c",
-    "src/bof3/world/invokeHelperWorld04Area19213_801F3424.c",
-    "src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19213_801F326C.c",
+    "src/bof3/world/invokeHelper13.c",
+    "src/bof3/world/lookupRowTableByte.c",
     "src/bof3/world/queryTable3890ByteOffset.c",
-    "src/bof3/world/resetFieldRecordPairThenFillWorkRecordsWorld04Area19213_801F3548.c",
-    "src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19213_801F2E44.c",
+    "src/bof3/world/resetFieldRecordPair.c",
+    "src/bof3/world/runStartupClearWork.c",
     "src/bof3/world/stateStatusOr20Gate.c",
-    "src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19213_801F2CFC.c",
-    "src/bof3/world/setStatusFFFFIfGateElse68World04Area19213_801F2C80.c",
-    "src/bof3/world/setStatusFFFFIfGateElse6CWorld04Area19213_801F2D54.c",
+    "src/bof3/world/setFromGateRow3.c",
+    "src/bof3/world/setIfGateElse68.c",
+    "src/bof3/world/setGateElse6C.c",
     "src/bof3/world/stampFrontBytesReset.c",
     "src/bof3/support/area192_13_psyq.c",
 ]

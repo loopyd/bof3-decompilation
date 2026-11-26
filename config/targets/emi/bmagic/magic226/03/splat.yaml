@@ -42,7 +42,7 @@ segments:
     - func_801EEFA4
   - - 1028
     - c
-    - dispatchStateByte1Table0c40BmagicMagic22603_801EF004
+    - dispatchStateByte1Table0
     - '@source: src/bof3/bmagic/magic22603DispatchTables.c'
   - - 1096
     - asm
@@ -58,8 +58,8 @@ segments:
     - func_801EF540
   - - 2544
     - c
-    - decrementWorkByte9ThenSetFlag20Mode1ClearTintTripletAndAdvanceWorkByte2BmagicMagic22603_801EF5F0
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetFlag20Mode1ClearTintTripletAndAdvanceWorkByte2BmagicMagic22603_801EF5F0.c'
+    - decrementWorkByte9Set
+    - '@source: src/bof3/bmagic/decrementWorkByte9Set.c'
     - '@behavior: Decrement work byte 9; on zero set flag 0x20 and mode 1, clear the tint triplet, and advance work byte 2.'
   - - 2712
     - c
@@ -77,7 +77,7 @@ segments:
     - func_801EFA64
   - - 4484
     - c
-    - dispatchStateByte1Table0c60BmagicMagic22603_801EFD84
+    - dispatchStateByte1Table0Tail
     - '@source: src/bof3/bmagic/magic22603DispatchTables.c'
   - - 4552
     - c

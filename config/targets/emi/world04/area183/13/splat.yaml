@@ -35,16 +35,16 @@ segments:
     - '@behavior: World-overlay area-module entry: when the signed scenario-state byte 0x80146870 reads at least 8 it runs the shared record/effect setup routine 0x801EECA4, then clears the byte 0x801455C7, and when the front-side byte 0x80143F03 reads nonzero it requests frontend cue 0x20C through the shared frontend cue dispatcher 0x8015DF18.'
   - - 1832
     - c
-    - invokeHelperArgWorld04Area18313_801F3328
+    - invokeHelperArg
   - - 1864
     - c
-    - copySharedXToWorkXIfInRangeWorld04Area18313_801F3348
-    - '@source: src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area18313_801F3348.c'
+    - copySharedXWork
+    - '@source: src/bof3/world/copySharedXWork8.c'
     - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 1912
     - c
-    - selectAreaStateForMatchedArgumentsWorld04Area18313_801F3378
-    - '@source: src/bof3/world/selectAreaStateForMatchedArgumentsWorld04Area18313_801F3378.c'
+    - selectStateMatchedArguments
+    - '@source: src/bof3/world/selectStateMatchedArguments7.c'
     - '@behavior: Returns 0 unless the two zero-extended u16 arguments read 0x3F and 0x0E and the leading byte of the main-RAM game-mode record 0x80145E98 reads 1; on that match it stores 6 into the shared state-entry byte 0x801448EB while the signed scenario-state byte 0x80146870 is below 8 and 0x1A once it reads at least 8, then returns 1.'
   - - 2020
     - asm
