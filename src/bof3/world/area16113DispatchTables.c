@@ -12,4 +12,4 @@ extern void (*dispatchHandlerTable801F3424[])(void); /* @source 0x801F3424 @kind
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable3424World04, dispatchHandlerTable801F3424);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2Table3424, dispatchHandlerTable801F3424);

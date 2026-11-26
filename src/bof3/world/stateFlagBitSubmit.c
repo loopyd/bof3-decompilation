@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind data */
-extern u16 *g_WorkRecordWorld03Area14013;
+extern u16 *scratchpadWorkRecord;
 /* @source 0x80144F28 @kind data */
 extern u8 D_80144F28;
 /* @source 0x8015B5A8 */
@@ -58,9 +58,9 @@ void stateFlagBitSubmit(
     void) {
   u16 *work;
 
-  work = g_WorkRecordWorld03Area14013;
+  work = scratchpadWorkRecord;
   func_8015B5A8(&D_80144F28, ((u8 *)work)[0xB]);
-  work = g_WorkRecordWorld03Area14013;
+  work = scratchpadWorkRecord;
   func_8015507C((s16)work[0x1B], (s16)work[0x1D]);
   func_80196070();
 }

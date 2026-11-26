@@ -1,4 +1,4 @@
-callStateTable3320World02 = 0x801F2C04;
+dispatchWorkByte2Handler = 0x801F2C04;
 queueAdvanceWorkPrimary = 0x801F2C48;
 advanceWorkByte2Draw = 0x801F2C94;
 func_801F2CDC = 0x801F2CDC;

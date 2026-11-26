@@ -17,7 +17,7 @@ sources = [
     "src/bof3/ui/callUiPhaseTable.c",
     "src/bof3/ui/callUiSubStep.c",
     "src/bof3/ui/updateUiPhaseState.c",
-    "src/bof3/ui/drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C.c",
+    "src/bof3/ui/renderPanelAdvancePhase.c",
     "src/bof3/ui/stepSixRampPad.c",
     "src/bof3/ui/stateLocalUiSubstep.c",
     "src/bof3/ui/emitPanelIconPrimitive.c",

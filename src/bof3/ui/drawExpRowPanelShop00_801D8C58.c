@@ -100,7 +100,7 @@ typedef struct ShopExpRowRecord {
  *           narrows x inside the test, reassociates the record add as
  *           `164*index + 0x16`, and reuses the first mask.
  */
-void drawExpRowPanel_shop00(s16 x, s16 y, u8 index, u8 mode) {
+void renderExpRowPanel(s16 x, s16 y, u8 index, u8 mode) {
   u8* base;
   ShopExpRowRecord* record;
   s32 value;

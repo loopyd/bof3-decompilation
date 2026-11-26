@@ -49,7 +49,7 @@ void emitSemiTransSprite(
     s16 arg0, s16 arg1, u8 arg2);
 
 /* Local panel the last layer is followed by. */
-void appendTransformedPanelWorld03(s16 arg0, s16 arg1);
+void appendTransformedPanel(s16 arg0, s16 arg1);
 
 /* Resident map probe returning the map byte under the given coordinates. */
 s32 func_80166CB0(s16 arg0, s16 arg1);
@@ -157,6 +157,6 @@ void renderMarkerLayersAppend(
     emitSemiTransSprite(
         (s16)(arg0 + 0x30), (s16)(arg1 + 0x18), 3);
   }
-  appendTransformedPanelWorld03((s16)(arg0 + 0x18),
+  appendTransformedPanel((s16)(arg0 + 0x18),
                                                     (s16)(arg1 + 0x18));
 }

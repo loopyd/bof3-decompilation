@@ -11,7 +11,7 @@
  *           overlay's own init path:
  *           stateWorkTableAdvance,
  *           the first word of the handler run selected by
- *           callStateTable36World03, calls it at
+ *           dispatchByte1Table36cc, calls it at
  *           0x801F2C50 and afterwards advances byte 0x1 of the work object
  *           published at the scratchpad pointer cell 0x1F800044. It is
  *           the overlay's own entry count: the same table is walked with stride

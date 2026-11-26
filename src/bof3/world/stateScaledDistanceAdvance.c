@@ -10,7 +10,7 @@ extern s16 func_8015477C(s32 x, s32 z); /* @source 0x8015477C */
 /* @source 0x801F3CDC
  * @behavior Step handler: entry 0 of the handler table based at 0x801F4F68 that
  *           this target's dispatcher
- *           callStateTable4World02 indexes with
+ *           dispatchWorkByte1Handler4 indexes with
  *           the work record's state byte at +1. Seeds the record's signed word
  *           at +0x3C with the shared distance helper 0x8015477C of the record
  *           word pair at +0x34/+0x38, scaled by 0x10000, and then advances that

@@ -55,7 +55,7 @@ void stepActiveActiveRecords(
  * Name evidence: no jal in the payload targets this address; its only in-image
  * reference is the word at 0x801F50A0, entry 4 of the code-pointer run at
  * 0x801F5090. That run is indexed by work record byte 0x01 through the
- * dispatcher callStateTable5090World04, and its
+ * dispatcher dispatchWorkByte1Run2, and its
  * entry 5 is the exact sibling setSubstate14AndClearWorkFlagsWhenEffectIdle
  * World04Area17213_801F3374, which reads the same effect-busy halfword. The
  * cadence and statement order follow the near-identical progress handler

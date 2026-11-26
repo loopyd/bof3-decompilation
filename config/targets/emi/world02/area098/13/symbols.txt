@@ -1,5 +1,5 @@
 scratchWorkPointerAt1 = 0x1F800044;
-callStateTable5World02 = 0x801F2C04;
+dispatchWorkByte1Handler = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2E98 = 0x801F2E98;
 func_801F2F38 = 0x801F2F38;

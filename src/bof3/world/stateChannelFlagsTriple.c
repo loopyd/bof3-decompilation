@@ -41,7 +41,7 @@ extern u8 D_80146158;
  * @behavior Entry 0 of this overlay's byte-1 handler run based at 0x801F37D0,
  *           the four-word pointer table whose words are 0x801F2C48, 0x801F2CB4,
  *           0x801F2CD4 and 0x801F2DAC in that order and which the exact
- *           dispatcher callStateTable37World03
+ *           dispatcher dispatchByte1Table37d0
  *           indexes with the unsigned work byte at +0x01 of the record
  *           published at the scratchpad pointer cell 0x1F800044, so this body
  *           is the step that dispatcher takes while that byte reads 0. It

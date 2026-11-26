@@ -5,7 +5,7 @@
 extern u8 D_80144F28; /* @source 0x80144F28 @kind data */
 
 /* Shared overlay state byte of the main executable, outside this overlay's
- * payload. The exact neighbour setWorld04Area16713_801F3F14, entry 5 of the
+ * payload. The exact neighbour stateSharedMode2, entry 5 of the
  * handler table below, writes 2 to it; this entry 6 clears it. */
 extern u8 D_8014933B; /* @source 0x8014933B @kind data */
 
@@ -17,7 +17,7 @@ extern void func_8015B5A8(void* flag_bank, u8 bit_index); /* @source 0x8015B5A8 
 /* @source 0x801F3F28
  * @behavior Entry 6 of the 25-entry overlay handler table at 0x801F6830 of
  *           this payload, whose entry 5 is the exact lift
- *           setWorld04Area16713_801F3F14 and whose word at 0x801F6848
+ *           stateSharedMode2 and whose word at 0x801F6848
  *           publishes this span. Clears bit 0x46 of the shared main-RAM flag
  *           bank D_80144F28 through the shared bit clear helper func_8015B5A8
  *           and then stores zero into the shared overlay state byte
@@ -33,7 +33,7 @@ extern void func_8015B5A8(void* flag_bank, u8 bit_index); /* @source 0x8015B5A8 
  * with index 0x4E and clearScenarioFlagBit3CAndQueueCue203World03Area11913_801F4554
  * with 0x3C). The trailing store clears 0x8014933B, the shared overlay state
  * byte this same target's neighbours seed with 1 and 2
- * (setWorld04Area16713_801F3F14, setWorld04Area16713_801F446C), which is the
+ * (stateSharedMode2, stateSharedMode1), which is the
  * clearOverlayStateByte* family role. The body itself is byte-identical to the
  * exact cross-target twin clearSharedFlagBit46ThenClearOverlayStateByte
  * World03Area14813_801F39A4: 0x30 payload bytes compare equal word for word.

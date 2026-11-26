@@ -6,7 +6,7 @@
  * than kept live across the call.
  * @source 0x1F800044 @kind data
  */
-extern u8* area16813WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 
 /* Front-end phase byte of the shared main executable, outside this payload;
  * Splat binds it through the shared symbol map. The world04 sibling handlers
@@ -79,14 +79,14 @@ void decrementFrontendPhasePair(
   u8* work;
   u16 half;
 
-  work = area16813WorkCursor_1F800044;
+  work = workRecordCursor1F800044;
   half = *(u16*)(work + 0x30) - 0x10;
   *(u16*)(work + 0x30) = half;
   if ((s16)half <= 0) {
     if (D_80143BB0 == 0) {
       func_8015DF18(0x203);
     }
-    work = area16813WorkCursor_1F800044;
+    work = workRecordCursor1F800044;
     work[2] = 1;
   }
   func_801F4158(0, 1);

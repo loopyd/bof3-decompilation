@@ -34,7 +34,7 @@ typedef struct WorkareaStepRecord {
 /* @source 0x801F4624
  * @behavior Overlay work-record step handler, entry 5 of the work-byte-1
  * handler table based at 0x801F5828 that this target's exact
- * callStateTable5828World03 indexes with the work
+ * callSeedStepTable indexes with the work
  * record's state byte at +0x01. The body hands the record's +0x0C block and the
  * word at +0x1C to the overlay helper at 0x801F4E64, then advances the word at
  * +0x1C by 0x1199; entry 0 at 0x801F4388 seeds that word from the copy of the

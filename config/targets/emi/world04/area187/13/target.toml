@@ -13,7 +13,7 @@ sources = [
     "src/bof3/world/releaseOverlayClearShared.c",
 ]
 support_sources = [
-    "src/bof3/world/setWorld04Area18713_801F2C90.c",
+    "src/bof3/world/setSharedByte1d.c",
     "src/bof3/support/area187_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area187_13_psyq.c"

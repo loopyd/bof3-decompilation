@@ -6,7 +6,7 @@ extern u8 D_80144F28;
  * 0x1F800044. The original reads the cell once inside the flag-set arm as
  * `lui $v1,0x1F80` / `lw $v1,0x44($v1)` and keeps no saved register for the
  * cell address across the calls. */
-extern u8* g_world02Area11113Work; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 s32 func_8015B5D4(u32 arg0, s32 arg1);
 void func_801F3244(void);
@@ -44,7 +44,7 @@ void func_801F3244(void);
  */
 void stateHandlerByteDraw(void) {
   if (func_8015B5D4((u32)&D_80144F28, 0x28) != 0) {
-    g_world02Area11113Work[2] = g_world02Area11113Work[2] + 1;
+    workRecordSlot[2] = workRecordSlot[2] + 1;
   }
   func_801F3244();
 }

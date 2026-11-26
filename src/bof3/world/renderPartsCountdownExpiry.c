@@ -5,7 +5,7 @@
  * keeps no saved register for it across the draw call, so the body spells the
  * cell itself at each statement.
  */
-extern u8* g_world02Area11113Work; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Overlay renderer: builds a run of textured, semi-transparent quads through
  * GetTPage, SetDrawMode, SetPolyG4 and SetSemiTrans for the parts block at its
@@ -45,12 +45,12 @@ void func_801F2DA0(u8* parts, s16 x, s16 y);
  */
 void renderPartsCountdownExpiry(
     void) {
-  func_801F2DA0(g_world02Area11113Work + 0x34,
-                *(s16*)(g_world02Area11113Work + 0x2E),
-                *(s16*)(g_world02Area11113Work + 0x30));
-  *(u16*)(g_world02Area11113Work + 0x2E) += 0x40;
-  *(u16*)(g_world02Area11113Work + 0x30) += 0x40;
-  if (--g_world02Area11113Work[9] == 0) {
-    g_world02Area11113Work[1] += 1;
+  func_801F2DA0(workRecordSlot + 0x34,
+                *(s16*)(workRecordSlot + 0x2E),
+                *(s16*)(workRecordSlot + 0x30));
+  *(u16*)(workRecordSlot + 0x2E) += 0x40;
+  *(u16*)(workRecordSlot + 0x30) += 0x40;
+  if (--workRecordSlot[9] == 0) {
+    workRecordSlot[1] += 1;
   }
 }

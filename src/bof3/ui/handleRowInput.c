@@ -53,7 +53,7 @@ extern s32 func_8014E640(u32 mask);
  */
 extern void dispatchSoundCue(u32 cue_id);
 
-extern void renderCommuListScreen(void);
+extern void renderEntryListScreen(void);
 extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
 extern void renderMarkerTriangle(s16 x, s16 y, u8 selected);
@@ -94,7 +94,7 @@ extern u8 queryActiveSlotKind(u8 kind, u8 ordinal);
  * when the signed byte goes negative, bit 0x2000 adds one and wraps to zero when
  * the signed byte passes the count, no other bit moves it, and an ordinal byte
  * landing on a different value queues resident cue 0x100. Every path then runs
- * renderCommuListScreen and draws the list row 0x801448ED with the selected flag 1
+ * renderEntryListScreen and draws the list row 0x801448ED with the selected flag 1
  * through renderRowMarkerOutline, then computes the slot origin
  * of that list row kind at the ordinal byte through computeKindSlotOrigin and, for
  * a nonzero ordinal byte, draws the marker triangle at that origin advanced by 4
@@ -167,7 +167,7 @@ void handleRowInput(void) {
       dispatchSoundCue(0x100);
     }
   }
-  renderCommuListScreen();
+  renderEntryListScreen();
   row = &D_801448ED;
   renderRowMarkerOutline(*row, 1);
   computeKindSlotOrigin(&x, &y, *row, D_801D4E24);

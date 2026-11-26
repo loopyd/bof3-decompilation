@@ -17,7 +17,7 @@ extern void (*D_801F5838[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5744World03, D_801F5744);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table5744, D_801F5744);
 
 /* @source 0x801F3560
  * @behavior Overlay step dispatch: reads the state byte at +1 of the work
@@ -33,7 +33,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5744World03, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable57World03, D_801F57A4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table57a4, D_801F57A4);
 
 /* @source 0x801F3E0C
  * @behavior Overlay step dispatch: reads the work-record state byte at offset
@@ -43,14 +43,14 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable57World03, D_801F5
  * 0x801F3E50, 0x801F3E8C, 0x801F3F78, 0x801F40C8 and 0x801F41B0 followed by a
  * zero word at 0x801F5818 (raw .word row inside the trailing asm blob of this
  * overlay). The already-exact same-target sibling
- * callStateTable57World03 is the same dispatch
+ * dispatchByte1Table57a4 is the same dispatch
  * through the same state byte and the table based at 0x801F57A4. Takes no
  * arguments and returns nothing.
  * @status exact
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5804World03, D_801F5804);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callEndStepTable, D_801F5804);
 
 /* @source 0x801F41D0
  * @behavior Overlay step dispatch: reads the work-record state byte at offset
@@ -63,17 +63,17 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5804World03, D_801
  * the trailing asm blob of this overlay); three of those entries are the
  * already-exact same-target handlers
  * clearWorkFlagsNo,
- * invokeHelperWorld03Area13413_801F453C and
- * invokeHelperWorld03Area13413_801F46CC. The sibling at 0x801F3E0C is the same
+ * callClearWorkFlags4 and
+ * callClearWorkFlags6. The sibling at 0x801F3E0C is the same
  * dispatch through the first local handler table 0x801F5804, and the
- * already-exact sibling callStateTable57World03 is
+ * already-exact sibling dispatchByte1Table57a4 is
  * the same dispatch through the table based at 0x801F57A4. Takes no arguments
  * and returns nothing.
  * @status exact
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable581World03, D_801F581C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStampStepTable, D_801F581C);
 
 /* @source 0x801F4344
  * @behavior Overlay step dispatch: reads the work-record state byte at offset
@@ -84,21 +84,21 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable581World03, D_801F
  * 0x801F4388, 0x801F4400, 0x801F44C0, 0x801F453C, 0x801F45A0, 0x801F4624,
  * 0x801F46AC and 0x801F46CC, followed by the non-pointer word 1 at 0x801F5848
  * (the tail of the same .word pointer run the exact sibling
- * callStateTable581World03 documents). Three of
+ * callStampStepTable documents). Three of
  * those entries are the already-exact same-target handlers
- * invokeHelperWorld03Area13413_801F453C,
- * invokeHelperWorld03Area13413_801F46AC and
- * invokeHelperWorld03Area13413_801F46CC. The exact same-target siblings
- * callStateTable57World03,
- * callStateTable5804World03 and
- * callStateTable581World03 are the same dispatch
+ * callClearWorkFlags4,
+ * callClearWorkFlags5 and
+ * callClearWorkFlags6. The exact same-target siblings
+ * dispatchByte1Table57a4,
+ * callEndStepTable and
+ * callStampStepTable are the same dispatch
  * through the tables based at 0x801F57A4, 0x801F5804 and 0x801F581C. Takes no
  * arguments, keeps no register, carries no frame and returns nothing.
  * @status exact
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5828World03, D_801F5828);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callSeedStepTable, D_801F5828);
 
 /* @source 0x801F455C
  * @behavior Overlay step dispatch: reads the state byte at +1 of the work record
@@ -109,4 +109,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5828World03, D_801
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable5838World03, D_801F5838);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callRunStepTable, D_801F5838);

@@ -1,4 +1,4 @@
-callStateTable3930World02 = 0x801F2C04;
+dispatchWorkByte2Handler = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2D04 = 0x801F2D04;
 renderLevelMarkerReset = 0x801F2D84;
@@ -6,7 +6,7 @@ func_801F2E28 = 0x801F2E28;
 renderLevelRearmSaved = 0x801F2EC0;
 func_801F2F44 = 0x801F2F44;
 func_801F3194 = 0x801F3194;
-callStateTable3948World02 = 0x801F3264;
+dispatchWorkByte2Handler2 = 0x801F3264;
 selectLsbsOffsetCompare = 0x801F32A8;
 func_801F3388 = 0x801F3388;
 func_801F3408 = 0x801F3408;

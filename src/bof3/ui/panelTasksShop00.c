@@ -96,7 +96,7 @@ PANEL_RETREAT_FIELD6(retreatPanelField6To62, 0x10, 0x3E)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg150B, -0x96)
+PANEL_RETREAT_X(retreatPanelNeg150B, -0x96)
 
 /* @source 0x801E2E70
  * @behavior advances the panel task x position by 0x20, clamps to max 0xF, and
@@ -156,7 +156,7 @@ PANEL_RETREAT_X_CLAMP(retreatPanelXTo75, 0x4B)
  * @match 100.00
  * @residual none
  */
-PANEL_ADVANCE_X(advancePanelXTo320C, 320)
+PANEL_ADVANCE_X(advancePanel320C, 320)
 
 /* @source 0x801E3C38
  * @behavior subtracts 0x20 from the panel task x position, clamps to max 0x96, and
@@ -190,7 +190,7 @@ PANEL_RETREAT_X(retreatPanelXNeg170, -0xAA)
  * @match 100.00
  * @residual none
  */
-PANEL_ADVANCE_X(advancePanelXTo320D, 320)
+PANEL_ADVANCE_X(advancePanel320D, 320)
 
 /* @source 0x801E3D8C
  * @behavior subtracts 0x20 from the panel task x position, clamps to max 0x96, and
@@ -199,7 +199,7 @@ PANEL_ADVANCE_X(advancePanelXTo320D, 320)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X_CLAMP(retreatPanelXTo150B, 0x96)
+PANEL_RETREAT_X_CLAMP(retreatPanel150B, 0x96)
 
 /* @source 0x801E3DCC
  * @behavior subtracts 0x20 from the panel task x position, clamps to max 0x11, and
@@ -226,7 +226,7 @@ PANEL_ADVANCE_X(advancePanelXTo150, 0x96)
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg150C, -0x96)
+PANEL_RETREAT_X(retreatPanelNeg150C, -0x96)
 
 /* @source 0x801E3EF4
  * @behavior Adds 32 to 16-bit panel x; signed results above 17 clamp to 17 and clear state.
@@ -269,7 +269,7 @@ PANEL_RETREAT_X_CLAMP(retreatXTo17B, 0x11)
  * @match 100.00
  * @residual none
  */
-PANEL_ADVANCE_X(advancePanelXTo320E, 320)
+PANEL_ADVANCE_X(advancePanel320E, 320)
 
 /* @source 0x801E43CC
  * @behavior subtracts 0x20 from the panel task x position, clamps to max 0x8C, and
@@ -303,7 +303,7 @@ PANEL_RETREAT_FIELD6(retreatPanelField6To128, 0x10, 0x80)
  * @match 100.00
  * @residual none
  */
-PANEL_ADVANCE_X(advancePanelXTo320F, 320)
+PANEL_ADVANCE_X(advancePanel320F, 320)
 
 /* @source 0x801E4580
  * @behavior subtracts 0x20 from the panel task x position, clamps to max 0xD2, and

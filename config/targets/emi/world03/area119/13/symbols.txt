@@ -1,4 +1,4 @@
-world03Area11913WorkRecord = 0x1F800044;
+scratchpadWorkRecord = 0x1F800044;
 D_8014932A = 0x8014932A;
 func_8015B580 = 0x8015B580;
 func_8015B5A8 = 0x8015B5A8;

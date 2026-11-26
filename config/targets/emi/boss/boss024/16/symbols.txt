@@ -1,9 +1,9 @@
 callStateByte1Table523 = 0x800C1804;
-publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02416_800C1848 = 0x800C1848;
-dispatchIndexedHandlerBossBoss02416_800C18A0 = 0x800C18A0;
-noopHandlerBossBoss02416_800C18D8 = 0x800C18D8;
+publishWorkStepHandler5 = 0x800C1848;
+dispatchIndexedHandler6 = 0x800C18A0;
+noopHandler151 = 0x800C18D8;
 noopHandler69 = 0x800C18E0;
-noopHandlerBossBoss02416_800C18E8 = 0x800C18E8;
+noopHandler152 = 0x800C18E8;
 callStateByte1Table8 = 0x800C18F0;
 publishWorkStepFlag8 = 0x800C1934;
 callIndexedHandler26 = 0x800C1998;

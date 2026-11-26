@@ -10,7 +10,7 @@ typedef void (*Boss02213Handler)(void);
  * third returns a zero result, which the void slot type drops. */
 void setupBattleEntryBoss(void);
 void setupBattleRecordBoss(void);
-s32 zeroResultBossBoss02213_800C1A40(void);
+s32 zeroResult34(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -24,7 +24,7 @@ extern Boss02213Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * slot order: the battle-entry hook setupBattleEntryBoss
  * into 0x801463A4, the battle setup hook
  * setupBattleRecordBoss into 0x801463A8, and the
- * zero-result accessor zeroResultBossBoss02213_800C1A40 into 0x801463AC, the
+ * zero-result accessor zeroResult34 into 0x801463AC, the
  * last one through the void slot type. No word of this payload names the
  * function and no jal reaches it, so the main program enters it through the
  * overlay entry point, as it does the sibling installers of this archive
@@ -37,5 +37,5 @@ extern Boss02213Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 void publishBattleHooks33(void) {
   D_801463A4 = setupBattleEntryBoss;
   D_801463A8 = setupBattleRecordBoss;
-  D_801463AC = (Boss02213Handler)zeroResultBossBoss02213_800C1A40;
+  D_801463AC = (Boss02213Handler)zeroResult34;
 }

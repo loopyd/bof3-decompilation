@@ -69,7 +69,7 @@ segments:
     - '@behavior: Installer of this overlay handler trio into the shared battle-hook slots: it stores the battle-entry hook at 0x800C1A48 into 0x801463A4, the battle setup hook at 0x800C1ABC into 0x801463A8 and the zero-result accessor at 0x800C1A40 into 0x801463AC, the last one through the void slot type. No word of this payload and no jal names the function, so the main program enters it through the overlay entry point.'
   - - 576
     - c
-    - zeroResultBossBoss02213_800C1A40
+    - zeroResult34
   - - 584
     - c
     - setupBattleEntryBoss

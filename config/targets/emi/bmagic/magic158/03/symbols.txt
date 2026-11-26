@@ -11,4 +11,4 @@ func_801EF2F0 = 0x801EF2F0;
 renderFlatWedgesRadii = 0x801EF3EC;
 reserveFirstFreeRecord = 0x801EF708;
 D_801EF76C = 0x801EF76C;
-magic15803RecordFlags = 0x801EF794;
+stateRecordFlags = 0x801EF794;

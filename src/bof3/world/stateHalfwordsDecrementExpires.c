@@ -12,7 +12,7 @@ typedef struct Area12114WorkRecord {
 } Area12114WorkRecord;
 
 /* @source 0x1F800044 @kind unknown */
-extern Area12114WorkRecord* area12114WorkCursor_1F800044;
+extern Area12114WorkRecord* scratchpadWorkRecord;
 
 void setWorkHalfwords(void);
 void func_8014D4E0(void);
@@ -35,14 +35,14 @@ void stateHalfwordsDecrementExpires(
   Area12114WorkRecord* state;
 
   setWorkHalfwords();
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   work->unk_09--;
   work->unk_40 += 0x2000;
 
-  state = area12114WorkCursor_1F800044;
+  state = scratchpadWorkRecord;
   if (state->unk_09 == 0) {
     state->unk_48 = 0;
-    area12114WorkCursor_1F800044->mode = 3;
+    scratchpadWorkRecord->mode = 3;
   }
 
   func_8014D4E0();

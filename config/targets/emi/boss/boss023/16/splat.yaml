@@ -40,13 +40,13 @@ segments:
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1AA0 table, which holds this overlay''s three inert handlers. The installer at 0x800C1848 publishes its address into the slot at offset 0xE4 of the record it reaches through D_801EB4E8.'
   - - 364
     - c
-    - noopHandlerBossBoss02316_800C196C
+    - noopHandler149
   - - 372
     - c
     - noopHandler66
   - - 380
     - c
-    - noopHandlerBossBoss02316_800C197C
+    - noopHandler150
   - - 388
     - c
     - publishBattleHooks19

@@ -33,7 +33,7 @@ WEAK_SYMBOL_AT(g_PrimCursor, 0x8014598c);
 WEAK_SYMBOL_AT(D_80143C2A, 0x80143c2a);
 WEAK_SYMBOL_AT(D_80181EBA, 0x80181eba);
 
-WEAK_SYMBOL_AT(game_front_local_mode_callback_loop, 0x8014ed6c);
+WEAK_SYMBOL_AT(frontLocalModeCallback, 0x8014ed6c);
 WEAK_SYMBOL_AT(func_80161808, 0x80161808);
 WEAK_SYMBOL_AT(game_start_selection_fx, 0x8015d4f8);
 WEAK_SYMBOL_AT(game_stop_selection_fx, 0x8015d404);

@@ -20,7 +20,7 @@ support_sources = [
     "src/bof3/boss/publishBattleHooks21.c",
     "src/bof3/boss/renderTwoCellBlock.c",
     "src/bof3/boss/selectModeLocalKind.c",
-    "src/bof3/boss/noopHandlerBossBoss01816_800C210C.c",
+    "src/bof3/boss/noopHandler145.c",
     "src/bof3/boss/noopHandler55.c",
     "src/bof3/boss/noopHandler54.c",
     "src/bof3/boss/noopHandler53.c",

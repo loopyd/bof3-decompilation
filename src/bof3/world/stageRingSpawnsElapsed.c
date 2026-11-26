@@ -24,7 +24,7 @@ extern u8 D_801F3834;
 /* @source 0x801F2E7C
  * @behavior Spawn-schedule step of this overlay's handler run: entry 7 of the
  *           nine-word run at 0x801F36CC that
- *           callStateTable36World03 selects with
+ *           dispatchByte1Table36cc selects with
  *           the unsigned work byte at offset +0x1 of the work object published
  *           at the scratchpad pointer cell 0x1F800044 and calls with no
  *           arguments. It takes that work object once and reads the signed

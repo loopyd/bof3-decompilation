@@ -22,7 +22,7 @@ extern u8 D_801F3AA9[];  /* @source 0x801F3AA9 @kind data */
 extern u16 D_801F3AA4[]; /* @source 0x801F3AA4 @kind data */
 
 /* Local drawing routine of this overlay. */
-void drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8(void);
+void renderMirroredGraphType(void);
 
 /* @source 0x801F2C48
  * @behavior State-0 handler of this overlay's work-record step dispatch: it
@@ -145,5 +145,5 @@ void loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area1
   FIELD_REF(u8, gate, 0x02) = 3;
 
 draw:
-  drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8();
+  renderMirroredGraphType();
 }

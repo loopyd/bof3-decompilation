@@ -18,7 +18,7 @@ typedef struct Area12114WorkRecord {
 } Area12114WorkRecord;
 
 /* @source 0x1F800044 @kind unknown */
-extern Area12114WorkRecord* area12114WorkCursor_1F800044;
+extern Area12114WorkRecord* scratchpadWorkRecord;
 
 extern u8  D_801F64D8[];
 extern u16 D_80143F10;
@@ -54,10 +54,10 @@ void requestResourceInteractionByte(void) {
   u32                  offset;
   u32                  next;
 
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   work->unk_07 = work->state;
 
-  if (area12114WorkCursor_1F800044->state == 1) {
+  if (scratchpadWorkRecord->state == 1) {
     value = D_80143F10;
     offset = 0;
   search:
@@ -80,13 +80,13 @@ void requestResourceInteractionByte(void) {
     }
   }
 seed_found:
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   next = 2;
   work->unk_18 = value;
   work->unk_40 = 0;
   work->unk_44 = 0x10000;
   work->unk_48 = next;
-  area12114WorkCursor_1F800044->unk_09 = 8;
+  scratchpadWorkRecord->unk_09 = 8;
   value = FIELD_REF(u8, D_801F64D8, offset + 2);
   goto request;
 
@@ -100,9 +100,9 @@ arm:
   work->unk_40 = 0;
   work->unk_44 = 0x10000;
   work->unk_48 = next;
-  area12114WorkCursor_1F800044->unk_09 = 8;
+  scratchpadWorkRecord->unk_09 = 8;
 
 request:
   func_8014D6B8(value);
-  area12114WorkCursor_1F800044->mode = next;
+  scratchpadWorkRecord->mode = next;
 }

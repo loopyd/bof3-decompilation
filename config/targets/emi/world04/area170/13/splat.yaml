@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 248
     - c
-    - callStateTable57World04
+    - dispatchWorkByte1Run1
     - '@source: src/bof3/world/area17013DispatchTables.c'
   - - 316
     - c
@@ -51,8 +51,8 @@ segments:
     - '@source: src/bof3/world/invokeHelper9.c'
   - - 928
     - c
-    - drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0
-    - '@source: src/bof3/world/drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0.c'
+    - renderGlyphGridMarkers
+    - '@source: src/bof3/world/renderGlyphGridMarkers.c'
     - '@behavior: Draws one glyph of the overlay banner as a 9-by-7 grid of 10-pixel cells at the signed halfword origin (x, y). Arms draw mode 2 and covers the 0x5A by 0x46 glyph box with one semi-transparent (0x40, 0x40, 0x40) POLY_F4, then arms draw mode 1 and draws the cell borders as ten gray (0x96) vertical lines at x+10k running from y to y+0x45 and eight at y+10k running from x to x+0x59. It then marks every cell of the grid: display column j at x+10j takes its seven row values from the 63-byte signed glyph table that is passed in, read at row*9+phase, with the phase advanced by one per display column and wrapped to zero once it reaches nine. Each value goes to the marker routine at 0x801F388C, whose 1 draws a cross and whose -1 draws a blue bar.'
   - - 1500
     - c
@@ -89,7 +89,7 @@ segments:
     - '@behavior: Stamps the 7x9 cell grid of the overlay banner into the map cell entries and queues one shared UI element per cell. Flag 0x7E of the shared flag bank 0x80144F28 is probed once through func_8015B5D4; while it is clear each cell takes the union of the three 0x3F-byte glyphs of the banner at 0x801F58D0, read at row*9 plus the per-glyph row phases at 0x801F5990 wrapped to nine, folded to one for a set cell and zero otherwise, and while the flag is set the cell value stays zero. The cell then queues func_801A4BC0 at (col + 0x16, row + 0x8E) with the size byte D_801F584C[row*9 + col] scaled by the cell value, and its map entry word - the block base 0x80104000 plus ((stride*rowCount + 1) >> 1)*4 plus four times the block bias at 0x80104002 plus four times D_8010402C[bias*2 + (row + 0x8E)*stride + col] - keeps its upper three bytes and takes the code byte D_801F57CC[cellValue*0x3F + row*9 + col] in the low one. func_801558F0 resolves the same cell and, when it returns a record, func_80155560 attaches that 0x50-byte entry of D_8012D880 with kind 2. Takes no arguments and returns nothing.'
   - - 4072
     - c
-    - callStateTable588World04
+    - dispatchWorkByte2Run1
     - '@source: src/bof3/world/area17013DispatchTables.c'
   - - 4140
     - asm
@@ -101,8 +101,8 @@ segments:
     - '@behavior: Byte-2 state handler, entry 1 of the five-entry handler table at 0x801F588C: when the camera is inside the record coordinate window it plays cue 0x200 through the front-end phase gate and advances work byte 2, then draws.'
   - - 4904
     - c
-    - advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28
-    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28.c'
+    - stateAdvanceHalfwordDraw
+    - '@source: src/bof3/world/stateAdvanceHalfwordDraw2.c'
   - - 4996
     - c
     - advanceRecordCoordinateWindow
@@ -120,7 +120,7 @@ segments:
     - '@behavior: Overlay draw routine of the byte-2 state handlers 0x801F3DE8, 0x801F3F28 and 0x801F4080. Route byte 0x08 of the scratchpad work record at 0x1F800044 selects the bar axis: non-zero fixes all four corner y at ((record halfword 0x3A - 0x80) << 7) | 0x40 and spreads the corners along x, zero fixes all four corner x from the record halfword 0x36 the same way and spreads along y. The spread is the unsigned record halfword 0x30 scaled by one signed byte of D_801F58B8 per packet: corners 0 and 2 take ((axis - 0x7F) << 7) + width + 0x40 and corners 1 and 3 take ((axis - 0x80) << 7) + width - 0x40. Each corner depth is -func_8015477C over ((x + 0x4000) << 9, (y + 0x4000) << 9) halved, minus the record halfword 0x3E, with corners 0 and 1 subtracting a further 0x180. RotTransPers4 projects the four deck vectors into the primitive corners, func_80155560 fills the texture state from 0x25510000 | (0x127 - packet) plus the route byte at bit 21, and func_8014E5A0 appends the 0x28-byte packet to slot 6. One 0x0C-byte draw mode is armed first with the texture depth 0x225 for graph types 1 and 2 and 0x95 otherwise. Takes no arguments, returns nothing and keeps a 0x50-byte frame.'
   - - 6392
     - c
-    - callStateTable58World04
+    - dispatchWorkByte2Run2
     - '@source: src/bof3/world/area17013DispatchTables.c'
   - - 6460
     - c
@@ -162,12 +162,12 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x37 into the shared state byte D_801448EC while the gate byte is nonzero and 0x34 when it is zero.'
   - - 7804
     - c
-    - raiseWorldFlags1010World04Area17013_801F4A7C
-    - '@source: src/bof3/world/raiseWorldFlags1010World04Area17013_801F4A7C.c'
+    - setSharedFlags1010
+    - '@source: src/bof3/world/setSharedFlags1010.c'
   - - 7836
     - c
-    - clearWorldFlags1010World04Area17013_801F4A9C
-    - '@source: src/bof3/world/clearWorldFlags1010World04Area17013_801F4A9C.c'
+    - clearSharedFlags1010
+    - '@source: src/bof3/world/clearSharedFlags1010.c'
     - '@behavior: Clears bits 0x0010 and 0x1000 of the shared world-flags halfword D_80146258 with one halfword read-modify-write: folded lui/lhu load, empty load delay slot, andi 0xEFEF, halfword store back through a re-materialised lui $at base; takes no arguments, returns nothing and keeps no frame.'
   - - 7868
     - c

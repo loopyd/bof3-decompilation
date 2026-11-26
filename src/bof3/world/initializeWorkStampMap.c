@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area15213WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 /* @source 0x8014496D @kind unknown */
 extern u8 firstFieldRecordId;
 /* @source 0x80146871 @kind unknown */
@@ -61,17 +61,17 @@ void initializeWorkStampMap(void) {
 
   func_8019A194();
   func_8014DD3C(0x205);
-  area15213WorkCursor_1F800044[0x48] = 0;
-  FIELD_REF(u8, area15213WorkCursor_1F800044, 0x24u) = 0;
-  FIELD_REF(u8, area15213WorkCursor_1F800044, 0x2Au) = 0;
-  FIELD_REF(u8, area15213WorkCursor_1F800044, 0x5Du) = 0;
-  FIELD_REF(u8, area15213WorkCursor_1F800044, 0x5Eu) = 0;
-  FIELD_REF(u8, area15213WorkCursor_1F800044, 0x5Fu) = 0;
+  workRecordCursor1F800044[0x48] = 0;
+  FIELD_REF(u8, workRecordCursor1F800044, 0x24u) = 0;
+  FIELD_REF(u8, workRecordCursor1F800044, 0x2Au) = 0;
+  FIELD_REF(u8, workRecordCursor1F800044, 0x5Du) = 0;
+  FIELD_REF(u8, workRecordCursor1F800044, 0x5Eu) = 0;
+  FIELD_REF(u8, workRecordCursor1F800044, 0x5Fu) = 0;
 
-  index = area15213WorkCursor_1F800044[0x0B];
+  index = workRecordCursor1F800044[0x0B];
   *(u8*)(stampByteBaseAddress + stampCellCoordinates[index][1] * stampRowByteStride +
          stampCellCoordinates[index][0]) = 0xA0;
 
   func_8014D6B8(0);
-  FIELD_REF(u8, area15213WorkCursor_1F800044, 0x01u) = 1;
+  FIELD_REF(u8, workRecordCursor1F800044, 0x01u) = 1;
 }

@@ -21,7 +21,7 @@ extern u8 D_80145EC8[];
  * this target's map owns it.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* area16813WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 
 /* Pair helper of this payload, still an `asm` span at 0x801F4158: it takes a
  * slot index and a signed mode byte and answers nothing.
@@ -74,7 +74,7 @@ void stateNoInsideCamera(
   s32 base;
 
   found = 0;
-  work = area16813WorkCursor_1F800044;
+  work = workRecordCursor1F800044;
   for (i = 0; i < 3; i++) {
     row = i * 0x140;
     if (D_80145E90[row] == 0) {
@@ -103,7 +103,7 @@ void stateNoInsideCamera(
     found = 1;
   }
   if (!found) {
-    cursor = area16813WorkCursor_1F800044;
+    cursor = workRecordCursor1F800044;
     cursor[2]++;
   }
   func_801F4158(0, 0);

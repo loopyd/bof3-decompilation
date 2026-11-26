@@ -25,7 +25,7 @@ support_sources = [
     "src/bof3/world/stateRampReturnExpiry.c",
     "src/bof3/world/stateGateResetStatus.c",
     "src/bof3/world/redirectMaskedSceneQuad.c",
-    "src/bof3/world/step2SetAdvanceScenario.c",
+    "src/bof3/world/stateStep2ProgressGate.c",
     "src/bof3/world/stateStatesRenderActive.c",
     "src/bof3/world/renderPassTexturedSpread.c",
     "src/bof3/world/renderProjectedDotTile.c",

@@ -10,7 +10,7 @@ extern void func_801F3400(s32 value2e, s32 value30, s32 value0c, s32 value10);
 /* @source 0x801F3284
  * @behavior Overlay step handler: entry 4 of the seven-word handler run based
  * at 0x801F3ED8 that this target's exact dispatcher
- * callStateTable3World03 indexes with the work
+ * dispatchByte1Table3ed8 indexes with the work
  * record's state byte at +1. Adds 0xF00 to the shared seed halfword at
  * 0x801469EA, then steps the published work record: adds 0xF to its word at
  * +0x0C and 0xA to its word at +0x10, and invokes 0x801F3400 with the record's

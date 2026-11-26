@@ -10,7 +10,7 @@ extern u8 D_801462ED; /* @source 0x801462ED @kind unknown */
 /* @source 0x800C1D14
  * @behavior Entry 1 of the fourteen-word handler run based at 0x800C27A0, whose
  * entry 0 is the already-exact sibling at 0x800C1CDC and whose entry 2 is the
- * inert noopHandlerBossBoss03316_800C1D68: the indexed dispatcher
+ * inert noopHandler165: the indexed dispatcher
  * dispatchIndexRun27a0 masks its argument with 0xFF,
  * scales it by four and calls that run, and the installer
  * publishStepDataBoss

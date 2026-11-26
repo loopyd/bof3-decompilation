@@ -56,17 +56,17 @@ extern void func_80150098(s16 arg0, s16 arg1, u32 arg2, const u8* arg3);
 extern void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 
 /* Sprite emitter of this overlay, defined by
- * drawSpritePrimTpageFromGraphTypeShisu00_801D550C.c: the icon kind at the two
+ * renderSpritePrimGraph.c: the icon kind at the two
  * zero-extended coordinates with the flag byte. The original zero-extends both
  * coordinates before these calls, so this translation unit declares the
  * call-site widths. */
-void drawSpritePrimTpageFromGraphTypeShisu00_801D550C(u16 arg0, u16 arg1,
+void renderSpritePrimGraph(u16 arg0, u16 arg1,
                                                       u8 arg2, u8 arg3);
 
 /* Experience-table sum of this overlay, defined by
- * sumLevelExpShisu00_801D5F78.c: the character row and the number of level
+ * sumLevelExp.c: the character row and the number of level
  * entries it adds. */
-extern s32 sumLevelExpShisu00_801D5F78(u8 row, u8 count);
+extern s32 sumLevelExp(u8 row, u8 count);
 
 extern int sprintf(char* buffer, const char* format, ...);
 
@@ -97,10 +97,10 @@ typedef struct ShisuAttributeBlock {
  *   (x+0x33, y+0x2E) with the shade 0xF1 and fills the two value rows inside
  *   it: the experience word at record byte 0x08 formatted "%7d" at
  *   (x+0x4E, y+0x30), and the experience total of the next level at
- *   (x+0x4E, y+0x39), which sumLevelExpShisu00_801D5F78 forms over the
+ *   (x+0x4E, y+0x39), which sumLevelExp forms over the
  *   record level byte 0x06 plus one and which the placeholder "-------"
  *   replaces once that level byte reaches 0x63. Each value row is preceded by
- *   drawSpritePrimTpageFromGraphTypeShisu00_801D550C at (x+0x36, y+0x30) with
+ *   renderSpritePrimGraph at (x+0x36, y+0x30) with
  *   kind 4 and at (x+0x36, y+0x39) with kind 5. The alignment argument of the
  *   text and glyph calls is 7 when the flag byte is nonzero and 0 when it is
  *   zero. Nothing is returned and the 0x58-byte frame keeps $s0 through $s7
@@ -110,7 +110,7 @@ typedef struct ShisuAttributeBlock {
  *   func_801D6E38, which passes the task origin halfwords, the leading byte of
  *   the 0x140-byte record D_80145FCC[task byte 0xC] and the low byte of its own
  *   second argument, right after the equipment-slot block
- *   drawEquipSlotRowsShisu00_801D4AF4 for the same arguments. One payload cmp
+ *   renderEquipSlotRows for the same arguments. One payload cmp
  *   proved these 0x3A0 bytes equal func_801D37AC at 0x801D37AC in
  *   emi/etc/bate/00 and func_801D9254 at 0x801D9254 in emi/etc/shop/00 apart
  *   from eight words - the low halves of the two payload caption and format
@@ -165,16 +165,16 @@ void renderMemberAttributesExp(s16 x, s16 y,
   func_8014F800((s16)(x + 0x4B), (s16)(y + 0x10), align, 4,
                 (u32)(D_801D9BA8 + 0x12));
   func_801AED54((s16)(x + 0x33), (s16)(y + 0x2E), 0x56, 0x14, 0xF1);
-  drawSpritePrimTpageFromGraphTypeShisu00_801D550C((u16)(x + 0x36),
+  renderSpritePrimGraph((u16)(x + 0x36),
                                                    (u16)(y + 0x30), 4, flag);
   sprintf((char*)D_80145AD4, D_801D0C28, *(s32*)&D_80144970[index * 164]);
   func_80150098((s16)(x + 0x4E), (s16)(y + 0x30), align, D_80145AD4);
-  drawSpritePrimTpageFromGraphTypeShisu00_801D550C((u16)(x + 0x36),
+  renderSpritePrimGraph((u16)(x + 0x36),
                                                    (u16)(y + 0x39), 5, flag);
   level = D_8014496E[index * 164];
   if (level < 0x63) {
     sprintf((char*)D_80145AD4, D_801D0C28,
-            sumLevelExpShisu00_801D5F78(index, (u8)(level + 1)));
+            sumLevelExp(index, (u8)(level + 1)));
     rowY = y;
   } else {
     sprintf((char*)D_80145AD4, D_801D0C2C);

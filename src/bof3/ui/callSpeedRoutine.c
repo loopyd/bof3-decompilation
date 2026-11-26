@@ -10,7 +10,7 @@ extern u8 func_801BA678(void);
  * 0x1F800044: a zero speed byte calls func_801B95E0 and a non-zero speed byte
  * calls func_801BA678, and the byte status returned by the selected routine is
  * returned. Both callees take no argument, unlike the request-id pair selected
- * by dispatchWorkHandlerBySpeedByte_game00_801B4494.
+ * by dispatchWorkSpeedHandler.
  * @status exact
  * @match 100.00
  * @residual none

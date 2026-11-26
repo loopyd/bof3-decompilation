@@ -54,7 +54,7 @@ segments:
     - '@behavior: Overlay handler: writes zero to the shared battle state byte at 0x80146375, clearing it, and returns. Entry 0 of this overlay''s handler table at 0x800C1D20.'
   - - 468
     - c
-    - noopHandlerBossBoss02116_800C19D4
+    - noopHandler146
   - - 476
     - c
     - noopHandler58
@@ -76,10 +76,10 @@ segments:
     - noopHandler59
   - - 704
     - c
-    - noopHandlerBossBoss02116_800C1AC0
+    - noopHandler147
   - - 712
     - c
-    - noopHandlerBossBoss02116_800C1AC8
+    - noopHandler148
   - - 720
     - c
     - publishBattleHooks16

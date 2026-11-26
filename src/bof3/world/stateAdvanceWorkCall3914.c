@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area16813WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 
 /* @source 0x801F3914 @kind function */
 extern void func_801F3914(void);
@@ -19,7 +19,7 @@ void stateAdvanceWorkCall3914(void) {
   u8* work;
   s32 offset;
 
-  work = area16813WorkCursor_1F800044;
+  work = workRecordCursor1F800044;
   offset = FIELD_REF(u16, work, 0x30) + 0x10;
   FIELD_REF(u16, work, 0x30) = offset;
   if ((s16)offset >= 0x80) {

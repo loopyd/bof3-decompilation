@@ -8,7 +8,7 @@ splat = "config/targets/emi/world03/area123/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/initArea12313State.c",
+    "src/bof3/world/stateEntryTupleMode14.c",
 ]
 support_sources = [
     "src/bof3/support/area123_13_psyq.c",

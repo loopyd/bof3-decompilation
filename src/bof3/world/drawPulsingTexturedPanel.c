@@ -19,7 +19,7 @@ typedef struct Area15213PanelWork {
 
 /* Scratchpad cell publishing this overlay's work record. */
 /* @source 0x1F800044 @kind unknown */
-extern Area15213PanelWork* area15213WorkCursor_1F800044;
+extern Area15213PanelWork* workRecordCursor1F800044;
 
 /* Shared distance-gated frame counter and gate byte. */
 /* @source 0x80143E6C @kind data */
@@ -111,7 +111,7 @@ void drawPulsingTexturedPanel(void) {
   long depth;
   long flag;
 
-  first = (volatile Area15213PanelWork*)area15213WorkCursor_1F800044;
+  first = (volatile Area15213PanelWork*)workRecordCursor1F800044;
   if (first->unk_02 == 0) {
     u8 count;
     u8 next;
@@ -125,14 +125,14 @@ void drawPulsingTexturedPanel(void) {
     return;
   }
 
-  scratch = area15213WorkCursor_1F800044;
+  scratch = workRecordCursor1F800044;
   layer = (s32)scratch->unk_0b - 2;
   scratch->unk_38 = scratch->unk_38 + 0x800 + (layer << 10);
   if (D_80104001 + 8 < FIELD_REF(s16, scratch, 0x3au)) {
     FIELD_REF(s16, scratch, 0x3au) = -8;
   }
 
-  scratch = area15213WorkCursor_1F800044;
+  scratch = workRecordCursor1F800044;
   if (abs(D_8014930A - FIELD_REF(s16, scratch, 0x36u)) >= 0x1a &&
       abs(D_8014930E - FIELD_REF(s16, scratch, 0x3au)) >= 0x1a) {
     return;
@@ -150,8 +150,8 @@ void drawPulsingTexturedPanel(void) {
   SPAD_REF(s16, 0x30u) = -0x300;
 
   half = ((2 - layer) * 256) + abs(0xf - (D_80143E6C & 0x1f));
-  x = (area15213WorkCursor_1F800044->unk_34 >> 9) - 0x3fc0;
-  y = (area15213WorkCursor_1F800044->unk_38 >> 9) - 0x3fc0;
+  x = (workRecordCursor1F800044->unk_34 >> 9) - 0x3fc0;
+  y = (workRecordCursor1F800044->unk_38 >> 9) - 0x3fc0;
 
   vertices[0].vx = x - half;
   SPAD_REF(s16, 0x16u) = y - half;
@@ -177,9 +177,9 @@ void drawPulsingTexturedPanel(void) {
     }
     for (column = 0; column < (2 - layer) * 4; column++) {
       record = func_801559AC(
-          FIELD_REF(s16, area15213WorkCursor_1F800044, 0x36u) - 2 + layer +
+          FIELD_REF(s16, workRecordCursor1F800044, 0x36u) - 2 + layer +
               column,
-          FIELD_REF(s16, area15213WorkCursor_1F800044, 0x3au) - 2 + layer + row);
+          FIELD_REF(s16, workRecordCursor1F800044, 0x3au) - 2 + layer + row);
       if (record == 0) {
         continue;
       }
@@ -214,7 +214,7 @@ void drawPulsingTexturedPanel(void) {
       *(u8*)(primitive + 0x0d) =
           D_801F4E34[layer] + row * D_801F4E38[layer] -
           (D_801F4E38[layer] *
-           FIELD_REF(u16, area15213WorkCursor_1F800044, 0x38u)) /
+           FIELD_REF(u16, workRecordCursor1F800044, 0x38u)) /
               0x10000;
       *(u8*)(primitive + 0x14) =
           D_801F4E38[layer] +
@@ -222,7 +222,7 @@ void drawPulsingTexturedPanel(void) {
       *(u8*)(primitive + 0x15) =
           D_801F4E34[layer] + row * D_801F4E38[layer] -
           (D_801F4E38[layer] *
-           FIELD_REF(u16, area15213WorkCursor_1F800044, 0x38u)) /
+           FIELD_REF(u16, workRecordCursor1F800044, 0x38u)) /
               0x10000;
       *(u8*)(primitive + 0x1c) =
           D_801F4E30[layer] + column * D_801F4E38[layer];
@@ -230,7 +230,7 @@ void drawPulsingTexturedPanel(void) {
           D_801F4E38[layer] +
           (D_801F4E34[layer] + row * D_801F4E38[layer] -
            (D_801F4E38[layer] *
-            FIELD_REF(u16, area15213WorkCursor_1F800044, 0x38u)) /
+            FIELD_REF(u16, workRecordCursor1F800044, 0x38u)) /
                0x10000);
       *(u8*)(primitive + 0x24) =
           D_801F4E38[layer] +
@@ -239,14 +239,14 @@ void drawPulsingTexturedPanel(void) {
           D_801F4E38[layer] +
           (D_801F4E34[layer] + row * D_801F4E38[layer] -
            (D_801F4E38[layer] *
-            FIELD_REF(u16, area15213WorkCursor_1F800044, 0x38u)) /
+            FIELD_REF(u16, workRecordCursor1F800044, 0x38u)) /
                0x10000);
 
       func_80155A08(
-          (FIELD_REF(s16, area15213WorkCursor_1F800044, 0x36u) - 2 + layer +
+          (FIELD_REF(s16, workRecordCursor1F800044, 0x36u) - 2 + layer +
            column)
               << 16,
-          (FIELD_REF(s16, area15213WorkCursor_1F800044, 0x3au) - 2 + layer +
+          (FIELD_REF(s16, workRecordCursor1F800044, 0x3au) - 2 + layer +
            row)
               << 16,
           1, 0x28);

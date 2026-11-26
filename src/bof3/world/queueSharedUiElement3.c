@@ -5,7 +5,7 @@
  * original loads the cell once and keeps no copy of the pointer.
  * @source 0x1F800044 @kind data
  */
-extern u8* area16813WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 
 /* Six-entry byte row table of this payload's own textbin tail at 0x801F4B2C:
  * entry k is the second argument the body hands to the shared world-marker
@@ -72,5 +72,5 @@ void queueSharedUiElement(
   for (i = 0; i < 6; i++) {
     func_801A4BC0(0x10, D_801F4B30[i], 0x89);
   }
-  area16813WorkCursor_1F800044[1] = 1;
+  workRecordCursor1F800044[1] = 1;
 }

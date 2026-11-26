@@ -6,7 +6,7 @@
  * of folding its address into one base register.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* area15213WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 
 /* Shared main-executable lookup helper: this target's generated
  * undefined_funcs_auto row binds the address-anchored name, and the byte-equal
@@ -43,12 +43,12 @@ void func_8014DD3C(u16 entry);
  */
 void prepareWorkRecordLookup1(
     void) {
-  area15213WorkCursor_1F800044[0x24] = 0x80;
+  workRecordCursor1F800044[0x24] = 0x80;
   func_8014DD3C(0x1D1);
-  area15213WorkCursor_1F800044[0x29] = 5;
-  area15213WorkCursor_1F800044[0x2A] = 0;
-  area15213WorkCursor_1F800044[0x5D] = 0;
-  area15213WorkCursor_1F800044[0x5E] = 0;
-  area15213WorkCursor_1F800044[0x5F] = 0;
-  area15213WorkCursor_1F800044[0x01] = 1;
+  workRecordCursor1F800044[0x29] = 5;
+  workRecordCursor1F800044[0x2A] = 0;
+  workRecordCursor1F800044[0x5D] = 0;
+  workRecordCursor1F800044[0x5E] = 0;
+  workRecordCursor1F800044[0x5F] = 0;
+  workRecordCursor1F800044[0x01] = 1;
 }

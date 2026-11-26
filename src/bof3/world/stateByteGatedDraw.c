@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x801454F2 @kind unknown */
 extern u8 D_801454F2;
 /* @source 0x80143BB0 @kind unknown */
@@ -31,19 +31,19 @@ void stateByteGatedDraw(
   u8* record;
   u8* emitter;
 
-  record = area12114WorkCursor_1F800044;
+  record = scratchpadWorkRecord;
   if (record[0x0B] == 0) {
     record[9]++;
-    record = area12114WorkCursor_1F800044;
+    record = scratchpadWorkRecord;
     if (record[9] >= 0x5A) {
       record[0x0B]++;
     }
   }
-  if ((D_801454F2 != 0 && area12114WorkCursor_1F800044[0x0B] != 0) ||
+  if ((D_801454F2 != 0 && scratchpadWorkRecord[0x0B] != 0) ||
       D_80143BB0 == 2 || (D_80146258 & 0x100u) != 0) {
-    area12114WorkCursor_1F800044[3]++;
+    scratchpadWorkRecord[3]++;
   }
-  emitter = area12114WorkCursor_1F800044;
+  emitter = scratchpadWorkRecord;
   renderSpriteMainRam(
       0x5C, FIELD_REF(s16, emitter, 0x30));
 }

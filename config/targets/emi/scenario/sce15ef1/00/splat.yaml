@@ -37,43 +37,43 @@ segments:
     - '@behavior: Entry 0 of the overlay step-handler code-pointer run at 0x801D3918: copies the shared position triple at 0x80145EC4/0x80145EC8/0x80145ECC into the scratchpad work object origin words at +0x64/+0x68/+0x6C with the third word lifted by 0x800000, arms the countdown byte at +0x9 with 8, clears the halfword at +0x2E, re-reads the pointer cell 0x1F800044, advances work byte +0x1 through that reloaded pointer and dispatches sound cue 0x20B, which moves the dispatcher func_801D0C04 on to entry 1 on the next frame.'
   - - 192
     - c
-    - advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0
-    - '@source: src/bof3/scenario/advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0.c'
+    - advanceWorkHalfwordTick
+    - '@source: src/bof3/scenario/advanceWorkHalfwordTick.c'
     - '@behavior: Entry 1 of the overlay step-handler run at 0x801D3918: adds 0x20 to the unsigned work halfword at +0x2E and stores it back, hands the origin block at +0x64, that value as a signed halfword and the flag mask 6 to the overlay helper 0x801D147C, ticks countdown byte +0x9 down by one, and when it reaches zero re-arms it with 0x40 and advances work byte +0x1 by one.'
   - - 340
     - c
-    - invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54
-    - '@source: src/bof3/scenario/invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54.c'
+    - callOriginHelperCountdown
+    - '@source: src/bof3/scenario/callOriginHelperCountdown.c'
     - '@behavior: Entry 2 of the overlay step-handler run at 0x801D3918: hands the work object behind scratchpad pointer cell 0x1F800044 to the overlay helper 0x801D147C as (origin block at +0x64, signed halfword at +0x2E, flag mask 6), ticks countdown byte +0x9 down by one, and when it reaches zero re-arms it with 0x20 and advances work byte +0x1 by one.'
   - - 472
     - c
-    - advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenResetRecordTableScenarioSce15ef100_801D0DD8
-    - '@source: src/bof3/scenario/advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenResetRecordTableScenarioSce15ef100_801D0DD8.c'
+    - decayHalfwordResetRecords
+    - '@source: src/bof3/scenario/decayHalfwordResetRecords.c'
     - '@behavior: Entry 3 of the overlay step-handler run at 0x801D3918: subtracts 6 from the work halfword +0x2E, adds 0xC0000 to the origin word +0x6C, hands the origin block at +0x64, the signed halfword at +0x2E and the flag mask 6 to the overlay helper 0x801D147C, ticks countdown byte +0x9 down by one, and when it reaches zero re-arms it with 0x20, clears work byte +0x6, advances work byte +0x1, clears the active flags of the 0x18-byte-stride record table at 0x801D39A8, copies the origin triple +0x64/+0x68/+0x6C into the position triple +0x34/+0x38/+0x3C, re-seeds the first 0x10 of the 0x2C-byte-stride records at 0x801D3B28 through 0x801D1F68 and clears the halfword pair +0x28/+0x2A of the remaining 0x10.'
   - - 784
     - c
-    - advanceWorkByte6ClaimRecordInvokeTwoHelpersAndOnProgress20RestoreMotionStateAndAdvanceWorkByte1ScenarioSce15ef100_801D0F10
-    - '@source: src/bof3/scenario/advanceWorkByte6ClaimRecordInvokeTwoHelpersAndOnProgress20RestoreMotionStateAndAdvanceWorkByte1ScenarioSce15ef100_801D0F10.c'
+    - claimRestoreMotionState
+    - '@source: src/bof3/scenario/claimRestoreMotionState.c'
     - '@behavior: Entry 4 of the overlay step-handler run at 0x801D3918: advances the scratchpad work object frame byte +0x6 and calls the record claim 0x801D19C8 when the pre-increment value is a multiple of four, calls 0x801D2088 and 0x801D1A60, and when the shared scenario progress byte reads 0x14 copies the object origin triple +0x64/+0x68/+0x6C into its position triple +0x18/+0x1C/+0x20, clears the step triple +0x0C/+0x10/+0x14, re-arms each origin word as (0x2F8000, 0x278000, 0x0F000000 minus its own old value) >> 7 and advances work byte +0x1.'
   - - 1004
     - c
-    - advanceWorkByte6ClaimRecordInvokeTwoHelpersArmCountdown32DispatchCue209AndAdvanceWorkByte1ScenarioSce15ef100_801D0FEC
-    - '@source: src/bof3/scenario/advanceWorkByte6ClaimRecordInvokeTwoHelpersArmCountdown32DispatchCue209AndAdvanceWorkByte1ScenarioSce15ef100_801D0FEC.c'
+    - claimRecordArmCue
+    - '@source: src/bof3/scenario/claimRecordArmCue.c'
     - '@behavior: Entry 5 of the overlay step-handler run at 0x801D3918: advances the scratchpad work object frame byte +0x6 and calls the record claim 0x801D19C8 when the pre-increment value is a multiple of four, calls 0x801D2088 and 0x801D1A60, arms the object countdown byte +0x9 with 0x20, advances work byte +0x1 and dispatches sound cue 0x209.'
   - - 1132
     - c
-    - drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C
-    - '@source: src/bof3/scenario/drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C.c'
+    - drawIntegrateHeadDecay
+    - '@source: src/bof3/scenario/drawIntegrateHeadDecay.c'
     - '@behavior: Entry 6 of the overlay step-handler run at 0x801D3918: advances the scratchpad work object frame byte +0x6 and calls the record claim 0x801D19C8 when the pre-increment value is a multiple of four, calls 0x801D1A60 then 0x801D2088, draws one semi-transparent quad from the object head point +0x18 to the point +0x34 with intensity 0x40, adds the origin triple +0x64/+0x68/+0x6C into the step triple +0x0C/+0x10/+0x14 and that step into the head point, re-seeds the head point with 0x2F8000/0x278000/0x0F000000 when its first word reads at or below 0x2F7FFF, subtracts 4 from the intensity byte +0x3 and ticks countdown byte +0x9 down by one; when that countdown reaches zero it exchanges the head point with +0x34/+0x38/+0x3C, re-seeds 0x10 consecutive 0x2C-byte effect records of the table at 0x801D3DE8 through 0x801D1F68, exchanges the two points back, re-arms the countdown with 0x80 and advances work byte +0x1.'
   - - 1696
     - c
-    - claimRecordExchangeHeadStepPairTwiceDrawBeamThenOnProgress23ArmIntensity128Countdown8DispatchCue522AndAdvanceWorkByte1ScenarioSce15ef100_801D12A0
-    - '@source: src/bof3/scenario/claimRecordExchangeHeadStepPairTwiceDrawBeamThenOnProgress23ArmIntensity128Countdown8DispatchCue522AndAdvanceWorkByte1ScenarioSce15ef100_801D12A0.c'
+    - exchangeHeadDrawQuad
+    - '@source: src/bof3/scenario/exchangeHeadDrawQuad.c'
     - '@behavior: Entry 7 of the overlay step-handler code-pointer run at 0x801D3918: advances the scratchpad work object frame byte +0x6 and, when the pre-increment value is a multiple of four, claims a work record through 0x801D19C8, exchanges the head triple +0x18/+0x1C/+0x20 with the point triple +0x34/+0x38/+0x3C word by word, claims a second record through the same helper and exchanges the two triples back; it then calls 0x801D1A60 and 0x801D2088, draws one semi-transparent quad from the head triple to the point triple with intensity 0x40, and only when the shared scenario progress byte 0x80146864 reads 0x17 it arms the intensity byte +0x3 with 0x80 and the countdown byte +0x9 with 8, advances work byte +0x1 and dispatches sound cue 0x20A.'
   - - 2036
     - c
-    - decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateWhenCountdown9ExpiresScenarioSce15ef100_801D13F4
-    - '@source: src/bof3/scenario/decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateWhenCountdown9ExpiresScenarioSce15ef100_801D13F4.c'
+    - decayIntensityDrawQuad
+    - '@source: src/bof3/scenario/decayIntensityDrawQuad.c'
     - '@behavior: Entry 8 of the overlay step-handler code-pointer run at 0x801D3918: subtracts 0x10 from the unsigned work halfword +0x2E and 8 from the intensity byte +0x3 through one load of the scratchpad pointer cell 0x1F800044, calls the overlay helper 0x801D1A60, draws one semi-transparent quad from the work object head point +0x18 to the point +0x34 with the decayed intensity byte +0x3, ticks countdown byte +0x9 down by one through a third load of that cell and, when it reaches zero, calls the resident reset helper 0x80196070.'
   - - 2172
     - c
@@ -163,8 +163,8 @@ segments:
     - '@behavior: Entry 6 of the overlay step-handler code-pointer run at 0x801D3954: arms the scratchpad work object countdown byte +0x9 with 0x14, clears the word pair +0x0C/+0x10 of its step triple and the word pair +0x18/+0x1C of its head point through the first pointer-cell load, advances work byte +0x1 through a second load of that cell, and dispatches sound cue 0x208 through the resident cue dispatcher 0x8015DF18.'
   - - 8192
     - c
-    - advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00
-    - '@source: src/bof3/scenario/advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00.c'
+    - advanceHeadEmitQuad
+    - '@source: src/bof3/scenario/advanceHeadEmitQuad.c'
     - '@behavior: Entry 7 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it adds 0x200 to the work object head word +0x18 and 0x100 to +0x1C, adds that head pair into the step word pair +0x0C/+0x10, hands the work object point at +0x34 together with the updated step pair to the overlay quad ring emitter 0x801D36BC, then re-reads that cell and through the second load ticks countdown byte +0x9 down by one and calls the resident reset helper 0x80196070 when it reaches zero.'
   - - 8340
     - c
@@ -173,8 +173,8 @@ segments:
     - '@behavior: Entry 8 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it clears the work object step word pair +0x0C/+0x10 and head point word pair +0x18/+0x1C, then runs twenty integration passes that add 0x100 to the head word +0x18 and 0x200 to +0x1C and fold the updated head pair into the step pair, re-reads that cell and through the second load arms countdown byte +0x9 with 0x14 and negates the accumulated step pair, then re-reads that cell again and through the third load advances work byte +0x1 and dispatches sound cue 0x208.'
   - - 8540
     - c
-    - drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C
-    - '@source: src/bof3/scenario/drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C.c'
+    - retreatHeadEmitQuad
+    - '@source: src/bof3/scenario/retreatHeadEmitQuad.c'
     - '@behavior: Entry 9 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it hands the work object point at +0x34 and its word pair +0x0C/+0x10 to the overlay quad ring emitter 0x801D36BC, then re-reads that cell and through one pointer ticks countdown byte +0x9 down by one, adds the head point pair +0x18/+0x1C into the word pair +0x0C/+0x10, subtracts 0x100 from +0x18 and 0x200 from +0x1C, and when the countdown reaches zero calls the resident reset helper 0x80196070.'
   - - 8684
     - c

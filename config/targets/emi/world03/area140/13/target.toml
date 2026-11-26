@@ -22,7 +22,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/world/incrementNonNegativeDraw4.c",
-    "src/bof3/world/stepWorkHalfword3World03.c",
+    "src/bof3/world/stepWorkHalfword3.c",
     "src/bof3/support/area140_13_psyq.c",
     "src/bof3/world/area14013DispatchTables.c",
     "src/bof3/world/armCountdownAdvanceWork.c",

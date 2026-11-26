@@ -9,10 +9,10 @@ load_address = 0x800C1800
 
 sources = [
     "src/bof3/boss/callStateByte1Table523.c",
-    "src/bof3/boss/dispatchIndexedHandlerBossBoss02416_800C18A0.c",
+    "src/bof3/boss/dispatchIndexedHandler6.c",
     "src/bof3/boss/callIndexedHandler26.c",
     "src/bof3/boss/callStateByte1Table8.c",
-    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02416_800C1848.c",
+    "src/bof3/boss/publishWorkStepHandler5.c",
     "src/bof3/boss/publishWorkStepFlag8.c",
 ]
 support_sources = [
@@ -25,9 +25,9 @@ support_sources = [
     "src/bof3/boss/noopHandler126.c",
     "src/bof3/boss/noopHandler88.c",
     "src/bof3/boss/noopHandler72.c",
-    "src/bof3/boss/noopHandlerBossBoss02416_800C18E8.c",
+    "src/bof3/boss/noopHandler152.c",
     "src/bof3/boss/noopHandler69.c",
-    "src/bof3/boss/noopHandlerBossBoss02416_800C18D8.c",
+    "src/bof3/boss/noopHandler151.c",
     "src/bof3/support/boss024_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss024_16_psyq.c"

@@ -12,7 +12,7 @@ typedef void (*Boss03113Handler)(void);
 void func_800C1A08(void); /* @source 0x800C1A08 */
 void publishOwnerRequestResource(
     void); /* @source 0x800C1A6C */
-s32 zeroResultBossBoss03113_800C1A00(void); /* @source 0x800C1A00 */
+s32 zeroResult35(void); /* @source 0x800C1A00 */
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle step
  * loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -26,7 +26,7 @@ extern Boss03113Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * slots: func_800C1A08 into 0x801463A4, the battle setup hook
  * publishOwnerRequestResource
  * into 0x801463A8, and the zero-result accessor
- * zeroResultBossBoss03113_800C1A00 into 0x801463AC; that accessor's s32 result
+ * zeroResult35 into 0x801463AC; that accessor's s32 result
  * is dropped by the void slot type. Each slot takes a `lui`/`addiu` pair
  * materializing the published address into $v0 and one `sw` through $at, in
  * ascending slot order, in a leaf body with no frame that returns immediately.
@@ -46,5 +46,5 @@ extern Boss03113Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 void publishHooksOwnerRequest(void) {
   D_801463A4 = func_800C1A08;
   D_801463A8 = publishOwnerRequestResource;
-  D_801463AC = (Boss03113Handler)zeroResultBossBoss03113_800C1A00;
+  D_801463AC = (Boss03113Handler)zeroResult35;
 }

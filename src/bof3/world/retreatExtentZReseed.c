@@ -56,7 +56,7 @@ void stateWorkTableByte0(void);
  * 0x801F4E04..0x801F4E28 names this address, and that run is the handler table
  * this target's exact area18813DispatchTables.c binds as
  * `void (*D_801F4E04[])(void)` and indexes with the work byte at +0x1 through
- * its exact dispatcher dispatchStateByte1Table4e04World04Area18813_801F32C0,
+ * its exact dispatcher dispatchWorkByte1Run3,
  * so the run names this function's position among the overlay's progress
  * handlers. The original bytes at 0x801F3484 are the head `lui 0x1F80` plus
  * lw 0x44, addiu $sp,$sp,-0x20 with sw $ra,0x18, $s1,0x14 and $s0,0x10, lw

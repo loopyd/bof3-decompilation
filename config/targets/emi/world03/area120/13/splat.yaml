@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 24
     - c
-    - callStateTable43World03
+    - dispatchByte1Table43c0
     - '@source: src/bof3/world/area12013DispatchTables.c'
   - - 92
     - c
@@ -44,8 +44,8 @@ segments:
     - '@behavior: Step 1 of the run dispatched through the handler table at 0x801F43C0, whose second pointer word names this body. It runs four consecutive claims through the target-local claim pass at 0x801F3630 and then the target-local effect sweep at 0x801F36B0, ignoring every result, then decrements the unsigned halfword at +0x32 of the work record published through the scratchpad pointer cell 0x1F800044 and stores the decremented value back: while that halfword reads non-zero the handler returns. On the frame it reaches zero the handler stores 1 into work record byte +0x06, the byte the sweep reads as its state step, reads the pointer cell again, refills the halfword at +0x32 with 0x3C and advances work record byte 0x01 by one, which sends the next frame to entry 2 of the same table, the handler at 0x801F2D40. Takes no arguments and returns nothing.'
   - - 320
     - c
-    - step2SetAdvanceScenario
-    - '@source: src/bof3/world/step2SetAdvanceScenario.c'
+    - stateStep2ProgressGate
+    - '@source: src/bof3/world/stateStep2ProgressGate.c'
     - '@behavior: Step 2 of the run the handler table at 0x801F43C0 dispatches. The body runs the target-local work-table routine at 0x801F36B0 and ignores its result, then, only when the shared scenario progress byte at 0x80146864 equals 0x11, queues cue 0x203 and then cue 0x202 through the same-binary dispatcher func_8015DF18, stores 2 into byte 0x06 of the scratchpad work record published through pointer cell 0x1F800044 and advances that record byte 0x01, the byte the table dispatcher indexes. Takes no arguments and returns nothing.'
   - - 432
     - c

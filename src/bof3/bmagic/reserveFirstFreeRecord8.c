@@ -1,6 +1,6 @@
 #include "base/types.h"
 
-extern u8 magic21303RecordFlags[]; /* @source 0x801EF8C0 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801EF8C0 @kind data */
 
 /* @source 0x801EF7EC
  * @behavior Reserves the first of the 64 records in the pool at 0x801EF8C0
@@ -24,9 +24,9 @@ u8 reserveFirstFreeRecord(void) {
 
     for (index = 0; index < 0x40; index++) {
         offset = index * 0x78;
-        flags = magic21303RecordFlags[offset];
+        flags = stateRecordFlags[offset];
         if (!(flags & 1)) {
-            magic21303RecordFlags[offset] = flags | 1;
+            stateRecordFlags[offset] = flags | 1;
             return index;
         }
     }

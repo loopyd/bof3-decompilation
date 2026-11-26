@@ -9,7 +9,7 @@ typedef void (*Boss03416Handler)(void);
  * immediately. The third returns a zero result, which the void slot type
  * drops. */
 void setupModeTupleFlag(void);
-void noopHandlerBossBoss03416_800C23CC(void);
+void noopHandler167(void);
 s32  zeroResult25(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -24,7 +24,7 @@ extern Boss03416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * setupModeTupleFlag (mode transition: tests the
  * 0x2 bit of D_80146328 and, while it is set, stores 5 into the byte at
  * D_80146875 and calls initModeTuple510, and otherwise calls initModeTuple520)
- * into 0x801463A4, the inert handler noopHandlerBossBoss03416_800C23CC into
+ * into 0x801463A4, the inert handler noopHandler167 into
  * 0x801463A8, and the zero-result accessor zeroResult25
  * into 0x801463AC; the accessor's s32 result is dropped by the void slot type.
  * Same trio shape as the sibling installers of this archive family, which write
@@ -38,6 +38,6 @@ extern Boss03416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooks22(void) {
   D_801463A4 = setupModeTupleFlag;
-  D_801463A8 = noopHandlerBossBoss03416_800C23CC;
+  D_801463A8 = noopHandler167;
   D_801463AC = (Boss03416Handler)zeroResult25;
 }

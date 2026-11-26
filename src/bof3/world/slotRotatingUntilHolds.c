@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-s32 classifyDirectionPointWorld03(s32 x, s32 y, u8 slot);
+s32 classifyPointDirection(s32 x, s32 y, u8 slot);
 s32 func_801B0E44(void);
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
@@ -26,7 +26,7 @@ s32 slotRotatingUntilHolds(
 
   if (slot != 0xFF) {
     SPAD_PTR_SLOT(u8, 0x44)[8] =
-        classifyDirectionPointWorld03(x, y, slot);
+        classifyPointDirection(x, y, slot);
     for (i = 0; i < 8; i++) {
       if ((func_801B0E44() & 0xFF) == 0) {
         if (func_801BDE14(x, y, 0) == -1) {

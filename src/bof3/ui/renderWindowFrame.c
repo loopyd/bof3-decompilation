@@ -9,7 +9,7 @@ extern void drawWindowTilePiece(s16 x, s16 y, u8 piece);
  * bottom-right corners, thirty-three repeated top and bottom edge pieces on an
  * eight-pixel horizontal step, and twenty repeated side pieces on an
  * eight-pixel vertical step, for a frame that spans 0x118 by 0xB0. The only
- * in-image caller, renderCommuListScreen, passes (20, 45), one pixel up and left of
+ * in-image caller, renderEntryListScreen, passes (20, 45), one pixel up and left of
  * the 0x114 by 0xAA panel it fills just before the frame. Every coordinate is
  * truncated to sixteen bits per primitive. No other state is read or written.
  * @status exact

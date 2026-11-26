@@ -12,7 +12,7 @@ typedef void (*Boss03216Handler)(void);
 void func_800C1A08(void); /* @source 0x800C1A08 */
 void publishOwnerRecordResource(
     void); /* @source 0x800C1BEC */
-s32 zeroResultBossBoss03216_800C1A00(void); /* @source 0x800C1A00 */
+s32 zeroResult36(void); /* @source 0x800C1A00 */
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -28,7 +28,7 @@ extern Boss03216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * publishOwnerRecordResource (clears the
  * 0x40 flag of owner record 0, publishes the owner-0 record into 0x80146884 and
  * the scratchpad cursor 0x1F800044 and requests resource 0) into 0x801463A8,
- * and the zero-result accessor zeroResultBossBoss03216_800C1A00 into
+ * and the zero-result accessor zeroResult36 into
  * 0x801463AC; that accessor's s32 result is dropped by the void slot type. Same
  * trio shape as the exact sibling installers of this archive family, which
  * write the same three slots in the same order and differ only in the published
@@ -42,5 +42,5 @@ extern Boss03216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 void publishHooksOwnerRecord(void) {
   D_801463A4 = func_800C1A08;
   D_801463A8 = publishOwnerRecordResource;
-  D_801463AC = (Boss03216Handler)zeroResultBossBoss03216_800C1A00;
+  D_801463AC = (Boss03216Handler)zeroResult36;
 }

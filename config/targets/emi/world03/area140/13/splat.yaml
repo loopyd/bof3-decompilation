@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 52
     - c
-    - callStateTable47World03
+    - callDrawStepTable
     - '@source: src/bof3/world/area14013DispatchTables.c'
   - - 120
     - asm
@@ -84,8 +84,8 @@ segments:
     - func_801F37C4
   - - 3268
     - c
-    - stepWorkHalfword3World03
-    - '@source: src/bof3/world/stepWorkHalfword3World03.c'
+    - stepWorkHalfword3
+    - '@source: src/bof3/world/stepWorkHalfword3.c'
     - '@behavior: Subtracts 16 from work halfword +0x3E, advances state on expiry and calls 0x801F3950.'
   - - 3408
     - asm

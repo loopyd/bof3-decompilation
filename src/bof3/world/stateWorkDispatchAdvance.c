@@ -13,7 +13,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  *           three words hold this address, 0x801F312C at 0x801F3E04 and
  *           0x801F31EC; the table is indexed with the work record state byte
  *           at +1 by this target exact dispatcher
- *           dispatchStateByte1Table3e00WorldWorld03Area13213_801F307C.
+ *           dispatchByte1Table3e00.
  *           Loads the published work record through the pointer cell
  *           0x1F800044 and copies its saved words at +0x34, +0x38 and +0x3C
  *           into the record words at +0x0C, +0x10 and +0x14, starting the

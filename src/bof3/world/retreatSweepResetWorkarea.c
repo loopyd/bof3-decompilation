@@ -11,7 +11,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x801F44C0
  * @behavior Entry 2 of the work-byte-1 handler table based at 0x801F5828,
  * dispatched by this target's exact
- * callStateTable5828World03 with the state byte at
+ * callSeedStepTable with the state byte at
  * +1 of the work record published at the scratchpad pointer cell 0x1F800044.
  * The body decrements the record countdown byte at +0x09 and does not re-arm
  * it. On the nonzero path it reloads the cell and sweeps the halfword at +0x20

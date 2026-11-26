@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/world/statePlayCameraInside.c",
     "src/bof3/world/area13913DispatchTables.c",
     "src/bof3/world/decrementMinusFfDraw3.c",
-    "src/bof3/world/noopWorld03Area13913_801F3A7C.c",
+    "src/bof3/world/noopHandler10.c",
     "src/bof3/world/probeAxisFoundOctant.c",
     "src/bof3/world/statePairsTablesInside.c",
     "src/bof3/world/setTriggerRecordFlag.c",

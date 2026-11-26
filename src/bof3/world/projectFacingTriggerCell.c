@@ -11,7 +11,7 @@ extern u8 D_80144F28;
  * overlay read it as a halfword record.
  * @source 0x1F800044 @kind data
  */
-extern u16 *g_WorkRecordWorld03Area14013;
+extern u16 *scratchpadWorkRecord;
 
 /* Byte +8 of the shared work-record run based at 0x80145E90: the mode byte the
  * neighbouring lifts copy into work byte 8.
@@ -182,10 +182,10 @@ void projectFacingTriggerCell(void) {
     s16 row;
 
     if (func_8015B5D4(&D_80144F28, 0x66) != 0) {
-        ((u8 *)g_WorkRecordWorld03Area14013)[8] = D_80145E98;
-        offset = ((u8 *)g_WorkRecordWorld03Area14013)[8] * 2;
-        col = g_WorkRecordWorld03Area14013[0x1B] + D_80181B00[offset];
-        row = g_WorkRecordWorld03Area14013[0x1D] + D_80181B01[offset];
+        ((u8 *)scratchpadWorkRecord)[8] = D_80145E98;
+        offset = ((u8 *)scratchpadWorkRecord)[8] * 2;
+        col = scratchpadWorkRecord[0x1B] + D_80181B00[offset];
+        row = scratchpadWorkRecord[0x1D] + D_80181B01[offset];
         if (D_80145E99 != 0 && D_80145FBB == 1) {
             if ((u8)checkMoveProbeCode(
                     col, row) == 0) {
@@ -193,19 +193,19 @@ void projectFacingTriggerCell(void) {
                     if ((u16)(row - 6) < 0xB) {
                         D_80148210[7] = 2;
                         func_801ABBA8(D_80148210,
-                                      ((u8 *)g_WorkRecordWorld03Area14013)[8]);
+                                      ((u8 *)scratchpadWorkRecord)[8]);
                     }
                 }
             }
         } else {
-            func_8015BAC4(((u8 *)g_WorkRecordWorld03Area14013)[8]);
+            func_8015BAC4(((u8 *)scratchpadWorkRecord)[8]);
         }
-        index = (((u8 *)g_WorkRecordWorld03Area14013)[8] & 7) >> 1;
+        index = (((u8 *)scratchpadWorkRecord)[8] & 7) >> 1;
         if ((D_80145AA8 & D_80145AC0) != 0) {
             D_80148210[0] |= 0x40;
-            ((u8 *)g_WorkRecordWorld03Area14013)[7] |= 8;
+            ((u8 *)scratchpadWorkRecord)[7] |= 8;
             func_8014D6B8(D_801F4A6C[index * 2]);
-            ((u8 *)g_WorkRecordWorld03Area14013)[0x2A] = D_801F4A6D[index * 2];
+            ((u8 *)scratchpadWorkRecord)[0x2A] = D_801F4A6D[index * 2];
             func_801F4380((u16)col, (u16)row);
             return;
         }

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x80145EC4 @kind unknown */
 extern u32 D_80145EC4;
 /* @source 0x80145EC8 @kind unknown */
@@ -32,14 +32,14 @@ void copySharedWordsExpires(
   u8* cursor;
   u8 countdown;
 
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   countdown = work[0x0A];
   if (countdown == 0) {
     FIELD_REF(u32, work, 0x34) = D_80145EC4;
     FIELD_REF(u32, work, 0x38) = D_80145EC8;
     FIELD_REF(u32, work, 0x3C) = D_80145ECC + 0x800000u;
     stateRotatedTexturedDiamond();
-    cursor = area12114WorkCursor_1F800044;
+    cursor = scratchpadWorkRecord;
     cursor[1] += 1;
   } else {
     work[0x0A] = countdown - 1;

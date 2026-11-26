@@ -2,7 +2,7 @@
 
 /* Shared published work-pointer cell: retain each original handoff and reload. */
 extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
-extern u8 workRecordAt80146920World03Area13413[]; /* @source 0x80146920 @kind unknown */
+extern u8 workRecordRow[]; /* @source 0x80146920 @kind unknown */
 /* Shared work seed word at 0x80146954, outside this overlay. */
 extern s32 D_80146954; /* @source 0x80146954 @kind data */
 extern s32 D_80145EC4;
@@ -26,7 +26,7 @@ void selectOr13WorkWord(void) {
   s32 smaller;
 
   saved = D_1F800044;
-  D_1F800044 = workRecordAt80146920World03Area13413;
+  D_1F800044 = workRecordRow;
   smaller = D_80146954 < D_80145EC4;
   D_80146250 = D_80145E90;
   D_1F800044 = saved;

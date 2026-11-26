@@ -5,7 +5,7 @@ void func_801F2F78(s32 *point); /* @source 0x801F2F78 @kind function */
 /* @source 0x801F2F30
  * @behavior Entry 1 of the two-entry step dispatch table based at 0x801F34E8,
  *           whose word 0 names 0x801F2EE4 and whose word 1 names this span and
- *           which callStateTable34World03 indexes
+ *           which dispatchByte1Table34e8 indexes
  *           with byte +1 of the work record published at the scratchpad pointer
  *           cell 0x1F800044. It loads that work-record pointer and copies the
  *           record's three cursor words at +0x34, +0x38 and +0x3C into a local

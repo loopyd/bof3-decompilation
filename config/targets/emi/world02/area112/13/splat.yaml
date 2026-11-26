@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 24
     - c
-    - callStateTable41World02
+    - dispatchWorkByte2Handler
     - '@source: src/bof3/world/area11213DispatchTables.c'
   - - 92
     - asm
@@ -90,7 +90,7 @@ segments:
     - '@source: src/bof3/world/checkHitsAnyBox.c'
   - - 4628
     - c
-    - callStateTable493World02
+    - dispatchWorkByte1Handler
     - '@source: src/bof3/world/area11213DispatchTables.c'
   - - 4696
     - c

@@ -5,7 +5,7 @@
  * the countdown store each reload it, as the original does.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 
 /* Record pointer cell of the shared main executable whose byte 0x12B this state
  * handler raises and the reseed probe at 0x801F5380 lowers. Its role beyond that
@@ -34,10 +34,10 @@ void func_801B0DFC(void);
 void setElseDecrementByte9(
     void) {
   D_80146250[0x12B] = 1;
-  if (area12114WorkCursor_1F800044[9] == 0) {
+  if (scratchpadWorkRecord[9] == 0) {
     probeReseedBumpTurn();
   } else {
-    area12114WorkCursor_1F800044[9] -= 1;
+    scratchpadWorkRecord[9] -= 1;
     func_801B0DFC();
   }
 }

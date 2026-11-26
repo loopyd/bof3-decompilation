@@ -1,6 +1,6 @@
 #include "base/types.h"
 
-extern u8 magic15803RecordFlags[]; /* @source 0x801EF794 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801EF794 @kind data */
 
 /* @source 0x801EF708
  * @behavior Reserves the first of 64 records whose flags byte has bit 0 clear,
@@ -17,9 +17,9 @@ u8 reserveFirstFreeRecord(void) {
 
     for (index = 0; index < 0x40; index++) {
         offset = index * 0x78;
-        flags = magic15803RecordFlags[offset];
+        flags = stateRecordFlags[offset];
         if (!(flags & 1)) {
-            magic15803RecordFlags[offset] = flags | 1;
+            stateRecordFlags[offset] = flags | 1;
             return index;
         }
     }

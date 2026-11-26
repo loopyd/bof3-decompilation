@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 28
     - c
-    - callStateTable4624World03
+    - dispatchByte2Table4624
     - '@source: src/bof3/world/area11713DispatchTables.c'
   - - 96
     - asm
@@ -61,7 +61,7 @@ segments:
     - func_801F314C
   - - 1972
     - c
-    - callStateTable4644World03
+    - dispatchByte2Table4644
     - '@source: src/bof3/world/area11713DispatchTables.c'
   - - 2040
     - asm
@@ -104,8 +104,8 @@ segments:
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 2 through the shared allocator 0x8015CB18 with word +0x0C = 0, word +0x10 = the byte D_801F4678[D_80144F5C] and halfwords +0x2E/+0x30 = D_8014613E/D_80146140; unless the call reports 0xFF the returned record index is stored in work byte +0x0B; takes no arguments and returns nothing.'
   - - 4976
     - c
-    - initArea11713State
-    - '@source: src/bof3/world/initArea11713State.c'
+    - stateEntryTupleMode5
+    - '@source: src/bof3/world/stateEntryTupleMode5.c'
     - '@behavior: calls the shared front-end startup helper at 0x8015C088, then stores 0x2C into the shared state selector byte 0x801448EB, 0 into 0x801448EC and 5 into 0x801448ED; takes no arguments and returns nothing.'
   - - 5040
     - c

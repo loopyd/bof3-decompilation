@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/world/stateAdvanceCallPair.c",
     "src/bof3/world/decrementFrontendPhasePair.c",
     "src/bof3/world/stateAdvanceWorkCall3914.c",
-    "src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1ThenCall3914World04Area16813_801F38A4.c",
+    "src/bof3/world/stateCountdownExpireCue.c",
     "src/bof3/world/stateStepCallPair.c",
     "src/bof3/world/stateEntrySubstateRow.c",
     "src/bof3/world/setEntryGateClear3.c",

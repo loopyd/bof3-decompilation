@@ -108,7 +108,7 @@ void setGlyphAlpha(u8* primitive, u8 alpha);
 /* @behavior slot-2 frontend-local callback body selected by the local mode byte.
  * @source 0x8014ED6C
  */
-void game_front_local_mode_callback_loop(void);
+void frontLocalModeCallback(void);
 
 /* @behavior starts one selection-specific frontend effect by table id pair.
  * @source 0x8015D4F8

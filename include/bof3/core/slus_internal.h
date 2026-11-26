@@ -124,7 +124,7 @@ extern s16 D_8018B408;
 /* @source 0x8018232A @kind unknown */
 extern s8  D_8018232A;
 /* @source 0x8018232C @kind table */
-extern void (*g_SoundCueHandlerTable[])(u32);
+extern void (*soundCueHandlerTable[])(u32);
 /* @source 0x8018E140 @kind unknown */
 extern s32 D_8018E140[];
 

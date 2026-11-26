@@ -41,7 +41,7 @@ extern s32 func_8014E640(u32 mask);
 extern void dispatchSoundCue(u32 cue_id);
 
 extern void renderRowMarkerOutline(u8 row, u8 selected);
-extern void renderCommuListScreen(void);
+extern void renderEntryListScreen(void);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
  * is declared wide here and the constant x arguments keep their bare `addiu`
  * form; the selected flag is the byte the emitter masks on entry. */
@@ -68,7 +68,7 @@ extern u8 queryActiveSlotKind(u8 kind, u8 ordinal);
  * adds one and wraps to 0 when the signed byte reaches the count, bit 0x8000
  * subtracts one and wraps to count minus one when the signed byte goes negative,
  * no other bit moves it, and the ordinal byte landing on a different value
- * queues resident cue 0x100. Every path then runs renderCommuListScreen and draws the
+ * queues resident cue 0x100. Every path then runs renderEntryListScreen and draws the
  * list row 0x801448ED with the selected flag 1 through
  * renderRowMarkerOutline, and then draws the record of the
  * ordinal byte: while the list row is zero through
@@ -130,7 +130,7 @@ void handleOrdinalInput(void) {
       dispatchSoundCue(0x100);
     }
   }
-  renderCommuListScreen();
+  renderEntryListScreen();
   row = &D_801448ED;
   renderRowMarkerOutline(*row, 1);
   if (*row == 0) {

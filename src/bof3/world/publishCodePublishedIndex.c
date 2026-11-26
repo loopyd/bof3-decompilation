@@ -3,7 +3,7 @@
 /* Scratchpad work-object pointer cell of the record published at 0x1F800044.
  * Bound as a symbol in this target's map so the base re-materializes from the
  * cell exactly as the original does with `lui $v0,0x1F80` / `lw $v0,0x44($v0)`. */
-extern u8* g_world02Area11113Work; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Shared overlay step-state byte seeded here with the published record's slot
  * code; the next entry of this overlay's handler pointer table (0x801F3790)
@@ -46,5 +46,5 @@ extern u8 D_80146867; /* @source 0x80146867 @kind data */
  */
 void publishCodePublishedIndex(
     void) {
-  D_80146867 = 0x10 << *(s32*)(g_world02Area11113Work + 0x18);
+  D_80146867 = 0x10 << *(s32*)(workRecordSlot + 0x18);
 }

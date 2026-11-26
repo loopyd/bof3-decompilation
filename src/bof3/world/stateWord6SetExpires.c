@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 
 void publishPositionWordsMeter(
     void);
@@ -30,11 +30,11 @@ void stateWord6SetExpires(void) {
   u8 countdown;
   u32 word;
 
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   word = FIELD_REF(u32, work, 0x6C);
   countdown = (u8)(work[9] - 1);
   work[9] = countdown;
-  reload = area12114WorkCursor_1F800044;
+  reload = scratchpadWorkRecord;
   FIELD_REF(u32, work, 0x6C) = (word + FIELD_REF(u32, work, 0x14)) & 0xFFFu;
   if (reload[9] == 0) {
     reload[1] = 1;

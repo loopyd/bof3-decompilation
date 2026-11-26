@@ -15,4 +15,4 @@ func_801EF71C = 0x801EF71C;
 reserveFirstFreeRecord = 0x801EF934;
 stateWorkThrough4 = 0x801EF998;
 D_801EF9E8 = 0x801EF9E8;
-magic21903RecordFlags = 0x801EFA14;
+stateRecordFlags = 0x801EFA14;

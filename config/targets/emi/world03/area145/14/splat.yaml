@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 144
     - c
-    - callStateTable5434World03
+    - callPointStepTable
     - '@source: src/bof3/world/area14514DispatchTables.c'
   - - 212
     - asm
@@ -50,7 +50,7 @@ segments:
     - func_801F2E58
   - - 648
     - c
-    - callStateTable5454World03
+    - callVectorStepTable
     - '@source: src/bof3/world/area14514DispatchTables.c'
   - - 716
     - c
@@ -80,7 +80,7 @@ segments:
     - func_801F3618
   - - 3228
     - c
-    - callStateTable545World03
+    - callCursorStepTable
     - '@source: src/bof3/world/area14514DispatchTables.c'
   - - 3296
     - c
@@ -150,11 +150,11 @@ segments:
     - invokeHelperByteArg
   - - 6004
     - c
-    - invokeHelperByteArgWorld03Area14514_801F4374
+    - callSharedByteArg
   - - 6044
     - c
-    - initArea14514State
-    - '@source: src/bof3/world/initArea14514State.c'
+    - setupFrontEndState
+    - '@source: src/bof3/world/setupFrontEndState.c'
     - '@behavior: Runs the shared front-end startup helper func_8015C088 and then writes the shared state-entry tuple 0x801448EB = 0x2C, 0x801448EC = 0 and 0x801448ED = 0xF. No in-image jal or pointer word addresses this 64-byte handler, so the overlay reaches it from outside its payload.'
   - - 6108
     - asm

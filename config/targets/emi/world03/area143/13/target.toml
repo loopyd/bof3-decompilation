@@ -23,7 +23,7 @@ support_sources = [
     "src/bof3/world/stateFlagsTableIdle.c",
     "src/bof3/world/clearWorkByte48Submit2.c",
     "src/bof3/world/drawWorkCursorQuad2.c",
-    "src/bof3/world/selectStatus525354Mode6World03.c",
+    "src/bof3/world/selectStatus525354Mode6.c",
     "src/bof3/world/requestFrontSelectorContext2.c",
     "src/bof3/world/area14313DispatchTables.c",
     "src/bof3/world/area14313_gate_status.c",

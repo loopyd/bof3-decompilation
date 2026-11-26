@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scratchWorkRecordPointer_1F800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 extern u8 D_8014933B; /* @source 0x8014933B @kind data */
 
 /* @source 0x801F3230
@@ -24,8 +24,8 @@ void stateByteAdvanceOverlay(void) {
   u8 state;
 
   if (D_8014933B == 1) {
-    scratchWorkRecordPointer_1F800044[0xB] = 0;
-    work = scratchWorkRecordPointer_1F800044;
+    scratchpadWorkRecord[0xB] = 0;
+    work = scratchpadWorkRecord;
     state = work[2];
     *(u32*)(work + 0x3C) = 0;
     work[2] = state + 1;

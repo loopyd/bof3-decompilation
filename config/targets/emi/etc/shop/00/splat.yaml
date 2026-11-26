@@ -415,7 +415,7 @@ segments:
     - '@behavior: shop equipment panel reached from the panel state dispatcher func_801E2DB4 with the panel task root x and field-6 halfwords and the field-record index D_80181B10[D_80144F5A[task byte 0xA]]: draws the panel backing through func_801DBF18 with the size pair 9/10, the 16x16 icon through func_801644D8 at (x+7, y+5) with the constants 16, 16 and 0x80, and the EQUIP caption D_801E583C through func_8014F800 at (x+0x2E, y+7) with the mask 0xFF. It then selects the six equipped-item records of the 164-byte field record the index byte chooses - the weapon record of WEAPON_OBJECTS for record byte 0x0E, the armor records of ARMOR_OBJECTS for bytes 0x0F..0x11 and the accessory records of ACCESSORY_OBJECTS for bytes 0x12..0x13 - and for each of the six slots arms the cell at (x+5, y+13*slot+0x1C) through func_801AEA80 with the per-slot id byte D_801E5834 and 0, then submits that record again through func_8014F800 at (x+0x11, y+13*slot+0x1A) with the low byte of the mask func_801AF20C reports for it.'
   - - 32856
     - c
-    - drawExpRowPanel_shop00
+    - renderExpRowPanel
     - '@source: src/bof3/ui/drawExpRowPanelShop00_801D8C58.c'
     - '@behavior: experience row panel of the shop overlay: it fills the 0x65 by 0x25 inset rectangle at (x+3, y+3) through func_801AE3F0 with the shade 0 and the CLUT-bank byte D_80144952, then selects the 164-byte record D_80144952[index*164+0x16] of the shared record table. With the mode byte zero it draws the EXP caption D_801E5844 through func_8014F800 at (x+0x2C, y+7) with the mask 0xFF and takes the word at record+8 as its value; with the mode byte set it draws the NEXT caption D_801E5848 at (x+0x26, y+7) with the same mask and takes as its value the sum func_801DAA78 forms over the first record[6]+1 values of that record row. It formats the value into the shared buffer D_80145AD4 with the format D_801D0CF8 when it is not -1 and with the placeholder D_801D0CFC when it is, draws that buffer through func_8014FF0C at (x+0x15, y+0x1A) with the shade 0 and finally submits the sprite-record stream D_801E5680 at (x, y) through func_801AF390 with the flag 1.'
   - - 33324
@@ -443,8 +443,8 @@ segments:
     - func_801D9254
   - - 35316
     - c
-    - drawEquipSlotRowsShop00_801D95F4
-    - '@source: src/bof3/ui/drawEquipSlotRowsShop00_801D95F4.c'
+    - renderEquipSlotRows
+    - '@source: src/bof3/ui/renderEquipSlotRows3.c'
     - '@behavior: equipment-slot block of the shop overlay: it paints the inset backing rectangle of the block through func_801AED54 at (x+2, y+0x44) with the size 0x87 by 0x58 and the shade 0xF1, then draws the six equipped slots of the 164-byte field record the index byte selects out of D_80144968 - the weapon record of WEAPON_OBJECTS for record byte 0x0E, the armor records of ARMOR_OBJECTS for bytes 0x0F through 0x11 and the accessory records of ACCESSORY_OBJECTS for bytes 0x12 and 0x13 - each as an eight-cell name run through func_8014F800 at (x+0x0F, y+0x46/0x53/0x60/0x6D/0x81/0x8E) aligned to 7 or 0 by the flag byte; the six palette cells 8, 0xA, 9, 0xB, 0xC and 0xC follow at (x+5, y+0x49/0x56/0x63/0x70/0x84/0x91) through func_801AEA80 with that same flag byte. The payload names the span only from the jal at 0x801DB9A4 inside func_801DB938; one payload cmp proved these 0x2CC bytes equal drawEquipSlotRowsShisu00_801D4AF4 at 0x801D4AF4 in emi/etc/shisu/00 and drawEquipSlotRowsBate00_801D3B4C at 0x801D3B4C in emi/etc/bate/00.'
   - - 36032
     - asm
@@ -501,7 +501,7 @@ segments:
     - c
     - func_801DB938
     - '@source: src/bof3/ui/func_801DB938_shop00.c'
-    - '@behavior: shop panel emitter: submits the shaded panel rectangle through func_801AE3F0 with the task''s x and field-6 halfwords, the fixed 0x8B by 0x9F size, the low byte of arg1 offset by 0xF0 and the main-RAM CLUT-bank byte D_80144952 as the trailing stack argument, then draws the same task twice, once through the equipment-slot block drawEquipSlotRowsShop00_801D95F4 and once through the still-unlifted shop row emitter func_801D9254, with the leading byte of the 0x140-byte-stride record D_80145FCC selected by task byte 0xC and the low byte of arg1.'
+    - '@behavior: shop panel emitter: submits the shaded panel rectangle through func_801AE3F0 with the task''s x and field-6 halfwords, the fixed 0x8B by 0x9F size, the low byte of arg1 offset by 0xF0 and the main-RAM CLUT-bank byte D_80144952 as the trailing stack argument, then draws the same task twice, once through the equipment-slot block renderEquipSlotRows and once through the still-unlifted shop row emitter func_801D9254, with the leading byte of the 0x140-byte-stride record D_80145FCC selected by task byte 0xC and the low byte of arg1.'
   - - 44528
     - c
     - drawShopParameterPanel
@@ -860,7 +860,7 @@ segments:
     - '@behavior: panel state dispatcher sibling of func_801E29C8 and func_801E2AB0: calls the handler D_801E5DF0[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel through drawShopEquipPanel with the same task root''s x and field-6 halfwords and the byte D_80181B10[D_80144F5A[task byte 0xA]].'
   - - 74288
     - c
-    - retreatPanelXToNeg150B
+    - retreatPanelNeg150B
     - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 74352
     - c
@@ -924,7 +924,7 @@ segments:
     - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720: calls the handler D_801E5E48[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop panel step func_801E112C.'
   - - 77816
     - c
-    - advancePanelXTo320C
+    - advancePanel320C
     - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 77880
     - c
@@ -945,11 +945,11 @@ segments:
     - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720/func_801E3BA4: calls the handler D_801E5E5C[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop panel step func_801E1710.'
   - - 78156
     - c
-    - advancePanelXTo320D
+    - advancePanel320D
     - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78220
     - c
-    - retreatPanelXTo150B
+    - retreatPanel150B
     - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78284
     - c
@@ -966,7 +966,7 @@ segments:
     - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720/func_801E3BA4/func_801E3CF8/func_801E4224: calls the handler D_801E5E70[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop field-list emitter func_801D826C with its x and field-6 halfwords, its byte 0xA and the constants 0 and 0.'
   - - 78516
     - c
-    - retreatPanelXToNeg150C
+    - retreatPanelNeg150C
     - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78580
     - c
@@ -1006,7 +1006,7 @@ segments:
     - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720/func_801E3BA4/func_801E3CF8/func_801E4224: calls the handler D_801E5F24[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop panel emitter func_801E4DF4.'
   - - 79756
     - c
-    - advancePanelXTo320E
+    - advancePanel320E
     - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 79820
     - c
@@ -1032,7 +1032,7 @@ segments:
     - '@behavior: panel state dispatcher sibling of func_801E2EB0, func_801E3720, func_801E3BA4, func_801E3CF8, func_801E4224, func_801E4338 and func_801E440C: calls the handler D_801E5F3C[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop ink panel at the same task root''s x and field-6 halfwords through drawShopInkPanel.'
   - - 80192
     - c
-    - advancePanelXTo320F
+    - advancePanel320F
     - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 80256
     - c

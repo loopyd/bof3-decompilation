@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind data */
-extern u16 *g_WorkRecordWorld03Area14013;
+extern u16 *scratchpadWorkRecord;
 /* @source 0x8015507C */
 extern void func_8015507C(s32 arg0, s32 arg1);
 /* @source 0x80155218 */
@@ -12,7 +12,7 @@ extern void func_801F3950(s32 arg0, s32 arg1);
 /* @source 0x801F34F4
  * @behavior Overlay step handler: entry 8 of the handler run based at
  *           0x801F47C4, the table this target's exact dispatcher
- *           callStateTable47World03 indexes with
+ *           callDrawStepTable indexes with
  *           the work record's state byte at +0x02, so no jal reaches this
  *           body. It reads the scratchpad work pointer published at 0x1F800044
  *           once, adds 0x10 to the record halfword at +0x3E, stores the
@@ -40,7 +40,7 @@ extern void func_801F3950(s32 arg0, s32 arg1);
  *
  *           Shape evidence: handler func_801F38C4 at 0x801F38C4, entry 11 of
  *           the same run, was lifted to
- *           src/bof3/world/stepWorkHalfword3World03.c with
+ *           src/bof3/world/stepWorkHalfword3.c with
  *           a measurement of 100.00, and its draw tail from the reload of the
  *           pointer cell through the 0x801F3950 call is byte-identical here,
  *           so that source supplied the statement order, the pointer-local
@@ -59,14 +59,14 @@ void stateStepHalfwordDraw(void) {
     u16 *work;
     u16 *tailWork;
 
-    work = g_WorkRecordWorld03Area14013;
+    work = scratchpadWorkRecord;
     work[0x1F] += 16;
     if ((s16)work[0x1F] >= 0x80) {
         func_8015507C((s16)work[0x1B], (s16)work[0x1D]);
-        func_80155218((s16)(g_WorkRecordWorld03Area14013[0x1B] + 1),
-                      (s16)(g_WorkRecordWorld03Area14013[0x1D] + 1));
-        ((u8 *)g_WorkRecordWorld03Area14013)[2] += 1;
+        func_80155218((s16)(scratchpadWorkRecord[0x1B] + 1),
+                      (s16)(scratchpadWorkRecord[0x1D] + 1));
+        ((u8 *)scratchpadWorkRecord)[2] += 1;
     }
-    tailWork = g_WorkRecordWorld03Area14013;
+    tailWork = scratchpadWorkRecord;
     func_801F3950(((u8 *)tailWork)[8], (s16)tailWork[0x1F]);
 }

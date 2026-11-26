@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area15213WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 /* @source 0x801454F2 @kind unknown */
 extern u8 D_801454F2;
 /* @source 0x80143BB0 @kind unknown */
@@ -29,7 +29,7 @@ void setState3UnlessGated(
     void) {
   u8* record;
 
-  if (D_801454F2 != 0 && area15213WorkCursor_1F800044[0x0B] != 0) {
+  if (D_801454F2 != 0 && workRecordCursor1F800044[0x0B] != 0) {
     return;
   }
   if (D_80143BB0 == 2) {
@@ -38,7 +38,7 @@ void setState3UnlessGated(
   if ((D_80146258 & 0x100u) != 0) {
     return;
   }
-  record = area15213WorkCursor_1F800044;
+  record = workRecordCursor1F800044;
   FIELD_REF(s16, record, 0x30) = 0xF0;
   record[3]++;
 }

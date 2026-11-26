@@ -13,7 +13,7 @@ void func_801F30D0(u8* entry);
 
 /* @source 0x801F2C60
  * @behavior Entry 0 of the seven-word overlay step handler run D_801F3ED8,
- *           which callStateTable3World03 indexes
+ *           which dispatchByte1Table3ed8 indexes
  *           with the unsigned work byte at +0x1 of the work record published at
  *           the scratchpad pointer cell 0x1F800044. It takes no arguments and
  *           returns nothing. It walks the 0x2C-byte-stride effect table at

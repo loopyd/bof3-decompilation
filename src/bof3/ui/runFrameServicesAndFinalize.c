@@ -2,7 +2,7 @@
 
 /*
  * @behavior Runs func_801527E4, func_8015A758, func_801BDAB8,
- * updateActiveGameWorkRecords, func_8019A0E4 and func_8014BA54 in order, then
+ * stateActiveGameRecords, func_8019A0E4 and func_8014BA54 in order, then
  * calls func_80158C80 and dispatchShopUiState. Takes no arguments and returns no
  * value.
  * @source 0x80199398
@@ -15,7 +15,7 @@ void runFrameServicesAndFinalize(void)
     func_801527E4();
     func_8015A758();
     func_801BDAB8();
-    updateActiveGameWorkRecords();
+    stateActiveGameRecords();
     func_8019A0E4();
     func_8014BA54();
     func_80158C80();

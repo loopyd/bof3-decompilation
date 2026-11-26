@@ -9,7 +9,7 @@
  * scroll/clamp block and before the projected quad pair.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 
 /* Shared effect bank byte at 0x8014832E: bit 0x04 lets this panel draw at all.
  * @source 0x8014832E @kind unknown
@@ -109,7 +109,7 @@ void renderLayerNearFocus(void) {
   long      depth;
   long      flag;
 
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   if (FIELD_REF(volatile u8, work, 0x02u) == 0) {
     u8 count;
     u8 next;
@@ -126,7 +126,7 @@ void renderLayerNearFocus(void) {
   {
     u8* scrollWork;
 
-    scrollWork = area12114WorkCursor_1F800044;
+    scrollWork = scratchpadWorkRecord;
     layer = (s32)FIELD_REF(u8, scrollWork, 0x0bu) - 2;
     scroll = FIELD_REF(u32, scrollWork, 0x38u);
     scroll = scroll + 0x800;
@@ -137,7 +137,7 @@ void renderLayerNearFocus(void) {
     }
   }
 
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   if (abs(D_8014930A - FIELD_REF(s16, work, 0x36u)) >= 0x1a &&
       abs(D_8014930E - FIELD_REF(s16, work, 0x3au)) >= 0x1a) {
     return;

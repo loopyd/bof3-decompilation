@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind data */
-extern u16 *g_WorkRecordWorld03Area14013;
+extern u16 *scratchpadWorkRecord;
 /* @source 0x801F47F4 @kind data */
 extern u8 D_801F47F4[];
 /* @source 0x801F3950 */
@@ -35,7 +35,7 @@ extern void func_801F3950(s32 arg0, s32 arg1);
  *           the ramp halfword at +0x3E; the halfword pair and the +0x3E ramp
  *           are the fields the neighbouring exact handlers
  *           stateStepHalfwordDraw
- *           and stepWorkHalfword3World03 own, and the byte
+ *           and stepWorkHalfword3 own, and the byte
  *           at +0x0B is the flag-bit index the exact handler
  *           stateFlagBitSubmit
  *           reads. No payload word names a role for the record run, so it stays
@@ -43,9 +43,9 @@ extern void func_801F3950(s32 arg0, s32 arg1);
  *           draw routine only, not named.
  *
  *           Shape evidence: handler
- *           stepWorkHalfword3World03, entry 5 of the same
+ *           stepWorkHalfword3, entry 5 of the same
  *           run, was lifted to
- *           src/bof3/world/stepWorkHalfword3World03.c and
+ *           src/bof3/world/stepWorkHalfword3.c and
  *           measured 100.00 when this seed was written; its pointer-cell
  *           reload spelling and its draw tail through the 0x801F3950 call with
  *           the record byte at +0x08 and the signed halfword at +0x3E supplied
@@ -66,13 +66,13 @@ void stateRecordSetDraw(void) {
     u16 *tailWork;
     u8 state;
 
-    work = g_WorkRecordWorld03Area14013;
+    work = scratchpadWorkRecord;
     scale = (s16)work[0x1B] * 4;
     work[0x1B] = D_801F47F4[scale];
     work[0x1D] = D_801F47F4[scale + 1];
     ((u8 *)work)[8] = D_801F47F4[scale + 2];
-    ((u8 *)g_WorkRecordWorld03Area14013)[0xB] = D_801F47F4[scale + 3];
-    stateWork = g_WorkRecordWorld03Area14013;
+    ((u8 *)scratchpadWorkRecord)[0xB] = D_801F47F4[scale + 3];
+    stateWork = scratchpadWorkRecord;
     if (((u8 *)stateWork)[8] == 0) {
         state = ((u8 *)stateWork)[2] + 1;
         stateWork[0x1F] = 0;
@@ -81,6 +81,6 @@ void stateRecordSetDraw(void) {
         state = 4;
     }
     ((u8 *)stateWork)[2] = state;
-    tailWork = g_WorkRecordWorld03Area14013;
+    tailWork = scratchpadWorkRecord;
     func_801F3950(((u8 *)tailWork)[8], (s16)tailWork[0x1F]);
 }

@@ -1,4 +1,4 @@
-callStateTable358World03 = 0x801F2C04;
+dispatchByte2Table358c = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2DF4 = 0x801F2DF4;
 advanceDrawHalfword32Mode = 0x801F2F34;

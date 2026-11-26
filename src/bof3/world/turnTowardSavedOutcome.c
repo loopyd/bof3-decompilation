@@ -7,7 +7,7 @@
  * dispatch arms.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 
 /* Shared mode byte whose zero lets this step run.
  * @source 0x80143BB0 @kind unknown
@@ -61,7 +61,7 @@ s32 stateMaskOverlapUnless(
 s32 func_801B6258(void);
 s32 stateClearMaskOverlap(void);
 s32 stateWorkByte8Mask(void);
-void stateMode3WorkWorld03(void);
+void stateMode3Work(void);
 s32 func_801B0E44(void);
 s8 func_801BDF08(void);
 void stateResolvedAnimMatches(
@@ -135,7 +135,7 @@ void turnTowardSavedOutcome(
   if (D_80143BB0 != 0) {
     return;
   }
-  if (area12114WorkCursor_1F800044[0xA] != 0) {
+  if (scratchpadWorkRecord[0xA] != 0) {
     return;
   }
   if (D_8014625C != 0) {
@@ -157,21 +157,21 @@ void turnTowardSavedOutcome(
        0xFF) != 0) {
     return;
   }
-  saved = area12114WorkCursor_1F800044[8];
+  saved = scratchpadWorkRecord[8];
   if ((((stateWorkByte8Mask() & 0xFF) == 0) &&
        ((D_80145AA4 & D_80145AB6) == 0)) ||
-      (area12114WorkCursor_1F800044[0xB] == 0x40)) {
-    area12114WorkCursor_1F800044[8] = saved;
+      (scratchpadWorkRecord[0xB] == 0x40)) {
+    scratchpadWorkRecord[8] = saved;
     D_80146250[0x12B] = 0;
-    stateMode3WorkWorld03();
-    area12114WorkCursor_1F800044[9] = 0;
-    area12114WorkCursor_1F800044[2] = 0;
+    stateMode3Work();
+    scratchpadWorkRecord[9] = 0;
+    scratchpadWorkRecord[2] = 0;
     return;
   }
   if ((D_80145AA4 & D_80145AB6) != 0) {
-    area12114WorkCursor_1F800044[8] = saved;
+    scratchpadWorkRecord[8] = saved;
   }
-  now = area12114WorkCursor_1F800044[8];
+  now = scratchpadWorkRecord[8];
   if (now != saved) {
     cur = now;
     want8 = (s8)saved;
@@ -196,44 +196,44 @@ void turnTowardSavedOutcome(
     }
     if (diff == 2) {
       if (cur8 < want8) {
-        area12114WorkCursor_1F800044[8] = saved - 1;
+        scratchpadWorkRecord[8] = saved - 1;
       } else {
-        area12114WorkCursor_1F800044[8] = saved + 1;
+        scratchpadWorkRecord[8] = saved + 1;
       }
     }
-    area12114WorkCursor_1F800044[8] &= 7;
+    scratchpadWorkRecord[8] &= 7;
   }
   step = func_801B0E44() & 0xFF;
   switch (step) {
     case 0:
       if ((s8)func_801BDF08() != 0) {
         D_80146250[0x12B] = 0;
-        area12114WorkCursor_1F800044[2] = 0;
+        scratchpadWorkRecord[2] = 0;
         stateResolvedAnimMatches();
         return;
       }
       stateModeMaskOverlap();
       if (D_80146250[0x11C] == 4 &&
-          area12114WorkCursor_1F800044[8] != saved) {
-        area12114WorkCursor_1F800044[8] = saved;
+          scratchpadWorkRecord[8] != saved) {
+        scratchpadWorkRecord[8] = saved;
         D_80146250[0x12B] = 0;
-        area12114WorkCursor_1F800044[2] = 0;
+        scratchpadWorkRecord[2] = 0;
         return;
       }
       func_801C24D0();
       func_801C4C48();
-      area12114WorkCursor_1F800044[9] -= 1;
+      scratchpadWorkRecord[9] -= 1;
       func_801B0DFC();
       D_80146250[0x12B] = 1;
-      area12114WorkCursor_1F800044[2] = 1;
+      scratchpadWorkRecord[2] = 1;
       return;
     case 1:
     case 0xFF:
-      area12114WorkCursor_1F800044[8] = saved;
+      scratchpadWorkRecord[8] = saved;
       D_80146250[0x12B] = 0;
       D_80146250[0x11C] = 3;
-      area12114WorkCursor_1F800044[9] = 0;
-      area12114WorkCursor_1F800044[2] = 0;
+      scratchpadWorkRecord[9] = 0;
+      scratchpadWorkRecord[2] = 0;
       return;
   }
 }

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x80143F00 @kind unknown */
 extern u16 D_80143F00;
 /* @source 0x80146250 @kind unknown */
@@ -28,16 +28,16 @@ void func_801B0DFC(void);
 s32 workTowardResolvedSlot(void) {
   if (D_80143F00 != 0x79 ||
       (slotRotatingUntilHolds(
-           *(s32*)(area12114WorkCursor_1F800044 + 0x34),
-           *(s32*)(area12114WorkCursor_1F800044 + 0x38),
-           func_801BDE14(*(s32*)(area12114WorkCursor_1F800044 + 0x34),
-                         *(s32*)(area12114WorkCursor_1F800044 + 0x38), 1)) & 0xFF) == 0) {
+           *(s32*)(scratchpadWorkRecord + 0x34),
+           *(s32*)(scratchpadWorkRecord + 0x38),
+           func_801BDE14(*(s32*)(scratchpadWorkRecord + 0x34),
+                         *(s32*)(scratchpadWorkRecord + 0x38), 1)) & 0xFF) == 0) {
     return 0;
   }
   func_801C24D0();
-  area12114WorkCursor_1F800044[9] -= 1;
+  scratchpadWorkRecord[9] -= 1;
   func_801B0DFC();
   D_80146250[0x12B] = 1;
-  area12114WorkCursor_1F800044[2] = 1;
+  scratchpadWorkRecord[2] = 1;
   return 1;
 }

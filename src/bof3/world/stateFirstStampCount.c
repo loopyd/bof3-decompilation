@@ -15,7 +15,7 @@ extern u32 D_801F5818; /* @source 0x801F5818 @kind data */
 /* @source 0x801F4214
  * @behavior Overlay state handler: entry 0 (work state byte 1 = 0) of the
  * handler table based at 0x801F581C that this target's dispatcher
- * callStateTable581World03 indexes with the work
+ * callStampStepTable indexes with the work
  * record's byte at +1. It is the run's first-step initialiser: while the
  * overlay's private word at 0x801F5818 still reads zero it calls the work-table
  * clear helper at 0x801F4974, the routine that zeroes the lead byte of the 0x20

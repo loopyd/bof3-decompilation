@@ -112,7 +112,7 @@ extern void func_801F3B98(void);
  * the +0x1000000 address form of the word at 0x3C), the main lookup helper and
  * the resource request are the roles the shared main-executable lifts record at
  * 0x8014DD3C and 0x8014D6B8, and the state byte +0x01 hand-off is the local
- * dispatcher callStateTable43World04, whose table
+ * dispatcher dispatchWorkByte1Run1, whose table
  * at 0x801F43EC holds this body as entry 0 and 0x801F3B98 as entry 1. No `jal`
  * in the payload names 0x801F3A68; the only in-image reference is the word
  * 0x801F3A68 at 0x801F43EC, so the body is reached from outside its own code

@@ -8,7 +8,7 @@ splat = "config/targets/emi/world04/area179/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/initAreaModuleAndQueueFrontCue20CWorld04Area17913_801F32D8.c",
+    "src/bof3/world/setupModuleQueueCue2.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperArg6.c",

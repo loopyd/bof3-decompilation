@@ -14,7 +14,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/support/area113_13_psyq.c",
-    "src/bof3/world/initArea11313State.c",
+    "src/bof3/world/initStateSelectorPair.c",
     "src/bof3/world/setHandlerIndex3Gate.c",
     "src/bof3/world/setHandlerIndex5Gate.c",
 ]

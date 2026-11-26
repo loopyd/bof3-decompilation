@@ -28,7 +28,7 @@ support_sources = [
     "src/bof3/world/dispatchStateByte3Table4.c",
     "src/bof3/world/area15213_work_state.c",
     "src/bof3/world/area15213DispatchTables.c",
-    "src/bof3/world/invokeTwoHelpersWorld04Area15213_801F4600.c",
+    "src/bof3/world/invokeTwoHelpers23.c",
     "src/bof3/world/invokeTwoHelpers4.c",
     "src/bof3/support/area152_13_psyq.c",
 ]

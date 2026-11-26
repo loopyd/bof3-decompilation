@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/findWorkPositionBounds2.c",
     "src/bof3/world/stateFrontSideIs.c",
-    "src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C.c",
+    "src/bof3/world/stateAdvanceHalfwordDraw.c",
     "src/bof3/world/loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area16913_801F2C48.c",
 ]
 support_sources = [

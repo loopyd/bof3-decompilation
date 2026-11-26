@@ -4,7 +4,7 @@
  * publishes 0x801F01B0 + i * 0x2C into the pointer cell at 0x801F17B0 and this
  * function hands out one pool slot index at a time. 128 records of 0x2C bytes
  * span 0x801F01B0 through 0x801F17AF, ending exactly at that pointer cell. */
-extern u8 magic16803RecordFlags[]; /* @source 0x801F01B0 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801F01B0 @kind data */
 
 /* @source 0x801EFFFC
  * @behavior Reserves the first of 128 records in the pool at 0x801F01B0 whose
@@ -34,9 +34,9 @@ u8 reserveFirstFreeRecord(void) {
 
   for (index = 0; index < 0x80; index++) {
     offset = index * 0x2C;
-    flags = magic16803RecordFlags[offset];
+    flags = stateRecordFlags[offset];
     if (!(flags & 1)) {
-      magic16803RecordFlags[offset] = flags | 1;
+      stateRecordFlags[offset] = flags | 1;
       return index;
     }
   }

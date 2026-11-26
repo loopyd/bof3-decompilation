@@ -5,7 +5,7 @@
 extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind data */
 
 /* Work record published at the scratchpad pointer cell 0x1F800044. */
-extern u8* world03Area11913WorkRecord; /* @source 0x1F800044 @kind data */
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 
 /* Shared main-executable work-area reset helper. */
 extern void func_80196070(void);
@@ -34,6 +34,6 @@ void stateRestartCycle(void) {
   if (g_ScenarioProgress == 0x28) {
     func_80196070();
   } else {
-    world03Area11913WorkRecord[1] = 0;
+    scratchpadWorkRecord[1] = 0;
   }
 }

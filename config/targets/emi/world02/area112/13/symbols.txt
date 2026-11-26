@@ -1,4 +1,4 @@
-callStateTable41World02 = 0x801F2C18;
+dispatchWorkByte2Handler = 0x801F2C18;
 func_801F2C5C = 0x801F2C5C;
 func_801F2D18 = 0x801F2D18;
 func_801F2DA0 = 0x801F2DA0;
@@ -15,7 +15,7 @@ func_801F3944 = 0x801F3944;
 func_801F3A14 = 0x801F3A14;
 func_801F3BE4 = 0x801F3BE4;
 checkHitsAnyBox = 0x801F3CF0;
-callStateTable493World02 = 0x801F3E14;
+dispatchWorkByte1Handler = 0x801F3E14;
 storeWorkCursorDistance = 0x801F3E58;
 drawWorkCursorQuad = 0x801F3EA4;
 func_801F3EEC = 0x801F3EEC;

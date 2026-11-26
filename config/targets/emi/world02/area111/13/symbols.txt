@@ -1,11 +1,11 @@
-g_world02Area11113Work = 0x1F800044;
+workRecordSlot = 0x1F800044;
 func_801C5DFC = 0x801C5DFC;
-callStateTable4890World02 = 0x801F2C64;
+dispatchWorkByte1Handler = 0x801F2C64;
 statePartsHalvesArm = 0x801F2CA8;
 renderPartsCountdownExpiry = 0x801F2CFC;
 invokeHelper = 0x801F2D80;
 func_801F2DA0 = 0x801F2DA0;
-callStateTable489World02 = 0x801F30EC;
+dispatchWorkByte2Handler = 0x801F30EC;
 zeroStepClearFlags = 0x801F3130;
 stateHandlerByteDraw = 0x801F319C;
 stateClearFlagsDraw = 0x801F31F0;

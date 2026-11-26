@@ -11,7 +11,7 @@ void func_801F38DC(void);
  *           table based at 0x801F5948 whose word at 0x801F594C holds this
  *           address; the run's entry 0 is 0x801F3718 and entry 2 is
  *           0x801F3860. This target's dispatcher
- *           callStateTable5948World02 indexes that
+ *           dispatchWorkByte1Handler2 indexes that
  *           table with the work record's state byte at +0x01. The body reads
  *           the work record published at the scratchpad pointer cell
  *           0x1F800044 and, in one pointer group, advances its signed word at
@@ -32,7 +32,7 @@ void func_801F38DC(void);
  * Name evidence: the only in-image reference to 0x801F37A0 is the word at
  * 0x801F594C, the second entry of the local pointer run based at 0x801F5948
  * that this target's exact
- * callStateTable5948World02 indexes with the work
+ * dispatchWorkByte1Handler2 indexes with the work
  * record's byte at +0x01; there is no jal caller, which is the dispatch shape
  * rather than missing evidence. The advance-and-clamp, countdown re-arm and
  * byte-1 advance roles come from this body's own immediates and stores.

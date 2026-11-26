@@ -4,7 +4,7 @@
  * Its argument is stored once and tested with `beqz`, so a non-zero value
  * enables the second rendering pass; this handler and the sibling entry at
  * 0x801F45E4 pass zero. */
-void drawTwoPassTexturedQuadAtWorkHalfword30WithFlagSelectedDepthWorld04Area17013_801F4640(
+void renderPassTexturedDepth(
     s32 variant);
 
 /* @source 0x801F453C
@@ -57,6 +57,6 @@ void clearWorkHalfword30AndAdvanceWorkByte2ThenDrawWorld04Area17013_801F453C(
   step = work[2];
   FIELD_REF(u16, work, 0x30) = 0;
   work[2] = step + 1;
-  drawTwoPassTexturedQuadAtWorkHalfword30WithFlagSelectedDepthWorld04Area17013_801F4640(
+  renderPassTexturedDepth(
       0);
 }

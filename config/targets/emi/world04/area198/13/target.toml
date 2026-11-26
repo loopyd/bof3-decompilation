@@ -11,7 +11,7 @@ sources = [
     "src/bof3/world/stepAccumulatorsLevelTriple.c",
     "src/bof3/world/stateTripleApplyLookup.c",
     "src/bof3/world/stateWorkProgress0.c",
-    "src/bof3/world/fixedPointUnitsWorld04.c",
+    "src/bof3/world/mathFixedToUnits.c",
     "src/bof3/world/stateAfterScalePass.c",
     "src/bof3/world/invokeHelperWithWork.c",
     "src/bof3/world/requestResourceFromScript.c",

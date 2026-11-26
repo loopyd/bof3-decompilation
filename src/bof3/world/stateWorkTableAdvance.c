@@ -5,7 +5,7 @@ void stateWorkTableAt800(void);
 /* @source 0x801F2C48
  * @behavior Entry 0 of this overlay's nine-word state-handler run at
  *           0x801F36CC, the table the exact dispatcher
- *           callStateTable36World03 indexes with
+ *           dispatchByte1Table36cc indexes with
  *           the unsigned work byte at offset +0x1 of the work object published
  *           at the scratchpad pointer cell 0x1F800044, so this is the entry the
  *           run starts from. It calls the overlay's work-table clear at

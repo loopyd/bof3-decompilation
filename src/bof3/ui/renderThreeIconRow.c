@@ -53,7 +53,7 @@ extern void func_801D44C0(s32 x, s32 y, s32 kind, s32 mode);
  * original zero-extends both icon coordinates (andi 0xFFFF), so this call site
  * keeps the unsigned coordinates the shared PANEL_ICON_PRIM template's signed
  * ones are widened from. */
-void emitPanelIconPrimShisu00_801D5620(u16 arg0, u16 arg1, s32 arg2, s32 arg3,
+void emitPanelIconPrim(u16 arg0, u16 arg1, s32 arg2, s32 arg3,
                                        u16 arg4, u8 arg5);
 
 /* Text submitter of the main executable: the row position, the alignment and
@@ -97,7 +97,7 @@ extern const u8 D_801D9A60[]; /* @source 0x801D9A60 @kind data */
  *           below it. For a record it re-reads the graph type when that answer
  *           is not 1, installs the draw mode at g_PrimCursor with dfe 0, dtd 0,
  *           the texture page 0xF, no texture window and slot 1 as 0xC bytes,
- *           then emits the 16x16 icon through emitPanelIconPrimShisu00_801D5620
+ *           then emits the 16x16 icon through emitPanelIconPrim
  *           at (x + 9, y + 5) with the icon id plus 3 as its kind, the 0x1E
  *           texture row, the clut GetClut(0x10, 0x1E0) and the attribute 0x80.
  *           It then draws the record's three sprite kinds: for every slot below
@@ -122,7 +122,7 @@ extern const u8 D_801D9A60[]; /* @source 0x801D9A60 @kind data */
  *           0x801D8208 in emi/etc/bate/00 and at 0x801DDCB0 in emi/etc/shop/00:
  *           a payload cmp of the three spans found 185 of their 192 words equal,
  *           and the seven that differ are the three jal words to each copy's own
- *           func_801D44C0, emitPanelIconPrimShisu00_801D5620 and func_801D56D8,
+ *           func_801D44C0, emitPanelIconPrim and func_801D56D8,
  *           which move with the copy's own address delta, plus the four low
  *           halves of the two format strings, the label row and the stream blob,
  *           which carry each payload's own blob base, so the three are one body
@@ -147,7 +147,7 @@ void renderThreeIconRow(u8 icon, s16 x, s16 y,
     }
     SetDrawMode((DR_MODE *)g_PrimCursor, 0, 0, 0xF, 0);
     GpuAppendPrim(1, 0xC);
-    emitPanelIconPrimShisu00_801D5620(
+    emitPanelIconPrim(
         (u16)(x + 9), (u16)(y + 5), (u8)(icon + 3), 0x1E,
         (u16)GetClut(0x10, 0x1E0), 0x80);
     for (i = 0; i < 3; i++) {

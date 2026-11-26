@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable507World04
+    - dispatchWorkByte1Run1
     - '@source: src/bof3/world/area17213DispatchTables.c'
   - - 72
     - c
@@ -58,7 +58,7 @@ segments:
     - '@behavior: Publishes every work record through the scratchpad pointer cell 0x1F800044 with ordering-table index 2 in byte 0x29 and then runs the shared main-executable service 0x8014D290 for it: first the six 0x98-byte game work records at 0x80146888, then each live 0x140-byte local work record at 0x80145E90 whose party byte at +0x79 reads 7 while the shared live count 0x80146254 is non-zero, restoring the cell value read on entry.'
   - - 1008
     - c
-    - callStateTable5090World04
+    - dispatchWorkByte1Run2
     - '@source: src/bof3/world/area17213DispatchTables.c'
   - - 1076
     - c
@@ -88,7 +88,7 @@ segments:
     - '@behavior: While the shared effect-busy halfword 0x80143C40 reads zero, stores the sub-state 0x14 into the shared sub-state byte 0x80146875 and then runs the shared 0x80196070 work-flag reset helper; a busy effect leaves both untouched.'
   - - 1964
     - c
-    - callStateTable50World04
+    - dispatchWorkByte1Run3
     - '@source: src/bof3/world/area17213DispatchTables.c'
   - - 2032
     - c
@@ -230,7 +230,7 @@ segments:
     - '@behavior: Queues the shared world-marker element at (0x9, 0x3) with size 0x50 through the shared marker queue func_801A4BC0; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 8576
     - c
-    - callStateTable6790World04
+    - dispatchWorkByte1Run4
     - '@source: src/bof3/world/area17213DispatchTables.c'
   - - 8644
     - c

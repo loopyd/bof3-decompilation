@@ -1,4 +1,4 @@
-callStateTable431World04 = 0x801F2C04;
+dispatchWorkByte1Run1 = 0x801F2C04;
 initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndAdvanceStateByte1World04Area19713_801F2C48 = 0x801F2C48;
 func_801F2DA4 = 0x801F2DA4;
 invokeHelper = 0x801F2E54;
@@ -10,7 +10,7 @@ func_801F32A4 = 0x801F32A4;
 stepVelocityBounceCountdowns = 0x801F3368;
 clearWorkTableAt800 = 0x801F3474;
 func_801F34A0 = 0x801F34A0;
-callStateTable4368World04 = 0x801F3628;
+dispatchWorkByte2Run1 = 0x801F3628;
 incrementWorkByte2 = 0x801F366C;
 waitDrawingFullWidth = 0x801F368C;
 func_801F36F0 = 0x801F36F0;

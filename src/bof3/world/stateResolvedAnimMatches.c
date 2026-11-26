@@ -6,7 +6,7 @@
  * before each of the two state stores.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 
 /* @source 0x80143F00 @kind unknown */
 extern u16 D_80143F00;
@@ -89,13 +89,13 @@ void stateResolvedAnimMatches(
   if (D_80143F00 != 0x79) {
     return;
   }
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   route = work[8];
   x = *(s32*)(work + 0x34) + D_80181B94[route * 2] * 2;
   y = *(s32*)(work + 0x38) + D_80181B98[route * 2] * 2;
   slot = func_801BDE14(x, y, 1);
   if ((D_80145AA4 & D_80145AB6) != 0 &&
-      area12114WorkCursor_1F800044[8] == (D_80146890[(u8)slot].route_00 & 7)) {
+      scratchpadWorkRecord[8] == (D_80146890[(u8)slot].route_00 & 7)) {
     D_80146890[(u8)slot].anim_6C |= 1;
     return;
   }
@@ -105,8 +105,8 @@ void stateResolvedAnimMatches(
     return;
   }
   func_801C24D0();
-  area12114WorkCursor_1F800044[9] -= 1;
+  scratchpadWorkRecord[9] -= 1;
   func_801B0DFC();
   D_80146250[0x12B] = 1;
-  area12114WorkCursor_1F800044[2] = 1;
+  scratchpadWorkRecord[2] = 1;
 }

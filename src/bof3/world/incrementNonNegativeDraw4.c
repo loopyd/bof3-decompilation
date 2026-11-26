@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind data */
-extern u16 *g_WorkRecordWorld03Area14013;
+extern u16 *scratchpadWorkRecord;
 /* @source 0x80143BB0 @kind data */
 extern u8 D_80143BB0;
 /* @source 0x8015DF18 */
@@ -23,14 +23,14 @@ void incrementNonNegativeDraw(void) {
     u16 *work;
     u16 half;
 
-    work = g_WorkRecordWorld03Area14013;
+    work = scratchpadWorkRecord;
     half = work[0x18] + 0x20;
     work[0x18] = half;
     if ((s16)half >= 0) {
         if (D_80143BB0 == 0) {
             func_8015DF18(0x201);
         }
-        ((u8 *)g_WorkRecordWorld03Area14013)[2] = 1;
+        ((u8 *)scratchpadWorkRecord)[2] = 1;
     }
     func_801F3050();
 }

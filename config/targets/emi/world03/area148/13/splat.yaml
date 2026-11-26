@@ -60,7 +60,7 @@ segments:
     - func_801F31AC
   - - 2520
     - c
-    - callStateTable5024World03
+    - dispatchByte2Table5024
     - '@source: src/bof3/world/area14813DispatchTables.c'
   - - 2588
     - c
@@ -77,8 +77,8 @@ segments:
     - '@behavior: Handler at word 2 of the state-byte-2 dispatch run based at 0x801F5024. Reads the work record pointer from the scratchpad cell 0x1F800044, raises the record halfword at 0x30 by 8 and stores it back, then advances the record dispatch byte at 2 by one when the signed halfword has reached 0x80. It then calls the quad drawing routine at 0x801F37B8 with selection 0 and signed byte mode -1, and again with selection 1 and mode 1. Takes no arguments, returns nothing and keeps a 0x18-byte frame whose only saved register is ra at 0x10.'
   - - 2952
     - c
-    - stateSharedDrawWorld03
-    - '@source: src/bof3/world/stateSharedDrawWorld03.c'
+    - stateSharedDraw
+    - '@source: src/bof3/world/stateSharedDraw.c'
     - '@behavior: Handler at word 3 of the state-byte-2 dispatch run based at 0x801F5024. Writes 0x01 to the shared overlay byte at 0x8014933B and then calls the quad drawing routine at 0x801F37B8 with the selection index 2 and the signed byte mode 0.'
   - - 3000
     - c
@@ -87,18 +87,18 @@ segments:
     - '@behavior: Overlay draw routine called from three state handlers of the payload (0x801F361C with modes -2 and 1, 0x801F3720 with -1 and 1, 0x801F3788 with 0). For each of the three selection rows it seeds the shared primitive cursor as a POLY_FT4, clears the shade texture and fills the four scratchpad corner vectors at 0x1F800014 from that row of packed six-byte vertex triples at 0x801F5038 + row * 0x18, keeping each triple y and z and rewriting x as the triple x plus ((selection & 1) << 7) minus the record halfword at 0x30 times the signed byte 0x801F5034[selection & 1]. RotTransPers4 projects the corners into the primitive vertex pairs, func_80155560 fills the texture state from the row word in 0x801F5080 and func_80155A08 links the record position pair at 0x34/0x38 with the signed byte mode as kind and 0x28 as size. Takes the selection index and the mode and returns nothing.'
   - - 3472
     - c
-    - setWorld03Area14813_801F3990
+    - stateSharedMode1
   - - 3492
     - c
     - stateSharedFlagOverlay
     - '@source: src/bof3/world/stateSharedFlagOverlay.c'
   - - 3540
     - c
-    - copyWords7a8cToWork34383cWorld03Area14813_801F39D4
-    - '@source: src/bof3/world/copyWords7a8cToWork34383cWorld03Area14813_801F39D4.c'
+    - copyResidentWorkWords
+    - '@source: src/bof3/world/copyResidentWorkWords.c'
   - - 3596
     - c
-    - setWorld03Area14813_801F3A0C
+    - stateSharedMode2
   - - 3616
     - c
     - audioActionPresentCandidate
@@ -125,8 +125,8 @@ segments:
     - func_801F4108
   - - 5480
     - c
-    - initArea14813State
-    - '@source: src/bof3/world/initArea14813State.c'
+    - setupFrontendState1F
+    - '@source: src/bof3/world/setupFrontendState1F.c'
   - - 5536
     - c
     - requestPrimaryState1F
@@ -137,7 +137,7 @@ segments:
     - noopHandler
   - - 5756
     - c
-    - callStateTable6160World03
+    - dispatchByte1Table6160
     - '@source: src/bof3/world/area14813DispatchTables.c'
   - - 5824
     - c

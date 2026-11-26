@@ -10,4 +10,4 @@ func_801EF284 = 0x801EF284;
 func_801EF380 = 0x801EF380;
 reserveFirstFreeRecord = 0x801EF69C;
 D_801EF700 = 0x801EF700;
-magic16603RecordFlags = 0x801EF724;
+stateRecordFlags = 0x801EF724;

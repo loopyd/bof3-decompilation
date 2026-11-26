@@ -26,7 +26,7 @@ void func_8015C088(void);
  * Name evidence: 0x801448EB is the shared state-entry byte and 0x801448EC its
  * progress byte, the pair the exact World03 area143, World04 area167/168/171
  * and world initialisers write through func_8015C088; the in-target reviewed
- * candidate initArea11413State@0x801F2C68 writes the same two bytes from the
+ * candidate initStateSelectorTriple@0x801F2C68 writes the same two bytes from the
  * same helper. The halfword at +0x7C is the record field the in-target
  * func_801F2CF0 also seeds (with 9 at 0x801F2E34, through the pointer it loads
  * from D_80148208), so the store is named by its anchored offset because no
@@ -58,7 +58,7 @@ void func_8015C088(void);
  *           $v0 and emits the zero return last; the two facts are coupled, the
  *           size, frame and store order already agree, and this is the same
  *           constant-scratch class the reviewed in-target candidate
- *           initArea11413State@0x801F2C68 retains at 68.75 percent.
+ *           initStateSelectorTriple@0x801F2C68 retains at 68.75 percent.
  */
 s32 stateEntry3ArgTo5(u8 *arg0) {
   func_8015C088();

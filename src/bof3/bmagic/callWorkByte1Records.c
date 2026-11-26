@@ -18,7 +18,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * into 0x801EB4E0 for the record's step. The flags read re-materialises this
  * base, while the published record pointer reuses one materialised base held
  * in a saved register, so the original keeps both forms. */
-extern u8 magic16203RecordFlags[]; /* @source 0x801F01B0 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801F01B0 @kind data */
 
 /* Current-record pointer cell at 0x801F17B0, the tail word of the overlay's
  * trailing data block. The sweep publishes the record it is about to step
@@ -94,10 +94,10 @@ void callWorkByte1Records(void) {
   handlers.handlers[g_battle_work[1]]();
   for (index = 0; index < 0x80; index++) {
     offset = index * 0x2C;
-    if (magic16203RecordFlags[offset] & 1) {
-      record = &magic16203RecordFlags[offset];
+    if (stateRecordFlags[offset] & 1) {
+      record = &stateRecordFlags[offset];
       savedRecord = D_801EB4E0;
-      recordWork = *(u8 **)&magic16203RecordFlags[offset + 0x28];
+      recordWork = *(u8 **)&stateRecordFlags[offset + 0x28];
       D_801F17B0 = record;
       D_801EB4E0 = recordWork;
       dispatchRecordByte();

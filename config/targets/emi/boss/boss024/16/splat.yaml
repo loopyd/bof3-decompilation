@@ -32,23 +32,23 @@ segments:
     - '@behavior: Overlay state dispatch: loads the scratchpad work pointer cell at 0x1F800044, takes the work record dispatch byte at offset 1 as the index and calls the handler pointer at that index of the local handler table based at 0x800C1B58, so the selected handler result stays in the return register'
   - - 72
     - c
-    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02416_800C1848
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02416_800C1848.c'
+    - publishWorkStepHandler5
+    - '@source: src/bof3/boss/publishWorkStepHandler5.c'
     - '@behavior: Step-0 setup of this overlay work state machine: it loads the current work record pointer from 0x801EB4E8, publishes the 0x800C1B44 data row pointer into field 0xEC, the dispatcher 0x800C18A0 into field 0xE4 and the in-row 0x800C1B50 pointer into field 0xE8, writes 2 into the work record state byte at offset 1 through the scratchpad pointer cell 0x1F800044 and calls 0x8014D978.'
   - - 160
     - c
-    - dispatchIndexedHandlerBossBoss02416_800C18A0
-    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss02416_800C18A0.c'
+    - dispatchIndexedHandler6
+    - '@source: src/bof3/boss/dispatchIndexedHandler6.c'
     - '@behavior: Byte-indexed overlay dispatcher: it masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B88 handler table, so the selected handler result stays in the return register'
   - - 216
     - c
-    - noopHandlerBossBoss02416_800C18D8
+    - noopHandler151
   - - 224
     - c
     - noopHandler69
   - - 232
     - c
-    - noopHandlerBossBoss02416_800C18E8
+    - noopHandler152
   - - 240
     - c
     - callStateByte1Table8

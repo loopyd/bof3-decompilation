@@ -4,7 +4,7 @@
  * materializes the cell with `lui` plus an offset load at each read and saves
  * no register for it across the cue call, so the body spells the cell itself
  * at both read points. */
-extern u8* g_world02Area11113Work; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Shared cue dispatcher of the main executable. This payload only calls it, so
  * the role comes from this call site. */
@@ -62,9 +62,9 @@ void statePartsHalvesArm(
   u8* work;
   u8* state;
 
-  work = g_world02Area11113Work;
+  work = workRecordSlot;
   work[9] = 0x28;
-  state = g_world02Area11113Work;
+  state = workRecordSlot;
   *(u16*)(work + 0x2E) = 0;
   *(u16*)(work + 0x30) = 0x100;
   state[1] += 1;

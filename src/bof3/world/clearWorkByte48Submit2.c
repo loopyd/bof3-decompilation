@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* scratchWorkRecordPointer_1F800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 extern void func_80196718(void* record); /* @source 0x80196718 */
 
 /* @source 0x801F3C40
@@ -13,6 +13,6 @@ extern void func_80196718(void* record); /* @source 0x80196718 */
  * @residual none
  */
 void clearWorkByte48Submit(void) {
-  scratchWorkRecordPointer_1F800044[0x48] = 0;
-  func_80196718(scratchWorkRecordPointer_1F800044);
+  scratchpadWorkRecord[0x48] = 0;
+  func_80196718(scratchpadWorkRecord);
 }

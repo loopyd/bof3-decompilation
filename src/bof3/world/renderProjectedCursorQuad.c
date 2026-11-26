@@ -10,7 +10,7 @@ void func_801F3D70(s32 *point); /* @source 0x801F3D70 @kind function */
 /* @source 0x801F3D28
  * @behavior Overlay step handler: entry 1 of the handler table based at
  * 0x801F4F68 that this target's dispatcher
- * callStateTable4World02 indexes with the work
+ * dispatchWorkByte1Handler4 indexes with the work
  * record's state byte at +1, whose entry 0 is
  * stateScaledDistanceAdvance.
  * It loads the work-object pointer published at the scratchpad cell 0x1F800044

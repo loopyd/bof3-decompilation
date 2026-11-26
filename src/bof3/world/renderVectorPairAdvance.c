@@ -17,7 +17,7 @@ void renderBeamRotatedBody(
  * through the shared 3D-to-screen projector func_801AFF04, so +0x0C and +0x18
  * are the record's two three-word position vectors; the helper draws between
  * them. Byte +0x01 is the dispatch byte this overlay's own handler table
- * callStateTable5454World03 indexes with, so the
+ * callVectorStepTable indexes with, so the
  * increment advances the record to the next handler step. The pointer cell is
  * read twice because the drawing call sits between the two reads. It takes no
  * arguments, returns nothing and reads no other state.

@@ -14,10 +14,10 @@ sources = [
     "src/bof3/boss/publishWorkStepHandler.c",
 ]
 support_sources = [
-    "src/bof3/boss/zeroResultBossBoss03113_800C1A00.c",
-    "src/bof3/boss/noopHandlerBossBoss03113_800C19C0.c",
-    "src/bof3/boss/noopHandlerBossBoss03113_800C19B8.c",
-    "src/bof3/boss/noopHandlerBossBoss03113_800C19B0.c",
+    "src/bof3/boss/zeroResult35.c",
+    "src/bof3/boss/noopHandler160.c",
+    "src/bof3/boss/noopHandler159.c",
+    "src/bof3/boss/noopHandler158.c",
     "src/bof3/support/boss031_13_psyq.c",
     "src/bof3/boss/publishOwnerRequestResource.c",
     "src/bof3/boss/dispatchIndexTable1b14.c",

@@ -138,7 +138,7 @@ segments:
     - func_800C20BC
   - - 2316
     - c
-    - noopHandlerBossBoss01816_800C210C
+    - noopHandler145
   - - 2324
     - c
     - publishBattleHooks10

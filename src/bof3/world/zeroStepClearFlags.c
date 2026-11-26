@@ -7,7 +7,7 @@ extern u8 D_80144F28;
  * cell once for the step halfword store and again after the flag probe, both
  * as `lui $v0,0x1F80` / `lw $v0,0x44($v0)`, and keeps no saved register for
  * the cell address. */
-extern u8* g_world02Area11113Work; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 s32 func_8015B5D4(u32 arg0, s32 arg1);
 void func_80196070(void);
@@ -52,11 +52,11 @@ void func_801F3244(void);
  */
 void zeroStepClearFlags(
     void) {
-  *(u16*)(g_world02Area11113Work + 0x30) = 0;
+  *(u16*)(workRecordSlot + 0x30) = 0;
   if (func_8015B5D4((u32)&D_80144F28, 0x28) != 0) {
     func_80196070();
   } else {
-    g_world02Area11113Work[2] = g_world02Area11113Work[2] + 1;
+    workRecordSlot[2] = workRecordSlot[2] + 1;
     func_801F3244();
   }
 }

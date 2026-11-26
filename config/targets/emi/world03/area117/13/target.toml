@@ -19,7 +19,7 @@ support_sources = [
     "src/bof3/world/area11713DispatchTables.c",
     "src/bof3/world/queryPositionBoundsIndex.c",
     "src/bof3/world/decrementBelowMinusDraw.c",
-    "src/bof3/world/initArea11713State.c",
+    "src/bof3/world/stateEntryTupleMode5.c",
     "src/bof3/world/publishThirdWorkBase.c",
     "src/bof3/world/publishFromModeTable.c",
     "src/bof3/world/publishModeStatusProgress.c",

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x80146920 @kind unknown */
-extern u8 workRecordAt80146920World03Area13413[];
+extern u8 workRecordRow[];
 
 /* @source 0x801F3BB4
  * @behavior Saves the work pointer at scratchpad cell 0x1F800044 and publishes
@@ -29,8 +29,8 @@ void retreatWorkWord38Set(void) {
   slots = SPAD_PTR_TABLE(u8);
   saved = slots[0x11];
   slots = SPAD_PTR_TABLE(u8);
-  slots[0x11] = (u8*)&workRecordAt80146920World03Area13413;
-  work = (u8*)&workRecordAt80146920World03Area13413;
+  slots[0x11] = (u8*)&workRecordRow;
+  work = (u8*)&workRecordRow;
   do {
     FIELD_REF(u32, work, 0x38) -= 0x4000;
     i += 1u;

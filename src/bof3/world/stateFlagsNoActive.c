@@ -12,7 +12,7 @@ void func_80196070(void);
 /* @source 0x801F2F90
  * @behavior Entry 8, the ninth and last word of this overlay's state-handler
  *           run based at 0x801F36CC, which
- *           callStateTable36World03 selects with
+ *           dispatchByte1Table36cc selects with
  *           the unsigned work byte at offset +0x1 of the work object published
  *           at the scratchpad pointer cell 0x1F800044 and calls with no
  *           arguments. It runs this overlay's per-frame record sweep at

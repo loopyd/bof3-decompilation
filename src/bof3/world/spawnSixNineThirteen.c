@@ -6,7 +6,7 @@ void claimFreeRingDirection(
 /* @source 0x801F2C80
  * @behavior Entry 1 of this overlay's nine-word work-state handler run at
  *           0x801F36CC, the table the exact dispatcher
- *           callStateTable36World03 indexes with
+ *           dispatchByte1Table36cc indexes with
  *           the unsigned work byte at offset +0x1 of the work object published
  *           at the scratchpad pointer cell 0x1F800044; entry 0 at 0x801F2C48
  *           advances that byte to 1, so this body runs on the second frame of

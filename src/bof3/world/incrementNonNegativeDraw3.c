@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* world03Area11913WorkRecord; /* @source 0x1F800044 @kind data */
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 extern u8 D_80143BB0; /* @source 0x80143BB0 @kind data */
 extern void func_801F301C(void); /* @source 0x801F301C @kind function */
 extern void func_801F3324(void); /* @source 0x801F3324 @kind function */
@@ -25,12 +25,12 @@ void incrementNonNegativeDraw(
   u8* resumedWork;
   u16 half;
 
-  work = world03Area11913WorkRecord;
+  work = scratchpadWorkRecord;
   half = *(u16*)(work + 0x30) + 0x20;
   *(u16*)(work + 0x30) = half;
   if ((s16)half >= 0) {
     func_801F301C();
-    resumedWork = world03Area11913WorkRecord;
+    resumedWork = scratchpadWorkRecord;
     if (resumedWork[2] == 2) {
       return;
     }

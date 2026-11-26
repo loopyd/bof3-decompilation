@@ -12,7 +12,7 @@ typedef struct World02Area10814Cell63dc {
  * (0x34,0x3B), (0x33,0x3C), (0x34,0x3C) - a two-by-four-byte block whose pairs
  * fill 0x801F63DC-0x801F63EB, up to the word the payload names 0x801F63EC. */
 /* @source 0x801F63DC @kind table */
-extern World02Area10814Cell63dc blockCellTable63World02[];
+extern World02Area10814Cell63dc payloadBlockCellTable[];
 
 /* Shared three-argument helper of the main executable. */
 /* @source 0x80155038 */
@@ -49,15 +49,15 @@ void queueBlockElementsSize(
 
   if (arg0 != 0) {
     for (i = 0; i < 4; i++) {
-      x = blockCellTable63World02[i].x;
-      y = blockCellTable63World02[i].y;
+      x = payloadBlockCellTable[i].x;
+      y = payloadBlockCellTable[i].y;
       func_80155038(x, y, 0xE);
       func_801A4BC0(x, y, 0x11);
     }
   } else {
     for (i = 0; i < 4; i++) {
-      x = blockCellTable63World02[i].x;
-      y = blockCellTable63World02[i].y;
+      x = payloadBlockCellTable[i].x;
+      y = payloadBlockCellTable[i].y;
       func_80155038(x, y, 0);
       func_801A4BC0(x, y, 0);
     }

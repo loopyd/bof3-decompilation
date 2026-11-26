@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable37World03
+    - dispatchByte1Table37d0
     - '@source: src/bof3/world/area14913DispatchTables.c'
   - - 72
     - c
     - stateChannelFlagsTriple
     - '@source: src/bof3/world/stateChannelFlagsTriple.c'
-    - '@behavior: Entry 0 of this overlay byte-1 handler run based at 0x801F37D0, which callStateTable37World03 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: stores 0x1C80 into the shared halfword 0x8014932C, publishes 2 in the shared mode byte 0x80149333, stores 1 into the shared flag bytes 0x80145ED8, 0x80146018 and 0x80146158, fills the record bytes +0x5F, +0x5E and +0x5D with 0x7F, arms the record countdown byte +0x09 with 0x96 and stores 1 into the record byte +0x01 to hand the run to entry 1 (0x801F2CB4); takes no arguments, calls nothing and returns nothing.'
+    - '@behavior: Entry 0 of this overlay byte-1 handler run based at 0x801F37D0, which dispatchByte1Table37d0 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: stores 0x1C80 into the shared halfword 0x8014932C, publishes 2 in the shared mode byte 0x80149333, stores 1 into the shared flag bytes 0x80145ED8, 0x80146018 and 0x80146158, fills the record bytes +0x5F, +0x5E and +0x5D with 0x7F, arms the record countdown byte +0x09 with 0x96 and stores 1 into the record byte +0x01 to hand the run to entry 1 (0x801F2CB4); takes no arguments, calls nothing and returns nothing.'
   - - 180
     - c
     - invokeHelper
@@ -41,18 +41,18 @@ segments:
     - c
     - stepLowerLevelTriple
     - '@source: src/bof3/world/stepLowerLevelTriple.c'
-    - '@behavior: Entry 2 of this overlay''s byte-1 handler run based at 0x801F37D0, which callStateTable37World03 indexes with work byte 1: decrements the work countdown byte 0x09, and when it reaches 0 stores 0x400 into the shared channel halfword 0x8014932C and stores 3 into work byte 1 to hand the run to entry 3 (0x801F2DAC); while the countdown runs it subtracts 0x2A from that halfword and, when the signed level byte 0x5D is nonzero, decrements bytes 0x5D, 0x5E and 0x5F; then it stores 2 into the shared mode byte 0x80149333 and calls the local drawing helper func_801F2DE0; takes no arguments and returns nothing.'
+    - '@behavior: Entry 2 of this overlay''s byte-1 handler run based at 0x801F37D0, which dispatchByte1Table37d0 indexes with work byte 1: decrements the work countdown byte 0x09, and when it reaches 0 stores 0x400 into the shared channel halfword 0x8014932C and stores 3 into work byte 1 to hand the run to entry 3 (0x801F2DAC); while the countdown runs it subtracts 0x2A from that halfword and, when the signed level byte 0x5D is nonzero, decrements bytes 0x5D, 0x5E and 0x5F; then it stores 2 into the shared mode byte 0x80149333 and calls the local drawing helper func_801F2DE0; takes no arguments and returns nothing.'
   - - 428
     - c
     - stateSharedSceneFlags
     - '@source: src/bof3/world/stateSharedSceneFlags.c'
-    - '@behavior: Entry 3 of this overlay''s byte-1 handler run based at 0x801F37D0, which callStateTable37World03 indexes with work byte 1 (entry 2 stores 3 into work byte 1 to hand the run here): adds one to the shared scene state request byte 0x80146875 and then runs the shared work-flag reset func_80196070, which clears the scratchpad work bytes at offsets 0x00 through 0x04 and so ends the run; takes no arguments and returns nothing.'
+    - '@behavior: Entry 3 of this overlay''s byte-1 handler run based at 0x801F37D0, which dispatchByte1Table37d0 indexes with work byte 1 (entry 2 stores 3 into work byte 1 to hand the run here): adds one to the shared scene state request byte 0x80146875 and then runs the shared work-flag reset func_80196070, which clears the scratchpad work bytes at offsets 0x00 through 0x04 and so ends the run; takes no arguments and returns nothing.'
   - - 480
     - asm
     - func_801F2DE0
   - - 708
     - c
-    - copyWords7Work34383World03
+    - copyResidentWorkWords
   - - 764
     - c
     - callStateByte4Table4580

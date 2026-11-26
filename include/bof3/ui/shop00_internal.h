@@ -378,7 +378,7 @@ extern void (*D_801E5DDC[])(void);
  * drawShopEquipPanel with the same task root's x and field-6 halfwords and the
  * byte
  * D_80181B10[D_80144F5A[task byte 0xA]]. The three pointer entries present in
- * the shipped payload are panelNoop (0x801E2800), retreatPanelXToNeg150B
+ * the shipped payload are panelNoop (0x801E2800), retreatPanelNeg150B
  * (0x801E2E30) and advancePanelXTo15 (0x801E2E70); the table ends 0xC bytes
  * in, where the pointer table D_801E5DFC starts.
  * @source 0x801E5DF0
@@ -420,7 +420,7 @@ extern void (*D_801E5E2C[])(void);
  * which calls the selected handler with no arguments and then forwards the
  * same task root to the shop panel step func_801E112C. The five pointer
  * entries present in the shipped payload are panelNoop (0x801E2800),
- * advancePanelXTo320C (0x801E3BF8), retreatPanelXTo150 (0x801E3C38),
+ * advancePanel320C (0x801E3BF8), retreatPanelXTo150 (0x801E3C38),
  * advancePanelXTo40 (0x801E3C78) and retreatPanelXNeg170 (0x801E3CB8);
  * the payload's code-pointer run continues in the adjacent table below, and
  * each per-panel table starts with the panelNoop idle handler.
@@ -433,7 +433,7 @@ extern void (*D_801E5E48[])(void);
  * which calls the selected handler with no arguments (framed jalr) and then
  * forwards the same task root to the shop panel step func_801E1710. The five
  * pointer entries present in the shipped payload are panelNoop (0x801E2800),
- * advancePanelXTo320D (0x801E3D4C), retreatPanelXTo150B (0x801E3D8C),
+ * advancePanel320D (0x801E3D4C), retreatPanel150B (0x801E3D8C),
  * retreatPanelXTo17 (0x801E3DCC) and advancePanelXTo150 (0x801E3E0C).
  * @source 0x801E5E5C
  * @kind table */
@@ -445,7 +445,7 @@ extern void (*D_801E5E5C[])(void);
  * arguments (framed jalr) and then forwards the same task root's x and field-6
  * halfwords, byte 0xA and the constants 0 and 0 to the shop field-list emitter
  * func_801D826C. The three pointer entries present in the shipped payload are
- * panelNoop (0x801E2800), retreatPanelXToNeg150C (0x801E3EB4) and
+ * panelNoop (0x801E2800), retreatPanelNeg150C (0x801E3EB4) and
  * statePanelXTo17 (0x801E3EF4); the table ends 0xC bytes in, where the
  * following pointer-free word starts.
  * @source 0x801E5E70
@@ -459,8 +459,8 @@ extern void (*D_801E5E70[])(void);
  * panel step func_801E45C0. The thirteen pointer entries present in the
  * shipped payload alternate the panelNoop (0x801E2800) idle handler with the
  * shop panel tweens retreatPanelXNeg120, advancePanelXTo100,
- * retreatPanelXTo17B, advancePanelXTo320E, retreatPanelXTo140,
- * advancePanelField6To240, retreatPanelField6To128, advancePanelXTo320F and
+ * retreatPanelXTo17B, advancePanel320E, retreatPanelXTo140,
+ * advancePanelField6To240, retreatPanelField6To128, advancePanel320F and
  * retreatPanelXTo210; the table ends where the following pointer-free word
  * starts.
  * @source 0x801E5F14
@@ -472,10 +472,10 @@ extern void (*D_801E5F14[])(void);
  * sibling dispatcher func_801E4338, which calls the selected handler with no
  * arguments (framed jalr) and then forwards the same task root to the shop
  * panel emitter func_801E4DF4. The nine pointer entries present in the shipped
- * payload are panelNoop (0x801E2800), advancePanelXTo320E (0x801E438C),
+ * payload are panelNoop (0x801E2800), advancePanel320E (0x801E438C),
  * retreatPanelXTo140 (0x801E43CC), panelNoop, advancePanelField6To240
  * (0x801E4460), retreatPanelField6To128 (0x801E44A0), panelNoop,
- * advancePanelXTo320F (0x801E4540) and retreatPanelXTo210 (0x801E4580); the
+ * advancePanel320F (0x801E4540) and retreatPanelXTo210 (0x801E4580); the
  * window starts 0x10 bytes into the pointer run declared by D_801E5F14 and
  * ends where the following pointer-free word starts.
  * @source 0x801E5F24
@@ -488,7 +488,7 @@ extern void (*D_801E5F24[])(void);
  * arguments (framed jalr) and then forwards the same task root to the shop
  * panel emitter func_801E4E9C. The six pointer entries present in the shipped
  * payload are panelNoop (0x801E2800), advancePanelField6To240 (0x801E4460),
- * retreatPanelField6To128 (0x801E44A0), panelNoop, advancePanelXTo320F
+ * retreatPanelField6To128 (0x801E44A0), panelNoop, advancePanel320F
  * (0x801E4540) and retreatPanelXTo210 (0x801E4580); the window starts 0x1C
  * bytes into the pointer run declared by D_801E5F14 and ends where the
  * following pointer-free word starts.
@@ -502,7 +502,7 @@ extern void (*D_801E5F30[])(void);
  * arguments (framed jalr) and then draws the panel at the same task root's
  * x/field-6 coordinates through drawShopInkPanel. The three pointer entries
  * present in the shipped payload are panelNoop (0x801E2800),
- * advancePanelXTo320F (0x801E4540) and retreatPanelXTo210 (0x801E4580); the
+ * advancePanel320F (0x801E4540) and retreatPanelXTo210 (0x801E4580); the
  * window starts 0x28 bytes into the pointer run declared by D_801E5F14 and
  * ends where the following pointer-free word starts.
  * @source 0x801E5F3C
@@ -1049,7 +1049,7 @@ void func_801DBF18(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
  * @source 0x801D8FC0 */
 void emitShopIconSprite(s32 x, s32 y, s32 kind, s32 mode);
 /* Equipment-slot block of this EMI, lifted at src/bof3/ui/
- * drawEquipSlotRowsShop00_801D95F4.c: it paints the inset backing rectangle at
+ * renderEquipSlotRows.c: it paints the inset backing rectangle at
  * (x+2, y+0x44) with the size 0x87 by 0x58 and the shade 0xF1, then draws the
  * six equipped slots of the 164-byte field record the index byte selects and
  * submits the six palette cells that label them. func_801DB938 calls it with
@@ -1057,9 +1057,9 @@ void emitShopIconSprite(s32 x, s32 y, s32 kind, s32 mode);
  * D_80145FCC selected by task byte 0xC and the low byte of that function
  * second argument.
  * @source 0x801D95F4 */
-void drawEquipSlotRowsShop00_801D95F4(u16 x, u16 y, u8 index, u8 flag);
+void renderEquipSlotRows(u16 x, u16 y, u8 index, u8 flag);
 /* Shop row emitter in this EMI (unlifted) called by func_801DB938 with the same
- * arguments as drawEquipSlotRowsShop00_801D95F4: the task's x and field-6
+ * arguments as renderEquipSlotRows: the task's x and field-6
  * halfwords, the leading
  * byte of the 0x140-byte record D_80145FCC selected by task byte 0xC and the
  * low byte of that function's second argument. Its body adds 2 to both
@@ -1984,7 +1984,7 @@ extern u16 D_80145AC8;
  * D_80146254 records at D_80145FCC by emi/etc/game/00, emi/etc/sisyou/00 and
  * emi/battle/battle/03. Read by this target's func_801DB938 to select the
  * record named by its task byte 0xC and passed as the third argument of the
- * equipment-slot block drawEquipSlotRowsShop00_801D95F4 and the shop row
+ * equipment-slot block renderEquipSlotRows and the shop row
  * emitter func_801D9254. The address is not owned
  * by the shared map, so this target declares it locally and adds a target-map
  * row.

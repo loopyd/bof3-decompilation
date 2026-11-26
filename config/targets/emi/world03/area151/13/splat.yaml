@@ -60,7 +60,7 @@ segments:
     - '@source: src/bof3/world/area15113_work_state.c'
   - - 1932
     - c
-    - callStateTable5440World03
+    - dispatchByte1Table5440
     - '@source: src/bof3/world/area15113DispatchTables.c'
   - - 2000
     - c
@@ -71,7 +71,7 @@ segments:
     - invokeTwoHelpers
   - - 2104
     - c
-    - callStateTable5448World03
+    - dispatchByte2Table5448
     - '@source: src/bof3/world/area15113DispatchTables.c'
   - - 2172
     - c
@@ -132,7 +132,7 @@ segments:
     - func_801F4034
   - - 5348
     - c
-    - callStateTable54World03
+    - dispatchByte1Table54d8
     - '@source: src/bof3/world/area15113DispatchTables.c'
   - - 5416
     - asm
@@ -154,7 +154,7 @@ segments:
     - func_801F457C
   - - 6828
     - c
-    - invokeTwoHelpersWorld03Area15113_801F46AC
+    - invokeTwoHelpers2
   - - 6868
     - c
     - renderPulsingScrollingFocus

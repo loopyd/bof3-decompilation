@@ -15,7 +15,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  *           table based at 0x801F3E00, whose three words hold 0x801F30C0,
  *           this address at 0x801F3E04 and 0x801F31EC. The table is indexed
  *           with the work record's state byte at +1 by this target's exact
- *           dispatcher dispatchStateByte1Table3e00WorldWorld03Area13213_801F307C.
+ *           dispatcher dispatchByte1Table3e00.
  *           Entry 0 seeds the fields this body moves: it arms the countdown
  *           byte at +0x09 with 0x40, clears the halfword at +0x20, stores
  *           0x01000000 in the word at +0x24, copies the saved words at +0x34,
@@ -42,7 +42,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * 0x801F3E04, entry 1 of the pointer run based at 0x801F3E00; there is no jal
  * caller, which is the dispatch shape rather than missing evidence. That table
  * is indexed with the work record's state byte at +1 by the exact same-target
- * dispatcher dispatchStateByte1Table3e00WorldWorld03Area13213_801F307C, whose
+ * dispatcher dispatchByte1Table3e00, whose
  * entries are this overlay's step handlers. The advance-and-clamp role comes
  * from this body's own immediates and from entry 0's seeding of the same
  * fields; the countdown re-arm and the state-byte advance come from the byte

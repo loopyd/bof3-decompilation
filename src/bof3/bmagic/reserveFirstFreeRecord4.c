@@ -6,7 +6,7 @@
  * span 0x801F01B0 through 0x801F17AF, ending exactly at that pointer cell. The
  * trailing data block carries no map row, so the reference binds through the
  * target's generated undefined-symbol table. */
-extern u8 magic16203RecordFlags[]; /* @source 0x801F01B0 @kind data */
+extern u8 stateRecordFlags[]; /* @source 0x801F01B0 @kind data */
 
 /* @source 0x801EFFFC
  * @behavior Reserves the first of 128 records in the pool at 0x801F01B0 whose
@@ -32,9 +32,9 @@ u8 reserveFirstFreeRecord(void) {
 
     for (index = 0; index < 0x80; index++) {
         offset = index * 0x2C;
-        flags = magic16203RecordFlags[offset];
+        flags = stateRecordFlags[offset];
         if (!(flags & 1)) {
-            magic16203RecordFlags[offset] = flags | 1;
+            stateRecordFlags[offset] = flags | 1;
             return index;
         }
     }

@@ -21,7 +21,7 @@ void func_80196070(void);
 /* @source 0x801F40C8
  * @behavior State-byte-1 handler 3 of the five-entry local handler run at
  * 0x801F5804, the table the exact dispatcher
- * callStateTable5804World03 indexes with the work
+ * callEndStepTable indexes with the work
  * record's byte at +1: when the area status byte D_80146865 already reads 0xFE
  * it first resets the work-area header through func_80196070, then publishes
  * the third shared work base D_80146110 as the overlay work pointer D_80146250

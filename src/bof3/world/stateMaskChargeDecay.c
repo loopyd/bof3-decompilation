@@ -7,7 +7,7 @@ extern u16 D_80145AB6;
 /* @source 0x80143E6C @kind unknown */
 extern u32 D_80143E6C;
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 
 /* @source 0x801F5798
  * @behavior Decrements work byte 0x0A when nonzero. When it reaches zero,
@@ -27,35 +27,35 @@ void stateMaskChargeDecay(void) {
   s32 value;
   s8* work;
 
-  if (area12114WorkCursor_1F800044[0x0A] != 0) {
-    area12114WorkCursor_1F800044[0x0A]--;
+  if (scratchpadWorkRecord[0x0A] != 0) {
+    scratchpadWorkRecord[0x0A]--;
   }
-  if (area12114WorkCursor_1F800044[0x0A] == 0) {
+  if (scratchpadWorkRecord[0x0A] == 0) {
     if ((D_80145AA4 & D_80145AB6) != 0) {
-      if (area12114WorkCursor_1F800044[0x0B] < 64) {
-        area12114WorkCursor_1F800044[0x0B]++;
+      if (scratchpadWorkRecord[0x0B] < 64) {
+        scratchpadWorkRecord[0x0B]++;
       }
-      if (area12114WorkCursor_1F800044[0x0B] == 64) {
-        area12114WorkCursor_1F800044[0x0A] = 30;
+      if (scratchpadWorkRecord[0x0B] == 64) {
+        scratchpadWorkRecord[0x0A] = 30;
       }
-    } else if (area12114WorkCursor_1F800044[0x0B] != 0) {
-      if (area12114WorkCursor_1F800044[0x0B] > 48) {
+    } else if (scratchpadWorkRecord[0x0B] != 0) {
+      if (scratchpadWorkRecord[0x0B] > 48) {
         decay = 3;
-      } else if (area12114WorkCursor_1F800044[0x0B] > 32) {
+      } else if (scratchpadWorkRecord[0x0B] > 32) {
         decay = 2;
       } else {
         decay = 1;
       }
-      if (area12114WorkCursor_1F800044[2] != 0) {
-        area12114WorkCursor_1F800044[0x0B] -= decay >> 1;
+      if (scratchpadWorkRecord[2] != 0) {
+        scratchpadWorkRecord[0x0B] -= decay >> 1;
         if (D_80143E6C & 1) {
-          area12114WorkCursor_1F800044[0x0B] -= decay & 1;
+          scratchpadWorkRecord[0x0B] -= decay & 1;
         }
       } else {
-        area12114WorkCursor_1F800044[0x0B] -= decay;
+        scratchpadWorkRecord[0x0B] -= decay;
       }
     }
-    work = (s8*)area12114WorkCursor_1F800044;
+    work = (s8*)scratchpadWorkRecord;
     value = work[0x0B];
     work[0x0B] = value >= 0 ? (value < 65 ? value : 64) : 0;
   }

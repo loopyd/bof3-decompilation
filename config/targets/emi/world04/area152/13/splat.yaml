@@ -62,7 +62,7 @@ segments:
     - '@source: src/bof3/world/area15213_work_state.c'
   - - 1760
     - c
-    - callStateTable4World04
+    - dispatchTable4d6c
     - '@source: src/bof3/world/area15213DispatchTables.c'
   - - 1828
     - c
@@ -152,7 +152,7 @@ segments:
     - '@behavior: Step handler of this overlay work record published at scratchpad pointer cell 0x1F800044: while work byte 0x0B is nonzero it calls the shared helper 0x80196070 and returns once bit 0x80 of work byte 0x00 is set, while work byte 0x0B is zero it stores 1 there when that bit is clear, then it re-reads the cell and adds the work word 0x0C to the word 0x34 and the work word 0x10 to the word 0x38 before calling the shared helpers 0x8014D978 and 0x8014D290 in that order.'
   - - 6284
     - c
-    - dispatchStateByte1Table4e28World04Area15213_801F448C
+    - dispatchByte1Table4e28
     - '@source: src/bof3/world/area15213DispatchTables.c'
   - - 6352
     - c
@@ -161,7 +161,7 @@ segments:
     - '@behavior: State handler 0 of the local state-1 handler run at 0x801F4E28 that the dispatcher 0x801F448C reads by work byte 0x01; when shared byte 0x8014496D is 9 or bit 0 of shared byte 0x80146871 is set it calls the shared 0x80196070 helper and returns, otherwise it calls the shared 0x8019A194 helper, requests resource 0x205 through the shared 0x8014DD3C helper, clears the work bytes at offsets 0x48, 0x24, 0x2A and 0x5D..0x5F of the record published at scratchpad cell 0x1F800044, stamps 0xA0 into the map byte at the column and row held by the four-byte record at 0x801F4C48 that work byte 0x0B selects (0x8014931C + row * 0x80104000 + column), calls the shared 0x8014D6B8 helper with 0 and sets work byte 0x01 to 1.'
   - - 6656
     - c
-    - invokeTwoHelpersWorld04Area15213_801F4600
+    - invokeTwoHelpers2
   - - 6696
     - c
     - drawPulsingTexturedPanel

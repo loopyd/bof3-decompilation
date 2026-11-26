@@ -39,7 +39,7 @@ segments:
     - '@behavior: stores the signed halfword -0x424 into the shared halfword at 0x8014932C, writes 1 into byte 4 of the scratch work record published through the 0x1F800044 pointer cell, then subtracts 2 from the halfword at offset 0x0A of the record published through the pointer cell at 0x80148210. Takes no arguments and returns nothing.'
   - - 188
     - c
-    - stateHalfword932To1500World03
+    - stateRampHalfword1500
   - - 304
     - asm
     - func_801F2D30
@@ -80,7 +80,7 @@ segments:
     - '@source: src/bof3/world/area12114_work_state.c'
   - - 2100
     - c
-    - callStateTable67World03
+    - dispatchByte1Table67d8
     - '@source: src/bof3/world/area12114DispatchTables.c'
   - - 2168
     - c
@@ -165,14 +165,14 @@ segments:
     - func_801F453C
   - - 6624
     - c
-    - callStateTable6894World03
+    - dispatchByte1Table6894
     - '@source: src/bof3/world/area12114DispatchTables.c'
   - - 6692
     - asm
     - func_801F4624
   - - 6996
     - c
-    - invokeTwoHelpersWorld03Area12114_801F4754
+    - callTwoSharedHelpers
   - - 7036
     - c
     - renderLayerNearFocus
@@ -189,7 +189,7 @@ segments:
     - '@behavior: Byte-2 state handler 0 of the two-entry handler table 0x801F689C that the overlay step dispatch at 0x801F4B00 indexes with work byte 0x02. It exits while the facing step at 0x801F5268 reports a settled slot, bit 0x100 of halfword 0x80146258, bit 0x40 of halfword 0x8014625A, shared byte 0x80143BB0 or work byte 0x0A is nonzero, and again when any of the guards 0x801B6674, 0x801F5578, 0x801B6258 and 0x801F55EC answers nonzero. It clears record byte 0x12A of 0x80146250 while halfword 0x8014625C is nonzero and bit 0x20 of the 0xA4-byte slot flag record selected by record byte 0x13C is clear. It latches work facing byte 0x08, runs the mask update at 0x801F5684 and, when the pad halfwords 0x80145AA4 and 0x80145AB6 overlap or work byte 0x0B reads 0x40, restores the facing and resets through 0x801F564C. Otherwise an overlap still restores the facing and a facing that differs from the latched byte is stepped one place on the eight-way ring only when the two lifted values stand exactly two apart, then masked to three bits. The low byte of 0x801B0E44 selects the arm: 0 settles through 0x801F50F4 when 0x801BDF08 reports a nonzero byte, otherwise runs 0x801F5734 and either re-publishes the latched facing with record byte 0x11C left clear or advances through 0x801C24D0, 0x801C4C48, the countdown byte 0x09 and 0x801B0DFC; 1 and 0xFF restore the facing, clear work bytes 0x09 and 0x02 and write 3 to record byte 0x11C. Takes no arguments and returns nothing.'
   - - 9080
     - c
-    - classifyDirectionPointWorld03
+    - classifyPointDirection
   - - 9256
     - c
     - slotRotatingUntilHolds
@@ -224,7 +224,7 @@ segments:
     - '@source: src/bof3/world/stateClearMaskOverlap.c'
   - - 10828
     - c
-    - stateMode3WorkWorld03
+    - stateMode3Work
   - - 10884
     - c
     - stateWorkByte8Mask
@@ -239,7 +239,7 @@ segments:
     - '@source: src/bof3/world/stateMaskChargeDecay.c'
   - - 11544
     - c
-    - callStateTable68World03
+    - dispatchByte1Table68a4
     - '@source: src/bof3/world/area12114DispatchTables.c'
   - - 11612
     - c

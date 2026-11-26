@@ -65,8 +65,8 @@ segments:
     - '@behavior: first handler of the BATE overlay sub-step handler pointer table D_801D8770 that requests frontend-local mode 3 through the main-exe setter func_8014ECAC and then advances the shared UI sub-step byte 0x80148652 by one, its 0x18-byte frame only keeping the return address at 0x10 across that call'
   - - 5404
     - c
-    - drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C
-    - '@source: src/bof3/ui/drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C.c'
+    - renderPanelAdvancePhase
+    - '@source: src/bof3/ui/renderPanelAdvancePhase.c'
     - '@behavior: second handler of the BATE overlay sub-step handler table D_801D8770 that always redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304, and that once the shared front-end effect-busy gate halfword 0x80143C40 reads zero resets this overlay slot-ramp state through stateSixRampLimits, clears the shared cursor-kind byte 0x80148658 and the shared UI sub-step byte 0x80148652, and advances the shared UI phase byte 0x80148651 by one'
   - - 5520
     - c

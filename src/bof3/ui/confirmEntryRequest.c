@@ -54,7 +54,7 @@ void publishTextId(void);
 u8 checkActiveRecordsKind(s32 kind);
 extern void movePadDirection(u8 *rowPtr);
 extern void renderRowMarkerOutline(u8 row, u8 selected);
-extern void renderCommuListScreen(void);
+extern void renderEntryListScreen(void);
 
 /* @source 0x801D0CAC
  * @behavior Handler at entry 1 of the run at 0x801D4BCC. Reads the shared
@@ -76,7 +76,7 @@ extern void renderCommuListScreen(void);
  * value other than those three, queues cue 0x107 and leaves the step alone. When
  * neither mask matches it moves the commu list row through
  * movePadDirection. Every
- * path then runs renderCommuListScreen and draws the list row 0x801448ED with the
+ * path then runs renderEntryListScreen and draws the list row 0x801448ED with the
  * selected flag 0 through renderRowMarkerOutline. Its 0x18-byte frame only holds ra.
  * @status exact
  * @match 100.00
@@ -122,6 +122,6 @@ void confirmEntryRequest(void) {
   } else {
     movePadDirection(&D_801448ED);
   }
-  renderCommuListScreen();
+  renderEntryListScreen();
   renderRowMarkerOutline(D_801448ED, 0);
 }

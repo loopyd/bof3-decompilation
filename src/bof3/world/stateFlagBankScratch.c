@@ -25,7 +25,7 @@ extern u8 D_80144F28[];
  * same overlay read the same cell under this name.
  * @source 0x1F800044 @kind data
  */
-extern u16* g_WorkRecordWorld03Area14013;
+extern u16* scratchpadWorkRecord;
 
 /* Shared bit helper of the main executable: writes the bit its second argument
  * selects in the flag bank its first argument addresses.
@@ -97,6 +97,6 @@ void stateFlagBankScratch(void) {
     if (D_80145F09 == 5 || D_80145F09 == 6 || D_80145F09 == 7) {
         func_8015B580(D_80144F28, 0x54);
         func_8015507C(2, 7);
-        ((u8*)g_WorkRecordWorld03Area14013)[0] = 0;
+        ((u8*)scratchpadWorkRecord)[0] = 0;
     }
 }

@@ -53,7 +53,7 @@ segments:
     - func_800C1AF8
   - - 848
     - c
-    - noopHandlerBossBoss03316_800C1B50
+    - noopHandler164
   - - 856
     - c
     - callStateTable2798Boss
@@ -82,19 +82,19 @@ segments:
     - raiseExpireRemainderMost
   - - 1384
     - c
-    - noopHandlerBossBoss03316_800C1D68
+    - noopHandler165
   - - 1392
     - c
     - publishHooksStateSwitch
   - - 1448
     - c
-    - zeroResultBossBoss03316_800C1DA8
+    - zeroResult37
   - - 1456
     - asm
     - func_800C1DB0
   - - 1572
     - c
-    - noopHandlerBossBoss03316_800C1E24
+    - noopHandler166
   - - 1580
     - c
     - callStateTable27Boss

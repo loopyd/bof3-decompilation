@@ -24,11 +24,11 @@ sources = [
 ]
 support_sources = [
     "src/bof3/world/stateBy3FrontUngated2.c",
-    "src/bof3/world/copyWords7Work34383World04.c",
-    "src/bof3/world/setWorld04Area16713_801F4480.c",
+    "src/bof3/world/copyResidentWorkWords3.c",
+    "src/bof3/world/stateSharedMode16.c",
     "src/bof3/world/area16713DispatchTables.c",
-    "src/bof3/world/setWorld04Area16713_801F446C.c",
-    "src/bof3/world/setWorld04Area16713_801F3F14.c",
+    "src/bof3/world/stateSharedMode12.c",
+    "src/bof3/world/stateSharedMode22.c",
     "src/bof3/world/advanceRecordCoordinateWindow3.c",
     "src/bof3/support/area167_13_psyq.c",
     "src/bof3/world/stateStoreDistanceWord.c",

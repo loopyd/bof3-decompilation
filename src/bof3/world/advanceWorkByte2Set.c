@@ -11,7 +11,7 @@
  * after the merge. The counter store fills the guard branch's delay slot in the
  * original. Takes no arguments, carries no frame and returns nothing.
  * This span is the word at byte offset 0x48 of the byte-1 handler table at
- * 0x801F5744 used by callStateTable5744World03, so
+ * 0x801F5744 used by dispatchByte1Table5744, so
  * it runs as state 18; nothing in the payload calls it directly and the
  * dispatch table carries no prototype.
  * @status exact

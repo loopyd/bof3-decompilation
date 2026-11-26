@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable38World04
+    - dispatchByte2Table38cc
     - '@source: src/bof3/world/area15713DispatchTables.c'
   - - 72
     - asm
@@ -51,7 +51,7 @@ segments:
     - func_801F3108
   - - 2112
     - c
-    - callStateTable3924World04
+    - dispatchByte2Table3924
     - '@source: src/bof3/world/area15713DispatchTables.c'
   - - 2180
     - asm

@@ -17,7 +17,7 @@ extern s32 func_8015477C(s32 x, s32 y);
  * @behavior Entry 0 of the two-entry state-byte-1 step dispatch table based at
  *           0x801F34E8, whose word 0 names this span and whose word 1 names
  *           renderWorkCursorQuad, and which
- *           callStateTable34World03 indexes with
+ *           dispatchByte1Table34e8 indexes with
  *           byte +1 of the work record published at the scratchpad pointer cell
  *           0x1F800044. It loads that work-record pointer, passes the record's
  *           cursor words at +0x34 and +0x38 to the shared main-executable

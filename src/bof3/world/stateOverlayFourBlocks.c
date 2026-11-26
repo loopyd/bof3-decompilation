@@ -78,7 +78,7 @@ void renderFourBlocksXy(void);
  *
  * Entry: no jal in this payload names the body. The word 0x801F3C6C at
  * 0x801F5958 is entry 1 of the code-pointer run based at 0x801F5954, which the
- * dispatcher callStateTable5954World02 indexes with
+ * dispatcher dispatchWorkByte2Handler indexes with
  * the work record's byte 2.
  *
  * Shape evidence: the tail from the shared frame counter through the epilogue is

@@ -7,7 +7,7 @@
  * saved register.
  * @source 0x1F800044 @kind data
  */
-extern u8* area16813WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 
 /* First column of the six-row stride-2 byte pair table of this payload's own
  * textbin tail at 0x801F4B2C: row k is the pair (0x801F4B7C[2k],
@@ -133,24 +133,24 @@ void stateDistanceUiElement(
   s32 y;
   s16 distance;
 
-  y = FIELD_REF(s16, area16813WorkCursor_1F800044, 0x3A);
-  x = FIELD_REF(s16, area16813WorkCursor_1F800044, 0x36);
-  area16813WorkCursor_1F800044[8] = (y == 0);
-  FIELD_REF(u16, area16813WorkCursor_1F800044, 0x36) = D_801F4B7C[x * 2];
-  FIELD_REF(u16, area16813WorkCursor_1F800044, 0x3A) = D_801F4B7D[x * 2];
-  distance = func_8015477C(FIELD_REF(u32, area16813WorkCursor_1F800044, 0x34),
-                           FIELD_REF(u32, area16813WorkCursor_1F800044, 0x38));
-  FIELD_REF(u16, area16813WorkCursor_1F800044, 0x3E) =
+  y = FIELD_REF(s16, workRecordCursor1F800044, 0x3A);
+  x = FIELD_REF(s16, workRecordCursor1F800044, 0x36);
+  workRecordCursor1F800044[8] = (y == 0);
+  FIELD_REF(u16, workRecordCursor1F800044, 0x36) = D_801F4B7C[x * 2];
+  FIELD_REF(u16, workRecordCursor1F800044, 0x3A) = D_801F4B7D[x * 2];
+  distance = func_8015477C(FIELD_REF(u32, workRecordCursor1F800044, 0x34),
+                           FIELD_REF(u32, workRecordCursor1F800044, 0x38));
+  FIELD_REF(u16, workRecordCursor1F800044, 0x3E) =
       -distance / 2 - D_801F4B5C[x];
-  FIELD_REF(u32, area16813WorkCursor_1F800044, 0x20) = D_801F4B68[x];
-  FIELD_REF(u16, area16813WorkCursor_1F800044, 0x30) = 0;
-  area16813WorkCursor_1F800044[0xB] = D_801F4BC8[x];
-  func_801A4BC0(FIELD_REF(s16, area16813WorkCursor_1F800044, 0x36),
-                FIELD_REF(s16, area16813WorkCursor_1F800044, 0x3A),
+  FIELD_REF(u32, workRecordCursor1F800044, 0x20) = D_801F4B68[x];
+  FIELD_REF(u16, workRecordCursor1F800044, 0x30) = 0;
+  workRecordCursor1F800044[0xB] = D_801F4BC8[x];
+  func_801A4BC0(FIELD_REF(s16, workRecordCursor1F800044, 0x36),
+                FIELD_REF(s16, workRecordCursor1F800044, 0x3A),
                 D_801F4BDC[x]);
-  func_801A4BC0(FIELD_REF(s16, area16813WorkCursor_1F800044, 0x36),
-                FIELD_REF(s16, area16813WorkCursor_1F800044, 0x3A) + 1,
+  func_801A4BC0(FIELD_REF(s16, workRecordCursor1F800044, 0x36),
+                FIELD_REF(s16, workRecordCursor1F800044, 0x3A) + 1,
                 D_801F4BDC[x]);
-  area16813WorkCursor_1F800044[2]++;
+  workRecordCursor1F800044[2]++;
   func_801F3914();
 }

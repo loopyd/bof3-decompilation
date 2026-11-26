@@ -9,7 +9,7 @@ void drawMarkerSpriteLayers(
 /* @source 0x801F3578
  * @behavior Entry 3 of the four-entry work-byte-2 handler table based at
  *           0x801F5448, reached through the dispatcher
- *           callStateTable5448World03. Reads the
+ *           dispatchByte2Table5448. Reads the
  *           work record through the scratchpad pointer cell 0x1F800044, stores
  *           that record's halfword 0x2E less 0x10, and clears the work state
  *           byte 0x02 when the stored signed value is below -0x2F. It then

@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable4138World04
+    - dispatchWorkByte2Run1
     - '@source: src/bof3/world/area19613DispatchTables.c'
   - - 72
     - asm
@@ -72,7 +72,7 @@ segments:
     - '@behavior: walks the four candidate bytes of the table at 0x801F4300 and, for each candidate, scans the D_80146254 live 0x140-byte-stride local work records for one whose party byte at 0x80145F09 equals it; on the first match it starts that candidate action through func_80150224 with the paired halfword of the table at 0x801F4304, publishes phase 2 in the shared front-end phase byte D_80143BB0 and returns, and with no match it returns after both loops.'
   - - 5400
     - c
-    - setWorld04Area19613_801F4118
+    - setSharedByte01
   - - 5420
     - textbin
     - D_801F412C

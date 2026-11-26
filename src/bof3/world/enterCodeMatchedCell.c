@@ -12,7 +12,7 @@ extern u8 D_80144F28; /* @source 0x80144F28 @kind data */
 
 /* Work record published at the scratchpad pointer cell: this body reads its
  * route byte at offset 8 to select the shared route-step entry. */
-extern u8* g_world02Area11113Work; /* @source 0x1F800044 @kind data */
+extern u8* workRecordSlot; /* @source 0x1F800044 @kind data */
 
 /* Shared route-step table: entry i holds the first-coordinate step at
  * D_80181B00 and the second-coordinate step at D_80181B01, two bytes per
@@ -72,7 +72,7 @@ void selectScrollCellEnter(
  *           0x80181B00/0x80181B01 that the neighbouring steps at 0x801F35F4,
  *           0x801F39E0 and 0x801F3BC0 already name as the shared route-step
  *           table, and the record is the work record published at scratchpad
- *           cell 0x44 that this target's map names g_world02Area11113Work. The
+ *           cell 0x44 that this target's map names workRecordSlot. The
  *           two arguments carry no separately evidenced role and no payload
  *           word or `jal` names this function, so they stay structural and the
  *           name keeps only the evidenced cell and route-step test.
@@ -120,7 +120,7 @@ s32 enterCodeMatchedCell(
   want = (s16)x - 0x15;
   if ((s16)x == 0x16) {
     if ((u16)(y - 0x162) < 0x1B) {
-      if ((s8)D_80181B00[(g_world02Area11113Work[8] & 7) * 2] == want) {
+      if ((s8)D_80181B00[(workRecordSlot[8] & 7) * 2] == want) {
         selectScrollCellEnter(
             3);
         return 0;
@@ -130,7 +130,7 @@ s32 enterCodeMatchedCell(
   want = (s16)x - 0x31;
   if ((s16)x == 0x30) {
     if ((u16)(y - 0x162) < 0x1B) {
-      if ((s8)D_80181B00[(g_world02Area11113Work[8] & 7) * 2] == want) {
+      if ((s8)D_80181B00[(workRecordSlot[8] & 7) * 2] == want) {
         selectScrollCellEnter(
             7);
         return 0;
@@ -140,7 +140,7 @@ s32 enterCodeMatchedCell(
   want = (s16)y - 0x161;
   if ((s16)y == 0x162) {
     if ((u16)(x - 0x16) < 0x1B) {
-      if ((s8)D_80181B01[(g_world02Area11113Work[8] & 7) * 2] == want) {
+      if ((s8)D_80181B01[(workRecordSlot[8] & 7) * 2] == want) {
         selectScrollCellEnter(
             5);
         return 0;
@@ -150,7 +150,7 @@ s32 enterCodeMatchedCell(
   want = (s16)y - 0x17D;
   if ((s16)y == 0x17C) {
     if ((u16)(x - 0x16) < 0x1B) {
-      if ((s8)D_80181B01[(g_world02Area11113Work[8] & 7) * 2] == want) {
+      if ((s8)D_80181B01[(workRecordSlot[8] & 7) * 2] == want) {
         selectScrollCellEnter(
             1);
         return 0;
@@ -160,7 +160,7 @@ s32 enterCodeMatchedCell(
   want = (s16)x - 0x21;
   if ((s16)x == 0x20) {
     if ((u16)(y - 0x16E) < 3) {
-      if ((s8)D_80181B00[(g_world02Area11113Work[8] & 7) * 2] == want) {
+      if ((s8)D_80181B00[(workRecordSlot[8] & 7) * 2] == want) {
         selectScrollCellEnter(
             7);
         return 0;
@@ -170,7 +170,7 @@ s32 enterCodeMatchedCell(
   want = (s16)x - 0x25;
   if ((s16)x == 0x26) {
     if ((u16)(y - 0x16E) < 3) {
-      if ((s8)D_80181B00[(g_world02Area11113Work[8] & 7) * 2] == want) {
+      if ((s8)D_80181B00[(workRecordSlot[8] & 7) * 2] == want) {
         selectScrollCellEnter(
             3);
         return 0;
@@ -180,7 +180,7 @@ s32 enterCodeMatchedCell(
   want = (s16)y - 0x16D;
   if ((s16)y == 0x16C) {
     if ((u16)(x - 0x22) < 3) {
-      if ((s8)D_80181B01[(g_world02Area11113Work[8] & 7) * 2] == want) {
+      if ((s8)D_80181B01[(workRecordSlot[8] & 7) * 2] == want) {
         selectScrollCellEnter(
             1);
         return 0;
@@ -190,7 +190,7 @@ s32 enterCodeMatchedCell(
   want = (s16)y - 0x171;
   if ((s16)y == 0x172) {
     if ((u16)(x - 0x22) < 3) {
-      if ((s8)D_80181B01[(g_world02Area11113Work[8] & 7) * 2] == want) {
+      if ((s8)D_80181B01[(workRecordSlot[8] & 7) * 2] == want) {
         selectScrollCellEnter(
             5);
         return 0;

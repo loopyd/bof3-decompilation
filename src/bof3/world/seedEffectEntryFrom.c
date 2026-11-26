@@ -67,7 +67,7 @@ void func_80179F98(s32 arg0, MATRIX* arg1);
  * and sh $v0,0x2A($s0).
  *
  * Seed evidence: a payload comparison finds the exact scenario lift
- * seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68
+ * stateCornerRotationScale
  * at 0x801D1F68 of emi/scenario/sce15ef1/00 holding this whole 0x120-byte body
  * with one differing word out of the 0x48 - the addiu that loads the +0x2A
  * constant, 0x20 here and 0x40 there - so that exact body supplies the

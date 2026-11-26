@@ -1,7 +1,7 @@
-callStateTable3World04 = 0x801F2C04;
+dispatchWorkByte2Run1 = 0x801F2C04;
 loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area16913_801F2C48 = 0x801F2C48;
 func_801F2DCC = 0x801F2DCC;
-advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C = 0x801F2F0C;
+stateAdvanceHalfwordDraw = 0x801F2F0C;
 advanceRecordCoordinateWindow = 0x801F2F68;
 func_801F3078 = 0x801F3078;
 renderMirroredGraphType = 0x801F30E8;

@@ -26,7 +26,7 @@ support_sources = [
     "src/bof3/world/setWorkHalfword2E2.c",
     "src/bof3/world/area15113_work_state.c",
     "src/bof3/world/area15113DispatchTables.c",
-    "src/bof3/world/invokeTwoHelpersWorld03Area15113_801F46AC.c",
+    "src/bof3/world/invokeTwoHelpers22.c",
     "src/bof3/world/invokeTwoHelpers3.c",
     "src/bof3/world/setWorkState2To32.c",
     "src/bof3/support/area151_13_psyq.c",

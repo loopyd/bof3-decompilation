@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable4308World03
+    - callCoordsStepTable
     - '@source: src/bof3/world/area14313DispatchTables.c'
   - - 72
     - c
@@ -70,7 +70,7 @@ segments:
     # @behavior Spawns work-record pairs from active seed countdowns.
   - - 1516
     - c
-    - callStateTable4314World03
+    - callAdvanceStepTable
     - '@source: src/bof3/world/area14313DispatchTables.c'
   - - 1584
     - c
@@ -90,8 +90,8 @@ segments:
     - '@behavior: Projects and submits 32 textured strips between two caller-sized rings using scratchpad vertices and the selected texture pair.'
   - - 3464
     - c
-    - selectStatus525354Mode6World03
-    - '@source: src/bof3/world/selectStatus525354Mode6World03.c'
+    - selectStatus525354Mode6
+    - '@source: src/bof3/world/selectStatus525354Mode6.c'
     - '@behavior: Stores status 0x54 when the gate byte is nonzero, or 0x53 when the gate is zero and D_80145548 differs from 0x3FFFF, also storing mode 6 on both paths; otherwise stores status 0x52 without changing mode.'
   - - 3556
     - c
@@ -156,7 +156,7 @@ segments:
     - '@behavior: Walks 11 consecutive 0x100-halfword palette blocks from the source window at 0x80033E00 into the mirror window at 0x80037E00, splits every halfword into its three 5-bit channels, shifts each channel right by the caller count with an arithmetic shift, packs the three shifted channels back beside bit 15 of the source halfword and, after the last block, stores 1 into the shared palette-stage byte at 0x80145988.'
   - - 4868
     - c
-    - callStateTable5308World03
+    - callCursorStepTable
     - '@source: src/bof3/world/area14313DispatchTables.c'
   - - 4936
     - asm

@@ -1,4 +1,4 @@
-callStateTable36World03 = 0x801F2C04;
+dispatchByte1Table36cc = 0x801F2C04;
 stateWorkTableAdvance = 0x801F2C48;
 spawnSixNineThirteen = 0x801F2C80;
 runSweepCountdownZero = 0x801F2CD8;

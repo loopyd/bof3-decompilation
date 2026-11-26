@@ -16,10 +16,10 @@ extern void dispatchSoundCue(u32 cue_id);
 /* @source 0x801F4388
  * @behavior Overlay run initialiser: entry 0 of the work-byte-1 handler table
  * based at 0x801F5828 that this target's exact dispatcher
- * callStateTable5828World03 indexes with the work
+ * callSeedStepTable indexes with the work
  * record's state byte at +1. That base is the fourth word of the pointer run
  * starting at 0x801F581C, so this address is also word 3 of the eleven-word run
- * the sibling dispatcher callStateTable581World03
+ * the sibling dispatcher callStampStepTable
  * documents; the shipped run reads 0x801F4214, 0x801F4288, 0x801F4310,
  * 0x801F4388, 0x801F4400 and on to 0x801F46CC before the non-pointer word 1 at
  * 0x801F5848.

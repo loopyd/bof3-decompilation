@@ -11,7 +11,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x801F4288
  * @behavior Overlay state handler: entry 1 (work state byte 1 = 1) of the
  * handler table based at 0x801F581C that this target's dispatcher
- * callStateTable581World03 indexes with the work
+ * callStampStepTable indexes with the work
  * record's byte at +1, reached the frame after the run's first-step
  * initialiser 0x801F4214 sets that byte. It reads the countdown byte at offset
  * 0x09 of the work record published at the scratchpad pointer cell 0x1F800044
@@ -29,7 +29,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind data */
  *
  * Name evidence: the only in-image reference to this address is its word in
  * the handler table based at 0x801F581C, dispatched through work byte 1 by
- * callStateTable581World03, whose entry 0 at
+ * callStampStepTable, whose entry 0 at
  * 0x801F4214 is this target's exact
  * stateFirstStampCount
  * and records that it arms the countdown byte 0x09 with 0x80 and advances the

@@ -56,7 +56,7 @@ segments:
     - func_801F31BC
   - - 2528
     - c
-    - dispatchStateByte2Table4aa0World04Area16713_801F35E0
+    - dispatchByte2Table4aa0
     - '@source: src/bof3/world/area16713DispatchTables.c'
   - - 2596
     - c
@@ -70,7 +70,7 @@ segments:
     - '@behavior: Entry 1 of the state-byte-2 handler run based at 0x801F4AA0 of this payload, whose dispatcher is 0x801F35E0 and whose entry 0 is 0x801F3624. When the shared overlay state byte D_8014933B holds 0x10 it queues sound cue 0x200 through the main executable dispatcher 0x8015DF18, but only while the front-end phase byte D_80143BB0 holds zero, and then increments record byte +0x02 through the scratchpad work record pointer cell 0x1F800044 so the next dispatch of the same run takes its entry 2. Calls the payload render helper 0x801F31BC on every path.'
   - - 2916
     - c
-    - dispatchStateByte2Table4ab0World04Area16713_801F3764
+    - dispatchByte2Table4ab0
     - '@source: src/bof3/world/area16713DispatchTables.c'
   - - 2984
     - asm
@@ -108,12 +108,12 @@ segments:
     - '@behavior: Entry 4 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 3 is the exact lift stateStatusSeedGate and whose entry 0 is the exact lift stateStatusGateSeed. A `cmp` of this 0x60-byte range with entry 3 reports no differing byte, so the two spans are one body. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there whenever the shared gate byte 0x801490C7 reads nonzero, and otherwise, on the zero value, runs the shared front-end startup helper 0x8015C088 and then seeds the shared counter byte 0x80146867 with 0x60, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x0A. Unlike its sibling handlers with a gate value test this span stores no mode value into the shared mode byte 0x80146866.'
   - - 4884
     - c
-    - setWorld04Area16713_801F3F14
+    - stateSharedMode2
   - - 4904
     - c
     - clearSharedFlagBit46
     - '@source: src/bof3/world/clearSharedFlagBit46.c'
-    - '@behavior: Entry 6 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 5 is the exact lift setWorld04Area16713_801F3F14 and whose word at 0x801F6848 publishes this span. Clears bit 0x46 of the shared main-RAM flag bank 0x80144F28 through the shared bit clear helper func_8015B5A8 and then stores zero into the shared overlay state byte 0x8014933B. Takes no arguments and returns nothing; the 0x18-byte frame holds only the return address, and no jal in this payload reaches the span.'
+    - '@behavior: Entry 6 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 5 is the exact lift stateSharedMode2 and whose word at 0x801F6848 publishes this span. Clears bit 0x46 of the shared main-RAM flag bank 0x80144F28 through the shared bit clear helper func_8015B5A8 and then stores zero into the shared overlay state byte 0x8014933B. Takes no arguments and returns nothing; the 0x18-byte frame holds only the return address, and no jal in this payload reaches the span.'
   - - 4952
     - c
     - stateFrontEndSeed
@@ -141,14 +141,14 @@ segments:
     - '@source: src/bof3/world/stateBy3FrontUngated2.c'
   - - 6196
     - c
-    - copyWords7Work34383World04
-    - '@source: src/bof3/world/copyWords7Work34383World04.c'
+    - copyResidentWorkWords
+    - '@source: src/bof3/world/copyResidentWorkWords3.c'
   - - 6252
     - c
-    - setWorld04Area16713_801F446C
+    - stateSharedMode1
   - - 6272
     - c
-    - setWorld04Area16713_801F4480
+    - stateSharedMode16
   - - 6292
     - asm
     - func_801F4494

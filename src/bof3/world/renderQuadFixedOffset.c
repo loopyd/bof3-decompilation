@@ -10,7 +10,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x801F31A0
  * @behavior Overlay step handler, entry 2 of the handler table based at
  *           0x801F4084 that this target's dispatcher
- *           callStateTable4084World02 indexes with
+ *           dispatchWorkByte1Handler3 indexes with
  *           the work record's state byte at +1. Entry 0 at 0x801F30B4 seeds the
  *           record's words and entry 1 at 0x801F3108 rises the record's +0x14
  *           word and advances that state byte once +0x14 passes 0x07FFFFFF, so
@@ -27,7 +27,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  *           Name evidence: the only in-image reference to 0x801F31A0 is the
  *           third word of the three-entry pointer run based at 0x801F4084,
  *           which the exact dispatcher
- *           callStateTable4084World02 indexes with
+ *           dispatchWorkByte1Handler3 indexes with
  *           the record's byte at +1; there is no jal caller, which is the
  *           dispatch shape rather than missing evidence. The quad-draw role
  *           comes from this body's own stores and the callee's own bytes.

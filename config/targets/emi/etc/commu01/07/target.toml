@@ -22,7 +22,7 @@ sources = [
     "src/bof3/ui/handleCommuEntryListInputThenDraw.c",
     "src/bof3/ui/saveRequestSelect.c",
     "src/bof3/ui/restoreSavedBack.c",
-    "src/bof3/ui/handleCommuListInput.c",
+    "src/bof3/ui/handleListEntryInput.c",
     "src/bof3/ui/commitIntoActive.c",
     "src/bof3/ui/renderMarkerTriangle.c",
     "src/bof3/ui/movePadDirection.c",
@@ -34,12 +34,12 @@ sources = [
     "src/bof3/ui/handleGridInput.c",
     "src/bof3/ui/handleRowInput.c",
     "src/bof3/ui/renderSlotChannelBox.c",
-    "src/bof3/ui/handleCommuKindInput.c",
+    "src/bof3/ui/handleKindGridInput.c",
     "src/bof3/ui/handleLineInput.c",
     "src/bof3/ui/handleCommitInput.c",
     "src/bof3/ui/renderKindIcon.c",
     "src/bof3/ui/drawWindowTilePiece.c",
-    "src/bof3/ui/renderCommuListScreen.c",
+    "src/bof3/ui/renderEntryListScreen.c",
 ]
 support_sources = [
     "src/bof3/ui/callScreenStepTable.c",

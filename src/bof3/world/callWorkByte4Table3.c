@@ -4,7 +4,7 @@
  * clear the work record's byte 4, the routines at 0x801F3458 and 0x801F34D0.
  * Both words are the tail of the reviewed `textbin` run based at 0x801F3554, so
  * the table is only referenced here. */
-extern void (*workByte4HandlersWorld03Area14213[])(void); /* @source 0x801F3B7C @kind data */
+extern void (*workByte4HandlerTable[])(void); /* @source 0x801F3B7C @kind data */
 
 /* @source 0x801F3414
  * @behavior Overlay step dispatch: the leading two instructions read the work
@@ -33,4 +33,4 @@ extern void (*workByte4HandlersWorld03Area14213[])(void); /* @source 0x801F3B7C 
  */
 EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_4,
                       callWorkByte4Table3,
-                      workByte4HandlersWorld03Area14213);
+                      workByte4HandlerTable);

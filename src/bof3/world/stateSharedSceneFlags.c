@@ -6,7 +6,7 @@ void func_80196070(void);
 
 /* @source 0x801F2DAC
  * @behavior Entry 3 of this overlay's byte-1 handler run based at 0x801F37D0,
- * which callStateTable37World03 indexes with the
+ * which dispatchByte1Table37d0 indexes with the
  * work record byte at +0x01: adds one to the shared scene state request byte
  * 0x80146875 and then runs the shared work-flag reset func_80196070, which
  * clears the scratchpad work bytes at offsets 0x00 through 0x04 and so ends

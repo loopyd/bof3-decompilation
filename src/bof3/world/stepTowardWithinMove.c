@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x80145E98 @kind unknown */
 extern u8 D_80145E98;
 
@@ -68,22 +68,22 @@ s32 stepTowardWithinMove(
   mode = target & 0xFF;
   if (face != (u32)mode) {
     if ((u32)mode < face) {
-      work = area12114WorkCursor_1F800044;
+      work = scratchpadWorkRecord;
       next = work[8];
       FIELD_REF(s32, work, 0x14) = -0x40;
       next--;
     } else {
-      work = area12114WorkCursor_1F800044;
+      work = scratchpadWorkRecord;
       next = work[8];
       FIELD_REF(s32, work, 0x14) = 0x40;
       next++;
     }
     work[8] = next;
-    area12114WorkCursor_1F800044[8] &= 7;
-    D_80145E98 = area12114WorkCursor_1F800044[8];
-    area12114WorkCursor_1F800044[9] = 8;
+    scratchpadWorkRecord[8] &= 7;
+    D_80145E98 = scratchpadWorkRecord[8];
+    scratchpadWorkRecord[9] = 8;
     stateWord6SetExpires();
-    area12114WorkCursor_1F800044[1] = 2;
+    scratchpadWorkRecord[1] = 2;
     return 1;
   }
   return 0;

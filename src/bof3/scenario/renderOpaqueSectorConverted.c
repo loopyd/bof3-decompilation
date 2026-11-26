@@ -89,7 +89,7 @@ typedef struct ScenarioSce15ef200ScreenPoint {
  * Shape evidence: the sibling overlays emi/scenario/sce15ef0/00 and
  * emi/scenario/sce15ef1/00 carry this body at 0x801D1A20 and 0x801D147C, and
  * the sce15ef1 lift,
- * drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C,
+ * renderSectorConvertedExtent,
  * is exact. One `cmp` of the two 0x1FC-byte payload spans shows they differ in
  * exactly three words: the two OT-slot immediates of the func_8014E5A0 calls,
  * 7 here against 2 there, and the SetSemiTrans argument, where this span's

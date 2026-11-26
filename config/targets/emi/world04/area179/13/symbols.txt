@@ -1,4 +1,4 @@
-initAreaModuleAndQueueFrontCue20CWorld04Area17913_801F32D8 = 0x801F32D8;
+setupModuleQueueCue = 0x801F32D8;
 invokeHelperArg = 0x801F3328;
 copySharedXWork = 0x801F3348;
 selectStateMatchedArguments = 0x801F3378;

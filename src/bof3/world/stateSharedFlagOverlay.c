@@ -19,7 +19,7 @@ void func_8015B5A8(void* flag_bank, u8 bit_index);
  * with index 0x4E and clearScenarioFlagBit3CAndQueueCue203World03Area11913_801F4554
  * with 0x3C). The trailing store clears 0x8014933B, the overlay state byte
  * this same target's neighbours seed with 1 and 2
- * (setWorld03Area14813_801F3990, setWorld03Area14813_801F3A0C) and the
+ * (stateSharedMode1, stateSharedMode2) and the
  * clearOverlayStateByte* family zeroes. No in-image caller exists: the
  * pointer 0x801F39A4 appears nowhere in this payload or in its incbin data
  * blob, so like its unindexed neighbours this handler is reached from a

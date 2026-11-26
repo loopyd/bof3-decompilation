@@ -77,7 +77,7 @@ typedef struct World03Area13413ScreenPoint {
  *           0x801F4454 in the entry at 0x801F4400 and the jal at 0x801F4524 in
  *           the entry at 0x801F44C0 of the byte-1 handler table based at
  *           0x801F5828 that this target's exact
- *           callStateTable5828World03 indexes with
+ *           callSeedStepTable indexes with
  *           the work record's state byte at +1. Neither caller sets an argument
  *           register, so the callee takes none, and each moves the record step
  *           word at +0x24 and the phase halfword at +0x20 immediately before

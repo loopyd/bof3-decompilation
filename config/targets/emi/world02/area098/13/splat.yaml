@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable5World02
+    - dispatchWorkByte1Handler
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 72
     - asm

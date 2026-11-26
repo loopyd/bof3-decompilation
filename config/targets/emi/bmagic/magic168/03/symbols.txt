@@ -16,4 +16,4 @@ func_801EFCD8 = 0x801EFCD8;
 reserveFirstFreeRecord = 0x801EFFFC;
 stateClearRecordSlot = 0x801F0068;
 D_801F00B8 = 0x801F00B8;
-magic16803RecordFlags = 0x801F01B0;
+stateRecordFlags = 0x801F01B0;

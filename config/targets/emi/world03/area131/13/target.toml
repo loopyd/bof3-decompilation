@@ -22,7 +22,7 @@ support_sources = [
     "src/bof3/world/retreatCounter3Clone.c",
     "src/bof3/support/emi_world03_area131_13_symbols.c",
     "src/bof3/world/retreatCounter2Clone.c",
-    "src/bof3/world/setWorld03Area13113_801F2F08.c",
+    "src/bof3/world/stateFrontendSelector22.c",
     "src/bof3/world/advanceCounter2Clone.c",
     "src/bof3/support/area131_13_psyq.c",
 ]

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 
 void func_8014DD3C(u16 entry);
 
@@ -19,12 +19,12 @@ void func_8014DD3C(u16 entry);
  * @residual none
  */
 void prepareWorkRecordLookup158(void) {
-  area12114WorkCursor_1F800044[0x24] = 0x80;
+  scratchpadWorkRecord[0x24] = 0x80;
   func_8014DD3C(0x158);
-  area12114WorkCursor_1F800044[0x29] = 5;
-  area12114WorkCursor_1F800044[0x2A] = 0;
-  area12114WorkCursor_1F800044[0x5D] = 0;
-  area12114WorkCursor_1F800044[0x5E] = 0;
-  area12114WorkCursor_1F800044[0x5F] = 0;
-  area12114WorkCursor_1F800044[0x01] = 1;
+  scratchpadWorkRecord[0x29] = 5;
+  scratchpadWorkRecord[0x2A] = 0;
+  scratchpadWorkRecord[0x5D] = 0;
+  scratchpadWorkRecord[0x5E] = 0;
+  scratchpadWorkRecord[0x5F] = 0;
+  scratchpadWorkRecord[0x01] = 1;
 }

@@ -17,7 +17,7 @@ extern void dispatchSoundCue(u32 cue_id);
  * slot 0x1F800044 and calls with no arguments and no result consumed. It arms
  * that object's countdown byte at +0x9 with 0x14, clears the word pair at
  * +0x0C/+0x10 - the first two words of the step triple the sibling
- * advanceWorkByte6ClaimRecordInvokeTwoHelpersAndOnProgress20RestoreMotionStateAndAdvanceWorkByte1ScenarioSce15ef100_801D0F10
+ * claimRestoreMotionState
  * clears whole - and the word pair at +0x18/+0x1C, the first two words of the
  * head point that same sibling advances by that step triple. It then advances
  * the work byte at +0x1 by one, so the next dispatch selects entry 7

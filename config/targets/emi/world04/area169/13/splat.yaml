@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - callStateTable3World04
+    - dispatchWorkByte2Run1
     - '@source: src/bof3/world/area16913DispatchTables.c'
   - - 72
     - c
@@ -39,8 +39,8 @@ segments:
     - func_801F2DCC
   - - 780
     - c
-    - advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C
-    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C.c'
+    - stateAdvanceHalfwordDraw
+    - '@source: src/bof3/world/stateAdvanceHalfwordDraw.c'
     - '@behavior: Advance the work record halfword at 0x30 by 0x10 and advance the state byte at 0x02 once that stored signed halfword reaches 0xC0, then draw the record''s mirrored quad pair.'
   - - 872
     - c

@@ -272,8 +272,8 @@ segments:
     - func_80199308
   - - 15208
     - c
-    - dispatchScenarioAndFinalizeFrame
-    - '@source: src/bof3/ui/dispatchScenarioAndFinalizeFrame.c'
+    - dispatchFrontFrame
+    - '@source: src/bof3/ui/dispatchFrontFrame.c'
     - '@behavior: runs the scenario-local handler/state dispatch, then the shared update slice func_801D1740, then finalizes one shared front-end frame through func_80158C80.'
   - - 15256
     - c
@@ -1304,8 +1304,8 @@ segments:
     - func_801B3A3C
   - - 123900
     - c
-    - callAreaOverlayRoutineForPendingWorld_game00_801B3BFC
-    - '@source: src/bof3/ui/callAreaOverlayRoutineForPendingWorld_game00_801B3BFC.c'
+    - callPendingWorldOverlay
+    - '@source: src/bof3/ui/callPendingWorldOverlay.c'
     - '@behavior: Overlay trampoline selected by the pending world id D_80143F00: when that u16 reads 0x68 it calls the concurrently resident per-area overlay routine at 0x801F45BC, otherwise the one at 0x801F4B00.'
   - - 123964
     - c
@@ -1326,8 +1326,8 @@ segments:
     - func_801B43D0
   - - 126100
     - c
-    - dispatchWorkHandlerBySpeedByte_game00_801B4494
-    - '@source: src/bof3/ui/dispatchWorkHandlerBySpeedByte_game00_801B4494.c'
+    - dispatchWorkSpeedHandler
+    - '@source: src/bof3/ui/dispatchWorkSpeedHandler.c'
     - '@behavior: selects one of two sibling work routines by the work-area speed byte at 0x70 and returns the byte status of the selected routine, masking the request id to eight bits at each of the two call sites.'
   - - 126172
     - asm

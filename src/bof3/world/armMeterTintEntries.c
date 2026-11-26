@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x80145E98 @kind unknown */
 extern u8 D_80145E98;
 /* @source 0x80143F00 @kind unknown */
@@ -60,12 +60,12 @@ void armMeterTintEntries(
   u8 index;
   s32 i;
 
-  area12114WorkCursor_1F800044[8] = D_80145E98;
+  scratchpadWorkRecord[8] = D_80145E98;
   func_8015AC8C((u8*)(*(u32*)((u8*)D_8017F974[D_80143F00] + 8) + 8));
-  ((s8*)area12114WorkCursor_1F800044)[0x5D] = -0x80;
-  ((s8*)area12114WorkCursor_1F800044)[0x5E] = -0x80;
-  ((s8*)area12114WorkCursor_1F800044)[0x5F] = -0x80;
-  area12114WorkCursor_1F800044[1] += 1;
+  ((s8*)scratchpadWorkRecord)[0x5D] = -0x80;
+  ((s8*)scratchpadWorkRecord)[0x5E] = -0x80;
+  ((s8*)scratchpadWorkRecord)[0x5F] = -0x80;
+  scratchpadWorkRecord[1] += 1;
   publishPositionWordsMeter();
   if (D_80143F00 == 0x68) {
     if (func_80166140(0xA) == 0) {

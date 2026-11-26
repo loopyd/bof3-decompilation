@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x801454F2 @kind unknown */
 extern u8 D_801454F2;
 
@@ -26,15 +26,15 @@ void decrementDrawHalfword2E(
   u8* draw;
   s16* half;
 
-  record = area12114WorkCursor_1F800044;
+  record = scratchpadWorkRecord;
   half = (s16*)(record + 0x2E);
   *half = (s16)(*half - 0x10);
   if (*half < -0x2F) {
     record[2] = 0;
   }
   if (D_801454F2 != 2) {
-    area12114WorkCursor_1F800044[2] = 1;
+    scratchpadWorkRecord[2] = 1;
   }
-  draw = area12114WorkCursor_1F800044;
+  draw = scratchpadWorkRecord;
   func_801F3B18(0x10, FIELD_REF(s16, draw, 0x2E));
 }

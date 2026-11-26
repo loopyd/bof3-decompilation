@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 u8* findFreeWorkRecord(void);
-void claimWorkRecordAndSeedPositionStepSizeAndHeadingFromWorkObjectWorld04Area17413_801F3378(
+void claimSizeHeadingObject(
     u8* record);
 void func_801F2EC4(void);
 
@@ -63,7 +63,7 @@ void spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanc
   if ((D_1F800044[9] & 7) == 0) {
     record = findFreeWorkRecord();
     if (record != 0) {
-      claimWorkRecordAndSeedPositionStepSizeAndHeadingFromWorkObjectWorld04Area17413_801F3378(
+      claimSizeHeadingObject(
           record);
     }
   }

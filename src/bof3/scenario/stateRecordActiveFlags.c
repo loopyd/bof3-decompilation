@@ -4,7 +4,7 @@
  * lead byte of each record is its active flag: func_801D19C8 sets it to 1 and
  * fills the rest of the record from the scratchpad work object at 0x1F800044,
  * and func_801D1A60, now lifted as
- * stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60,
+ * stepClaimedLifeExpired,
  * gates its per-record update on it and clears it when the record byte-2
  * countdown expires. The bytes sit inside the Splat `textbin`
  * row at payload offset 0x2D18 and are zero on disc, so the run is only

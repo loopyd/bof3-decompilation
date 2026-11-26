@@ -7,7 +7,7 @@ extern u8 D_8014933B; /* @source 0x8014933B @kind data */
 
 /* Work record published through the scratchpad pointer cell 0x1F800044. The
  * target map already binds that cell, so this source reuses its name. */
-extern u8* world03Area11913WorkRecord; /* @source 0x1F800044 @kind data */
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 
 /* @source 0x801F35D0
  * @behavior Overlay step handler: when the shared overlay state byte at
@@ -37,7 +37,7 @@ void stateWorkSharedSet(void) {
   u8* work;
 
   if (D_8014933B != 0) {
-    work = world03Area11913WorkRecord;
+    work = scratchpadWorkRecord;
     work[2] += 1;
   }
 }

@@ -9,7 +9,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x801F3108
  * @behavior Overlay step handler, entry 1 of the handler table based at
  *           0x801F4084 that this target's dispatcher
- *           callStateTable4084World02 indexes with
+ *           dispatchWorkByte1Handler3 indexes with
  *           the work record's state byte at +1; entry 0 at 0x801F30B4 seeds the
  *           fields this body moves by storing the 0x8015477C distance of the
  *           record's +0x34/+0x38 pair, scaled by 0x10000, in +0x3C, clearing

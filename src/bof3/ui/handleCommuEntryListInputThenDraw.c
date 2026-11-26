@@ -21,15 +21,15 @@ extern u8 D_801D4E24; /* @source 0x801D4E24 @kind data */
 /* Result halfword of the current commu request. */
 extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
 
-extern void restoreSavedCommuBack(void);
+extern void restoreSavedBack(void);
 extern s32 commitIntoActive(s32 offset);
-extern void moveCommuPadDirection(u8 *rowPtr);
+extern void movePadDirection(u8 *rowPtr);
 extern void renderRowMarkerOutline(u8 row, u8 selected);
-extern void renderCommuListScreen(void);
+extern void renderEntryListScreen(void);
 extern void renderMarkerTriangle(s16 x, s16 y, u8 selected);
 extern void renderSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected);
-void publishCommuTextId(void);
-void publishCommuEntryTextIdForRow(u8 *rowPtr);
+void publishTextId(void);
+void publishEntryTextId(u8 *rowPtr);
 void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
 u8 queryActiveSlotKind(u8 kind, u8 ordinal);
 
@@ -37,17 +37,17 @@ u8 queryActiveSlotKind(u8 kind, u8 ordinal);
  * @behavior Handler at entry 9 of the dispatch table at 0x801D4BCC. Reads the
  * shared pad-state word 0x80145AA8 once and dispatches on its masks. While that
  * word shares a bit with the cancel mask 0x80145AC4 it closes the request
- * through restoreSavedCommuBack and publishes the list row
- * text id of 0x801448ED through publishCommuTextId into the result
+ * through restoreSavedBack and publishes the list row
+ * text id of 0x801448ED through publishTextId into the result
  * halfword 0x801D4E0C. While it
  * shares a bit with the confirm mask 0x80145AC2 it commits the request row
  * through commitIntoActive with offset 1 and stores
  * result code 0xB5 into
  * 0x801D4E0C when the returned low byte is nonzero. When neither mask matches it
  * moves the request row byte 0x801D4E28 through
- * moveCommuPadDirection and publishes that row text id through
- * publishCommuEntryTextIdForRow. Every path then runs
- * renderCommuListScreen, draws the list row 0x801448ED with the selected flag 1 and the
+ * movePadDirection and publishes that row text id through
+ * publishEntryTextId. Every path then runs
+ * renderEntryListScreen, draws the list row 0x801448ED with the selected flag 1 and the
  * request row 0x801D4E28 with 0 through renderRowMarkerOutline, and when no commit
  * happened computes the slot origin of the list row kind at ordinal 0x801D4E24
  * through computeKindSlotOrigin, draws the marker at that origin advanced by 4
@@ -71,8 +71,8 @@ void handleCommuEntryListInputThenDraw(void) {
   pad = D_80145AA8;
   committed = 0;
   if (pad & D_80145AC4) {
-    restoreSavedCommuBack();
-    publishCommuTextId();
+    restoreSavedBack();
+    publishTextId();
   } else if (pad & D_80145AC2) {
     committed = commitIntoActive(1);
     if (committed & 0xFF) {
@@ -80,10 +80,10 @@ void handleCommuEntryListInputThenDraw(void) {
     }
   } else {
     row = &D_801D4E28;
-    moveCommuPadDirection(row);
-    publishCommuEntryTextIdForRow(row);
+    movePadDirection(row);
+    publishEntryTextId(row);
   }
-  renderCommuListScreen();
+  renderEntryListScreen();
   row = &D_801448ED;
   renderRowMarkerOutline(*row, 1);
   renderRowMarkerOutline(D_801D4E28, 0);

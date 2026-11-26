@@ -2,7 +2,7 @@
 
 /* Stamp routine of this overlay: writes the 7x9 banner glyph grid into the map
  * cell codes and queues one shared UI element per cell. */
-void stampGlyphGridCellCodesQueueCellElementsAndAttachCellTextureWorld04Area17013_801F3994(
+void stampElementsAttachTexture(
     void);
 
 /* @source 0x801F2F48
@@ -30,7 +30,7 @@ void stampGlyphGridCellCodesQueueCellElementsAndAttachCellTextureWorld04Area1701
 void stampGlyphGridCellCodesThenAdvanceStateByte1World04Area17013_801F2F48(void) {
   u8* step;
 
-  stampGlyphGridCellCodesQueueCellElementsAndAttachCellTextureWorld04Area17013_801F3994();
+  stampElementsAttachTexture();
   step = SPAD_PTR_SLOT(u8, 0x44u);
   step[1] += 1;
 }

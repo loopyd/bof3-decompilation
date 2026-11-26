@@ -1,4 +1,4 @@
-callStateTable3614World02 = 0x801F2C04;
+dispatchWorkByte2Handler = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2D04 = 0x801F2D04;
 func_801F2D84 = 0x801F2D84;

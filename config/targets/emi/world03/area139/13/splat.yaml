@@ -57,11 +57,11 @@ segments:
     - func_801F36DC
   - - 3708
     - c
-    - noopWorld03Area13913_801F3A7C
-    - '@source: src/bof3/world/noopWorld03Area13913_801F3A7C.c'
+    - noopHandler
+    - '@source: src/bof3/world/noopHandler10.c'
   - - 3724
     - c
-    - callStateTable4448World03
+    - callPairsStepTable
     - '@source: src/bof3/world/area13913DispatchTables.c'
   - - 3792
     - c

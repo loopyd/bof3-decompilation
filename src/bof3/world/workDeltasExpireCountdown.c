@@ -6,7 +6,7 @@
  * cell always points at the record the per-frame handlers update. It is the
  * payload's last word and is zero on disc; the address is bound by this
  * target's generated undefined_syms_auto.txt, so no map row is needed. */
-extern u8* workRecordCursor63World02; /* @source 0x801F63EC @kind data */
+extern u8* workRecordCursor; /* @source 0x801F63EC @kind data */
 
 /* @source 0x801F3198
  * @behavior Overlay per-frame step handler: reads the work-record cursor cell
@@ -30,14 +30,14 @@ void workDeltasExpireCountdown(void) {
   s32* words;
   u8 countdown;
 
-  words = (s32*)workRecordCursor63World02;
+  words = (s32*)workRecordCursor;
   words[1] += words[5];
   words[2] += words[6];
   words[3] += words[7];
   ((u8*)words)[3]--;
-  countdown = (u8)(workRecordCursor63World02[2] - 1);
-  workRecordCursor63World02[2] = countdown;
+  countdown = (u8)(workRecordCursor[2] - 1);
+  workRecordCursor[2] = countdown;
   if (countdown == 0) {
-    workRecordCursor63World02[0] = 0;
+    workRecordCursor[0] = 0;
   }
 }

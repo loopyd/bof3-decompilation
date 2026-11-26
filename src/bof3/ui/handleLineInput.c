@@ -56,7 +56,7 @@ extern s32 func_8014E640(u32 mask);
  */
 extern void dispatchSoundCue(u32 cue_id);
 
-extern void renderCommuListScreen(void);
+extern void renderEntryListScreen(void);
 extern void saveRequestSelect(void);
 extern void renderRowMarkerOutline(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
@@ -93,7 +93,7 @@ extern void func_801647C4(u16 x, u16 y, s32 mode);
  * byte minus one when the signed result goes negative, bit 0x4000 adds one and
  * wraps to zero when the signed result reaches that first byte, no other bit
  * moves it, and a line landing on a different value queues resident cue 0x100.
- * Every path then runs renderCommuListScreen, draws the list row marker of 0x801448ED
+ * Every path then runs renderEntryListScreen, draws the list row marker of 0x801448ED
  * with selected flag 1 through renderRowMarkerOutline, computes
  * the slot origin of that row kind at ordinal 0 through computeKindSlotOrigin,
  * draws the marker triangle at that origin with selected flag 1, draws the
@@ -159,7 +159,7 @@ void handleLineInput(void) {
       dispatchSoundCue(0x100);
     }
   }
-  renderCommuListScreen();
+  renderEntryListScreen();
   cursor = &D_801448ED;
   renderRowMarkerOutline(*cursor, 1);
   computeKindSlotOrigin(&x, &y, *cursor, 0);

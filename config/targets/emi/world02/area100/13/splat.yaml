@@ -30,14 +30,14 @@ segments:
   subsegments:
   - - 48
     - c
-    - callStateTable407World02
+    - dispatchWorkByte1Handler
     - '@source: src/bof3/world/area10013DispatchTables.c'
   - - 116
     - c
     - stateNoopSlot
   - - 124
     - c
-    - dispatchStateByte1Table407cWorld02Area10013_801F2C7C
+    - dispatchWorkByte1Handler2
     - '@source: src/bof3/world/area10013DispatchTables.c'
   - - 192
     - c
@@ -54,7 +54,7 @@ segments:
     - func_801F2D60
   - - 1136
     - c
-    - callStateTable4084World02
+    - dispatchWorkByte1Handler3
     - '@source: src/bof3/world/area10013DispatchTables.c'
   - - 1204
     - c
@@ -68,7 +68,7 @@ segments:
     - c
     - renderQuadFixedOffset
     - '@source: src/bof3/world/renderQuadFixedOffset.c'
-    - '@behavior: overlay step handler, entry 2 of the handler table based at 0x801F4084 that callStateTable4084World02 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array, and calls the overlay draw routine at 0x801F31E8 with that array and the fixed word 0x08000000, which that routine adds to the array third word before projecting it, so this handler draws the record quad at the fixed offset 0x08000000. It advances no state byte and returns nothing.'
+    - '@behavior: overlay step handler, entry 2 of the handler table based at 0x801F4084 that dispatchWorkByte1Handler3 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array, and calls the overlay draw routine at 0x801F31E8 with that array and the fixed word 0x08000000, which that routine adds to the array third word before projecting it, so this handler draws the record quad at the fixed offset 0x08000000. It advances no state byte and returns nothing.'
   - - 1512
     - asm
     - func_801F31E8
@@ -130,7 +130,7 @@ segments:
     - func_801F3C2C
   - - 4248
     - c
-    - callStateTable4World02
+    - dispatchWorkByte1Handler4
     - '@source: src/bof3/world/area10013DispatchTables.c'
   - - 4316
     - c
@@ -140,7 +140,7 @@ segments:
     - c
     - renderProjectedCursorQuad
     - '@source: src/bof3/world/renderProjectedCursorQuad.c'
-    - '@behavior: overlay step handler, entry 1 of the handler table based at 0x801F4F68 that callStateTable4World02 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array and calls the overlay draw routine at 0x801F3D70 with that array, which projects it through func_801AFF04 and emits one semi-transparent G4 through SetPolyG4. It advances no state byte and returns nothing.'
+    - '@behavior: overlay step handler, entry 1 of the handler table based at 0x801F4F68 that dispatchWorkByte1Handler4 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array and calls the overlay draw routine at 0x801F3D70 with that array, which projects it through func_801AFF04 and emits one semi-transparent G4 through SetPolyG4. It advances no state byte and returns nothing.'
   - - 4464
     - asm
     - func_801F3D70

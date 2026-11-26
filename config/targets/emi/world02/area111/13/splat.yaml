@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 100
     - c
-    - callStateTable4890World02
+    - dispatchWorkByte1Handler
     - '@source: src/bof3/world/area11113DispatchTables.c'
   - - 168
     - c
@@ -51,7 +51,7 @@ segments:
     - func_801F2DA0
   - - 1260
     - c
-    - callStateTable489World02
+    - dispatchWorkByte2Handler
     - '@source: src/bof3/world/area11113DispatchTables.c'
   - - 1328
     - c

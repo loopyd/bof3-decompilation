@@ -45,10 +45,10 @@ segments:
     - noopHandler133
   - - 224
     - c
-    - noopHandlerBossBoss03016_800C18E0
+    - noopHandler153
   - - 232
     - c
-    - noopHandlerBossBoss03016_800C18E8
+    - noopHandler154
   - - 240
     - c
     - dispatchByte1Table1b18
@@ -66,13 +66,13 @@ segments:
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B48 handler table, so the selected handler result stays in the return register. The original does not bound the index before the scaled table load, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. The step setup at 0x800C1934 stores this address into +0xE4 of the enemy work record loaded from 0x801EB4E8, so the state machine enters it through that stored pointer word; no jal immediate in this payload reaches it.'
   - - 452
     - c
-    - noopHandlerBossBoss03016_800C19C4
+    - noopHandler155
   - - 460
     - c
-    - noopHandlerBossBoss03016_800C19CC
+    - noopHandler156
   - - 468
     - c
-    - noopHandlerBossBoss03016_800C19D4
+    - noopHandler157
   - - 476
     - c
     - publishHooksOwnerHeads

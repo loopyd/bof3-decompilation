@@ -1,5 +1,5 @@
-g_WorkRecordWorld03Area14013 = 0x1F800044;
-callStateTable47World03 = 0x801F2C34;
+scratchpadWorkRecord = 0x1F800044;
+callDrawStepTable = 0x801F2C34;
 func_801F2C78 = 0x801F2C78;
 func_801F2D80 = 0x801F2D80;
 decrementMinusFfDraw = 0x801F2E64;
@@ -13,7 +13,7 @@ func_801F33FC = 0x801F33FC;
 stateStepHalfwordDraw = 0x801F34F4;
 func_801F35B0 = 0x801F35B0;
 func_801F37C4 = 0x801F37C4;
-stepWorkHalfword3World03 = 0x801F38C4;
+stepWorkHalfword3 = 0x801F38C4;
 func_801F3950 = 0x801F3950;
 queryRecordIndexPosition = 0x801F3C44;
 func_801F3D4C = 0x801F3D4C;

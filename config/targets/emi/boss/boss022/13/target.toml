@@ -14,7 +14,7 @@ sources = [
 support_sources = [
     "src/bof3/boss/accumulateEnemyRearm.c",
     "src/bof3/boss/setupBattleEntryBoss.c",
-    "src/bof3/boss/zeroResultBossBoss02213_800C1A40.c",
+    "src/bof3/boss/zeroResult34.c",
     "src/bof3/boss/noopHandler64.c",
     "src/bof3/boss/noopHandler63.c",
     "src/bof3/boss/noopHandler62.c",

@@ -177,7 +177,7 @@ sources = [
     "src/bof3/ui/renderBackgroundTilesKind.c",
     "src/bof3/ui/drawSlotMemoryCard.c",
     "src/bof3/ui/drawShopPriceList.c",
-    "src/bof3/ui/drawEquipSlotRowsShop00_801D95F4.c",
+    "src/bof3/ui/renderEquipSlotRows3.c",
     "src/bof3/ui/drawShopParameterPanel.c",
     "src/bof3/ui/dispatchShopUiState.c",
 ]

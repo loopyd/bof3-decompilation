@@ -6,7 +6,7 @@
  * PushMatrix and after RotTransPers4, so every block binds it again.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 
 /* Shared effect bank byte at 0x8014832E. Bits 0x1B let this handler draw.
  * @source 0x8014832E @kind unknown
@@ -72,7 +72,7 @@ void stateRotatedTexturedDiamond(
   s32       tpage;
   s32       half;
 
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   FIELD_REF(u16, work, 0x3E) = (u16)(FIELD_REF(u16, work, 0x3E) + 0x10);
   if ((s16)FIELD_REF(u16, work, 0x3E) >= 0x281) {
     work[1] = 3;
@@ -82,7 +82,7 @@ void stateRotatedTexturedDiamond(
   }
 
   PushMatrix();
-  work = area12114WorkCursor_1F800044;
+  work = scratchpadWorkRecord;
   rotation.vx = 0;
   rotation.vy = 0;
   rotation.vz = 0;
@@ -95,7 +95,7 @@ void stateRotatedTexturedDiamond(
   SetRotMatrix(&matrix);
   SetTransMatrix(&matrix);
 
-  p = ((s16)FIELD_REF(u16, area12114WorkCursor_1F800044, 0x3E) >> 7) * 10 + 0x10;
+  p = ((s16)FIELD_REF(u16, scratchpadWorkRecord, 0x3E) >> 7) * 10 + 0x10;
   prim = (POLY_FT4*)g_PrimCursor;
   D_1F800014[0].vx = -(u16)p;
   D_1F800014[0].vy = 0;
@@ -136,7 +136,7 @@ void stateRotatedTexturedDiamond(
   prim->g0 = 0x80;
   prim->b0 = 0x80;
 
-  func_80155A08(FIELD_REF(s32, area12114WorkCursor_1F800044, 0x34),
-                FIELD_REF(s32, area12114WorkCursor_1F800044, 0x38), 1, 0x28);
+  func_80155A08(FIELD_REF(s32, scratchpadWorkRecord, 0x34),
+                FIELD_REF(s32, scratchpadWorkRecord, 0x38), 1, 0x28);
   PopMatrix();
 }

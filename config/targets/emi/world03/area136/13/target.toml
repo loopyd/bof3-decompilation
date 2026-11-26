@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/world/selectCrossedFrontSide.c",
     "src/bof3/world/publishSecondWorkBase2.c",
     "src/bof3/world/publishFromModeTable3.c",
-    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13613_801F3048.c",
+    "src/bof3/world/publishSecondKind3Mode2.c",
     "src/bof3/support/area136_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area136_13_psyq.c"

@@ -50,21 +50,21 @@ segments:
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1C88 handler table, returning the selected handler result in the return register.'
   - - 432
     - c
-    - noopHandlerBossBoss03216_800C19B0
+    - noopHandler161
   - - 440
     - c
-    - noopHandlerBossBoss03216_800C19B8
+    - noopHandler162
   - - 448
     - c
-    - noopHandlerBossBoss03216_800C19C0
+    - noopHandler163
   - - 456
     - c
     - publishHooksOwnerRecord
     - '@source: src/bof3/boss/publishHooksOwnerRecord.c'
-    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the unlifted handler func_800C1A08 into 0x801463A4, the battle setup hook publishOwnerRecordResource into 0x801463A8, and the zero-result accessor zeroResultBossBoss03216_800C1A00 into 0x801463AC.'
+    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the unlifted handler func_800C1A08 into 0x801463A4, the battle setup hook publishOwnerRecordResource into 0x801463A8, and the zero-result accessor zeroResult36 into 0x801463AC.'
   - - 512
     - c
-    - zeroResultBossBoss03216_800C1A00
+    - zeroResult36
   - - 520
     - asm
     - func_800C1A08

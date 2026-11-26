@@ -6,7 +6,7 @@
  * cell always points at the record the per-frame handlers update. It is the
  * payload's last word and is zero on disc; the address is bound by this
  * target's generated undefined_syms_auto.txt, so no map row is needed. */
-extern u8* workRecordCursor63World02; /* @source 0x801F63EC @kind data */
+extern u8* workRecordCursor; /* @source 0x801F63EC @kind data */
 
 /* Per-record initialiser at 0x801F2F1C: copies the sketch record's position
  * words +0x34/+0x38/+0x3C from the scratch work record published at
@@ -35,11 +35,11 @@ void func_801F2F1C(u8* record);
 void stateSixteenWorkRecords(void) {
   u8 count;
 
-  workRecordCursor63World02 = PSX_PTR(u8, 0x800E4800u);
+  workRecordCursor = PSX_PTR(u8, 0x800E4800u);
   count = 0u;
   do {
-    func_801F2F1C(workRecordCursor63World02);
-    workRecordCursor63World02 += 0x28u;
+    func_801F2F1C(workRecordCursor);
+    workRecordCursor += 0x28u;
     count++;
   } while (count < 0x10u);
 }

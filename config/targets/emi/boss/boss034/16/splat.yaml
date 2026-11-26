@@ -127,7 +127,7 @@ segments:
     - c
     - publishBattleHooks22
     - '@source: src/bof3/boss/publishBattleHooks22.c'
-    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the mode-transition handler setupModeTupleFlag into 0x801463A4, the inert handler noopHandlerBossBoss03416_800C23CC into 0x801463A8, and the zero-result accessor zeroResult25 into 0x801463AC'
+    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the mode-transition handler setupModeTupleFlag into 0x801463A4, the inert handler noopHandler167 into 0x801463A8, and the zero-result accessor zeroResult25 into 0x801463AC'
   - - 2936
     - c
     - zeroResult25
@@ -138,7 +138,7 @@ segments:
     - '@behavior: Overlay mode-transition handler: while the 0x2 bit of the shared battle flag byte D_80146328 is set it stores 5 into the shared mode byte D_80146875 and runs initModeTuple510, and otherwise it runs initModeTuple520'
   - - 3020
     - c
-    - noopHandlerBossBoss03416_800C23CC
+    - noopHandler167
   - - 3028
     - asm
     - func_800C23D4

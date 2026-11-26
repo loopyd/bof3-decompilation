@@ -7,7 +7,7 @@
  * stateByteAdvanceOverlay
  * and clearWorkByte48Submit declare the same
  * cell this way. */
-extern u8* scratchWorkRecordPointer_1F800044; /* @source 0x1F800044 @kind data */
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 
 /* Leading words of the 0x140-byte-stride party action record array in main RAM,
  * outside this overlay's image. The exact ui lift func_8019EB38 publishes
@@ -51,12 +51,12 @@ extern void initialize16RecordsSignedPairs(void);
 void stateCoordsInitializeRecords(void) {
   u8* work;
 
-  work = scratchWorkRecordPointer_1F800044;
+  work = scratchpadWorkRecord;
   *(u32*)(work + 0x34) = D_80145EC4;
   *(u32*)(work + 0x38) = D_80145EC8;
   *(u32*)(work + 0x3C) = D_80145ECC;
   stateTableLeadBytes();
   initialize16RecordsSignedPairs();
-  work = scratchWorkRecordPointer_1F800044;
+  work = scratchpadWorkRecord;
   work[1]++;
 }

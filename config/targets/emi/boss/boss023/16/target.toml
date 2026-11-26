@@ -13,9 +13,9 @@ sources = [
 support_sources = [
     "src/bof3/boss/callIndexedHandler16.c",
     "src/bof3/boss/zeroResult13.c",
-    "src/bof3/boss/noopHandlerBossBoss02316_800C197C.c",
+    "src/bof3/boss/noopHandler150.c",
     "src/bof3/boss/noopHandler66.c",
-    "src/bof3/boss/noopHandlerBossBoss02316_800C196C.c",
+    "src/bof3/boss/noopHandler149.c",
     "src/bof3/boss/stateOwnerRecordHeads.c",
     "src/bof3/boss/publishBattleHooks19.c",
     "src/bof3/support/boss023_16_psyq.c",

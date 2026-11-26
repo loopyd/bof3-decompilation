@@ -95,7 +95,7 @@ segments:
     - func_801F39B4
   - - 3620
     - c
-    - callStateTable43World04
+    - dispatchWorkByte1Run1
     - '@source: src/bof3/world/area19813DispatchTables.c'
   - - 3688
     - c
@@ -106,8 +106,8 @@ segments:
     - func_801F3B98
   - - 4556
     - c
-    - fixedPointUnitsWorld04
-    - '@source: src/bof3/world/fixedPointUnitsWorld04.c'
+    - mathFixedToUnits
+    - '@source: src/bof3/world/mathFixedToUnits.c'
   - - 4604
     - textbin
     - D_801F3DFC

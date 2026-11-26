@@ -3,7 +3,7 @@
 /* @source 0x801F2D3C
  * @behavior Entry 3 of this overlay's nine-word work-state handler run at
  *           0x801F36CC, the table the exact dispatcher
- *           callStateTable36World03 indexes with
+ *           dispatchByte1Table36cc indexes with
  *           the unsigned work byte at offset +0x1 of the work object published
  *           at the scratchpad pointer cell 0x1F800044 and calls with no
  *           arguments. It stores 0x96 into that object's byte at +0x9 and then

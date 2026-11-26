@@ -12,7 +12,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/support/area114_13_psyq.c",
-    "src/bof3/world/initArea11413State.c",
+    "src/bof3/world/initStateSelectorTriple.c",
     "src/bof3/world/audioActionReturnNext.c",
 ]
 psyq_source = "src/bof3/support/area114_13_psyq.c"

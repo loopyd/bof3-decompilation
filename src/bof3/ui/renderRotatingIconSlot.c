@@ -120,7 +120,7 @@ extern void func_8017A97C(void *arg0);
  * original zero-extends both icon coordinates, so this call site keeps the
  * unsigned coordinates the emitter's signed halfword fields are filled from.
  * @source 0x801D5620 */
-extern void emitPanelIconPrimShisu00_801D5620(u16 arg0, u16 arg1, s32 arg2,
+extern void emitPanelIconPrim(u16 arg0, u16 arg1, s32 arg2,
                                              s32 arg3, u16 arg4, u8 arg5);
 
 /* @source 0x801D4DC0
@@ -152,7 +152,7 @@ extern void emitPanelIconPrimShisu00_801D5620(u16 arg0, u16 arg1, s32 arg2,
  *           slots by their rotated y with a bubble sort that swaps the rotated
  *           pair, the icon kind and the colour through signed-byte and byte
  *           temporaries. Finally it emits one 16x16 icon per slot through
- *           emitPanelIconPrimShisu00_801D5620 at (x + 0x27 + slot x - 4,
+ *           emitPanelIconPrim at (x + 0x27 + slot x - 4,
  *           y + 0x17 + slot y - 8) with the icon kind plus 3 as its kind, the
  *           0x1E texture row, the clut GetClut(0x10, 0x1E0) and the slot's
  *           colour byte, and submits the three sprite streams D_801D98BC at
@@ -278,7 +278,7 @@ void renderRotatingIconSlot(u16 x, u16 y, u8 index, u8 mask,
         }
     }
     for (i = 0; i < count; i++) {
-        emitPanelIconPrimShisu00_801D5620(
+        emitPanelIconPrim(
             (u16)(x + 0x27 + D_801D9F10[i].x - 4),
             (u16)(y + 0x17 + D_801D9F10[i].y - 8), (u8)(iconId[i] + 3), 0x1E,
             (u16)GetClut(0x10, 0x1E0), channels[i]);

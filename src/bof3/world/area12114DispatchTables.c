@@ -18,7 +18,7 @@ void stateMaskChargeDecay(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable67World03, D_801F67D8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table67d8, D_801F67D8);
 
 /* @source 0x801F34E0
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record
@@ -51,7 +51,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchState01, D_801F6870);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable6894World03, D_801F6894);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table6894, D_801F6894);
 
 /* @source 0x801F4B00
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record
@@ -77,4 +77,4 @@ EMI_DEFINE_DISPATCHER_THEN_RESET(
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable68World03, D_801F68A4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchByte1Table68a4, D_801F68A4);

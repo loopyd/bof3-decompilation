@@ -45,8 +45,8 @@ segments:
     - func_801F2C9C
   - - 336
     - c
-    - initArea14613State
-    - '@source: src/bof3/world/initArea14613State.c'
+    - setupFrontendState2C
+    - '@source: src/bof3/world/setupFrontendState2C.c'
   - - 400
     - c
     - dispatchStateByte1Table3

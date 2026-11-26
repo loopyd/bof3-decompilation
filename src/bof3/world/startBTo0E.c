@@ -19,12 +19,12 @@ extern u8 D_80143BB0;
  * original bytes hold 8, 5, 2, 4.
  * @source 0x801F5CB4 @kind table
  */
-extern u8 partyCandidateByteTableWorld03Area14514_801F5CB4[];
+extern u8 partySecondByteTable[];
 /* Four action halfwords started for the candidate that matched; the original
  * bytes hold 0x0B, 0x0C, 0x0D and 0x0E.
  * @source 0x801F5CB8 @kind table
  */
-extern s16 partyCandidateActionTableWorld03Area14514_801F5CB8[];
+extern s16 partySecondActionTable[];
 
 /* Shared front-end action starter of the main executable, outside this payload:
  * it starts the action whose id it is given. Prototype form and argument type
@@ -73,8 +73,8 @@ void startBTo0E(
     for (j = 0; j < D_80146254; j++) {
       offset = j * 0x140;
       if (D_80145F09[offset] ==
-          partyCandidateByteTableWorld03Area14514_801F5CB4[i]) {
-        func_80150224(partyCandidateActionTableWorld03Area14514_801F5CB8[i]);
+          partySecondByteTable[i]) {
+        func_80150224(partySecondActionTable[i]);
         D_80143BB0 = 2;
         return;
       }

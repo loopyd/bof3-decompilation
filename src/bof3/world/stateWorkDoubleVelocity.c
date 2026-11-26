@@ -7,7 +7,7 @@
  * per-frame handlers update. It is the payload's last word and is zero on disc;
  * the address is bound by this target's generated undefined_syms_auto.txt, so no
  * map row is needed. */
-extern u8* workRecordCursor63World02; /* @source 0x801F63EC @kind data */
+extern u8* workRecordCursor; /* @source 0x801F63EC @kind data */
 
 /* @source 0x801F30FC
  * @behavior Overlay per-frame step handler, entry 3 of the state-byte-1
@@ -33,7 +33,7 @@ void stateWorkDoubleVelocity(void) {
   s32* words;
   u8 timer;
 
-  words = (s32*)workRecordCursor63World02;
+  words = (s32*)workRecordCursor;
   timer = ((u8*)words)[2] - 1;
   words[1] += words[5] * 2;
   words[2] += words[6] * 2;
@@ -41,7 +41,7 @@ void stateWorkDoubleVelocity(void) {
   ((u8*)words)[2] = timer;
   ((u16*)words)[0x12] += 0x80;
   if (timer == 0) {
-    ((u8*)workRecordCursor63World02)[2] = 0x40;
-    workRecordCursor63World02[1]++;
+    ((u8*)workRecordCursor)[2] = 0x40;
+    workRecordCursor[1]++;
   }
 }

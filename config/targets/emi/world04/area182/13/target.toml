@@ -11,7 +11,7 @@ sources = [
     "src/bof3/world/selectStateMatchedArguments6.c",
 ]
 support_sources = [
-    "src/bof3/world/initAreaModuleAndQueueFrontCue20CWorld04Area18213_801F32D8.c",
+    "src/bof3/world/setupModuleQueueCue5.c",
     "src/bof3/world/invokeHelperArg9.c",
     "src/bof3/world/copySharedXWork7.c",
     "src/bof3/support/area182_13_psyq.c",

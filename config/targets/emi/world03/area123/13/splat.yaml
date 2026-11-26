@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - initArea12313State
+    - stateEntryTupleMode14
   - - 68
     - textbin
     - D_801F2C44

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind data */
-extern u16 *g_WorkRecordWorld03Area14013;
+extern u16 *scratchpadWorkRecord;
 extern s32 D_80145EC4; /* @source 0x80145EC4 @kind data */
 extern s32 D_80145EC8; /* @source 0x80145EC8 @kind data */
 /* @source 0x801F3050 */
@@ -67,7 +67,7 @@ extern void func_801F3050(void);
 void advanceCellWindowDraw(void) {
     u16 *work;
 
-    work = g_WorkRecordWorld03Area14013;
+    work = scratchpadWorkRecord;
     if (__builtin_abs(D_80145EC4 - ((((s32)(s16)work[0x1B] + 1) << 16) | 0x8000)) > 0x20000) {
         ((u8 *)work)[2]++;
     } else if (__builtin_abs(D_80145EC8 - ((s32)(s16)work[0x1D] << 16)) > 0x20000) {

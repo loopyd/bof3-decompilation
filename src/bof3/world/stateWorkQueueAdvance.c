@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8* world03Area11913WorkRecord; /* @source 0x1F800044 @kind data */
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 extern void func_8015DF18(u16 cue); /* @source 0x8015DF18 */
 
 /* @source 0x801F3D4C
@@ -15,8 +15,8 @@ extern void func_8015DF18(u16 cue); /* @source 0x8015DF18 */
 void stateWorkQueueAdvance(void) {
   u8* work;
 
-  world03Area11913WorkRecord[9] = 0;
+  scratchpadWorkRecord[9] = 0;
   func_8015DF18(0x202);
-  work = world03Area11913WorkRecord;
+  work = scratchpadWorkRecord;
   work[2] += 1;
 }

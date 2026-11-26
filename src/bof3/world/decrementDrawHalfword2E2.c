@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area15213WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 /* @source 0x801454F2 @kind unknown */
 extern u8 D_801454F2;
 
@@ -46,16 +46,16 @@ void decrementDrawHalfword2E(
   u8* draw;
   s16* half;
 
-  record = area15213WorkCursor_1F800044;
+  record = workRecordCursor1F800044;
   half = (s16*)(record + 0x2E);
   *half = (s16)(*half - 0x10);
   if (*half < -0x2F) {
     record[2] = 0;
   }
   if (D_801454F2 != 2) {
-    area15213WorkCursor_1F800044[2] = 1;
+    workRecordCursor1F800044[2] = 1;
   }
-  draw = area15213WorkCursor_1F800044;
+  draw = workRecordCursor1F800044;
   drawMarkerSpriteLayers(
       0x10, FIELD_REF(s16, draw, 0x2E));
 }

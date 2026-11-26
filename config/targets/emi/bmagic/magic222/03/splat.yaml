@@ -86,8 +86,8 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9Copy.c'
   - - 2760
     - c
-    - incrementAdvanceAdvanceBmagic
-    - '@source: src/bof3/bmagic/incrementAdvanceAdvanceBmagic.c'
+    - incrementAdvanceWord6
+    - '@source: src/bof3/bmagic/incrementAdvanceWord6.c'
   - - 2852
     - c
     - decrementWorkByteAdvance
@@ -143,8 +143,8 @@ segments:
     - '@behavior: Per-frame work-handler step, entry 0 of the five-entry handler table at 0x801F0D98 that the byte-1 dispatcher callDrawTwiceActive indexes with the scratchpad work object byte 0x2. It seeds the work object halfword pair 0x2E/0x30 from the same halfwords of the shared battle record read through 0x801EB4E0, taking the record pointer and the work pointer through 0x1F800044 before it creates its 0x18-byte frame and storing both halves through that one work base. It then calls func_800A9610 with the shared battle target byte at 0x80146384 and the battler status flag 0x10. After the call it re-reads the cell before each store group to set work byte 0xB to 8, work byte 0x9 to 0 and work byte 0xA to 4, and re-reads it once more to advance work byte 0x2 by one, which selects table entry 1 (0x801F061C). It takes no arguments, returns nothing and reads or writes no other state.'
   - - 6684
     - c
-    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C
-    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C.c'
+    - workAdvanceAt10
+    - '@source: src/bof3/bmagic/workAdvanceAt102.c'
   - - 6764
     - c
     - decrementByteRearmZero

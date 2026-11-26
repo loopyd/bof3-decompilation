@@ -50,8 +50,8 @@ segments:
     - func_801EF210
   - - 1956
     - c
-    - add2ToWorkByteBAdd2ToWorkByteAWhenBelow10ThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic17203_801EF3A4
-    - '@source: src/bof3/bmagic/add2ToWorkByteBAdd2ToWorkByteAWhenBelow10ThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic17203_801EF3A4.c'
+    - mathAddPairCountdown
+    - '@source: src/bof3/bmagic/mathAddPairCountdown.c'
   - - 2096
     - asm
     - func_801EF430

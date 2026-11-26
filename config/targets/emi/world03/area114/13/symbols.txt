@@ -1,4 +1,4 @@
-initArea11413State = 0x801F2C68;
+initStateSelectorTriple = 0x801F2C68;
 stateEntry3ArgTo5 = 0x801F2CA8;
 func_801F2CF0 = 0x801F2CF0;
 audioActionReturnNext = 0x801F2E48;

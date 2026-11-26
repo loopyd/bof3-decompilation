@@ -32,7 +32,7 @@ void dispatchSoundCue(u32 cue_id) {
   D_8018B408 = (s16)hi;
   D_8018B404 = (s16)lo8;
   saved = cue_id;
-  g_SoundCueHandlerTable[hi](cue_id);
+  soundCueHandlerTable[hi](cue_id);
 
   if (D_8018B3F4 == 0x80) {
     switch (D_8018B3E4) {

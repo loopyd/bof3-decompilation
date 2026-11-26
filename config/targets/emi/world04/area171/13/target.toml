@@ -8,7 +8,7 @@ splat = "config/targets/emi/world04/area171/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17113_801F2F00.c",
+    "src/bof3/world/stateAdvanceHalfwordDraw3.c",
     "src/bof3/world/advanceRecordCoordinateWindow7.c",
     "src/bof3/world/decrementByte2To1Draw2.c",
     "src/bof3/world/stateSharedRequestQueue.c",

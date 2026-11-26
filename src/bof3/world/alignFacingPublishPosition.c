@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x80145E98 @kind unknown */
 extern u8 D_80145E98;
 
@@ -34,15 +34,15 @@ void alignFacingPublishPosition(
   u8 facing;
 
   mode = &D_80145E98;
-  facing = area12114WorkCursor_1F800044[8];
+  facing = scratchpadWorkRecord[8];
   if (facing != *mode) {
     if ((func_801F5ECC(facing, *mode) & 0xFF) != 0) {
       return;
     }
-    if ((func_801F5ECC(area12114WorkCursor_1F800044[8] ^ 4, *mode) & 0xFF) != 0) {
+    if ((func_801F5ECC(scratchpadWorkRecord[8] ^ 4, *mode) & 0xFF) != 0) {
       return;
     }
-    *mode = area12114WorkCursor_1F800044[8];
+    *mode = scratchpadWorkRecord[8];
   }
   publishPositionWordsMeter();
 }

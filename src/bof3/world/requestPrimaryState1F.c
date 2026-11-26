@@ -43,7 +43,7 @@ void func_8015C088(void);
  * Name evidence: 0x801448EB is the state-entry selector that etc/game/00
  *   dispatches its D_801C84BC handler table through and that the world overlays
  *   publish their next state entry into, with 0x801448EC the sub-state of the
- *   same pair; this overlay enters with the tuple 0x1F/0xA from initArea14813State
+ *   same pair; this overlay enters with the tuple 0x1F/0xA from setupFrontendState1F
  *   and its neighbouring entry gate func_801F4108 publishes 0x1F on its success
  *   path, so 0x1F names the requested state family here and D_801448EC the
  *   matched row's sub-state. The arguments carry no evidenced role beyond table

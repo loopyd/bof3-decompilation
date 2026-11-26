@@ -8,7 +8,7 @@ splat = "config/targets/emi/world03/area142/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/stateWorkBy2World03.c",
+    "src/bof3/world/stateWorkAdvanceTwo.c",
     "src/bof3/world/callRunStepConsumer.c",
     "src/bof3/world/callWorkByte4Table3.c",
 ]

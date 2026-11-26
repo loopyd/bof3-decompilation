@@ -36,7 +36,7 @@ extern u8 D_801454EC;
  *           The five-word handler pointer run at payload offset 0x1B8
  *           (0x801F2C04, 0x801F2C60, 0x801F2C90, 0x801F2CC0, 0x801F2D04) carries
  *           this address as its first word, and the payload's only `jal`
- *           (func_8015C088, from initArea11313State) does not target
+ *           (func_8015C088, from initStateSelectorPair) does not target
  *           0x801F2C04, so the payload installs the body as a table member
  *           rather than reaching it with a call.
  * @status exact

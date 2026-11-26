@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area16813WorkCursor_1F800044;
+extern u8* workRecordCursor1F800044;
 
 /* @source 0x801F4158 @kind function */
 extern void func_801F4158(s32 index, s8 mode);
@@ -19,8 +19,8 @@ extern void func_801F4158(s32 index, s8 mode);
 void stateStepCallPair(void) {
   u8* work;
 
-  area16813WorkCursor_1F800044[8] = 1;
-  work = area16813WorkCursor_1F800044;
+  workRecordCursor1F800044[8] = 1;
+  work = workRecordCursor1F800044;
   FIELD_REF(u16, work, 0x3E) = 0;
   FIELD_REF(u32, work, 0x20) = 0x28709126u;
   FIELD_REF(u16, work, 0x30) = 0;

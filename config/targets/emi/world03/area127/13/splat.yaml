@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - updateArea127RecordState
+    - updateRecordState
     - func_801F2C04
   - - 116
     - rodata

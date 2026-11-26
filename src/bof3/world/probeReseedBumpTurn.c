@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* area12114WorkCursor_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x80143F02 @kind unknown */
 extern u8 D_80143F02;
 /* @source 0x80143F10 @kind unknown */
@@ -39,7 +39,7 @@ s32 func_801A79A4(s32 arg0, s32 arg1);
 void func_801C2BEC(void);
 void func_801C329C(void);
 void func_801C3598(void);
-void stateMode3WorkWorld03(void);
+void stateMode3Work(void);
 void turnTowardSavedOutcome(
     void);
 
@@ -70,31 +70,31 @@ void probeReseedBumpTurn(
   func_801C3598();
   func_801C2BEC();
   if (D_80143F02 & 1u) {
-    if ((u8)func_80166CB0(*(s16*)(area12114WorkCursor_1F800044 + 0x36),
-                          *(s16*)(area12114WorkCursor_1F800044 + 0x3A)) == 0xAF) {
+    if ((u8)func_80166CB0(*(s16*)(scratchpadWorkRecord + 0x36),
+                          *(s16*)(scratchpadWorkRecord + 0x3A)) == 0xAF) {
       func_8019FA28(D_80143F10, D_80143F14, D_80143F18, D_80143F1C);
       D_80143F1E = 0;
       D_80143F1D = 0xC;
       return;
     }
-    if ((u8)func_80166CB0(*(s16*)(area12114WorkCursor_1F800044 + 0x36),
-                          *(s16*)(area12114WorkCursor_1F800044 + 0x3A)) == 0xC0) {
-      func_801A0048(*(s16*)(area12114WorkCursor_1F800044 + 0x36),
-                    *(s16*)(area12114WorkCursor_1F800044 + 0x3A));
+    if ((u8)func_80166CB0(*(s16*)(scratchpadWorkRecord + 0x36),
+                          *(s16*)(scratchpadWorkRecord + 0x3A)) == 0xC0) {
+      func_801A0048(*(s16*)(scratchpadWorkRecord + 0x36),
+                    *(s16*)(scratchpadWorkRecord + 0x3A));
     }
   }
 
   countdown = D_80143F22;
   D_80143F22 = countdown + 1;
-  if (area12114WorkCursor_1F800044[8] == 2 ||
-      area12114WorkCursor_1F800044[8] == 6) {
+  if (scratchpadWorkRecord[8] == 2 ||
+      scratchpadWorkRecord[8] == 6) {
     D_80143F22 = countdown + 2;
   }
 
-  stateMode3WorkWorld03();
-  if (func_801A79A4(*(s32*)(area12114WorkCursor_1F800044 + 0x34),
-                    *(s32*)(area12114WorkCursor_1F800044 + 0x38))) {
-    area12114WorkCursor_1F800044[2] = 0;
+  stateMode3Work();
+  if (func_801A79A4(*(s32*)(scratchpadWorkRecord + 0x34),
+                    *(s32*)(scratchpadWorkRecord + 0x38))) {
+    scratchpadWorkRecord[2] = 0;
     return;
   }
 
@@ -104,6 +104,6 @@ void probeReseedBumpTurn(
     turnTowardSavedOutcome();
   } else {
     D_80146250[0x12B] = 0;
-    area12114WorkCursor_1F800044[2] = 0;
+    scratchpadWorkRecord[2] = 0;
   }
 }

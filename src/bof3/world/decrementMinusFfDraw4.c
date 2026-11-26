@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind data */
-extern u16 *g_WorkRecordWorld03Area14013;
+extern u16 *scratchpadWorkRecord;
 /* @source 0x801F3050 */
 extern void func_801F3050(void);
 
@@ -32,7 +32,7 @@ void decrementMinusFfDraw(void) {
     u16 *work;
     u16 half;
 
-    work = g_WorkRecordWorld03Area14013;
+    work = scratchpadWorkRecord;
     half = work[0x18] - 0x20;
     work[0x18] = half;
     if ((s16)half < -0xFF) {
