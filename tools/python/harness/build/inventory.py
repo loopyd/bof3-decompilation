@@ -145,3 +145,52 @@ def has_current_inventory(root: Path, snapshot: Path) -> bool:
     except (FileNotFoundError, ValueError):
         return False
     return True
+
+
+def _adapter_inventory(root: Path) -> str:
+    """Run the build adapter exactly as the frontend does, and return its output."""
+    import os
+    import subprocess
+    import sys
+
+    environment = dict(os.environ)
+    environment["PYTHONPATH"] = str(root / "tools" / "python")
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
+    result = subprocess.run(
+        [sys.executable, "-m", "harness.build.cli", "--root", str(root), "inventory"],
+        cwd=root,
+        env=environment,
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"inventory adapter failed: {(result.stderr or result.stdout).strip()[:200]}"
+        )
+    return result.stdout
+
+
+def refresh(root: Path, target: str | None = None) -> dict:
+    """Rewrite the generated inventory, then relink one target.
+
+    The frontend writes `build/cmake/bof3-inventory.json` at configure time. It holds
+    hashes and paths rather than symbol names, so it is not what resolves a spelling;
+    relinking the payload is, and this is the call that does both from current maps.
+    """
+    from harness.build.operations import build, cmake_target_for_directory
+    from harness.domain.registry import lookup_target_manifest
+
+    root = root.resolve()
+    snapshot = root / "build" / "cmake" / "bof3-inventory.json"
+    text = _adapter_inventory(root)
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
+    linked = None
+    if target is not None:
+        manifest = lookup_target_manifest(root, target)
+        linked = build(root, cmake_target_for_directory(manifest.source_dir)).returncode
+    return {
+        "snapshot": snapshot.relative_to(root).as_posix(),
+        "bytes": len(text),
+        "link": linked,
+    }

@@ -215,3 +215,64 @@ def test_a_failed_write_restores_every_captured_byte(tmp_path: Path) -> None:
     assert OLD not in other.read_text()
     journal.rollback()
     assert other.read_text() == before
+
+
+def _data_target(root: Path, target: str, address: int = 0x80100010) -> Path:
+    """A target that maps one data cell and claims no source, so it needs no binary."""
+    directory = root / "config" / "targets" / target
+    directory.mkdir(parents=True)
+    (directory / "target.toml").write_text(
+        textwrap.dedent(
+            f"""\
+            schema = "harness.target/v2"
+            id = "{target}"
+            disc_id = "SLUS_004.22"
+            kind = "executable"
+            source_dir = "src/bof3/battle"
+            binary = "out/binaries/{target}.bin"
+            splat = "config/targets/{target}/splat.yaml"
+            load_address = 0x80010000
+            sources = [
+                "src/bof3/battle/keep{target.replace('/', '_')}.c",
+            ]
+            """
+        ),
+        encoding="utf-8",
+    )
+    kept = root / "src" / "bof3" / "battle" / f"keep{target.replace('/', '_')}.c"
+    kept.parent.mkdir(parents=True, exist_ok=True)
+    kept.write_text(f"void keep{target.replace('/', '_')}(void) {{}}\n", encoding="utf-8")
+    (directory / "symbols.txt").write_text(
+        f"D_{address:08X} = 0x{address:08X};\n", encoding="utf-8"
+    )
+    (directory / "splat.yaml").write_text(
+        f"- [0x{address:08X}, data, D_{address:08X}]\n", encoding="utf-8"
+    )
+    return directory / "symbols.txt"
+
+
+def test_a_group_write_failure_restores_every_member(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path
+    first_map = _data_target(root, "exe/a")
+    second_map = _data_target(root, "exe/b")
+    before_first, before_second = first_map.read_text(), second_map.read_text()
+    old = "D_80100010"
+
+    real_write = rename._write
+    calls = {"count": 0}
+
+    def failing_write(plan, source_name, target_name, journal=None):
+        calls["count"] += 1
+        if calls["count"] == 2:
+            raise OSError("second member fails")
+        return real_write(plan, source_name, target_name, journal)
+
+    monkeypatch.setattr(rename, "_write", failing_write)
+    payload = rename.apply_group(root, "sharedCell", [("exe/a", old), ("exe/b", old)])
+    assert payload["applied"] is False
+    assert calls["count"] >= 2
+    # The first member was renamed before the second failed; the group restores it.
+    assert first_map.read_text() == before_first
+    assert second_map.read_text() == before_second

@@ -82,6 +82,9 @@ class RenamePlan:
     # Owner -> sources outside this target that spell the old name. A rename writes
     # them too, so one spelling holds across every unit that calls it.
     foreign: dict[str, list[str]] = field(default_factory=dict)
+    # Owner -> address that owner spells but does not map. The link resolves the
+    # spelling in that owner's own map, so the transaction adds the row.
+    inserts: dict[str, int] = field(default_factory=dict)
 
     @property
     def passed(self) -> bool:
@@ -506,6 +509,11 @@ def _check_consumers(plan: RenamePlan, root: Path, target: str, old: str) -> Non
         return
     for owner, source in findings:
         plan.foreign.setdefault(owner, []).append(source)
+    if plan.address is not None:
+        for owner in plan.foreign:
+            rows = load_map(map_path(root, owner))
+            if not any(symbol.address == plan.address for symbol in rows):
+                plan.inserts[owner] = plan.address
     files = sum(len(paths) for paths in plan.foreign.values())
     if files > MAX_FOREIGN_FILES or len(plan.foreign) > MAX_FOREIGN_TARGETS:
         plan.refuse(
@@ -555,10 +563,24 @@ def _foreign_proof(plan: RenamePlan) -> str | None:
             if result.returncode != 0:
                 detail = (result.stderr or result.stdout or "").strip().splitlines()
                 return f"{relative}: {detail[-1][:160] if detail else 'build failed'}"
+    from harness.build.inventory import refresh
+    from harness.domain.manifests import load_target_manifests
+
     from .inspection import check_report
 
+    # The write changed maps, so the proof must read the generation that describes
+    # the tree as it is now, not the one the plan was resolved against.
+    generation = load_target_manifests(plan.root)
+    plan.manifests = generation
+    plan.manifest = generation.get(plan.target) or plan.manifest
     for owner in sorted(plan.foreign):
-        report = check_report(plan.root, owner, (), manifests=plan.manifests)
+        # Relink against the current maps before the proof reads the result.
+        try:
+            if refresh(plan.root, owner)["link"] not in (None, 0):
+                return f"{owner} does not link after a rebuild"
+        except (OSError, RuntimeError, ValueError) as error:
+            return f"{owner} could not be rebuilt: {str(error)[:160]}"
+        report = check_report(plan.root, owner, (), manifests=generation)
         broken = [row for row in report["findings"] if row["code"] == "native"]
         if broken:
             return f"{owner} no longer links: {broken[0]['message'][:120]}"
