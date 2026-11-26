@@ -82,7 +82,7 @@ void func_8015DF18(u32 cue);
  * @match 100.00
  * @residual none
  */
-void initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndAdvanceStateByte1World04Area19713_801F2C48(
+void initWorkTablesSeed(
     void) {
   s32 from[3];
   s32 to[3];

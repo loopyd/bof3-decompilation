@@ -56,7 +56,7 @@ extern s32 D_80147A8C;
  * @match 100.00
  * @residual none
  */
-void spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanceWorkByte1WhenPositionEquals3c8000World04Area17413_801F2CA8(
+void spawnWorkRecordTicks(
     void) {
   u8* record;
 

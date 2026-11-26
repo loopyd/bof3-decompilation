@@ -20,7 +20,7 @@ sources = [
     "src/bof3/world/playPairTableStep.c",
     "src/bof3/world/claimSizeHeadingObject.c",
     "src/bof3/world/stateTableSetClear.c",
-    "src/bof3/world/spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanceWorkByte1WhenPositionEquals3c8000World04Area17413_801F2CA8.c",
+    "src/bof3/world/spawnWorkRecordTicks.c",
     "src/bof3/world/spawnEighthTickRecord.c",
     "src/bof3/world/stateTablesStampInside.c",
     "src/bof3/world/audioStoreFirstSecond.c",

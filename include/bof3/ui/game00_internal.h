@@ -1115,7 +1115,7 @@ void drawSprite(s16 x, s16 y, u8 sprite_id, u8 flags);
  * sprite-record table drawing each sprite via drawSprite with signed offsets
  * shifted by 3 applied to base coords. The flag word is wider than a byte: the
  * original never truncates the incoming $a3 at entry (the byte-wide precedent
- * dispatchPositionCheckBySpeed does), and keeps it as a full word in $s3. The
+ * dispatchPositionCheck does), and keeps it as a full word in $s3. The
  * eight-bit re-mask at each drawSprite call comes from the source expression,
  * so it says nothing about the argument width; u32 and s32 are not
  * byte-distinguishable here.

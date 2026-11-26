@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-u8 dispatchPositionCheckBySpeed(s32 x, s32 y, u8 speed, s16 reference)
+u8 dispatchPositionCheck(s32 x, s32 y, u8 speed, s16 reference)
 {
   u8 result;
 

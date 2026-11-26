@@ -8,7 +8,7 @@ splat = "config/targets/emi/world04/area197/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndAdvanceStateByte1World04Area19713_801F2C48.c",
+    "src/bof3/world/initWorkTablesSeed.c",
     "src/bof3/world/armSelectLowerShared.c",
     "src/bof3/world/startActions1ETo21.c",
     "src/bof3/world/stepSharedStartSelector.c",

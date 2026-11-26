@@ -27,7 +27,7 @@ void stampElementsAttachTexture(
  * the scratchpad slot macro the target's other lifts use. Calling the stamp
  * routine adds only the 0x18-byte frame with $ra at 0x10.
  */
-void stampGlyphGridCellCodesThenAdvanceStateByte1World04Area17013_801F2F48(void) {
+void stampGlyphCellCodes(void) {
   u8* step;
 
   stampElementsAttachTexture();

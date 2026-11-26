@@ -67,7 +67,7 @@ extern u8* D_1F800044;
  * forms keep the recomputed 100-scaled index per group, so the work record is
  * re-read three times as the original does.
  */
-void drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC(s32 x,
+void drawThreeGlyphPanel(s32 x,
                                                                     s32 y) {
   s32 origin;
 

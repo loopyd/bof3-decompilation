@@ -15,7 +15,7 @@ sources = [
     "src/bof3/world/advanceRecordCoordinateWindow6.c",
     "src/bof3/world/advanceWorkByte2Play4.c",
     "src/bof3/world/stateAdvanceHalfwordDraw2.c",
-    "src/bof3/world/drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC.c",
+    "src/bof3/world/drawThreeGlyphPanel.c",
     "src/bof3/world/renderGlyphCellMarker.c",
     "src/bof3/world/renderGlyphGridMarkers.c",
     "src/bof3/world/stateStatusGateClear.c",
@@ -23,7 +23,7 @@ sources = [
     "src/bof3/world/setProgress19GateClear.c",
     "src/bof3/world/decrementByte2To1Draw.c",
     "src/bof3/world/statePlaySetDraw.c",
-    "src/bof3/world/clearWorkHalfword30AndAdvanceWorkByte2ThenDrawWorld04Area17013_801F453C.c",
+    "src/bof3/world/clearWorkHalfwordDraw.c",
     "src/bof3/world/replaceBannerCrossedSide.c",
     "src/bof3/world/renderTransFlatLine.c",
     "src/bof3/world/renderTransFlatTriangle.c",
@@ -33,7 +33,7 @@ sources = [
     "src/bof3/world/renderAxisSplitScaled.c",
     "src/bof3/world/renderPassTexturedDepth.c",
     "src/bof3/world/stateGlyphPhasePointer.c",
-    "src/bof3/world/stampGlyphGridCellCodesThenAdvanceStateByte1World04Area17013_801F2F48.c",
+    "src/bof3/world/stampGlyphCellCodes.c",
     "src/bof3/world/setSharedFlag67.c",
 ]
 support_sources = [

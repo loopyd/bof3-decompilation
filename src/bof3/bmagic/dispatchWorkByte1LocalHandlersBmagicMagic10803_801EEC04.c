@@ -8,7 +8,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* This overlay's two work-byte-1 step handlers. The begin step at 0x801EEC5C
  * is the lift
- * queueActionSlotPublishWorkPointerCopyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic10803_801EEC5C,
+ * queueActionPointerTriplet,
  * which calls func_801E590C with the constants 1 and 0x1A, copies the selected
  * record's fields into the bands at 0x801EC338, 0x801EC364 and 0x801EC3A4,
  * clears the work object's byte 0x0B and advances byte 0x01. 0x801EED1C is the
@@ -16,7 +16,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * was last measured: it acts only when byte 0x0B reads 0xFF, then calls
  * func_800A9820, sets bit 0x04 of the halfword at 0x801462E8 and calls
  * func_801E5988. */
-void queueActionSlotPublishWorkPointerCopyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic10803_801EEC5C(
+void queueActionPointerTriplet(
     void);
 void func_801EED1C(void);
 
@@ -48,7 +48,7 @@ void func_801EED1C(void);
  */
 void dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04(void) {
   void (*handlers[2])(void) = {
-      queueActionSlotPublishWorkPointerCopyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic10803_801EEC5C,
+      queueActionPointerTriplet,
       func_801EED1C};
 
   handlers[g_battle_work[1]]();

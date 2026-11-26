@@ -57,7 +57,7 @@ sources = [
     "src/bof3/ui/adjustPairedValuesMask.c",
     "src/bof3/ui/runFrameFinalizationServices.c",
     "src/bof3/ui/dispatchPanelTaskHandler.c",
-    "src/bof3/ui/dispatchPositionCheckBySpeed.c",
+    "src/bof3/ui/dispatchPositionCheck.c",
     "src/bof3/ui/func_80199418.c",
     "src/bof3/ui/func_8019959C.c",
     "src/bof3/ui/func_801996A8.c",
@@ -217,7 +217,7 @@ sources = [
     "src/bof3/ui/stateWorkResetReady.c",
     "src/bof3/ui/checkRouteSampleDifference.c",
     "src/bof3/ui/stateFlagsCountdownExpires.c",
-    "src/bof3/ui/runFrameServicesAndFinalize.c",
+    "src/bof3/ui/runFrameServices.c",
     "src/bof3/ui/stateIndexTintCompletes.c",
     "src/bof3/ui/publishFadeIndexOne.c",
     "src/bof3/ui/selectSequenceSetFactor.c",
@@ -260,7 +260,7 @@ evidence = "Original Game00 loader/state path requests slot 0x266, waits on 0x80
 [companion_overlays.abi]
 target_address = 0x801D0EA0
 prototype = "void dispatchShopUiState(void)"
-evidence = "Scoped to runFrameServicesAndFinalize: the call at 0x801993D8 supplies no arguments and discards the result. The complete SHOP dispatcher consumes no incoming a0-a3. No handler-result or callback ABI is inferred."
+evidence = "Scoped to runFrameServices: the call at 0x801993D8 supplies no arguments and discards the result. The complete SHOP dispatcher consumes no incoming a0-a3. No handler-result or callback ABI is inferred."
 
 [[companion_overlays.static_calls]]
 caller_address = 0x801993D8

@@ -61,7 +61,7 @@ u8 queryActiveSlotKind(u8 kind, u8 ordinal);
  * @match 100.00
  * @residual none
  */
-void handleCommuEntryListInputThenDraw(void) {
+void handleEntryListInput(void) {
   u16 pad;
   s32 committed;
   u8 *row;

@@ -31,8 +31,8 @@ segments:
     - '@source: src/bof3/world/area19713DispatchTables.c'
   - - 72
     - c
-    - initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndAdvanceStateByte1World04Area19713_801F2C48
-    - '@source: src/bof3/world/initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndAdvanceStateByte1World04Area19713_801F2C48.c'
+    - initWorkTablesSeed
+    - '@source: src/bof3/world/initWorkTablesSeed.c'
     - '@behavior: Overlay init handler, entry 0 of the state-byte-1 handler run at 0x801F431C. It empties the 0x28-byte-stride work table at 0x800E4800 and the 0x24-byte-stride table at 0x800E5C00, seeds both in three entry bands with random positions interpolated between the X word pairs 0x20000 to 0x50000, 0x50000 to 0xA0000 and 0xA0000 to 0xD0000, requests cue 0x207 through func_8015DF18, clears the work record byte at +0x02 and advances the byte at +0x01 from 0 to 1 so its own dispatch run moves to 0x801F2DA4.'
   - - 420
     - asm

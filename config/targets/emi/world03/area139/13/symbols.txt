@@ -1,4 +1,4 @@
-callStateTable4430World03 = 0x801F2C04;
+callStepTable = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2CE0 = 0x801F2CE0;
 func_801F2E68 = 0x801F2E68;

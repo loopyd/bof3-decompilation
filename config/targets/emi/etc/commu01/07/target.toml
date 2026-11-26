@@ -19,7 +19,7 @@ sources = [
     "src/bof3/ui/renderWindowFrame.c",
     "src/bof3/ui/drawEntryListFrame.c",
     "src/bof3/ui/computeKindSlotOrigin.c",
-    "src/bof3/ui/handleCommuEntryListInputThenDraw.c",
+    "src/bof3/ui/handleEntryListInput.c",
     "src/bof3/ui/saveRequestSelect.c",
     "src/bof3/ui/restoreSavedBack.c",
     "src/bof3/ui/handleListEntryInput.c",

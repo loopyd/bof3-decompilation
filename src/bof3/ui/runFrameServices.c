@@ -10,7 +10,7 @@
  * @match 100.00
  * @residual none
  */
-void runFrameServicesAndFinalize(void)
+void runFrameServices(void)
 {
     func_801527E4();
     func_8015A758();

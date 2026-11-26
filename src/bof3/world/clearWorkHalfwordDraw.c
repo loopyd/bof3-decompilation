@@ -45,7 +45,7 @@ void renderPassTexturedDepth(
  * @match 100.00
  * @residual none
  */
-void clearWorkHalfword30AndAdvanceWorkByte2ThenDrawWorld04Area17013_801F453C(
+void clearWorkHalfwordDraw(
     void) {
   u8* work;
   u8 step;

@@ -42,8 +42,8 @@ segments:
     - func_801F2D80
   - - 840
     - c
-    - stampGlyphGridCellCodesThenAdvanceStateByte1World04Area17013_801F2F48
-    - '@source: src/bof3/world/stampGlyphGridCellCodesThenAdvanceStateByte1World04Area17013_801F2F48.c'
+    - stampGlyphCellCodes
+    - '@source: src/bof3/world/stampGlyphCellCodes.c'
     - '@behavior: Handler at slot 2 of the overlay dispatch table at 0x801F57BC - the pointer word at 0x801F57C4 - stamps the 7x9 glyph grid of the overlay banner into the map cell codes by calling the stamp routine at 0x801F3994 with no arguments, then reads the scratchpad work record from the pointer cell 0x1F800044 and adds one to the record dispatch state byte at offset 0x01, the byte the dispatcher at 0x801F2CF8 scales by four and indexes into that pointer run, so the overlay steps from this slot to the helper slot at 0x801F2F80. Takes no arguments, returns nothing and keeps a 0x18-byte frame holding only the return address.'
   - - 896
     - c
@@ -56,8 +56,8 @@ segments:
     - '@behavior: Draws one glyph of the overlay banner as a 9-by-7 grid of 10-pixel cells at the signed halfword origin (x, y). Arms draw mode 2 and covers the 0x5A by 0x46 glyph box with one semi-transparent (0x40, 0x40, 0x40) POLY_F4, then arms draw mode 1 and draws the cell borders as ten gray (0x96) vertical lines at x+10k running from y to y+0x45 and eight at y+10k running from x to x+0x59. It then marks every cell of the grid: display column j at x+10j takes its seven row values from the 63-byte signed glyph table that is passed in, read at row*9+phase, with the phase advanced by one per display column and wrapped to zero once it reaches nine. Each value goes to the marker routine at 0x801F388C, whose 1 draws a cross and whose -1 draws a blue bar.'
   - - 1500
     - c
-    - drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC
-    - '@source: src/bof3/world/drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC.c'
+    - drawThreeGlyphPanel
+    - '@source: src/bof3/world/drawThreeGlyphPanel.c'
     - '@behavior: Draws the overlay three-glyph banner at the signed halfword origin (x, y) and marks the glyph the work record selected. Arms draw mode 0, covers the box with three semi-transparent (0, 0x80, 0) quads 0x136 wide and 0x5A tall (two 5-pixel end caps and the body), and draws the three 9x7 glyph grids at x+9, x+0x6D and x+0xD1 from the 0x3F-byte stride table at 0x801F58D0 starting at the row phases in 0x801F5990 through 0x801F5992. When bit 4 of the shared frame word 0x80143E6C is set it steps x down one pixel and marks the glyph selected by byte 6 of the scratchpad work record at 0x1F800044, scaled by 100: two unfilled (0xC8, 0xC8, 0xC8) triangles flank the column and four lines draw the 0x5A by 0x46 selection frame. The record is re-read for each of the three marks.'
   - - 2452
     - c
@@ -124,8 +124,8 @@ segments:
     - '@source: src/bof3/world/area17013DispatchTables.c'
   - - 6460
     - c
-    - clearWorkHalfword30AndAdvanceWorkByte2ThenDrawWorld04Area17013_801F453C
-    - '@source: src/bof3/world/clearWorkHalfword30AndAdvanceWorkByte2ThenDrawWorld04Area17013_801F453C.c'
+    - clearWorkHalfwordDraw
+    - '@source: src/bof3/world/clearWorkHalfwordDraw.c'
     - '@behavior: Entry 0 of the three-entry byte-2 handler table based at 0x801F58BC, the table the overlay dispatcher at 0x801F44F8 indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044. Reads that state byte, stores zero into the record halfword at 0x30 - the progress value the overlay draw routine at 0x801F4640 uses as its quad''s horizontal origin - and then stores the state byte advanced by one, so the next dispatch takes entry 1 at 0x801F4574. The draw routine at 0x801F4640 then runs with argument 0, the variant flag whose zero keeps its second rendering pass off. Takes no arguments, returns nothing and keeps a 0x18-byte frame holding only the return address.'
   - - 6516
     - c
