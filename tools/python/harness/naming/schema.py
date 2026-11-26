@@ -52,7 +52,11 @@ VIOLATION_CODES = (
 
 
 def is_raw_name(name: str) -> bool:
-    """True for a placeholder whose only claim is its address."""
+    """True for a placeholder whose only claim is its address.
+
+    A placeholder is still judged: it carries an address, so `name_report` reports
+    `address` and `role` for it. This predicate only labels the row for reporting.
+    """
     return bool(RAW_NAME_RE.match(name))
 
 
@@ -127,9 +131,6 @@ def name_report(
     ``kind`` is ``"data"`` only where the caller proved it; the role rule is
     skipped for an unresolved kind rather than guessed.
     """
-    if is_raw_name(name):
-        return NameReport(tokens=name_tokens(name), length=len(name), violations=())
-
     # The address tail is an identity claim, not part of the description.
     tokens = name_tokens(ADDRESS_SUFFIX_RE.sub("", name))
 

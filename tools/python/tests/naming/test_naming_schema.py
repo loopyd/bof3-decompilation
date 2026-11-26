@@ -67,9 +67,14 @@ def test_address_suffix_is_refused() -> None:
     assert report("stateAdvanceWorkByte_801EEFA4").violations == ("address",)
 
 
-def test_raw_placeholder_is_exempt() -> None:
-    assert report("func_801EEFA4", target="emi/bmagic/magic001/00").passed
-    assert report("D_801CE404", target="emi/plchar/plp467/00").passed
+def test_raw_placeholder_is_judged_like_any_other_name() -> None:
+    # A placeholder claims nothing but its address, so the address rule applies.
+    assert report("func_801EEFA4", target="emi/bmagic/magic001/00").violations == (
+        "category",
+        "address",
+    )
+    assert report("D_801CE404", target="emi/plchar/plp467/00").violations == ("address",)
+    assert report("T_801CE404", target="emi/plchar/plp467/00").violations == ("address",)
 
 
 def test_data_role_word_is_required_only_for_proved_data() -> None:
