@@ -37,7 +37,7 @@ void initializeParametersAdvanceHandler(void) {
   clearWords[26] = 0u;
   clearWords[27] = 0u;
 
-  copySharedWorkParametersOrClearWorkFlagsWorld00Area03004();
+  copySharedParametersFlags();
 
   dispatchWork = (u8*)D_1F800044;
   dispatchWork[1u] = (u8)(dispatchWork[1u] + 1u);

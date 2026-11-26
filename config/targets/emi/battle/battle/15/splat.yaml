@@ -99,7 +99,7 @@ segments:
     - '@behavior: Queues event 0x104, arms selection slot byte 4, marks the UI ring entry behind the ring tail, runs panel tasks 16..19 and resets the selection substate.'
   - - 5308
     - c
-    - queueEvent106ResetState2
+    - queueEventNoPanel
   - - 5404
     - c
     - dispatchSubstateTable4408
@@ -142,8 +142,8 @@ segments:
     - '@behavior: Resets the active battle selection slot and advances selection state.'
   - - 6884
     - c
-    - queueEvent106ResetState3
-    - '@source: src/bof3/battle/queueEvent106ResetState3.c'
+    - queueEventNoSubstate
+    - '@source: src/bof3/battle/queueEventNoSubstate.c'
     - '@behavior: Queues event 0x106, stages the active message slot, and resets battle selection state.'
   - - 6988
     - c
@@ -185,7 +185,7 @@ segments:
     - func_80098FD4
   - - 10516
     - c
-    - queueEvent106ResetState4
+    - queueEventNoStore
   - - 10616
     - c
     - dispatchSubstateTable446c
@@ -1023,8 +1023,8 @@ segments:
     - '@behavior: Returns whether the selected battler''s 0x140-stride halfword above 0x80145F18 is at least the 0xFF-gated sum of the mapped lookup bytes of the four-byte grid cell selected by the two work counters.'
   - - 59576
     - c
-    - initMenuState15
-    - '@source: src/bof3/battle/initMenuState15.c'
+    - initMenuPanelExtra
+    - '@source: src/bof3/battle/initMenuPanelExtra.c'
     - '@behavior: Initializes battle menu state 0x15 and advances its update counter.'
   - - 59680
     - c
@@ -1097,8 +1097,8 @@ segments:
     - dispatchSubstateTable4d30
   - - 63532
     - c
-    - initMenuState13
-    - '@source: src/bof3/battle/initMenuState13.c'
+    - initMenuPanelPreset
+    - '@source: src/bof3/battle/initMenuPanelPreset.c'
     - '@behavior: Initializes battle menu state 0x13 and advances its update counter.'
   - - 63656
     - c

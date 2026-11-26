@@ -29,7 +29,7 @@ segments:
     start: 0x760
     vram: 0x801ce760
     subsegments:
-      - [0x760, c, initWorkAreaAndStartSubsystems, '@source: src/bof3/boot/initWorkAreaAndStartSubsystems.c']
+      - [0x760, c, bootInitSubsystems, '@source: src/bof3/boot/bootInitSubsystems.c']
       - [0x7f4, c, func_801CE7F4, '@source: src/bof3/boot/func_801CE7F4.c', '@behavior: resets the console and video mode, builds both 320x240 RGB24 display environments of the LOGO double buffer, clears the 960x480 work area, publishes the second environment and enables display output']
       - [0x8dc, c, func_801CE8DC, '@source: src/bof3/boot/func_801CE8DC.c', '@behavior: publishes the LOGO display environment selected by the double buffer index D_801EB4A8 through PutDispEnv, then flips the index for the next frame']
       - [0x930, c, func_801CE930, '@source: src/bof3/boot/func_801CE930.c', '@behavior: starts the CAPCOM30.STR stream: clears the buffer index, transfer flag and frame number, resets the DCT decoder, installs the func_801CECA4 MDEC output callback, arms the CD stream for D_801EB448, sets the D_801EB474/D_801EB475 flags, converts the supplied LBA into the three BCD position bytes func_801D0320 writes at D_801EB4AC, repeats the readiness probes of func_801CFEF4 (modes 0xD and 2) and func_801D2180 (one 0x1C8-byte frame) while any probe reports not-ready, waits for func_801D2558 to publish the bitstream and header pointers, records the header frame number in D_801EB468, decodes the bitstream through DecDCTvlc and advances the decoder stream position, returning 0']

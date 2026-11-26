@@ -25,7 +25,7 @@ extern u8 D_801F0670[]; /* @source 0x801F0670 @kind data */
  * @match 100.00
  * @residual none
  */
-u8 resourceReserveFreeRecord4(void) {
+u8 resourceReserveWideStride(void) {
     u8 index;
     u8 flags;
     u32 offset;

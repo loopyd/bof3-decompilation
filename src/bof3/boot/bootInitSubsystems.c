@@ -9,7 +9,7 @@
  * @residual none
  * live audit is instruction- and byte-exact.
  */
-void initWorkAreaAndStartSubsystems(s32 work_base, u_long disc_lba) {
+void bootInitSubsystems(s32 work_base, u_long disc_lba) {
   u8 scratch[0x30];
 
   (void)scratch;

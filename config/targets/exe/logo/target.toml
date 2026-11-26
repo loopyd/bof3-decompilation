@@ -10,7 +10,7 @@ psyq_source = "src/bof3/support/logo_psyq.c"
 
 sources = [
     "src/bof3/boot/func_801CE758.c",
-    "src/bof3/boot/initWorkAreaAndStartSubsystems.c",
+    "src/bof3/boot/bootInitSubsystems.c",
     "src/bof3/boot/func_801CE7F4.c",
     "src/bof3/boot/func_801CEDA4.c",
     "src/bof3/boot/rampCdMixLevel.c",

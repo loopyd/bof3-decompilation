@@ -24,7 +24,7 @@ void func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-void clearWorkAnimBit0(
+void stateClearBitStartup(
     void) {
   u8* record;
 

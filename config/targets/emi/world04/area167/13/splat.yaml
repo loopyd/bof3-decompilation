@@ -111,8 +111,8 @@ segments:
     - stateSharedMode2
   - - 4904
     - c
-    - clearSharedFlagBit46
-    - '@source: src/bof3/world/clearSharedFlagBit46.c'
+    - stateResetFlagMode
+    - '@source: src/bof3/world/stateResetFlagMode.c'
     - '@behavior: Entry 6 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 5 is the exact lift stateSharedMode2 and whose word at 0x801F6848 publishes this span. Clears bit 0x46 of the shared main-RAM flag bank 0x80144F28 through the shared bit clear helper func_8015B5A8 and then stores zero into the shared overlay state byte 0x8014933B. Takes no arguments and returns nothing; the 0x18-byte frame holds only the return address, and no jal in this payload reaches the span.'
   - - 4952
     - c

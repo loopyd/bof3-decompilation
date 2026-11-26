@@ -15,7 +15,7 @@ const SlotTableEntry* slot_table_logo_str(void) {
   (void)scratch;
   func_801CE758();
   CdInit();
-  initWorkAreaAndStartSubsystems((void*)0x8003b800, capcomStrLba);
+  bootInitSubsystems((void*)0x8003b800, capcomStrLba);
   do {
     pad_state = PadRead(0);
     if ((pad_state & PADstart) != 0) {

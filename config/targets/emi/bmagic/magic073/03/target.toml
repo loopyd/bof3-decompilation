@@ -16,7 +16,7 @@ support_sources = [
     "src/bof3/bmagic/stateClearRecordBytes4.c",
     "src/bof3/bmagic/stateIncrementByte.c",
     "src/bof3/bmagic/incrementCountersDecrementZero.c",
-    "src/bof3/bmagic/resourceReserveFreeRecord4.c",
+    "src/bof3/bmagic/resourceReserveWideStride.c",
     "src/bof3/bmagic/callInvokeDrawHelpers.c",
     "src/bof3/bmagic/stateAccumulateSampleLimit.c",
     "src/bof3/bmagic/stateSampleEveryFourth.c",

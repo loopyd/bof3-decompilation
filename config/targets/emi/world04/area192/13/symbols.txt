@@ -1,4 +1,4 @@
-setIfGateElse68 = 0x801F2C80;
+stateStatusGateElse68 = 0x801F2C80;
 setSubstate14GateClear = 0x801F2CA8;
 setFromGateRow = 0x801F2CFC;
 setGateElse6C = 0x801F2D54;

@@ -17,7 +17,7 @@ extern u8 D_80146875;
  * @match 100.00
  * @residual none
  */
-void setIfGateElse0(void) {
+void stateMirrorGateSubstate(void) {
   D_801490A8 = 0xFFFFu;
   if (D_801490C7 == 0) {
     D_80146875 = 0;

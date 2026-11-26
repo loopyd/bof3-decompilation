@@ -44,7 +44,7 @@ u32 func_8014D8D4(u8 arg0);
  * @match 100.00
  * @residual none
  */
-void selectArrivalReachedExpiry2(
+void selectArrivalReachedInverted(
     void) {
   if (D_1F800044[8] == D_1F800044[3]) {
     switch (D_1F800044[8]) {

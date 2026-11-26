@@ -24,7 +24,7 @@ support_sources = [
     "src/bof3/world/claimStoreOwnerIndex.c",
     "src/bof3/world/invokeHelperArgs.c",
     "src/bof3/world/invokeHelperArgHelper.c",
-    "src/bof3/world/clearSharedFlagBit4.c",
+    "src/bof3/world/stateClearSharedFlag.c",
     "src/bof3/world/queueSharedMarkerElement.c",
     "src/bof3/support/area172_13_psyq.c",
     "src/bof3/world/stepActiveActiveRecords.c",

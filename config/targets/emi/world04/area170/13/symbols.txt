@@ -34,6 +34,6 @@ replaceBannerCrossedSide = 0x801F4ABC;
 func_801F4B58 = 0x801F4B58;
 audioSidePackedRanges = 0x801F53A4;
 func_801F5698 = 0x801F5698;
-setSharedFlag67 = 0x801F56E0;
+stateArmAdvanceFlag = 0x801F56E0;
 raiseQueueRunEnd = 0x801F5708;
 D_801F57BC = 0x801F57BC;

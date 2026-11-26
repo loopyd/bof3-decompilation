@@ -34,7 +34,7 @@ sources = [
     "src/bof3/world/renderPassTexturedDepth.c",
     "src/bof3/world/stateGlyphPhasePointer.c",
     "src/bof3/world/stampGlyphCellCodes.c",
-    "src/bof3/world/setSharedFlag67.c",
+    "src/bof3/world/stateArmAdvanceFlag.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelper9.c",

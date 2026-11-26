@@ -19,7 +19,7 @@ support_sources = [
     "src/bof3/world/runStartupClearWork.c",
     "src/bof3/world/stateStatusOr20Gate.c",
     "src/bof3/world/setFromGateRow3.c",
-    "src/bof3/world/setIfGateElse68.c",
+    "src/bof3/world/stateStatusGateElse682.c",
     "src/bof3/world/setGateElse6C.c",
     "src/bof3/world/stampFrontBytesReset.c",
     "src/bof3/support/area192_13_psyq.c",

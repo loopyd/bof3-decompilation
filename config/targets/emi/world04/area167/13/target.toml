@@ -15,7 +15,7 @@ sources = [
     "src/bof3/world/setFSet90Clear.c",
     "src/bof3/world/stateMirrorSideInto.c",
     "src/bof3/world/stateFrontEndSeed.c",
-    "src/bof3/world/clearSharedFlagBit46.c",
+    "src/bof3/world/stateResetFlagMode.c",
     "src/bof3/world/stateAdvanceWorkCall31.c",
     "src/bof3/world/stateCameraOutsideOverlay.c",
     "src/bof3/world/stateBy3SharedClear.c",

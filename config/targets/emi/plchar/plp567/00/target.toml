@@ -40,7 +40,7 @@ support_sources = [
     "src/bof3/plchar/requestResourceHelperReady4.c",
     "src/bof3/plchar/selectArrivalRouteStep2.c",
     "src/bof3/plchar/selectSequenceReadyRow5.c",
-    "src/bof3/plchar/selectArrivalReachedExpiry2.c",
+    "src/bof3/plchar/selectArrivalReachedInverted.c",
     "src/bof3/plchar/selectArrivalReachedExpiry.c",
     "src/bof3/plchar/stepClearReportsDone8.c",
     "src/bof3/plchar/checkProjectedAgainstCodes.c",

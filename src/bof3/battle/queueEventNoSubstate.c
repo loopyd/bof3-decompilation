@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void queueEvent106ResetState3(void) {
+void queueEventNoSubstate(void) {
   func_8015DF18(0x106u);
   D_8014839F = 1u;
   D_8014837B = 1u;

@@ -4,7 +4,7 @@
 
 /*
  * @source 0x801CE930
- * @behavior starts the CAPCOM30.STR stream after initWorkAreaAndStartSubsystems
+ * @behavior starts the CAPCOM30.STR stream after bootInitSubsystems
  * has published the work-area buffers: clears the D_801EB458 buffer index, the
  * D_801EB46C transfer flag and the D_801EB464 frame number, resets the DCT
  * decoder, installs func_801CECA4 as the MDEC output callback, arms the CD

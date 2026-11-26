@@ -41,7 +41,7 @@ extern void func_8015B5A8(void* flag_bank, u8 bit_index); /* @source 0x8015B5A8 
  * @match 100.00
  * @residual none
  */
-void clearSharedFlagBit46(void) {
+void stateResetFlagMode(void) {
   func_8015B5A8(&D_80144F28, 0x46);
   D_8014933B = 0;
 }

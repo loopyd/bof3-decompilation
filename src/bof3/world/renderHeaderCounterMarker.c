@@ -36,5 +36,5 @@ void renderHeaderCounterMarker(s16 x, s16 y) {
   } else {
     func_8014FF0C((s16)(x + 240), (s16)(y + 26), 0, D_80145AD4);
   }
-  drawStatusMarkerFrameWorld00Area03004(x, y);
+  renderStatusMarkerFrame(x, y);
 }

@@ -12,6 +12,6 @@ void func_8015B5A8(void* flag_bank, u8 bit_index);
  * @match 100.00
  * @residual none
  */
-void clearSharedFlagBit4(void) {
+void stateClearSharedFlag(void) {
   func_8015B5A8(&D_80144F28, 0x4E);
 }

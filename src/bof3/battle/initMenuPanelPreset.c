@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void initMenuState13(void) {
+void initMenuPanelPreset(void) {
   u8 *counter;
   u8 count;
 

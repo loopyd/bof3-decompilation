@@ -84,8 +84,8 @@ segments:
     - func_801F400C
   - - 6264
     - c
-    - setIfGateElse0
-    - '@source: src/bof3/world/setIfGateElse0.c'
+    - stateMirrorGateSubstate
+    - '@source: src/bof3/world/stateMirrorGateSubstate.c'
   - - 6324
     - textbin
     - trailLayerPushCursors

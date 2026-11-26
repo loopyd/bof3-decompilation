@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-void queueEvent106ResetState2(void) {
+void queueEventNoPanel(void) {
   func_8015DF18(0x106u);
   func_801DEA64((s32)BATTLE_ACTIVE_MESSAGE_SLOT_PTR);
   D_801462E1 = 4u;

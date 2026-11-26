@@ -186,8 +186,8 @@ segments:
     - func_801F5698
   - - 10976
     - c
-    - setSharedFlag67
-    - '@source: src/bof3/world/setSharedFlag67.c'
+    - stateArmAdvanceFlag
+    - '@source: src/bof3/world/stateArmAdvanceFlag.c'
     - '@behavior: Overlay flag raiser of the byte-2 state machine. It materializes the shared main-RAM flag bank D_80144F28 as a lui/addiu $a0 pair and sets flag 0x67 through the EXE-side flag setter func_8015B580, with 0x67 in the jal delay slot. The in-image consumer is the byte-2 state handler at 0x801F4574 of this same overlay, which tests the same flag of the same bank through func_8015B5D4 and advances the record state byte once the flag is set, so this body arms the condition that handler waits on. Takes no arguments, returns nothing, reads no other state, and the 0x18-byte frame only keeps ra at 0x10 across the setter call.'
   - - 11016
     - c

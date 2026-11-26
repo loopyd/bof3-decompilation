@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void initMenuState15(void) {
+void initMenuPanelExtra(void) {
   u8 *counter;
   u8 count;
 

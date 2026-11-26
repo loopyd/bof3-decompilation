@@ -37,6 +37,6 @@ void func_8015B580(void* arg0, s32 arg1);
  * @match 100.00
  * @residual none
  */
-void setSharedFlag67(void) {
+void stateArmAdvanceFlag(void) {
   func_8015B580(&D_80144F28, 0x67);
 }

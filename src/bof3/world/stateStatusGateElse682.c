@@ -21,4 +21,4 @@ extern u16 D_801490A8; /* @source 0x801490A8 @kind unknown */
  * macro owns the branch and both arm constants, so the invocation below
  * carries only this function's own cells and constants.
  */
-WORLD_DEFINE_GATE_STATUS(setIfGateElse68, D_801490C7, D_801490A8, 0xFFFF, 0x68)
+WORLD_DEFINE_GATE_STATUS(stateStatusGateElse68, D_801490C7, D_801490A8, 0xFFFF, 0x68)
