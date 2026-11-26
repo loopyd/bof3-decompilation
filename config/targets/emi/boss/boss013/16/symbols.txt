@@ -1,5 +1,5 @@
 clearOwnerRecordFlag40 = 0x800AC844;
-T_800C1804 = 0x800C1804;
+func_800C1804 = 0x800C1804;
 callStateTable2620Boss = 0x800C181C;
 func_800C1860 = 0x800C1860;
 callIndexedHandler6 = 0x800C18FC;

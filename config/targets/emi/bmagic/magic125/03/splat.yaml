@@ -114,5 +114,5 @@ segments:
     - '@source: src/bof3/bmagic/stateWorkBytes3.c'
   - - 6616
     - textbin
-    - T_801F05D8
+    - recordFlags
 - - 14340
