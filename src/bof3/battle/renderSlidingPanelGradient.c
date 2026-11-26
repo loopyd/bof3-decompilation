@@ -11,9 +11,9 @@
  *           0xff/0xff/0xff, marked semi-transparent, so the quad ramps from
  *           black to white across the panel's left edge; the second draw mode
  *           selects the same page with semi-transparency mode 2. The caller
- *           func_801EEF10 passes the battle halfword D_801463B0, which it
+ *           func_801EEF10 passes the battle halfword sharedBattleWord, which it
  *           raises by 4 up to 0xF4 before each call, so the panel and its ramp
- *           move right together; D_801463B0 starts at 0x2c, where the tile
+ *           move right together; sharedBattleWord starts at 0x2c, where the tile
  *           lands on the sibling's 0x4c anchor. The panel's screen role is not
  *           established.
  * @status exact

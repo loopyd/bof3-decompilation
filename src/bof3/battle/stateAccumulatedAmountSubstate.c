@@ -3,7 +3,7 @@
 extern u16 D_80145AA4;
 extern u8 D_801462E4;
 extern s32 D_8014632C;
-extern u16 D_801463B0;
+extern u16 sharedBattleWord; /* @source 0x801463B0 @kind data */
 
 /* EXE-side EMI loader ready test: the same-target dispatchers at 0x801EEFCC and
  * 0x801EF870 poll it with no arguments and branch on a nonzero answer. */
@@ -57,9 +57,9 @@ void stateAccumulatedAmountSubstate(void) {
     return;
   }
   amount = &D_8014632C;
-  if (*amount - D_801463B0 > 0) {
-    func_801DD59C(D_801463B0);
-    *amount = *amount - D_801463B0;
+  if (*amount - sharedBattleWord > 0) {
+    func_801DD59C(sharedBattleWord);
+    *amount = *amount - sharedBattleWord;
     return;
   }
   func_801DD59C(*amount);

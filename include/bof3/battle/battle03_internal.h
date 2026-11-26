@@ -365,7 +365,7 @@ extern u8                           D_80146856;
 /* @source 0x801463B0 @kind unknown — halfword audioSelectionEmiStream
  * publishes from the selected 0x80181EB8 entry before starting it through
  * func_80161FDC; the batl_ovr/00 sibling publishes its own 0x2C there. */
-extern u16                          D_801463B0;
+extern u16                          sharedBattleWord;
 /* @source 0x80181EB8 @kind table — runtime-filled 4-byte-stride front-end
  * selection records: the EMI stream slot at +0x00 and the two staged effect
  * bytes at +0x02/+0x03. audioSelectionEmiStream re-materialises

@@ -40,7 +40,7 @@ segments:
     - c
     - setupScenePrimsSubstate
     - '@source: src/bof3/battle/setupScenePrimsSubstate.c'
-    - '@behavior: Rebuilds the battle scene draw environment and its 0x80 sprite through the target''s two setup routines, then, while the shared scene gate D_80143C40 stays clear, publishes 0x2C to the battle halfword D_801463B0 and advances the overlay dispatch substate byte D_801462E3.'
+    - '@behavior: Rebuilds the battle scene draw environment and its 0x80 sprite through the target''s two setup routines, then, while the shared scene gate D_80143C40 stays clear, publishes 0x2C to the battle halfword sharedBattleWord and advances the overlay dispatch substate byte D_801462E3.'
   - - 784
     - asm
     - func_801EEF10
@@ -62,7 +62,7 @@ segments:
     - c
     - renderSlidingPanelGradient
     - '@source: src/bof3/battle/renderSlidingPanelGradient.c'
-    - '@behavior: Appends, at g_PrimCursor under texture page 0x3c0, an opaque black 0xa8x0x18 tile at (x + 0x20, 0x30) and then a semi-transparent 0x22x0x18 Gouraud quad at (x, 0x30) that ramps from black on its left corners to 0xff/0xff/0xff on its right corners, both at ordering-table index 1; the sole caller passes the animated battle counter D_801463B0, so the panel and its ramp move right together.'
+    - '@behavior: Appends, at g_PrimCursor under texture page 0x3c0, an opaque black 0xa8x0x18 tile at (x + 0x20, 0x30) and then a semi-transparent 0x22x0x18 Gouraud quad at (x, 0x30) that ramps from black on its left corners to 0xff/0xff/0xff on its right corners, both at ordering-table index 1; the sole caller passes the animated battle counter sharedBattleWord, so the panel and its ramp move right together.'
   - - 2552
     - textbin
     - D_801EF5F8

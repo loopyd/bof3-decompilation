@@ -9,7 +9,7 @@
  *           entry effect bytes go to D_80146855/D_80146856, the 0x20 transfer
  *           bit of D_80146854 is raised (with the 0x40 bit as well while
  *           D_80146328 carries bit 0x10), and the entry stream slot is
- *           published at D_801463B0 and started through func_80161FDC. A 0xFF
+ *           published at sharedBattleWord and started through func_80161FDC. A 0xFF
  *           selection raises bit 0x08 of D_80146328 instead. Every path that
  *           passes the loader gate advances the battle front-end state byte
  *           BATTLE_GLOBAL_BYTE_62E2 that dispatchStateTableAd20 uses to select
@@ -59,7 +59,7 @@ void audioSelectionEmiStream(void) {
           D_80146854 = loaderState | 0x60u;
         }
         slot = D_80181EB8[selection * 2];
-        D_801463B0 = slot;
+        sharedBattleWord = slot;
         func_80161FDC(slot);
       } else {
         D_80146328 |= 8u;

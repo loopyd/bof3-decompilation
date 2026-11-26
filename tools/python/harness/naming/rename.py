@@ -1248,10 +1248,36 @@ def _write(
                     line if alias.match(line) else line.replace(source_name, target_name)
                     for line in lines
                 )
+            if plan.address is not None:
+                # A map row is tracked through an @source-tagged definition, so a
+                # declaration the rewrite touched gains the tag when it lacks one.
+                declaration = re.compile(
+                    rf"^(\s*extern\b[^;\n]*\b{re.escape(target_name)}\b[^;\n]*;)"
+                    r"(?![ \t]*/\*)",
+                    re.M,
+                )
+                rewritten = declaration.sub(
+                    lambda m: f"{m.group(1)} /* @source 0x{plan.address:08X} @kind data */",
+                    rewritten,
+                )
             if journal is None:
                 path.write_text(rewritten, encoding="utf-8")
             else:
                 journal.write_text(path, rewritten)
+    # A foreign target spells the name but may not map the address; the link resolves
+    # the spelling in that target's own map, so the transaction adds the row.
+    for owner, address in sorted(plan.inserts.items()):
+        path = map_path(plan.root, owner)
+        if not forward or journal is None or not path.is_file():
+            continue
+        rows = [
+            line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
+        ]
+        if any(line.startswith(f"{plan.new} =") for line in rows):
+            continue
+        rows.append(f"{plan.new} = 0x{address:08X};")
+        rows.sort(key=lambda line: int(line.split("=")[1].strip().rstrip(";"), 16))
+        journal.write_text(path, "\n".join(rows) + "\n")
     if forward:
         seen = set()
         for before, after in plan.renames:

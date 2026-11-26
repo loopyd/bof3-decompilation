@@ -8,7 +8,7 @@
  * published here is not established. */
 extern u16 D_80143C40; /* @source 0x80143C40 @kind unknown */
 extern u8 D_801462E3;  /* @source 0x801462E3 @kind unknown */
-extern u16 D_801463B0; /* @source 0x801463B0 @kind unknown */
+extern u16 sharedBattleWord; /* @source 0x801463B0 @kind unknown */
 
 void func_801EF318(void);
 void func_801EF180(u8 color);
@@ -17,7 +17,7 @@ void func_801EF180(u8 color);
  * @behavior Rebuilds the battle scene draw environment and its 0x80 sprite
  *           through this target's two setup routines, then, while the shared
  *           scene gate D_80143C40 stays clear, publishes 0x2C to the battle
- *           halfword D_801463B0 and advances the overlay dispatch substate
+ *           halfword sharedBattleWord and advances the overlay dispatch substate
  *           byte D_801462E3.
  * @status exact
  * @match 100.00
@@ -30,7 +30,7 @@ void setupScenePrimsSubstate(void) {
   func_801EF180(0x80);
   if (D_80143C40 == 0) {
     substate = D_801462E3;
-    D_801463B0 = 0x2C;
+    sharedBattleWord = 0x2C;
     D_801462E3 = substate + 1;
   }
 }
