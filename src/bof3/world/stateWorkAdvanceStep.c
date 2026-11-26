@@ -3,7 +3,8 @@
 /* @source 0x1F800044 @kind unknown */
 extern u8* workRecordCursor1F800044;
 /* @source 0x80146954 @kind unknown */
-extern u32 workSeedWord80146954;
+/* Shared work seed word at 0x80146954, outside this overlay. */
+extern u32 D_80146954; /* @source 0x80146954 @kind data */
 /* @source 0x80146958 @kind unknown */
 extern u32 workSeedWord80146958;
 /* @source 0x8014695C @kind unknown */
@@ -27,7 +28,7 @@ void stateWorkAdvanceStep(void) {
   u8* nextWork;
 
   work = workRecordCursor1F800044;
-  *(u32*)(work + 0x34) = workSeedWord80146954;
+  *(u32*)(work + 0x34) = D_80146954;
   *(u32*)(work + 0x38) = workSeedWord80146958;
   *(u32*)(work + 0x3C) = workSeedWord8014695C;
   *(u32*)(work + 0x0C) = 180;

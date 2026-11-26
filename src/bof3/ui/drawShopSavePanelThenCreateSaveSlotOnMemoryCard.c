@@ -26,7 +26,7 @@
  *           When that submission does not report -1 it publishes the one-based
  *           slot byte D_801E6074 plus one into the bracket-entry byte
  *           D_801E6108, prepares the save-data image through
- *           prepareSaveDataImageAndPublishPanelRecord and, while the
+ *           prepareSaveDataImage and, while the
  *           remaining-capacity byte D_801E60FC is nonzero, consumes one block
  *           of it and advances the kept-entry count D_801E610C - the counter
  *           pair that records the new directory entry the write creates. It
@@ -62,7 +62,7 @@ void drawShopSavePanelThenCreateSaveSlotOnMemoryCard(void) {
   strcpy(name, (char*)D_80145AD4);
   if ((s8)func_801EEC30(1, name, 0x200, 0, 0) != -1) {
     D_801E6108 = D_801E6074 + 1;
-    prepareSaveDataImageAndPublishPanelRecord();
+    prepareSaveDataImage();
     if (D_801E60FC != 0) {
       D_801E60FC = D_801E60FC - 1;
       D_801E610C = D_801E610C + 1;

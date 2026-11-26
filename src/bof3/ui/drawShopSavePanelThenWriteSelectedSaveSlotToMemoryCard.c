@@ -23,7 +23,7 @@
  *           -1. Otherwise it re-formats the name, publishes the units digit
  *           byte D_80145AE5 of that name plus 0xD1 into the bracket-entry byte
  *           D_801E6108, prepares the save-data image through
- *           prepareSaveDataImageAndPublishPanelRecord, re-formats the name once
+ *           prepareSaveDataImage, re-formats the name once
  *           more and hands it to func_801EEC30 with the constants 2, 0x12B0 and
  *           0, playing the same 0x107 cue on the -1 result. When that second
  *           submission reports no failure it publishes the selected slot's
@@ -64,7 +64,7 @@ void drawShopSavePanelThenWriteSelectedSaveSlotToMemoryCard(void) {
   if ((s8)func_801EEC30(1, D_80145AD4, 1, 1, 0) != -1) {
     sprintf((char*)D_80145AD4, D_801D0C20, D_801E6074);
     D_801E6108 = D_80145AE5 + 0xD1;
-    prepareSaveDataImageAndPublishPanelRecord();
+    prepareSaveDataImage();
     sprintf((char*)D_80145AD4, D_801D0C20, D_801E6074);
     if ((s8)func_801EEC30(1, D_80145AD4, 2, 0x12B0, 0) != -1) {
       func_801D6CE4(D_801E6074, clutCell - 0x7A);
