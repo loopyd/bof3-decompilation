@@ -175,7 +175,7 @@ sources = [
     "src/bof3/ui/renderIdSubstepTimer.c",
     "src/bof3/ui/stateUpRowsTriples.c",
     "src/bof3/ui/renderBackgroundTilesKind.c",
-    "src/bof3/ui/drawShopSavePanelThenCreateSaveSlotOnMemoryCard.c",
+    "src/bof3/ui/drawSlotMemoryCard.c",
     "src/bof3/ui/drawShopPriceList.c",
     "src/bof3/ui/drawEquipSlotRowsShop00_801D95F4.c",
     "src/bof3/ui/drawShopParameterPanel.c",

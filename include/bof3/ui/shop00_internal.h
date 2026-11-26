@@ -2022,7 +2022,7 @@ extern u32 shopValueSelectionState;
  * armShopValueSubstep, func_801D4E74,
  * drawShopSavePanel,
  * renderIdSubstepTimer and
- * drawShopSavePanelThenCreateSaveSlotOnMemoryCard read
+ * drawSlotMemoryCard read
  * or rewrite it as the selected panel action, which takes
  * the values 0..3, 6, 8 and 0xA there. The
  * lifted handler renderValueActionId gates on it
@@ -2145,7 +2145,7 @@ extern u8 D_80144FC1;
 
 /* Second cell of the same play-time clock, below the minute cell D_80144FC1 and
  * above the sub-second byte D_80144FC3: the save handler
- * drawShopSavePanelThenCreateSaveSlotOnMemoryCard formats the hour, minute and
+ * drawSlotMemoryCard formats the hour, minute and
  * this byte as the three `%02d` fields of its game-time stamp string, so the
  * stamp records the elapsed play time of the save it is about to write.
  * Owned by the shared map, so no target-map row is added.
@@ -2267,7 +2267,7 @@ extern const char D_801D0C98[];
 extern const char D_801D0C20[];
 
 /* EMI-local game-time stamp format string of the save handler
- * drawShopSavePanelThenCreateSaveSlotOnMemoryCard: the payload holds
+ * drawSlotMemoryCard: the payload holds
  * "BOF3-%02d/%02d/%02d" here, and that handler formats it into the shared text
  * buffer D_80145AD4 with the play-time clock bytes D_80144FC0, D_80144FC1 and
  * D_80144FC2 before copying the result into the record it submits to the

@@ -42,7 +42,7 @@
  * @match 100.00
  * @residual none
  */
-void drawShopSavePanelThenCreateSaveSlotOnMemoryCard(void) {
+void drawSlotMemoryCard(void) {
   char name[0x18];
   char stamp[0x40];
 
