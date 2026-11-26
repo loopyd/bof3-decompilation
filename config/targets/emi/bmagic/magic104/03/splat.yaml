@@ -117,5 +117,5 @@ segments:
     - workSeedPairTable
   - - 7400
     - textbin
-    - T_801F08E8
+    - workByte1HandlerTable
 - - 7432

@@ -105,5 +105,5 @@ segments:
     - '@source: src/bof3/bmagic/stateWorkBytes0Through4.c'
   - - 4140
     - textbin
-    - T_801EFC2C
+    - workByte1HandlerTable
 - - 11872

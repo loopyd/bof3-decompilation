@@ -32,9 +32,9 @@ void stateTableFlagBytes(void);
 
 /* @source 0x801F7A30
  * @behavior One-shot overlay handler, word 0 of the three-word in-image
- * code-pointer run labelled T_801FDDB4 at 0x801FDDB4, which
- * callWorkByte2Step7 indexes with the
- * scratchpad work object's unsigned byte at offset 0x02, so it runs while that
+ * code-pointer run labelled workByte2HandlerTable at 0x801FDDB4, which
+ * callWorkByte2Step7 indexes with the scratchpad work object's unsigned byte at
+ * offset 0x02, so it runs while that
  * byte reads 0. No in-image `jal` reaches the address and that run word is the
  * only image word naming it. It loads the work-object pointer cell at
  * 0x1F800044 before it creates its frame, seeds that object's word at 0x34 from

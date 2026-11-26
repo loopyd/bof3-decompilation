@@ -76,5 +76,5 @@ segments:
     - '@source: src/bof3/bmagic/renderFanTintedJittered.c'
   - - 7872
     - textbin
-    - T_801F0AC0
+    - workByte1HandlerTable
 - - 7892

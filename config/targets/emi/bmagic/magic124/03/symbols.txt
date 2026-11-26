@@ -23,4 +23,4 @@ func_801F03E0 = 0x801F03E0;
 renderQuadsScaledRadii = 0x801F05B4;
 resourceReserveFreeRecord9 = 0x801F0828;
 stateWorkBytes4 = 0x801F088C;
-T_801F08DC = 0x801F08DC;
+workByte1HandlerTable = 0x801F08DC;

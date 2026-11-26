@@ -108,5 +108,5 @@ segments:
     - '@source: src/bof3/bmagic/clearWorkBytes3.c'
   - - 6024
     - textbin
-    - T_801F0388
+    - workByte1HandlerTable
 - - 9916

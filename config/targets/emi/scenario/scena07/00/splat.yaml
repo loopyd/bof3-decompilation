@@ -158,7 +158,7 @@ segments:
     - c
     - stateDistanceTransitionArm
     - '@source: src/bof3/scenario/stateDistanceTransitionArm.c'
-    - '@behavior: One-shot overlay handler, word 0 of the three-word in-image code-pointer run labelled T_801FDDB4 at 0x801FDDB4 (0x801F7A30 / 0x801F7AB0 / stateClearCallbackFlags) that callWorkByte2Step7 indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads 0; no in-image jal reaches the address. It loads the work-object pointer cell at 0x1F800044 before it creates its frame, seeds that object''s word at 0x34 from the shared coordinate word D_80145EC4 and its word at 0x38 from D_80145EC8, and stores into the object''s word at 0x3C the distance the shared main-executable helper func_8015477C computes from that pair, shifted left by 16. It then calls the overlay''s table-clearing helper at 0x801F8358 with no arguments and, through further reads of the pointer cell, writes 1 to the work object''s transition byte at offset 0x06, arms its countdown word at 0x0C with 0x28 and increments its byte at 0x02, the handler index that advances the run to word 1 at 0x801F7AB0. Takes no arguments, returns nothing, and its 0x28-byte frame keeps only $ra at 0x20.'
+    - '@behavior: One-shot overlay handler, word 0 of the three-word in-image code-pointer run labelled workByte2HandlerTable at 0x801FDDB4 (0x801F7A30 / 0x801F7AB0 / stateClearCallbackFlags) that callWorkByte2Step7 indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads 0; no in-image jal reaches the address. It loads the work-object pointer cell at 0x1F800044 before it creates its frame, seeds that object''s word at 0x34 from the shared coordinate word D_80145EC4 and its word at 0x38 from D_80145EC8, and stores into the object''s word at 0x3C the distance the shared main-executable helper func_8015477C computes from that pair, shifted left by 16. It then calls the overlay''s table-clearing helper at 0x801F8358 with no arguments and, through further reads of the pointer cell, writes 1 to the work object''s transition byte at offset 0x06, arms its countdown word at 0x0C with 0x28 and increments its byte at 0x02, the handler index that advances the run to word 1 at 0x801F7AB0. Takes no arguments, returns nothing, and its 0x28-byte frame keeps only $ra at 0x20.'
   - - 3760
     - c
     - claimEveryFourthWhile
@@ -433,7 +433,7 @@ segments:
     - T_801FDD74
   - - 29108
     - textbin
-    - T_801FDDB4
+    - workByte2HandlerTable
   - - 29236
     - textbin
     - T_801FDE34

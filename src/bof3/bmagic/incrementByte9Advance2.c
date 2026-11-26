@@ -24,8 +24,9 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           calls it as entry 2, zero-based, of the nine-word handler run
  *           (0x801EF050, 0x801EF0B8, 0x801EF0F8, 0x801EF148, 0x801EF18C,
  *           0x801EF404, 0x801EF47C, 0x801EF628, 0x801EF6E0) that this target's
- *           map leaves as the textbin row T_801EFC2C. A payload cmp proved
- *           bytes 0x801EF0F8..0x801EF147 byte-identical to the 80-byte spans at
+ *           map leaves as the textbin row workByte1HandlerTable. A payload cmp
+ *           proved bytes 0x801EF0F8..0x801EF147 byte-identical to the 80-byte
+ *           spans at
  *           0x801EF59C of emi/bmagic/magic088/03, 0x801EF588 of magic062/03,
  *           0x801EFFCC of magic067/03, 0x801EFCDC and 0x801EFF08 of
  *           magic079/03, 0x801EF630 of magic082/03 and 0x801EFD00 of

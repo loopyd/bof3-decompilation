@@ -17,4 +17,4 @@ projectTransformQuarterTurn = 0x801EFA18;
 renderSteppingSixtyFading = 0x801EFAE0;
 renderAlongSixteenthFading = 0x801EFEA8;
 func_801F01AC = 0x801F01AC;
-T_801F048C = 0x801F048C;
+workByte1HandlerTable = 0x801F048C;

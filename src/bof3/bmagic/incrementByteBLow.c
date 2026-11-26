@@ -18,8 +18,8 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
  *           0x801EF0F8, 0x801EF148, 0x801EF18C, 0x801EF404, 0x801EF47C,
  *           0x801EF628, 0x801EF6E0) names this address, so the payload holds no
  *           jal caller for it and this target's map leaves the run as the
- *           textbin row T_801EFC2C. Bytes 0x801EF148..0x801EF18B were
- *           byte-identical to the then-exact lifts 0x801EF5EC of
+ *           textbin row workByte1HandlerTable. Bytes 0x801EF148..0x801EF18B
+ *           were byte-identical to the then-exact lifts 0x801EF5EC of
  *           bmagic/magic088/03, 0x801EFBA8 of bmagic/magic004/03 and
  *           0x801EF410 of bmagic/magic167/03, and to the then-assembled row
  *           0x801EF078 of bmagic/magic126/03, so statement order, operand forms

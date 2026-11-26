@@ -8,6 +8,14 @@
  * final increment keeps one cell load for its read and its write, which is
  * why its store fills the return delay slot. */
 
+/* This handler is entry 0 of the work-byte-1 handler table based at
+ * 0x801F048C. The overlay's dispatcher at 0x801EEDBC reads the work object's
+ * unsigned byte at offset 0x01, scales it by four and calls that entry, and
+ * the table's four in-image words are 0x801EEE50, 0x801EEEA0, 0x801EEF0C and
+ * 0x801EEF5C. Splat keeps the run as one `textbin` row, so this declaration
+ * carries the table base. */
+extern void (*workByte1HandlerTable[])(void); /* @source 0x801F048C @kind table */
+
 /* @source 0x801EEE50
  * @behavior Clears work-record bytes 0x0B, 0x09 and 0x0A, then advances work
  *           byte 0x01 with a byte-width read-modify-write whose store is the

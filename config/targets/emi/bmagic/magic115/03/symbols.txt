@@ -15,4 +15,4 @@ stateHeaderUnitMotion = 0x801EF690;
 func_801EF7A4 = 0x801EF7A4;
 decrementTintTripletFour = 0x801EF7F4;
 decrementGlobalInvokeHelper2 = 0x801EF888;
-T_801EF8BC = 0x801EF8BC;
+workByte1HandlerTable = 0x801EF8BC;

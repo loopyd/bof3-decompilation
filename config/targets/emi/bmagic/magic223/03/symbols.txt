@@ -18,4 +18,4 @@ func_801EF6E0 = 0x801EF6E0;
 func_801EF7A8 = 0x801EF7A8;
 reserveFirstFreeRecord = 0x801EFB78;
 stateWorkBytes0Through4 = 0x801EFBDC;
-T_801EFC2C = 0x801EFC2C;
+workByte1HandlerTable = 0x801EFC2C;

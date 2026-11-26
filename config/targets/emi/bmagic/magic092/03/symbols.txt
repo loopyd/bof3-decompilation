@@ -24,4 +24,4 @@ incrementGlobalByteSet = 0x801F03DC;
 decrementGlobalByteClear = 0x801F0420;
 renderAroundRadiusTen = 0x801F04BC;
 resourceReserveFreeRecord6 = 0x801F0758;
-T_801F07BC = 0x801F07BC;
+workByte1HandlerTable = 0x801F07BC;

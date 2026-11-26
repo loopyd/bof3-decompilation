@@ -10,9 +10,9 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * base 0x801EFC44: entry 0 = 0x801EF47C, entry 1 = 0x801EF628, entry 2 =
  * 0x801EF6E0. That base is the sixth word of the nine-word code-pointer run
  * this target stores at 0x801EFC2C, which Splat places as the single `textbin`
- * row T_801EFC2C, so the extern is declared at the indexed word and the run
- * stays one map row; the generated undefined_syms_auto.txt row for 0x801EFC44
- * already names this word. */
+ * row workByte1HandlerTable, so the extern is declared at the indexed word and
+ * the run stays one map row; the generated undefined_syms_auto.txt row for
+ * 0x801EFC44 already names this word. */
 extern void (*D_801EFC44[])(void); /* @source 0x801EFC44 @kind data */
 
 /* This overlay's second draw step at 0x801EF7A8, still on its own `asm` row.

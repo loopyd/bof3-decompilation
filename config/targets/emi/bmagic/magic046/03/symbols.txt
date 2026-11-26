@@ -20,5 +20,5 @@ renderPlusTwiceTwenty = 0x801EF7E8;
 projectInstallTransform = 0x801EFB90;
 renderTrianglesTenTinted = 0x801EFC48;
 reservePool48 = 0x801EFED0;
-T_801EFF34 = 0x801EFF34;
+workByte1HandlerTable = 0x801EFF34;
 slotFlagTable = 0x801EFF3C;

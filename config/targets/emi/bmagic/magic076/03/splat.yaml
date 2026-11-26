@@ -127,5 +127,5 @@ segments:
     - stateClearWorkBytes2
   - - 6280
     - textbin
-    - T_801F0488
+    - workByte1HandlerTable
 - - 13988

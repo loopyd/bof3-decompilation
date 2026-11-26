@@ -11,11 +11,12 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Word 1 of the code-pointer run based at 0x801F07BC, which Splat places as the
- * single textbin row D_801F07BC: the fifteen non-zero words from 0x801EF044
- * through 0x801F0420, followed by the record pool at 0x801F07F8. The byte-1
- * dispatcher at 0x801EF000 indexes that run from its head, while this body
- * dispatches on work byte 2 from the word at 0x801F07C0, whose own entries are
- * 0x801EF0CC, 0x801EF1F0, 0x801EF350, 0x801EF388, 0x801EF840, 0x801F0260,
+ * single textbin row workByte1HandlerTable: the fifteen non-zero words from
+ * 0x801EF044 through 0x801F0420, followed by the record pool at 0x801F07F8.
+ * The byte-1 dispatcher at 0x801EF000 indexes that run from its head, while
+ * this body dispatches on work byte 2 from the word at 0x801F07C0, whose own
+ * entries are 0x801EF0CC, 0x801EF1F0, 0x801EF350, 0x801EF388, 0x801EF840,
+ * 0x801F0260,
  * 0x801EF8C0, 0x801EF940 and on through the same run. The work record's byte 2
  * scales by four and is added to 0x801F07C0, so the extern is declared at the
  * indexed word and the run stays that one map row; the generated

@@ -22,4 +22,4 @@ renderGreyTwelveRim = 0x801EFE3C;
 func_801F0090 = 0x801F0090;
 reserveFirstFreeRecord = 0x801F0368;
 stateWorkBytes = 0x801F03CC;
-T_801F041C = 0x801F041C;
+workByte1HandlerTable = 0x801F041C;

@@ -14,4 +14,4 @@ workMotionPairGlobal = 0x801EF64C;
 func_801EF72C = 0x801EF72C;
 func_801EF7F8 = 0x801EF7F8;
 reserveClearFlagSlot = 0x801EFC24;
-T_801EFC88 = 0x801EFC88;
+workByte1HandlerTable = 0x801EFC88;

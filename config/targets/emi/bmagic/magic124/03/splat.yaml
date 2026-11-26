@@ -116,5 +116,5 @@ segments:
     - stateWorkBytes4
   - - 7388
     - textbin
-    - T_801F08DC
+    - workByte1HandlerTable
 - - 15104

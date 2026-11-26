@@ -109,5 +109,5 @@ segments:
     - func_801F05C8
   - - 7344
     - textbin
-    - T_801F08B0
+    - workByte1HandlerTable
 - - 7380

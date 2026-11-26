@@ -10,7 +10,7 @@ typedef void (*ScenarioScena0700WorkSubStateHandler)(void);
  * label D_801FDDC0 closes the run. The address sits inside the overlay's final
  * Splat asm block (the code-shaped boundary func_801FDD14), which defines the
  * label; the target map does not own it. */
-extern ScenarioScena0700WorkSubStateHandler D_801FDDB4[];
+extern ScenarioScena0700WorkSubStateHandler workByte2HandlerTable[]; /* @source 0x801FDDB4 @kind table */
 
 /* @source 0x801F79EC
  * @behavior Overlay handler dispatcher for the scratchpad work object's byte at
@@ -46,5 +46,5 @@ extern ScenarioScena0700WorkSubStateHandler D_801FDDB4[];
  * @residual none
  */
 void callWorkByte2Step7(void) {
-  D_801FDDB4[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
+  workByte2HandlerTable[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
 }

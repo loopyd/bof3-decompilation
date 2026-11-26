@@ -11,9 +11,10 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * its own base 0x801EFC30: entry 0 = 0x801EF0B8, entry 1 = 0x801EF0F8,
  * entry 2 = 0x801EF148, entry 3 = 0x801EF18C, entry 4 = 0x801EF404. The base
  * is the second word of the nine-word code-pointer run this target stores at
- * 0x801EFC2C and Splat places as the single `textbin` row T_801EFC2C, so the
- * extern is declared at the indexed word and the run stays one map row; the
- * generated undefined_syms_auto.txt row for 0x801EFC30 already names this
+ * 0x801EFC2C and Splat places as the single `textbin` row
+ * workByte1HandlerTable, so the extern is declared at the indexed word and the
+ * run stays one map row; the generated undefined_syms_auto.txt row for
+ * 0x801EFC30 already names this
  * word. */
 extern void (*D_801EFC30[])(void); /* @source 0x801EFC30 @kind data */
 

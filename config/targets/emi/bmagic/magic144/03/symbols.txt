@@ -24,4 +24,4 @@ stateAdvanceFlagTest = 0x801F00F0;
 stateCountdownGlobalClear = 0x801F0134;
 func_801F01D0 = 0x801F01D0;
 reserveFirstFreeRecord = 0x801F046C;
-T_801F04D0 = 0x801F04D0;
+workByte1HandlerTable = 0x801F04D0;

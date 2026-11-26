@@ -20,4 +20,4 @@ renderSeventeenSliceRibbon = 0x801EF5C4;
 func_801EFE04 = 0x801EFE04;
 func_801F0568 = 0x801F0568;
 renderFanTintedJittered = 0x801F083C;
-T_801F0AC0 = 0x801F0AC0;
+workByte1HandlerTable = 0x801F0AC0;

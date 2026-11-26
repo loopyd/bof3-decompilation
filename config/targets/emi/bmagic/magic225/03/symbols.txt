@@ -20,4 +20,4 @@ func_801F0140 = 0x801F0140;
 stepPositionPairGrow = 0x801F021C;
 reserveFirstFreeRecord = 0x801F02D4;
 clearWorkBytes = 0x801F0338;
-T_801F0388 = 0x801F0388;
+workByte1HandlerTable = 0x801F0388;

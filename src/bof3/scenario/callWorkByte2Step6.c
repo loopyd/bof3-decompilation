@@ -4,9 +4,9 @@ typedef void (*ScenarioScena0700WorkSubStateHandler)(void);
 
 /* Overlay-local run of two in-image code pointers based at 0x801FDDAC, selected
  * by the work object's byte at offset 0x02: 0x801F78B0 and 0x801F7960, with the
- * next data label D_801FDDB4 closing the run at 0x801FDDB4. That following label
- * is a separate three-word code-pointer run (0x801F7A30, 0x801F7AB0 and
- * stateClearCallbackFlags) which entry 6 of
+ * next data label workByte2HandlerTable closing the run at 0x801FDDB4. That
+ * following label is a separate three-word code-pointer run (0x801F7A30,
+ * 0x801F7AB0 and stateClearCallbackFlags) which entry 6 of
  * the same byte-1 run, callWorkByte2Step7, indexes; this dispatcher's run ends before
  * it. The address sits inside the overlay's final Splat asm block (the
  * code-shaped boundary func_801FDD14), which defines the label; the target map

@@ -25,4 +25,4 @@ func_801F0284 = 0x801F0284;
 func_801F0334 = 0x801F0334;
 reserveFirstFreeRecord = 0x801F0628;
 clearWorkBytes = 0x801F068C;
-T_801F06DC = 0x801F06DC;
+workByte1HandlerTable = 0x801F06DC;
