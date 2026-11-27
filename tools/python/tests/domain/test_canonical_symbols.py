@@ -292,6 +292,10 @@ def test_parse_declaration_source_tag_forms() -> None:
     assert parse_declaration_source_tag(leading, "bar") == 0x80100001
     assert parse_declaration_source_tag(split, "counter1") == 0x80149328
     assert parse_declaration_source_tag(funcdecl, "loopBody") == 0x8014ED6C
+    # A wrapped declaration carries its tag on the closing line, which is how the
+    # repository spells a shared extern that a second target also maps.
+    wrapped = "extern void bar(u32 x, u32 y,\n    u8 count, u8 extra); /* @source 0x800AF0F8 */\n"
+    assert parse_declaration_source_tag(wrapped, "bar") == 0x800AF0F8
     assert (
         parse_declaration_source_tag(
             "/* counter1 table */\nextern u16 counter1;\n", "counter1"

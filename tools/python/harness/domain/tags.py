@@ -451,6 +451,18 @@ def parse_declaration_source_tag(text: str, name: str) -> int | None:
         trailing = SOURCE_TAG_RE.search(line, match.end() - line_start)
         if trailing is not None:
             return int(trailing.group(1), 16)
+        if ";" not in line[line.find(name) : ]:
+            # A declaration may be wrapped: the tag then trails its closing line,
+            # which is where a multi-line extern in this repository carries it.
+            rest = text[line_end if line_end != -1 else len(text) :]
+            for follow in rest.splitlines()[:6]:
+                if ";" in follow:
+                    wrapped = SOURCE_TAG_RE.search(follow, follow.find(";"))
+                    if wrapped is not None:
+                        return int(wrapped.group(1), 16)
+                    break
+                if SOURCE_TAG_RE.search(follow):
+                    return int(SOURCE_TAG_RE.search(follow).group(1), 16)
         tags: list[str] = []
         pos = line_start
         while pos > 0:
