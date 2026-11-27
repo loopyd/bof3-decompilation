@@ -143,7 +143,7 @@ extern s32 func_80162D00(void);
 /* Shared front-end script step at 0x8014B87C of the main executable: the two
  * selection waits of the world arm 0xBC step it with the count 1.
  * @source 0x8014B87C @kind function */
-extern void func_8014B87C(u16 countdown);
+extern void yieldCallbackSlotScheduler(u16 countdown); /* @source 0x8014B87C @kind data */
 
 /* Shared front-end cue helper at 0x80161C20 of the main executable: both
  * selection waits close with selection id, cue level 0x64 and shape 8.
@@ -191,7 +191,7 @@ extern void func_80161C20(u8 selection_id, s32 cue_level, s32 cue_shape);
  * 0x2F-free paths and seeds the front-end records with effect ids 0x76, 0x79,
  * 0x7B and 0x7C, sets bit 0x08 of D_80146258, queues cues 0x290 and 0x100 with
  * D_80149333 = 2, and runs the front-end selections 0x8F and 0x8B: it starts
- * one through func_80161BBC, steps func_8014B87C(1) until func_80162D00 reports
+ * one through func_80161BBC, steps yieldCallbackSlotScheduler(1) until func_80162D00 reports
  * the selection finished, and closes with func_80161C20(selection, 0x64, 8).
  * Worlds 0x2D, 0x41, 0x57, 0x10 and 0x73 fall into the clearing tail, which
  * clears g_ScenarioProgress, 0x80146865, 0x80146866, 0x80146867, D_80146875 and
@@ -469,7 +469,7 @@ void statePendingWorldSetup(void) {
       }
       func_80161BBC(0x8F);
       while (func_80162D00() == 0) {
-        func_8014B87C(1);
+        yieldCallbackSlotScheduler(1);
       }
       func_80161C20(0x8F, 0x64, 8);
       break;
@@ -515,7 +515,7 @@ void statePendingWorldSetup(void) {
     case 9:
       func_80161BBC(0x8B);
       while (func_80162D00() == 0) {
-        func_8014B87C(1);
+        yieldCallbackSlotScheduler(1);
       }
       func_80161C20(0x8B, 0x64, 8);
       break;

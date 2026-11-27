@@ -16,7 +16,7 @@ void advanceEntrySerial(void) {
   initStreamSlot(0x268u);
 
   while (!func_80162D00()) {
-    func_8014B87C(1u);
+    yieldCallbackSlotScheduler(1u);
   }
 
   stageSharedPaletteBank();

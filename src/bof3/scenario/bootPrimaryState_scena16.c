@@ -25,7 +25,7 @@ void bootPrimaryState(void) {
   func_80161BBC(6u);
 
   while (!func_80162D00()) {
-    func_8014B87C(1u);
+    yieldCallbackSlotScheduler(1u);
   }
 
   g_ScenarioProgress = 0u;

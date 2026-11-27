@@ -10,7 +10,7 @@
  * two route work-area slot tables (6 four-byte slots at 0x80145500 and 12 at
  * 0x80145518) to 0xFF, raises flag 0x40 in the mode word D_80146258, requests
  * primary scene state 5 in D_80146874 with secondary state 0 in D_80146875,
- * yields with func_8014B87C(1) until the EMI loader reports ready through
+ * yields with yieldCallbackSlotScheduler(1) until the EMI loader reports ready through
  * func_80162D00, and finally clears the scenario progress word and advances
  * D_80146872 to 1 for the next frame. Takes no arguments and returns nothing;
  * the address is entry 0 of the overlay-local handler table at 0x801FCA10.
@@ -58,7 +58,7 @@ void bootState(void) {
   D_80146258 |= 0x40u;
 
   while (!func_80162D00()) {
-    func_8014B87C(1u);
+    yieldCallbackSlotScheduler(1u);
   }
 
   g_ScenarioProgress = 0u;

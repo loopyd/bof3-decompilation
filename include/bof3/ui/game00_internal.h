@@ -717,7 +717,7 @@ extern u8          D_801462E0;
 /* @source 0x801462E1 @kind unknown */
 extern u8          D_801462E1;
 /* @source 0x801462E2 @kind unknown */
-extern u8          D_801462E2;
+extern u8          BATTLE_GLOBAL_BYTE_62E2;
 /* @source 0x80145E9B @kind unknown */
 extern u8          D_80145E9B;
 /* @source 0x80145FDB @kind unknown */

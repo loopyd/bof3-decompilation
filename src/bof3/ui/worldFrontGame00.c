@@ -28,7 +28,7 @@ void updateStateMachine(void) {
     case 3:
       D_801462E0 = 0;
       D_801462E1 = 0;
-      D_801462E2 = 0;
+      BATTLE_GLOBAL_BYTE_62E2 = 0;
       D_80145E9B = 0;
       D_80145FDB = 0;
       D_8014611B = 0;

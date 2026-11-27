@@ -3,6 +3,7 @@ countdownFlagByte = 0x80145E90;
 D_80145ECE = 0x80145ECE;
 D_8014600E = 0x8014600E;
 workRecordTable = 0x80146888;
+yieldCallbackSlotScheduler = 0x8014B87C;
 func_801A7AD8 = 0x801A7AD8;
 dispatchFrameHandler = 0x801F6E70;
 claimActivateBothTemplate = 0x801F6EB4;

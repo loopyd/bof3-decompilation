@@ -44,7 +44,7 @@ WEAK_SYMBOL_AT(game_queue_frontend_cue, 0x8015df18);
 WEAK_SYMBOL_AT(stateHandlerTable, 0x801d1c4c);
 WEAK_SYMBOL_AT(glyphGeometryTable, 0x801d1c6c);
 WEAK_SYMBOL_AT(func_8014BA04, 0x8014ba04);
-WEAK_SYMBOL_AT(func_8014B87C, 0x8014b87c);
+WEAK_SYMBOL_AT(yieldCallbackSlotScheduler, 0x8014b87c);
 WEAK_SYMBOL_AT(updateBanner, 0x801d18f8);
 WEAK_SYMBOL_AT(updateWindows, 0x801d1b00);
 WEAK_SYMBOL_AT(func_8019611C, 0x8019611c);

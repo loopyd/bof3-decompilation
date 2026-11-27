@@ -18,7 +18,7 @@ void altMainLoop(void) {
 
   while (1) {
     callbacks = GAME_ALT_FRONT_CALLBACK_TABLE;
-    func_8014B87C(1u);
+    yieldCallbackSlotScheduler(1u);
     callbacks[D_80143B90]();
     func_80158C80();
   }

@@ -14,7 +14,7 @@
  * D_8014832E = 0x1F, clears the progress word and runs func_801BE1B0(1),
  * otherwise just runs func_8015C058; on a zero return from that first wait it
  * instead runs func_80161BBC(3), polls func_80162D00 in a loop that reruns
- * func_8014B87C(1), then arms D_8014832E = 0x1F, clears the progress word,
+ * yieldCallbackSlotScheduler(1), then arms D_8014832E = 0x1F, clears the progress word,
  * runs func_8015B580(D_8014686C, 3) and func_80154FD8(0x480), seeds
  * D_8014932C = 0x480 and D_801492DC = 0x350, runs func_801BE1B0(0) and
  * func_801C601C(0), stores the object byte func_8019601C() in scratchpad
@@ -51,7 +51,7 @@ void statePathThreeStep(void) {
       func_80161BBC(3u);
 
       while (func_80162D00() == 0) {
-        func_8014B87C(1u);
+        yieldCallbackSlotScheduler(1u);
       }
 
       flag_word = *(u32 *)&D_8014686C;

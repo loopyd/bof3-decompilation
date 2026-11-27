@@ -4,7 +4,7 @@
  * @behavior AREA030 work-record dispatch step, handler 0 of the local handler table at
  * 0x801E22C8 selected by byte 3 of the scratch work record published at
  * 0x1F800044: while the shared gate halfword D_80143C40 is clear it arms the
- * callback scheduler through func_8014B87C(1), commits the shared fixed-point
+ * callback scheduler through yieldCallbackSlotScheduler(1), commits the shared fixed-point
  * channel pair D_80149308 = 0xF0000/D_8014930C = 0x3C0000, resets the overlay
  * through func_80153DE8, clears the shared front-end entry table through
  * stateHeadFieldsTwo and requests front-end
@@ -22,7 +22,7 @@ void stateChannelPairDispatch(void) {
   u8* work;
 
   if (D_80143C40 == 0) {
-    func_8014B87C(1);
+    yieldCallbackSlotScheduler(1);
     D_80149308 = 0xF0000;
     D_8014930C = 0x3C0000;
     func_80153DE8();

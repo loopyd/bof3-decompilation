@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 D_801462E1;
-extern u8 D_801462E2;
+extern u8 BATTLE_GLOBAL_BYTE_62E2; /* @source 0x801462E2 @kind data */
 extern u8 D_801462E3;
 extern u8 D_801462E4;
 extern u8 D_80146327; /* @source 0x80146327 @kind data */
@@ -54,7 +54,7 @@ void gateCountedEntriesEnter(void) {
       } while (i < *((u8*)ids - 0xd));
     }
     D_801462E1 = 4;
-    D_801462E2 = 0;
+    BATTLE_GLOBAL_BYTE_62E2 = 0;
     D_801462E3 = 0;
     D_801462E4 = 0;
   }

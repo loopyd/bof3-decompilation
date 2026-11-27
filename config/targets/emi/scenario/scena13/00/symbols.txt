@@ -1,4 +1,5 @@
 paletteStageSerial = 0x80145988;
+yieldCallbackSlotScheduler = 0x8014B87C;
 dispatchWorkByte1Handler2 = 0x801F6EA4;
 stateTintArmCountdown = 0x801F6EE8;
 decrementWorkCountdownRamp = 0x801F6F24;

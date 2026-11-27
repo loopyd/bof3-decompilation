@@ -19,7 +19,7 @@ void bank2CompleteOperation(void) {
     D_80146329 = 0;
     D_801462E0 = 0;
     D_801462E1 = 0;
-    D_801462E2 = 0;
+    BATTLE_GLOBAL_BYTE_62E2 = 0;
     D_801462E3 = 0;
     D_801462E4 = 0;
     localBattlerCount = findModeFreeSlot(1);

@@ -67,7 +67,7 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
  * progress byte to read 8, sets the shared front-end local mode 0 through
  * func_8014ECAC and advances to 2. Sub-state 2 waits for the gate word
  * D_80143C40 to clear, clears the effect-bank byte D_8014832E, yields to the
- * loader through func_8014B87C(1), arms the front-end phase byte D_80143BB0
+ * loader through yieldCallbackSlotScheduler(1), arms the front-end phase byte D_80143BB0
  * with 6 and advances to 3. Sub-state 3 waits for that phase byte to clear,
  * clears the progress byte, sets bit 0 of the flag word D_8014686C through
  * func_8015B580, seeds the front selector context (0x7E, 0x4E0000, 0x2C8000, 1)
@@ -155,7 +155,7 @@ void claimSelectorContextBank(void) {
     }
 
     D_8014832E = 0u;
-    func_8014B87C(1u);
+    yieldCallbackSlotScheduler(1u);
     D_80143BB0 = 6u;
     D_80146875 = 3u;
     break;

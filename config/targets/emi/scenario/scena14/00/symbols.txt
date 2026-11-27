@@ -1,4 +1,5 @@
 paletteStageSerial = 0x80145988;
+yieldCallbackSlotScheduler = 0x8014B87C;
 callStateHandler4 = 0x801F6FD8;
 stateChainStart2 = 0x801F7014;
 func_801F7028 = 0x801F7028;

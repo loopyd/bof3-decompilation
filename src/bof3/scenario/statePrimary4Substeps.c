@@ -76,7 +76,7 @@ void func_8015D4F8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
 /* Shared front-end record release helper at 0x8015D404. */
 void func_8015D404(u32 arg0, s32 arg1);
 /* Shared front-end helper at 0x8014B87C. */
-void func_8014B87C(u16 arg0);
+void yieldCallbackSlotScheduler(u16 arg0);
 
 /* @source 0x801F9570
  * @behavior Entry 4 of the nine-entry primary-state handler table at
@@ -122,7 +122,7 @@ void func_8014B87C(u16 arg0);
  * effect bank D_8014832E, queues action 0x14, stores 2 in the mode byte,
  * releases through func_8015D404(0, 1) and advances to 0x1C. Sub-state 0x1C
  * waits for the mode byte to leave 2, then arms it with 6 through
- * func_8014B87C(1) and advances to 0x1D. Sub-state 0x1D, while the mode byte is
+ * yieldCallbackSlotScheduler(1) and advances to 0x1D. Sub-state 0x1D, while the mode byte is
  * still nonzero, clears the progress byte, sets bit 0x0F of D_8014686C, seeds
  * func_8019FA28(0x56, 0x100000, 0x98000, 3), stores 0xFF in both D_80143F1D and
  * D_80143F1E and advances to 0x1E. Sub-state 0x1E, while the mode byte is still
@@ -254,7 +254,7 @@ void statePrimary4Substeps(void) {
     if (*mode == 2) {
       break;
     }
-    func_8014B87C(1);
+    yieldCallbackSlotScheduler(1);
     *mode = 6;
     D_80146875 = 0x1D;
     break;

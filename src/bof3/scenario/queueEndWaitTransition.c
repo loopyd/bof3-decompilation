@@ -49,7 +49,7 @@ void queueEndWaitTransition(void) {
   func_801636A0(2, 1);
   while ((u8)func_80163EA0() == 0) {
     func_801992B8();
-    func_8014B87C(1);
+    yieldCallbackSlotScheduler(1);
   }
   func_80161D74(D_80145029);
 }

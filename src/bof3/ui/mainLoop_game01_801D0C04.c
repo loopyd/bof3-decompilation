@@ -13,7 +13,7 @@ void mainLoop(void) {
   func_8014BA04();
 
   for (;;) {
-    func_8014B87C(1);
+    yieldCallbackSlotScheduler(1);
     preDispatchGate();
     GAME_FRONT_STATE_HANDLERS[GAME_FRONT_STATE]();
     updateBanner();

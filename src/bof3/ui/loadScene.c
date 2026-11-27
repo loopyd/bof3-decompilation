@@ -40,7 +40,7 @@ void loadScene(u8 scenario_index) {
     if ((D_80143F00 != none_sel) && (D_80143BB0 != ready_phase)) {
       runFrameFinalizationServices();
     }
-    func_8014B87C(1u);
+    yieldCallbackSlotScheduler(1u);
   }
 
   callSceneHandlerState();

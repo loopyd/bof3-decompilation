@@ -1,3 +1,4 @@
+yieldCallbackSlotScheduler = 0x8014B87C;
 func_80196070 = 0x80196070;
 callWorkByte1State = 0x801F7174;
 callWorkByte2State = 0x801F71B8;

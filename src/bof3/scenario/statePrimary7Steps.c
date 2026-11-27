@@ -210,7 +210,7 @@ void func_801A78F8(void);
  *           func_8015477C reports; 0x12 starts the 0x78-frame beat. Sub-state
  *           0x14 starts action 0x22 once the shared flag halfword D_80143C40 is
  *           clear and publishes front-end phase 2; 0x15 hands 0x0B and 1 to
- *           func_801C1DF0 and func_8014B87C and publishes phase 6; 0x16 raises
+ *           func_801C1DF0 and yieldCallbackSlotScheduler and publishes phase 6; 0x16 raises
  *           phase 1 with the surface flag D_80148660. Sub-state 0x17 publishes
  *           phase 2, clears the status bytes, stages 0x258000/0x278000 through
  *           func_801BFE34, walks the eight 0xA4-byte effect rows from scratchpad
@@ -415,7 +415,7 @@ void statePrimary7Steps(void) {
       return;
     }
     func_801C1DF0(0x0B);
-    func_8014B87C(1);
+    yieldCallbackSlotScheduler(1);
     *phase = 6;
     D_80146875 = 0x16;
     return;

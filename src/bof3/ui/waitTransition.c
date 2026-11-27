@@ -12,9 +12,9 @@ void waitTransition(u32 arg0) {
 
   force_update = arg0;
   while (1) {
-    func_8014B87C(1);
+    yieldCallbackSlotScheduler(1);
     if (effectBusy == 0 && force_update == 0) {
-      func_8014B87C(1);
+      yieldCallbackSlotScheduler(1);
       break;
     }
     func_801991B8();
