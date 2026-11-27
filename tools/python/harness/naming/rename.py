@@ -574,12 +574,20 @@ def _foreign_proof(plan: RenamePlan) -> str | None:
     plan.manifests = generation
     plan.manifest = generation.get(plan.target) or plan.manifest
     for owner in sorted(plan.foreign):
-        # Relink against the current maps before the proof reads the result.
+        report = check_report(plan.root, owner, (), manifests=generation)
+        broken = [row for row in report["findings"] if row["code"] == "native"]
+        if not broken:
+            continue
+        # Only a target that actually fails earns a rebuild: relinking a payload costs
+        # far more than the check, and most foreign targets link unchanged.
         try:
-            if refresh(plan.root, owner)["link"] not in (None, 0):
-                return f"{owner} does not link after a rebuild"
+            rebuilt = refresh(plan.root, owner)
         except (OSError, RuntimeError, ValueError) as error:
             return f"{owner} could not be rebuilt: {str(error)[:160]}"
+        if rebuilt["link"] not in (None, 0):
+            return f"{owner} does not link after a rebuild"
+        generation = load_target_manifests(plan.root)
+        plan.manifests = generation
         report = check_report(plan.root, owner, (), manifests=generation)
         broken = [row for row in report["findings"] if row["code"] == "native"]
         if broken:
