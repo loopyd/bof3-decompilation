@@ -95,7 +95,7 @@ segments:
     - func_801EFBE4
   - - 4632
     - asm
-    - func_801EFE18
+    - renderPhaseLinePrim
   - - 5296
     - asm
     - func_801F00B0

@@ -1,4 +1,5 @@
 g_battle_work = 0x1F800044;
+queryParticipantLookupByte = 0x800B0058;
 func_801E5988 = 0x801E5988;
 dispatchWorkByte1Nine = 0x801EEC28;
 func_801EEC98 = 0x801EEC98;

@@ -3,7 +3,7 @@
 /* @source 0x1F800044 @kind data */
 extern u16 *scratchpadWorkRecord;
 /* @source 0x801F3050 */
-extern void func_801F3050(void);
+extern void renderPayloadRecordQuad(void);
 
 /* @source 0x801F2E64
  * @behavior Entry 2 of the state-byte +0x02 handler table based at 0x801F47C4,
@@ -38,5 +38,5 @@ void decrementMinusFfDraw(void) {
     if ((s16)half < -0xFF) {
         ((u8 *)work)[2]++;
     }
-    func_801F3050();
+    renderPayloadRecordQuad();
 }

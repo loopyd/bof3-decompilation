@@ -1,4 +1,6 @@
 g_battle_work = 0x1F800044;
+setupClassPanelRecord = 0x800AC218;
+queryFindIdentityIndex = 0x800AC704;
 D_800C1804 = 0x800C1804;
 publishDataBattlerFields = 0x800C1894;
 callStateTable31Boss = 0x800C197C;

@@ -53,8 +53,8 @@ extern void func_8015D71C(s32 selector); /* @source 0x8015D71C @kind function */
 /* This overlay's two draw routines at 0x801EF584 and 0x801EF750, called in
  * that order once the position pair is on screen. Unlifted, so they keep their
  * raw names; this caller passes no arguments and reads no result. */
-extern void func_801EF584(void); /* @source 0x801EF584 @kind function */
-extern void func_801EF750(void); /* @source 0x801EF750 @kind function */
+extern void renderUvTrianglePacket(void); /* @source 0x801EF584 @kind function */
+extern void renderGouraudQuadPacket(void); /* @source 0x801EF750 @kind function */
 
 /* @source 0x801EF28C
  * @behavior Entry index 1 of the four-word handler run based at 0x801EFD5C
@@ -117,7 +117,7 @@ void incrementSampledPlaySound(void) {
   if (*(s16 *)(g_battle_work + 0x2E) < 0x140 &&
       *(s16 *)(g_battle_work + 0x30) < 0xF0 &&
       *(s16 *)(g_battle_work + 0x2E) > 0 && *(s16 *)(g_battle_work + 0x30) > 0) {
-    func_801EF584();
-    func_801EF750();
+    renderUvTrianglePacket();
+    renderGouraudQuadPacket();
   }
 }

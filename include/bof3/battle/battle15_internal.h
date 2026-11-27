@@ -307,7 +307,7 @@ extern u8 D_80145F37[]; /* @source 0x80145F37 @kind unknown */
 extern u8 D_80145F18[]; /* @source 0x80145F18 @kind unknown */
 /* Halfwords of the same 0x140-byte party-work record read by applyPendingBattleDamage
  * (+0x02, +0x04, +0x0A). Each address is its own symbol for the reason given
- * on the func_800A4458 band below: the original encodes the access as
+ * on the stateApplyPartyTemplate band below: the original encodes the access as
  * `lui %hi(SYM); addu at,at,index*0x140; op %lo(SYM)(at)`. */
 extern u8 D_80145F1A[]; /* @source 0x80145F1A @kind unknown */
 extern u8 D_80145F1C[]; /* @source 0x80145F1C @kind unknown */
@@ -315,7 +315,7 @@ extern u8 D_80145F22[]; /* @source 0x80145F22 @kind unknown */
 extern u8 D_80145F10[]; /* @source 0x80145F10 @kind unknown */
 extern u8 D_80145F12[]; /* @source 0x80145F12 @kind unknown */
 extern u8 battleWorkRecordBase[]; /* @source 0x80145F04 @kind unknown */
-/* Party-slot position/colour band maintained by func_800A4458. Every address is
+/* Party-slot position/colour band maintained by stateApplyPartyTemplate. Every address is
  * its own symbol: the original encodes each access as `lui %hi(SYM);
  * addu at,at,offset; op %lo(SYM)(at)`, which a raw address expression would
  * assemble as `addu at,offset,at`. */
@@ -332,7 +332,7 @@ extern u8 D_80145F4A[]; /* @source 0x80145F4A @kind unknown */
 /* Work-field band read by adjustBattleWorkValues's case 4 at one base
  * and displacements -0x280/-0x140. The field's gameplay role is unresolved. */
 extern u8 battleCalculationInputAdjustment[]; /* @source 0x801461CA @kind unknown */
-/* Shared 0x20-byte party-slot template read by func_800A4458. */
+/* Shared 0x20-byte party-slot template read by stateApplyPartyTemplate. */
 extern u8 D_801EBEF0[]; /* @source 0x801EBEF0 @kind unknown */
 extern u8 D_801EB6E4[]; /* @source 0x801EB6E4 @kind unknown */
 extern u8 D_801EB6E5[]; /* @source 0x801EB6E5 @kind unknown */
@@ -343,7 +343,7 @@ extern u8 D_801EB712[]; /* @source 0x801EB712 @kind unknown */
 extern u8 D_801EB713[]; /* @source 0x801EB713 @kind unknown */
 extern u8 D_801EB6C4[]; /* @source 0x801EB6C4 @kind unknown */
 /* Field addresses of the 0x118-byte local panel record written by
- * func_800AC218 and read by applyPendingBattleDamage. Every field address is its own
+ * setupClassPanelRecord and read by applyPendingBattleDamage. Every field address is its own
  * symbol: the original encodes each access as `lui %hi(SYM); addu at,at,record
  * byte offset; op %lo(SYM)(at)`, which a raw address expression assembles as
  * `addu at,offset,at`. */
@@ -480,7 +480,7 @@ extern u8* g_PrimCursor; /* @source 0x8014598C @kind bss */
 extern u8 D_80143D44; /* @source 0x80143D44 @kind unknown */
 extern u8 D_80142CC4[]; /* @source 0x80142CC4 @kind unknown */
 
-/* Reference cell read as two s16 values by func_800AF0F8. */
+/* Reference cell read as two s16 values by renderLinkCellPackets. */
 extern s16 D_80149320; /* @source 0x80149320 @kind unknown */
 extern s16 D_80149322; /* @source 0x80149322 @kind unknown */
 
@@ -547,7 +547,7 @@ void                           stateValueRollRejected(void);
 s16  mathScaledDamageRoll(u8 selection_index, u8 battler_index, u16 base_value,
                    u8 element_flag);
 s32  passesBytePairGate(u8 battler_index, u8 value);
-s16  func_800A2AE0(u8 battler_index, u16 element_mask);
+s16  mathSumElementResistance(u8 battler_index, u16 element_mask);
 s32  queryElementModifierZero(u8 battler_index, u32 flags);
 s16  queryElementModifierSentinel(s32 battler_index, s32 selection_mask);
 s32  mathNegatedScaleRoll(u32 unused, u8 selector);
@@ -563,7 +563,7 @@ s32  func_800A3B6C(s32 arg0, s32 battler_index, s32 selection_mask);
  * selection mask is the halfword of the 0x14-byte row 0x801CA71C[D_801463C0].
  * Returns a 0/1 success flag. */
 s32  func_800A3C9C(s32 arg0, s32 battler_index);
-u16  func_800A36F0(u8 battler_index, u16 flags);
+u16  stateClearStatusBits(u8 battler_index, u16 flags);
 void stateRefreshFlagStatus(void);
 void claimOwnerSlotsRow(void);
 void dispatchModeHandlerPass(void);
@@ -576,14 +576,14 @@ u8   resetSelectionApplyInput(s32 input_mask);
 /* @source 0x801DB524 */
 u8   checkBattlerInactiveFlag4000(u8 arg0);
 s16  func_800A4294(s32 kind);
-void func_800A4458(void);
+void stateApplyPartyTemplate(void);
 /* Selection-grid initialiser called by the confirm-selection substate step
  * setupSelectionGridSubstate (0x80096FBC): rebuilds the
  * 0x80148570 grid band from the active message-slot work record. */
 void initSelectionGridBand(void);
 void setupMode104ArmWork(void);
 void adjustBattleWorkValues(void);
-void func_800AAEBC(s16 target_index, u8 battler_index);
+void setupActionTargetSlot(s16 target_index, u8 battler_index);
 void drawBattleLocalPanel(void);
 void drawBattlePanelSlots(s16 base_x, s16 base_y);
 void func_800B0F9C(void);
@@ -604,10 +604,10 @@ s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
  * incoming $a2/$a3 before use; a caller's live substate is not an argument. */
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 
-/* Shared work-record submitter; func_800A36F0 hands it the battler record base
+/* Shared work-record submitter; stateClearStatusBits hands it the battler record base
  * it stages in the scratchpad work cell. */
 void func_80196718(void *arg0);
-/* Status-word consumer called by func_800A36F0 with the status word it has just
+/* Status-word consumer called by stateClearStatusBits with the status word it has just
  * stored; the call site loads it with `lhu` and sets no other argument. */
 void func_801DDAB4(u16 status);
 /* Panel box pass called first by drawBattleLocalPanel with the panel origin at
@@ -629,11 +629,11 @@ void func_80158E20(void);
 void func_8015DF18(u16 arg0);
 u32  func_801502D0(u32 arg0);
 void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
-u8   func_801DB5CC(s32 arg0);
+u8   queryAvailableBattlerSlot(s32 arg0);
 void func_801E5988(void);
 void func_801DEE4C(void);
 u32  func_801E590C(u32 arg0, u32 arg1);
-void func_801DEA64(s32 arg0);
+void submitSlotScriptEvent(s32 arg0);
 
 #define BATTLE_ACTIVE_SELECTION_SLOT_PTR D_801EB4D8
 #define BATTLE_ACTIVE_MESSAGE_SLOT_PTR   PSX_REF(volatile void*, 0x801ebf08u)
@@ -804,7 +804,7 @@ extern BattleEnemyGuardRecord D_801EB730[]; /* @source 0x801EB730 @kind unknown 
  * eight signed halfwords directly above battleElementResistanceModifier. */
 extern u16 D_800B492C[]; /* @source 0x800B492C @kind table */
 
-/* Action records touched by func_800A36F0: the three words copied from the
+/* Action records touched by stateClearStatusBits: the three words copied from the
  * 0x78-byte defence row land at +0x00..+0x08 and the status word this function
  * clears sits at +0x4C (party) or +0x4E (enemy) of the same record. The status
  * member is volatile because the original stores it and then reloads it. */
@@ -826,7 +826,7 @@ typedef struct BattleEnemyActionRecord {
   u8  unk_50[0xC8];
 } BattleEnemyActionRecord;
 
-/* Defence row copied by func_800A36F0, three words per 0x78-byte row. */
+/* Defence row copied by stateClearStatusBits, three words per 0x78-byte row. */
 typedef struct BattleDefenceRow {
   u32 unk_00;
   u32 unk_04;

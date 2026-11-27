@@ -47,8 +47,8 @@ void drawBattleCommandStrip(u32 arg0) {
   green = (palette >> 2) & 0xf8;
   blue = (palette >> 7) & 0xf8;
   drawTableTilePrim(x, (s16)(y + 2), 5, 1);
-  func_801D9AB4(x, (s16)y, 0x0a, 1);
-  func_801D9AB4(x, (s16)(y + 0x11), 0x0b, 1);
+  drawQuadTemplateColor(x, (s16)y, 0x0a, 1);
+  drawQuadTemplateColor(x, (s16)(y + 0x11), 0x0b, 1);
   drawSpriteAbrFull((s16)(x + 2), (s16)(y + 2), (s16)(x + 0x25),
                        (s16)(y + 2), red, green, blue);
   drawSpriteAbrFull((s16)(x + 2), (s16)(y + 3), (s16)(x + 2),

@@ -80,7 +80,7 @@ extern void func_8014D6B8(u8 resource); /* @source 0x8014D6B8 */
  * work record at 0x801EB2E8 indexed by its first argument and runs the enemy
  * script byte helper for the second. Splat binds the address through this
  * target's generated undefined_funcs_auto.txt. */
-extern void func_801E257C(u8 index, u8 scriptByte); /* @source 0x801E257C */
+extern void statePublishEnemyWork(u8 index, u8 scriptByte); /* @source 0x801E257C */
 
 /* Main-executable helper this span runs once with argument 0 between publishing
  * the party record into the current-record cell and restoring that cell. No
@@ -121,7 +121,7 @@ extern void func_801DD858(u32 arg0); /* @source 0x801DD858 */
  *           plus 0x10, restores the saved work object and asks func_8014D6B8
  *           again with that object's byte 8 plus 0x10. Once the acting battler
  *           byte is 3 or above, which is the enemy panel, it instead calls the
- *           shared battle helper func_801E257C with the acting battler byte as
+ *           shared battle helper statePublishEnemyWork with the acting battler byte as
  *           enemy work index and 4 as the script byte. Both guards branch to
  *           that one enemy arm, so it runs when either read of the acting
  *           battler byte reaches 3, and it reloads the byte for its argument.
@@ -178,7 +178,7 @@ void decrementPointerResourceScript(void) {
             g_battle_work = work;
             func_8014D6B8(work[8] + 0x10);
         } else {
-            func_801E257C(D_80146374[0], 4);
+            statePublishEnemyWork(D_80146374[0], 4);
         }
 
         g_battle_work[9] = 0x1E;

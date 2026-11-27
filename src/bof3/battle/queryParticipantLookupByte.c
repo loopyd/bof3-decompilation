@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-u8 func_800B0058(void) {
+u8 queryParticipantLookupByte(void) {
   u32 index;
   u32 offset;
 

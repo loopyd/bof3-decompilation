@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void func_800AFC54(void) {
+void stateCopyHalfwordBuffer(void) {
   u32        i;
   u16*       dst;
   const u16* src;

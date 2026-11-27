@@ -56,7 +56,7 @@ s16 stateResolvedDamageTarget(u8 attacker, u8 target) {
     offset = target * 0x140;
     if ((D_80145FB4[target].flags_00 & 0x100u) != 0u) {
       amount = *(u16 *)(D_80145F18 + offset);
-      func_801DE560(1u, 0u, 0u, 0x1eu, (u32)D_801EB075);
+      setupEventDispatchSlot(1u, 0u, 0u, 0x1eu, (u32)D_801EB075);
       D_801483C3 = 1;
       D_80145FB4[target].flags_00 &= ~0x100u;
     }
@@ -98,7 +98,7 @@ s16 stateResolvedDamageTarget(u8 attacker, u8 target) {
     if ((*(u32 *)(D_801EB730 + offset) & 0x100u) != 0u) {
       if (!(0x7fffu < ehp)) {
         amount = ehp;
-        func_801DE560(1u, 0u, 0u, 0x1eu, (u32)D_801EB075);
+        setupEventDispatchSlot(1u, 0u, 0u, 0x1eu, (u32)D_801EB075);
         D_801483C3 = 1;
         *(u32 *)(D_801EB730 + offset) &= ~0x100u;
       }

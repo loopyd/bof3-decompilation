@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8 D_80146255;         /* @source 0x80146255 @kind unknown */
+extern u8 battleModeState;         /* @source 0x80146255 @kind unknown */
 extern u8 D_80146328;         /* @source 0x80146328 @kind unknown */
 extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind unknown */
 
@@ -42,6 +42,6 @@ void setupModeThirdTuple(
   } else {
     g_ScenarioProgress = 0x32;
     initModeTuple530();
-    D_80146255 = 0x3;
+    battleModeState = 0x3;
   }
 }

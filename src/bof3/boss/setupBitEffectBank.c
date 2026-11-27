@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 D_80145029; /* @source 0x80145029 @kind unknown */
-extern u8 D_80146255; /* @source 0x80146255 @kind unknown */
+extern u8 battleModeState; /* @source 0x80146255 @kind unknown */
 extern u8 D_80146328; /* @source 0x80146328 @kind unknown */
 extern u8 D_80146874; /* @source 0x80146874 @kind unknown */
 extern u8 D_80146875; /* @source 0x80146875 @kind unknown */
@@ -50,11 +50,11 @@ void setupBitEffectBank(
   flags = &D_80146328;
   value = *flags;
   if (value & 0x1) {
-    D_80146255 = 6;
+    battleModeState = 6;
     D_80146874 = 6;
     D_80146875 = 0x32;
   } else {
-    D_80146255 = 2;
+    battleModeState = 2;
     D_8014832E = 0;
     *flags = value | 0x8;
     step = &D_80146875;

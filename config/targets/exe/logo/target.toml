@@ -14,11 +14,11 @@ sources = [
     "src/bof3/boot/setupStreamDisplay.c",
     "src/bof3/boot/rampCdMixDown.c",
     "src/bof3/boot/rampCdMixLevel.c",
-    "src/bof3/boot/func_801CEBFC.c",
+    "src/bof3/boot/bootShutdownStream.c",
     "src/bof3/boot/waitStreamTransfer.c",
     "src/bof3/boot/flipStreamBuffer.c",
     "src/bof3/boot/streamDecodeCallback.c",
-    "src/bof3/boot/func_801CEA98.c",
+    "src/bof3/boot/bootPumpStreamFrame.c",
     "src/bof3/boot/startStreamDecoder.c",
     "src/bof3/boot/playCapcomStream.c",
 ]

@@ -9,10 +9,10 @@ typedef struct Magic114Endpoint {
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
 extern Magic114Endpoint edgeEndpoints[]; /* @source 0x801F11F4 @kind data */
-extern void func_801EF6A8(void); /* @source 0x801EF6A8 */
+extern void setupWorkViewMatrix(void); /* @source 0x801EF6A8 */
 extern void func_801DD350(s32 work); /* @source 0x801DD350 */
-extern void func_801EF280(s32 *keys); /* @source 0x801EF280 */
-extern void func_800AF0F8(u32 x, u32 y, s32 *keys, u8 *packets,
+extern void renderUvTrianglePacket(s32 *keys); /* @source 0x801EF280 */
+extern void renderLinkCellPackets(u32 x, u32 y, s32 *keys, u8 *packets,
                          u8 count, u8 stride, u8 extra); /* @source 0x800AF0F8 */
 
 /* @source 0x801EF128
@@ -37,7 +37,7 @@ void renderEightScaledEndpoint(void) {
   u8 *packets;
   s32 work;
 
-  func_801EF6A8();
+  setupWorkViewMatrix();
   index = 0;
   packets = g_PrimCursor;
   do {
@@ -54,10 +54,10 @@ void renderEightScaledEndpoint(void) {
     FIELD_REF(s32, work, 0x10u) = edgeEndpoints[edge].unk_04 * FIELD_REF(u8, work, 0xAu);
     func_801DD350(work);
     g_battle_work[0xB] = index;
-    func_801EF280(keys);
+    renderUvTrianglePacket(keys);
     index++;
   } while (index < 8);
-  func_800AF0F8(FIELD_REF(u32, D_801EB4E0, 0x34u),
+  renderLinkCellPackets(FIELD_REF(u32, D_801EB4E0, 0x34u),
                 FIELD_REF(u32, D_801EB4E0, 0x38u), keys, packets, 8, 0x1C, 2);
   PopMatrix();
 }

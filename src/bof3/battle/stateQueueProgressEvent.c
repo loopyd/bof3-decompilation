@@ -13,9 +13,9 @@ void stateQueueProgressEvent(void) {
   Battle03QueuedSlot* work;
 
   if (BATTLE_GLOBAL_BYTE_6374 < 3u) {
-    func_801DE560(1u, 0u, 0u, 0x1Eu, (u32)D_801EB05B);
+    setupEventDispatchSlot(1u, 0u, 0u, 0x1Eu, (u32)D_801EB05B);
   } else {
-    func_801DE560(1u, 0u, 0u, 0x1Eu, (u32)D_801EB068);
+    setupEventDispatchSlot(1u, 0u, 0u, 0x1Eu, (u32)D_801EB068);
   }
   work = D_801EC2E0;
   D_801483C3 = 1;

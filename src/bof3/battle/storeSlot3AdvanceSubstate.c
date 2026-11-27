@@ -9,7 +9,7 @@
 void storeSlot3AdvanceSubstate(void) {
   u8 value;
 
-  *D_801EB4D8 = func_801DB5CC(3);
+  *D_801EB4D8 = queryAvailableBattlerSlot(3);
   value = D_801462E4;
   D_801462EF = 1;
   D_80145AC8 = 0;

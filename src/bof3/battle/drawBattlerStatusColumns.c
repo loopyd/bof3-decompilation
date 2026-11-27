@@ -19,7 +19,7 @@ extern u8 D_8014833E[];
 /* @source 0x801D750C
  * @behavior Draws the battler status window at the panel anchor (arg0, arg1):
  * opens the 0x3C0-texture draw mode and emits the two quadrangle caps through
- * func_801D9AB4 at (arg0, arg1) and (arg0, arg1 + 0x18) and the body tile
+ * drawQuadTemplateColor at (arg0, arg1) and (arg0, arg1 + 0x18) and the body tile
  * through drawTableTilePrim at (arg0, arg1 + 2), whose tile rows follow the
  * localBattlerCount byte 0x801462F0. It then draws one framed column per local
  * battler at x = arg0 + index * 0x5E: the row-9 colour tile and the textured
@@ -62,8 +62,8 @@ void drawBattlerStatusColumns(s32 arg0, s32 arg1) {
 
   SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(0, 0, 0x3c0, 0), 0);
   func_8014E5A0(1, 0x0c);
-  func_801D9AB4((s16)arg0, (s16)arg1, (localBattlerCount * 2 + 0x0a) & 0xfe, 1);
-  func_801D9AB4((s16)arg0, (s16)(arg1 + 0x18),
+  drawQuadTemplateColor((s16)arg0, (s16)arg1, (localBattlerCount * 2 + 0x0a) & 0xfe, 1);
+  drawQuadTemplateColor((s16)arg0, (s16)(arg1 + 0x18),
                 (localBattlerCount * 2 + 0x0b) & 0xff, 1);
   drawTableTilePrim((s16)arg0, (s16)(arg1 + 2), (localBattlerCount + 0x0d) & 0xff,
                 1);

@@ -6,7 +6,7 @@
  * follows the call site and returns nothing. Splat binds the address through
  * this target's generated undefined_funcs_auto.txt, so no target-map row is
  * added here. */
-extern void func_800AFC54(void); /* @source 0x800AFC54 @kind function */
+extern void stateCopyHalfwordBuffer(void); /* @source 0x800AFC54 @kind function */
 
 /* Scratchpad work-object pointer cell shared by this overlay's handlers. The
  * original re-materializes the cell address (lui $vN,0x1F80 / lw $vN,68($vN))
@@ -43,7 +43,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
  */
 void clearRecordFlagAdvance(void) {
   if (D_1F800044[0xB] == 0) {
-    func_800AFC54();
+    stateCopyHalfwordBuffer();
     D_801EB4E0[0] &= 0xBF;
     D_1F800044[1]++;
   }

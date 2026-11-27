@@ -14,11 +14,11 @@ extern s32 D_801EB450; /* @source 0x801EB450 @kind unknown */
 extern s32 D_801EB454; /* @source 0x801EB454 @kind unknown */
 extern CdlATV D_801EB470; /* @source 0x801EB470 @kind unknown */
 
-/* CAPCOM30.STR stream state for the frame pump func_801CEA98 and the stream
+/* CAPCOM30.STR stream state for the frame pump bootPumpStreamFrame and the stream
  * setup startStreamDecoder. D_801EB458 selects one of the two CD/MDEC work buffers
  * stored at 0x801EB44C/0x801EB450; D_801EB44C_BUFFERS is the array view of
  * that pair, a macro over D_801EB44C because the map owns the address under the
- * scalar element-0 name func_801CEBFC reads. D_801EB45C is the 24x240 frame
+ * scalar element-0 name bootShutdownStream reads. D_801EB45C is the 24x240 frame
  * column RECT advanced by waitStreamTransfer, D_801EB464/D_801EB468 hold the
  * previous and current stream frame numbers, and D_801EB46C is the stream
  * transfer flag that waitStreamTransfer spins on and streamDecodeCallback completes. The

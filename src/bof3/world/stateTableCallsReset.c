@@ -2,13 +2,13 @@
 
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 D_80144F28; /* @source 0x80144F28 @kind data */
-extern u8 D_801F3E90[]; /* @source 0x801F3E90 @kind data */
+extern u8 tableStepRamp[]; /* @source 0x801F3E90 @kind data */
 extern u8 D_801F3EBC[]; /* @source 0x801F3EBC @kind data */
 extern u8 D_801F3ED8[]; /* @source 0x801F3ED8 @kind data */
 
 extern void func_801F2F38(s32 arg0, s32 arg1); /* @source 0x801F2F38 */
-extern void func_801F31DC(s32 arg0, s32 arg1); /* @source 0x801F31DC */
-extern void func_801F33D4(s32 arg0); /* @source 0x801F33D4 */
+extern void renderTexturedQuadPrim(s32 arg0, s32 arg1); /* @source 0x801F31DC */
+extern void renderSampledTileRing(s32 arg0); /* @source 0x801F33D4 */
 extern void func_8015B580(void* arg0, u8 bit_index); /* @source 0x8015B580 */
 extern void func_8015507C(s32 arg0, s32 arg1); /* @source 0x8015507C */
 extern s32 func_8015B5D4(u32 arg0, s32 arg1); /* @source 0x8015B5D4 */
@@ -37,7 +37,7 @@ void stateTableCallsReset(void) {
 
   step = D_1F800044[9];
   if (step != 0) {
-    func_801F2F38(1, D_801F3E90[step] << 4);
+    func_801F2F38(1, tableStepRamp[step] << 4);
     D_1F800044[9]++;
   }
   if (D_1F800044[9] == 23) {
@@ -48,9 +48,9 @@ void stateTableCallsReset(void) {
   if (func_8015B5D4((u32)&D_80144F28, 0x4F) != 0) {
     index = D_1F800044[10];
     if (index < 25) {
-      func_801F31DC(D_801F3EBC[index] << 2, D_801F3ED8[index >> 1]);
+      renderTexturedQuadPrim(D_801F3EBC[index] << 2, D_801F3ED8[index >> 1]);
     }
-    func_801F33D4(D_1F800044[10]);
+    renderSampledTileRing(D_1F800044[10]);
   }
   D_1F800044[10]++;
   if (D_1F800044[10] >= 49) {

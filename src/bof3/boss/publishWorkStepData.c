@@ -7,7 +7,7 @@ typedef void (*Boss03016StepHandler)(u8 index);
  * of the segment. 0x800C1AB4 is that row's own label; 0x800C1ACC is its +0x18
  * word, inside the row and not a row boundary, so it is referenced as its own
  * data symbol rather than as a row start. */
-extern u8 D_800C1AB4; /* @source 0x800C1AB4 @kind data */
+extern u8 resourceStepData; /* @source 0x800C1AB4 @kind data */
 extern u8 D_800C1ACC; /* @source 0x800C1ACC @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -51,7 +51,7 @@ void func_8014D978(void);
 void publishWorkStepData(void) {
   u8 *work = D_801EB4E8;
 
-  FIELD_REF(void *, work, 0xECu) = &D_800C1AB4;
+  FIELD_REF(void *, work, 0xECu) = &resourceStepData;
   FIELD_REF(Boss03016StepHandler, work, 0xE4u) =
       dispatchIndexTable;
   FIELD_REF(void *, work, 0xE8u) = &D_800C1ACC;

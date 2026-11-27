@@ -8,6 +8,6 @@
  */
 
 void clearBattlerFlag80B(void) {
-  func_800A36F0(D_80146394, 0x80);
+  stateClearStatusBits(D_80146394, 0x80);
   stateRefreshFlagStatus();
 }

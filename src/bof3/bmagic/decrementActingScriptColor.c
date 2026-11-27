@@ -22,7 +22,7 @@ extern u8 D_80146374; /* @source 0x80146374 @kind unknown */
  * func_801E2314 for the second argument, then restores the previously published
  * record. Splat binds the address through this target's generated
  * undefined_funcs_auto.txt, so no target-map row is needed. */
-extern void func_801E257C(u8 index, u8 arg1);
+extern void statePublishEnemyWork(u8 index, u8 arg1); /* @source 0x801E257C @kind data */
 
 /* @source 0x801EF6EC
  * @behavior Per-frame step handler of this overlay's work-byte-2 run: word 6 of
@@ -38,7 +38,7 @@ extern void func_801E257C(u8 index, u8 arg1);
  *           andi 0xFF / bnez), so the rest of the body runs only when that
  *           countdown reaches zero. On zero it first tests the acting battler
  *           byte 0x80146374 against 3 with an unsigned compare and, for an enemy
- *           panel slot, invokes the shared battle helper func_801E257C with that
+ *           panel slot, invokes the shared battle helper statePublishEnemyWork with that
  *           byte as the enemy work index and 0 as the script byte selector. Then
  *           it re-reads the pointer cell and raises bit 0x20 of work byte 0,
  *           sets mode byte 0x5C and work byte 0x2B to 1 from one materialised
@@ -60,7 +60,7 @@ void decrementActingScriptColor(void) {
 
   if (--D_1F800044[9] == 0) {
     if (D_80146374 >= 3) {
-      func_801E257C(D_80146374, 0);
+      statePublishEnemyWork(D_80146374, 0);
     }
     D_1F800044[0] |= 0x20;
     value = 1;

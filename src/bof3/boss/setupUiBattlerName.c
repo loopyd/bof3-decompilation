@@ -59,7 +59,7 @@ typedef struct Boss01316WorkTail {
 void func_801D9484(void); /* @source 0x801D9484 */
 void func_801501E4(void *destination, void *source, u32 count); /* @source 0x801501E4 */
 u32 func_801502D0(u32 texture_id); /* @source 0x801502D0 */
-void func_801DE560(u8 kind, u8 arg1, u8 arg2, u8 row, u32 texture); /* @source 0x801DE560 */
+void setupEventDispatchSlot(u8 kind, u8 arg1, u8 arg2, u8 row, u32 texture); /* @source 0x801DE560 */
 void func_801C1254(u32 arg0, u32 arg1); /* @source 0x801C1254 */
 void func_8014D6B8(u32 resource); /* @source 0x8014D6B8 */
 
@@ -96,7 +96,7 @@ void setupUiBattlerName(
   func_801D9484();
   func_801501E4(D_801490D8, &D_80144968[D_80181B11], 8u);
   texture = func_801502D0(0x25u);
-  func_801DE560(2u, 0u, 0u, 0x2du, texture);
+  setupEventDispatchSlot(2u, 0u, 0u, 0x2du, texture);
   D_800C26E0 = 0;
   func_801C1254(1u, 1u);
   D_1F800044[0x29] = 4;

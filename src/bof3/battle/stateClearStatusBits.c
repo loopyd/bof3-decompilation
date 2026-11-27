@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-u16 func_800A36F0(u8 battler_index, u16 flags)
+u16 stateClearStatusBits(u8 battler_index, u16 flags)
 {
   u16 status;
   u16 applied;

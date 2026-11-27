@@ -7,7 +7,7 @@ extern u8 D_80143BB0;
 /* @source 0x8015DF18 */
 extern void func_8015DF18(u16 cue);
 /* @source 0x801F3050 */
-extern void func_801F3050(void);
+extern void renderPayloadRecordQuad(void);
 
 /* @source 0x801F2F7C
  * @behavior Adds 0x20 to work halfword +0x30 and stores the truncated value.
@@ -32,5 +32,5 @@ void incrementNonNegativeDraw(void) {
         }
         ((u8 *)scratchpadWorkRecord)[2] = 1;
     }
-    func_801F3050();
+    renderPayloadRecordQuad();
 }

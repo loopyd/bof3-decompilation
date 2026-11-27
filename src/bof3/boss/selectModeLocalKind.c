@@ -3,7 +3,7 @@
 /* The kind byte +0x79 of the first 0x140-stride local work record of the run at
  * 0x80145E90, and the mode byte the battle hooks of this overlay publish. */
 extern u8 D_80145F09[]; /* @source 0x80145F09 @kind unknown */
-extern u8 D_80146255;   /* @source 0x80146255 @kind unknown */
+extern u8 battleModeState;   /* @source 0x80146255 @kind unknown */
 
 /* @source 0x800C2A40
  * @behavior Reads the unsigned kind byte of the first local work record of the
@@ -25,16 +25,16 @@ extern u8 D_80146255;   /* @source 0x80146255 @kind unknown */
 void selectModeLocalKind(void) {
   switch (D_80145F09[0]) {
   case 0:
-    D_80146255 = 0x2C;
+    battleModeState = 0x2C;
     break;
   case 1:
-    D_80146255 = 0x2D;
+    battleModeState = 0x2D;
     break;
   case 5:
-    D_80146255 = 0x2E;
+    battleModeState = 0x2E;
     break;
   case 6:
-    D_80146255 = 0x2F;
+    battleModeState = 0x2F;
     break;
   }
 }

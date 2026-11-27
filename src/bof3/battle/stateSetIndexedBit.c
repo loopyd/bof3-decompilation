@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void func_800AD074(u16 bitIndex) {
+void stateSetIndexedBit(u16 bitIndex) {
   s32 bit_mask;
 
   bit_mask = 0x1F;

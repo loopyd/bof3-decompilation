@@ -21,9 +21,9 @@ const SlotTableEntry* slot_table_logo_str(void) {
     if ((pad_state & PADstart) != 0) {
       break;
     }
-    stream_finished = func_801CEA98();
+    stream_finished = bootPumpStreamFrame(); /* @source 0x801CEA98 @kind data */
   } while (stream_finished == 0);
-  func_801CEBFC();
+  bootShutdownStream(); /* @source 0x801CEBFC @kind data */
   StopCallback();
   PadStop();
   SetDispMask(0);

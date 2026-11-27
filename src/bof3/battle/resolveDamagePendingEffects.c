@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
 void func_800AAC88(s16 arg0, u8 arg1); /* @source 0x800AAC88 */
-void func_800AAEBC(s16 arg0, u8 arg1); /* @source 0x800AAEBC */
+void setupActionTargetSlot(s16 arg0, u8 arg1); /* @source 0x800AAEBC */
 void func_8009D198(void); /* @source 0x8009D198 */
 s32  func_80165F68(u8 arg0, u8 arg1); /* @source 0x80165F68 */
 void func_800AB834(void); /* @source 0x800AB834 */
@@ -50,7 +50,7 @@ typedef struct Battle03SelectionBlock {
  * the selected effect id for mode 1, and for modes 4/5 only when the mode 4
  * kind-keyed byte 0x801CA718 (+0x14 stride) or the mode 5 func_80165F68 result
  * has no 0x04 bit. It replays the pending effect halves +0x11C/+0x11E through
- * func_800AAC88/func_800AAEBC gated by record byte +0x120 bits 1 and 2, ORs the
+ * func_800AAC88/setupActionTargetSlot gated by record byte +0x120 bits 1 and 2, ORs the
  * accumulated 0x801463D8 gate into record halfword +0x80 and clears it. For a
  * positive +0x11C it submits work effect variant 0 when +0x88 is nonzero, or
  * else raises record bit 0x4000 (from the +0x128 bit 2 test), submits variant 1
@@ -151,7 +151,7 @@ void resolveDamagePendingEffects(void) {
     record = D_80146250;
   }
   if ((record->unk_120 & 2u) != 0u) {
-    func_800AAEBC((s16)record->unk_11e, D_1F800044->unk_05);
+    setupActionTargetSlot((s16)record->unk_11e, D_1F800044->unk_05);
   }
   gate = &D_801463D8;
   record = D_80146250;

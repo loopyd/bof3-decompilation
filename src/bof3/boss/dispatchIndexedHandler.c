@@ -3,7 +3,7 @@
 typedef void (*Boss03716Handler)(void);
 
 /* Handler run this dispatcher selects from, based at 0x800C19D4: word 17 of the
- * pointer run this payload's Splat `textbin` row D_800C1990 places at 0x800C1990,
+ * pointer run this payload's Splat `textbin` row resourceStepData places at 0x800C1990,
  * 0x44 bytes into that row. Its three words reach the end of this payload and are
  * this overlay's inert handlers 0x800C18E4, 0x800C18EC and 0x800C18F4, so this
  * declaration binds only the word the scaled index is added to and the row stays

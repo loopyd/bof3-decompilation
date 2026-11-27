@@ -284,8 +284,8 @@ segments:
     - '@behavior: Draws one semi-transparent tile at the current primitive cursor: publishes the tpage-0x3C0 draw mode, takes the dimensions from the 2-entry row of D_801EAE50 selected by the low byte of arg2 and the red/green/blue channels from scratchpad bytes 0x00 through 0x02, then closes the 0x10-byte packet.'
   - - 36532
     - c
-    - func_801D9AB4
-    - '@source: src/bof3/battle/func_801D9AB4.c'
+    - drawQuadTemplateColor
+    - '@source: src/bof3/battle/drawQuadTemplateColor3.c'
     - '@behavior: Draws a flat four-point quadrangle at the current primitive cursor: adds the selected 0x10-byte-stride coordinate template entry at D_801EAD30 to the two corner arguments for the four vertices, then packs the red/green/blue channels of the palette entry selected by the CLUT bank byte D_80144952 and the low byte of arg3 into the colour bytes, marks the primitive semi-transparent and closes the 0x18-byte packet.'
   - - 36992
     - c
@@ -377,8 +377,8 @@ segments:
     - '@behavior: reports whether one local/enemy battler slot is unavailable, either because it is inactive or because its corresponding `0x4000` flag is set.'
   - - 43468
     - c
-    - func_801DB5CC
-    - '@source: src/bof3/battle/func_801DB5CC.c'
+    - queryAvailableBattlerSlot
+    - '@source: src/bof3/battle/queryAvailableBattlerSlot3.c'
     - '@behavior: Returns the index of the first battler slot that checkBattlerInactiveFlag4000 reports available, rotating the scan around the requested slot: for requested indices below 3 it scans the local work slots from that index up to 2 and then from 0 up to that index, and for higher indices it scans the enemy work slots from that index up to 10 and then from 3 up to that index; returns 0xFF when no slot is found.'
   - - 43764
     - c
@@ -580,8 +580,8 @@ segments:
     - '@behavior: Clears the dispatched-handler mask at 0x80146329, then scans the eight 12-byte battle dispatch slots twice, once per pass; for every occupied slot whose byte +3 equals the pass and whose byte +1 does not intersect that mask it publishes the slot pointer to 0x801EB4DC, stores the slot index in scratchpad byte 0, and invokes the slot handler from the five-entry table copied off 0x801D0C84.'
   - - 55648
     - c
-    - func_801DE560
-    - '@source: src/bof3/battle/func_801DE560.c'
+    - setupEventDispatchSlot
+    - '@source: src/bof3/battle/setupEventDispatchSlot3.c'
     - '@behavior: finds the first free event slot among queue slots 2 through 7 and populates it with the caller''s parameters.'
   - - 55820
     - c
@@ -634,8 +634,8 @@ segments:
     - submitEnemyScriptBlock
   - - 56932
     - c
-    - func_801DEA64
-    - '@source: src/bof3/battle/func_801DEA64.c'
+    - submitSlotScriptEvent
+    - '@source: src/bof3/battle/submitSlotScriptEvent3.c'
     - '@behavior: Submits the current slot script, optionally appends its suffix, and queues the common event.'
   - - 57056
     - c
@@ -646,7 +646,7 @@ segments:
     - c
     - queueScriptEvent
     - '@source: src/bof3/battle/queueScriptEvent.c'
-    - '@behavior: Resolves one event id from the ten-halfword rows of the 0x801EB09C script table selected by the low byte of arg0 and the halfword selected by the low byte of arg1, passes that halfword through func_801502D0 and submits the result to func_801DE560 with dispatch byte 2 and halfword 0x2D, which fills the first free event slot among slots 2 through 7.'
+    - '@behavior: Resolves one event id from the ten-halfword rows of the 0x801EB09C script table selected by the low byte of arg0 and the halfword selected by the low byte of arg1, passes that halfword through func_801502D0 and submits the result to setupEventDispatchSlot with dispatch byte 2 and halfword 0x2D, which fills the first free event slot among slots 2 through 7.'
   - - 57384
     - c
     - centerFieldText
@@ -966,19 +966,19 @@ segments:
     - '@behavior: Publishes the first occupied 0x118-byte reserve work record at D_801EB630 as the current enemy work (scratchpad +0x44 and the 0x801EB4E8 global) and runs func_8014D290, skipping empty records.'
   - - 71444
     - c
-    - func_801E2314
-    - '@source: src/bof3/battle/func_801E2314.c'
+    - stateDeriveScriptFlag
+    - '@source: src/bof3/battle/stateDeriveScriptFlag3.c'
     - '@behavior: Consumes one enemy script byte selected by the scratch work mode byte +0x08 and derives the flag byte +0x2A of that same scratch record from it: modes 0 and 1 read script byte [index] and modes 2 and 3 read script byte [index + 1]; the byte masked to 0x7F is handed to func_8014D8D4 and the flag takes bit 0x80 of the byte for modes 0 and 2 and the inverse of that bit for modes 1 and 3. Any other mode leaves the flag untouched.'
   - - 71928
     - c
     - callScriptByteWork
     - '@source: src/bof3/battle/callScriptByteWork.c'
-    - '@behavior: Publishes the 0x118-byte work record at D_801EB2E8[index] as the current enemy work (scratchpad +0x44 and the 0x801EB4E8 global), runs the enemy script byte helper func_801E2314 for the masked argument, then restores both previously published pointers.'
+    - '@behavior: Publishes the 0x118-byte work record at D_801EB2E8[index] as the current enemy work (scratchpad +0x44 and the 0x801EB4E8 global), runs the enemy script byte helper stateDeriveScriptFlag for the masked argument, then restores both previously published pointers.'
   - - 72060
     - c
-    - func_801E257C
-    - '@source: src/bof3/battle/func_801E257C_battle03.c'
-    - '@behavior: Publishes the 0x118-byte work record at D_801EB2E8[index] as the current enemy work, runs the enemy script byte helper func_801E2314 for the masked argument and restores the previously published record.'
+    - statePublishEnemyWork
+    - '@source: src/bof3/battle/statePublishEnemyWork3.c'
+    - '@behavior: Publishes the 0x118-byte work record at D_801EB2E8[index] as the current enemy work, runs the enemy script byte helper stateDeriveScriptFlag for the masked argument and restores the previously published record.'
   - - 72160
     - c
     - stateEnemyTargetPublish
@@ -1035,7 +1035,7 @@ segments:
     - c
     - setupFrontScriptHooks
     - '@source: src/bof3/battle/setupFrontScriptHooks.c'
-    - '@behavior: Publishes D_801EB288 as the current enemy work script pointer at +0xEC, registers requestFrontSelectorState1 and enterFrontendMode as the battle hooks at 0x801463A4/0x801463A8, runs the enemy script byte helper func_801E2314 for class argument 0, raises bit 0x40 of scratch work byte +0x00, submits the positional 0x80 effect for the work flags halfword +0x82, then increments scratch work byte +0x01.'
+    - '@behavior: Publishes D_801EB288 as the current enemy work script pointer at +0xEC, registers requestFrontSelectorState1 and enterFrontendMode as the battle hooks at 0x801463A4/0x801463A8, runs the enemy script byte helper stateDeriveScriptFlag for class argument 0, raises bit 0x40 of scratch work byte +0x00, submits the positional 0x80 effect for the work flags halfword +0x82, then increments scratch work byte +0x01.'
   - - 75436
     - c
     - callByte2Table3
@@ -1062,7 +1062,7 @@ segments:
     - c
     - applyModeOffsetPair
     - '@source: src/bof3/battle/applyModeOffsetPair.c'
-    - '@behavior: Clears scratch work flag bit 6, runs the enemy script byte helper func_801E2314 for class 0, mirrors the work pair +0x34/+0x38 into +0x18/+0x1C, subtracts the mode-rotated 8.0 offset pair from +0x34, republishes the mode-rotated 0.5 offset pair at +0x0C/+0x10, then advances scratch work byte +0x02.'
+    - '@behavior: Clears scratch work flag bit 6, runs the enemy script byte helper stateDeriveScriptFlag for class 0, mirrors the work pair +0x34/+0x38 into +0x18/+0x1C, subtracts the mode-rotated 8.0 offset pair from +0x34, republishes the mode-rotated 0.5 offset pair at +0x0C/+0x10, then advances scratch work byte +0x02.'
   - - 76076
     - c
     - integrateUntilTargetReset
@@ -1092,7 +1092,7 @@ segments:
     - c
     - statePublishClassByte
     - '@source: src/bof3/battle/statePublishClassByte.c'
-    - '@behavior: Runs the enemy script byte helper func_801E2314 for class argument 2, then publishes the 0x800E40CE class-table byte at stride 0x88 selected by the current enemy work byte +0xE0 as scratch work byte +0x09, increments scratch work byte +0x01 and clears scratch work byte +0x02.'
+    - '@behavior: Runs the enemy script byte helper stateDeriveScriptFlag for class argument 2, then publishes the 0x800E40CE class-table byte at stride 0x88 selected by the current enemy work byte +0xE0 as scratch work byte +0x09, increments scratch work byte +0x01 and clears scratch work byte +0x02.'
   - - 77312
     - c
     - dispatchByte2TableB404
@@ -1158,7 +1158,7 @@ segments:
     - c
     - stateReadyScriptByte
     - '@source: src/bof3/battle/stateReadyScriptByte.c'
-    - '@behavior: Increments scratchpad work byte +0x03 when the enemy readiness helper enemyReadyOrHelper2 reports success, then runs the enemy script byte helper func_801E2314 with 8 when the current enemy work word +0x100 has bit 0x02 set, otherwise with 0.'
+    - '@behavior: Increments scratchpad work byte +0x03 when the enemy readiness helper enemyReadyOrHelper2 reports success, then runs the enemy script byte helper stateDeriveScriptFlag with 8 when the current enemy work word +0x100 has bit 0x02 set, otherwise with 0.'
   - - 80736
     - c
     - dispatchByte3TableB444
@@ -1260,7 +1260,7 @@ segments:
     - c
     - stateScriptByteReady
     - '@source: src/bof3/battle/stateScriptByteReady.c'
-    - '@behavior: Runs the enemy script byte helper func_801E2314 for class argument 4, then runs the enemy readiness helper selected by the current enemy work word +0x100: bit 0x10 takes enemyReadyOrHelper1, otherwise bit 0x20 takes enemyReadyOrHelper2.'
+    - '@behavior: Runs the enemy script byte helper stateDeriveScriptFlag for class argument 4, then runs the enemy readiness helper selected by the current enemy work word +0x100: bit 0x10 takes enemyReadyOrHelper1, otherwise bit 0x20 takes enemyReadyOrHelper2.'
   - - 83688
     - c
     - stubHandler52E8

@@ -1,6 +1,6 @@
 #include "bof3/battle/battle03_internal.h"
 
-void func_800ACF80(void);
+void stateClearRecordBytes(void); /* @source 0x800ACF80 @kind data */
 
 /* Byte +0x07 and byte +0x1A of the 0xA4-byte field records at D_80144968, plus
  * the shared battle-reset bytes 0x801462E3/0x801462E4 and the sub-state word
@@ -15,7 +15,7 @@ extern u8  D_801462E4;   /* @source 0x801462E4 @kind unknown */
 
 /* @source 0x801D7350
  * @behavior Third handler of the D_801EAD20 state table: resets the eight enemy
- *   work records (func_800ACF80) and the queued-slot key bytes (resetAllQueuedSlots),
+ *   work records (stateClearRecordBytes) and the queued-slot key bytes (resetAllQueuedSlots),
  *   then initializes the 0xA4-byte field record of each active local work
  *   record -- active meaning bit 0x4000 of its +0x80 halfword (D_80145F10), with
  *   the field record selected by byte +0x13C (D_80145FCC). Initializing sets
@@ -37,7 +37,7 @@ void setupBattlerFieldRecords(void) {
   u16  state;
   u8   index;
 
-  func_800ACF80();
+  stateClearRecordBytes();
   /* Keep this initialization in its own operation scope so it remains before
    * the queued-slot reset during scheduling. */
   do {

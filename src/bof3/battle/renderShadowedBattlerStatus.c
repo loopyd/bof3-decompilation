@@ -54,14 +54,14 @@ void renderShadowedBattlerStatus(s32 arg0, s32 arg1, s32 arg2) {
   green = (palette >> 2) & 0xf8;
   blue = (palette >> 7) & 0xf8;
   drawTableTilePrim((s16)(arg0 + 4), (s16)(arg1 + 8), 8, 1);
-  func_801D9AB4((s16)(arg0 + 4), (s16)(arg1 + 6), 2, 1);
-  func_801D9AB4((s16)(arg0 + 4), (s16)(arg1 + 0x19), 3, 1);
+  drawQuadTemplateColor((s16)(arg0 + 4), (s16)(arg1 + 6), 2, 1);
+  drawQuadTemplateColor((s16)(arg0 + 4), (s16)(arg1 + 0x19), 3, 1);
   SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(0, 1, 0x3c0, 0), 0);
   func_8014E5A0(1, 0x0c);
   drawTableTilePrim((s16)arg0, (s16)(arg1 + 2), 8, 0);
   drawColorTilePrim((s16)(arg0 + 6), (s16)(arg1 + 0xb), 9, 0, 0);
-  func_801D9AB4((s16)arg0, (s16)arg1, 2, 0);
-  func_801D9AB4((s16)arg0, (s16)(arg1 + 0x13), 3, 0);
+  drawQuadTemplateColor((s16)arg0, (s16)arg1, 2, 0);
+  drawQuadTemplateColor((s16)arg0, (s16)(arg1 + 0x13), 3, 0);
   x = arg0;
   y = arg1;
   if (D_801EB6AF[index * 0x118] == 1) {

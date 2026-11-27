@@ -91,5 +91,5 @@ segments:
     - '@behavior: Second shared battle hook of this overlay: clears the head of the owner records for ids 0, 1 and 2 by calling the main-program helper at 0x800AC934 once per id in ascending order, then returns.'
   - - 692
     - textbin
-    - D_800C1AB4
+    - resourceStepData
 - - 852

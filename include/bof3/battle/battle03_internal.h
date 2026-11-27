@@ -62,7 +62,7 @@ typedef struct Battle03LocalWork {
   u32 unk_20;
   u8  pad_24[5];
   u8  unk_29;
-  /* unk_2a is the enemy script flag byte that func_801E2314 derives from the
+  /* unk_2a is the enemy script flag byte that stateDeriveScriptFlag derives from the
    * script bit 0x80 of the mode-selected byte. */
   u8  unk_2a;
   u8  unk_2b;
@@ -705,13 +705,13 @@ s32  testFlag400WhenEligible(u8 arg0);
 u8   func_800A9304(u8 arg0);
 u8   func_800A94A8(void);
 u8   func_800A955C(void);
-void func_800A36F0(u32 arg0, u32 arg1);
-s16  func_800A2AE0(u8 battler_index, u16 element_mask);
+void stateClearStatusBits(u32 arg0, u32 arg1);
+s16  mathSumElementResistance(u8 battler_index, u16 element_mask);
 u8   func_800A3DF8(u32 arg0, u32 arg1);
 void func_800A31E0(u32 arg0, u32 arg1);
-void func_800AD074(u8 arg0);
+void stateSetIndexedBit(u8 arg0);
 void adjustBattleWorkValuesForMode(void);
-void func_800A4458(void);
+void stateApplyPartyTemplate(void);
 void func_800A9BD8(u8 arg0);
 /* Owned by the SLUS address space; the band rebuild
  * rebuildLocalBandsField runs between its two band copies takes
@@ -761,7 +761,7 @@ extern Battle03Handler D_801EB120[]; /* @source 0x801EB120 @kind unknown */
 
 void dispatchLocalStateTable(void);
 void markPendingBit(u32 arg0);
-void func_801DE560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4);
+void setupEventDispatchSlot(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4);
 void copyBattlerNameText(u32 arg0);
 extern u8 D_801490D8[]; /* @source 0x801490D8 @kind unknown */
 extern u8 D_801EB35C[]; /* @source 0x801EB35C @kind unknown */
@@ -894,7 +894,7 @@ extern Battle03RankEntry D_801EB550[];
 /* @source 0x801EAF48 @kind unknown — per-rank random-bonus table the enemy arm
  * adds to the enemy value. */
 extern const s8 D_801EAF48[];
-void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+void drawQuadTemplateColor(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void drawTableTilePrim(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void drawColorTilePrim(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
 void renderBattlerStatusGauge(s16 arg0, s16 arg1, u16 arg2, u16 arg3,
@@ -944,7 +944,7 @@ void deactivateBattleDispatchSlots(void);
 u8   queuedSlotKindAbsent(s8 arg0);
 void pushUiRingTriple(s8 arg0, s8 arg1, u32 arg2);
 u8   hasUiRingWork(void);
-void func_801DEA64(s32 arg0);
+void submitSlotScriptEvent(s32 arg0);
 void queueActiveBattlerSnapshots(void);
 u8   allLocalRecordsReady(void);
 void selectLocalCleanupSubstate(void);
@@ -953,7 +953,7 @@ void stateScratchGlobalBit4(void);
 void resetLocalWorkState(void);
 u8   enemyReadyOrHelper2(void);
 u8   checkEnemyQueuedPredicate(void);
-void func_801E2314(u32 arg0);
+void stateDeriveScriptFlag(u32 arg0);
 void setupEnemyCueLoader(void);
 void stateEnemyScratchBit4(void);
 void initializeFlippedWorkDecay(void);

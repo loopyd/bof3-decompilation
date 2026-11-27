@@ -16,7 +16,7 @@ void func_801C187C(s32 arg0);
  * is entry 8 - the word at 0x801FD694, payload offset 0x6A94 - of the
  * 18-entry overlay handler pointer table D_801FD674 (0x801FD674 ...
  * 0x801FD6B8, terminated by the null word at 0x801FD6BC) that sits inside the
- * Splat func_801FD5A8 blob, so the table selects this handler instead of a jal.
+ * Splat tableHandlerPointers blob, so the table selects this handler instead of a jal.
  * The 60 bytes are instruction-identical to the sibling
  * armEffectGroupTear (entry 7 at
  * 0x801FD690) apart from the func_801C187C id immediate, which is 1 here and 5

@@ -7,7 +7,7 @@
  *   work record halfword at 0x801EB6B2 (stride 0x118) selected by the index
  *   rebased by -3. When the bit is set it stores -1 in the signed halfword at
  *   byte +0x04 of the selection record pointer D_8014639C.record, clears that
- *   0x4000 bit from the battler through func_800A36F0 and advances the band's
+ *   0x4000 bit from the battler through stateClearStatusBits and advances the band's
  *   counter byte: D_801462F1 for a party index, D_801462F3 for an enemy index.
  *   When the bit is clear it stores zero in that record halfword.
  * @status exact
@@ -32,7 +32,7 @@ void stateNegOneBattler(void) {
   if (flag != 0) {
     D_8014639C.record[2] = -1;
     state = (u8*)&D_80146394;
-    func_800A36F0(*(volatile u8*)state, 0x4000);
+    stateClearStatusBits(*(volatile u8*)state, 0x4000);
     if (*state < 3) {
       D_801462F1++;
     } else {

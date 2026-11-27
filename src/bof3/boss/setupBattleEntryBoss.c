@@ -2,7 +2,7 @@
 
 extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind unknown */
 extern u8 D_80145029;         /* @source 0x80145029 @kind unknown */
-extern u8 D_80146255;         /* @source 0x80146255 @kind unknown */
+extern u8 battleModeState;         /* @source 0x80146255 @kind unknown */
 extern u8 D_80146325;         /* @source 0x80146325 @kind unknown */
 extern u8 D_80146328;         /* @source 0x80146328 @kind unknown */
 
@@ -25,9 +25,9 @@ void setupBattleEntryBoss(void) {
   u8* flags;
 
   g_ScenarioProgress = 12;
-  D_80146255 = 3;
+  battleModeState = 3;
   D_80145029 = 0x6A;
-  D_80146255 = 3;
+  battleModeState = 3;
   flags = &D_80146328;
   *flags |= 8;
   D_80146325 &= 0xBF;

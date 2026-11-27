@@ -19,7 +19,7 @@ extern void (*D_801F0104[])(void); /* @source 0x801F0104 @kind data */
  * matrices (PushMatrix / RotTrans / RotMatrix / MulMatrix2 / SetRotMatrix /
  * SetTransMatrix) in its 0x50-byte frame. Still an asm row in this target, so
  * its role stays address-anchored here. */
-extern void func_801EF3B0(void); /* @source 0x801EF3B0 @kind function */
+extern void setupWorkTransformMatrix(void); /* @source 0x801EF3B0 @kind function */
 
 /* In-overlay helper called between the transform install and the matrix pop.
  * Still an asm row in this target, so its role stays address-anchored. */
@@ -58,7 +58,7 @@ void callStepTablePop(
   D_801F0104[work[2]]();
   work = g_battle_work;
   if (work[0] != 0) {
-    func_801EF3B0();
+    setupWorkTransformMatrix();
     func_801EF4C4();
     PopMatrix();
   }

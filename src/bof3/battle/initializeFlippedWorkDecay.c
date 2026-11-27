@@ -2,7 +2,7 @@
 
 extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind bss */
 void rotateSecondPointPair(s32 arg0);
-void func_801E2314(u32 arg0);
+void stateDeriveScriptFlag(u32 arg0);
 s32 func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_8015DF18(u16 arg0);
 u8 enemyReadyOrHelper1(void);
@@ -33,7 +33,7 @@ void initializeFlippedWorkDecay(void)
     *(s32*)(motion_work + 0x10) = 0;
     motion_work[9] = 16;
     D_1F800044[10] = 8;
-    func_801E2314(0);
+    stateDeriveScriptFlag(0);
     func_8019651C(D_1F800044, -4, -4, -4, 1);
     D_1F800044[0] |= 0x20;
     D_1F800044[0x5c] = 2;

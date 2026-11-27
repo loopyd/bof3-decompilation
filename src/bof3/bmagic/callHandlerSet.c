@@ -3,9 +3,9 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void (*D_801F1230[])(void); /* @source 0x801F1230 @kind data */
 
-extern void func_801F093C(void); /* @source 0x801F093C @kind function */
+extern void renderGouraudQuadPacket(void); /* @source 0x801F093C @kind function */
 extern void func_801F04D4(s32 mode); /* @source 0x801F04D4 @kind function */
-extern void func_801F0004(void); /* @source 0x801F0004 @kind function */
+extern void renderTexturedQuadPacket(void); /* @source 0x801F0004 @kind function */
 
 /* @source 0x801EFDD8
  * @behavior Calls the handler indexed by unsigned work-record byte 2 in the
@@ -22,8 +22,8 @@ extern void func_801F0004(void); /* @source 0x801F0004 @kind function */
 void callHandlerSet(void) {
   D_801F1230[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
-    func_801F093C();
+    renderGouraudQuadPacket();
     func_801F04D4(g_battle_work[0xB]);
-    func_801F0004();
+    renderTexturedQuadPacket();
   }
 }

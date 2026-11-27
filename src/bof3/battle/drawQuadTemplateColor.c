@@ -11,7 +11,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
+void drawQuadTemplateColor(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   POLY_F4* primitive;
   s8* paletteBank;
   s32 offset;

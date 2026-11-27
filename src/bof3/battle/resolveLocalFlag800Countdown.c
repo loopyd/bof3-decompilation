@@ -26,7 +26,7 @@ u8 resolveLocalFlag800Countdown(void) {
       D_80145E90[index].unk_88 = D_80145E90[index].unk_90;
       D_80145E90[index].unk_8a = D_80145E90[index].unk_92;
       D_80145E90[index].unk_8c = D_80145E90[index].unk_9e;
-      func_800A36F0(index, 0x8ffu);
+      stateClearStatusBits(index, 0x8ffu); /* @source 0x800A36F0 @kind data */
     }
     index += 1u;
   } while (index < 3u);
@@ -41,7 +41,7 @@ u8 resolveLocalFlag800Countdown(void) {
       event_id = 0x2bu;
     }
     event_id = func_801502D0(event_id);
-    func_801DE560(2u, 0u, 0u, 0x2du, event_id);
+    setupEventDispatchSlot(2u, 0u, 0u, 0x2du, event_id);
     return 1u;
   }
 

@@ -5,7 +5,7 @@
 extern s32 GetGraphType(void);
 
 /* @source 0x801F6800 @kind table */
-extern u8 D_801F6800[];
+extern u8 tableSpriteFrames[];
 
 /* @source 0x801F39F0
  * @behavior Emits one semi-transparent sprite of the AREA121 sprite table. The
@@ -50,9 +50,9 @@ void emitSemiTransSprite(
   prim->x0 = x;
   prim->y0 = y;
   prim->clut = 0x7b80;
-  prim->w = D_801F6800[index];
-  prim->h = D_801F6800[index + 1];
-  prim->u0 = D_801F6800[index + 2];
-  prim->v0 = D_801F6800[index + 3];
+  prim->w = tableSpriteFrames[index];
+  prim->h = tableSpriteFrames[index + 1];
+  prim->u0 = tableSpriteFrames[index + 2];
+  prim->v0 = tableSpriteFrames[index + 3];
   func_8014E5A0(1, 0x14);
 }

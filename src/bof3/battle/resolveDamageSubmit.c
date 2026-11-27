@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
 void func_800AAC88(s16 arg0, u8 arg1); /* @source 0x800AAC88 */
-void func_800AAEBC(s16 arg0, u8 arg1); /* @source 0x800AAEBC */
+void setupActionTargetSlot(s16 arg0, u8 arg1); /* @source 0x800AAEBC */
 void func_8009D198(void); /* @source 0x8009D198 */
 s32  func_80165F68(u8 arg0, u8 arg1); /* @source 0x80165F68 */
 void func_800AB834(void); /* @source 0x800AB834 */
@@ -49,10 +49,10 @@ typedef struct Battle03EnemySubjectBlock {
  * enemy work handler +0xE4 with argument 1. A record byte +0xFC bit 1 with a
  * zero +0xF8 returns early after storing 3 into scratch work byte +0x02. While
  * record word +0x100 has no 0x200 bit the pass raises the enemy script byte
- * helper func_801E2314 with class 4 for mode 1, for mode 5 when the
+ * helper stateDeriveScriptFlag with class 4 for mode 1, for mode 5 when the
  * func_80165F68 result for the 0x801463C0 halfword has no 0x04 bit, and for
  * mode 4 when the 0x801CA718 kind-keyed byte (+0x14 stride) has no 0x04 bit. It
- * replays the pending halves +0xF8/+0xFA through func_800AAC88/func_800AAEBC
+ * replays the pending halves +0xF8/+0xFA through func_800AAC88/setupActionTargetSlot
  * gated by record byte +0xFC bits 1 and 2, ORs the accumulated 0x801463D8 gate
  * into record halfword +0x82, clears that gate cell and calls func_8009BBE8.
  * For a positive +0xF8 it clears scratch work byte +0x09 and, when the
@@ -117,17 +117,17 @@ void resolveDamageSubmit(void) {
   if ((battleCurrentEnemyWork->unk_100 & 0x200u) == 0u) {
     mode = (u8*)&BATTLE_GLOBAL_BYTE_6375;
     if (*mode == 1u) {
-      func_801E2314(4);
+      stateDeriveScriptFlag(4);
     }
     if (*mode == 5u) {
       kind = BATTLE_GLOBAL_HALF_63C0;
       if ((func_80165F68(kind >> 8, kind & 0xFFu) & 4) == 0) {
-        func_801E2314(4);
+        stateDeriveScriptFlag(4);
       }
     }
     if (D_80146375 == 4u) {
       if ((D_801CA718[(u32)BATTLE_GLOBAL_HALF_63C0 * 0x14u] & 4u) == 0u) {
-        func_801E2314(4);
+        stateDeriveScriptFlag(4);
       }
     }
   }
@@ -136,7 +136,7 @@ void resolveDamageSubmit(void) {
                   D_1F800044->unk_05);
   }
   if ((battleCurrentEnemyWork->unk_fc & 2u) != 0u) {
-    func_800AAEBC((s16)battleCurrentEnemyWork->unk_fa,
+    setupActionTargetSlot((s16)battleCurrentEnemyWork->unk_fa,
                   D_1F800044->unk_05);
   }
   gate = &D_801463D8;

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern void func_8015D71C(s32 selector); /* @source 0x8015D71C @kind function */
-extern void func_801E257C(u8 index, u8 scriptByte); /* @source 0x801E257C @kind function */
+extern void statePublishEnemyWork(u8 index, u8 scriptByte); /* @source 0x801E257C @kind function */
 extern void func_800A9610(u8 index, s32 flags); /* @source 0x800A9610 @kind function */
 extern u8 D_80146374; /* @source 0x80146374 @kind data */
 extern u8 D_80146384; /* @source 0x80146384 @kind data */
@@ -35,7 +35,7 @@ void integrateIntoHelpersZero(void) {
   *(u16 *)(work + 0x3E) = accumulator;
   if (countdown == 0) {
     func_8015D71C(0x203);
-    func_801E257C(D_80146374, 0xC);
+    statePublishEnemyWork(D_80146374, 0xC);
     func_800A9610(D_80146384, 0x10);
     D_1F800044[9] = 3;
     D_1F800044[2]++;

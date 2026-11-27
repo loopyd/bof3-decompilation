@@ -43,8 +43,8 @@ void drawBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2) {
   blue = (palette >> 7) & 0xf8;
   drawTableTilePrim((s16)arg0, (s16)(arg1 + 2), 8, 1);
   drawColorTilePrim((s16)(arg0 + 6), (s16)(arg1 + 0xb), 9, 0, 0);
-  func_801D9AB4((s16)arg0, (s16)arg1, 2, 1);
-  func_801D9AB4((s16)arg0, (s16)(arg1 + 0x13), 3, 1);
+  drawQuadTemplateColor((s16)arg0, (s16)arg1, 2, 1);
+  drawQuadTemplateColor((s16)arg0, (s16)(arg1 + 0x13), 3, 1);
   /* Preserve the anchors for the outline; reuse the consumed formals for
    * the final edge coordinates below so the two phases stay distinct. */
   x = arg0;

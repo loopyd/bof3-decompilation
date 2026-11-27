@@ -20,7 +20,7 @@
  * @residual none
  * live comparison is instruction- and byte-exact.
  */
-s32 func_801CEA98(void) {
+s32 bootPumpStreamFrame(void) {
   u_long* data;
   u_long* header;
   u_long new_frame;

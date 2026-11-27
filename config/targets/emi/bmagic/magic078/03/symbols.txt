@@ -1,4 +1,5 @@
 g_battle_work = 0x1F800044;
+checkSizeWithinRecord = 0x800AF5FC;
 func_801E5988 = 0x801E5988;
 func_801EEC04 = 0x801EEC04;
 queueLinkedSlotsTriplets = 0x801EECFC;

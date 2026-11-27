@@ -3,8 +3,8 @@
 extern u8 *D_801F22BC; /* @source 0x801F22BC @kind data */
 extern void (*D_801F12AC[])(void); /* @source 0x801F12AC @kind data */
 
-extern void func_801F11AC(void); /* @source 0x801F11AC @kind function */
-extern void func_801F0ED0(void); /* @source 0x801F0ED0 @kind function */
+extern void renderProjectRecordPoint(void); /* @source 0x801F11AC @kind function */
+extern void renderRecordTextureQuad(void); /* @source 0x801F0ED0 @kind function */
 
 /* @source 0x801F0960
  * @behavior Reads the record pointer at 0x801F22BC and calls the handler
@@ -25,7 +25,7 @@ void callRecordHelpersSet(void) {
     D_801F12AC[step_record[2]]();
     gate_record = D_801F22BC;
     if (gate_record[0] != 0 && gate_record[2] != 0) {
-        func_801F11AC();
-        func_801F0ED0();
+        renderProjectRecordPoint();
+        renderRecordTextureQuad();
     }
 }

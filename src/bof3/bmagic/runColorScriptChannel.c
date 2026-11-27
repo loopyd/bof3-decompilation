@@ -56,7 +56,7 @@ extern void func_8014D6B8(u8 resource);
  * work record at 0x801EB2E8 indexed by its first argument as the current enemy
  * work and runs the enemy script byte helper for the second argument. Splat
  * binds the address through this target's generated undefined_funcs_auto.txt. */
-extern void func_801E257C(u8 index, u8 scriptByte);
+extern void statePublishEnemyWork(u8 index, u8 scriptByte); /* @source 0x801E257C @kind data */
 
 /* @source 0x801F04EC
  * @behavior Step 6 of the nine-word code pointer run based at 0x801EEC10, which
@@ -80,7 +80,7 @@ extern void func_801E257C(u8 index, u8 scriptByte);
  *           eight bits, restores the previously saved work object into the cell
  *           and calls func_8014D6B8 again with that object's byte 8 plus 0x1C.
  *           For an enemy slot it instead calls the shared battle helper
- *           func_801E257C with the acting battler byte as enemy work index and 4
+ *           statePublishEnemyWork with the acting battler byte as enemy work index and 4
  *           as the script byte. Both arms then re-read the cell and increment
  *           work byte 2 at byte width, advancing the work-byte-2 dispatcher to
  *           step 7. The 0x18-byte frame keeps the return address at 0x14 and the
@@ -126,7 +126,7 @@ void runColorScriptChannel(void) {
       g_battle_work = work;
       func_8014D6B8(work[8] + 0x1C);
     } else {
-      func_801E257C(index, 4);
+      statePublishEnemyWork(index, 4);
     }
 
     g_battle_work[2]++;

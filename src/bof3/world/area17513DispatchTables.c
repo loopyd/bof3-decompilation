@@ -1,6 +1,6 @@
 #include "bof3/emi/dispatchers.h"
 
-extern void (*D_801F45EC[])(void); /* @source 0x801F45EC @kind data */
+extern void (*workByte1HandlerTable[])(void); /* @source 0x801F45EC @kind data */
 extern void (*D_801F45F8[])(void); /* @source 0x801F45F8 @kind data */
 extern void (*D_801F460C[])(void); /* @source 0x801F460C @kind data */
 
@@ -14,7 +14,7 @@ extern void (*D_801F460C[])(void); /* @source 0x801F460C @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1Run1, D_801F45EC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1Run1, workByte1HandlerTable);
 
 /* @source 0x801F31E4
  * @behavior Reads the non-volatile scratchpad work-object pointer cell at

@@ -72,10 +72,10 @@ extern u32 func_801E590C(u32 arg0, u32 arg1);
  * both call sites and re-reads the battle state byte afterwards. */
 extern void func_800AF2B4(u8 *record, u32 size);
 
-/* Record range test of the main executable. The battle lift func_800AF5FC owns
+/* Record range test of the main executable. The battle lift checkSizeWithinRecord owns
  * the body: it compares the scratch work object's 0x34/0x38/0x3E axes against
  * the passed record and returns non-zero while the object stays inside it. */
-extern u32 func_800AF5FC(u8 *record, u32 value);
+extern u32 checkSizeWithinRecord(u8 *record, u32 value); /* @source 0x800AF5FC @kind data */
 
 /* Shared main-executable resource request helper; the sibling boss and bmagic
  * lifts declare the same prototype and pass a resource id. */
@@ -110,7 +110,7 @@ extern u8 func_8014DAEC(void);
  *           the battle state byte 0x80146384 with the constant size 0x50: the
  *           local work record D_80145E90 at the 0x140-byte stride while the
  *           state byte is below three, otherwise the battler record D_801EB2E8
- *           at the 0x118-byte stride. When the range test func_800AF5FC, given
+ *           at the 0x118-byte stride. When the range test checkSizeWithinRecord, given
  *           that record and the constant 0x10000, reports the scratch work
  *           object inside the record range, it requests resource 5 through
  *           func_8014D6B8, runs the per-state handler func_800A9820 with the
@@ -161,14 +161,14 @@ void copyHeadRangeCovers(
   state = &D_80146384;
   if (*state < 3u) {
     func_800AF2B4(D_80145E90 + *state * 0x140, 0x50);
-    if (func_800AF5FC(D_80145E90 + *state * 0x140, 0x10000) != 0u) {
+    if (checkSizeWithinRecord(D_80145E90 + *state * 0x140, 0x10000) != 0u) {
       func_8014D6B8(0x5);
       func_800A9820(*state);
       D_1F800044[2]++;
     }
   } else {
     func_800AF2B4(D_801EB2E8 + *state * 0x118, 0x50);
-    if (func_800AF5FC(D_801EB2E8 + *state * 0x118, 0x10000) != 0u) {
+    if (checkSizeWithinRecord(D_801EB2E8 + *state * 0x118, 0x10000) != 0u) {
       func_8014D6B8(0x5);
       func_800A9820(*state);
       D_1F800044[2]++;

@@ -14,7 +14,7 @@
  *   action_slot in $a1 and target_flags in $a2) and the schedule around the
  *   joined sign-extension seed.
  */
-void func_800AAEBC(s16 target_index, u8 battler_index) {
+void setupActionTargetSlot(s16 target_index, u8 battler_index) {
   u8  action_slot;
   u8  target_flags;
   u32 enemy;

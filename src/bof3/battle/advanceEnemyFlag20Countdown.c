@@ -47,7 +47,7 @@ u8 advanceEnemyFlag20Countdown(void) {
       event_id = 0x28u;
     }
     event_id = func_801502D0(event_id);
-    func_801DE560(2u, 0u, 0u, 0x2du, event_id);
+    setupEventDispatchSlot(2u, 0u, 0u, 0x2du, event_id);
     return 1u;
   }
 

@@ -21,7 +21,7 @@ extern void func_8016728C(u32 slot_id, u32 mode);
  * byte BATTLE_GLOBAL_BYTE_62E2 steps back by one and the body returns;
  * otherwise it resets the layout bank through func_80161808, submits every
  * active record with the 0xBF5F-masked status halfword at D_80145F10 through
- * func_800A36F0 and func_80196718, publishes each record whose flag byte
+ * stateClearStatusBits and func_80196718, publishes each record whose flag byte
  * carries bit 0 into the scratchpad work pointer and draws its panel through
  * func_8014D664 with the 0x800F0800 row and the 0x1800 flags, starts the EMI
  * stream slot selected by the low seven bits of D_80145024 through
@@ -71,7 +71,7 @@ void submitActiveBattlerRecords(void) {
     for (index = 0; index < localBattlerCount; index++) {
       u32 offset = (u32)index * 0x140u;
 
-      func_800A36F0(index, *(volatile u16*)(D_80145F10 + offset) & 0xBF5Fu);
+      stateClearStatusBits(index, *(volatile u16*)(D_80145F10 + offset) & 0xBF5Fu);
       func_80196718(&D_80145E90[index]);
     }
     for (index = 0; index < localBattlerCount; index++) {

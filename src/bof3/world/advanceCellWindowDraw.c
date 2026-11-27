@@ -5,7 +5,7 @@ extern u16 *scratchpadWorkRecord;
 extern s32 D_80145EC4; /* @source 0x80145EC4 @kind data */
 extern s32 D_80145EC8; /* @source 0x80145EC8 @kind data */
 /* @source 0x801F3050 */
-extern void func_801F3050(void);
+extern void renderPayloadRecordQuad(void);
 
 /* @source 0x801F2EC0
  * @behavior Entry 3 of the twelve-entry state-byte +0x02 handler table based at
@@ -75,5 +75,5 @@ void advanceCellWindowDraw(void) {
             ((u8 *)work)[2]++;
         }
     }
-    func_801F3050();
+    renderPayloadRecordQuad();
 }

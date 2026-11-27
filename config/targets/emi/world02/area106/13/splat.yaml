@@ -52,10 +52,10 @@ segments:
     - func_801F2F38
   - - 1500
     - asm
-    - func_801F31DC
+    - renderTexturedQuadPrim
   - - 2004
     - asm
-    - func_801F33D4
+    - renderSampledTileRing
   - - 3304
     - asm
     - func_801F38E8
@@ -77,5 +77,5 @@ segments:
     - '@source: src/bof3/world/stateEntry24ProgressByte.c'
   - - 4752
     - textbin
-    - D_801F3E90
+    - tableStepRamp
 - - 7256

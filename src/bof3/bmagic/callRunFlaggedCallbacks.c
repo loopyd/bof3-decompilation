@@ -9,7 +9,7 @@ extern u8 *stateWorkRecordPointer; /* @source 0x801F20DC @kind data */
 extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 extern void func_801F00B0(void); /* @source 0x801F00B0 @kind function */
 extern void func_801EFBE4(u16 phase, u16 amount); /* @source 0x801EFBE4 @kind function */
-extern void func_801EFE18(u16 phase, u16 amount); /* @source 0x801EFE18 @kind function */
+extern void renderPhaseLinePrim(u16 phase, u16 amount); /* @source 0x801EFE18 @kind function */
 
 /* @source 0x801EF754
  * @behavior Copies three handler pointers from 0x801EEC1C into the frame
@@ -38,7 +38,7 @@ void callRunFlaggedCallbacks(void) {
     record = stateWorkRecordPointer;
     if (FIELD_REF(u16, record, 0x0Cu) & 3) {
       func_801EFBE4((u16)(D_80143E6C >> 1), record[6]);
-      func_801EFE18((u16)((D_80143E6C >> 1) + 4),
+      renderPhaseLinePrim((u16)((D_80143E6C >> 1) + 4),
                    stateWorkRecordPointer[6] + (stateWorkRecordPointer[6] >> 1));
     }
   }

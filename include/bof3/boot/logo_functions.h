@@ -10,8 +10,8 @@ void setupStreamDisplay(void);
 s32  startStreamDecoder(u_long disc_lba);
 void rampCdMixLevel(void);
 void rampCdMixDown(void);
-s32  func_801CEA98(void);
-void func_801CEBFC(void);
+s32  bootPumpStreamFrame(void);
+void bootShutdownStream(void);
 void playCapcomStream(void);
 void func_801CEEF4(void);
 void flipStreamBuffer(void);
@@ -27,11 +27,11 @@ s32 func_801D02BC(s32 buffer, s32 length);
 void func_801D2294(void);
 
 /* Uncatalogued functions inside the LOGO.EXE image used by the CAPCOM30.STR
- * frame pump func_801CEA98, again declared by address only. func_801D2558
+ * frame pump bootPumpStreamFrame, again declared by address only. func_801D2558
  * publishes the VLC bitstream and frame-header pointers for the next stream
  * frame, func_801D2464 advances the decoder stream position, func_801D6FCC
  * submits the 0xB40-byte CD work buffer and waitStreamTransfer advances the LOGO
- * frame column inside func_801CEBFC's boundary. */
+ * frame column inside bootShutdownStream's boundary. */
 s32  func_801D2558(u_long** data, u_long** header);
 
 /* Uncatalogued functions inside the LOGO.EXE image used by the CAPCOM30.STR

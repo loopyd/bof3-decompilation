@@ -13,7 +13,7 @@ extern void claimOwnerLocalCount(
  *   the owner work record of that slot through
  *   claimOwnerLocalCount with the slot
  *   index, the number of records claimed so far and the row byte as the class
- *   id that pass forwards to func_800AC218 and publishClassRulePair. After the walk it
+ *   id that pass forwards to setupClassPanelRecord and publishClassRulePair. After the walk it
  *   copies the counter D_801462F2 into D_801462F3, the countdown that
  *   clearBattlerFlagsAndDecrement462F3 decrements as each battler finishes.
  * @status exact
@@ -40,7 +40,7 @@ extern void claimOwnerLocalCount(
  * and the call site then sets nothing beyond $a0 and $a1; nine spellings that
  * let the byte die at the compare kept it in $v0 and held at 46/48, and passing
  * it as the class id measured 48/48. The callee's own exact body saves $a2 and
- * forwards it to func_800AC218 and publishClassRulePair, so those words are its
+ * forwards it to setupClassPanelRecord and publishClassRulePair, so those words are its
  * argument setup.
  */
 void claimOwnerSlotsRow(void) {

@@ -76,9 +76,9 @@ void submitBattlerStartStream(void) {
           *(u16*)(D_80145F18 + offset) = panel;
           *(u16*)(D_80145F1A + offset) = position;
           *(u8*)(D_80145F1C + offset) = value;
-          func_800A36F0(index, status & 0xBFFFu);
+          stateClearStatusBits(index, status & 0xBFFFu);
         }
-        func_800A36F0(index, *(volatile u16*)(D_80145F10 + offset) & 0xBF5Fu);
+        stateClearStatusBits(index, *(volatile u16*)(D_80145F10 + offset) & 0xBF5Fu);
         func_80196718(record);
         advanceRankedLocalCounter(index);
         index += 1;

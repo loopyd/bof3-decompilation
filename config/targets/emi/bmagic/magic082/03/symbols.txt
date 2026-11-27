@@ -1,4 +1,5 @@
 g_battle_work = 0x1F800044;
+renderLinkCellPackets = 0x800AF0F8;
 callWorkByte1Handler22 = 0x801EEC1C;
 func_801EEC94 = 0x801EEC94;
 func_801EEF0C = 0x801EEF0C;

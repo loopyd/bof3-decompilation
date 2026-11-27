@@ -16,7 +16,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801E2314(u32 arg0) {
+void stateDeriveScriptFlag(u32 arg0) {
   s32 mode;
   u8  value;
 

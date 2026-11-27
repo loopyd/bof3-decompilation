@@ -14,7 +14,7 @@
  * counter keeps its zero-extending `andi ...,0xff` per use (compare, argument,
  * return) exactly as the original does, so the counter stays a plain u8.
  */
-u8 func_801DB5CC(u8 arg0) {
+u8 queryAvailableBattlerSlot(u8 arg0) {
   u8 i;
 
   if (arg0 < 3u) {

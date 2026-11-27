@@ -85,7 +85,7 @@ segments:
     - '@behavior: Draw bands of sixteen semi-transparent Gouraud quads with work-byte-9 radius, sampled band angles and state-dependent colors; project scratchpad vectors and append at work words 0x34/0x38.'
   - - 3668
     - asm
-    - func_801EFA54
+    - setupWorkViewMatrix
   - - 3884
     - c
     - renderThirtyTrianglesSampled
@@ -111,7 +111,7 @@ segments:
     - '@behavior: Calls two local helpers and PopMatrix, decrements work byte 0x9 and subtracts 0x40 from halfword 0x3E, then publishes byte 0xB and calls the shared helper when the countdown reaches zero.'
   - - 6084
     - asm
-    - func_801F03C4
+    - renderGouraudQuadPacket
   - - 7336
     - textbin
     - workSeedPairTable

@@ -8,4 +8,4 @@ publishFlagHooks = 0x800C18FC;
 zeroResult = 0x800C1934;
 func_800C193C = 0x800C193C;
 noopHandler4 = 0x800C1988;
-D_800C1990 = 0x800C1990;
+resourceStepData = 0x800C1990;

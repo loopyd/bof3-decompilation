@@ -9,7 +9,7 @@ typedef void (*Boss03316StepHandler)(u8 index);
  * referenced as its own data symbol rather than as a row start. That word is the
  * halfword pair effect table the byte-1 handler at 0x800C1A58 reads back from
  * work record offset 0xE8. */
-extern u8 D_800C2744; /* @source 0x800C2744 @kind data */
+extern u8 resourceStepData; /* @source 0x800C2744 @kind data */
 extern u8 D_800C2750; /* @source 0x800C2750 @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -60,7 +60,7 @@ void func_8014D978(void);
 void publishStepDataBoss(void) {
   u8 *work = D_801EB4E8;
 
-  FIELD_REF(void *, work, 0xECu) = &D_800C2744;
+  FIELD_REF(void *, work, 0xECu) = &resourceStepData;
   FIELD_REF(Boss03316StepHandler, work, 0xE4u) =
       dispatchIndexRun27a0;
   FIELD_REF(void *, work, 0xE8u) = &D_800C2750;

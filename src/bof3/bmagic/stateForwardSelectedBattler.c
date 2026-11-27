@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_80196718(void *arg0);
-void func_800AFC54(void);
+void stateCopyHalfwordBuffer(void); /* @source 0x800AFC54 @kind data */
 void func_800AEF98(s32 event, s32 value);
 void func_800A9820(u8 arg0);
 
@@ -113,7 +113,7 @@ void stateForwardSelectedBattler(
     return;
   }
   D_801EB4E0[0] &= 0xBF;
-  func_800AFC54();
+  stateCopyHalfwordBuffer();
   func_800AEF98(0x1C, 0);
   func_800A9820(D_80146384);
   if (D_80146374 < 3u) {

@@ -7,13 +7,13 @@
 extern u8 D_80144952;
 extern u16 D_80033A08[];
 
-/* Shared primitive helpers of the main executable. func_801D9AB4 emits one
+/* Shared primitive helpers of the main executable. drawQuadTemplateColor emits one
  * flat four-point quadrangle from the template row its third argument selects,
  * coloured by the CLUT bank byte and its fourth argument; func_801DA5A8 and
  * func_801DA4B4 emit one flat line between two corner pairs, coloured by the
  * three bytes given as their last arguments. None of the three is lifted at
  * its own address, so they keep their address-anchored prototypes here. */
-extern void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+extern void drawQuadTemplateColor(s16 arg0, s16 arg1, s32 arg2, s32 arg3); /* @source 0x801D9AB4 @kind data */
 extern void func_801DA5A8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4,
                           u8 arg5, u8 arg6);
 extern void func_801DA4B4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4,
@@ -80,8 +80,8 @@ void renderPanelFrame(s32 x, s32 y, s32 width, s32 height) {
   g = (color >> 2) & 0xF8;
   b = (color >> 7) & 0xF8;
 
-  func_801D9AB4(x, y, 8, 1);
-  func_801D9AB4(x, y + height + 2, 9, 1);
+  drawQuadTemplateColor(x, y, 8, 1);
+  drawQuadTemplateColor(x, y + height + 2, 9, 1);
   func_801DA5A8(x + 2, y + 2, x + width - 3, y + 2, r, g, b);
   height += 1;
   func_801DA5A8(x + 2, y + 3, x + 2, y + height, r, g, b);

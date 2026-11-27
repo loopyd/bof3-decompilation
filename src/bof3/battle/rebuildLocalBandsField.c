@@ -16,7 +16,7 @@ typedef struct Battle03FieldBand {
  *   that record's field record (selected by the D_80145FCC byte at the record's
  *   own offset) into the record's +0x82 bytes and +0xB0 band. It then calls
  *   func_800AAA74, mirrors every +0xB0 band into the parallel band 0x20 bytes
- *   earlier at +0x90 (D_80145F20), calls func_800A4458 and closes with one
+ *   earlier at +0x90 (D_80145F20), calls stateApplyPartyTemplate and closes with one
  *   func_800A9BD8 refresh per battler index.
  * @status exact
  * @match 100.00
@@ -77,7 +77,7 @@ void rebuildLocalBandsField(void) {
     } while (index < *band_count);
   }
 
-  func_800A4458();
+  stateApplyPartyTemplate(); /* @source 0x800A4458 @kind data */
 
   /* This reset has the same lifetime boundary as the band-loop reset. */
   do {

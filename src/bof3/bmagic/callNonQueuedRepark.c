@@ -23,7 +23,7 @@ extern u8 D_80146384; /* @source 0x80146384 @kind data */
 /* Acting battler byte in main RAM, outside this overlay's image: party slots
  * are 0, 1 and 2 and enemy panel slots are 3 and above, the split the exact
  * lifts of this target use for the same compare against 3. Read once for that
- * compare and once as the enemy work index func_801E257C takes. */
+ * compare and once as the enemy work index statePublishEnemyWork takes. */
 extern u8 D_80146374; /* @source 0x80146374 @kind data */
 
 /* Party record table in main RAM, outside this overlay's image: the
@@ -93,8 +93,8 @@ void func_8014D6B8(u8 arg0);
  * overlay's image: it publishes the enemy work record indexed by its first
  * argument and runs the script byte helper for the second. Declared with the
  * two byte-wide parameters the sibling lift above uses at its own
- * func_801E257C(D_80146374, 2) site. */
-void func_801E257C(u8 index, u8 scriptByte);
+ * statePublishEnemyWork(D_80146374, 2) site. */
+void statePublishEnemyWork(u8 index, u8 scriptByte);
 
 /* Shared seed helper of the main executable at 0x800AFF98, outside this
  * overlay's image: its returned byte seeds work byte 9 in this body and in the
@@ -135,7 +135,7 @@ extern int rand(void);
  *           counter 0x80145A00 in place and zeroes the entry at the new count
  *           in the word array 0x80145A04 and in the two halfword arrays
  *           0x80145A54 and 0x80145A7C; for 3 and above (an enemy panel slot) it
- *           stores 0xFF into work byte 0x4B and runs func_801E257C with that
+ *           stores 0xFF into work byte 0x4B and runs statePublishEnemyWork with that
  *           byte as the enemy work index and 2 as the script byte. Both of
  *           those arms then seed work byte 9 from the byte func_800AFF98
  *           returns and add 1 to work byte 2 with a byte-width add, moving
@@ -202,7 +202,7 @@ void callNonQueuedRepark(void) {
         *(u16 *)&D_80145A7C[slot * 2] = 0;
       } else {
         g_battle_work[0x4B] = 0xFF;
-        func_801E257C(D_80146374, 2);
+        statePublishEnemyWork(D_80146374, 2);
       }
       g_battle_work[9] = func_800AFF98();
       work = g_battle_work;
@@ -220,7 +220,7 @@ void callNonQueuedRepark(void) {
         *(u16 *)&D_80145A7C[slot * 2] = 0;
       } else {
         g_battle_work[0x4B] = 0xFF;
-        func_801E257C(D_80146374, 2);
+        statePublishEnemyWork(D_80146374, 2);
       }
       g_battle_work[9] = func_800AFF98();
       work = g_battle_work;

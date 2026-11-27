@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_800ACF80(void)
+void stateClearRecordBytes(void)
 {
   u8 i;
 

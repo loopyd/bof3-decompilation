@@ -80,7 +80,7 @@ segments:
     - func_801EF654
   - - 2792
     - asm
-    - func_801EF6E8
+    - renderGouraudQuadBand
   - - 5644
     - asm
     - func_801F020C

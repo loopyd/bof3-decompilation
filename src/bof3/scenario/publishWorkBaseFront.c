@@ -1,5 +1,8 @@
 #include "bof3/bof3.h"
 
+/* The textbin run this overlay indexes; its row needs a tagged declaration. */
+extern u8 tableHandlerPointers[]; /* @source 0x801FD5A8 @kind table */
+
 /* The shared work base published as the scratchpad cursor.
  * @source 0x80145E90 @kind unknown
  */
@@ -31,7 +34,7 @@ extern u8 D_80143FF8[];
  * @source 0x80144F5A @kind unknown
  */
 extern u8 D_80144F5A;
-/* Overlay-local byte table inside the func_801FD5A8 textbin run.
+/* Overlay-local byte table inside the tableHandlerPointers textbin run.
  * @source 0x801FD5C0 @kind table
  */
 extern u8 D_801FD5C0[];

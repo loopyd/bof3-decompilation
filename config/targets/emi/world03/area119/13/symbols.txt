@@ -47,3 +47,4 @@ stateFlagQueueCue203 = 0x801F4524;
 stateFlagBit3Queue = 0x801F4554;
 stateStatusOr14Gate = 0x801F4584;
 D_801F45C4 = 0x801F45C4;
+workByte1HandlerTable = 0x801F45EC;

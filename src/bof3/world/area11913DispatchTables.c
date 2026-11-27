@@ -1,7 +1,7 @@
 #include "bof3/emi/dispatchers.h"
 
 extern void (*D_801F45CC[])(void);
-extern void (*D_801F45EC[])(void);
+extern void (*workByte1HandlerTable[])(void); /* @source 0x801F45EC @kind data */
 extern void (*D_801F4604[])(void);
 extern void (*D_801F460C[])(void);
 extern void (*D_801F4634[])(void);
@@ -26,7 +26,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable45World, D_801F45C
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table45, D_801F45EC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table45, workByte1HandlerTable);
 
 /* @source 0x801F358C
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record

@@ -5,7 +5,7 @@
  * build's default `-fschedule-insns` hoists the selection-slot store out of
  * the `jal` delay slot. The original battle/15 object used `-fno-schedule-insns`;
  * restoring that per-target profile makes this match.
- * @behavior Stores the low byte of func_801DB5CC(3) through the pointer at 0x801EB4D8,
+ * @behavior Stores the low byte of queryAvailableBattlerSlot(3) through the pointer at 0x801EB4D8,
  * then calls func_801DE94C(2, 0). Sets byte 0x801462EF to 1, clears halfword
  * 0x80145AC8 and increments byte 0x801462E3 modulo 256.
  * @status exact
@@ -16,7 +16,7 @@ void stateQueueScriptRoot(void) {
   u8  result;
   u8* game_ram;
 
-  result = func_801DB5CC(3);
+  result = queryAvailableBattlerSlot(3); /* @source 0x801DB5CC @kind data */
   *BATTLE_ACTIVE_SELECTION_SLOT_PTR = result;
 
   func_801DE94C(2, 0);

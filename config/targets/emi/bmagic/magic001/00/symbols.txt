@@ -1,3 +1,5 @@
+stateCopyHalfwordBuffer = 0x800AFC54;
+statePublishEnemyWork = 0x801E257C;
 dispatchWorkByte1Slot = 0x801EEC64;
 stateSelectedBattlerRaise = 0x801EECC4;
 clearRecordFlagAdvance = 0x801EEF34;

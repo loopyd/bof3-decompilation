@@ -22,7 +22,7 @@
  * element or byte view, split or single scale statement) leaves it unchanged. The last
  * instruction is the first palette read narrowing to lbu where the original
  * keeps lhu: that pairing is common to every measured spelling here, including
- * the named-symbol and byte-offset forms, and to func_801D9AB4 in this same
+ * the named-symbol and byte-offset forms, and to drawQuadTemplateColor in this same
  * module, so it is a compiler narrowing of (load & 0x1f) << 3 rather than an
  * address-representation effect. Rungs 4 (compiler profile) and 5 (permuter)
  * are untried and outside this lane.

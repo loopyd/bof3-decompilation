@@ -48,6 +48,7 @@ initModeProgress44 = 0x800C22C0;
 setupOwnerThreeHalfword = 0x800C230C;
 func_800C236C = 0x800C236C;
 D_800C2640 = 0x800C2640;
+resourceStepData = 0x800C2744;
 func_8014D978 = 0x8014D978;
 initModeTuple510 = 0x801DDED8;
 initModeTuple520 = 0x801DDF00;

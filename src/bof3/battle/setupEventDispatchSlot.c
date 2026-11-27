@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DE560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4) {
+void setupEventDispatchSlot(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4) {
   u8  index;
   u8  value;
   u32 offset;

@@ -24,5 +24,5 @@ void queueScriptEvent(u32 arg0, u32 arg1) {
   do {
     event_id = *event_slot;
   } while (0);
-  func_801DE560(2u, 0u, 0u, 0x2du, func_801502D0(event_id));
+  setupEventDispatchSlot(2u, 0u, 0u, 0x2du, func_801502D0(event_id));
 }

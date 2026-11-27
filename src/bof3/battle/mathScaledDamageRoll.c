@@ -46,7 +46,7 @@ s16 mathScaledDamageRoll(u8 selection_index, u8 battler_index, u16 base_value,
     if (element_flag != 0u) {
       modifier = (s16)queryElementModifierZero(battler_index, kind_mask);
     } else {
-      modifier = (s16)func_800A2AE0(battler_index, kind_mask);
+      modifier = (s16)mathSumElementResistance(battler_index, kind_mask);
     }
     damage = damage * modifier / 0x64;
   }

@@ -5,7 +5,7 @@ extern u8* workRecordCursor1F800044; /* @source 0x1F800044 @kind unknown */
 extern u8 D_80144F5A; /* @source 0x80144F5A @kind unknown */
 extern s16 D_80145EBE; /* @source 0x80145EBE @kind unknown */
 extern s16 D_80145EC0; /* @source 0x80145EC0 @kind unknown */
-extern u8 D_801F2DD4[]; /* @source 0x801F2DD4 @kind table */
+extern u8 tableModeBytes[]; /* @source 0x801F2DD4 @kind table */
 
 /* Shared front-end record allocator and seeder at 0x8015CB18: takes the next
  * free 0x74-byte record index from func_8019601C and fills record byte +0 = 1,
@@ -23,7 +23,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  *           at 0x801F2DD4 and halfwords +0x2E/+0x30 = D_80145EBE/D_80145EC0;
  *           unless the call reports 0xFF the returned record index is stored in
  *           work byte +0x0B. Takes no arguments and returns nothing. The word at
- *           0x801F3778 inside this payload's D_801F2DD4 textbin holds this
+ *           0x801F3778 inside this payload's tableModeBytes textbin holds this
  *           address, so the function is one entry of that code-pointer run and
  *           is entered from outside its own payload rather than through a jal.
  * @status exact
@@ -45,7 +45,7 @@ void publishWorkBaseSeed(
   u8 result;
 
   workRecordCursor1F800044 = D_80145E90;
-  result = func_8015CB18(3, 0, D_801F2DD4[D_80144F5A], D_80145EBE, D_80145EC0);
+  result = func_8015CB18(3, 0, tableModeBytes[D_80144F5A], D_80145EBE, D_80145EC0);
   if (result != 0xFF) {
     workRecordCursor1F800044[0xB] = result;
   }

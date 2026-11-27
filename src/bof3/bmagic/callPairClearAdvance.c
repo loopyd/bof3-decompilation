@@ -5,7 +5,7 @@
  * register, so the prototype follows the call site and returns nothing. Splat
  * binds the address through this target's generated undefined_funcs_auto.txt,
  * so no target-map row is added here. */
-void func_800AFC54(void);
+void stateCopyHalfwordBuffer(void);
 
 /* Shared battle event dispatcher at 0x800AEF98, outside this overlay's image
  * and owned by the battle targets. This lift only calls it, so the prototype
@@ -57,7 +57,7 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 void callPairClearAdvance(
     void) {
   if (D_1F800044[0xB] == 0) {
-    func_800AFC54();
+    stateCopyHalfwordBuffer();
     func_800AEF98(4, 0);
     D_801EB4E0[0] &= 0xBF;
     D_1F800044[1]++;

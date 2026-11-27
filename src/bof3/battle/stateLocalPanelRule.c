@@ -10,7 +10,7 @@ extern u8 D_801463D7; /* @source 0x801463D7 @kind unknown */
  * @behavior Applies one 16-byte local panel rule to a battle work record. The
  *   rule byte +0x01 selects the operation: 1 stores the rule byte +0x02 into
  *   the work halfword +0x80; 2 publishes the work record at 0x1F800044 and runs
- *   func_800A36F0 with the work byte +0x05 and 0xFFFF, then func_800A31E0 with
+ *   stateClearStatusBits with the work byte +0x05 and 0xFFFF, then func_800A31E0 with
  *   the published record byte +0x05 and the rule byte +0x02 or-ed with the work
  *   byte +0x82; 3 and 4 walk the eight high bits of the rule byte +0x02 and call
  *   applyScaledBattlerField or storeIndexedSelectionByte for each set bit with the work record, the
@@ -45,7 +45,7 @@ void stateLocalPanelRule(u8 *work, u8 *rule) {
   case 2:
     saved = g_battle_work;
     g_battle_work = work;
-    func_800A36F0(work[5], 0xFFFF);
+    stateClearStatusBits(work[5], 0xFFFF);
     func_800A31E0(g_battle_work[5], work[0x82] | rule[2]);
     g_battle_work = saved;
     break;

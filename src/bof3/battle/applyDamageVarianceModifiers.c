@@ -30,7 +30,7 @@ u32 applyDamageVarianceModifiers(u32 arg0, u8 arg1, s32 arg2) {
   flags = scratch[0];
   mode = flags & 0x1f;
   if (mode != 0) {
-    value = (value * (s16)func_800A2AE0(arg1, flags)) / 100;
+    value = (value * (s16)mathSumElementResistance(arg1, flags)) / 100; /* @source 0x800A2AE0 @kind data */
   }
   if ((scratch[0] & 0x20) != 0) {
     if (arg1 < 3) {

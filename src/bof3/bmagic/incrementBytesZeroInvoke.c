@@ -17,7 +17,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 void stateWorkBytes2(void);
-extern void func_801EF9E0(void); /* @source 0x801EF9E0 @kind function */
+extern void renderJitterUvTriangle(void); /* @source 0x801EF9E0 @kind function */
 
 /* @source 0x801EF4AC
  * @behavior Entry index 2 of the four-word handler run based at 0x801EFD5C that
@@ -59,6 +59,6 @@ void incrementBytesZeroInvoke(void) {
     D_801EB4E0[0xB]--;
     stateWorkBytes2();
   } else {
-    func_801EF9E0();
+    renderJitterUvTriangle();
   }
 }

@@ -1,3 +1,4 @@
+stateCopyHalfwordBuffer = 0x800AFC54;
 func_801E5988 = 0x801E5988;
 workHandlerTable = 0x801EEC04;
 workByte1HeaderTable = 0x801EEC14;

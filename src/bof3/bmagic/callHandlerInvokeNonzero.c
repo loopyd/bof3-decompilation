@@ -17,7 +17,7 @@ extern void (*D_801F0114[])(void); /* @source 0x801F0114 @kind data */
 /* Overlay quad-drawing routine: sets the draw mode, then a poly G4 and semi
  * transparency on the primitive cursor and fills one 0x13F by 0xEF sprite
  * quad. */
-extern void func_801EFDF8(void); /* @source 0x801EFDF8 @kind function */
+extern void renderFillScreenQuad(void); /* @source 0x801EFDF8 @kind function */
 
 /* @source 0x801EFC58
  * @behavior Dispatches one frame of the overlay work object through its work
@@ -41,6 +41,6 @@ void callHandlerInvokeNonzero(
   D_801F0114[work[2]]();
   work = g_battle_work;
   if (work[0] != 0) {
-    func_801EFDF8();
+    renderFillScreenQuad();
   }
 }

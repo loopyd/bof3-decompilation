@@ -2,8 +2,8 @@
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
-extern void func_801EFA54(void); /* @source 0x801EFA54 @kind function */
-extern void func_801F03C4(void); /* @source 0x801F03C4 @kind function */
+extern void setupWorkViewMatrix(void); /* @source 0x801EFA54 @kind function */
+extern void renderGouraudQuadPacket(void); /* @source 0x801F03C4 @kind function */
 extern void func_801E5988(void); /* @source 0x801E5988 @kind function */
 
 /* @source 0x801F034C
@@ -24,8 +24,8 @@ void decrementAfterHelpersPublish(void)
     u8 *work;
     u8 countdown;
 
-    func_801EFA54();
-    func_801F03C4();
+    setupWorkViewMatrix();
+    renderGouraudQuadPacket();
     PopMatrix();
     work = g_battle_work;
     countdown = work[9] - 1;

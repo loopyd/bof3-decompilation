@@ -14,7 +14,7 @@
  * Live audit: 84/84 instructions, 336 bytes, live byte match. The descending
  * counters stay `u8` with an explicit `(s8)` comparison so every test emits the
  * original `sll ...,24` sign test (`bltz`/`bgez` per direction) and the plain
- * 8-bit `andi ...,0xff` argument/return path of the sibling func_801DB5CC; the
+ * 8-bit `andi ...,0xff` argument/return path of the sibling queryAvailableBattlerSlot; the
  * second loop of each side compares the sign-extended counter against the
  * sign-extended requested index, which keeps that bound hoisted in a
  * callee-saved register exactly as the original does.

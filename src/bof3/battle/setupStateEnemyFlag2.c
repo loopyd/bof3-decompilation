@@ -14,9 +14,9 @@ void setupStateEnemyFlag2(void)
     enemy_work = PSX_REF(volatile void*, 0x801EB4E8u);
     flags = FIELD_REF(u32, enemy_work, 0x100);
     if (flags & 2) {
-        func_801E2314(8);
+        stateDeriveScriptFlag(8);
     } else {
-        func_801E2314(0);
+        stateDeriveScriptFlag(0);
     }
     enemyReadyOrHelper1();
     SPAD_PTR_SLOT(u8, 0x44)[1]++;

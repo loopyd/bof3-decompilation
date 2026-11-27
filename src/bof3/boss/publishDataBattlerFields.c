@@ -38,12 +38,12 @@ void callIndexedHandler20(u8 index);
  * BIN/BOSS/BOSS008.EMI; it takes no arguments and returns none here. */
 void func_8014D978(void);
 
-/* Shared main-program battle helpers: func_800AC704 returns the index of the
+/* Shared main-program battle helpers: queryFindIdentityIndex returns the index of the
  * first of eight class records whose leading byte matches the id it is given
- * (0xFF when none does), and func_800AC218 copies that class's eight-byte
+ * (0xFF when none does), and setupClassPanelRecord copies that class's eight-byte
  * template into the record of the battler index it is given. */
-u8 func_800AC704(u8 id);
-void func_800AC218(u8 index, u8 class_id);
+u8 queryFindIdentityIndex(u8 id); /* @source 0x800AC704 @kind data */
+void setupClassPanelRecord(u8 index, u8 class_id); /* @source 0x800AC218 @kind data */
 
 /* @source 0x800C1894
  * @behavior Work-state entry setup of this overlay, and entry 0 of the run at
@@ -59,8 +59,8 @@ void func_800AC218(u8 index, u8 class_id);
  *           Writing 2 leaves entry 0 of that state run for the handler the new
  *           record word selects. When the battle mode byte 0x801462EA holds
  *           0x1A it also gives battler 0 the class template of the class record
- *           whose leading byte is 0x59 (func_800AC704 selects that record and
- *           func_800AC218 applies its template), stores 1 into work byte +0x7F
+ *           whose leading byte is 0x59 (queryFindIdentityIndex selects that record and
+ *           setupClassPanelRecord applies its template), stores 1 into work byte +0x7F
  *           and 0x1E into work byte +0xF0, and copies the shared halfword run
  *           0x80144E00/0x80144E04/0x80144E06 into the record's +0x94 and into
  *           the two runs at +0xA0/+0xA4/+0xA6 and +0xC0/+0xC4/+0xC6. The three
@@ -89,7 +89,7 @@ void publishDataBattlerFields(
   SPAD_PTR_SLOT(u8, 0x44u)[1] = 2;
   func_8014D978();
   if (D_801462EA == 0x1Au) {
-    func_800AC218(0, func_800AC704(0x59u));
+    setupClassPanelRecord(0, queryFindIdentityIndex(0x59u));
     D_801EB4E8[0x7F] = 1;
     D_801EB4E8[0xF0] = 0x1E;
     work = D_801EB4E8;

@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DEA64(s32 arg0) {
+void submitSlotScriptEvent(s32 arg0) {
   void* script = &D_801492B8;
 
   func_801501E4(script, (u32)(arg0 + 0x74), 5u);

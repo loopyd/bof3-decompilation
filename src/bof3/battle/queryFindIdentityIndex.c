@@ -16,7 +16,7 @@
  * scaled index in the address expression lets gcc materialize the constant
  * (`lui`+`ori` base) and hoist it out of the loop.
  */
-u8 func_800AC704(u8 id)
+u8 queryFindIdentityIndex(u8 id)
 {
   u8 i;
   u32 offset;

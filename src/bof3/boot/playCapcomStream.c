@@ -23,9 +23,9 @@ void playCapcomStream(void) {
     if ((pad_state & PADstart) != 0) {
       break;
     }
-    stream_finished = func_801CEA98();
+    stream_finished = bootPumpStreamFrame();
   } while (stream_finished == 0);
-  func_801CEBFC();
+  bootShutdownStream();
   StopCallback();
   func_801CEEF4();
   SetDispMask(0);

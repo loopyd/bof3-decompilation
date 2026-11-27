@@ -12,7 +12,7 @@ extern u8 battleByte801463ca; /* @source 0x801463CA @kind unknown */
  *           enemy entry collection, decrements the D_801462F3 counter and
  *           raises D_80146328 bit 1 when it reaches zero, clears global
  *           halfword 62E8 bit 0x4000 while the panel byte still names the same
- *           battler, runs func_800AD074 on enemy byte +0x7C, submits the
+ *           battler, runs stateSetIndexedBit on enemy byte +0x7C, submits the
  *           scratch work through func_80196718, clears enemy word +0x100 bits
  *           0x70 and the pending bit, then re-arms scratch bytes +1..+3 as
  *           2/0/0. Reached from applyGravityOrReset once the scratch vertical
@@ -48,7 +48,7 @@ void accumulateEnemyHalfwordsReset(void) {
       BATTLE_GLOBAL_HALF_62E8 = flags & 0xbfffu;
     }
   }
-  func_800AD074(BATTLE_ENEMY_BYTE_7C(battleCurrentEnemyWork));
+  stateSetIndexedBit(BATTLE_ENEMY_BYTE_7C(battleCurrentEnemyWork)); /* @source 0x800AD074 @kind data */
   func_80196718(D_1F800044);
   battleCurrentEnemyWork->unk_100 &= 0xffffff8fu;
   clearPendingBit(D_1F800044->unk_05);

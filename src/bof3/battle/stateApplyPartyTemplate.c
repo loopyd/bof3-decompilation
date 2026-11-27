@@ -18,7 +18,7 @@
  *   body, accounting for 21 register substitutions. The other instructions
  *   and both store targets match.
  */
-void func_800A4458(void) {
+void stateApplyPartyTemplate(void) {
   u8* tmpl;
   u8* record;
   u32 offset;

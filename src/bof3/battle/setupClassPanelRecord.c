@@ -54,7 +54,7 @@
  *   than a representation gap and the band spelling is measured out, not
  *   untried. The untried rungs are the selector profile and permuter, which
  *   this lane is not authorized to run.
- *   Callers: two direct in-target `jal func_800AC218` sites, func_800ABCE0 at
+ *   Callers: two direct in-target `jal setupClassPanelRecord` sites, func_800ABCE0 at
  *   0x800ABEF0 and func_800AC01C at 0x800AC1AC. Both mask both arguments to
  *   0xFF (0x800ABEBC `andi s2,0xFF` with 0x800ABEC0 `andi a1,s0,0xFF`;
  *   0x800AC0B4 `andi s2,0xFF` with 0x800AC180 `andi s1,s4,0xFF`) and pass the
@@ -74,7 +74,7 @@
  *   the address-anchored name stays.
  *   No aids: no register pins, clobbers, barriers or empty asm.
  */
-void func_800AC218(u8 index, u8 class_id) {
+void setupClassPanelRecord(u8 index, u8 class_id) {
   u8 i;
   u8 *rec;
   u8 *tmpl;

@@ -9,7 +9,7 @@
  */
 void queueEventNoStore(void) {
   func_8015DF18(0x106u);
-  func_801DEA64((s32)BATTLE_ACTIVE_MESSAGE_SLOT_PTR);
+  submitSlotScriptEvent((s32)BATTLE_ACTIVE_MESSAGE_SLOT_PTR);
   D_801462E1 = 4u;
   D_801462E2 = 2u;
   D_801462EF = 0u;

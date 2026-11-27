@@ -8,7 +8,7 @@
  * is entry 0 of that table: 0x800C1EF4, then 0x801E52E8, 0x801E35D8,
  * 0x801E3638, 0x801E3980, 0x801E3A00, 0x800C18A0, 0x801E4AE8, 0x801E4D8C,
  * 0x801E4F64, 0x801E52E8 and 0x801E5288. */
-extern void (*D_800C2744[])(void); /* @source 0x800C2744 @kind data */
+extern void (*resourceStepData[])(void); /* @source 0x800C2744 @kind data */
 
 /* @source 0x800C1EB0
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -30,4 +30,4 @@ extern void (*D_800C2744[])(void); /* @source 0x800C2744 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable2744Boss, D_800C2744);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable2744Boss, resourceStepData);

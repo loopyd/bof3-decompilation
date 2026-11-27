@@ -23,7 +23,7 @@ typedef struct Boss03716PublishWork {
  * 0x800C18EC and 0x800C18F4. 0x800C199C is that record's +0xC word, 0x06000601,
  * inside the row and not a row boundary, so it is referenced as its own data
  * symbol rather than as a row start. */
-extern u8 D_800C1990; /* @source 0x800C1990 @kind data */
+extern u8 resourceStepData; /* @source 0x800C1990 @kind data */
 extern u8 D_800C199C; /* @source 0x800C199C @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -67,7 +67,7 @@ void publishStepSetup(
   Boss03716PublishWork *work = (Boss03716PublishWork *)D_801EB4E8;
   u8 *state;
 
-  work->data_row = &D_800C1990;
+  work->data_row = &resourceStepData;
   work->step_handler = dispatchIndexedHandler;
   work->step_data = &D_800C199C;
   state = SPAD_PTR_SLOT(u8, 0x44u);

@@ -15,6 +15,7 @@ zeroResult34 = 0x800C1A40;
 setupBattleEntryBoss = 0x800C1A48;
 setupBattleRecordBoss = 0x800C1ABC;
 D_800C1B18 = 0x800C1B18;
+battleModeState = 0x80146255;
 func_8014D6B8 = 0x8014D6B8;
 func_8014DD3C = 0x8014DD3C;
 initModeTuple530 = 0x801DDF28;

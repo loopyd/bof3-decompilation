@@ -2,7 +2,7 @@
 
 extern u8 func_8014DAEC(void); /* @source 0x8014DAEC @kind function */
 extern void func_8015D71C(s32 selector); /* @source 0x8015D71C @kind function */
-extern void func_801E257C(u8 index, u8 scriptByte); /* @source 0x801E257C @kind function */
+extern void statePublishEnemyWork(u8 index, u8 scriptByte); /* @source 0x801E257C @kind function */
 extern u8 D_80146374; /* @source 0x80146374 @kind data */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 
@@ -27,7 +27,7 @@ void callHelpersRetreatReady(void) {
   func_8014DAEC();
   if (func_8014DAEC() != 0) {
     func_8015D71C(0x203);
-    func_801E257C(D_80146374, 0xC);
+    statePublishEnemyWork(D_80146374, 0xC);
     work = D_1F800044;
     if (--work[9] != 0) {
       work = D_1F800044;

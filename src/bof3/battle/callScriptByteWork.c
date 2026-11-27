@@ -3,7 +3,7 @@
 /* @source 0x801E24F8
  * @behavior Publishes the 0x118-byte work record at D_801EB2E8[index] as the
  * current enemy work -- both the scratchpad +0x44 cell and the 0x801EB4E8
- * global -- runs the enemy script byte helper func_801E2314 for the masked
+ * global -- runs the enemy script byte helper stateDeriveScriptFlag for the masked
  * argument, then restores both previously published pointers.
  * @status exact
  * @match 100.00
@@ -20,7 +20,7 @@ void callScriptByteWork(u8 index, u8 arg1) {
   record = (Battle03EnemyWork*)(D_801EB2E8 + ((index * 36u - index) * 8u));
   battleWork = (u8*)record;
   battleCurrentEnemyWork = record;
-  func_801E2314(arg1);
+  stateDeriveScriptFlag(arg1);
   battleWork = previousWork;
   battleCurrentEnemyWork = previousEnemy;
 }

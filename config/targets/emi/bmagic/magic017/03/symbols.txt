@@ -1,3 +1,4 @@
+statePublishEnemyWork = 0x801E257C;
 func_801E5988 = 0x801E5988;
 dispatchWorkByte1Head = 0x801EEC38;
 copyActingOrdinalStat = 0x801EEC98;

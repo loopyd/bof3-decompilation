@@ -160,7 +160,7 @@ segments:
     - '@behavior: Projects record position pair, accumulates word 18, counts down byte 6, and clears at zero.'
   - - 8912
     - asm
-    - func_801F0ED0
+    - renderRecordTextureQuad
   - - 9488
     - asm
     - func_801F1110
@@ -170,7 +170,7 @@ segments:
     - '@source: src/bof3/bmagic/stateClearThroughThree.c'
   - - 9644
     - asm
-    - func_801F11AC
+    - renderProjectRecordPoint
   - - 9820
     - textbin
     - D_801F125C

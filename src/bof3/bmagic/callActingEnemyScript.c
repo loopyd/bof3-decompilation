@@ -22,12 +22,12 @@ extern u8 D_80146374; /* @source 0x80146374 @kind data */
  * argument as the current enemy work, runs the enemy script byte helper
  * func_801E2314 for the second argument, then restores the previously published
  * record. */
-extern void func_801E257C(u8 index, u8 scriptByte); /* @source 0x801E257C @kind function */
+extern void statePublishEnemyWork(u8 index, u8 scriptByte); /* @source 0x801E257C @kind function */
 
 /* @source 0x801EF0E8
  * @behavior Overlay work handler, word 3 of the leading 24-word code pointer run
  *           at 0x801EEC04, stored at 0x801EEC10. Runs the shared enemy script
- *           helper func_801E257C with the acting battler byte 0x80146374 as the
+ *           helper statePublishEnemyWork with the acting battler byte 0x80146374 as the
  *           enemy work index and 0xA as the script byte selector, then copies
  *           byte 0x27 of the shared battle work record read through 0x801EB4E0
  *           into byte 0x27 of the scratchpad work object read through the pointer
@@ -50,7 +50,7 @@ void callActingEnemyScript(void) {
   u8 *clearByteA;
   u8 *step;
 
-  func_801E257C(D_80146374, 0xA);
+  statePublishEnemyWork(D_80146374, 0xA);
   source = D_801EB4E0;
   work = D_1F800044;
   work[0x27] = source[0x27];

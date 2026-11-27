@@ -93,7 +93,7 @@ segments:
     - func_801EF6E0
   - - 2984
     - asm
-    - func_801EF7A8
+    - renderTexturedQuadPacket
   - - 3960
     - c
     - reserveFirstFreeRecord

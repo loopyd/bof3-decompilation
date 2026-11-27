@@ -15,4 +15,4 @@ publishHooksOwnerHeads = 0x800C19DC;
 stateZeroResult = 0x800C1A14;
 func_800C1A1C = 0x800C1A1C;
 stateOwnerHeadsBoss = 0x800C1A84;
-D_800C1AB4 = 0x800C1AB4;
+resourceStepData = 0x800C1AB4;

@@ -16,7 +16,7 @@ extern s32 func_801782FC(s32 angle); /* @source 0x801782FC */
 extern s32 func_801783C8(s32 angle); /* @source 0x801783C8 */
 extern void func_8017A97C(void *primitive); /* @source 0x8017A97C */
 extern void func_80155A08(s32 x, s32 y, s32 kind, s32 size); /* @source 0x80155A08 */
-extern void func_800AF0F8(u32 x, u32 y, s32 *keys, u8 *packets,
+extern void renderLinkCellPackets(u32 x, u32 y, s32 *keys, u8 *packets,
                          u8 count, u8 stride, u8 extra); /* @source 0x800AF0F8 */
 
 /* @source 0x801F03E0
@@ -98,7 +98,7 @@ void renderFansOppositeDepths(void) {
     primitive->b2 = (u16)scratch[5];
     g_PrimCursor += 0x1C;
   }
-  func_800AF0F8(FIELD_REF(u32, g_battle_work, 0x34u),
+  renderLinkCellPackets(FIELD_REF(u32, g_battle_work, 0x34u),
                 FIELD_REF(u32, g_battle_work, 0x38u), keys, packets, 4, 0x1C, 2);
   packets = g_PrimCursor;
   for (phase = g_battle_work[9]; phase < g_battle_work[9] + 32;
@@ -138,6 +138,6 @@ void renderFansOppositeDepths(void) {
     primitive->b2 = (u16)scratch[-1];
     g_PrimCursor += 0x1C;
   }
-  func_800AF0F8(FIELD_REF(u32, g_battle_work, 0x34u),
+  renderLinkCellPackets(FIELD_REF(u32, g_battle_work, 0x34u),
                 FIELD_REF(u32, g_battle_work, 0x38u), keys, packets, 4, 0x1C, 2);
 }

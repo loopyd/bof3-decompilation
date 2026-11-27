@@ -7,4 +7,4 @@ publishWorkBaseSeed = 0x801F2CEC;
 retreatCounter2By4 = 0x801F2D6C;
 advanceCounter2By4 = 0x801F2D94;
 copyModeByte = 0x801F2DBC;
-D_801F2DD4 = 0x801F2DD4;
+tableModeBytes = 0x801F2DD4;

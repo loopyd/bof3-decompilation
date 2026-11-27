@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-s16 func_800A2AE0(u8 battler_index, u16 element_mask) {
+s16 mathSumElementResistance(u8 battler_index, u16 element_mask) {
   s32 result;
   u32 offset;
   u32 offset1;

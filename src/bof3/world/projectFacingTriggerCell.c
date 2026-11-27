@@ -115,7 +115,7 @@ extern s32 checkMoveProbeCode(s32 col,
  * unsigned halfwords.
  * @source 0x801F4380
  */
-extern void func_801F4380(u16 col, u16 row);
+extern void runCellTriggerRecord(u16 col, u16 row);
 
 /* @source 0x801F3E30
  * @behavior Walk tick of this overlay. It runs only while flag 0x66 of the main
@@ -206,7 +206,7 @@ void projectFacingTriggerCell(void) {
             ((u8 *)scratchpadWorkRecord)[7] |= 8;
             func_8014D6B8(D_801F4A6C[index * 2]);
             ((u8 *)scratchpadWorkRecord)[0x2A] = D_801F4A6D[index * 2];
-            func_801F4380((u16)col, (u16)row);
+            runCellTriggerRecord((u16)col, (u16)row);
             return;
         }
     }

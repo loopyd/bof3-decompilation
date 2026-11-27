@@ -5,7 +5,7 @@
  *   below 3 whose 0x140-stride party-record halfword at 0x80145F10 carries bit
  *   0x4000, stores -10000 in the halfword at byte +0x04 of the record pointed
  *   to by D_8014639C.record, advances the byte count at 0x801462F1 and clears
- *   that 0x4000 bit from the battler through func_800A36F0. An index below 3
+ *   that 0x4000 bit from the battler through stateClearStatusBits. An index below 3
  *   without the bit clears the record halfword to zero; indexes 3 and above
  *   leave the record and the count untouched.
  * @status exact
@@ -28,7 +28,7 @@ void stateRecordNeg10000Party(void) {
       do {
         D_801462F1++;
       } while (0);
-      func_800A36F0(*(volatile u8*)state, 0x4000);
+      stateClearStatusBits(*(volatile u8*)state, 0x4000);
     } else {
       D_8014639C.record[2] = 0;
     }

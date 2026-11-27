@@ -31,7 +31,7 @@ void setupEnemyCueLoader(void)
         if ((D_801CA71C[BATTLE_GLOBAL_HALF_63C0].mask_00 & 0x800) == 0) {
             D_1F800044->unk_09 = PSX_REF(
                 u8, 0x800E40CFu + battleCurrentEnemyWork->unk_e0 * 0x88u);
-            func_801E2314(6);
+            stateDeriveScriptFlag(6);
             work = D_1F800044;
             work->unk_02++;
         } else {

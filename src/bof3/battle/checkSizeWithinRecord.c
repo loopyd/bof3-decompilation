@@ -38,7 +38,7 @@
  *   temporaries. Clean-C byte match and independent review pending.
  *   No aids: no register pins, clobbers, barriers or empty asm.
  */
-u32 func_800AF5FC(BattleRange *range, u32 value) {
+u32 checkSizeWithinRecord(BattleRange *range, u32 value) {
     BattleRange *work;
     u32 plane;
     u32 first;

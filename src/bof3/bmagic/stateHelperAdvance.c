@@ -13,7 +13,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * calls it, and the target's generated undefined-funcs map already spells the
  * address with this raw name, so this prototype carries the source tag alone
  * and needs no map row. */
-extern u8 func_800B0058(void); /* @source 0x800B0058 */
+extern u8 queryParticipantLookupByte(void); /* @source 0x800B0058 */
 
 /* @source 0x801EF740
  * @behavior Handler entry 0 of the nine-word pointer run at 0x801EEC04 whose
@@ -45,7 +45,7 @@ void stateHelperAdvance(
     void) {
   u8 value;
 
-  value = func_800B0058();
+  value = queryParticipantLookupByte();
   g_battle_work[9] = value;
   g_battle_work[2]++;
 }

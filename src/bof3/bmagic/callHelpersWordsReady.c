@@ -2,7 +2,7 @@
 
 extern u8 func_8014DAEC(void); /* @source 0x8014DAEC @kind function */
 extern void func_800AFC98(s32 arg0, s32 arg1); /* @source 0x800AFC98 @kind function */
-extern void func_801E257C(u8 index, u8 scriptByte); /* @source 0x801E257C @kind function */
+extern void statePublishEnemyWork(u8 index, u8 scriptByte); /* @source 0x801E257C @kind function */
 extern u8 D_80146374; /* @source 0x80146374 @kind data */
 
 /* @source 0x801EF164
@@ -22,7 +22,7 @@ void callHelpersWordsReady(void) {
 
   if (func_8014DAEC() != 0) {
     func_800AFC98(2, 0);
-    func_801E257C(D_80146374, 0xB);
+    statePublishEnemyWork(D_80146374, 0xB);
     work = SPAD_PTR_SLOT(u8, 0x44u);
     *(s32 *)(work + 0x14) = 0x100;
     *(s32 *)(work + 0x20) = -8;

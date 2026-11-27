@@ -5,7 +5,7 @@
  * 0x801F12BC, publishes the record it is about to step into this cell with
  * `sw` and restores nothing, so every consumer sees the current record.
  * func_801F0960, func_801F09E0, func_801F0B34, func_801F0C7C, func_801F0DA4
- * and func_801F11AC reload the cell once per access, and this dispatcher reads
+ * and renderProjectRecordPoint reload the cell once per access, and this dispatcher reads
  * it once. The word is zero on disc. */
 extern u8 *D_801F22BC; /* @source 0x801F22BC @kind data */
 

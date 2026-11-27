@@ -1,4 +1,6 @@
 g_battle_work = 0x1F800044;
+stateCopyHalfwordBuffer = 0x800AFC54;
+statePublishEnemyWork = 0x801E257C;
 func_801E5988 = 0x801E5988;
 dispatchWorkByte1Triad = 0x801EEC34;
 stateActingBandsStats = 0x801EEC94;

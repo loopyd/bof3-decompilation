@@ -1,5 +1,6 @@
 g_battle_work = 0x1F800044;
 func_800AFF98 = 0x800AFF98;
+statePublishEnemyWork = 0x801E257C;
 func_801E5988 = 0x801E5988;
 dispatchWorkByte1Stamp = 0x801EECF0;
 stateActingHeadStamp = 0x801EED5C;

@@ -60,13 +60,13 @@ segments:
     - '@source: src/bof3/bmagic/decrementGlobalClearBytes.c'
   - - 2436
     - asm
-    - func_801EF584
+    - renderUvTrianglePacket
   - - 2896
     - asm
-    - func_801EF750
+    - renderGouraudQuadPacket
   - - 3552
     - asm
-    - func_801EF9E0
+    - renderJitterUvTriangle
   - - 4256
     - asm
     - func_801EFCA0

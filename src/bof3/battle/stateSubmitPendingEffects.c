@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
 void func_800AAC88(s16 arg0, u8 arg1); /* @source 0x800AAC88 */
-void func_800AAEBC(s16 arg0, u8 arg1); /* @source 0x800AAEBC */
+void setupActionTargetSlot(s16 arg0, u8 arg1); /* @source 0x800AAEBC */
 
 /* @source 0x801E1494
  * @behavior Local work state-3 entry-0 step: counts the published local work
@@ -46,7 +46,7 @@ void stateSubmitPendingEffects(void) {
     record = D_80146250;
   }
   if ((record->unk_120 & 2u) != 0u) {
-    func_800AAEBC((s16)record->unk_11e, D_1F800044->unk_05);
+    setupActionTargetSlot((s16)record->unk_11e, D_1F800044->unk_05);
   }
 
   localReadyOrHelper1();

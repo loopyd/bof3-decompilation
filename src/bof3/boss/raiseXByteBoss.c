@@ -16,7 +16,7 @@ extern u8 func_8014DAEC(void);
  *           based at 0x800C27B4, which is the base word the step dispatcher
  *           func_800C1E70 (that run's word 0) loads and indexes with work byte 2
  *           scaled by four; run word 7 at 0x800C27D0 holds this address, and the
- *           run's row D_800C2744 ends with it. It loads the scratch work object
+ *           run's row resourceStepData ends with it. It loads the scratch work object
  *           published at the pointer cell 0x1F800044 and raises bit 0x20 of that
  *           object's byte 0, sets object byte 0x5C to 3, then writes the same
  *           value -(object byte 0xB << 4) to object bytes 0x5D, 0x5F and 0x5E in

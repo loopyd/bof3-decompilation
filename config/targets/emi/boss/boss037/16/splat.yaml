@@ -65,5 +65,5 @@ segments:
     - noopHandler4
   - - 400
     - textbin
-    - D_800C1990
+    - resourceStepData
 - - 480

@@ -47,5 +47,5 @@ segments:
     - copyModeByte
   - - 468
     - textbin
-    - D_801F2DD4
+    - tableModeBytes
 - - 4604

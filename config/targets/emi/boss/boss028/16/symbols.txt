@@ -31,4 +31,5 @@ T_800C2180 = 0x800C2180;
 T_800C21C0 = 0x800C21C0;
 initModeTuple510 = 0x801DDED8;
 initModeTuple520 = 0x801DDF00;
+stateDeriveScriptFlag = 0x801E2314;
 func_801E5988 = 0x801E5988;

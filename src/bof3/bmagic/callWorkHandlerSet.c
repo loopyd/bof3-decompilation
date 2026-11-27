@@ -19,7 +19,7 @@ extern void (*D_801EFC44[])(void); /* @source 0x801EFC44 @kind data */
  * It selects a graph-type draw mode (0x125 for types 1 and 2, 0x55 otherwise),
  * arms SetDrawMode at g_PrimCursor and continues with a primitive packet, so
  * the body below only calls it and its role stays address-anchored. */
-extern void func_801EF7A8(void); /* @source 0x801EF7A8 */
+extern void renderTexturedQuadPacket(void); /* @source 0x801EF7A8 */
 
 /* @source 0x801EF404
  * @behavior Work byte 2 step handler of the overlay work object: reads the
@@ -44,6 +44,6 @@ void callWorkHandlerSet(
   D_801EFC44[g_battle_work[2]]();
   work = g_battle_work;
   if (work[0] != 0 && work[2] != 0) {
-    func_801EF7A8();
+    renderTexturedQuadPacket();
   }
 }

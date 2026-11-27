@@ -16,7 +16,7 @@ extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
  * that address measured. This overlay's use passes the script byte index 2, so
  * the prototype keeps the address-anchored spelling of the shared helper and
  * this target's generated undefined_funcs_auto.txt binds the address. */
-extern void func_801E2314(u32 arg0); /* @source 0x801E2314 */
+extern void stateDeriveScriptFlag(u32 arg0); /* @source 0x801E2314 */
 
 /* @source 0x800C18E4
  * @behavior Handler entry 0 of this overlay's byte-2 step run, the code pointer
@@ -29,7 +29,7 @@ extern void func_801E2314(u32 arg0); /* @source 0x801E2314 */
  *           class-row byte at 0x800E40CE into scratch work byte +0x09. That
  *           byte is the countdown the run's next handler, entry 1 at
  *           0x800C1950, decrements and acts on when it reaches zero. The body
- *           then runs the shared enemy script byte helper func_801E2314 for
+ *           then runs the shared enemy script byte helper stateDeriveScriptFlag for
  *           script byte 2 and, after re-reading the pointer cell, advances
  *           scratch work byte +0x02 by one, moving the dispatcher to that same
  *           entry 1. It writes no other state and leaves no value callers read;
@@ -63,6 +63,6 @@ void armCueClassScript(
   work = D_801EB4E8;
   classIndex = work[0xE0];
   boss028CurrentRecordState[0x9] = PSX_REF(u8, 0x800E40CEu + classIndex * 0x88u);
-  func_801E2314(2);
+  stateDeriveScriptFlag(2);
   boss028CurrentRecordState[0x2]++;
 }

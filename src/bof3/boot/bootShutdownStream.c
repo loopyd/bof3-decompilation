@@ -16,7 +16,7 @@
  * @residual none
  * live comparison is instruction- and byte-exact.
  */
-void func_801CEBFC(void) {
+void bootShutdownStream(void) {
   rampCdMixDown();
   func_801D2294();
   func_801CFEA4(0, 0);

@@ -66,10 +66,10 @@ segments:
     # @behavior Draw eight scaled-endpoint triangles, submit packets and restore the matrix.
   - - 1664
     - asm
-    - func_801EF280
+    - renderUvTrianglePacket
   - - 2728
     - asm
-    - func_801EF6A8
+    - setupWorkViewMatrix
   - - 2932
     - c
     - callStateTable121
@@ -111,13 +111,13 @@ segments:
     - '@behavior: Decrement work byte 9, subtract 5 from work word 0x20 and add 2 to work word 0x14, then call 0x801E5988 if the decremented byte is zero.'
   - - 5124
     - asm
-    - func_801F0004
+    - renderTexturedQuadPacket
   - - 6356
     - asm
     - func_801F04D4
   - - 7484
     - asm
-    - func_801F093C
+    - renderGouraudQuadPacket
   - - 8456
     - c
     - callDispatchPublish
@@ -139,7 +139,7 @@ segments:
     - '@behavior: Seed the mode-transformed offset, project the work position and install the parity-selected axis quarter turn.'
   - - 9148
     - asm
-    - func_801F0FBC
+    - renderQuarterTurnTile
   - - 9716
     - textbin
     - edgeEndpoints

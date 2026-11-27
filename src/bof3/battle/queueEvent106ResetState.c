@@ -11,7 +11,7 @@ void queueEvent106ResetState(void) {
   func_8015DF18(0x106u);
   D_8014839F = 1u;
   D_8014837B = 1u;
-  func_801DEA64((s32)BATTLE_ACTIVE_MESSAGE_SLOT_PTR);
+  submitSlotScriptEvent((s32)BATTLE_ACTIVE_MESSAGE_SLOT_PTR); /* @source 0x801DEA64 @kind data */
   D_801462EF = 0u;
   D_801462E1 = 2u;
   D_801462E2 = 0u;

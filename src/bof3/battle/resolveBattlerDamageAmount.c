@@ -37,7 +37,7 @@ extern u32 resolveEnemyTargetDamage(s16 damage, u8 attacker,
  *   and that byte is 1. The target's status halfword (local +0x80, enemy +0x82)
  *   drives the remaining gates: while either of bits 0x40 and 0x20 is set it
  *   raises the matching bit of 0x801463DA, clears the target's guard bits
- *   through func_800A36F0 and zeroes the target's +0x121/+0xFD byte, and bit
+ *   through stateClearStatusBits and zeroes the target's +0x121/+0xFD byte, and bit
  *   0x04 as well as both of those arms raise a zero amount to one; with none of
  *   bits 0x64 set the amount instead passes through resolveDamageNegation for a party
  *   target or resolveEnemyTargetDamage for an enemy target. A
@@ -131,10 +131,10 @@ s32 resolveBattlerDamageAmount(u8 attacker, u8 target, u16 kind_mask) {
       u16* gate = &D_801463DA;
       *gate |= 0x40u;
       if (target < 3u) {
-        func_800A36F0(D_80145E90[target].unk_05, 0x40u);
+        stateClearStatusBits(D_80145E90[target].unk_05, 0x40u);
         D_80145E90[target].unk_121 = 0;
       } else {
-        func_800A36F0(D_801EB630[target - 3u].unk_05, 0x40u);
+        stateClearStatusBits(D_801EB630[target - 3u].unk_05, 0x40u);
         D_801EB630[target - 3u].unk_fd = 0;
       }
       if (damage == 0) {
@@ -145,10 +145,10 @@ s32 resolveBattlerDamageAmount(u8 attacker, u8 target, u16 kind_mask) {
       u16* gate = &D_801463DA;
       *gate |= 0x20u;
       if (target < 3u) {
-        func_800A36F0(D_80145E90[target].unk_05, 0x20u);
+        stateClearStatusBits(D_80145E90[target].unk_05, 0x20u);
         D_80145E90[target].unk_121 = 0;
       } else {
-        func_800A36F0(D_801EB630[target - 3u].unk_05, 0x20u);
+        stateClearStatusBits(D_801EB630[target - 3u].unk_05, 0x20u);
         D_801EB630[target - 3u].unk_fd = 0;
       }
       if (damage == 0) {

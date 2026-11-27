@@ -20,7 +20,7 @@
  *   the `andi` of the stride is emitted one block later, and the 0xFF000000 /
  *   0xFFFFFF masks are materialised outside the packet block instead of inline.
  */
-void func_800AF0F8(u32 pos0, u32 pos1, s32 *list, u8 *packet, u8 rows,
+void renderLinkCellPackets(u32 pos0, u32 pos1, s32 *list, u8 *packet, u8 rows,
                    u8 stride, u8 extra) {
   u32 delta;
   u32 dy;
